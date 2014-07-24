@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Note StyleSheet="http://www.jeredmcferron.com/sample_style.xml">
+    <StackPanel PaddingLeft="5%" PaddingRight="5%" Top="100" Alignment="Left">
+    
+        <Header Alignment="Center">
+            <Title>CAPTAIN AMERICA ON MORALITY</Title>
+            <Speaker>Dr. Mark Moore</Speaker>
+            <Date>July 5 &amp; 6, 2014</Date>
+        </Header>
+
+        <Paragraph>1. Morality is exposed by<RevealBox>POWER</RevealBox></Paragraph>
+
+        <Quote Citation="Micah 6:8">
+            He has showed you, O man, what is good. And what does the Lord require of you? To act justly and to love mercy and to walk humbly with your God.
+        </Quote>
+
+        <Paragraph>2. Morality is revealed by <RevealBox>REFLEX</RevealBox></Paragraph>
+        <Paragraph>True Test of Character:</Paragraph>
+        <Paragraph>   * What do you do when <RevealBox>NO ONE IS LOOKING</RevealBox></Paragraph>
+        <Paragraph>   * What do you do you don't have <RevealBox>TIME TO THINK</RevealBox></Paragraph>
+        <Paragraph>   * What do you do when someone <RevealBox>CAN'T REPAY YOU?</RevealBox></Paragraph>
+        <Paragraph>3. Morality is amplified by <RevealBox>MIGHT</RevealBox></Paragraph>
+
+        <Quote Citation="Genesis 3:4-5">
+            You will not sure die, the serpant said to the woman. For God knows that when you eat of it your eyes will be opened, and you will be like God, knowing good and evil.
+        </Quote>
+
+        <Paragraph>4. Morality is won by <RevealBox>SPIRITUAL FORCES</RevealBox></Paragraph>
+
+        <Quote Citation="Ephesians 6:12">
+            For our struggle is not against flesh and blood, but against the rulers, against the authorities, against the powers of this dark world and against the spiritual forces of evil in the heavenely realms.
+        </Quote>
+
+        <Paragraph>TAKE AWAY: What small battle do you need to win TODAY so you can face your ultimate enemy SOMEDAY?</Paragraph>
+
+        <TextInput PlaceHolder="Enter your battle to win"/>
+
+        <Quote Citation="Jacob Riis">
+            I go look at a stonecutter hammering away at his rock, perhaps a hundred times without so much as a crack showing in it. Yet at the hundred and first blow it will split in two, and I know it was not that blow that did it, but all that had gone before.
+       </Quote>
+       
+    </StackPanel>
+</Note>

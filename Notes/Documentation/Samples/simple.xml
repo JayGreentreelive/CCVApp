@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Note StyleSheet="http://www.jeredmcferron.com/sample_style.xml">
+
+    <!--Start a main stack that will cover the viewable window-->
+    <StackPanel PaddingLeft="5%" PaddingRight="5%" Top="100" Alignment="Left">
+    
+        <!--Demonstrate basic text-->
+        <Paragraph>Here's some basic text.</Paragraph>
+        
+        <!--Show a reveal box on its own-->
+        <RevealBox>REVEALED!</RevealBox>
+        
+        <!--Show a paragraph with a reveal box embedded in it.-->
+        <Paragraph>Another Paragraph <RevealBox>EMBEDDED REVEAL!</RevealBox> with a reveal box embedded!</Paragraph>
+        
+        <!--A stack can be within another stack when you want to do custom layouts-->
+        <StackPanel Debug="True" Width="50%" PaddingLeft="5%" PaddingTop="5%" PaddingRight="5%" PaddingBottom="5%">
+            <Paragraph>An inner stack with 5 percent padding! Note it wants only 50 percent of the width of its parent. Also notice how this text stays away from the edges thanks to the padding.</Paragraph>
+        </StackPanel>
+        
+        <!--Another stack to show the flexibility in laying out text.-->
+        <StackPanel Debug="True" Width="50%" Alignment="Right" PaddingLeft="5%" PaddingTop="5%" PaddingRight="5%" PaddingBottom="5%">
+            <Paragraph>This stack has 5 percent padding and requests right alignment within its parent. We also set this width to 50 percent. Again the text stays away from the edges thanks to padding.</Paragraph>
+        </StackPanel>
+        
+        <!--Text in a paragraph can be positioned within its parent, and the text itself can be aligned-->
+        <Paragraph Debug="True" Width="50%" Top="25" Alignment="Center" ChildAlignment="Right">Heres some text in a paragraph. The width is set to 50 percent, and we set its top 25 pixels down from the control above it. We request the paragraph container to be centered, and this text within it to be right aligned. Pretty cool huh?</Paragraph>
+        
+    </StackPanel>
+</Note>

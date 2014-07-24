@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>{CED4668A-3978-4548-8291-B72682C483B4}</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Notes</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)BaseControl.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ControlStyles.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Header.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IUIControl.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Label.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Note.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Paragraph.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Quote.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RevealBox.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StackPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TextInput.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PlatformLabel.cs" />
+  </ItemGroup>
+</Project>
