@@ -2,6 +2,7 @@
 using System.Xml;
 using MonoTouch.UIKit;
 using System.Drawing;
+using Notes.PlatformUI;
 
 namespace Notes
 {

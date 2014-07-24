@@ -51,6 +51,12 @@ namespace Notes
             Quote_PlatformLabel.TextColor = fontColor;
             Citation_PlatformLabel.TextColor = fontColor;
 
+            if(mStyle.mBackgroundColor.HasValue)
+            {
+                Quote_PlatformLabel.BackgroundColor = Styles.Style.GetUIColor(mStyle.mBackgroundColor.Value);
+                Citation_PlatformLabel.BackgroundColor = Styles.Style.GetUIColor(mStyle.mBackgroundColor.Value);
+            }
+
 
             // if our left position is requested as a %, then that needs to be % of parent width
             if(bounds.X < 1)
@@ -142,17 +148,18 @@ namespace Notes
             Quote_PlatformLabel.SizeToFit();
 
 			// now that we know our text size, we can adjust the citation
-            Citation_PlatformLabel.Frame = new RectangleF(Quote_PlatformLabel.Frame.Right - Citation_PlatformLabel.Frame.Width, 
+            Citation_PlatformLabel.Frame = new RectangleF(Quote_PlatformLabel.Frame.Left, 
                                                           Quote_PlatformLabel.Frame.Bottom, 
-                                                          Citation_PlatformLabel.Frame.Width,
+                                                          Quote_PlatformLabel.Frame.Width,
                                                           Citation_PlatformLabel.Frame.Height);
+            Citation_PlatformLabel.TextAlignment = UITextAlignment.Right;
 
 
             // get a bounding frame for the quote and citation
             RectangleF frame = Parser.CalcBoundingFrame(Quote_PlatformLabel.Frame, Citation_PlatformLabel.Frame);
 
             // reintroduce vertical padding
-            bounds.Height = frame.Height + topPadding + bottomPadding; 
+            bounds.Height = frame.Height + topPadding + bottomPadding;
 
             // and store that as our bounds
             Bounds = bounds;

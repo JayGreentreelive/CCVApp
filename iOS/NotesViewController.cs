@@ -102,7 +102,7 @@ namespace CCVApp
 			{
                 if(Note != null)
                 {
-				    Note.TouchesEnded(touch);
+                    Note.TouchesEnded(touch.LocationInView(UIScrollView));
                 }
 			}
 		}

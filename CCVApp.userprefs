@@ -1,17 +1,20 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhoneRetina.7.1" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Notes/PlatformLabel.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Notes/Label.cs">
     <Files>
-      <File FileName="iOS/AppDelegate.cs" Line="13" Column="28" />
-      <File FileName="iOS/NotesViewController.cs" Line="157" Column="52" />
-      <File FileName="iOS/Info.plist" />
-      <File FileName="Notes/Label.cs" Line="17" Column="13" />
-      <File FileName="Notes/PlatformLabel.cs" Line="12" Column="12" />
-      <File FileName="../RockMobile/CoreLocation/iBeacon/iBeacon.cs" Line="17" Column="27" />
+      <File FileName="Notes/Label.cs" Line="32" Column="51" />
+      <File FileName="../RockMobile/CoreLocation/iBeacon/iBeacon.cs" Line="29" Column="1" />
+      <File FileName="Notes/ControlStyles.cs" Line="269" Column="61" />
+      <File FileName="Notes/PlatformUI/PlatformLabel.cs" Line="50" Column="15" />
+      <File FileName="Notes/PlatformUI/PlatformCommon.cs" Line="7" Column="55" />
+      <File FileName="Notes/PlatformUI/iOS/iOSLabel.cs" Line="76" Column="13" />
+      <File FileName="Notes/Header.cs" Line="52" Column="46" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
-        <State expanded="True" />
+        <State expanded="True">
+          <Node name="iOS" expanded="True" selected="True" />
+        </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>

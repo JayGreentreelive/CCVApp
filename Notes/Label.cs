@@ -1,25 +1,20 @@
 ﻿using System;
-using MonoTouch.UIKit;
 using System.Xml;
-using MonoTouch.Foundation;
 using System.Collections.Generic;
 using System.Drawing;
+using Notes.PlatformUI;
 
 namespace Notes
 {
     public class Label : BaseControl
     {
-        protected UILabel PlatformLabel { get; set; }
+        protected PlatformLabel PlatformLabel { get; set; }
 
         protected override void Initialize ()
         {
             base.Initialize ();
 
-            // TODO: Update this to be like iBeacon, where it's platform abstracted
-            PlatformLabel = new MonoTouch.UIKit.UILabel ();
-
-            PlatformLabel.Layer.AnchorPoint = new PointF (0, 0);
-            PlatformLabel.TextAlignment = UITextAlignment.Left;
+            PlatformLabel = PlatformLabel.Create();
         }
 
         protected Label()
@@ -37,8 +32,13 @@ namespace Notes
             mStyle = parentParams.Style;
             Styles.Style.MergeStyleAttributesWithDefaults(ref mStyle, ref ControlStyles.mText);
 
-            PlatformLabel.Font = UIFont.FromName(mStyle.mFont.mName, mStyle.mFont.mSize.Value);
-            PlatformLabel.TextColor = Styles.Style.GetUIColor(mStyle.mFont.mColor.Value);
+            PlatformLabel.SetFont(mStyle.mFont.mName, mStyle.mFont.mSize.Value);
+            PlatformLabel.TextColor = mStyle.mFont.mColor.Value;
+
+            if(mStyle.mBackgroundColor.HasValue)
+            {
+                PlatformLabel.BackgroundColor = mStyle.mBackgroundColor.Value;
+            }
 
             // set the dimensions and position
             if(bounds.Width == 0)
@@ -53,7 +53,7 @@ namespace Notes
             SetText (text);
 
             // position ourselves in absolute coordinates, and trust our parent to offset us to be relative to them.
-            PlatformLabel.Layer.Position = new PointF (bounds.X, bounds.Y);
+            PlatformLabel.Position = new PointF (bounds.X, bounds.Y);
         }
 
         protected void SetText (string text)
@@ -68,27 +68,26 @@ namespace Notes
         {
             base.AddOffset (xOffset, yOffset);
 
-            PlatformLabel.Layer.Position = new PointF (PlatformLabel.Layer.Position.X + xOffset, 
-                PlatformLabel.Layer.Position.Y + yOffset);
+            PlatformLabel.Position = new PointF (PlatformLabel.Position.X + xOffset, 
+                                                 PlatformLabel.Position.Y + yOffset);
         }
 
         public override void AddToView (object obj)
         {
             base.AddToView (obj);
 
-            ((UIView)obj).AddSubview (PlatformLabel);
+            PlatformLabel.AddAsSubview(obj);
         }
 
         public override void RemoveFromView ()
         {
             base.RemoveFromView ();
 
-            PlatformLabel.RemoveFromSuperview ();
+            PlatformLabel.RemoveAsSubview();
         }
 
         public override RectangleF GetFrame ()
         {
-            //base.DebugFrameView.Frame = PlatformLabel.Frame;
             return PlatformLabel.Frame;
         }
     }

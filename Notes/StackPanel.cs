@@ -161,7 +161,7 @@ namespace Notes
             base.DebugFrameView.Frame = Bounds;
 		}
 
-		public override void TouchesEnded (UITouch touch)
+		public override void TouchesEnded (PointF touch)
 		{
 			// let each child handle it
 			foreach(IUIControl control in ChildControls)

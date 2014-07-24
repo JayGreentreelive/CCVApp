@@ -87,6 +87,7 @@ namespace Notes
             // now calculate the available width based on padding. (Don't actually change our width)
             float availableWidth = bounds.Width - leftPadding - rightPadding;
 
+            bool trimmedLeadingSpace = false;
 
 			bool finishedReading = false;
             while (finishedReading == false && reader.Read ()) 
@@ -99,9 +100,9 @@ namespace Notes
 						if(control != null)
 						{
                             // only allow RevealBoxes as children.
-                            if(control as RevealBox == null)
+                            if(control as RevealBox == null && control as TextInput == null)
                             {
-                                throw new InvalidOperationException("RevealBox is the only supported child of Paragraph.");
+                                throw new InvalidOperationException("RevealBox and TextInput are the only supported children of Paragraph.");
                             }
 							ChildControls.Add(control);
 						}
@@ -112,6 +113,14 @@ namespace Notes
                     {
                         // grab the text. Remove leading/trailing spaces and lines
                         string text = reader.Value.Replace(System.Environment.NewLine, "");
+
+                        // Remove leading spaces only on the very first set of text within this paragraph.
+                        // This allows authors to put the Paragraph tag on a seperate line from the content.
+                        if(trimmedLeadingSpace == false)
+                        {
+                            text = text.TrimStart(' ');
+                            trimmedLeadingSpace = true;
+                        }
 
                         // now break it into words so we can do word wrapping
                         string[] words = text.Split(' ');
@@ -250,8 +259,13 @@ namespace Notes
             float xRowAdjust = 0;
             switch(ChildHorzAlignment)
             {
-                case Alignment.Right:  xRowAdjust = (maxWidth - rowWidth); break;
-                case Alignment.Center: xRowAdjust = ((maxWidth / 2) - (rowWidth / 2)); break;
+                // JHM Note 7-24: Yesterday I changed bounds.Width to be MaxRowWidth. I can't remember why.
+                // Today Jon found that if you put a single line of text, you can't align it because its
+                // width is the max width, which causes no movement in the paragraph.
+                // I made it bounds.width again and can't find any problems with it, but I'm leaving the old calculation
+                // here just in case we need it again. :-\
+                case Alignment.Right:  xRowAdjust = (bounds.Width - rowWidth); break;
+                case Alignment.Center: xRowAdjust = ((bounds.Width / 2) - (rowWidth / 2)); break;
                 case Alignment.Left:   xRowAdjust = 0; break;
             }
 
@@ -281,7 +295,7 @@ namespace Notes
             base.DebugFrameView.Frame = Bounds;
 		}
 
-		public override void TouchesEnded (UITouch touch)
+		public override void TouchesEnded (PointF touch)
 		{
 			// let each child handle it
 			foreach(IUIControl control in ChildControls)

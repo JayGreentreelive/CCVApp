@@ -128,7 +128,7 @@ namespace Notes
 			return frame;
 		}
 
-		public void TouchesEnded (UITouch touch)
+		public void TouchesEnded (PointF touch)
 		{
 			// notify all controls
 			foreach(IUIControl control in ChildControls)

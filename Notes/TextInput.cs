@@ -39,14 +39,34 @@ namespace Notes
             PlatformTextField.Font = UIFont.FromName(mStyle.mFont.mName, mStyle.mFont.mSize.Value);
             PlatformTextField.TextColor = Styles.Style.GetUIColor(mStyle.mFont.mColor.Value);
            
+            if(mStyle.mBackgroundColor.HasValue)
+            {
+                PlatformTextField.BackgroundColor = Styles.Style.GetUIColor(mStyle.mBackgroundColor.Value);
+            }
 
-			// if no width was specified, use our parents
-			if(bounds.Width == 0)
-			{
-				// always take the available width, in case this control
-				// is specified to be offset relative to its parent
-                bounds.Width = parentParams.Width - bounds.X;
-			}
+            // if our left position is requested as a %, then that needs to be % of parent width
+            if(bounds.X < 1)
+            {
+                bounds.X = parentParams.Width * bounds.X;
+            }
+
+            // if our top position is requested as a %, then that needs to be % of parent width
+            if(bounds.Y < 1)
+            {
+                bounds.Y = parentParams.Height * bounds.Y;
+            }
+
+            //WIDTH
+            if(bounds.Width == 0)
+            {
+                // if 0, just take the our parents width
+                bounds.Width = Math.Max(1, parentParams.Width - bounds.X);
+            }
+            // if < 1 it's a percent and we should convert
+            else if(bounds.Width <= 1)
+            {
+                bounds.Width = Math.Max(1, parentParams.Width - bounds.X) * bounds.Width;
+            }
 
 			// set the dimensions and position
 			PlatformTextField.Bounds = bounds;
@@ -95,8 +115,9 @@ namespace Notes
 				}
 			}
 
-			// position ourselves in absolute coordinates, and trust our parent to offset us to be relative to them.
-            PlatformTextField.Layer.Position = new PointF (bounds.X, bounds.Y);
+            // size to fit to calculate the height, then reset our width with that height.
+            PlatformTextField.SizeToFit();
+            PlatformTextField.Bounds = new RectangleF(PlatformTextField.Bounds.Left, PlatformTextField.Bounds.Top, parentParams.Width, PlatformTextField.Bounds.Height);
 
             // set the color of the hint text
             PlatformTextField.AttributedPlaceholder = new NSAttributedString (
@@ -104,10 +125,9 @@ namespace Notes
                 font: PlatformTextField.Font,
                 foregroundColor: PlatformTextField.TextColor
             );
-            PlatformTextField.SizeToFit();
 		}
 
-		public override void TouchesEnded (UITouch touch)
+		public override void TouchesEnded (PointF touch)
 		{
 			// hide the keyboard
 			PlatformTextField.ResignFirstResponder();

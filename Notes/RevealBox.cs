@@ -20,14 +20,31 @@ namespace Notes
 			RectangleF bounds = new RectangleF();
             ParseCommonAttribs(reader, ref bounds);
 
+            // if our left position is requested as a %, then that needs to be % of parent width
+            if(bounds.X < 1)
+            {
+                bounds.X = parentParams.Width * bounds.X;
+            }
+
+            // if our top position is requested as a %, then that needs to be % of parent width
+            if(bounds.Y < 1)
+            {
+                bounds.Y = parentParams.Height * bounds.Y;
+            }
+
+
             // take our parent's style but override with anything we set
             mStyle = parentParams.Style;
             Styles.Style.ParseStyleAttributesWithDefaults(reader, ref mStyle, ref ControlStyles.mRevealBox);
 
             // create the font that either we or our parent defined
-            PlatformLabel.Font = UIFont.FromName(mStyle.mFont.mName, mStyle.mFont.mSize.Value);
-            PlatformLabel.TextColor = Styles.Style.GetUIColor(mStyle.mFont.mColor.Value);
+            PlatformLabel.SetFont(mStyle.mFont.mName, mStyle.mFont.mSize.Value);
+            PlatformLabel.TextColor = mStyle.mFont.mColor.Value;
 
+            if(mStyle.mBackgroundColor.HasValue)
+            {
+                PlatformLabel.BackgroundColor = mStyle.mBackgroundColor.Value;
+            }
 
 			// get text
 			string result = reader.GetAttribute("Text");
@@ -91,14 +108,17 @@ namespace Notes
             }
             PlatformLabel.Text = "[TOUCH]";
 
-            PlatformLabel.Layer.Position = new PointF (bounds.X, bounds.Y);
+            PlatformLabel.Position = new PointF (bounds.X, bounds.Y);
 		}
 
-		public override void TouchesEnded (UITouch touch)
+		public override void TouchesEnded (PointF touch)
 		{
 			// if the touch that was released was in our region, toggle the text
-			PointF point = touch.LocationInView(PlatformLabel);
-			if(PlatformLabel.Bounds.Contains(point))
+            PointF point = new PointF(touch.X - PlatformLabel.Position.X, touch.Y - PlatformLabel.Position.Y);
+
+            //TODO: We can expand this to a radius to make it easier to tap.
+			
+            if(PlatformLabel.Bounds.Contains(point))
 			{
 				SetText(HiddenText);
 			}

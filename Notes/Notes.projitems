@@ -21,6 +21,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)RevealBox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StackPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TextInput.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PlatformLabel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\PlatformCommon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\PlatformLabel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\iOS\iOSLabel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)PlatformUI\" />
+    <Folder Include="$(MSBuildThisFileDirectory)PlatformUI\iOS\" />
   </ItemGroup>
 </Project>

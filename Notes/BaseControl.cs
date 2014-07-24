@@ -1,14 +1,14 @@
 ﻿using System;
-using MonoTouch.UIKit;
 using System.Drawing;
 using System.Xml;
 using Notes.Styles;
+using Notes.PlatformUI;
 
 namespace Notes
 {
 	public class BaseControl : IUIControl
 	{
-		protected UIView DebugFrameView { get; set; }
+		protected PlatformLabel DebugFrameView { get; set; }
 		protected bool ShowDebugFrame { get; set; }
 
         protected Style mStyle;
@@ -35,11 +35,10 @@ namespace Notes
             mStyle.mAlignment = Alignment.Inherit;
 
             //Debugging - show the grid frames
-			DebugFrameView = new MonoTouch.UIKit.UIView();
-			DebugFrameView.Layer.AnchorPoint = new PointF(0, 0);
-			DebugFrameView.Layer.Opacity = .50f;
-			DebugFrameView.Layer.BackgroundColor = UIColor.Blue.CGColor;
-			DebugFrameView.Layer.ZPosition = 100;
+            DebugFrameView = PlatformLabel.Create();
+			DebugFrameView.Opacity = .50f;
+            DebugFrameView.BackgroundColor = 0x0000FFFF;
+			DebugFrameView.ZPosition = 100;
 			//Debugging
 		}
 
@@ -119,8 +118,8 @@ namespace Notes
 		{
 			if(ShowDebugFrame)
 			{
-				DebugFrameView.Layer.Position = new PointF(DebugFrameView.Layer.Position.X + xOffset, 
-														   DebugFrameView.Layer.Position.Y + yOffset);
+				DebugFrameView.Position = new PointF(DebugFrameView.Position.X + xOffset, 
+													 DebugFrameView.Position.Y + yOffset);
 			}
 		}
 
@@ -128,7 +127,7 @@ namespace Notes
 		{
 			if(ShowDebugFrame)
 			{
-				((UIView)obj).AddSubview(DebugFrameView);
+                DebugFrameView.AddAsSubview(obj);
 			}
 		}
 
@@ -136,11 +135,11 @@ namespace Notes
 		{
 			if(ShowDebugFrame)
 			{
-				DebugFrameView.RemoveFromSuperview();
+				DebugFrameView.RemoveAsSubview();
 			}
 		}
 
-		public virtual void TouchesEnded(UITouch touch)
+		public virtual void TouchesEnded(PointF touch)
 		{
 		}
 
@@ -155,4 +154,4 @@ namespace Notes
 		}
 	}
 }
-
+    

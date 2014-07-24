@@ -1,5 +1,5 @@
 ﻿using System;
-using MonoTouch.UIKit;
+using System.Drawing;
 
 namespace Notes
 {
@@ -11,7 +11,7 @@ namespace Notes
 		void AddToView(object obj);
 		void RemoveFromView();
 
-		void TouchesEnded (UITouch touch);
+		void TouchesEnded (PointF touch);
 
         Styles.Alignment GetHorzAlignment();
 	}
