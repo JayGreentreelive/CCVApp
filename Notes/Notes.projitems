@@ -9,24 +9,25 @@
     <Import_RootNamespace>Notes</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)BaseControl.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ControlStyles.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Header.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IUIControl.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Label.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Note.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Paragraph.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Parser.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Quote.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)RevealBox.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)StackPanel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)TextInput.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\PlatformCommon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\PlatformLabel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\iOS\iOSLabel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\BaseControl.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\ControlStyles.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Header.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\IUIControl.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Label.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Note.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Paragraph.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Parser.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Quote.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\RevealBox.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\StackPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\TextInput.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)PlatformUI\" />
     <Folder Include="$(MSBuildThisFileDirectory)PlatformUI\iOS\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Controls\" />
   </ItemGroup>
 </Project>

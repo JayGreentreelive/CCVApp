@@ -1,5 +1,5 @@
 ﻿using System;
-using MonoTouch.UIKit;
+using Notes.PlatformUI;
 using System.Xml;
 using System.Drawing;
 
@@ -7,26 +7,16 @@ namespace Notes
 {
 	public class Quote : BaseControl
 	{
-		protected UILabel Quote_PlatformLabel { get; set; }
-		protected UILabel Citation_PlatformLabel { get; set; }
+		protected PlatformLabel QuoteLabel { get; set; }
+		protected PlatformLabel Citation { get; set; }
         protected RectangleF Bounds { get; set; }
 
 		protected override void Initialize()
 		{
 			base.Initialize();
 
-			// TODO: Update this to be like iBeacon, where it's platform abstracted
-			Quote_PlatformLabel = new MonoTouch.UIKit.UILabel();
-			Citation_PlatformLabel = new MonoTouch.UIKit.UILabel();
-
-			// these could be optional in XML
-			Quote_PlatformLabel.Layer.AnchorPoint = new PointF(0, 0);
-			Quote_PlatformLabel.TextAlignment = UITextAlignment.Left;
-			Quote_PlatformLabel.LineBreakMode = UILineBreakMode.WordWrap;
-			Quote_PlatformLabel.Lines = 0;
-
-			Citation_PlatformLabel.Layer.AnchorPoint = new PointF(0, 0);
-			Citation_PlatformLabel.TextAlignment = UITextAlignment.Left;
+            QuoteLabel = PlatformLabel.Create();
+            Citation = PlatformLabel.Create();
 		}
 
         public Quote (CreateParams parentParams, XmlReader reader)
@@ -43,18 +33,16 @@ namespace Notes
 
 
             // create the font that either we or our parent defined
-            Quote_PlatformLabel.Font = UIFont.FromName(mStyle.mFont.mName, mStyle.mFont.mSize.Value);
-            Citation_PlatformLabel.Font = UIFont.FromName(mStyle.mFont.mName, mStyle.mFont.mSize.Value);
+            QuoteLabel.SetFont(mStyle.mFont.mName, mStyle.mFont.mSize.Value);
+            Citation.SetFont(mStyle.mFont.mName, mStyle.mFont.mSize.Value);
 
-            UIColor fontColor = Styles.Style.GetUIColor(mStyle.mFont.mColor.Value);
-
-            Quote_PlatformLabel.TextColor = fontColor;
-            Citation_PlatformLabel.TextColor = fontColor;
+            QuoteLabel.TextColor = mStyle.mFont.mColor.Value;
+            Citation.TextColor = mStyle.mFont.mColor.Value;
 
             if(mStyle.mBackgroundColor.HasValue)
             {
-                Quote_PlatformLabel.BackgroundColor = Styles.Style.GetUIColor(mStyle.mBackgroundColor.Value);
-                Citation_PlatformLabel.BackgroundColor = Styles.Style.GetUIColor(mStyle.mBackgroundColor.Value);
+                QuoteLabel.BackgroundColor = mStyle.mBackgroundColor.Value;
+                Citation.BackgroundColor = mStyle.mBackgroundColor.Value;
             }
 
 
@@ -92,7 +80,7 @@ namespace Notes
             float availableWidth = bounds.Width - leftPadding - rightPadding;
 
             // Set the bounds and position for the frame (except Height, which we'll calculate based on the text)
-            Quote_PlatformLabel.Frame = new RectangleF(bounds.X + leftPadding, bounds.Y + topPadding, availableWidth, 0);
+            QuoteLabel.Frame = new RectangleF(bounds.X + leftPadding, bounds.Y + topPadding, availableWidth, 0);
 
 
 			// expect the citation to be an attribute
@@ -100,8 +88,8 @@ namespace Notes
 			if(String.IsNullOrEmpty(result) == false)
 			{
 				// set and resize the citation to fit
-				Citation_PlatformLabel.Text = result;
-				Citation_PlatformLabel.SizeToFit();
+				Citation.Text = result;
+				Citation.SizeToFit();
 			}
 
             bool finishedScripture = false;
@@ -115,7 +103,7 @@ namespace Notes
 						{
 							case "Text":
 							{
-								Quote_PlatformLabel.Text = reader.ReadElementContentAsString();
+								QuoteLabel.Text = reader.ReadElementContentAsString();
 								break;
 							}
 						}
@@ -125,7 +113,7 @@ namespace Notes
                     case XmlNodeType.Text:
                     {
                         // support text as embedded in the element
-                        Quote_PlatformLabel.Text = reader.Value.Replace(System.Environment.NewLine, "").Trim(' ');
+                        QuoteLabel.Text = reader.Value.Replace(System.Environment.NewLine, "").Trim(' ');
 
                         break;
                     }
@@ -145,18 +133,20 @@ namespace Notes
 			}
 
             // We forced the text to fit within the width specified above, so this will simply calculate the height.
-            Quote_PlatformLabel.SizeToFit();
+            QuoteLabel.SizeToFit();
 
 			// now that we know our text size, we can adjust the citation
-            Citation_PlatformLabel.Frame = new RectangleF(Quote_PlatformLabel.Frame.Left, 
-                                                          Quote_PlatformLabel.Frame.Bottom, 
-                                                          Quote_PlatformLabel.Frame.Width,
-                                                          Citation_PlatformLabel.Frame.Height);
-            Citation_PlatformLabel.TextAlignment = UITextAlignment.Right;
+            Citation.Frame = new RectangleF(QuoteLabel.Frame.Left, 
+                                            QuoteLabel.Frame.Bottom, 
+                                            QuoteLabel.Frame.Width,
+                                            Citation.Frame.Height);
+
+
+            Citation.TextAlignment = TextAlignment.Right;
 
 
             // get a bounding frame for the quote and citation
-            RectangleF frame = Parser.CalcBoundingFrame(Quote_PlatformLabel.Frame, Citation_PlatformLabel.Frame);
+            RectangleF frame = Parser.CalcBoundingFrame(QuoteLabel.Frame, Citation.Frame);
 
             // reintroduce vertical padding
             bounds.Height = frame.Height + topPadding + bottomPadding;
@@ -170,11 +160,11 @@ namespace Notes
 		{
 			base.AddOffset(xOffset, yOffset);
 
-            Quote_PlatformLabel.Layer.Position = new PointF (Quote_PlatformLabel.Layer.Position.X + xOffset, 
-                                                             Quote_PlatformLabel.Layer.Position.Y + yOffset);
+            QuoteLabel.Position = new PointF (QuoteLabel.Position.X + xOffset, 
+                                              QuoteLabel.Position.Y + yOffset);
 
-            Citation_PlatformLabel.Layer.Position = new PointF (Citation_PlatformLabel.Layer.Position.X + xOffset, 
-                                                                Citation_PlatformLabel.Layer.Position.Y + yOffset);
+            Citation.Position = new PointF (Citation.Position.X + xOffset, 
+                                            Citation.Position.Y + yOffset);
 
             // update our bounds by the new offsets.
             Bounds = new RectangleF(Bounds.X + xOffset, Bounds.Y + yOffset, Bounds.Width, Bounds.Height);
@@ -185,16 +175,16 @@ namespace Notes
 		{
 			base.AddToView(obj);
 
-			((UIView)obj).AddSubview(Quote_PlatformLabel);
-			((UIView)obj).AddSubview(Citation_PlatformLabel);
+            QuoteLabel.AddAsSubview(obj);
+            Citation.AddAsSubview(obj);
 		}
 
 		public override void RemoveFromView()
 		{
 			base.RemoveFromView();
 
-			Quote_PlatformLabel.RemoveFromSuperview();
-			Citation_PlatformLabel.RemoveFromSuperview();
+            QuoteLabel.RemoveAsSubview();
+			Citation.RemoveAsSubview();
 		}
 
 		public override System.Drawing.RectangleF GetFrame()

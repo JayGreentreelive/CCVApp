@@ -128,7 +128,7 @@ namespace CCVApp
 				Indicator.StartAnimating();
 
 				// grab the notes (clearly this should not be hard-coded)
-				HttpWebRequest.Instance.MakeAsyncRequest("http://www.jeredmcferron.com/test_note.xml", OnCompletion);
+				HttpWebRequest.Instance.MakeAsyncRequest("http://www.jeredmcferron.com/sample_note.xml", OnCompletion);
 			}
 		}
 
@@ -189,7 +189,8 @@ namespace CCVApp
                             Note.AddToView(this.UIScrollView);
 
                             // take the requested background color
-                            UIScrollView.BackgroundColor = Notes.Styles.Style.GetUIColor(ControlStyles.mMainNote.mBackgroundColor.Value);
+                            //TODO: Not acceptable to leave this!
+                            UIScrollView.BackgroundColor = Notes.PlatformUI.iOSLabel.GetUIColor(ControlStyles.mMainNote.mBackgroundColor.Value);
 
                             // update the height of the scroll view to fit all content
                             RectangleF frame = Note.GetFrame();

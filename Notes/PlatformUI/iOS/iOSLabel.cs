@@ -17,9 +17,12 @@ namespace Notes
                 Label = new UILabel();
                 Label.Layer.AnchorPoint = new PointF (0, 0);
                 Label.TextAlignment = UITextAlignment.Left;
+                Label.LineBreakMode = UILineBreakMode.WordWrap;
+                Label.Lines = 0;
             }
 
-            protected static UIColor GetUIColor(uint color)
+            //TODO: Do not let outside entities call this (right now I am till I finish the port)
+            public static UIColor GetUIColor(uint color)
             {
                 return new UIColor(
                     (float)((color & 0xFF000000) >> 24) / 255, //TODO: obviously completely unacceptable.
@@ -101,6 +104,17 @@ namespace Notes
             {
                 Label.Text = text;
             }
+
+            protected override TextAlignment getTextAlignment()
+            {
+                return (TextAlignment)Label.TextAlignment;
+            }
+
+            protected override void setTextAlignment(TextAlignment alignment)
+            {
+                Label.TextAlignment = (UITextAlignment)alignment;
+            }
+
 
             public override void AddAsSubview(object masterView)
             {

@@ -37,11 +37,11 @@ namespace Notes
 
             // create the font that either we or our parent defined
             PlatformTextField.Font = UIFont.FromName(mStyle.mFont.mName, mStyle.mFont.mSize.Value);
-            PlatformTextField.TextColor = Styles.Style.GetUIColor(mStyle.mFont.mColor.Value);
+            PlatformTextField.TextColor = PlatformUI.iOSLabel.GetUIColor(mStyle.mFont.mColor.Value);
            
             if(mStyle.mBackgroundColor.HasValue)
             {
-                PlatformTextField.BackgroundColor = Styles.Style.GetUIColor(mStyle.mBackgroundColor.Value);
+                PlatformTextField.BackgroundColor = PlatformUI.iOSLabel.GetUIColor(mStyle.mBackgroundColor.Value);
             }
 
             // if our left position is requested as a %, then that needs to be % of parent width

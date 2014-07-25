@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Xml;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
 using System.Drawing;
-using RockMobile.Network;
 using System.IO;
+using RockMobile.Network;
 
 namespace Notes
 {
@@ -258,18 +256,6 @@ namespace Notes
                 {
                     style.mBackgroundColor = defaultStyle.mBackgroundColor;
                 }
-            }
-
-            public static UIColor GetUIColor(uint intColor)
-            {
-                UIColor color = new UIColor(
-                    (float)((intColor & 0xFF000000) >> 24) / 255, //TODO: obviously completely unacceptable.
-                    (float)((intColor & 0x00FF0000) >> 16) / 255, 
-                    (float)((intColor & 0x0000FF00) >> 8) / 255, 
-                    (float)((intColor & 0x000000FF)) / 255);
-
-
-                return color;
             }
         }
     }

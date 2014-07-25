@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Xml;
-using MonoTouch.UIKit;
 using System.Drawing;
 
 namespace Notes

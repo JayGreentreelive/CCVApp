@@ -79,6 +79,14 @@ namespace Notes
             protected abstract string getText();
             protected abstract void setText(string text);
 
+            public TextAlignment TextAlignment
+            {
+                get { return getTextAlignment(); }
+                set { setTextAlignment(value); }
+            }
+            protected abstract TextAlignment getTextAlignment();
+            protected abstract void setTextAlignment(TextAlignment alignment);
+
 
             public abstract void AddAsSubview(object masterView);
             public abstract void RemoveAsSubview();

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml;
-using MonoTouch.UIKit;
 using System.Drawing;
 using System.IO;
 
@@ -105,7 +104,7 @@ namespace Notes
 			}
 		}
 
-		public void AddToView (UIView view)
+		public void AddToView (object view)
 		{
 			foreach(IUIControl uiControl in ChildControls)
 			{
