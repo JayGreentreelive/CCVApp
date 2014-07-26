@@ -1,26 +1,19 @@
 ﻿using System;
-using MonoTouch.UIKit;
 using System.Xml;
 using System.Drawing;
-using MonoTouch.Foundation;
+using Notes.PlatformUI;
 
 namespace Notes
 {
 	public class TextInput : BaseControl
 	{
-		protected UITextField PlatformTextField { get; set; }
+		protected PlatformTextField TextField { get; set; }
 
 		protected override void Initialize()
 		{
 			base.Initialize();
 
-			// TODO: Update this to be like iBeacon, where it's platform abstracted
-			PlatformTextField = new UITextField();
-
-			// these could be optional in XML
-			PlatformTextField.Layer.AnchorPoint = new PointF(0, 0);
-			PlatformTextField.Bounds = new RectangleF();
-			PlatformTextField.TextAlignment = UITextAlignment.Left;
+            TextField = PlatformTextField.Create();
 		}
 
         public TextInput(CreateParams parentParams, XmlReader reader)
@@ -36,12 +29,12 @@ namespace Notes
             Styles.Style.ParseStyleAttributesWithDefaults(reader, ref mStyle, ref ControlStyles.mTextInput);
 
             // create the font that either we or our parent defined
-            PlatformTextField.Font = UIFont.FromName(mStyle.mFont.mName, mStyle.mFont.mSize.Value);
-            PlatformTextField.TextColor = PlatformUI.iOSLabel.GetUIColor(mStyle.mFont.mColor.Value);
+            TextField.SetFont(mStyle.mFont.mName, mStyle.mFont.mSize.Value);
+            TextField.TextColor = mStyle.mFont.mColor.Value;
            
             if(mStyle.mBackgroundColor.HasValue)
             {
-                PlatformTextField.BackgroundColor = PlatformUI.iOSLabel.GetUIColor(mStyle.mBackgroundColor.Value);
+                TextField.BackgroundColor = mStyle.mBackgroundColor.Value;
             }
 
             // if our left position is requested as a %, then that needs to be % of parent width
@@ -69,14 +62,14 @@ namespace Notes
             }
 
 			// set the dimensions and position
-			PlatformTextField.Bounds = bounds;
-            PlatformTextField.Placeholder = " ";
+			TextField.Bounds = bounds;
+            TextField.Placeholder = " ";
 
 			// get the hint text if it's as an attribute
 			string result = reader.GetAttribute("PlaceHolder");
 			if(String.IsNullOrEmpty(result) == false)
 			{
-				PlatformTextField.Placeholder = result;
+				TextField.Placeholder = result;
 			}
 
 			// parse the rest of the stream
@@ -93,7 +86,7 @@ namespace Notes
 							{
 								case "PlaceHolder":
 								{
-									PlatformTextField.Placeholder = reader.ReadElementContentAsString();
+									TextField.Placeholder = reader.ReadElementContentAsString();
 									
 									break;
 								}
@@ -116,49 +109,45 @@ namespace Notes
 			}
 
             // size to fit to calculate the height, then reset our width with that height.
-            PlatformTextField.SizeToFit();
-            PlatformTextField.Bounds = new RectangleF(PlatformTextField.Bounds.Left, PlatformTextField.Bounds.Top, parentParams.Width, PlatformTextField.Bounds.Height);
+            TextField.SizeToFit();
+            TextField.Bounds = new RectangleF(TextField.Bounds.Left, TextField.Bounds.Top, parentParams.Width, TextField.Bounds.Height);
 
             // set the color of the hint text
-            PlatformTextField.AttributedPlaceholder = new NSAttributedString (
-                PlatformTextField.Placeholder,
-                font: PlatformTextField.Font,
-                foregroundColor: PlatformTextField.TextColor
-            );
+            TextField.PlaceholderTextColor = mStyle.mFont.mColor.Value;
 		}
 
 		public override void TouchesEnded (PointF touch)
 		{
 			// hide the keyboard
-			PlatformTextField.ResignFirstResponder();
+			TextField.ResignFirstResponder();
 		}
 
 		public override void AddOffset(float xOffset, float yOffset)
 		{
 			base.AddOffset(xOffset, yOffset);
 
-			PlatformTextField.Layer.Position = new PointF(PlatformTextField.Layer.Position.X + xOffset, 
-												          PlatformTextField.Layer.Position.Y + yOffset);
+			TextField.Position = new PointF(TextField.Position.X + xOffset, 
+                                            TextField.Position.Y + yOffset);
 		}
 
 		public override void AddToView(object obj)
 		{
 			base.AddToView(obj);
 
-			((UIView)obj).AddSubview(PlatformTextField);
+            TextField.AddAsSubview(obj);
 		}
 
 		public override void RemoveFromView()
 		{
 			base.RemoveFromView();
 
-			PlatformTextField.RemoveFromSuperview();
+			TextField.RemoveAsSubview();
 		}
 
 		public override RectangleF GetFrame()
 		{
-            base.DebugFrameView.Frame = PlatformTextField.Frame;
-            return PlatformTextField.Frame;
+            base.DebugFrameView.Frame = TextField.Frame;
+            return TextField.Frame;
 		}
 	}
 }

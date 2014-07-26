@@ -89,6 +89,7 @@ namespace Notes
 			{
 				// set and resize the citation to fit
 				Citation.Text = result;
+                Citation.Bounds = bounds;
 				Citation.SizeToFit();
 			}
 

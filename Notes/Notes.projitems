@@ -24,10 +24,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controls\RevealBox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\StackPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\TextInput.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\PlatformTextField.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\iOS\iOSTextField.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\Droid\DroidLabel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)PlatformUI\" />
     <Folder Include="$(MSBuildThisFileDirectory)PlatformUI\iOS\" />
     <Folder Include="$(MSBuildThisFileDirectory)Controls\" />
+    <Folder Include="$(MSBuildThisFileDirectory)PlatformUI\Droid\" />
   </ItemGroup>
 </Project>

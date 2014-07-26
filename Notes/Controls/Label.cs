@@ -50,7 +50,7 @@ namespace Notes
             PlatformLabel.Bounds = bounds;
 
             // get text
-            SetText (text);
+            SetText(text);
 
             // position ourselves in absolute coordinates, and trust our parent to offset us to be relative to them.
             PlatformLabel.Position = new PointF (bounds.X, bounds.Y);
@@ -61,7 +61,7 @@ namespace Notes
             PlatformLabel.Text = text;
 
             // resize the label to fit the text
-            PlatformLabel.SizeToFit ();
+            PlatformLabel.SizeToFit();
         }
 
         public override void AddOffset (float xOffset, float yOffset)

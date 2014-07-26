@@ -7,6 +7,8 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Notes", "Notes\Notes.shproj
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "RockMobile", "..\RockMobile\RockMobile.shproj", "{A72997A9-2CAA-402A-AA22-632CB99DC3DD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Droid", "Droid\Droid.csproj", "{68BFCE9C-3ABC-4ACC-9054-BA9340AA598C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|iPhoneSimulator = Debug|iPhoneSimulator
@@ -17,6 +19,18 @@ Global
 		AppStore|iPhone = AppStore|iPhone
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{68BFCE9C-3ABC-4ACC-9054-BA9340AA598C}.Ad-Hoc|iPhone.ActiveCfg = Release|Any CPU
+		{68BFCE9C-3ABC-4ACC-9054-BA9340AA598C}.Ad-Hoc|iPhone.Build.0 = Release|Any CPU
+		{68BFCE9C-3ABC-4ACC-9054-BA9340AA598C}.AppStore|iPhone.ActiveCfg = Release|Any CPU
+		{68BFCE9C-3ABC-4ACC-9054-BA9340AA598C}.AppStore|iPhone.Build.0 = Release|Any CPU
+		{68BFCE9C-3ABC-4ACC-9054-BA9340AA598C}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{68BFCE9C-3ABC-4ACC-9054-BA9340AA598C}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{68BFCE9C-3ABC-4ACC-9054-BA9340AA598C}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{68BFCE9C-3ABC-4ACC-9054-BA9340AA598C}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{68BFCE9C-3ABC-4ACC-9054-BA9340AA598C}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{68BFCE9C-3ABC-4ACC-9054-BA9340AA598C}.Release|iPhone.Build.0 = Release|Any CPU
+		{68BFCE9C-3ABC-4ACC-9054-BA9340AA598C}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{68BFCE9C-3ABC-4ACC-9054-BA9340AA598C}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 		{8493BB83-6542-4BAE-BE1B-FCFE349AF1E6}.Ad-Hoc|iPhone.ActiveCfg = Ad-Hoc|iPhone
 		{8493BB83-6542-4BAE-BE1B-FCFE349AF1E6}.Ad-Hoc|iPhone.Build.0 = Ad-Hoc|iPhone
 		{8493BB83-6542-4BAE-BE1B-FCFE349AF1E6}.AppStore|iPhone.ActiveCfg = AppStore|iPhone
@@ -31,6 +45,6 @@ Global
 		{8493BB83-6542-4BAE-BE1B-FCFE349AF1E6}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = iOS\iOS.csproj
+		StartupItem = Droid\Droid.csproj
 	EndGlobalSection
 EndGlobal

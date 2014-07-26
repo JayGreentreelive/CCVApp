@@ -339,7 +339,14 @@ namespace Notes
                 XmlReader reader = XmlReader.Create (new StringReader(body));
 
                 // parse the Styles tag to determine what our defaults should be
-                ParseStyles(reader);
+                try
+                {
+                    ParseStyles(reader);
+                }
+                catch(Exception ex)
+                {
+                    mStylesCreatedDelegate(ex);
+                }
 
                 mStylesCreatedDelegate(null);
             }

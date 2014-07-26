@@ -8,17 +8,15 @@ namespace Notes
 {
     namespace PlatformUI
     {
-        public class iOSLabel : PlatformLabel
+        public class iOSTextField : PlatformTextField
         {
-            UILabel Label { get; set; }
+            UITextField TextField { get; set; }
 
-            public iOSLabel( )
+            public iOSTextField( )
             {
-                Label = new UILabel();
-                Label.Layer.AnchorPoint = new PointF (0, 0);
-                Label.TextAlignment = UITextAlignment.Left;
-                Label.LineBreakMode = UILineBreakMode.WordWrap;
-                Label.Lines = 0;
+                TextField = new UITextField();
+                TextField.Layer.AnchorPoint = new PointF (0, 0);
+                TextField.TextAlignment = UITextAlignment.Left;
             }
 
             //TODO: Do not let outside entities call this (right now I am till I finish the port)
@@ -34,85 +32,109 @@ namespace Notes
             // Properties
             public override void SetFont(string fontName, float fontSize)
             {
-                Label.Font = UIFont.FromName(fontName, fontSize);
+                TextField.Font = UIFont.FromName(fontName, fontSize);
             }
 
             protected override void setBackgroundColor(uint backgroundColor)
             {
-                Label.Layer.BackgroundColor = GetUIColor(backgroundColor).CGColor;
+                TextField.Layer.BackgroundColor = GetUIColor(backgroundColor).CGColor;
             }
 
             protected override float getOpacity()
             {
-                return Label.Layer.Opacity;
+                return TextField.Layer.Opacity;
             }
 
             protected override void setOpacity(float opacity)
             {
-                Label.Layer.Opacity = opacity;
+                TextField.Layer.Opacity = opacity;
             }
 
             protected override float getZPosition()
             {
-                return Label.Layer.ZPosition;
+                return TextField.Layer.ZPosition;
             }
             protected override void setZPosition(float zPosition)
             {
-                Label.Layer.ZPosition = zPosition;
+                TextField.Layer.ZPosition = zPosition;
             }
 
             protected override RectangleF getBounds()
             {
-                return Label.Bounds;
+                return TextField.Bounds;
             }
 
             protected override void setBounds(RectangleF bounds)
             {
-                Label.Bounds = bounds;
+                TextField.Bounds = bounds;
             }
 
             protected override RectangleF getFrame()
             {
-                return Label.Frame;
+                return TextField.Frame;
             }
 
             protected override void setFrame(RectangleF frame)
             {
-                Label.Frame = frame;
+                TextField.Frame = frame;
             }
 
             protected override  PointF getPosition()
             {
-                return Label.Layer.Position;
+                return TextField.Layer.Position;
             }
             protected override void setPosition(PointF position)
             {
-                Label.Layer.Position = position;
+                TextField.Layer.Position = position;
             }
 
             protected override void setTextColor(uint color)
             {
-                Label.TextColor = GetUIColor(color);
+                TextField.TextColor = GetUIColor(color);
+            }
+
+            protected override void setPlaceholderTextColor(uint color)
+            {
+                TextField.AttributedPlaceholder = new NSAttributedString (
+                    TextField.Placeholder,
+                    font: TextField.Font,
+                    foregroundColor: GetUIColor(color)
+                );
             }
 
             protected override string getText()
             {
-                return Label.Text;
+                return TextField.Text;
             }
 
             protected override void setText(string text)
             {
-                Label.Text = text;
+                TextField.Text = text;
             }
 
             protected override TextAlignment getTextAlignment()
             {
-                return (TextAlignment)Label.TextAlignment;
+                return (TextAlignment)TextField.TextAlignment;
             }
 
             protected override void setTextAlignment(TextAlignment alignment)
             {
-                Label.TextAlignment = (UITextAlignment)alignment;
+                TextField.TextAlignment = (UITextAlignment)alignment;
+            }
+
+            protected override string getPlaceholder()
+            {
+                return TextField.Placeholder;
+            }
+
+            protected override void setPlaceholder(string placeholder)
+            {
+                TextField.Placeholder = placeholder;
+            }
+
+            public override void ResignFirstResponder()
+            {
+                TextField.ResignFirstResponder();
             }
 
             public override void AddAsSubview(object masterView)
@@ -124,17 +146,17 @@ namespace Notes
                     throw new InvalidCastException("Object passed to iOS AddAsSubview must be a UIView.");
                 }
 
-                view.AddSubview(Label);
+                view.AddSubview(TextField);
             }
 
             public override void RemoveAsSubview()
             {
-                Label.RemoveFromSuperview();
+                TextField.RemoveFromSuperview();
             }
 
             public override void SizeToFit()
             {
-                Label.SizeToFit();
+                TextField.SizeToFit();
             }
         }
     }
