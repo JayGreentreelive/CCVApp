@@ -14,150 +14,142 @@ namespace Notes
 
             public iOSTextField( )
             {
-                TextField = new UITextField();
-                TextField.Layer.AnchorPoint = new PointF (0, 0);
+                TextField = new UITextField( );
+                TextField.Layer.AnchorPoint = new PointF( 0, 0 );
                 TextField.TextAlignment = UITextAlignment.Left;
             }
 
-            //TODO: Do not let outside entities call this (right now I am till I finish the port)
-            public static UIColor GetUIColor(uint color)
-            {
-                return new UIColor(
-                    (float)((color & 0xFF000000) >> 24) / 255, //TODO: obviously completely unacceptable.
-                    (float)((color & 0x00FF0000) >> 16) / 255, 
-                    (float)((color & 0x0000FF00) >> 8) / 255, 
-                    (float)((color & 0x000000FF)) / 255);
-            }
-
             // Properties
-            public override void SetFont(string fontName, float fontSize)
+            public override void SetFont( string fontName, float fontSize )
             {
-                TextField.Font = UIFont.FromName(fontName, fontSize);
+                TextField.Font = UIFont.FromName( fontName, fontSize );
             }
 
-            protected override void setBackgroundColor(uint backgroundColor)
+            protected override void setBackgroundColor( uint backgroundColor )
             {
-                TextField.Layer.BackgroundColor = GetUIColor(backgroundColor).CGColor;
+                TextField.Layer.BackgroundColor = PlatformCommonUI.GetUIColor( backgroundColor ).CGColor;
             }
 
-            protected override float getOpacity()
+            protected override float getOpacity( )
             {
                 return TextField.Layer.Opacity;
             }
 
-            protected override void setOpacity(float opacity)
+            protected override void setOpacity( float opacity )
             {
                 TextField.Layer.Opacity = opacity;
             }
 
-            protected override float getZPosition()
+            protected override float getZPosition( )
             {
                 return TextField.Layer.ZPosition;
             }
-            protected override void setZPosition(float zPosition)
+
+            protected override void setZPosition( float zPosition )
             {
                 TextField.Layer.ZPosition = zPosition;
             }
 
-            protected override RectangleF getBounds()
+            protected override RectangleF getBounds( )
             {
                 return TextField.Bounds;
             }
 
-            protected override void setBounds(RectangleF bounds)
+            protected override void setBounds( RectangleF bounds )
             {
                 TextField.Bounds = bounds;
             }
 
-            protected override RectangleF getFrame()
+            protected override RectangleF getFrame( )
             {
                 return TextField.Frame;
             }
 
-            protected override void setFrame(RectangleF frame)
+            protected override void setFrame( RectangleF frame )
             {
                 TextField.Frame = frame;
             }
 
-            protected override  PointF getPosition()
+            protected override  PointF getPosition( )
             {
                 return TextField.Layer.Position;
             }
-            protected override void setPosition(PointF position)
+
+            protected override void setPosition( PointF position )
             {
                 TextField.Layer.Position = position;
             }
 
-            protected override void setTextColor(uint color)
+            protected override void setTextColor( uint color )
             {
-                TextField.TextColor = GetUIColor(color);
+                TextField.TextColor = PlatformCommonUI.GetUIColor( color );
             }
 
-            protected override void setPlaceholderTextColor(uint color)
+            protected override void setPlaceholderTextColor( uint color )
             {
-                TextField.AttributedPlaceholder = new NSAttributedString (
+                TextField.AttributedPlaceholder = new NSAttributedString(
                     TextField.Placeholder,
                     font: TextField.Font,
-                    foregroundColor: GetUIColor(color)
+                    foregroundColor: PlatformCommonUI.GetUIColor( color )
                 );
             }
 
-            protected override string getText()
+            protected override string getText( )
             {
                 return TextField.Text;
             }
 
-            protected override void setText(string text)
+            protected override void setText( string text )
             {
                 TextField.Text = text;
             }
 
-            protected override TextAlignment getTextAlignment()
+            protected override TextAlignment getTextAlignment( )
             {
-                return (TextAlignment)TextField.TextAlignment;
+                return ( TextAlignment )TextField.TextAlignment;
             }
 
-            protected override void setTextAlignment(TextAlignment alignment)
+            protected override void setTextAlignment( TextAlignment alignment )
             {
-                TextField.TextAlignment = (UITextAlignment)alignment;
+                TextField.TextAlignment = ( UITextAlignment )alignment;
             }
 
-            protected override string getPlaceholder()
+            protected override string getPlaceholder( )
             {
                 return TextField.Placeholder;
             }
 
-            protected override void setPlaceholder(string placeholder)
+            protected override void setPlaceholder( string placeholder )
             {
                 TextField.Placeholder = placeholder;
             }
 
-            public override void ResignFirstResponder()
+            public override void ResignFirstResponder( )
             {
-                TextField.ResignFirstResponder();
+                TextField.ResignFirstResponder( );
             }
 
-            public override void AddAsSubview(object masterView)
+            public override void AddAsSubview( object masterView )
             {
                 // we know that masterView will be an iOS View.
                 UIView view = masterView as UIView;
-                if(view == null)
+                if( view == null )
                 {
-                    throw new InvalidCastException("Object passed to iOS AddAsSubview must be a UIView.");
+                    throw new InvalidCastException( "Object passed to iOS AddAsSubview must be a UIView." );
                 }
 
-                view.AddSubview(TextField);
+                view.AddSubview( TextField );
             }
 
-            public override void RemoveAsSubview(object obj)
+            public override void RemoveAsSubview( object obj )
             {
                 // Obj is only needed by Android, so we ignore it
-                TextField.RemoveFromSuperview();
+                TextField.RemoveFromSuperview( );
             }
 
-            public override void SizeToFit()
+            public override void SizeToFit( )
             {
-                TextField.SizeToFit();
+                TextField.SizeToFit( );
             }
         }
     }

@@ -16,7 +16,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ControlStyles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Header.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\IUIControl.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\Label.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Note.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Paragraph.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Parser.cs" />
@@ -27,6 +26,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\PlatformTextField.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\iOS\iOSTextField.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\Droid\DroidLabel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\Droid\DroidTextField.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\NoteText.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Canvas.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)PlatformUI\" />

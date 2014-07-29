@@ -3,16 +3,18 @@ using System.Drawing;
 
 namespace Notes
 {
-	public interface IUIControl
-	{
-		void AddOffset(float xOffset, float yOffset);
-		System.Drawing.RectangleF GetFrame();
+    public interface IUIControl
+    {
+        void AddOffset( float xOffset, float yOffset );
 
-		void AddToView(object obj);
-        void RemoveFromView(object obj);
+        System.Drawing.RectangleF GetFrame( );
 
-		void TouchesEnded (PointF touch);
+        void AddToView( object obj );
 
-        Styles.Alignment GetHorzAlignment();
-	}
+        void RemoveFromView( object obj );
+
+        void TouchesEnded( PointF touch );
+
+        Styles.Alignment GetHorzAlignment( );
+    }
 }

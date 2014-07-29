@@ -6,10 +6,11 @@ using Notes.PlatformUI;
 
 namespace Notes
 {
-	public abstract class BaseControl : IUIControl
-	{
-		protected PlatformLabel DebugFrameView { get; set; }
-		protected bool ShowDebugFrame { get; set; }
+    public abstract class BaseControl : IUIControl
+    {
+        protected PlatformLabel DebugFrameView { get; set; }
+
+        protected bool ShowDebugFrame { get; set; }
 
         protected Style mStyle;
 
@@ -17,10 +18,12 @@ namespace Notes
         public class CreateParams
         {
             public float Height { get; set; }
+
             public float Width { get; set; }
+
             public Style Style { get; set; }
 
-            public CreateParams(float width, float height, ref Style style)
+            public CreateParams( float width, float height, ref Style style )
             {
                 Height = height;
                 Width = width;
@@ -28,142 +31,142 @@ namespace Notes
             }
         }
 
-		protected virtual void Initialize()
-		{
-            mStyle = new Style();
-            mStyle.Initialize();
+        protected virtual void Initialize( )
+        {
+            mStyle = new Style( );
+            mStyle.Initialize( );
             mStyle.mAlignment = Alignment.Inherit;
 
             //Debugging - show the grid frames
-            DebugFrameView = PlatformLabel.Create();
-			DebugFrameView.Opacity = .50f;
+            DebugFrameView = PlatformLabel.Create( );
+            DebugFrameView.Opacity = .50f;
             DebugFrameView.BackgroundColor = 0x0000FFFF;
-			DebugFrameView.ZPosition = 100;
-			//Debugging
-		}
+            DebugFrameView.ZPosition = 100;
+            //Debugging
+        }
 
-		public BaseControl ()
-		{
-		}
-
-        protected virtual void ParseCommonAttribs(XmlReader reader, ref RectangleF bounds)
-		{
-			// check for positioning attribs
-			string result = reader.GetAttribute("Left");
-			if(String.IsNullOrEmpty(result) == false)
-			{
-                float denominator = 1.0f;
-                if(result.Contains("%"))
-                {
-                    result = result.Trim('%');
-                    denominator = 100.0f;
-                }
-
-                bounds.X = float.Parse(result) / denominator;
-			}
-
-			result = reader.GetAttribute("Top");
-			if(String.IsNullOrEmpty(result) == false)
-			{
-                float denominator = 1.0f;
-                if(result.Contains("%"))
-                {
-                    result = result.Trim('%');
-                    denominator = 100.0f;
-                }
-
-                bounds.Y = float.Parse(result) / denominator;
-			}
-
-			result = reader.GetAttribute("Width");
-			if(String.IsNullOrEmpty(result) == false)
-			{
-                float denominator = 1.0f;
-                if(result.Contains("%"))
-                {
-                    result = result.Trim('%');
-                    denominator = 100.0f;
-                }
-
-				bounds.Width = float.Parse(result) / denominator;
-			}
-
-			result = reader.GetAttribute("Height");
-			if(String.IsNullOrEmpty(result) == false)
-			{
-                float denominator = 1.0f;
-                if(result.Contains("%"))
-                {
-                    result = result.Trim('%');
-                    denominator = 100.0f;
-                }
-
-                bounds.Height = float.Parse(result) / denominator;
-			}
-
-
-			// check for a debug frame
-			result = reader.GetAttribute("Debug");
-			if(String.IsNullOrEmpty(result) == false)
-			{
-				ShowDebugFrame = bool.Parse(result);
-			}
-			else
-			{
-				ShowDebugFrame = false;
-			}
-		}
-
-		public virtual void AddOffset (float xOffset, float yOffset)
-		{
-			if(ShowDebugFrame)
-			{
-				DebugFrameView.Position = new PointF(DebugFrameView.Position.X + xOffset, 
-													 DebugFrameView.Position.Y + yOffset);
-			}
-		}
-
-        public virtual void AddToView(object obj)
+        public BaseControl( )
         {
         }
 
-        public virtual void RemoveFromView(object obj)
+        protected virtual void ParseCommonAttribs( XmlReader reader, ref RectangleF bounds )
+        {
+            // check for positioning attribs
+            string result = reader.GetAttribute( "Left" );
+            if( string.IsNullOrEmpty( result ) == false )
+            {
+                float denominator = 1.0f;
+                if( result.Contains( "%" ) )
+                {
+                    result = result.Trim( '%' );
+                    denominator = 100.0f;
+                }
+
+                bounds.X = float.Parse( result ) / denominator;
+            }
+
+            result = reader.GetAttribute( "Top" );
+            if( string.IsNullOrEmpty( result ) == false )
+            {
+                float denominator = 1.0f;
+                if( result.Contains( "%" ) )
+                {
+                    result = result.Trim( '%' );
+                    denominator = 100.0f;
+                }
+
+                bounds.Y = float.Parse( result ) / denominator;
+            }
+
+            result = reader.GetAttribute( "Width" );
+            if( string.IsNullOrEmpty( result ) == false )
+            {
+                float denominator = 1.0f;
+                if( result.Contains( "%" ) )
+                {
+                    result = result.Trim( '%' );
+                    denominator = 100.0f;
+                }
+
+                bounds.Width = float.Parse( result ) / denominator;
+            }
+
+            result = reader.GetAttribute( "Height" );
+            if( string.IsNullOrEmpty( result ) == false )
+            {
+                float denominator = 1.0f;
+                if( result.Contains( "%" ) )
+                {
+                    result = result.Trim( '%' );
+                    denominator = 100.0f;
+                }
+
+                bounds.Height = float.Parse( result ) / denominator;
+            }
+
+
+            // check for a debug frame
+            result = reader.GetAttribute( "Debug" );
+            if( string.IsNullOrEmpty( result ) == false )
+            {
+                ShowDebugFrame = bool.Parse( result );
+            }
+            else
+            {
+                ShowDebugFrame = false;
+            }
+        }
+
+        public virtual void AddOffset( float xOffset, float yOffset )
+        {
+            if( ShowDebugFrame )
+            {
+                DebugFrameView.Position = new PointF( DebugFrameView.Position.X + xOffset, 
+                    DebugFrameView.Position.Y + yOffset );
+            }
+        }
+
+        public virtual void AddToView( object obj )
         {
         }
 
-		public void TryAddDebugLayer(object obj)
-		{
+        public virtual void RemoveFromView( object obj )
+        {
+        }
+
+        public void TryAddDebugLayer( object obj )
+        {
             // call this at the _end_ so it is the highest level 
             // view on Android.
-			if(ShowDebugFrame)
-			{
-                DebugFrameView.AddAsSubview(obj);
-			}
-		}
+            if( ShowDebugFrame )
+            {
+                DebugFrameView.AddAsSubview( obj );
+            }
+        }
 
-        public void TryRemoveDebugLayer(object obj)
-		{
+        public void TryRemoveDebugLayer( object obj )
+        {
             // call this at the _end_ so it is the highest level 
             // view on Android.
-			if(ShowDebugFrame)
-			{
-				DebugFrameView.RemoveAsSubview(obj);
-			}
-		}
+            if( ShowDebugFrame )
+            {
+                DebugFrameView.RemoveAsSubview( obj );
+            }
+        }
 
-		public virtual void TouchesEnded(PointF touch)
-		{
-		}
+        public virtual void TouchesEnded( PointF touch )
+        {
+        }
 
-        public Alignment GetHorzAlignment()
+        public Alignment GetHorzAlignment( )
         {
             return mStyle.mAlignment.Value;
         }
 
-		public virtual RectangleF GetFrame()
-		{
-			return new RectangleF();
-		}
-	}
+        public virtual RectangleF GetFrame( )
+        {
+            return new RectangleF( );
+        }
+    }
 }
     

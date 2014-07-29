@@ -6,7 +6,7 @@ using Notes.Styles;
 
 namespace Notes
 {
-    public class StackPanel : BaseControl
+    public class Canvas : BaseControl
     {
         protected List<IUIControl> ChildControls { get; set; }
 
@@ -23,7 +23,7 @@ namespace Notes
             ChildHorzAlignment = Alignment.Inherit;
         }
 
-        public StackPanel( CreateParams parentParams, XmlReader reader )
+        public Canvas( CreateParams parentParams, XmlReader reader )
         {
             Initialize( );
 
@@ -121,7 +121,7 @@ namespace Notes
                     case XmlNodeType.EndElement:
                         {
                             // if we hit the end of our label, we're done.
-                            if( reader.Name == "StackPanel" )
+                            if( reader.Name == "Canvas" )
                             {
                                 finishedParsing = true;
                             }
@@ -134,6 +134,7 @@ namespace Notes
 
             // layout all controls
             float yOffset = bounds.Y + topPadding; //vertically they should just stack
+            float height = 0;
 
             // now we must center each control within the stack.
             foreach( IUIControl control in ChildControls )
@@ -162,14 +163,14 @@ namespace Notes
                 // adjust the next sibling by yOffset
                 control.AddOffset( xAdjust + leftPadding, yOffset );
 
-                // and the next sibling must begin there
-                yOffset = control.GetFrame( ).Bottom;
+                // track the height of the grid by the control lowest control 
+                height = control.GetFrame( ).Bottom > height ? control.GetFrame( ).Bottom : height;
             }
 
             // we need to store our bounds. We cannot
             // calculate them on the fly because we
             // would lose any control defined offsets, which would throw everything off.
-            bounds.Height = ( yOffset - bounds.Y ) + bottomPadding;
+            bounds.Height = height + bottomPadding;
             Bounds = bounds;
 
             // store our debug frame

@@ -6,143 +6,144 @@ using System.IO;
 
 namespace Notes
 {
-	public class Note
-	{
-        public delegate void OnPreReqsComplete(Note note, Exception e);
+    public class Note
+    {
+        public delegate void OnPreReqsComplete( Note note, Exception e );
 
-		protected List<IUIControl> ChildControls { get; set; }
-        public String NoteXml { get; protected set; }
+        protected List<IUIControl> ChildControls { get; set; }
 
-        public static void HandlePreReqs(string noteXml, string styleXml, OnPreReqsComplete onPreReqsComplete)
+        public string NoteXml { get; protected set; }
+
+        public static void HandlePreReqs( string noteXml, string styleXml, OnPreReqsComplete onPreReqsComplete )
         {
             // now use a reader to get each element
-            XmlReader reader = XmlReader.Create (new StringReader(noteXml));
+            XmlReader reader = XmlReader.Create( new StringReader( noteXml ) );
 
             string styleSheetUrl = "";
 
             bool finishedReading = false;
-            while(finishedReading == false && reader.Read())
+            while( finishedReading == false && reader.Read( ) )
             {
                 // expect the first element to be "Note"
-                switch(reader.NodeType)
+                switch( reader.NodeType )
                 {
                     case XmlNodeType.Element:
-                    {
-                        if(reader.Name == "Note")
                         {
-                            styleSheetUrl = reader.GetAttribute("StyleSheet");
-                            if(styleSheetUrl == null)
+                            if( reader.Name == "Note" )
                             {
-                                throw new InvalidDataException("Could not find attribute 'StyleSheet'. This should be a URL pointing to the style to use.");
+                                styleSheetUrl = reader.GetAttribute( "StyleSheet" );
+                                if( styleSheetUrl == null )
+                                {
+                                    throw new InvalidDataException( "Could not find attribute 'StyleSheet'. This should be a URL pointing to the style to use." );
+                                }
                             }
-                        }
-                        else
-                        {
-                            throw new InvalidDataException(String.Format("Expected root element to be <Note>. Found <{0}>", reader.Name));
-                        }
+                            else
+                            {
+                                throw new InvalidDataException( string.Format( "Expected root element to be <Note>. Found <{0}>", reader.Name ) );
+                            }
 
-                        finishedReading = true;
-                        break;
-                    }
+                            finishedReading = true;
+                            break;
+                        }
                 }
             }
 
             // Parse the styles. We cannot go any further until this is finished.
-            ControlStyles.Initialize(styleSheetUrl, styleXml, (Exception e) =>
+            ControlStyles.Initialize( styleSheetUrl, styleXml, (Exception e ) =>
                 {
                     // We don't just create the note here because the parent
                     // might need to change threads before creating UI objects
-                    onPreReqsComplete(new Note(noteXml), e);
-                });
+                    onPreReqsComplete( new Note( noteXml ), e );
+                } );
         }
 
-        public Note(String noteXml)
+        public Note( string noteXml )
         {
             // store our XML
             NoteXml = noteXml;
         }
 
-        public void Create(float parentWidth, float parentHeight)
+        public void Create( float parentWidth, float parentHeight )
         {
             // create a child control list
-            ChildControls = new List<IUIControl>();
+            ChildControls = new List<IUIControl>( );
 
             // setup a blank style so we don't override anything.
-            Styles.Style style = new Styles.Style();
-            style.Initialize();
+            Styles.Style style = new Styles.Style( );
+            style.Initialize( );
             style.mAlignment = Styles.Alignment.Left;
 
             // now use a reader to get each element
-            XmlReader reader = XmlReader.Create (new StringReader(NoteXml));
+            XmlReader reader = XmlReader.Create( new StringReader( NoteXml ) );
 
             // begin reading the xml stream
-            while (reader.Read ()) 
+            while( reader.Read( ) )
             {
-                switch(reader.NodeType)
+                switch( reader.NodeType )
                 {
-                    // there should only be ui controls within a note
+                // there should only be ui controls within a note
                     case XmlNodeType.Element:
-                    {
-                        // don't worry about our root node.
-                        if(reader.Name != "Note")
                         {
-                            // pass an empty style because we just don't care.
-                            IUIControl control = Parser.TryParseControl(new BaseControl.CreateParams(parentWidth, parentHeight, ref style), reader);
-                            ChildControls.Add(control);
+                            // don't worry about our root node.
+                            if( reader.Name != "Note" )
+                            {
+                                // pass an empty style because we just don't care.
+                                IUIControl control = Parser.TryParseControl( new BaseControl.CreateParams( parentWidth, parentHeight, ref style ), reader );
+                                ChildControls.Add( control );
+                            }
+                            break;
                         }
-                        break;
-                    }
                 }
             }
         }
 
-        public void Destroy(object obj)
-		{
-			// release references to our UI objects
-			if(ChildControls != null)
-			{
-				foreach(IUIControl uiControl in ChildControls)
-				{
-					uiControl.RemoveFromView(obj);
-				}
+        public void Destroy( object obj )
+        {
+            // release references to our UI objects
+            if( ChildControls != null )
+            {
+                foreach( IUIControl uiControl in ChildControls )
+                {
+                    uiControl.RemoveFromView( obj );
+                }
 
-				// and clear our UI list
-				ChildControls.Clear();
+                // and clear our UI list
+                ChildControls.Clear( );
 
                 NoteXml = null;
-			}
-		}
+            }
+        }
 
-		public void AddToView (object view)
-		{
-			foreach(IUIControl uiControl in ChildControls)
-			{
-				uiControl.AddToView(view);
-			}
-		}
+        public void AddToView( object view )
+        {
+            foreach( IUIControl uiControl in ChildControls )
+            {
+                uiControl.AddToView( view );
+            }
+        }
 
-		public RectangleF GetFrame()
-		{
-			// create an inverse region to guarantee we use our first child's bounds.
-			RectangleF frame = new RectangleF(65000, 65000, -65000, -65000);
+        public RectangleF GetFrame( )
+        {
+            // create an inverse region to guarantee we use our first child's bounds.
+            RectangleF frame = new RectangleF( 65000, 65000, -65000, -65000 );
 
-			// for each child control
-			foreach(IUIControl control in ChildControls)
-			{
-				// enlarge our frame by the current frame and the next child
-				frame = Parser.CalcBoundingFrame(frame, control.GetFrame());
-			}
+            // for each child control
+            foreach( IUIControl control in ChildControls )
+            {
+                // enlarge our frame by the current frame and the next child
+                frame = Parser.CalcBoundingFrame( frame, control.GetFrame( ) );
+            }
 
-			return frame;
-		}
+            return frame;
+        }
 
-		public void TouchesEnded (PointF touch)
-		{
-			// notify all controls
-			foreach(IUIControl control in ChildControls)
-			{
-				control.TouchesEnded(touch);
-			}
-		}
-	}
+        public void TouchesEnded( PointF touch )
+        {
+            // notify all controls
+            foreach( IUIControl control in ChildControls )
+            {
+                control.TouchesEnded( touch );
+            }
+        }
+    }
 }

@@ -20,8 +20,8 @@ namespace Droid
             SetContentView( Resource.Layout.Main );
 
             // kick off our intent for the Notes activity
-            Intent intent = new Intent(this, typeof(NotesActivity));
-            StartActivity(intent);
+            Intent intent = new Intent( this, typeof( NotesActivity ) );
+            StartActivity( intent );
         }
     }
 }

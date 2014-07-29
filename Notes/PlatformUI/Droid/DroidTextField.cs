@@ -4,20 +4,29 @@ using System.Drawing;
 using Android.Widget;
 using Android.Graphics;
 using Android.Views;
+using Android.Views.InputMethods;
+using Android.App;
 
 
 namespace Notes
 {
     namespace PlatformUI
     {
-        public class DroidLabel : PlatformLabel
+        public class DroidTextField : PlatformTextField
         {
-            TextView Label { get; set; }
+            EditText TextField { get; set; }
 
-            public DroidLabel( )
+            View DummyView { get; set; }
+
+            public DroidTextField( )
             {
-                Label = new TextView( PlatformCommonUI.Context );
-                Label.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.FillParent, ViewGroup.LayoutParams.WrapContent );
+                TextField = new EditText( PlatformCommonUI.Context );
+                TextField.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.FillParent, ViewGroup.LayoutParams.WrapContent );
+
+                // create a dummy view that can take focus to de-select the text field
+                DummyView = new View( PlatformCommonUI.Context );
+                DummyView.Focusable = true;
+                DummyView.FocusableInTouchMode = true;
             }
 
             // Properties
@@ -26,8 +35,8 @@ namespace Notes
                 try
                 {
                     Typeface fontFace = Typeface.CreateFromAsset( PlatformCommonUI.Context.Assets, "fonts/" + fontName.ToLower( ) + ".ttf" );
-                    Label.SetTypeface( fontFace, TypefaceStyle.Normal );
-                    Label.SetTextSize( Android.Util.ComplexUnitType.Pt, fontSize );
+                    TextField.SetTypeface( fontFace, TypefaceStyle.Normal );
+                    TextField.SetTextSize( Android.Util.ComplexUnitType.Pt, fontSize );
                 } catch
                 {
                     throw new ArgumentException( string.Format( "Unable to load font: {0}", fontName ) );
@@ -36,17 +45,17 @@ namespace Notes
 
             protected override void setBackgroundColor( uint backgroundColor )
             {
-                Label.SetBackgroundColor( PlatformCommonUI.GetUIColor( backgroundColor ) );
+                TextField.SetBackgroundColor( PlatformCommonUI.GetUIColor( backgroundColor ) );
             }
 
             protected override float getOpacity( )
             {
-                return Label.Alpha;
+                return TextField.Alpha;
             }
 
             protected override void setOpacity( float opacity )
             {
-                Label.Alpha = opacity;
+                TextField.Alpha = opacity;
             }
 
             protected override float getZPosition( )
@@ -66,7 +75,7 @@ namespace Notes
                 //Bounds is simply the localSpace coordinates of the edges.
                 // NOTE: On android we're not supporting a non-0 left/top. I don't know why you'd EVER
                 // want this, but it's possible to set on iOS.
-                return new RectangleF( 0, 0, Label.LayoutParameters.Width, Label.LayoutParameters.Height );
+                return new RectangleF( 0, 0, TextField.LayoutParameters.Width, TextField.LayoutParameters.Height );
             }
 
             protected override void setBounds( RectangleF bounds )
@@ -74,15 +83,15 @@ namespace Notes
                 //Bounds is simply the localSpace coordinates of the edges.
                 // NOTE: On android we're not supporting a non-0 left/top. I don't know why you'd EVER
                 // want this, but it's possible to set on iOS.
-                Label.LayoutParameters.Width = ( int )bounds.Width;
-                Label.SetMaxWidth( Label.LayoutParameters.Width );
-                Label.LayoutParameters.Height = ( int )bounds.Height;
+                TextField.LayoutParameters.Width = ( int )bounds.Width;
+                TextField.SetMaxWidth( TextField.LayoutParameters.Width );
+                TextField.LayoutParameters.Height = ( int )bounds.Height;
             }
 
             protected override RectangleF getFrame( )
             {
                 //Frame is the transformed bounds to include position, so the Right/Bottom will be absolute.
-                RectangleF frame = new RectangleF( Label.GetX( ), Label.GetY( ), Label.LayoutParameters.Width, Label.LayoutParameters.Height );
+                RectangleF frame = new RectangleF( TextField.GetX( ), TextField.GetY( ), TextField.LayoutParameters.Width, TextField.LayoutParameters.Height );
                 return frame;
             }
 
@@ -97,34 +106,49 @@ namespace Notes
 
             protected override System.Drawing.PointF getPosition( )
             {
-                return new System.Drawing.PointF( Label.GetX( ), Label.GetY( ) );
+                return new System.Drawing.PointF( TextField.GetX( ), TextField.GetY( ) );
             }
 
             protected override void setPosition( System.Drawing.PointF position )
             {
-                Label.SetX( position.X );
-                Label.SetY( position.Y );
+                TextField.SetX( position.X );
+                TextField.SetY( position.Y );
             }
 
             protected override void setTextColor( uint color )
             {
-                Label.SetTextColor( PlatformCommonUI.GetUIColor( color ) );
+                TextField.SetTextColor( PlatformCommonUI.GetUIColor( color ) );
             }
 
             protected override string getText( )
             {
-                return Label.Text;
+                return TextField.Text;
             }
 
             protected override void setText( string text )
             {
-                Label.Text = text;
+                TextField.Text = text;
+            }
+
+            protected override void setPlaceholderTextColor( uint color )
+            {
+                TextField.SetHintTextColor( PlatformCommonUI.GetUIColor( color ) );
+            }
+
+            protected override string getPlaceholder( )
+            {
+                return TextField.Hint;
+            }
+
+            protected override void setPlaceholder( string placeholder )
+            {
+                TextField.Hint = placeholder;
             }
 
             protected override TextAlignment getTextAlignment( )
             {
                 // gonna have to do a stupid transform
-                switch( Label.Gravity )
+                switch( TextField.Gravity )
                 {
                     case GravityFlags.Center:
                         return TextAlignment.Center;
@@ -143,16 +167,16 @@ namespace Notes
                 switch( alignment )
                 {
                     case TextAlignment.Center:
-                        Label.Gravity = GravityFlags.Center;
+                        TextField.Gravity = GravityFlags.Center;
                         break;
                     case TextAlignment.Left:
-                        Label.Gravity = GravityFlags.Left;
+                        TextField.Gravity = GravityFlags.Left;
                         break;
                     case TextAlignment.Right:
-                        Label.Gravity = GravityFlags.Right;
+                        TextField.Gravity = GravityFlags.Right;
                         break;
                     default:
-                        Label.Gravity = GravityFlags.Left;
+                        TextField.Gravity = GravityFlags.Left;
                         break;
                 }
             }
@@ -166,7 +190,8 @@ namespace Notes
                     throw new InvalidCastException( "Object passed to Android AddAsSubview must be a RelativeLayout." );
                 }
 
-                view.AddView( Label );
+                view.AddView( TextField );
+                view.AddView( DummyView );
             }
 
             public override void RemoveAsSubview( object masterView )
@@ -178,24 +203,40 @@ namespace Notes
                     throw new InvalidCastException( "Object passed to Android RemoveAsSubview must be a RelativeLayout." );
                 }
 
-                view.RemoveView( Label );
+                view.RemoveView( TextField );
+                view.RemoveView( DummyView );
             }
 
             public override void SizeToFit( )
             {
                 // create the specs we want for measurement
-                int widthMeasureSpec = View.MeasureSpec.MakeMeasureSpec( Label.LayoutParameters.Width, MeasureSpecMode.Unspecified );
+                int widthMeasureSpec = View.MeasureSpec.MakeMeasureSpec( TextField.LayoutParameters.Width, MeasureSpecMode.Unspecified );
                 int heightMeasureSpec = View.MeasureSpec.MakeMeasureSpec( 0, MeasureSpecMode.Unspecified );
 
                 // measure the label given the current width/height/text
-                Label.Measure( widthMeasureSpec, heightMeasureSpec );
+                TextField.Measure( widthMeasureSpec, heightMeasureSpec );
 
                 // update its width
-                Label.LayoutParameters.Width = Label.MeasuredWidth;
-                Label.SetMaxWidth( Label.LayoutParameters.Width );
+                TextField.LayoutParameters.Width = TextField.MeasuredWidth;
+                TextField.SetMaxWidth( TextField.LayoutParameters.Width );
 
                 // set the height which will include the wrapped lines
-                Label.LayoutParameters.Height = Label.MeasuredHeight;
+                TextField.LayoutParameters.Height = TextField.MeasuredHeight;
+            }
+
+            public override void ResignFirstResponder( )
+            {
+                Activity activity = ( Activity )PlatformCommonUI.Context;
+                if( activity.CurrentFocus != null && ( activity.CurrentFocus as EditText ) != null )
+                {
+                    InputMethodManager imm = ( InputMethodManager )Context.GetSystemService( Android.Content.Context.InputMethodService );
+
+                    imm.HideSoftInputFromWindow( TextField.WindowToken, 0 );
+
+                    // yeild focus to the dummy view so the text field clears it's caret and the selected outline
+                    TextField.ClearFocus( );
+                    DummyView.RequestFocus( );
+                }
             }
         }
     }

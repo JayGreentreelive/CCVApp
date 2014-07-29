@@ -4,35 +4,38 @@ using System.Drawing;
 namespace Notes
 {
     namespace PlatformUI
-    {   
+    {
         public abstract class PlatformTextField : PlatformCommonUI
         {
-            public static PlatformTextField Create()
+            public static PlatformTextField Create( )
             {
                 #if __IOS__
-                return new iOSTextField();
+                return new iOSTextField( );
                 #endif
 
                 #if __ANDROID__
-                return null;
+                return new DroidTextField( );
                 #endif
             }
 
             public string Placeholder
             {
-                get { return getPlaceholder(); }
-                set { setPlaceholder(value); }
+                get { return getPlaceholder( ); }
+                set { setPlaceholder( value ); }
             }
-            protected abstract string getPlaceholder();
-            protected abstract void setPlaceholder(string placeholder);
+
+            protected abstract string getPlaceholder( );
+
+            protected abstract void setPlaceholder( string placeholder );
 
             public uint PlaceholderTextColor
             {
-                set { setPlaceholderTextColor(value); }
+                set { setPlaceholderTextColor( value ); }
             }
-            protected abstract void setPlaceholderTextColor(uint color);
 
-            public abstract void ResignFirstResponder();
+            protected abstract void setPlaceholderTextColor( uint color );
+
+            public abstract void ResignFirstResponder( );
         }
     }
 }
