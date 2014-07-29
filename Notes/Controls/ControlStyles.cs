@@ -266,7 +266,8 @@ namespace Notes
         public delegate void StylesCreated(Exception e);
         static StylesCreated mStylesCreatedDelegate;
 
-        static string mStyleSheet;
+        static string mStyleSheetUrl;
+        public static string StyleSheetXml { get; protected set; }
 
         // Thse are to be referenced globally as needed
         public static Styles.Style mMainNote;
@@ -288,7 +289,7 @@ namespace Notes
             style.mPaddingBottom = 0;
         }
 
-        public static void Initialize (string styleSheet, StylesCreated stylesCreatedDelegate)
+        public static void Initialize (String styleSheetUrl, String styleSheetXml, StylesCreated stylesCreatedDelegate)
         {
             // Create each control's default style. And put some defaults...for the defaults.
             //(Seriously, that way if it doesn't exist in XML we still have a value.)
@@ -317,79 +318,85 @@ namespace Notes
 
 
             // store the styles URL so we can download it
-            mStyleSheet = styleSheet;
+            mStyleSheetUrl = styleSheetUrl;
 
-            // now download it
-
-            // grab the notes (clearly this should not be hard-coded)
-            HttpWebRequest.Instance.MakeAsyncRequest(mStyleSheet, OnCompletion);
-        }
-
-        static void OnCompletion (bool result, System.Collections.Generic.Dictionary<string, string> responseHeaders, string body)
-        {
-            if(result == false)
+            // if an existing XML stream wasn't provided, download via the URL
+            if(styleSheetXml == null)
             {
-                mStylesCreatedDelegate(new InvalidDataException(String.Format(
-                    "Could not download style sheet {0}", 
-                    mStyleSheet)));
+                HttpWebRequest.Instance.MakeAsyncRequest(mStyleSheetUrl, OnCompletion);
             }
             else
             {
-                // now use a reader to get each element
-                XmlReader reader = XmlReader.Create (new StringReader(body));
-
-                // parse the Styles tag to determine what our defaults should be
-                try
-                {
-                    ParseStyles(reader);
-                }
-                catch(Exception ex)
-                {
-                    mStylesCreatedDelegate(ex);
-                }
-
-                mStylesCreatedDelegate(null);
+                // otherwise we can directly parse the XML
+                ParseStyles(styleSheetXml);
             }
         }
 
-        protected static void ParseStyles(XmlReader reader)
+        static void OnCompletion (Exception ex, System.Collections.Generic.Dictionary<string, string> responseHeaders, string body)
         {
-            bool finishedParsing = false;
-
-            // look at each element, as they all define styles for our controls
-            while(finishedParsing == false && reader.Read())
+            if(ex == null)
             {
-                switch(reader.NodeType)
-                {
-                    //Find the control elements
-                    case XmlNodeType.Element:
-                    {
-                        //most controls don't care about anything other than the basic attributes,
-                        // so we can use a common Parse function. Certain styles may need to define more specific things,
-                        // for which we can add special parse classes
-                        switch(reader.Name)
-                        {
-                            case "Note": Notes.Styles.Style.ParseStyleAttributes(reader, ref mMainNote); break;
-                            case "Paragraph": Notes.Styles.Style.ParseStyleAttributes(reader, ref mParagraph); break;
-                            case "RevealBox": Notes.Styles.Style.ParseStyleAttributes(reader, ref mRevealBox); break;
-                            case "TextInput": Notes.Styles.Style.ParseStyleAttributes(reader, ref mTextInput); break;
-                            case "Quote": Notes.Styles.Style.ParseStyleAttributes(reader, ref mQuote); break;
-                            case "Header": Notes.Styles.Style.ParseStyleAttributes(reader, ref mHeader); break;
-                            case "Text": Notes.Styles.Style.ParseStyleAttributes(reader, ref mText); break;
-                        }
-                        break;
-                    }
+                ParseStyles(body);
+            }
+            else
+            {
+                mStylesCreatedDelegate(ex);
+            }
+        }
 
-                    case XmlNodeType.EndElement:
+        protected static void ParseStyles(String styleSheetXml)
+        {
+            Exception exception = null;
+            try
+            {
+                StyleSheetXml = styleSheetXml;
+
+                // now use a reader to get each element
+                XmlReader reader = XmlReader.Create (new StringReader(styleSheetXml));
+
+                bool finishedParsing = false;
+
+                // look at each element, as they all define styles for our controls
+                while(finishedParsing == false && reader.Read())
+                {
+                    switch(reader.NodeType)
                     {
-                        if(reader.Name == "Styles")
+                        //Find the control elements
+                        case XmlNodeType.Element:
                         {
-                            finishedParsing = true;
+                            //most controls don't care about anything other than the basic attributes,
+                            // so we can use a common Parse function. Certain styles may need to define more specific things,
+                            // for which we can add special parse classes
+                            switch(reader.Name)
+                            {
+                                case "Note": Notes.Styles.Style.ParseStyleAttributes(reader, ref mMainNote); break;
+                                case "Paragraph": Notes.Styles.Style.ParseStyleAttributes(reader, ref mParagraph); break;
+                                case "RevealBox": Notes.Styles.Style.ParseStyleAttributes(reader, ref mRevealBox); break;
+                                case "TextInput": Notes.Styles.Style.ParseStyleAttributes(reader, ref mTextInput); break;
+                                case "Quote": Notes.Styles.Style.ParseStyleAttributes(reader, ref mQuote); break;
+                                case "Header": Notes.Styles.Style.ParseStyleAttributes(reader, ref mHeader); break;
+                                case "Text": Notes.Styles.Style.ParseStyleAttributes(reader, ref mText); break;
+                            }
+                            break;
                         }
-                        break;
+
+                        case XmlNodeType.EndElement:
+                        {
+                            if(reader.Name == "Styles")
+                            {
+                                finishedParsing = true;
+                            }
+                            break;
+                        }
                     }
                 }
             }
+            catch(Exception ex)
+            {
+                exception = ex;
+            }
+
+            mStylesCreatedDelegate(exception);
         }
     }
 }

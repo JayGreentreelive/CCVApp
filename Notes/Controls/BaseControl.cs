@@ -6,7 +6,7 @@ using Notes.PlatformUI;
 
 namespace Notes
 {
-	public class BaseControl : IUIControl
+	public abstract class BaseControl : IUIControl
 	{
 		protected PlatformLabel DebugFrameView { get; set; }
 		protected bool ShowDebugFrame { get; set; }
@@ -123,19 +123,31 @@ namespace Notes
 			}
 		}
 
-		public virtual void AddToView(object obj)
+        public virtual void AddToView(object obj)
+        {
+        }
+
+        public virtual void RemoveFromView(object obj)
+        {
+        }
+
+		public void TryAddDebugLayer(object obj)
 		{
+            // call this at the _end_ so it is the highest level 
+            // view on Android.
 			if(ShowDebugFrame)
 			{
                 DebugFrameView.AddAsSubview(obj);
 			}
 		}
 
-		public virtual void RemoveFromView()
+        public void TryRemoveDebugLayer(object obj)
 		{
+            // call this at the _end_ so it is the highest level 
+            // view on Android.
 			if(ShowDebugFrame)
 			{
-				DebugFrameView.RemoveAsSubview();
+				DebugFrameView.RemoveAsSubview(obj);
 			}
 		}
 

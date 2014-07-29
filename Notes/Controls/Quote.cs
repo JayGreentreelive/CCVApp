@@ -174,18 +174,18 @@ namespace Notes
 
 		public override void AddToView(object obj)
 		{
-			base.AddToView(obj);
-
-            QuoteLabel.AddAsSubview(obj);
+			QuoteLabel.AddAsSubview(obj);
             Citation.AddAsSubview(obj);
+
+            TryAddDebugLayer(obj);
 		}
 
-		public override void RemoveFromView()
+        public override void RemoveFromView(object obj)
 		{
-			base.RemoveFromView();
+			QuoteLabel.RemoveAsSubview(obj);
+			Citation.RemoveAsSubview(obj);
 
-            QuoteLabel.RemoveAsSubview();
-			Citation.RemoveAsSubview();
+            TryRemoveDebugLayer(obj);
 		}
 
 		public override System.Drawing.RectangleF GetFrame()

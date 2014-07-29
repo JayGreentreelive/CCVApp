@@ -33,7 +33,6 @@ namespace CCVApp
 		// Notes members
 		bool RefreshingNotes { get; set; }
 		Note Note { get; set; }
-        String NoteXml { get; set; }
 
 		public NotesViewController () : base ("NotesViewController", null)
 		{
@@ -63,7 +62,14 @@ namespace CCVApp
             RefreshButton.Layer.Position = new PointF(View.Bounds.Width / 2, RefreshButton.Bounds.Height + 10);
 
             // re-create our notes with the new dimensions
-            CreateNotes();
+            String noteXml = null;
+            String styleSheetXml = null;
+            if(Note != null)
+            {
+                noteXml = Note.NoteXml;
+                styleSheetXml = ControlStyles.StyleSheetXml;
+            }
+            CreateNotes(noteXml, styleSheetXml);
         }
 
 		public override void ViewDidLoad ()
@@ -88,7 +94,7 @@ namespace CCVApp
 			// if they tap the refresh button, refresh the list
 			RefreshButton.TouchUpInside += (object sender, EventArgs e) => 
 			{
-				CreateNotes();
+                CreateNotes(null, null);
 			};
 			UIScrollView.AddSubview(RefreshButton);
 		}
@@ -111,12 +117,12 @@ namespace CCVApp
 		{
 			if(Note != null)
 			{
-				Note.Destroy();
+				Note.Destroy(null);
                 Note = null;
 			}
 		}
 
-		public void CreateNotes()
+        public void CreateNotes(String noteXml, String styleSheetXml)
 		{
 			if(RefreshingNotes == false)
 			{
@@ -127,53 +133,46 @@ namespace CCVApp
 				// show a busy indicator
 				Indicator.StartAnimating();
 
-				// grab the notes (clearly this should not be hard-coded)
-				HttpWebRequest.Instance.MakeAsyncRequest("http://www.jeredmcferron.com/sample_note.xml", OnCompletion);
+                // if we don't have BOTH xml strings, re-download
+                if(noteXml == null || styleSheetXml == null)
+                {
+                    HttpWebRequest.Instance.MakeAsyncRequest("http://www.jeredmcferron.com/sample_note.xml", (Exception ex, Dictionary<string, string> responseHeaders, string body) => 
+                        {
+                            if(ex == null)
+                            {
+                                HandleNotePreReqs(body, null);
+                            }
+                            else
+                            {
+                                ReportException("Failed to download Sermon Notes", ex);
+                            }
+                        });
+                }
+                else
+                {
+                    // if we DO have both, go ahead and create with them.
+                    HandleNotePreReqs(noteXml, styleSheetXml);
+                }
 			}
 		}
 
-        public void OnCompletion(bool result, Dictionary<String, String> responseHeaders, String body)
+        protected void HandleNotePreReqs(String noteXml, String styleXml)
         {
-            if(result)
+            try
             {
-                NoteXml = body;
-
-                // the body is raw XML, so pass it on in to the notes generator
-                try
-                {
-                    Note.CreateNote(NoteXml, OnPreReqsComplete);
-                }
-                catch(Exception e)
-                {
-                    ReportException(e);
-                }
+                Note.HandlePreReqs(noteXml, styleXml, OnPreReqsComplete);
             }
-            else
+            catch(Exception e)
             {
-                ReportException(new InvalidOperationException(String.Format("Could not download sermon notes.")));
+                ReportException("Note PreReqs Failed", e);
             }
-        }
-
-        protected void ReportException(Exception e)
-        {
-            new NSObject().InvokeOnMainThread(delegate
-                {
-                    // explain that we couldn't generate notes
-                    UIAlertView alert = new UIAlertView();
-                    alert.Title = "Error";
-                    alert.Message = "Failed to build notes. " + e.Message;
-                    alert.AddButton("Ok");
-                    alert.Show();
-
-                    FinishNotesCreation();
-                });
         }
 
         protected void OnPreReqsComplete(Note note, Exception e)
         {
             if(e != null)
             {
-                ReportException(e);
+                ReportException("Note PreReqs Failed", e);
             }
             else
             {
@@ -183,7 +182,7 @@ namespace CCVApp
 
                         try
                         {
-                            Note.Create(UIScrollView.Bounds.Width, UIScrollView.Bounds.Height, NoteXml);
+                            Note.Create(UIScrollView.Bounds.Width, UIScrollView.Bounds.Height);
 
                             //todo: we can't pass in an iOS type like this...
                             Note.AddToView(this.UIScrollView);
@@ -200,7 +199,7 @@ namespace CCVApp
                         }
                         catch(Exception ex)
                         {
-                            ReportException(ex);
+                            ReportException("Note Creation Failed", ex);
                         }
                     });
             }
@@ -212,6 +211,21 @@ namespace CCVApp
 
             // flag that we're clear to refresh again
             RefreshingNotes = false;
+        }
+
+        protected void ReportException(String errorMsg, Exception e)
+        {
+            new NSObject().InvokeOnMainThread(delegate
+                {
+                    // explain that we couldn't generate notes
+                    UIAlertView alert = new UIAlertView();
+                    alert.Title = "Note Error";
+                    alert.Message = errorMsg + "Exception: " + e.Message;
+                    alert.AddButton("Ok");
+                    alert.Show();
+
+                    FinishNotesCreation();
+                });
         }
 	}
 }

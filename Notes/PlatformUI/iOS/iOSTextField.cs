@@ -149,8 +149,9 @@ namespace Notes
                 view.AddSubview(TextField);
             }
 
-            public override void RemoveAsSubview()
+            public override void RemoveAsSubview(object obj)
             {
+                // Obj is only needed by Android, so we ignore it
                 TextField.RemoveFromSuperview();
             }
 

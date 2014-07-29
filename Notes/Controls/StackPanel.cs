@@ -186,24 +186,24 @@ namespace Notes
 
 		public override void AddToView(object obj)
 		{
-			base.AddToView(obj);
-
 			// let each child do the same thing
 			foreach(IUIControl control in ChildControls)
 			{
 				control.AddToView(obj);
 			}
+
+            TryAddDebugLayer(obj);
 		}
 
-		public override void RemoveFromView()
+        public override void RemoveFromView(object obj)
 		{
-			base.RemoveFromView();
-
 			// let each child do the same thing
 			foreach(IUIControl control in ChildControls)
 			{
-				control.RemoveFromView();
+				control.RemoveFromView(obj);
 			}
+
+            TryRemoveDebugLayer(obj);
 		}
 
 		public override RectangleF GetFrame()

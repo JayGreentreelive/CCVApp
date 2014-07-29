@@ -132,16 +132,16 @@ namespace Notes
 
 		public override void AddToView(object obj)
 		{
-			base.AddToView(obj);
-
             TextField.AddAsSubview(obj);
+
+            TryAddDebugLayer(obj);
 		}
 
-		public override void RemoveFromView()
+        public override void RemoveFromView(object obj)
 		{
-			base.RemoveFromView();
+			TextField.RemoveAsSubview(obj);
 
-			TextField.RemoveAsSubview();
+            TryRemoveDebugLayer(obj);
 		}
 
 		public override RectangleF GetFrame()

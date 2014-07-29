@@ -34,7 +34,14 @@ namespace Notes
             // Properties
             public override void SetFont(string fontName, float fontSize)
             {
-                Label.Font = UIFont.FromName(fontName, fontSize);
+                try
+                {
+                    Label.Font = UIFont.FromName(fontName, fontSize);
+                }
+                catch
+                {
+                    throw new ArgumentNullException(String.Format("Failed to load font: {0}", fontName));
+                }
             }
 
             protected override void setBackgroundColor(uint backgroundColor)
@@ -127,8 +134,9 @@ namespace Notes
                 view.AddSubview(Label);
             }
 
-            public override void RemoveAsSubview()
+            public override void RemoveAsSubview(object obj)
             {
+                //obj is only for Android, so we don't use it.
                 Label.RemoveFromSuperview();
             }
 

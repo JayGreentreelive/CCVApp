@@ -99,7 +99,7 @@ namespace Notes
 
 
             public abstract void AddAsSubview(object masterView);
-            public abstract void RemoveAsSubview();
+            public abstract void RemoveAsSubview(object masterView);
 
             public abstract void SizeToFit();
         }

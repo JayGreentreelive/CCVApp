@@ -72,18 +72,18 @@ namespace Notes
                                                  PlatformLabel.Position.Y + yOffset);
         }
 
-        public override void AddToView (object obj)
+        public override void AddToView(object obj)
         {
-            base.AddToView (obj);
-
             PlatformLabel.AddAsSubview(obj);
+
+            TryAddDebugLayer(obj);
         }
 
-        public override void RemoveFromView ()
+        public override void RemoveFromView(object obj)
         {
-            base.RemoveFromView ();
+            PlatformLabel.RemoveAsSubview(obj);
 
-            PlatformLabel.RemoveAsSubview();
+            TryRemoveDebugLayer(obj);
         }
 
         public override RectangleF GetFrame ()

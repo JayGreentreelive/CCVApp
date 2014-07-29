@@ -5,10 +5,28 @@
     android:layout_height="fill_parent"
     android:minWidth="25px"
     android:minHeight="25px">
+    <Button
+        android:width="@android:dimen/notification_large_icon_width"
+        android:height="@android:dimen/notification_large_icon_height"
+        android:text="Refresh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/refreshButton" />
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:id="@+id/progressBar"
+        android:indeterminate="true" />
     <ScrollView
         android:minWidth="25px"
         android:minHeight="25px"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/scrollView" />
+        android:layout_height="match_parent"
+        android:id="@+id/scrollView"
+        android:scrollbarStyle="insideInset"
+        android:scrollbars="vertical"
+        android:overScrollMode="always"
+        android:verticalScrollbarPosition="defaultPosition" />
 </LinearLayout>

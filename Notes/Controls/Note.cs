@@ -11,8 +11,9 @@ namespace Notes
         public delegate void OnPreReqsComplete(Note note, Exception e);
 
 		protected List<IUIControl> ChildControls { get; set; }
+        public String NoteXml { get; protected set; }
 
-        public static void CreateNote(string noteXml, OnPreReqsComplete onPreReqsComplete)
+        public static void HandlePreReqs(string noteXml, string styleXml, OnPreReqsComplete onPreReqsComplete)
         {
             // now use a reader to get each element
             XmlReader reader = XmlReader.Create (new StringReader(noteXml));
@@ -47,15 +48,21 @@ namespace Notes
             }
 
             // Parse the styles. We cannot go any further until this is finished.
-            ControlStyles.Initialize(styleSheetUrl, (Exception e) =>
+            ControlStyles.Initialize(styleSheetUrl, styleXml, (Exception e) =>
                 {
                     // We don't just create the note here because the parent
                     // might need to change threads before creating UI objects
-                    onPreReqsComplete(new Note(), e);
+                    onPreReqsComplete(new Note(noteXml), e);
                 });
         }
 
-        public void Create(float parentWidth, float parentHeight, string noteXml)
+        public Note(String noteXml)
+        {
+            // store our XML
+            NoteXml = noteXml;
+        }
+
+        public void Create(float parentWidth, float parentHeight)
         {
             // create a child control list
             ChildControls = new List<IUIControl>();
@@ -66,7 +73,7 @@ namespace Notes
             style.mAlignment = Styles.Alignment.Left;
 
             // now use a reader to get each element
-            XmlReader reader = XmlReader.Create (new StringReader(noteXml));
+            XmlReader reader = XmlReader.Create (new StringReader(NoteXml));
 
             // begin reading the xml stream
             while (reader.Read ()) 
@@ -89,18 +96,20 @@ namespace Notes
             }
         }
 
-		public void Destroy ()
+        public void Destroy(object obj)
 		{
 			// release references to our UI objects
 			if(ChildControls != null)
 			{
 				foreach(IUIControl uiControl in ChildControls)
 				{
-					uiControl.RemoveFromView();
+					uiControl.RemoveFromView(obj);
 				}
 
 				// and clear our UI list
 				ChildControls.Clear();
+
+                NoteXml = null;
 			}
 		}
 

@@ -9,7 +9,7 @@ using Android.OS;
 
 namespace Droid
 {
-    [Activity( Label = "Droid", MainLauncher = true, Icon = "@drawable/icon" )]
+    [Activity( Label = "CCVApp Proto", MainLauncher = true, Icon = "@drawable/icon" )]
     public class MainActivity : Activity
     {
         protected override void OnCreate( Bundle bundle )

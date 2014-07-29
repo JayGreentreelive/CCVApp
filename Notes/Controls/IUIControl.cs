@@ -9,7 +9,7 @@ namespace Notes
 		System.Drawing.RectangleF GetFrame();
 
 		void AddToView(object obj);
-		void RemoveFromView();
+        void RemoveFromView(object obj);
 
 		void TouchesEnded (PointF touch);
 

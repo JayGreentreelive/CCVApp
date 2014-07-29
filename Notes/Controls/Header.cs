@@ -16,13 +16,13 @@ namespace Notes
 			base.Initialize();
 
             Title = PlatformLabel.Create();
-			Title.SetFont("Helvetica-Bold", 16f);
+			Title.SetFont("Verdana", 16f);
 
             Date = PlatformLabel.Create();
-            Date.SetFont("Helvetica", 12f);
+            Date.SetFont("Verdana", 12f);
 
             Speaker = PlatformLabel.Create();
-            Speaker.SetFont("Helvetica", 12f);
+            Speaker.SetFont("Verdana", 12f);
 		}
 
         public Header (CreateParams parentParams, XmlReader reader)
@@ -124,22 +124,22 @@ namespace Notes
                                           Speaker.Position.Y + yOffset);
 		}
 
-		public override void AddToView(object obj)
+        public override void AddToView(object obj)
 		{
-			base.AddToView(obj);
-
-            Title.AddAsSubview(obj);
+			Title.AddAsSubview(obj);
             Date.AddAsSubview(obj);
             Speaker.AddAsSubview(obj);
+
+            TryAddDebugLayer(obj);
 		}
 
-		public override void RemoveFromView()
+        public override void RemoveFromView(object obj)
 		{
-			base.RemoveFromView();
+			Title.RemoveAsSubview(obj);
+            Date.RemoveAsSubview(obj);
+            Speaker.RemoveAsSubview(obj);
 
-            Title.RemoveAsSubview();
-            Date.RemoveAsSubview();
-            Speaker.RemoveAsSubview();
+            TryRemoveDebugLayer(obj);
 		}
 
 		public override RectangleF GetFrame()

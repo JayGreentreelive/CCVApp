@@ -17,20 +17,14 @@ namespace Notes
             public DroidLabel( )
             {
                 Label = new TextView(PlatformCommonUI.Context);
-                Label.LayoutParameters = new ViewGroup.LayoutParams(0, 0);
-
-                //Label.SetBackgroundResource(0);
-                //Label.Layer.AnchorPoint = new PointF (0, 0);
-                //Label.TextAlignment = UITextAlignment.Left;
-                //Label.LineBreakMode = UILineBreakMode.WordWrap;
-                //Label.Lines = 0;
+                Label.LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FillParent, ViewGroup.LayoutParams.WrapContent);
             }
 
-            //TODO: Do not let outside entities call this (right now I am till I finish the port)
-            public static Android.Graphics.Color GetUIColor(uint color)
+            public static object GetUIColor(uint color)
             {
+                // break out the colors and set it up for android
                 return new Android.Graphics.Color(
-                    (byte)((color & 0xFF000000) >> 24), //TODO: obviously completely unacceptable.
+                    (byte)((color & 0xFF000000) >> 24),
                     (byte)((color & 0x00FF0000) >> 16), 
                     (byte)((color & 0x0000FF00) >> 8), 
                     (byte)((color & 0x000000FF)));
@@ -39,14 +33,21 @@ namespace Notes
             // Properties
             public override void SetFont(string fontName, float fontSize)
             {
-                Typeface fontFace = Typeface.CreateFromAsset(PlatformCommonUI.Context.Assets, "fonts/" + fontName.ToLower() + ".ttf");
-                Label.SetTypeface(fontFace, TypefaceStyle.Normal);
-                Label.SetTextSize(Android.Util.ComplexUnitType.Pt, fontSize);
+                try
+                {
+                    Typeface fontFace = Typeface.CreateFromAsset(PlatformCommonUI.Context.Assets, "fonts/" + fontName.ToLower() + ".ttf");
+                    Label.SetTypeface(fontFace, TypefaceStyle.Normal);
+                    Label.SetTextSize(Android.Util.ComplexUnitType.Pt, fontSize);
+                }
+                catch
+                {
+                    throw new ArgumentException(String.Format("Unable to load font: {0}", fontName));
+                }
             }
 
             protected override void setBackgroundColor(uint backgroundColor)
             {
-                Label.SetBackgroundColor(GetUIColor(backgroundColor));
+                Label.SetBackgroundColor( (Android.Graphics.Color) GetUIColor(backgroundColor));
             }
 
             protected override float getOpacity()
@@ -84,6 +85,7 @@ namespace Notes
                 // NOTE: On android we're not supporting a non-0 left/top. I don't know why you'd EVER
                 // want this, but it's possible to set on iOS.
                 Label.LayoutParameters.Width = (int)bounds.Width;
+                Label.SetMaxWidth(Label.LayoutParameters.Width);
                 Label.LayoutParameters.Height = (int)bounds.Height;
             }
 
@@ -115,7 +117,7 @@ namespace Notes
 
             protected override void setTextColor(uint color)
             {
-                Label.SetTextColor( GetUIColor(color) );
+                Label.SetTextColor( (Android.Graphics.Color) GetUIColor(color) );
             }
 
             protected override string getText()
@@ -164,34 +166,33 @@ namespace Notes
                 view.AddView(Label);
             }
 
-            public override void RemoveAsSubview()
+            public override void RemoveAsSubview(object masterView)
             {
-                //Label.RemoveFromSuperview();
-                ((LinearLayout)Label.RootView).RemoveView(Label);
+                // we know that masterView will be an iOS View.
+                RelativeLayout view = masterView as RelativeLayout;
+                if(view == null)
+                {
+                    throw new InvalidCastException("Object passed to Android RemoveAsSubview must be a RelativeLayout.");
+                }
+
+                view.RemoveView(Label);
             }
 
             public override void SizeToFit()
             {
-                Rect bounds = new Rect();
-                Label.Paint.GetTextBounds(Label.Text, 0, Label.Text.Length, bounds);
+                // create the specs we want for measurement
+                int widthMeasureSpec = View.MeasureSpec.MakeMeasureSpec(Label.LayoutParameters.Width, MeasureSpecMode.Unspecified);
+                int heightMeasureSpec = View.MeasureSpec.MakeMeasureSpec(0, MeasureSpecMode.Unspecified);
 
-                // add an extra space at the end to compensate for what iOS does. 
-                Label.LayoutParameters.Width = Math.Min(bounds.Width(), Label.LayoutParameters.Width);
+                // measure the label given the current width/height/text
+                Label.Measure(widthMeasureSpec, heightMeasureSpec);
 
-                int numRows = 0;
-                int index = 0;
+                // update its width
+                Label.LayoutParameters.Width = Label.MeasuredWidth;
+                Label.SetMaxWidth(Label.LayoutParameters.Width);
 
-                int length = Label.Text.Length;
-                while(index < length - 1)
-                {
-                    // 
-                    index += Label.Paint.BreakText(Label.Text.ToCharArray(), index, length - index, Label.LayoutParameters.Width, null);
-
-                    numRows++;
-                }
-
-                Label.LayoutParameters.Height = (numRows + 2) * bounds.Height();
-                    
+                // set the height which will include the wrapped lines
+                Label.LayoutParameters.Height = Label.MeasuredHeight;
             }
         }
     }
