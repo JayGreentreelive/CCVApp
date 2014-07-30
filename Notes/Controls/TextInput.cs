@@ -81,29 +81,28 @@ namespace Notes
                     switch( reader.NodeType )
                     {
                         case XmlNodeType.Element:
+                        {
+                            switch( reader.Name )
                             {
-                                switch( reader.Name )
+                                case "PlaceHolder":
                                 {
-                                    case "PlaceHolder":
-                                        {
-                                            TextField.Placeholder = reader.ReadElementContentAsString( );
-									
-                                            break;
-                                        }
+                                    TextField.Placeholder = reader.ReadElementContentAsString( );
+                                    break;
                                 }
-                                break;
                             }
+                            break;
+                        }
 
                         case XmlNodeType.EndElement:
+                        {
+                            // if we hit the end of our label, we're done.
+                            if( reader.Name == "TextInput" )
                             {
-                                // if we hit the end of our label, we're done.
-                                if( reader.Name == "TextInput" )
-                                {
-                                    finishedLabel = true;
-                                }
-
-                                break;
+                                finishedLabel = true;
                             }
+
+                            break;
+                        }
                     }
                 }
             }

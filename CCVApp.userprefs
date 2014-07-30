@@ -1,17 +1,18 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" PreferredExecutionTarget="Android.094c904b" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/NotesActivity.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhoneRetina.7.1" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Notes/Controls/Quote.cs">
     <Files>
-      <File FileName="Notes/Controls/Note.cs" Line="11" Column="48" />
-      <File FileName="Droid/NotesActivity.cs" Line="18" Column="2" />
+      <File FileName="Notes/Controls/Note.cs" Line="151" Column="13" />
+      <File FileName="Notes/Controls/BaseControl.cs" Line="58" Column="19" />
+      <File FileName="Notes/Controls/Parser.cs" Line="35" Column="81" />
+      <File FileName="Notes/Controls/ControlStyles.cs" Line="146" Column="1" />
+      <File FileName="Notes/Controls/Paragraph.cs" Line="122" Column="40" />
+      <File FileName="Notes/Controls/Quote.cs" Line="120" Column="84" />
+      <File FileName="Notes/Controls/RevealBox.cs" Line="81" Column="39" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="Droid" expanded="True">
-            <Node name="NotesActivity.cs" selected="True" />
-          </Node>
-        </State>
+        <State expanded="True" />
       </Pad>
       <Pad Id="MonoDevelop.Debugger.WatchPad">
         <State />

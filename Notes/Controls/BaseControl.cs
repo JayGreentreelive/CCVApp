@@ -52,61 +52,10 @@ namespace Notes
         protected virtual void ParseCommonAttribs( XmlReader reader, ref RectangleF bounds )
         {
             // check for positioning attribs
-            string result = reader.GetAttribute( "Left" );
-            if( string.IsNullOrEmpty( result ) == false )
-            {
-                float denominator = 1.0f;
-                if( result.Contains( "%" ) )
-                {
-                    result = result.Trim( '%' );
-                    denominator = 100.0f;
-                }
-
-                bounds.X = float.Parse( result ) / denominator;
-            }
-
-            result = reader.GetAttribute( "Top" );
-            if( string.IsNullOrEmpty( result ) == false )
-            {
-                float denominator = 1.0f;
-                if( result.Contains( "%" ) )
-                {
-                    result = result.Trim( '%' );
-                    denominator = 100.0f;
-                }
-
-                bounds.Y = float.Parse( result ) / denominator;
-            }
-
-            result = reader.GetAttribute( "Width" );
-            if( string.IsNullOrEmpty( result ) == false )
-            {
-                float denominator = 1.0f;
-                if( result.Contains( "%" ) )
-                {
-                    result = result.Trim( '%' );
-                    denominator = 100.0f;
-                }
-
-                bounds.Width = float.Parse( result ) / denominator;
-            }
-
-            result = reader.GetAttribute( "Height" );
-            if( string.IsNullOrEmpty( result ) == false )
-            {
-                float denominator = 1.0f;
-                if( result.Contains( "%" ) )
-                {
-                    result = result.Trim( '%' );
-                    denominator = 100.0f;
-                }
-
-                bounds.Height = float.Parse( result ) / denominator;
-            }
-
+            Parser.ParseBounds( reader, ref bounds );
 
             // check for a debug frame
-            result = reader.GetAttribute( "Debug" );
+            string result = reader.GetAttribute( "Debug" );
             if( string.IsNullOrEmpty( result ) == false )
             {
                 ShowDebugFrame = bool.Parse( result );

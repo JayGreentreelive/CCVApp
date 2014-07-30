@@ -89,14 +89,14 @@ namespace Droid
             switch( e.Action )
             {
                 case MotionEventActions.Up:
+                {
+                    if( Note != null )
                     {
-                        if( Note != null )
-                        {
-                            Note.TouchesEnded( new PointF( e.GetX( ), e.GetY( ) ) );
-                        }
-
-                        break;
+                        Note.TouchesEnded( new PointF( e.GetX( ), e.GetY( ) ) );
                     }
+
+                    break;
+                }
             }
             return true;
         }
@@ -124,7 +124,7 @@ namespace Droid
                 // if we don't have BOTH xml strings, re-download
                 if( noteXml == null || styleSheetXml == null )
                 {
-                    HttpWebRequest.Instance.MakeAsyncRequest( "http://www.jeredmcferron.com/sample_note.xml", (Exception ex, Dictionary<string, string> responseHeaders, string body ) =>
+                    HttpWebRequest.Instance.MakeAsyncRequest( "http://www.jeredmcferron.com/sample_note.xml", ( Exception ex, Dictionary<string, string> responseHeaders, string body ) =>
                         {
                             if( ex == null )
                             {
@@ -149,7 +149,8 @@ namespace Droid
             try
             {
                 Note.HandlePreReqs( noteXml, styleXml, OnPreReqsComplete );
-            } catch( Exception e )
+            } 
+            catch( Exception e )
             {
                 ReportException( "Note PreReqs Failed", e );
             }
@@ -184,7 +185,8 @@ namespace Droid
                             ScrollViewLayout.LayoutParameters.Height = scrollFrameHeight;
 
                             FinishNotesCreation( );
-                        } catch( Exception ex )
+                        } 
+                        catch( Exception ex )
                         {
                             ReportException( "Note Creation Failed", ex );
                         }
@@ -206,7 +208,7 @@ namespace Droid
                 {
                     AlertDialog.Builder dlgAlert = new AlertDialog.Builder( this );                      
                     dlgAlert.SetTitle( "Notes Error" ); 
-                    dlgAlert.SetMessage( errorMsg + "Exception: " + e.Message ); 
+                    dlgAlert.SetMessage( errorMsg + " - Exception: " + e.Message ); 
                     dlgAlert.SetPositiveButton( "Ok", delegate(object sender, DialogClickEventArgs ev )
                         {
                         } );

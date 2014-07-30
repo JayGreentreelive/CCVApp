@@ -79,7 +79,7 @@ namespace Notes
                 // This builds a style with the following conditions
                 // Values from XML come first. This means the control specifically asked for this.
                 // Values already set come second. This means the parent specifically asked for this.
-                //Padding is an exception AND DOES NOT INHERIT
+                // Padding is an exception AND DOES NOT INHERIT
                 // Unlike the WithDefaults version, this will allow style values to remain null. Important
                 // for container controls that don't want to force styles.
                 string result = reader.GetAttribute( "FontName" );
@@ -106,17 +106,11 @@ namespace Notes
                 {
                     switch( result )
                     {
-                        case "Left":
-                            style.mAlignment = Styles.Alignment.Left;
-                            break;
-                        case "Right":
-                            style.mAlignment = Styles.Alignment.Right;
-                            break;
-                        case "Center":
-                            style.mAlignment = Styles.Alignment.Center;
-                            break;
-                        default:
-                            throw new Exception( "Unknown alignment type specified." );
+                        case "Left": style.mAlignment = Styles.Alignment.Left; break;
+                        case "Right": style.mAlignment = Styles.Alignment.Right; break;
+                        case "Center": style.mAlignment = Styles.Alignment.Center; break;
+
+                        default: throw new Exception( "Unknown alignment type specified." );
                     }
                 }
 
@@ -389,48 +383,35 @@ namespace Notes
                     {
                     //Find the control elements
                         case XmlNodeType.Element:
+                        {
+                            //most controls don't care about anything other than the basic attributes,
+                            // so we can use a common Parse function. Certain styles may need to define more specific things,
+                            // for which we can add special parse classes
+                            switch( reader.Name )
                             {
-                                //most controls don't care about anything other than the basic attributes,
-                                // so we can use a common Parse function. Certain styles may need to define more specific things,
-                                // for which we can add special parse classes
-                                switch( reader.Name )
-                                {
-                                    case "Note":
-                                        Notes.Styles.Style.ParseStyleAttributes( reader, ref mMainNote );
-                                        break;
-                                    case "Paragraph":
-                                        Notes.Styles.Style.ParseStyleAttributes( reader, ref mParagraph );
-                                        break;
-                                    case "RevealBox":
-                                        Notes.Styles.Style.ParseStyleAttributes( reader, ref mRevealBox );
-                                        break;
-                                    case "TextInput":
-                                        Notes.Styles.Style.ParseStyleAttributes( reader, ref mTextInput );
-                                        break;
-                                    case "Quote":
-                                        Notes.Styles.Style.ParseStyleAttributes( reader, ref mQuote );
-                                        break;
-                                    case "Header":
-                                        Notes.Styles.Style.ParseStyleAttributes( reader, ref mHeader );
-                                        break;
-                                    case "Text":
-                                        Notes.Styles.Style.ParseStyleAttributes( reader, ref mText );
-                                        break;
-                                }
-                                break;
+                                case "Note": Notes.Styles.Style.ParseStyleAttributes( reader, ref mMainNote ); break;
+                                case "Paragraph": Notes.Styles.Style.ParseStyleAttributes( reader, ref mParagraph ); break;
+                                case "RevealBox": Notes.Styles.Style.ParseStyleAttributes( reader, ref mRevealBox ); break;
+                                case "TextInput": Notes.Styles.Style.ParseStyleAttributes( reader, ref mTextInput ); break;
+                                case "Quote": Notes.Styles.Style.ParseStyleAttributes( reader, ref mQuote ); break;
+                                case "Header": Notes.Styles.Style.ParseStyleAttributes( reader, ref mHeader ); break;
+                                case "Text": Notes.Styles.Style.ParseStyleAttributes( reader, ref mText ); break;
                             }
+                            break;
+                        }
 
                         case XmlNodeType.EndElement:
+                        {
+                            if( reader.Name == "Styles" )
                             {
-                                if( reader.Name == "Styles" )
-                                {
-                                    finishedParsing = true;
-                                }
-                                break;
+                                finishedParsing = true;
                             }
+                            break;
+                        }
                     }
                 }
-            } catch( Exception ex )
+            } 
+            catch( Exception ex )
             {
                 exception = ex;
             }

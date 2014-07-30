@@ -14,22 +14,71 @@ namespace Notes
             // either create/parse a new control, or return null.
             switch( reader.Name )
             {
-                case "Paragraph":
-                    return new Paragraph( parentParams, reader );
-                case "Canvas":
-                    return new Canvas( parentParams, reader );
-                case "StackPanel":
-                    return new StackPanel( parentParams, reader );
-                case "RevealBox":
-                    return new RevealBox( parentParams, reader );
-                case "Quote":
-                    return new Quote( parentParams, reader );
-                case "TextInput":
-                    return new TextInput( parentParams, reader );
-            //case "Header": return new Header(parentParams, reader); JHM: 7-29 as I began updating Header to support needed stuff, I realized Paragraphs do EXACTLY what we need.
+                case "Paragraph": return new Paragraph( parentParams, reader );
+                case "Canvas": return new Canvas( parentParams, reader );
+                case "StackPanel": return new StackPanel( parentParams, reader );
+                case "RevealBox": return new RevealBox( parentParams, reader );
+                case "Quote": return new Quote( parentParams, reader );
+                case "TextInput": return new TextInput( parentParams, reader );
+                //case "Header": return new Header(parentParams, reader); JHM: 7-29 as I began updating Header to support needed stuff, I realized Paragraphs do EXACTLY what we need.
             }
 
             throw new ArgumentNullException( String.Format( "Control of type {0} does not exist.", reader.Name ) );
+        }
+
+        public static void ParseBounds( XmlReader reader, ref RectangleF bounds )
+        {
+            string result = reader.GetAttribute( "Left" );
+            if( string.IsNullOrEmpty( result ) == false )
+            {
+                float denominator = 1.0f;
+                if( result.Contains( "%" ) )
+                {
+                    result = result.Trim( '%' );
+                    denominator = 100.0f;
+                }
+
+                bounds.X = float.Parse( result ) / denominator;
+            }
+
+            result = reader.GetAttribute( "Top" );
+            if( string.IsNullOrEmpty( result ) == false )
+            {
+                float denominator = 1.0f;
+                if( result.Contains( "%" ) )
+                {
+                    result = result.Trim( '%' );
+                    denominator = 100.0f;
+                }
+
+                bounds.Y = float.Parse( result ) / denominator;
+            }
+
+            result = reader.GetAttribute( "Width" );
+            if( string.IsNullOrEmpty( result ) == false )
+            {
+                float denominator = 1.0f;
+                if( result.Contains( "%" ) )
+                {
+                    result = result.Trim( '%' );
+                    denominator = 100.0f;
+                }
+
+                bounds.Width = float.Parse( result ) / denominator;
+            }
+
+            result = reader.GetAttribute( "Height" );
+            if( string.IsNullOrEmpty( result ) == false )
+            {
+                float denominator = 1.0f;
+                if( result.Contains( "%" ) )
+                {
+                    result = result.Trim( '%' );
+                    denominator = 100.0f;
+                }
+
+                bounds.Height = float.Parse( result ) / denominator;
+            }
         }
 
         // Return a rect that contains both rects A and B (sort of a bounding box)

@@ -27,7 +27,8 @@ namespace Notes
                 try
                 {
                     Label.Font = UIFont.FromName( fontName, fontSize );
-                } catch
+                } 
+                catch
                 {
                     throw new ArgumentNullException( string.Format( "Failed to load font: {0}", fontName ) );
                 }

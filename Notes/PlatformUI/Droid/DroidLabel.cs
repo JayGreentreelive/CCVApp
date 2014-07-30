@@ -5,7 +5,6 @@ using Android.Widget;
 using Android.Graphics;
 using Android.Views;
 
-
 namespace Notes
 {
     namespace PlatformUI
@@ -28,7 +27,8 @@ namespace Notes
                     Typeface fontFace = Typeface.CreateFromAsset( PlatformCommonUI.Context.Assets, "fonts/" + fontName.ToLower( ) + ".ttf" );
                     Label.SetTypeface( fontFace, TypefaceStyle.Normal );
                     Label.SetTextSize( Android.Util.ComplexUnitType.Pt, fontSize );
-                } catch
+                } 
+                catch
                 {
                     throw new ArgumentException( string.Format( "Unable to load font: {0}", fontName ) );
                 }
@@ -127,13 +127,13 @@ namespace Notes
                 switch( Label.Gravity )
                 {
                     case GravityFlags.Center:
-                        return TextAlignment.Center;
+                    return TextAlignment.Center;
                     case GravityFlags.Left:
-                        return TextAlignment.Left;
+                    return TextAlignment.Left;
                     case GravityFlags.Right:
-                        return TextAlignment.Right;
+                    return TextAlignment.Right;
                     default:
-                        return TextAlignment.Left;
+                    return TextAlignment.Left;
                 }
             }
 
@@ -143,17 +143,17 @@ namespace Notes
                 switch( alignment )
                 {
                     case TextAlignment.Center:
-                        Label.Gravity = GravityFlags.Center;
-                        break;
+                    Label.Gravity = GravityFlags.Center;
+                    break;
                     case TextAlignment.Left:
-                        Label.Gravity = GravityFlags.Left;
-                        break;
+                    Label.Gravity = GravityFlags.Left;
+                    break;
                     case TextAlignment.Right:
-                        Label.Gravity = GravityFlags.Right;
-                        break;
+                    Label.Gravity = GravityFlags.Right;
+                    break;
                     default:
-                        Label.Gravity = GravityFlags.Left;
-                        break;
+                    Label.Gravity = GravityFlags.Left;
+                    break;
                 }
             }
 

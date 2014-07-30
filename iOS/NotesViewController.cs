@@ -58,11 +58,12 @@ namespace CCVApp
         {
             base.ViewDidLayoutSubviews( );
 
+            RefreshButton.Layer.Position = new PointF( View.Bounds.Width / 2, RefreshButton.Bounds.Height + 10 );
+
             UIScrollView.Frame = new RectangleF( 0, 0, View.Bounds.Width, View.Bounds.Height );
+            UIScrollView.Layer.Position = new PointF( UIScrollView.Layer.Position.X, UIScrollView.Layer.Position.Y + RefreshButton.Frame.Bottom);
 
             Indicator.Layer.Position = new PointF( View.Bounds.Width / 2, View.Bounds.Height / 2 );
-
-            RefreshButton.Layer.Position = new PointF( View.Bounds.Width / 2, RefreshButton.Bounds.Height + 10 );
 
             // re-create our notes with the new dimensions
             string noteXml = null;
@@ -83,7 +84,10 @@ namespace CCVApp
             UIScrollView.Interceptor = this;
             UIScrollView.Frame = View.Frame;
             UIScrollView.BackgroundColor = UIColor.Black;
+
+            View.BackgroundColor = UIScrollView.BackgroundColor;
             View.AddSubview( UIScrollView );
+
 
             // add a busy indicator
             Indicator = new UIActivityIndicatorView( UIActivityIndicatorViewStyle.White );
@@ -99,7 +103,7 @@ namespace CCVApp
             {
                 CreateNotes( null, null );
             };
-            UIScrollView.AddSubview( RefreshButton );
+            View.AddSubview( RefreshButton );
         }
 
         public override void TouchesEnded( NSSet touches, UIEvent evt )
@@ -164,7 +168,8 @@ namespace CCVApp
             try
             {
                 Note.HandlePreReqs( noteXml, styleXml, OnPreReqsComplete );
-            } catch( Exception e )
+            } 
+            catch( Exception e )
             {
                 ReportException( "Note PreReqs Failed", e );
             }
@@ -190,15 +195,16 @@ namespace CCVApp
                             Note.AddToView( this.UIScrollView );
 
                             // take the requested background color
-                            //TODO: Not acceptable to leave this!
                             UIScrollView.BackgroundColor = Notes.PlatformUI.iOSLabel.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value );
+                            View.BackgroundColor = UIScrollView.BackgroundColor; //Make the view itself match too
 
                             // update the height of the scroll view to fit all content
                             RectangleF frame = Note.GetFrame( );
                             UIScrollView.ContentSize = new SizeF( UIScrollView.Bounds.Width, frame.Size.Height + ( UIScrollView.Bounds.Height / 2 ) );
 
                             FinishNotesCreation( );
-                        } catch( Exception ex )
+                        }
+                        catch( Exception ex )
                         {
                             ReportException( "Note Creation Failed", ex );
                         }

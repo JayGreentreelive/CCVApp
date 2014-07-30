@@ -27,6 +27,9 @@ namespace Notes
                 DummyView = new View( PlatformCommonUI.Context );
                 DummyView.Focusable = true;
                 DummyView.FocusableInTouchMode = true;
+
+                // let the dummy request focus so that the edit field doesn't get it and bring up the keyboard.
+                DummyView.RequestFocus();
             }
 
             // Properties
@@ -37,7 +40,8 @@ namespace Notes
                     Typeface fontFace = Typeface.CreateFromAsset( PlatformCommonUI.Context.Assets, "fonts/" + fontName.ToLower( ) + ".ttf" );
                     TextField.SetTypeface( fontFace, TypefaceStyle.Normal );
                     TextField.SetTextSize( Android.Util.ComplexUnitType.Pt, fontSize );
-                } catch
+                } 
+                catch
                 {
                     throw new ArgumentException( string.Format( "Unable to load font: {0}", fontName ) );
                 }

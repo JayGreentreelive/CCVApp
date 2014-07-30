@@ -61,36 +61,36 @@ namespace Notes
                     switch( reader.NodeType )
                     {
                         case XmlNodeType.Element:
+                        {
+                            switch( reader.Name )
                             {
-                                switch( reader.Name )
+                                case "Text":
                                 {
-                                    case "Text":
-                                        {
-                                            HiddenText = reader.ReadElementContentAsString( );
-                                            break;
-                                        }
+                                    HiddenText = reader.ReadElementContentAsString( );
+                                    break;
                                 }
-                                break;
                             }
+                            break;
+                        }
 
                         case XmlNodeType.Text:
-                            {
-                                // support text as embedded in the element
-                                HiddenText = reader.Value.Replace( System.Environment.NewLine, "" );
+                        {
+                            // support text as embedded in the element
+                            HiddenText = reader.Value.Replace( System.Environment.NewLine, "" );
 
-                                break;
-                            }
+                            break;
+                        }
 
                         case XmlNodeType.EndElement:
+                        {
+                            // if we hit the end of our label, we're done.
+                            if( reader.Name == "RevealBox" )
                             {
-                                // if we hit the end of our label, we're done.
-                                if( reader.Name == "RevealBox" )
-                                {
-                                    finishedLabel = true;
-                                }
-
-                                break;
+                                finishedLabel = true;
                             }
+
+                            break;
+                        }
                     }
                 }
             }

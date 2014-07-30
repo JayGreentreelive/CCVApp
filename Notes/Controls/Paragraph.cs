@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Drawing;
 using Notes.Styles;
+using System.Text.RegularExpressions;
 
 namespace Notes
 {
@@ -44,17 +45,17 @@ namespace Notes
                 switch( result )
                 {
                     case "Left":
-                        ChildHorzAlignment = Alignment.Left;
-                        break;
+                    ChildHorzAlignment = Alignment.Left;
+                    break;
                     case "Right":
-                        ChildHorzAlignment = Alignment.Right;
-                        break;
+                    ChildHorzAlignment = Alignment.Right;
+                    break;
                     case "Center":
-                        ChildHorzAlignment = Alignment.Center;
-                        break;
+                    ChildHorzAlignment = Alignment.Center;
+                    break;
                     default:
-                        ChildHorzAlignment = mStyle.mAlignment.Value;
-                        break;
+                    ChildHorzAlignment = mStyle.mAlignment.Value;
+                    break;
                 }
             }
             else
@@ -96,7 +97,7 @@ namespace Notes
             // now calculate the available width based on padding. (Don't actually change our width)
             float availableWidth = bounds.Width - leftPadding - rightPadding;
 
-            bool trimmedLeadingSpace = false;
+            //bool trimmedLeadingSpace = false;
 
             bool finishedReading = false;
             while( finishedReading == false && reader.Read( ) )
@@ -104,54 +105,49 @@ namespace Notes
                 switch( reader.NodeType )
                 {
                     case XmlNodeType.Element:
+                    {
+                        IUIControl control = Parser.TryParseControl( new CreateParams( availableWidth, parentParams.Height, ref mStyle ), reader );
+                        if( control != null )
                         {
-                            IUIControl control = Parser.TryParseControl( new CreateParams( availableWidth, parentParams.Height, ref mStyle ), reader );
-                            if( control != null )
+                            // only allow RevealBoxes as children.
+                            if( control as RevealBox == null && control as TextInput == null )
                             {
-                                // only allow RevealBoxes as children.
-                                if( control as RevealBox == null && control as TextInput == null )
-                                {
-                                    throw new InvalidOperationException( "RevealBox and TextInput are the only supported children of Paragraph." );
-                                }
-                                ChildControls.Add( control );
+                                throw new InvalidOperationException( "RevealBox and TextInput are the only supported children of Paragraph." );
                             }
-                            break;
+                            ChildControls.Add( control );
                         }
+                        break;
+                    }
 
                     case XmlNodeType.Text:
+                    {
+                        // grab the text. remove any weird characters
+                        string text = Regex.Replace( reader.Value, @"\t|\n|\r", "" );
+
+                        // now break it into words so we can do word wrapping
+                        string[] words = text.Split( ' ' );
+                        foreach( string word in words )
                         {
-                            // grab the text. Remove leading/trailing spaces and lines
-                            string text = reader.Value.Replace( System.Environment.NewLine, "" );
-
-                            // Remove leading spaces only on the very first set of text within this paragraph.
-                            // This allows authors to put the Paragraph tag on a seperate line from the content.
-                            if( trimmedLeadingSpace == false )
+                            // create labels out of each one
+                            if( string.IsNullOrEmpty( word ) == false )
                             {
-                                text = text.TrimStart( ' ' );
-                                trimmedLeadingSpace = true;
-                            }
-
-                            // now break it into words so we can do word wrapping
-                            string[] words = text.Split( ' ' );
-                            foreach( string word in words )
-                            {
-                                // create labels out of each one
                                 NoteText textLabel = new NoteText( new CreateParams( availableWidth, parentParams.Height, ref mStyle ), word + " " );
 
                                 ChildControls.Add( textLabel );
                             }
-                            break;
                         }
+                        break;
+                    }
 
                     case XmlNodeType.EndElement:
+                    {
+                        // if we hit the end of our label, we're done.
+                        if( reader.Name == "Paragraph" )
                         {
-                            // if we hit the end of our label, we're done.
-                            if( reader.Name == "Paragraph" )
-                            {
-                                finishedReading = true;
-                            }
-                            break;
+                            finishedReading = true;
                         }
+                        break;
+                    }
                 }
             }
 
@@ -274,14 +270,14 @@ namespace Notes
             // I made it bounds.width again and can't find any problems with it, but I'm leaving the old calculation
             // here just in case we need it again. :-\
                 case Alignment.Right:
-                    xRowAdjust = ( bounds.Width - rowWidth );
-                    break;
+                xRowAdjust = ( bounds.Width - rowWidth );
+                break;
                 case Alignment.Center:
-                    xRowAdjust = ( ( bounds.Width / 2 ) - ( rowWidth / 2 ) );
-                    break;
+                xRowAdjust = ( ( bounds.Width / 2 ) - ( rowWidth / 2 ) );
+                break;
                 case Alignment.Left:
-                    xRowAdjust = 0;
-                    break;
+                xRowAdjust = 0;
+                break;
             }
 
             // Now adjust each control to be aligned correctly on X and Y

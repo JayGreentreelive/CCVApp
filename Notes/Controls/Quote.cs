@@ -2,6 +2,7 @@
 using Notes.PlatformUI;
 using System.Xml;
 using System.Drawing;
+using System.Text.RegularExpressions;
 
 namespace Notes
 {
@@ -100,38 +101,36 @@ namespace Notes
             {
                 switch( reader.NodeType )
                 {
-                    case XmlNodeType.Element:
-                        {
-                            switch( reader.Name )
-                            {
-                                case "Text":
-                                {
-                                    QuoteLabel.Text = reader.ReadElementContentAsString( );
-                                    break;
-                                }
-                            }
-                            break;
-                        }
-
                     case XmlNodeType.Text:
-                        {
-                            // support text as embedded in the element
-                            QuoteLabel.Text = reader.Value.Replace( System.Environment.NewLine, "" ).Trim( ' ' );
+                    {
+                        // grab the text. remove any weird characters
+                        string text = Regex.Replace( reader.Value, @"\t|\n|\r", "" );
 
-                            break;
+                        // now break it into words so we can do word wrapping
+                        string[] words = text.Split( ' ' );
+                        foreach( string word in words )
+                        {
+                            // create labels out of each one
+                            if( string.IsNullOrEmpty( word ) == false )
+                            {
+                                QuoteLabel.Text += word + " ";
+                            }
                         }
+
+                        break;
+                    }
 
 
                     case XmlNodeType.EndElement:
+                    {
+                        // if we hit the end of our label, we're done.
+                        if( reader.Name == "Quote" )
                         {
-                            // if we hit the end of our label, we're done.
-                            if( reader.Name == "Quote" )
-                            {
-                                finishedScripture = true;
-                            }
-
-                            break;
+                            finishedScripture = true;
                         }
+
+                        break;
+                    }
                 }
             }
 

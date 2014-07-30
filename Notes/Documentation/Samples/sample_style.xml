@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Styles>
-     <Note BackgroundColor="0x000000FF"/>
+     <Note Padding="5%" BackgroundColor="0x000000FF"/>
      <Paragraph PaddingBottom="1%"/>
      <RevealBox FontName="Verdana" FontSize="12" FontColor="0x6d1c1cFF"/>
      <Quote FontName="Verdana" FontSize="12" FontColor="0x6d1c1cFF"/>

@@ -61,48 +61,48 @@ namespace Notes
                 {
                 // we expect elements
                     case XmlNodeType.Element:
+                    {
+                        // determine which element it is and setup appropriately
+                        switch( reader.Name )
                         {
-                            // determine which element it is and setup appropriately
-                            switch( reader.Name )
+                            case "Title":
                             {
-                                case "Title":
-                                    {
-                                        Title.Text = reader.ReadElementContentAsString( );
-                                        break;
-                                    }
+                                Title.Text = reader.ReadElementContentAsString( );
+                                break;
+                            }
 
-                                case "Date":
-                                    {
-                                        string result = reader.GetAttribute( "Top" );
-                                        if( string.IsNullOrEmpty( result ) == false )
-                                        {
-                                            dateOffsetY = float.Parse( result );
-                                        }
+                            case "Date":
+                            {
+                                string result = reader.GetAttribute( "Top" );
+                                if( string.IsNullOrEmpty( result ) == false )
+                                {
+                                    dateOffsetY = float.Parse( result );
+                                }
 
-                                        Date.Text = reader.ReadElementContentAsString( );
+                                Date.Text = reader.ReadElementContentAsString( );
 
                                 
-                                        break;
-                                    }
-
-                                case "Speaker":
-                                    {
-                                        Speaker.Text = reader.ReadElementContentAsString( );
-                                        break;
-                                    }
+                                break;
                             }
-                            break;
+
+                            case "Speaker":
+                            {
+                                Speaker.Text = reader.ReadElementContentAsString( );
+                                break;
+                            }
                         }
+                        break;
+                    }
 
                     case XmlNodeType.EndElement:
+                    {
+                        if( reader.Name == "Header" )
                         {
-                            if( reader.Name == "Header" )
-                            {
-                                // flag that we're done reading the header
-                                finishedHeader = true;
-                            }
-                            break;
+                            // flag that we're done reading the header
+                            finishedHeader = true;
                         }
+                        break;
+                    }
                 }
             }
 
