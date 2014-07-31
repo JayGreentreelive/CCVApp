@@ -5,8 +5,16 @@ using Notes.PlatformUI;
 
 namespace Notes
 {
+    /// <summary>
+    /// A label displaying Placeholder text. When tapped, allows
+    /// a user to enter text via keyboard.
+    /// </summary>
     public class TextInput : BaseControl
     {
+        /// <summary>
+        /// Actual textfield object.
+        /// </summary>
+        /// <value>The text field.</value>
         protected PlatformTextField TextField { get; set; }
 
         protected override void Initialize( )

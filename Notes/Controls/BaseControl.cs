@@ -6,15 +6,29 @@ using Notes.PlatformUI;
 
 namespace Notes
 {
+    /// <summary>
+    /// Contains common properties and methods used by all UI Controls.
+    /// </summary>
     public abstract class BaseControl : IUIControl
     {
+        /// <summary>
+        /// Layer used for the debug frame.
+        /// </summary>
         protected PlatformLabel DebugFrameView { get; set; }
 
+        /// <summary>
+        /// If true, displays a debug frame around the bounds of the control.
+        /// </summary>
         protected bool ShowDebugFrame { get; set; }
 
+        /// <summary>
+        /// Defines the style that this control should use.
+        /// </summary>
         protected Style mStyle;
 
-        // Class used for passing creation params to child controls
+        /// <summary>
+        /// Used to pass creation params from parent to child.
+        /// </summary>
         public class CreateParams
         {
             public float Height { get; set; }

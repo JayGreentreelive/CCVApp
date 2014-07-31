@@ -19,20 +19,46 @@ namespace Droid
     [Activity( Label = "NotesActivity" )]            
     public class NotesActivity : Activity, View.IOnTouchListener
     {
+        /// <summary>
+        /// Tags for storing the NoteScript and Style XML during an orientation change.
+        /// </summary>
         const string XML_NOTE_KEY = "NOTE_XML";
         const string XML_STYLE_KEY = "STYLE_XML";
 
+        /// <summary>
+        /// Reloads the NoteScript
+        /// </summary>
+        /// <value>The refresh button.</value>
         Button RefreshButton { get; set; }
 
+        /// <summary>
+        /// Displays the Note
+        /// </summary>
+        /// <value>The scroll view.</value>
         ScrollView ScrollView { get; set; }
 
+        /// <summary>
+        /// Immediate child of the ScrollView. Parent to all content
+        /// </summary>
+        /// <value>The scroll view layout.</value>
         RelativeLayout ScrollViewLayout { get; set; }
 
+        /// <summary>
+        /// Displays when content is being downloaded.
+        /// </summary>
+        /// <value>The indicator.</value>
         ProgressBar Indicator { get; set; }
 
-        // Notes members
+        /// <summary>
+        /// True when notes are being refreshed to prevent multiple simultaneous downloads.
+        /// </summary>
+        /// <value><c>true</c> if refreshing notes; otherwise, <c>false</c>.</value>
         bool RefreshingNotes { get; set; }
 
+        /// <summary>
+        /// Actual Note object created by a NoteScript
+        /// </summary>
+        /// <value>The note.</value>
         Note Note { get; set; }
 
         protected override void OnCreate( Bundle bundle )
@@ -132,7 +158,7 @@ namespace Droid
                             }
                             else
                             {
-                                ReportException( "Failed to download Sermon Notes", ex );
+                                ReportException( "NoteScript Download Error", ex );
                             }
                         } );
                 }
@@ -152,7 +178,7 @@ namespace Droid
             } 
             catch( Exception e )
             {
-                ReportException( "Note PreReqs Failed", e );
+                ReportException( "StyleSheet Error", e );
             }
         }
 
@@ -160,7 +186,7 @@ namespace Droid
         {
             if( e != null )
             {
-                ReportException( "Note PreReqs Failed", e );
+                ReportException( "StyleSheet Error", e );
             }
             else
             {
@@ -188,7 +214,7 @@ namespace Droid
                         } 
                         catch( Exception ex )
                         {
-                            ReportException( "Note Creation Failed", ex );
+                            ReportException( "NoteScript Error", ex );
                         }
                     } );
             }
@@ -207,8 +233,8 @@ namespace Droid
             RunOnUiThread( delegate
                 {
                     AlertDialog.Builder dlgAlert = new AlertDialog.Builder( this );                      
-                    dlgAlert.SetTitle( "Notes Error" ); 
-                    dlgAlert.SetMessage( errorMsg + " - Exception: " + e.Message ); 
+                    dlgAlert.SetTitle( "Note Error" ); 
+                    dlgAlert.SetMessage( errorMsg + "\n" + e.Message ); 
                     dlgAlert.SetPositiveButton( "Ok", delegate(object sender, DialogClickEventArgs ev )
                         {
                         } );

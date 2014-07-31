@@ -6,12 +6,27 @@ using Notes.Styles;
 
 namespace Notes
 {
+    /// <summary>
+    /// UI Control that allows absolute layout of children relative to the Canvas' X/Y position.
+    /// </summary>
     public class Canvas : BaseControl
     {
+        /// <summary>
+        /// List of owned and managed child controls.
+        /// </summary>
+        /// <value>The child controls.</value>
         protected List<IUIControl> ChildControls { get; set; }
 
-        protected RectangleF Bounds { get; set; }
+        /// <summary>
+        /// The bounds (including position) of this control.
+        /// </summary>
+        /// <value>The bounds.</value>
+        protected RectangleF Frame { get; set; }
 
+        /// <summary>
+        /// The alignment that child controls should take within this control.
+        /// </summary>
+        /// <value>The child horz alignment.</value>
         protected Alignment ChildHorzAlignment { get; set; }
 
         protected override void Initialize( )
@@ -171,10 +186,10 @@ namespace Notes
             // calculate them on the fly because we
             // would lose any control defined offsets, which would throw everything off.
             bounds.Height = height + bottomPadding;
-            Bounds = bounds;
+            Frame = bounds;
 
             // store our debug frame
-            base.DebugFrameView.Frame = Bounds;
+            base.DebugFrameView.Frame = Frame;
         }
 
         public override void TouchesEnded( PointF touch )
@@ -197,8 +212,8 @@ namespace Notes
             }
 
             // update our bounds by the new offsets.
-            Bounds = new RectangleF( Bounds.X + xOffset, Bounds.Y + yOffset, Bounds.Width, Bounds.Height );
-            base.DebugFrameView.Frame = Bounds;
+            Frame = new RectangleF( Frame.X + xOffset, Frame.Y + yOffset, Frame.Width, Frame.Height );
+            base.DebugFrameView.Frame = Frame;
         }
 
         public override void AddToView( object obj )
@@ -225,7 +240,7 @@ namespace Notes
 
         public override RectangleF GetFrame( )
         {
-            return Bounds;
+            return Frame;
         }
     }
 }

@@ -7,17 +7,39 @@ using Notes.Styles;
 
 namespace Notes
 {
+    /// <summary>
+    /// The core object that all UI Controls are children of. Does not need to derive from BaseControl.
+    /// Includes utility functions for creating a Note object and initializing the styles.
+    /// </summary>
     public class Note
     {
+        /// <summary>
+        /// Delegate for notifying the caller when a note is ready to be created via Note.Create()
+        /// </summary>
         public delegate void OnPreReqsComplete( Note note, Exception e );
 
+        /// <summary>
+        /// A list of all immediate child controls of the Note. (This list is hierchical and not flat)
+        /// </summary>
+        /// <value>The child controls.</value>
         protected List<IUIControl> ChildControls { get; set; }
 
+        /// <summary>
+        /// The NoteScript XML. Stored for rebuilding notes on an orientation change.
+        /// </summary>
+        /// <value>The note xml.</value>
         public string NoteXml { get; protected set; }
 
+        /// <summary>
+        /// The style settings for the Note. Will be passed to all children.
+        /// </summary>
         protected Style mStyle;
 
-        protected RectangleF Bounds { get; set; }
+        /// <summary>
+        /// The bounds (including position) of the note.
+        /// </summary>
+        /// <value>The bounds.</value>
+        protected RectangleF Frame { get; set; }
 
         public static void HandlePreReqs( string noteXml, string styleXml, OnPreReqsComplete onPreReqsComplete )
         {
@@ -39,12 +61,12 @@ namespace Notes
                             styleSheetUrl = reader.GetAttribute( "StyleSheet" );
                             if( styleSheetUrl == null )
                             {
-                                throw new InvalidDataException( "Could not find attribute 'StyleSheet'. This should be a URL pointing to the style to use." );
+                                throw new Exception( "Could not find attribute 'StyleSheet'. This should be a URL pointing to the style to use." );
                             }
                         }
                         else
                         {
-                            throw new InvalidDataException( string.Format( "Expected root element to be <Note>. Found <{0}>", reader.Name ) );
+                            throw new Exception( string.Format( "Expected root element to be <Note>. Found <{0}>", reader.Name ) );
                         }
 
                         finishedReading = true;
@@ -93,7 +115,7 @@ namespace Notes
                         }
                         else
                         {
-                            throw new ArgumentException( String.Format( "Expected <Note> elemtn. Found <{0}> instead.", reader.Name ) );
+                            throw new Exception( String.Format( "Expected <Note> element. Found <{0}> instead.", reader.Name ) );
                         }
 
                         finishedReading = true;
@@ -217,7 +239,7 @@ namespace Notes
             }
 
             bounds.Height = ( yOffset - bounds.Y ) + bottomPadding;
-            Bounds = bounds;
+            Frame = bounds;
         }
 
         public void AddToView( object view )
@@ -230,7 +252,7 @@ namespace Notes
 
         public RectangleF GetFrame( )
         {
-            return Bounds;
+            return Frame;
         }
 
         public void TouchesEnded( PointF touch )

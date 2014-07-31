@@ -15,8 +15,9 @@ namespace Notes
             Natural
         }
 
-        // All PlatformUI implementations dervice from this class, as it contains
-        // interfaces for commonly used properties (I mean just LOOK AT IT!!)
+        /// <summary>
+        /// The base platformUI that provides an interface to platform specific UI controls.
+        /// </summary>
         public abstract class PlatformBaseUI
         {
             #if __ANDROID__

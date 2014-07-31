@@ -6,13 +6,30 @@ using System.Text.RegularExpressions;
 
 namespace Notes
 {
+    /// <summary>
+    /// Contains a text label that displays a quote, as well as a text label
+    /// with the quote's citation.
+    /// Assumes a layout or quote and that cannot be overridden.
+    /// </summary>
     public class Quote : BaseControl
     {
+        /// <summary>
+        /// The quote to display
+        /// </summary>
+        /// <value>The quote label.</value>
         protected PlatformLabel QuoteLabel { get; set; }
 
+        /// <summary>
+        /// The entity being cited.
+        /// </summary>
+        /// <value>The citation.</value>
         protected PlatformLabel Citation { get; set; }
 
-        protected RectangleF Bounds { get; set; }
+        /// <summary>
+        /// The bounds (including position) of the quote.
+        /// </summary>
+        /// <value>The bounds.</value>
+        protected RectangleF Frame { get; set; }
 
         protected override void Initialize( )
         {
@@ -154,8 +171,8 @@ namespace Notes
             bounds.Height = frame.Height + topPadding + bottomPadding;
 
             // and store that as our bounds
-            Bounds = bounds;
-            base.DebugFrameView.Frame = Bounds;
+            Frame = bounds;
+            base.DebugFrameView.Frame = Frame;
         }
 
         public override void AddOffset( float xOffset, float yOffset )
@@ -169,8 +186,8 @@ namespace Notes
                 Citation.Position.Y + yOffset );
 
             // update our bounds by the new offsets.
-            Bounds = new RectangleF( Bounds.X + xOffset, Bounds.Y + yOffset, Bounds.Width, Bounds.Height );
-            base.DebugFrameView.Frame = Bounds;
+            Frame = new RectangleF( Frame.X + xOffset, Frame.Y + yOffset, Frame.Width, Frame.Height );
+            base.DebugFrameView.Frame = Frame;
         }
 
         public override void AddToView( object obj )
@@ -189,9 +206,9 @@ namespace Notes
             TryRemoveDebugLayer( obj );
         }
 
-        public override System.Drawing.RectangleF GetFrame( )
+        public override RectangleF GetFrame( )
         {
-            return Bounds;
+            return Frame;
         }
     }
 }

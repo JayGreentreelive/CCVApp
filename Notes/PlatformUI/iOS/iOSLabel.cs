@@ -10,6 +10,9 @@ namespace Notes
 {
     namespace PlatformUI
     {
+        /// <summary>
+        /// The iOS implementation of a text label.
+        /// </summary>
         public class iOSLabel : PlatformLabel
         {
             UILabel Label { get; set; }
@@ -28,12 +31,11 @@ namespace Notes
             {
                 try
                 {
-                    String fontScriptName = iOSCommon.LoadDynamicFont(fontName);
-                    Label.Font = UIFont.FromName(fontScriptName, fontSize );
+                    Label.Font = iOSCommon.LoadFontDynamic(fontName, fontSize);
                 } 
                 catch
                 {
-                    throw new ArgumentNullException( string.Format( "Failed to load font: {0}", fontName ) );
+                    throw new Exception( string.Format( "Failed to load font: {0}", fontName ) );
                 }
             }
 
@@ -123,7 +125,7 @@ namespace Notes
                 UIView view = masterView as UIView;
                 if( view == null )
                 {
-                    throw new InvalidCastException( "Object passed to iOS AddAsSubview must be a UIView." );
+                    throw new Exception( "Object passed to iOS AddAsSubview must be a UIView." );
                 }
 
                 view.AddSubview( Label );

@@ -8,7 +8,9 @@ namespace Notes
 {
     namespace Styles
     {
-        // Objects that define a style
+        /// <summary>
+        /// Alignment options for controls within parents.
+        /// </summary>
         public enum Alignment
         {
             Inherit,
@@ -17,6 +19,10 @@ namespace Notes
             Center
         }
 
+        /// <summary>
+        /// Defines the font a control's text should use.
+        /// Anything null uses values from the control's default style.
+        /// </summary>
         public struct FontParams
         {
             public string mName;
@@ -31,16 +37,44 @@ namespace Notes
             }
         }
 
-        //Style class
+        /// <summary>
+        /// Defines common styling values for controls.
+        /// </summary>
         public struct Style
         {
+            /// <summary>
+            /// The background color for a control. (Not used by all controls)
+            /// </summary>
             public uint? mBackgroundColor;
+
+            /// <summary>
+            /// The alignment of the control within its parent.
+            /// </summary>
             public Alignment? mAlignment;
+
+            /// <summary>
+            /// The font the control's text should use, as well as what will be passed to children.
+            /// </summary>
             public FontParams mFont;
 
+            /// <summary>
+            /// Amount of padding between control's content and left edge.
+            /// </summary>
             public float? mPaddingLeft;
+
+            /// <summary>
+            /// Amount of padding between control's content and top edge.
+            /// </summary>
             public float? mPaddingTop;
+
+            /// <summary>
+            /// Amount of padding between control's content and right edge.
+            /// </summary>
             public float? mPaddingRight;
+
+            /// <summary>
+            /// Amount of padding between control's content and bottom edge.
+            /// </summary>
             public float? mPaddingBottom;
 
             public void Initialize( )
@@ -73,6 +107,12 @@ namespace Notes
                 return styleValue;
             }
 
+            public static UInt32 ParseColor( string color )
+            {
+                if( color[0] != '#' ) throw new Exception( String.Format( "Colors must be in the format #RRGGBBAA. Color found: {0}", color ) );
+                return Convert.ToUInt32( color.Substring( 1 ), 16 ); //skip the first character
+            }
+
             // Utility function for parsing common style attributes
             public static void ParseStyleAttributes( XmlReader reader, ref Style style )
             {
@@ -97,7 +137,7 @@ namespace Notes
                 result = reader.GetAttribute( "FontColor" );
                 if( string.IsNullOrEmpty( result ) == false )
                 {
-                    style.mFont.mColor = Convert.ToUInt32( result, 16 );
+                    style.mFont.mColor = ParseColor( result );
                 }
 
                 // check for alignment
@@ -118,7 +158,7 @@ namespace Notes
                 result = reader.GetAttribute( "BackgroundColor" );
                 if( string.IsNullOrEmpty( result ) == false )
                 {
-                    style.mBackgroundColor = Convert.ToUInt32( result, 16 );
+                    style.mBackgroundColor = ParseColor( result );
                 }
 
                 // check for padding; DOES NOT INHERIT
@@ -281,25 +321,82 @@ namespace Notes
     //This is a static class containing all the default styles for controls
     public class ControlStyles
     {
+        ///<summary>>
+        /// Delegate used to notify the creator that styles have been downloaded and created.
+        /// </summary>
         public delegate void StylesCreated( Exception e );
 
+        /// <summary>
+        /// Delegate object to invoke.
+        /// </summary>
         static StylesCreated mStylesCreatedDelegate;
 
+        /// <summary>
+        /// URL of the style sheet to download. (For reference / debugging)
+        /// </summary>
         static string mStyleSheetUrl;
 
+        /// <summary>
+        /// Actual XML of the style sheet. Used when needing to rebuild notes for an orientation change.
+        /// </summary>
+        /// <value>The style sheet xml.</value>
         public static string StyleSheetXml { get; protected set; }
 
         // These are to be referenced globally as needed
+        /// <summary>
+        /// Note control's default styles if non are specified by a parent or in NoteScript XML.
+        /// </summary>
         public static Styles.Style mMainNote;
+
+        /// <summary>
+        /// Paragraph control's default styles if non are specified by a parent or in NoteScript XML.
+        /// </summary>
         public static Styles.Style mParagraph;
+
+        /// <summary>
+        /// Stack control's default styles if non are specified by a parent or in NoteScript XML.
+        /// </summary>
         public static Styles.Style mStackPanel;
+
+        /// <summary>
+        /// Revealbox's control's default styles if non are specified by a parent or in NoteScript XML.
+        /// </summary>
         public static Styles.Style mRevealBox;
+
+        /// <summary>
+        /// TextInput control's default styles if non are specified by a parent or in NoteScript XML.
+        /// </summary>
         public static Styles.Style mTextInput;
+
+        /// <summary>
+        /// Header Container's default styles if non are specified by a parent or in NoteScript XML.
+        /// </summary>
         public static Styles.Style mHeaderContainer;
+
+        /// <summary>
+        /// Header Title control's default styles if non are specified by a parent or in NoteScript XML.
+        /// </summary>
         public static Styles.Style mHeaderTitle;
+
+        /// <summary>
+        /// Header Date control's default styles if non are specified by a parent or in NoteScript XML.
+        /// </summary>
         public static Styles.Style mHeaderDate;
+
+        /// <summary>
+        /// Header Speaker control's default styles if non are specified by a parent or in NoteScript XML.
+        /// </summary>
         public static Styles.Style mHeaderSpeaker;
+
+        /// <summary>
+        /// Quote control's default styles if non are specified by a parent or in NoteScript XML.
+        /// </summary>
         public static Styles.Style mQuote;
+
+        /// <summary>
+        /// Text's default styles if non are specified by a parent or in NoteScript XML.
+        /// Note that text is not an actual control, rather it uses Labels.
+        /// </summary>
         public static Styles.Style mText;
 
 

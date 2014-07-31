@@ -3,11 +3,16 @@ using System;
 using System.Drawing;
 using MonoTouch.UIKit;
 using MonoTouch.Foundation;
+using MonoTouch.CoreGraphics;
+using MonoTouch.CoreText;
 
 namespace Notes
 {
     namespace PlatformUI
     {
+        /// <summary>
+        /// The iOS implementation of a text field.
+        /// </summary>
         public class iOSTextField : PlatformTextField
         {
             UITextField TextField { get; set; }
@@ -22,9 +27,14 @@ namespace Notes
             // Properties
             public override void SetFont( string fontName, float fontSize )
             {
-                String fontScriptName = iOSCommon.LoadDynamicFont(fontName);
-
-                TextField.Font = UIFont.FromName(fontScriptName, fontSize );
+                try
+                {
+                    TextField.Font = iOSCommon.LoadFontDynamic(fontName, fontSize);
+                } 
+                catch
+                {
+                    throw new Exception( string.Format( "Failed to load font: {0}", fontName ) );
+                }
             }
 
             protected override void setBackgroundColor( uint backgroundColor )
@@ -137,7 +147,7 @@ namespace Notes
                 UIView view = masterView as UIView;
                 if( view == null )
                 {
-                    throw new InvalidCastException( "Object passed to iOS AddAsSubview must be a UIView." );
+                    throw new Exception( "Object passed to iOS AddAsSubview must be a UIView." );
                 }
 
                 view.AddSubview( TextField );

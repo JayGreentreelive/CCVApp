@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Styles>
-     <Note Padding="5%" BackgroundColor="0x000000FF"/>
+     <Note Padding="5%" BackgroundColor="#000000FF"/>
      <Paragraph PaddingBottom="1%"/>
-     <RevealBox FontName="Bevan" FontSize="12" FontColor="0x6d1c1cFF"/>
-     <Quote FontName="Bevan" FontSize="12" FontColor="0x6d1c1cFF"/>
-     <TextInput FontName="Bevan" FontSize="10" FontColor="0xAFAFAFFF"/>
+     <RevealBox FontName="Bevan" FontSize="12" FontColor="#6d1c1cFF"/>
+     <Quote FontName="Bevan" FontSize="12" FontColor="#6d1c1cFF"/>
+     <TextInput FontName="Bevan" FontSize="10" FontColor="#AFAFAFFF"/>
      <Header PaddingBottom="5%" Alignment="Center"/>
-     <HeaderTitle Alignment="Center" FontName="Bevan" FontSize="18" FontColor="0xAFAFAFFF"/>
-     <HeaderSpeaker Alignment="Left" FontName="Bevan" FontSize="12" FontColor="0xAFAFAFFF"/>
-     <HeaderDate Alignment="Right" FontName="Bevan" FontSize="12" FontColor="0xAFAFAFFF"/>
-     <Text FontName="Bevan" FontSize="12" FontColor="0xAFAFAFFF"/>
+     <HeaderTitle Alignment="Center" FontName="Bevan" FontSize="18" FontColor="#AFAFAFFF"/>
+     <HeaderSpeaker Alignment="Left" FontName="Bevan" FontSize="12" FontColor="#AFAFAFFF"/>
+     <HeaderDate Alignment="Right" FontName="Bevan" FontSize="12" FontColor="#AFAFAFFF"/>
+     <Text FontName="Bevan" FontSize="12" FontColor="#AFAFAFFF"/>
 </Styles>

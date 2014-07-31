@@ -7,6 +7,9 @@ using RockMobile.Network;
 
 namespace Notes
 {
+    /// <summary>
+    /// Parser contains a set of utility methods to assist in parsing NoteScript.
+    /// </summary>
     public class Parser
     {
         public static IUIControl TryParseControl( Notes.BaseControl.CreateParams parentParams, XmlReader reader )
@@ -23,7 +26,7 @@ namespace Notes
                 case "Header": return new Header(parentParams, reader);
             }
 
-            throw new ArgumentNullException( String.Format( "Control of type {0} does not exist.", reader.Name ) );
+            throw new Exception( String.Format( "Control of type {0} does not exist.", reader.Name ) );
         }
 
         public static void ParseBounds( XmlReader reader, ref RectangleF bounds )

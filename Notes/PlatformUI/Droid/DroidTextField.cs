@@ -12,10 +12,17 @@ namespace Notes
 {
     namespace PlatformUI
     {
+        /// <summary>
+        /// Android implementation of a text field.
+        /// </summary>
         public class DroidTextField : PlatformTextField
         {
             EditText TextField { get; set; }
 
+            /// <summary>
+            /// A dummy view that absorbs focus when the text field isn't being edited.
+            /// </summary>
+            /// <value>The dummy view.</value>
             View DummyView { get; set; }
 
             public DroidTextField( )
@@ -43,7 +50,7 @@ namespace Notes
                 } 
                 catch
                 {
-                    throw new ArgumentException( string.Format( "Unable to load font: {0}", fontName ) );
+                    throw new Exception( string.Format( "Unable to load font: {0}", fontName ) );
                 }
             }
 
@@ -191,7 +198,7 @@ namespace Notes
                 RelativeLayout view = masterView as RelativeLayout;
                 if( view == null )
                 {
-                    throw new InvalidCastException( "Object passed to Android AddAsSubview must be a RelativeLayout." );
+                    throw new Exception( "Object passed to Android AddAsSubview must be a RelativeLayout." );
                 }
 
                 view.AddView( TextField );
@@ -204,7 +211,7 @@ namespace Notes
                 RelativeLayout view = masterView as RelativeLayout;
                 if( view == null )
                 {
-                    throw new InvalidCastException( "Object passed to Android RemoveAsSubview must be a RelativeLayout." );
+                    throw new Exception( "Object passed to Android RemoveAsSubview must be a RelativeLayout." );
                 }
 
                 view.RemoveView( TextField );

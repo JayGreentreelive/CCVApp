@@ -7,13 +7,31 @@ using System.Text.RegularExpressions;
 
 namespace Notes
 {
+    /// <summary>
+    /// Container for Text, RevealText and InputText. Manages wrapping 
+    /// and alignment of children.
+    /// </summary>
     public class Paragraph : BaseControl
     {
+        /// <summary>
+        /// Text, RevealText and InputText children.
+        /// </summary>
+        /// <value>The child controls.</value>
         protected List<IUIControl> ChildControls { get; set; }
 
+        /// <summary>
+        /// The alignment that children should have within the paragraph container.
+        /// Example: The Paragraph container might be centered, but ChildControls can be LEFT
+        /// aligned within the container.
+        /// </summary>
+        /// <value>The child horz alignment.</value>
         protected Alignment ChildHorzAlignment { get; set; }
 
-        protected RectangleF Bounds { get; set; }
+        /// <summary>
+        /// The actual bounds (including position) of the paragraph.
+        /// </summary>
+        /// <value>The bounds.</value>
+        protected RectangleF Frame { get; set; }
 
         protected override void Initialize( )
         {
@@ -118,7 +136,7 @@ namespace Notes
                             // only allow RevealBoxes as children.
                             if( control as RevealBox == null && control as TextInput == null )
                             {
-                                throw new InvalidOperationException( "RevealBox and TextInput are the only supported children of Paragraph." );
+                                throw new Exception( String.Format("Paragraph only supports children of type <RevealBox> and <TextInput>. Found <{0}>", control.GetType()) );
                             }
                             ChildControls.Add( control );
                         }
@@ -246,8 +264,8 @@ namespace Notes
             frame.Height += bottomPadding + topPadding; //add in padding
             frame.Width = bounds.Width;
 
-            Bounds = frame;
-            base.DebugFrameView.Frame = Bounds;
+            Frame = frame;
+            base.DebugFrameView.Frame = Frame;
         }
 
         void AlignRow( RectangleF bounds, List<IUIControl> currentRow, float maxWidth )
@@ -314,8 +332,8 @@ namespace Notes
             }
 
             // update our bounds by the new offsets.
-            Bounds = new RectangleF( Bounds.X + xOffset, Bounds.Y + yOffset, Bounds.Width, Bounds.Height );
-            base.DebugFrameView.Frame = Bounds;
+            Frame = new RectangleF( Frame.X + xOffset, Frame.Y + yOffset, Frame.Width, Frame.Height );
+            base.DebugFrameView.Frame = Frame;
         }
 
         public override void TouchesEnded( PointF touch )
@@ -351,7 +369,7 @@ namespace Notes
 
         public override RectangleF GetFrame( )
         {
-            return Bounds;
+            return Frame;
         }
     }
 }

@@ -5,18 +5,34 @@ using Notes.PlatformUI;
 
 namespace Notes
 {
+    /// <summary>
+    /// A header describes a Title, Speaker and Date with a default layout that can 
+    /// be overridden via NoteScript or Style.
+    /// </summary>
     public class Header : BaseControl
     {
+        /// <summary>
+        /// The Title control for the header.
+        /// </summary>
         protected PlatformLabel mTitle;
 
+        /// <summary>
+        /// The Date control for the header.
+        /// </summary>
         protected const float DEFAULT_DATE_Y_OFFSET = .10f;
         protected PlatformLabel mDate;
 
+        /// <summary>
+        /// The speaker control for the header
+        /// </summary>
         protected const float DEFAULT_SPEAKER_Y_OFFSET = .10f;
         protected PlatformLabel mSpeaker;
 
-
-        protected RectangleF Bounds { get; set; }
+        /// <summary>
+        /// The bounds (including position) of the header.
+        /// </summary>
+        /// <value>The frame.</value>
+        protected RectangleF Frame { get; set; }
 
         protected override void Initialize( )
         {
@@ -145,8 +161,8 @@ namespace Notes
             bottomY = bottomY > mDate.Frame.Bottom ? bottomY : mDate.Frame.Bottom;
 
             // set our bounds
-            Bounds = new RectangleF( bounds.X, bounds.Y, bounds.Width, bottomY + bottomPadding);
-            base.DebugFrameView.Frame = Bounds;
+            Frame = new RectangleF( bounds.X, bounds.Y, bounds.Width, bottomY + bottomPadding);
+            base.DebugFrameView.Frame = Frame;
         }
 
         void ParseHeaderElement( XmlReader reader, float parentWidth, float parentHeight, out PlatformLabel element, ref RectangleF elementBounds, ref Styles.Style defaultStyle )
@@ -233,8 +249,8 @@ namespace Notes
                                             mSpeaker.Position.Y + yOffset );
 
             // update our bounds by the new offsets.
-            Bounds = new RectangleF( Bounds.X + xOffset, Bounds.Y + yOffset, Bounds.Width, Bounds.Height );
-            base.DebugFrameView.Frame = Bounds;
+            Frame = new RectangleF( Frame.X + xOffset, Frame.Y + yOffset, Frame.Width, Frame.Height );
+            base.DebugFrameView.Frame = Frame;
         }
 
         public override void AddToView( object obj )
@@ -257,7 +273,7 @@ namespace Notes
 
         public override RectangleF GetFrame( )
         {
-            return Bounds;
+            return Frame;
         }
     }
 }

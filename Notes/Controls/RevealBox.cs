@@ -4,8 +4,15 @@ using System.Drawing;
 
 namespace Notes
 {
+    /// <summary>
+    /// A text label that is hidden until a user taps on it.
+    /// </summary>
     public class RevealBox : NoteText
     {
+        /// <summary>
+        /// The text to reveal when the control is tapped.
+        /// </summary>
+        /// <value>The hidden text.</value>
         protected string HiddenText { get; set; }
 
         public RevealBox( CreateParams parentParams, XmlReader reader ) : base( )

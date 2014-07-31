@@ -9,6 +9,9 @@ namespace Notes
 {
     namespace PlatformUI
     {
+        /// <summary>
+        /// Android implementation of a text label.
+        /// </summary>
         public class DroidLabel : PlatformLabel
         {
             TextView Label { get; set; }
@@ -30,7 +33,7 @@ namespace Notes
                 } 
                 catch
                 {
-                    throw new ArgumentException( string.Format( "Unable to load font: {0}", fontName ) );
+                    throw new Exception( string.Format( "Unable to load font: {0}", fontName ) );
                 }
             }
 
@@ -163,7 +166,7 @@ namespace Notes
                 RelativeLayout view = masterView as RelativeLayout;
                 if( view == null )
                 {
-                    throw new InvalidCastException( "Object passed to Android AddAsSubview must be a RelativeLayout." );
+                    throw new Exception( "Object passed to Android AddAsSubview must be a RelativeLayout." );
                 }
 
                 view.AddView( Label );
@@ -175,7 +178,7 @@ namespace Notes
                 RelativeLayout view = masterView as RelativeLayout;
                 if( view == null )
                 {
-                    throw new InvalidCastException( "Object passed to Android RemoveAsSubview must be a RelativeLayout." );
+                    throw new Exception( "Object passed to Android RemoveAsSubview must be a RelativeLayout." );
                 }
 
                 view.RemoveView( Label );

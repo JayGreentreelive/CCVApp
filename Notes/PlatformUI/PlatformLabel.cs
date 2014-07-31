@@ -5,6 +5,9 @@ namespace Notes
 {
     namespace PlatformUI
     {
+        /// <summary>
+        /// The base Platform Label that provides an interface to platform specific text labels.
+        /// </summary>
         public abstract class PlatformLabel : PlatformBaseUI
         {
             public static PlatformLabel Create( )

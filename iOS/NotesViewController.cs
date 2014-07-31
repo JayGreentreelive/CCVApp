@@ -26,15 +26,34 @@ namespace CCVApp
 
     public partial class NotesViewController : UIViewController
     {
+        /// <summary>
+        /// Displays when content is being downloaded.
+        /// </summary>
+        /// <value>The indicator.</value>
         UIActivityIndicatorView Indicator { get; set; }
 
+        /// <summary>
+        /// Reloads the NoteScript
+        /// </summary>
+        /// <value>The refresh button.</value>
         UIButton RefreshButton { get; set; }
 
+        /// <summary>
+        /// Displays the actual Note content
+        /// </summary>
+        /// <value>The user interface scroll view.</value>
         CustomScrollView UIScrollView { get; set; }
 
-        // Notes members
+        /// <summary>
+        /// True when notes are being refreshed to prevent multiple simultaneous downloads.
+        /// </summary>
+        /// <value><c>true</c> if refreshing notes; otherwise, <c>false</c>.</value>
         bool RefreshingNotes { get; set; }
 
+        /// <summary>
+        /// Actual Note object created by a NoteScript
+        /// </summary>
+        /// <value>The note.</value>
         Note Note { get; set; }
 
         public NotesViewController( ) : base( "NotesViewController", null )
@@ -151,7 +170,7 @@ namespace CCVApp
                             }
                             else
                             {
-                                ReportException( "Failed to download Sermon Notes", ex );
+                                ReportException( "NoteScript Download Error", ex );
                             }
                         } );
                 }
@@ -171,7 +190,7 @@ namespace CCVApp
             } 
             catch( Exception e )
             {
-                ReportException( "Note PreReqs Failed", e );
+                ReportException( "StyleSheet Error", e );
             }
         }
 
@@ -179,7 +198,7 @@ namespace CCVApp
         {
             if( e != null )
             {
-                ReportException( "Note PreReqs Failed", e );
+                ReportException( "StyleSheet Error", e );
             }
             else
             {
@@ -206,7 +225,7 @@ namespace CCVApp
                         }
                         catch( Exception ex )
                         {
-                            ReportException( "Note Creation Failed", ex );
+                            ReportException( "NoteScript Error", ex );
                         }
                     } );
             }
@@ -227,7 +246,7 @@ namespace CCVApp
                     // explain that we couldn't generate notes
                     UIAlertView alert = new UIAlertView( );
                     alert.Title = "Note Error";
-                    alert.Message = errorMsg + "Exception: " + e.Message;
+                    alert.Message = errorMsg + "\n" + e.Message;
                     alert.AddButton( "Ok" );
                     alert.Show( );
 

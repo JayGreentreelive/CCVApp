@@ -3,6 +3,9 @@ using System.Drawing;
 
 namespace Notes
 {
+    /// <summary>
+    /// Interface with methods allowing abstracted management of UI Controls.
+    /// </summary>
     public interface IUIControl
     {
         void AddOffset( float xOffset, float yOffset );

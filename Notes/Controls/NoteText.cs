@@ -6,8 +6,15 @@ using Notes.PlatformUI;
 
 namespace Notes
 {
+    /// <summary>
+    /// Control that lays out basic text. Used by Paragraphs.
+    /// </summary>
     public class NoteText : BaseControl
     {
+        /// <summary>
+        /// Actual text label.
+        /// </summary>
+        /// <value>The platform label.</value>
         protected PlatformLabel PlatformLabel { get; set; }
 
         protected override void Initialize( )

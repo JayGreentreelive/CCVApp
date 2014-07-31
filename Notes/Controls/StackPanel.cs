@@ -6,12 +6,29 @@ using Notes.Styles;
 
 namespace Notes
 {
+    /// <summary>
+    /// A container that displays children in a vertical stack.
+    /// </summary>
     public class StackPanel : BaseControl
     {
+        /// <summary>
+        /// Children to display
+        /// </summary>
+        /// <value>The child controls.</value>
         protected List<IUIControl> ChildControls { get; set; }
 
+        /// <summary>
+        /// The bounds (including position) of the stack panel.
+        /// </summary>
+        /// <value>The bounds.</value>
         protected RectangleF Bounds { get; set; }
 
+        /// <summary>
+        /// The alignment that children should have within the stack panel container.
+        /// Example: The stack panel container might be centered, but ChildControls can be LEFT
+        /// aligned within the container.
+        /// </summary>
+        /// <value>The child horz alignment.</value>
         protected Alignment ChildHorzAlignment { get; set; }
 
         protected override void Initialize( )

@@ -5,6 +5,9 @@ namespace Notes
 {
     namespace PlatformUI
     {
+        /// <summary>
+        /// The base text field that provides an interface to platform specific text fields.
+        /// </summary>
         public abstract class PlatformTextField : PlatformBaseUI
         {
             public static PlatformTextField Create( )
