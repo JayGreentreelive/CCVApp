@@ -17,7 +17,7 @@ namespace Notes
 
         // All PlatformUI implementations dervice from this class, as it contains
         // interfaces for commonly used properties (I mean just LOOK AT IT!!)
-        public abstract class PlatformCommonUI
+        public abstract class PlatformBaseUI
         {
             #if __ANDROID__
             public static Android.Graphics.Color GetUIColor( uint color )
@@ -41,11 +41,6 @@ namespace Notes
                     ( float )( ( color & 0x0000FF00 ) >> 8 ) / 255, 
                     ( float )( ( color & 0x000000FF ) ) / 255 );
             }
-            #endif
-
-            // beeee sure to set this for android!
-            #if __ANDROID__
-            public static Android.Content.Context Context = null;
             #endif
 
             // Properties

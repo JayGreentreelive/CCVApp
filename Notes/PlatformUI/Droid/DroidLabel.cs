@@ -15,7 +15,7 @@ namespace Notes
 
             public DroidLabel( )
             {
-                Label = new TextView( PlatformCommonUI.Context );
+                Label = new TextView( DroidCommon.Context );
                 Label.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.FillParent, ViewGroup.LayoutParams.WrapContent );
             }
 
@@ -24,7 +24,7 @@ namespace Notes
             {
                 try
                 {
-                    Typeface fontFace = Typeface.CreateFromAsset( PlatformCommonUI.Context.Assets, "fonts/" + fontName.ToLower( ) + ".ttf" );
+                    Typeface fontFace = Typeface.CreateFromAsset( DroidCommon.Context.Assets, "Fonts/" + fontName + ".ttf" );
                     Label.SetTypeface( fontFace, TypefaceStyle.Normal );
                     Label.SetTextSize( Android.Util.ComplexUnitType.Pt, fontSize );
                 } 
@@ -36,7 +36,7 @@ namespace Notes
 
             protected override void setBackgroundColor( uint backgroundColor )
             {
-                Label.SetBackgroundColor( PlatformCommonUI.GetUIColor( backgroundColor ) );
+                Label.SetBackgroundColor( GetUIColor( backgroundColor ) );
             }
 
             protected override float getOpacity( )
@@ -108,7 +108,7 @@ namespace Notes
 
             protected override void setTextColor( uint color )
             {
-                Label.SetTextColor( PlatformCommonUI.GetUIColor( color ) );
+                Label.SetTextColor( GetUIColor( color ) );
             }
 
             protected override string getText( )

@@ -29,6 +29,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\Droid\DroidTextField.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\NoteText.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Canvas.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\iOS\iOSCommon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\Droid\DroidCommon.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)PlatformUI\" />

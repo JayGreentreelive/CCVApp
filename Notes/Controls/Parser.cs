@@ -20,7 +20,7 @@ namespace Notes
                 case "RevealBox": return new RevealBox( parentParams, reader );
                 case "Quote": return new Quote( parentParams, reader );
                 case "TextInput": return new TextInput( parentParams, reader );
-                //case "Header": return new Header(parentParams, reader); JHM: 7-29 as I began updating Header to support needed stuff, I realized Paragraphs do EXACTLY what we need.
+                case "Header": return new Header(parentParams, reader);
             }
 
             throw new ArgumentNullException( String.Format( "Control of type {0} does not exist.", reader.Name ) );

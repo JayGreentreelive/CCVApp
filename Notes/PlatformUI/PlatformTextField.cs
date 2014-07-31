@@ -5,7 +5,7 @@ namespace Notes
 {
     namespace PlatformUI
     {
-        public abstract class PlatformTextField : PlatformCommonUI
+        public abstract class PlatformTextField : PlatformBaseUI
         {
             public static PlatformTextField Create( )
             {

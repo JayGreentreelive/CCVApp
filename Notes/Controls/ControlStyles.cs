@@ -289,50 +289,143 @@ namespace Notes
 
         public static string StyleSheetXml { get; protected set; }
 
-        // Thse are to be referenced globally as needed
+        // These are to be referenced globally as needed
         public static Styles.Style mMainNote;
         public static Styles.Style mParagraph;
+        public static Styles.Style mStackPanel;
         public static Styles.Style mRevealBox;
         public static Styles.Style mTextInput;
-        public static Styles.Style mHeader;
+        public static Styles.Style mHeaderContainer;
+        public static Styles.Style mHeaderTitle;
+        public static Styles.Style mHeaderDate;
+        public static Styles.Style mHeaderSpeaker;
         public static Styles.Style mQuote;
         public static Styles.Style mText;
 
-        static void InitStyle( ref Notes.Styles.Style style )
+
+        static void CreateHeaderStyle()
         {
-            // just a default for the default styles (in case somehow it's missing in XML)
-            style.mAlignment = Styles.Alignment.Left;
-            style.mFont = new Notes.Styles.FontParams( );
-            style.mPaddingLeft = 0;
-            style.mPaddingTop = 0;
-            style.mPaddingRight = 0;
-            style.mPaddingBottom = 0;
+            // Default the header container to no padding and left alignment
+            mHeaderContainer = new Styles.Style( );
+            mHeaderContainer.Initialize();
+            mHeaderContainer.mAlignment = Styles.Alignment.Left;
+            mHeaderContainer.mPaddingLeft = 0;
+            mHeaderContainer.mPaddingTop = 0;
+            mHeaderContainer.mPaddingRight = 0;
+            mHeaderContainer.mPaddingBottom = 0;
+
+
+            //Title should be large, bevan, centered and white
+            mHeaderTitle = new Styles.Style( );
+            mHeaderTitle.Initialize();
+            mHeaderTitle.mAlignment = Styles.Alignment.Center;
+            mHeaderTitle.mFont.mName = "Bevan";
+            mHeaderTitle.mFont.mSize = 18;
+            mHeaderTitle.mFont.mColor = 0xFFFFFFFF;
+
+            // Date should be medium, verdana, left and white
+            mHeaderDate = new Styles.Style( );
+            mHeaderDate.Initialize();
+            mHeaderDate.mAlignment = Styles.Alignment.Left;
+            mHeaderDate.mFont.mName = "Bevan";
+            mHeaderDate.mFont.mSize = 12;
+            mHeaderDate.mFont.mColor = 0xFFFFFFFF;
+
+            // Speaker should be mediu, verdana, right and white
+            mHeaderSpeaker = new Styles.Style( );
+            mHeaderSpeaker.Initialize();
+            mHeaderSpeaker.mAlignment = Styles.Alignment.Right;
+            mHeaderSpeaker.mFont.mName = "Bevan";
+            mHeaderSpeaker.mFont.mSize = 12;
+            mHeaderSpeaker.mFont.mColor = 0xFFFFFFFF;
+        }
+
+        static void CreateMainNoteStyle()
+        {
+            // note should have a black background and no alignment
+            mMainNote = new Styles.Style( );
+            mMainNote.Initialize();
+
+            mMainNote.mBackgroundColor = 0x000000FF;
+        }
+
+        static void CreateParagraphStyle()
+        {
+            // paragraphs should have a preference for left alignment
+            mParagraph = new Styles.Style( );
+            mParagraph.Initialize();
+
+            mParagraph.mAlignment = Styles.Alignment.Left;
+        }
+
+        static void CreateStackPanelStyle()
+        {
+            // like paragraphs, stack panels shouldn't care about anything but alignment
+            mStackPanel = new Styles.Style( );
+            mStackPanel.Initialize( );
+
+            mStackPanel.mAlignment = Styles.Alignment.Left;
+        }
+
+        static void CreateRevealBoxStyle()
+        {
+            mRevealBox = new Styles.Style( );
+            mRevealBox.Initialize();
+
+            // make reveal boxes redish
+            mRevealBox.mAlignment = Styles.Alignment.Left;
+            mRevealBox.mFont.mName = "Bevan";
+            mRevealBox.mFont.mSize = 12;
+            mRevealBox.mFont.mColor = 0x6d1c1cFF;
+        }
+
+        static void CreateTextInputStyle()
+        {
+            mTextInput = new Styles.Style( );
+            mTextInput.Initialize();
+
+            // Make text input small by default
+            mTextInput.mAlignment = Styles.Alignment.Left;
+            mTextInput.mFont.mName = "Bevan";
+            mTextInput.mFont.mSize = 8;
+            mTextInput.mFont.mColor = 0xFFFFFFFF;
+        }
+
+        static void CreateQuoteStyle()
+        {
+            mQuote = new Styles.Style( );
+            mQuote.Initialize();
+
+            // Make quotes redish
+            mQuote.mAlignment = Styles.Alignment.Left;
+            mQuote.mFont.mName = "Bevan";
+            mQuote.mFont.mSize = 12;
+            mQuote.mFont.mColor = 0x6d1c1cFF;
+        }
+
+        static void CreateTextStyle()
+        {
+            mText = new Styles.Style( );
+            mText.Initialize();
+
+            mText.mAlignment = Styles.Alignment.Left;
+            mText.mFont.mName = "Bevan";
+            mText.mFont.mSize = 12;
+            mText.mFont.mColor = 0xFFFFFFFF;
         }
 
         public static void Initialize( string styleSheetUrl, string styleSheetXml, StylesCreated stylesCreatedDelegate )
         {
             // Create each control's default style. And put some defaults...for the defaults.
             //(Seriously, that way if it doesn't exist in XML we still have a value.)
-            mMainNote = new Styles.Style( );
-            InitStyle( ref mMainNote );
-
-            mParagraph = new Styles.Style( );
-            InitStyle( ref mParagraph );
-
-            mRevealBox = new Styles.Style( );
-            InitStyle( ref mRevealBox );
-
-            mTextInput = new Styles.Style( );
-            InitStyle( ref mTextInput );
-
-            mHeader = new Styles.Style( );
-            InitStyle( ref mHeader );
-
-            mQuote = new Styles.Style( );
-            InitStyle( ref mQuote );
-
-            mText = new Styles.Style( );
-            InitStyle( ref mText );
+            CreateMainNoteStyle();
+            CreateParagraphStyle();
+            CreateStackPanelStyle();
+            CreateRevealBoxStyle();
+            CreateTextInputStyle();
+            CreateQuoteStyle();
+            CreateTextStyle();
+            CreateHeaderStyle();
 
             mStylesCreatedDelegate = stylesCreatedDelegate;
 
@@ -394,7 +487,10 @@ namespace Notes
                                 case "RevealBox": Notes.Styles.Style.ParseStyleAttributes( reader, ref mRevealBox ); break;
                                 case "TextInput": Notes.Styles.Style.ParseStyleAttributes( reader, ref mTextInput ); break;
                                 case "Quote": Notes.Styles.Style.ParseStyleAttributes( reader, ref mQuote ); break;
-                                case "Header": Notes.Styles.Style.ParseStyleAttributes( reader, ref mHeader ); break;
+                                case "Header": Notes.Styles.Style.ParseStyleAttributes( reader, ref mHeaderContainer ); break;
+                                case "HeaderSpeaker": Notes.Styles.Style.ParseStyleAttributes( reader, ref mHeaderSpeaker ); break;
+                                case "HeaderDate": Notes.Styles.Style.ParseStyleAttributes( reader, ref mHeaderDate ); break;
+                                case "HeaderTitle": Notes.Styles.Style.ParseStyleAttributes( reader, ref mHeaderTitle ); break;
                                 case "Text": Notes.Styles.Style.ParseStyleAttributes( reader, ref mText ); break;
                             }
                             break;

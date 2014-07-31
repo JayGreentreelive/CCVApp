@@ -45,17 +45,25 @@ namespace Notes
                 switch( result )
                 {
                     case "Left":
-                    ChildHorzAlignment = Alignment.Left;
-                    break;
+                    {
+                        ChildHorzAlignment = Alignment.Left;
+                        break;
+                    }
                     case "Right":
-                    ChildHorzAlignment = Alignment.Right;
-                    break;
+                    {
+                        ChildHorzAlignment = Alignment.Right;
+                        break;
+                    }
                     case "Center":
-                    ChildHorzAlignment = Alignment.Center;
-                    break;
+                    {
+                        ChildHorzAlignment = Alignment.Center;
+                        break;
+                    }
                     default:
-                    ChildHorzAlignment = mStyle.mAlignment.Value;
-                    break;
+                    {
+                        ChildHorzAlignment = mStyle.mAlignment.Value;
+                        break;
+                    }
                 }
             }
             else
@@ -96,8 +104,6 @@ namespace Notes
 
             // now calculate the available width based on padding. (Don't actually change our width)
             float availableWidth = bounds.Width - leftPadding - rightPadding;
-
-            //bool trimmedLeadingSpace = false;
 
             bool finishedReading = false;
             while( finishedReading == false && reader.Read( ) )
@@ -264,20 +270,26 @@ namespace Notes
             float xRowAdjust = 0;
             switch( ChildHorzAlignment )
             {
-            // JHM Note 7-24: Yesterday I changed bounds.Width to be MaxRowWidth. I can't remember why.
-            // Today Jon found that if you put a single line of text, you can't align it because its
-            // width is the max width, which causes no movement in the paragraph.
-            // I made it bounds.width again and can't find any problems with it, but I'm leaving the old calculation
-            // here just in case we need it again. :-\
+                // JHM Note 7-24: Yesterday I changed bounds.Width to be MaxRowWidth. I can't remember why.
+                // Today Jon found that if you put a single line of text, you can't align it because its
+                // width is the max width, which causes no movement in the paragraph.
+                // I made it bounds.width again and can't find any problems with it, but I'm leaving the old calculation
+                // here just in case we need it again. :-\
                 case Alignment.Right:
-                xRowAdjust = ( bounds.Width - rowWidth );
-                break;
+                {
+                    xRowAdjust = ( bounds.Width - rowWidth );
+                    break;
+                }
                 case Alignment.Center:
-                xRowAdjust = ( ( bounds.Width / 2 ) - ( rowWidth / 2 ) );
-                break;
+                {
+                    xRowAdjust = ( ( bounds.Width / 2 ) - ( rowWidth / 2 ) );
+                    break;
+                }
                 case Alignment.Left:
-                xRowAdjust = 0;
-                break;
+                {
+                    xRowAdjust = 0;
+                    break;
+                }
             }
 
             // Now adjust each control to be aligned correctly on X and Y

@@ -3,6 +3,8 @@ using System;
 using System.Drawing;
 using MonoTouch.UIKit;
 using MonoTouch.Foundation;
+using MonoTouch.CoreGraphics;
+using MonoTouch.CoreText;
 
 namespace Notes
 {
@@ -26,7 +28,8 @@ namespace Notes
             {
                 try
                 {
-                    Label.Font = UIFont.FromName( fontName, fontSize );
+                    String fontScriptName = iOSCommon.LoadDynamicFont(fontName);
+                    Label.Font = UIFont.FromName(fontScriptName, fontSize );
                 } 
                 catch
                 {
@@ -36,7 +39,7 @@ namespace Notes
 
             protected override void setBackgroundColor( uint backgroundColor )
             {
-                Label.Layer.BackgroundColor = PlatformCommonUI.GetUIColor( backgroundColor ).CGColor;
+                Label.Layer.BackgroundColor = GetUIColor( backgroundColor ).CGColor;
             }
 
             protected override float getOpacity( )
@@ -91,7 +94,7 @@ namespace Notes
 
             protected override void setTextColor( uint color )
             {
-                Label.TextColor = PlatformCommonUI.GetUIColor( color );
+                Label.TextColor = GetUIColor( color );
             }
 
             protected override string getText( )

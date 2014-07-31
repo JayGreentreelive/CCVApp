@@ -7,24 +7,24 @@ namespace Notes
 {
     public class Header : BaseControl
     {
-        protected PlatformLabel Title { get; set; }
+        protected PlatformLabel mTitle;
 
-        protected PlatformLabel Date { get; set; }
+        protected const float DEFAULT_DATE_Y_OFFSET = .10f;
+        protected PlatformLabel mDate;
 
-        protected PlatformLabel Speaker { get; set; }
+        protected const float DEFAULT_SPEAKER_Y_OFFSET = .10f;
+        protected PlatformLabel mSpeaker;
+
+
+        protected RectangleF Bounds { get; set; }
 
         protected override void Initialize( )
         {
             base.Initialize( );
 
-            Title = PlatformLabel.Create( );
-            Title.SetFont( "Verdana", 16f );
-
-            Date = PlatformLabel.Create( );
-            Date.SetFont( "Verdana", 12f );
-
-            Speaker = PlatformLabel.Create( );
-            Speaker.SetFont( "Verdana", 12f );
+            mTitle = null;
+            mDate = null;
+            mSpeaker = null;
         }
 
         public Header( CreateParams parentParams, XmlReader reader )
@@ -37,57 +37,81 @@ namespace Notes
 
             // take our parent's style but override with anything we set
             mStyle = parentParams.Style;
-            Styles.Style.ParseStyleAttributesWithDefaults( reader, ref mStyle, ref ControlStyles.mHeader );
+            Styles.Style.ParseStyleAttributesWithDefaults( reader, ref mStyle, ref ControlStyles.mHeaderContainer );
 
-            // create the font that either we or our parent defined
-            Title.SetFont( mStyle.mFont.mName, mStyle.mFont.mSize.Value );
-            Date.SetFont( mStyle.mFont.mName, mStyle.mFont.mSize.Value );
-            Speaker.SetFont( mStyle.mFont.mName, mStyle.mFont.mSize.Value );
+            // if our left position is requested as a %, then that needs to be % of parent width
+            if( bounds.X < 1 )
+            {
+                bounds.X = parentParams.Width * bounds.X;
+            }
 
-            Title.TextColor = mStyle.mFont.mColor.Value;
-            Date.TextColor = mStyle.mFont.mColor.Value;
-            Speaker.TextColor = mStyle.mFont.mColor.Value;
+            // if our top position is requested as a %, then that needs to be % of parent width
+            if( bounds.Y < 1 )
+            {
+                bounds.Y = parentParams.Height * bounds.Y;
+            }
 
-            float dateOffsetY = 15.0f;
-            float speakerOffsetY = 15.0f;
+            //WIDTH
+            if( bounds.Width == 0 )
+            {
+                // if 0, just take the our parents width
+                bounds.Width = Math.Max( 1, parentParams.Width - bounds.X );
+            }
+            // if < 1 it's a percent and we should convert
+            else if( bounds.Width <= 1 )
+            {
+                bounds.Width = Math.Max( 1, parentParams.Width - bounds.X ) * bounds.Width;
+            }
+
+            // PADDING
+            float leftPadding = Styles.Style.GetStyleValue( mStyle.mPaddingLeft, parentParams.Width );
+            float rightPadding = Styles.Style.GetStyleValue( mStyle.mPaddingRight, parentParams.Width );
+            float topPadding = Styles.Style.GetStyleValue( mStyle.mPaddingTop, parentParams.Height );
+            float bottomPadding = Styles.Style.GetStyleValue( mStyle.mPaddingBottom, parentParams.Height );
+
+            // now calculate the available width based on padding. (Don't actually change our width)
+            float availableWidth = bounds.Width - leftPadding - rightPadding;
 
 
             bool finishedHeader = false;
-
             while( finishedHeader == false && reader.Read( ) )
             {
                 // look for the next tag type
                 switch( reader.NodeType )
                 {
-                // we expect elements
+                    // we expect elements
                     case XmlNodeType.Element:
                     {
                         // determine which element it is and setup appropriately
                         switch( reader.Name )
                         {
                             case "Title":
-                            {
-                                Title.Text = reader.ReadElementContentAsString( );
+                            {   
+                                // check for attributes we support
+                                RectangleF elementBounds = new RectangleF( 0, 0, availableWidth, 0 );
+                                Parser.ParseBounds( reader, ref elementBounds );
+
+                                ParseHeaderElement( reader, availableWidth, parentParams.Height, out mTitle, ref elementBounds, ref ControlStyles.mHeaderTitle );
                                 break;
                             }
 
                             case "Date":
                             {
-                                string result = reader.GetAttribute( "Top" );
-                                if( string.IsNullOrEmpty( result ) == false )
-                                {
-                                    dateOffsetY = float.Parse( result );
-                                }
+                                // check for attributes we support
+                                RectangleF elementBounds = new RectangleF( 0, parentParams.Height * DEFAULT_DATE_Y_OFFSET, availableWidth, 0 );
+                                Parser.ParseBounds( reader, ref elementBounds );
 
-                                Date.Text = reader.ReadElementContentAsString( );
-
-                                
+                                ParseHeaderElement( reader, availableWidth, parentParams.Height, out mDate, ref elementBounds, ref ControlStyles.mHeaderDate );
                                 break;
                             }
 
                             case "Speaker":
                             {
-                                Speaker.Text = reader.ReadElementContentAsString( );
+                                // check for attributes we support
+                                RectangleF elementBounds = new RectangleF( 0, parentParams.Height * DEFAULT_SPEAKER_Y_OFFSET, availableWidth, 0 );
+                                Parser.ParseBounds( reader, ref elementBounds );
+
+                                ParseHeaderElement( reader, availableWidth, parentParams.Height, out mSpeaker, ref elementBounds, ref ControlStyles.mHeaderSpeaker );
                                 break;
                             }
                         }
@@ -106,60 +130,134 @@ namespace Notes
                 }
             }
 
-            // position all the header elements
-            Title.SizeToFit( );
-            Date.SizeToFit( );
-            Speaker.SizeToFit( );
+            // offset the controls according to our layout
+            mTitle.Position = new PointF( mTitle.Position.X + bounds.X + leftPadding, 
+                                          mTitle.Position.Y + bounds.Y + topPadding );
 
-            // position all the header elements
-            Title.Position = new PointF( bounds.X, bounds.Y );
-            Date.Position = new PointF( bounds.X, Title.Frame.Bottom + dateOffsetY );
-            Speaker.Position = new PointF( bounds.X, Date.Frame.Bottom + speakerOffsetY );
+            mDate.Position = new PointF( mDate.Position.X + bounds.X + leftPadding, 
+                                         mDate.Position.Y + bounds.Y + topPadding );
 
+            mSpeaker.Position = new PointF( mSpeaker.Position.X + bounds.X + leftPadding, 
+                                            mSpeaker.Position.Y + bounds.Y + topPadding );
+
+            // determine the lowest control
+            float bottomY = mSpeaker.Frame.Bottom > mTitle.Frame.Bottom ? mSpeaker.Frame.Bottom : mTitle.Frame.Bottom;
+            bottomY = bottomY > mDate.Frame.Bottom ? bottomY : mDate.Frame.Bottom;
+
+            // set our bounds
+            Bounds = new RectangleF( bounds.X, bounds.Y, bounds.Width, bottomY + bottomPadding);
+            base.DebugFrameView.Frame = Bounds;
+        }
+
+        void ParseHeaderElement( XmlReader reader, float parentWidth, float parentHeight, out PlatformLabel element, ref RectangleF elementBounds, ref Styles.Style defaultStyle )
+        {
+            element = PlatformLabel.Create( );
+
+            // if our left position is requested as a %, then that needs to be % of parent width
+            if( elementBounds.X < 1 )
+            {
+                elementBounds.X = parentWidth * elementBounds.X;
+            }
+
+            // if our top position is requested as a %, then that needs to be % of parent width
+            if( elementBounds.Y < 1 )
+            {
+                elementBounds.Y = parentHeight * elementBounds.Y;
+            }
+
+            // header elements are weird with styles. We don't want any of our parent's styles,
+            // so we create our own and mix that with our defaults
+            Styles.Style elementStyle = new Styles.Style( );
+            elementStyle.Initialize( );
+
+            Styles.Style.ParseStyleAttributesWithDefaults( reader, ref elementStyle, ref defaultStyle );
+
+            element.SetFont( elementStyle.mFont.mName, elementStyle.mFont.mSize.Value );
+            element.TextColor = elementStyle.mFont.mColor.Value;
+
+            if( elementStyle.mBackgroundColor.HasValue )
+            {
+                element.BackgroundColor = elementStyle.mBackgroundColor.Value;
+            }
+
+            element.Bounds = elementBounds;
+
+            // get text
+            element.Text = reader.ReadElementContentAsString( );
+            element.SizeToFit( );
+
+
+            // horizontally position the controls according to their 
+            // requested alignment
+            Styles.Alignment controlAlignment = elementStyle.mAlignment.Value;
+
+            // adjust by our position
+            float xAdjust = 0;
+            switch( controlAlignment )
+            {
+                case Styles.Alignment.Center:
+                {
+                    xAdjust = elementBounds.X + ( ( parentWidth / 2 ) - ( element.Bounds.Width / 2 ) );
+                    element.TextAlignment = TextAlignment.Center;
+                    break;
+                }
+                case Styles.Alignment.Right:
+                {
+                    xAdjust = elementBounds.X + ( parentWidth - element.Bounds.Width );
+                    element.TextAlignment = TextAlignment.Right;
+                    break;
+                }
+                case Styles.Alignment.Left:
+                {
+                    xAdjust = elementBounds.X;
+                    element.TextAlignment = TextAlignment.Left;
+                    break;
+                }
+            }
+
+            // adjust position
+            element.Position = new PointF( elementBounds.X + xAdjust, elementBounds.Y );
         }
 
         public override void AddOffset( float xOffset, float yOffset )
         {
             base.AddOffset( xOffset, yOffset );
 
-            Title.Position = new PointF( Title.Position.X + xOffset, 
-                Title.Position.Y + yOffset );
+            mTitle.Position = new PointF( mTitle.Position.X + xOffset, 
+                                          mTitle.Position.Y + yOffset );
 
-            Date.Position = new PointF( Date.Position.X + xOffset, 
-                Date.Position.Y + yOffset );
+            mDate.Position = new PointF( mDate.Position.X + xOffset, 
+                                         mDate.Position.Y + yOffset );
 
-            Speaker.Position = new PointF( Speaker.Position.X + xOffset, 
-                Speaker.Position.Y + yOffset );
+            mSpeaker.Position = new PointF( mSpeaker.Position.X + xOffset, 
+                                            mSpeaker.Position.Y + yOffset );
+
+            // update our bounds by the new offsets.
+            Bounds = new RectangleF( Bounds.X + xOffset, Bounds.Y + yOffset, Bounds.Width, Bounds.Height );
+            base.DebugFrameView.Frame = Bounds;
         }
 
         public override void AddToView( object obj )
         {
-            Title.AddAsSubview( obj );
-            Date.AddAsSubview( obj );
-            Speaker.AddAsSubview( obj );
+            mTitle.AddAsSubview( obj );
+            mDate.AddAsSubview( obj );
+            mSpeaker.AddAsSubview( obj );
 
             TryAddDebugLayer( obj );
         }
 
         public override void RemoveFromView( object obj )
         {
-            Title.RemoveAsSubview( obj );
-            Date.RemoveAsSubview( obj );
-            Speaker.RemoveAsSubview( obj );
+            mTitle.RemoveAsSubview( obj );
+            mDate.RemoveAsSubview( obj );
+            mSpeaker.RemoveAsSubview( obj );
 
             TryRemoveDebugLayer( obj );
         }
 
         public override RectangleF GetFrame( )
         {
-            // Get a bounding frame that encompasses all children
-            RectangleF frame = Parser.CalcBoundingFrame( Speaker.Frame, Title.Frame );
-
-            frame = Parser.CalcBoundingFrame( frame, Date.Frame );
-
-            base.DebugFrameView.Frame = frame;
-
-            return frame;
+            return Bounds;
         }
     }
 }

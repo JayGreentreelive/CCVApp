@@ -69,7 +69,6 @@ namespace Notes
 
             mStyle = new Style( );
             mStyle.Initialize( );
-            mStyle.mAlignment = Styles.Alignment.Left;
         }
 
         public void Create( float parentWidth, float parentHeight )

@@ -5,7 +5,7 @@ namespace Notes
 {
     namespace PlatformUI
     {
-        public abstract class PlatformLabel : PlatformCommonUI
+        public abstract class PlatformLabel : PlatformBaseUI
         {
             public static PlatformLabel Create( )
             {

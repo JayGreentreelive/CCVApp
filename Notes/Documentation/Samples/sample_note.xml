@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Note StyleSheet="http://www.jeredmcferron.com/sample_style.xml">    
-    <!--Header Paragraph-->
-    <Canvas PaddingBottom="5%">
-        <Paragraph Alignment="Center" FontName="Verdana" FontSize="18">CAPTAIN AMERICA ON MORALITY</Paragraph>
-        <Paragraph Top="10%" Alignment="Left" FontName="Verdana" FontSize="12">Dr.Mark Moore</Paragraph>
-        <Paragraph Top="10%" Alignment="Right" FontName="Verdana" FontSize="12">July 5 &amp; 6, 2014</Paragraph>
-    </Canvas>
-    <!--End Header Paragraph-->
+    <Header>
+        <Title>CAPTAIN AMERICA ON MORALITY</Title>
+        <Speaker>Dr.Mark Moore</Speaker>
+        <Date>July 5 &amp; 6, 2014</Date>
+    </Header>
 
     <Paragraph>1. Morality is exposed by<RevealBox>POWER</RevealBox></Paragraph>
     

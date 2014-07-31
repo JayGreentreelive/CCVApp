@@ -22,12 +22,14 @@ namespace Notes
             // Properties
             public override void SetFont( string fontName, float fontSize )
             {
-                TextField.Font = UIFont.FromName( fontName, fontSize );
+                String fontScriptName = iOSCommon.LoadDynamicFont(fontName);
+
+                TextField.Font = UIFont.FromName(fontScriptName, fontSize );
             }
 
             protected override void setBackgroundColor( uint backgroundColor )
             {
-                TextField.Layer.BackgroundColor = PlatformCommonUI.GetUIColor( backgroundColor ).CGColor;
+                TextField.Layer.BackgroundColor = GetUIColor( backgroundColor ).CGColor;
             }
 
             protected override float getOpacity( )
@@ -82,7 +84,7 @@ namespace Notes
 
             protected override void setTextColor( uint color )
             {
-                TextField.TextColor = PlatformCommonUI.GetUIColor( color );
+                TextField.TextColor = GetUIColor( color );
             }
 
             protected override void setPlaceholderTextColor( uint color )
@@ -90,7 +92,7 @@ namespace Notes
                 TextField.AttributedPlaceholder = new NSAttributedString(
                     TextField.Placeholder,
                     font: TextField.Font,
-                    foregroundColor: PlatformCommonUI.GetUIColor( color )
+                    foregroundColor: GetUIColor( color )
                 );
             }
 

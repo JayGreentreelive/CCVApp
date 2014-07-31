@@ -20,11 +20,11 @@ namespace Notes
 
             public DroidTextField( )
             {
-                TextField = new EditText( PlatformCommonUI.Context );
+                TextField = new EditText( DroidCommon.Context );
                 TextField.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.FillParent, ViewGroup.LayoutParams.WrapContent );
 
                 // create a dummy view that can take focus to de-select the text field
-                DummyView = new View( PlatformCommonUI.Context );
+                DummyView = new View( DroidCommon.Context );
                 DummyView.Focusable = true;
                 DummyView.FocusableInTouchMode = true;
 
@@ -37,7 +37,7 @@ namespace Notes
             {
                 try
                 {
-                    Typeface fontFace = Typeface.CreateFromAsset( PlatformCommonUI.Context.Assets, "fonts/" + fontName.ToLower( ) + ".ttf" );
+                    Typeface fontFace = Typeface.CreateFromAsset( DroidCommon.Context.Assets, "Fonts/" + fontName + ".ttf" );
                     TextField.SetTypeface( fontFace, TypefaceStyle.Normal );
                     TextField.SetTextSize( Android.Util.ComplexUnitType.Pt, fontSize );
                 } 
@@ -49,7 +49,7 @@ namespace Notes
 
             protected override void setBackgroundColor( uint backgroundColor )
             {
-                TextField.SetBackgroundColor( PlatformCommonUI.GetUIColor( backgroundColor ) );
+                TextField.SetBackgroundColor( GetUIColor( backgroundColor ) );
             }
 
             protected override float getOpacity( )
@@ -121,7 +121,7 @@ namespace Notes
 
             protected override void setTextColor( uint color )
             {
-                TextField.SetTextColor( PlatformCommonUI.GetUIColor( color ) );
+                TextField.SetTextColor( GetUIColor( color ) );
             }
 
             protected override string getText( )
@@ -136,7 +136,7 @@ namespace Notes
 
             protected override void setPlaceholderTextColor( uint color )
             {
-                TextField.SetHintTextColor( PlatformCommonUI.GetUIColor( color ) );
+                TextField.SetHintTextColor( GetUIColor( color ) );
             }
 
             protected override string getPlaceholder( )
@@ -230,10 +230,10 @@ namespace Notes
 
             public override void ResignFirstResponder( )
             {
-                Activity activity = ( Activity )PlatformCommonUI.Context;
+                Activity activity = ( Activity )DroidCommon.Context;
                 if( activity.CurrentFocus != null && ( activity.CurrentFocus as EditText ) != null )
                 {
-                    InputMethodManager imm = ( InputMethodManager )Context.GetSystemService( Android.Content.Context.InputMethodService );
+                    InputMethodManager imm = ( InputMethodManager )DroidCommon.Context.GetSystemService( Android.Content.Context.InputMethodService );
 
                     imm.HideSoftInputFromWindow( TextField.WindowToken, 0 );
 

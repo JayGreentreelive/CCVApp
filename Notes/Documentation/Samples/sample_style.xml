@@ -2,9 +2,12 @@
 <Styles>
      <Note Padding="5%" BackgroundColor="0x000000FF"/>
      <Paragraph PaddingBottom="1%"/>
-     <RevealBox FontName="Verdana" FontSize="12" FontColor="0x6d1c1cFF"/>
-     <Quote FontName="Verdana" FontSize="12" FontColor="0x6d1c1cFF"/>
-     <TextInput FontName="Verdana" FontSize="10" FontColor="0xAFAFAFFF"/>
-     <Header FontName="Verdana" FontSize="12" FontColor="0xAFAFAFFF"/>
-     <Text FontName="Verdana" FontSize="12" FontColor="0xAFAFAFFF"/>
+     <RevealBox FontName="Bevan" FontSize="12" FontColor="0x6d1c1cFF"/>
+     <Quote FontName="Bevan" FontSize="12" FontColor="0x6d1c1cFF"/>
+     <TextInput FontName="Bevan" FontSize="10" FontColor="0xAFAFAFFF"/>
+     <Header PaddingBottom="5%" Alignment="Center"/>
+     <HeaderTitle Alignment="Center" FontName="Bevan" FontSize="18" FontColor="0xAFAFAFFF"/>
+     <HeaderSpeaker Alignment="Left" FontName="Bevan" FontSize="12" FontColor="0xAFAFAFFF"/>
+     <HeaderDate Alignment="Right" FontName="Bevan" FontSize="12" FontColor="0xAFAFAFFF"/>
+     <Text FontName="Bevan" FontSize="12" FontColor="0xAFAFAFFF"/>
 </Styles>

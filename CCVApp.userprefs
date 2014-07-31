@@ -1,21 +1,22 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhoneRetina.7.1" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Notes/Controls/Quote.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Notes/PlatformUI/Droid/DroidLabel.cs">
     <Files>
-      <File FileName="Notes/Controls/Note.cs" Line="151" Column="13" />
-      <File FileName="Notes/Controls/BaseControl.cs" Line="58" Column="19" />
-      <File FileName="Notes/Controls/Parser.cs" Line="35" Column="81" />
-      <File FileName="Notes/Controls/ControlStyles.cs" Line="146" Column="1" />
-      <File FileName="Notes/Controls/Paragraph.cs" Line="122" Column="40" />
-      <File FileName="Notes/Controls/Quote.cs" Line="120" Column="84" />
-      <File FileName="Notes/Controls/RevealBox.cs" Line="81" Column="39" />
+      <File FileName="Notes/PlatformUI/Droid/DroidLabel.cs" Line="27" Column="78" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
-        <State expanded="True" />
-      </Pad>
-      <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
+        <State expanded="True">
+          <Node name="Droid" expanded="True">
+            <Node name="NotesActivity.cs" selected="True" />
+          </Node>
+          <Node name="iOS" expanded="True" />
+          <Node name="Notes" expanded="True">
+            <Node name="PlatformUI" expanded="True">
+              <Node name="Droid" expanded="True" />
+            </Node>
+          </Node>
+        </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>

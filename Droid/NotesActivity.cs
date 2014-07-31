@@ -39,7 +39,7 @@ namespace Droid
         {
             base.OnCreate( bundle );
 
-            Notes.PlatformUI.PlatformCommonUI.Context = this;
+            Notes.PlatformUI.DroidCommon.Context = this;
 
             // Set our view from the "main" layout resource
             SetContentView( Resource.Layout.Notes );
