@@ -63,7 +63,7 @@ namespace Notes
             PlatformLabel.Position = new PointF( bounds.X, bounds.Y );
         }
 
-        protected void SetText( string text )
+        public void SetText( string text )
         {
             PlatformLabel.Text = text;
 

@@ -19,5 +19,7 @@ namespace Notes
         void TouchesEnded( PointF touch );
 
         Styles.Alignment GetHorzAlignment( );
+
+        bool ShouldShowBulletPoint();
     }
 }

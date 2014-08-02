@@ -100,5 +100,26 @@
         </StackPanel>
         
      </Canvas>       
+     
+     <!--Demonstrate numbered and bullet lists-->
+     <List Type="Numbered">
+        <ListItem FontColor="#FF0000FF">First Entry in a numbered list.</ListItem>
+        <ListItem>
+            <List Type="Bullet">
+                <ListItem>
+                    First Entry in a bullet list.
+                    
+                    <Quote Citation="Author">
+                        A great example of a list item with a quote!
+                    </Quote>
+                </ListItem>
+                
+                <ListItem>Second Entry in a bullet list.</ListItem>
+                <ListItem>Third Entry in a bullet list.</ListItem>
+            </List>
+         </ListItem>
+        <ListItem>Second Entry in a numbered list.</ListItem>
+        
+    </List>
     
 </Note>

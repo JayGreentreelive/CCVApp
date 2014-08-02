@@ -77,6 +77,16 @@ namespace Notes
             /// </summary>
             public float? mPaddingBottom;
 
+            /// <summary>
+            /// The character to use for list bullet points
+            /// </summary>
+            public string mListBullet;
+
+            /// <summary>
+            /// The indention amount for lists
+            /// </summary>
+            public float? mListIndention;
+
             public void Initialize( )
             {
                 mFont = new FontParams( );
@@ -160,6 +170,28 @@ namespace Notes
                 {
                     style.mBackgroundColor = ParseColor( result );
                 }
+
+                // check for list bullet point (lists only)
+                result = reader.GetAttribute( "BulletPoint" );
+                if( string.IsNullOrEmpty( result ) == false )
+                {
+                    style.mListBullet = result;
+                }
+
+                // check for list indentation (lists only)
+                result = reader.GetAttribute( "Indentation" );
+                if( string.IsNullOrEmpty( result ) == false )
+                {
+                    float denominator = 1.0f;
+                    if( result.Contains( "%" ) )
+                    {
+                        result = result.Trim( '%' );
+                        denominator = 100.0f;
+                    }
+
+                    style.mListIndention = float.Parse( result ) / denominator;
+                }
+
 
                 // check for padding; DOES NOT INHERIT
                 result = reader.GetAttribute( "Padding" );
@@ -288,6 +320,17 @@ namespace Notes
                     style.mAlignment = defaultStyle.mAlignment;
                 }
 
+                // check for list specifics
+                if ( style.mListBullet == null )
+                {
+                    style.mListBullet = defaultStyle.mListBullet;
+                }
+
+                if ( style.mListIndention.HasValue == false )
+                {
+                    style.mListIndention = defaultStyle.mListIndention;
+                }
+
                 // check for padding
                 if( style.mPaddingLeft.HasValue == false )
                 {
@@ -344,61 +387,70 @@ namespace Notes
 
         // These are to be referenced globally as needed
         /// <summary>
-        /// Note control's default styles if non are specified by a parent or in NoteScript XML.
+        /// Note control's default styles if none are specified by a parent or in NoteScript XML.
         /// </summary>
         public static Styles.Style mMainNote;
 
         /// <summary>
-        /// Paragraph control's default styles if non are specified by a parent or in NoteScript XML.
+        /// Paragraph control's default styles if none are specified by a parent or in NoteScript XML.
         /// </summary>
         public static Styles.Style mParagraph;
 
         /// <summary>
-        /// Stack control's default styles if non are specified by a parent or in NoteScript XML.
+        /// Stack control's default styles if none are specified by a parent or in NoteScript XML.
         /// </summary>
         public static Styles.Style mStackPanel;
 
         /// <summary>
-        /// Revealbox's control's default styles if non are specified by a parent or in NoteScript XML.
+        /// Revealbox's control's default styles if none are specified by a parent or in NoteScript XML.
         /// </summary>
         public static Styles.Style mRevealBox;
 
         /// <summary>
-        /// TextInput control's default styles if non are specified by a parent or in NoteScript XML.
+        /// TextInput control's default styles if none are specified by a parent or in NoteScript XML.
         /// </summary>
         public static Styles.Style mTextInput;
 
         /// <summary>
-        /// Header Container's default styles if non are specified by a parent or in NoteScript XML.
+        /// Header Container's default styles if none are specified by a parent or in NoteScript XML.
         /// </summary>
         public static Styles.Style mHeaderContainer;
 
         /// <summary>
-        /// Header Title control's default styles if non are specified by a parent or in NoteScript XML.
+        /// Header Title control's default styles if none are specified by a parent or in NoteScript XML.
         /// </summary>
         public static Styles.Style mHeaderTitle;
 
         /// <summary>
-        /// Header Date control's default styles if non are specified by a parent or in NoteScript XML.
+        /// Header Date control's default styles if none are specified by a parent or in NoteScript XML.
         /// </summary>
         public static Styles.Style mHeaderDate;
 
         /// <summary>
-        /// Header Speaker control's default styles if non are specified by a parent or in NoteScript XML.
+        /// Header Speaker control's default styles if none are specified by a parent or in NoteScript XML.
         /// </summary>
         public static Styles.Style mHeaderSpeaker;
 
         /// <summary>
-        /// Quote control's default styles if non are specified by a parent or in NoteScript XML.
+        /// Quote control's default styles if none are specified by a parent or in NoteScript XML.
         /// </summary>
         public static Styles.Style mQuote;
 
         /// <summary>
-        /// Text's default styles if non are specified by a parent or in NoteScript XML.
+        /// Text's default styles if none are specified by a parent or in NoteScript XML.
         /// Note that text is not an actual control, rather it uses Labels.
         /// </summary>
         public static Styles.Style mText;
 
+        /// <summary>
+        /// List Item's default style if none are specified by a parent or in NoteScript XML.
+        /// </summary>
+        public static Styles.Style mListItem;
+
+        /// <summary>
+        /// List's default style if none are specified by a parent or in NoteScript XML.
+        /// </summary>
+        public static Styles.Style mList;
 
         static void CreateHeaderStyle()
         {
@@ -511,6 +563,22 @@ namespace Notes
             mText.mFont.mColor = 0xFFFFFFFF;
         }
 
+        static void CreateListStyle()
+        {
+            mList = new Styles.Style( );
+            mList.Initialize( );
+
+            mList.mAlignment = Styles.Alignment.Left;
+            mList.mListBullet = "•"; //we want a nice looking bullet as default
+            mList.mListIndention = 25.0f;
+        }
+
+        static void CreateListItemStyle()
+        {
+            mListItem = new Styles.Style( );
+            mListItem.Initialize( );
+        }
+
         public static void Initialize( string styleSheetUrl, string styleSheetXml, StylesCreated stylesCreatedDelegate )
         {
             // Create each control's default style. And put some defaults...for the defaults.
@@ -523,6 +591,8 @@ namespace Notes
             CreateQuoteStyle();
             CreateTextStyle();
             CreateHeaderStyle();
+            CreateListItemStyle();
+            CreateListStyle();
 
             mStylesCreatedDelegate = stylesCreatedDelegate;
 
@@ -584,11 +654,13 @@ namespace Notes
                                 case "RevealBox": Notes.Styles.Style.ParseStyleAttributes( reader, ref mRevealBox ); break;
                                 case "TextInput": Notes.Styles.Style.ParseStyleAttributes( reader, ref mTextInput ); break;
                                 case "Quote": Notes.Styles.Style.ParseStyleAttributes( reader, ref mQuote ); break;
-                                case "Header": Notes.Styles.Style.ParseStyleAttributes( reader, ref mHeaderContainer ); break;
-                                case "HeaderSpeaker": Notes.Styles.Style.ParseStyleAttributes( reader, ref mHeaderSpeaker ); break;
-                                case "HeaderDate": Notes.Styles.Style.ParseStyleAttributes( reader, ref mHeaderDate ); break;
-                                case "HeaderTitle": Notes.Styles.Style.ParseStyleAttributes( reader, ref mHeaderTitle ); break;
+                                case "Header.Container": Notes.Styles.Style.ParseStyleAttributes( reader, ref mHeaderContainer ); break;
+                                case "Header.Speaker": Notes.Styles.Style.ParseStyleAttributes( reader, ref mHeaderSpeaker ); break;
+                                case "Header.Date": Notes.Styles.Style.ParseStyleAttributes( reader, ref mHeaderDate ); break;
+                                case "Header.Title": Notes.Styles.Style.ParseStyleAttributes( reader, ref mHeaderTitle ); break;
                                 case "Text": Notes.Styles.Style.ParseStyleAttributes( reader, ref mText ); break;
+                                case "List": Notes.Styles.Style.ParseStyleAttributes( reader, ref mList ); break;
+                                case "ListItem": Notes.Styles.Style.ParseStyleAttributes( reader, ref mListItem ); break;
                             }
                             break;
                         }

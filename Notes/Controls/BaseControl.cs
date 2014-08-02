@@ -130,6 +130,12 @@ namespace Notes
         {
             return new RectangleF( );
         }
+
+        public virtual bool ShouldShowBulletPoint( )
+        {
+            //the default behavior is that we should want a bullet point
+            return true;
+        }
     }
 }
     

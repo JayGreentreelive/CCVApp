@@ -9,8 +9,11 @@ namespace Notes
     /// <summary>
     /// A container that displays children in a vertical stack.
     /// </summary>
-    public class StackPanel : BaseControl
+    public class List : BaseControl
     {
+        protected const string ListTypeBullet = "Bullet";
+        protected const string ListTypeNumbered = "Numbered";
+
         /// <summary>
         /// Children to display
         /// </summary>
@@ -21,31 +24,16 @@ namespace Notes
         /// The bounds (including position) of the stack panel.
         /// </summary>
         /// <value>The bounds.</value>
-        protected RectangleF Frame { get; set; }
-
-        /// <summary>
-        /// The alignment that children should have within the stack panel container.
-        /// Example: The stack panel container might be centered, but ChildControls can be LEFT
-        /// aligned within the container.
-        /// </summary>
-        /// <value>The child horz alignment.</value>
-        protected Alignment ChildHorzAlignment { get; set; }
+        protected RectangleF Bounds { get; set; }
 
         protected override void Initialize( )
         {
             base.Initialize( );
 
             ChildControls = new List<IUIControl>( );
-
-            ChildHorzAlignment = Alignment.Inherit;
         }
 
-        // for derived classes that do their own parsing
-        protected StackPanel( )
-        {
-        }
-
-        public StackPanel( CreateParams parentParams, XmlReader reader )
+        public List( CreateParams parentParams, XmlReader reader )
         {
             Initialize( );
 
@@ -55,43 +43,22 @@ namespace Notes
 
             // take our parent's style but override with anything we set
             mStyle = parentParams.Style;
-            Styles.Style.ParseStyleAttributesWithDefaults( reader, ref mStyle, ref ControlStyles.mStackPanel );
+            Styles.Style.ParseStyleAttributesWithDefaults( reader, ref mStyle, ref ControlStyles.mList );
 
+            // parse for the desired list style. Default to Bullet if they didn't put anything.
+            string listTypeStr = reader.GetAttribute( "Type" );
+            if( string.IsNullOrEmpty( listTypeStr ) == true)
+            {
+                listTypeStr = ListTypeBullet;
+            }
 
-            // now read what our children's alignment should be
-            // check for alignment
-            string result = reader.GetAttribute( "ChildAlignment" );
-            if( string.IsNullOrEmpty( result ) == false )
+            // convert indentation if it's a percentage
+            float listIndentation = mStyle.mListIndention.Value;
+            if( listIndentation < 1 )
             {
-                switch( result )
-                {
-                    case "Left":
-                    {
-                        ChildHorzAlignment = Alignment.Left;
-                        break;
-                    }
-                    case "Right":
-                    {
-                        ChildHorzAlignment = Alignment.Right;
-                        break;
-                    }
-                    case "Center":
-                    {
-                        ChildHorzAlignment = Alignment.Center;
-                        break;
-                    }
-                    default:
-                    {
-                        ChildHorzAlignment = mStyle.mAlignment.Value;
-                        break;
-                    }
-                }
+                listIndentation = parentParams.Width * listIndentation;
             }
-            else
-            {
-                // if it wasn't specified, use OUR alignment.
-                ChildHorzAlignment = mStyle.mAlignment.Value;
-            }
+
 
             // LEFT/TOP POSITIONING
             if( bounds.X < 1 )
@@ -125,10 +92,20 @@ namespace Notes
             float bottomPadding = Styles.Style.GetStyleValue( mStyle.mPaddingBottom, parentParams.Height );
 
             // now calculate the available width based on padding. (Don't actually change our width)
-            float availableWidth = bounds.Width - leftPadding - rightPadding;
+            // also consider the indention amount of the list.
+            float availableWidth = bounds.Width - leftPadding - rightPadding - listIndentation;
 
 
             // Parse Child Controls
+            int numberedCount = 1;
+
+            // don't force our alignment, bullet style or indentation on children.
+            Style style = new Style( );
+            style = mStyle;
+            style.mAlignment = null;
+            style.mListIndention = null;
+            style.mListBullet = null;
+
             bool finishedParsing = false;
             while( finishedParsing == false && reader.Read( ) )
             {
@@ -136,22 +113,44 @@ namespace Notes
                 {
                     case XmlNodeType.Element:
                     {
-                        // let each child have our available width.
-                        Style style = new Style( );
-                        style = mStyle;
-                        style.mAlignment = ChildHorzAlignment;
-                        IUIControl control = Parser.TryParseControl( new CreateParams( availableWidth, parentParams.Height, ref style ), reader );
-                        if( control != null )
+                        // Create the prefix for this list item.
+                        string listItemPrefixStr = mStyle.mListBullet + " ";
+                        if( listTypeStr == ListTypeNumbered )
                         {
-                            ChildControls.Add( control );
+                            listItemPrefixStr = numberedCount.ToString() + ". ";
                         }
+
+                        NoteText textLabel = new NoteText( new CreateParams( availableWidth, parentParams.Height, ref style ), listItemPrefixStr );
+                        ChildControls.Add( textLabel );
+
+
+                        // create our actual child, but throw an exception if it's anything but a ListItem.
+                        IUIControl control = Parser.TryParseControl( new CreateParams( availableWidth - textLabel.GetFrame().Width, parentParams.Height, ref style ), reader );
+
+                        ListItem listItem = control as ListItem;
+                        if( listItem == null ) throw new Exception( String.Format("Only a <ListItem> may be a child of a <List>. Found element <{0}>.", control.GetType( ) ) );
+
+
+                        // if it will actually use the bullet point, increment our count.
+                        if( listItem.ShouldShowBulletPoint() == true )
+                        {
+                            numberedCount++;
+                        }
+                        else
+                        {
+                            // otherwise give it a blank space, and keep our count the same.
+                            textLabel.SetText("  ");
+                        }
+
+                        // and finally add the actual list item.
+                        ChildControls.Add( control );
                         break;
                     }
 
                     case XmlNodeType.EndElement:
                     {
                         // if we hit the end of our label, we're done.
-                        if( reader.Name == "StackPanel" )
+                        if( reader.Name == "List" )
                         {
                             finishedParsing = true;
                         }
@@ -161,59 +160,43 @@ namespace Notes
                 }
             }
 
-            LayoutStackPanel( bounds, leftPadding, topPadding, availableWidth, bottomPadding );
-        }
 
-        protected void LayoutStackPanel( RectangleF bounds, float leftPadding, float topPadding, float availableWidth, float bottomPadding )
-        {
             // layout all controls
+            float xAdjust = bounds.X + listIndentation; 
             float yOffset = bounds.Y + topPadding; //vertically they should just stack
 
-            // now we must center each control within the stack.
+            // we know each child is a NoteText followed by ListItem. So, lay them out 
+            // as: * - ListItem
+            //     * - ListItem
             foreach( IUIControl control in ChildControls )
             {
                 RectangleF controlFrame = control.GetFrame( );
 
-                // horizontally position the controls according to their 
-                // requested alignment
-                Alignment controlAlignment = control.GetHorzAlignment( );
-
-                // adjust by our position
-                float xAdjust = 0;
-                switch( controlAlignment )
-                {
-                    case Alignment.Center:
-                    {
-                        xAdjust = bounds.X + ( ( availableWidth / 2 ) - ( controlFrame.Width / 2 ) );
-                        break;
-                    }
-                    case Alignment.Right:
-                    {
-                        xAdjust = bounds.X + ( availableWidth - controlFrame.Width );
-                        break;
-                    }
-                    case Alignment.Left:
-                    {
-                        xAdjust = bounds.X;
-                        break;
-                    }
-                }
-
-                // adjust the next sibling by yOffset
+                // position the control
                 control.AddOffset( xAdjust + leftPadding, yOffset );
 
-                // and the next sibling must begin there
-                yOffset = control.GetFrame( ).Bottom;
+                // is this the item prefix?
+                if( (control as NoteText) != null )
+                {
+                    // and update xAdjust so the actual item starts after.
+                    xAdjust += controlFrame.Width;
+                }
+                else
+                {
+                    // reset the values for the next line.
+                    xAdjust = bounds.X + listIndentation;
+                    yOffset = control.GetFrame( ).Bottom;
+                }
             }
 
             // we need to store our bounds. We cannot
             // calculate them on the fly because we
             // would lose any control defined offsets, which would throw everything off.
             bounds.Height = ( yOffset - bounds.Y ) + bottomPadding;
-            Frame = bounds;
+            Bounds = bounds;
 
             // store our debug frame
-            base.DebugFrameView.Frame = Frame;
+            base.DebugFrameView.Frame = Bounds;
         }
 
         public override void TouchesEnded( PointF touch )
@@ -236,8 +219,8 @@ namespace Notes
             }
 
             // update our bounds by the new offsets.
-            Frame = new RectangleF( Frame.X + xOffset, Frame.Y + yOffset, Frame.Width, Frame.Height );
-            base.DebugFrameView.Frame = Frame;
+            Bounds = new RectangleF( Bounds.X + xOffset, Bounds.Y + yOffset, Bounds.Width, Bounds.Height );
+            base.DebugFrameView.Frame = Bounds;
         }
 
         public override void AddToView( object obj )
@@ -264,7 +247,7 @@ namespace Notes
 
         public override RectangleF GetFrame( )
         {
-            return Frame;
+            return Bounds;
         }
 
         public override bool ShouldShowBulletPoint( )

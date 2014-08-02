@@ -20,6 +20,8 @@ namespace Notes
                 case "Paragraph": return new Paragraph( parentParams, reader );
                 case "Canvas": return new Canvas( parentParams, reader );
                 case "StackPanel": return new StackPanel( parentParams, reader );
+                case "List": return new List( parentParams, reader );
+                case "ListItem": return new ListItem( parentParams, reader );
                 case "RevealBox": return new RevealBox( parentParams, reader );
                 case "Quote": return new Quote( parentParams, reader );
                 case "TextInput": return new TextInput( parentParams, reader );

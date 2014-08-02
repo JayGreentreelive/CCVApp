@@ -117,7 +117,7 @@ namespace Notes
 
             // size to fit to calculate the height, then reset our width with that height.
             TextField.SizeToFit( );
-            TextField.Bounds = new RectangleF( TextField.Bounds.Left, TextField.Bounds.Top, parentParams.Width, TextField.Bounds.Height );
+            TextField.Frame = new RectangleF( bounds.X, bounds.Y, parentParams.Width, TextField.Bounds.Height );
 
             // set the color of the hint text
             TextField.PlaceholderTextColor = mStyle.mFont.mColor.Value;

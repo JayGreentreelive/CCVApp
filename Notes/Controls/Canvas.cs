@@ -242,5 +242,11 @@ namespace Notes
         {
             return Frame;
         }
+
+        public override bool ShouldShowBulletPoint( )
+        {
+            // as a container, it wouldn't really make sense to show a bullet point.
+            return false;
+        }
     }
 }

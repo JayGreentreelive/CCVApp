@@ -3,11 +3,16 @@
      <Note Padding="5%" BackgroundColor="#000000FF"/>
      <Paragraph PaddingBottom="1%"/>
      <RevealBox FontName="Bevan" FontSize="12" FontColor="#6d1c1cFF"/>
-     <Quote FontName="Bevan" FontSize="12" FontColor="#6d1c1cFF"/>
+     <Quote FontName="Merriweather-BoldItalic" FontSize="12" FontColor="#6d1c1cFF"/>
      <TextInput FontName="Bevan" FontSize="10" FontColor="#AFAFAFFF"/>
-     <Header PaddingBottom="5%" Alignment="Center"/>
-     <HeaderTitle Alignment="Center" FontName="Bevan" FontSize="18" FontColor="#AFAFAFFF"/>
-     <HeaderSpeaker Alignment="Left" FontName="Bevan" FontSize="12" FontColor="#AFAFAFFF"/>
-     <HeaderDate Alignment="Right" FontName="Bevan" FontSize="12" FontColor="#AFAFAFFF"/>
+     
+     <Header.Container PaddingBottom="5%" Alignment="Center"/>
+     <Header.Title Alignment="Center" FontName="Bevan" FontSize="18" FontColor="#AFAFAFFF"/>
+     <Header.Speaker Alignment="Left" FontName="Bevan" FontSize="12" FontColor="#AFAFAFFF"/>
+     <Header.Date Alignment="Right" FontName="Bevan" FontSize="12" FontColor="#AFAFAFFF"/>
+     
      <Text FontName="Bevan" FontSize="12" FontColor="#AFAFAFFF"/>
+     
+     <List Indentation="5%" BulletPoint="☛"/>
+     <ListItem PaddingBottom="5%"/>
 </Styles>

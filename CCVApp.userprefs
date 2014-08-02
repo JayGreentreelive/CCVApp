@@ -1,21 +1,20 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhoneRetina.7.1" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Notes/Controls/RevealBox.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Notes/Controls/Header.cs">
     <Files>
-      <File FileName="Notes/Controls/RevealBox.cs" Line="32" Column="52" />
+      <File FileName="Notes/Controls/RevealBox.cs" Line="19" Column="10" />
+      <File FileName="Notes/Controls/ListItem.cs" Line="161" Column="1" />
+      <File FileName="Notes/Controls/StackPanel.cs" Line="216" Column="1" />
+      <File FileName="Notes/Controls/List.cs" Line="120" Column="59" />
+      <File FileName="Notes/Controls/NoteText.cs" Line="66" Column="15" />
+      <File FileName="Notes/Controls/Note.cs" Line="31" Column="54" />
+      <File FileName="Notes/Controls/Parser.cs" Line="24" Column="1" />
+      <File FileName="Notes/Controls/Header.cs" Line="83" Column="103" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="iOS" expanded="True" />
-          <Node name="Notes" expanded="True">
-            <Node name="Controls" expanded="True">
-              <Node name="StackPanel.cs" selected="True" />
-            </Node>
-            <Node name="PlatformUI" expanded="True">
-              <Node name="iOS" expanded="True" />
-            </Node>
-          </Node>
+          <Node name="iOS" expanded="True" selected="True" />
         </State>
       </Pad>
       <Pad Id="MonoDevelop.Debugger.WatchPad">

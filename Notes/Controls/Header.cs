@@ -19,13 +19,13 @@ namespace Notes
         /// <summary>
         /// The Date control for the header.
         /// </summary>
-        protected const float DEFAULT_DATE_Y_OFFSET = .10f;
+        protected const float DEFAULT_DATE_Y_OFFSET = .15f;
         protected PlatformLabel mDate;
 
         /// <summary>
         /// The speaker control for the header
         /// </summary>
-        protected const float DEFAULT_SPEAKER_Y_OFFSET = .10f;
+        protected const float DEFAULT_SPEAKER_Y_OFFSET = .15f;
         protected PlatformLabel mSpeaker;
 
         /// <summary>
@@ -274,6 +274,12 @@ namespace Notes
         public override RectangleF GetFrame( )
         {
             return Frame;
+        }
+
+        public override bool ShouldShowBulletPoint( )
+        {
+            // as a container, it wouldn't really make sense to show a bullet point.
+            return false;
         }
     }
 }
