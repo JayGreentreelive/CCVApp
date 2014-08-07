@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Xml;
 using System.Drawing;
+using Notes.PlatformUI;
 
 namespace Notes
 {
@@ -9,18 +10,14 @@ namespace Notes
     /// </summary>
     public class RevealBox : NoteText
     {
-        /// <summary>
-        /// The text to reveal when the control is tapped.
-        /// </summary>
-        /// <value>The hidden text.</value>
-        protected string HiddenText { get; set; }
-
         public RevealBox( CreateParams parentParams, XmlReader reader ) : base( )
         {
             // don't call the base constructor that reads. we'll do the reading here.
+            base.Initialize( );
 
-            Initialize( );
+            PlatformLabel = PlatformLabel.CreateRevealLabel( );
 
+            PlatformLabel.SetFade( 0.0f );
 
             // check for attributes we support
             RectangleF bounds = new RectangleF( );
@@ -52,14 +49,9 @@ namespace Notes
                 PlatformLabel.BackgroundColor = mStyle.mBackgroundColor.Value;
             }
 
-            // get text
-            string result = reader.GetAttribute( "Text" );
-            if( string.IsNullOrEmpty( result ) == false )
-            {
-                HiddenText = result;
-            }
 
-            // parse the rest of the stream
+            // parse the stream
+            string revealText = "";
             if( reader.IsEmptyElement == false )
             {
                 bool finishedLabel = false;
@@ -67,23 +59,10 @@ namespace Notes
                 {
                     switch( reader.NodeType )
                     {
-                        case XmlNodeType.Element:
-                        {
-                            switch( reader.Name )
-                            {
-                                case "Text":
-                                {
-                                    HiddenText = reader.ReadElementContentAsString( );
-                                    break;
-                                }
-                            }
-                            break;
-                        }
-
                         case XmlNodeType.Text:
                         {
                             // support text as embedded in the element
-                            HiddenText = reader.Value.Replace( System.Environment.NewLine, "" );
+                            revealText = reader.Value.Replace( System.Environment.NewLine, "" );
 
                             break;
                         }
@@ -102,17 +81,23 @@ namespace Notes
                 }
             }
 
-            // before applying the hidden text, measure and see what length we should be using.
-            // This is totally hacky / temp till we get a real reveal affect in.
-            if( HiddenText.Length > "[TOUCH]".Length )
+            // adjust the text
+            switch( mStyle.mTextCase )
             {
-                SetText( HiddenText );
+                case Styles.TextCase.Upper:
+                {
+                    revealText = revealText.ToUpper( );
+                    break;
+                }
+
+                case Styles.TextCase.Lower:
+                {
+                    revealText = revealText.ToLower( );
+                    break;
+                }
             }
-            else
-            {
-                SetText( "[TOUCH]" );
-            }
-            PlatformLabel.Text = "[TOUCH]";
+
+            SetText( revealText );
 
             PlatformLabel.Position = new PointF( bounds.X, bounds.Y );
         }
@@ -126,7 +111,8 @@ namespace Notes
 			
             if( PlatformLabel.Bounds.Contains( point ) )
             {
-                SetText( HiddenText );
+                //SetText( HiddenText );
+                PlatformLabel.AnimateToFade( 1.0f );
             }
         }
     }

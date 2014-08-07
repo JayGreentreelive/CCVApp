@@ -28,7 +28,7 @@ namespace Notes
             public DroidTextField( )
             {
                 TextField = new EditText( DroidCommon.Context );
-                TextField.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.FillParent, ViewGroup.LayoutParams.WrapContent );
+                TextField.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
 
                 // create a dummy view that can take focus to de-select the text field
                 DummyView = new View( DroidCommon.Context );
@@ -71,14 +71,13 @@ namespace Notes
 
             protected override float getZPosition( )
             {
-                // TODO: There's no current way I can find in Android to do this. But,
-                // we only use it for debugging.
+                //Android doesn't use/need a Z position for its layers. (It goes based on order added)
                 return 0.0f;
             }
 
             protected override void setZPosition( float zPosition )
             {
-                // TODO: There's no current way I can find in Android to do this.
+                //Android doesn't use/need a Z position for its layers. (It goes based on order added)
             }
 
             protected override RectangleF getBounds( )

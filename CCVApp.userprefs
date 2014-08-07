@@ -1,24 +1,32 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhoneRetina.7.1" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Notes/Controls/Header.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" PreferredExecutionTarget="Android.094c904b" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Notes/PlatformUI/iOS/iOSRevealLabel.cs">
     <Files>
-      <File FileName="Notes/Controls/RevealBox.cs" Line="19" Column="10" />
-      <File FileName="Notes/Controls/ListItem.cs" Line="161" Column="1" />
-      <File FileName="Notes/Controls/StackPanel.cs" Line="216" Column="1" />
-      <File FileName="Notes/Controls/List.cs" Line="120" Column="59" />
-      <File FileName="Notes/Controls/NoteText.cs" Line="66" Column="15" />
-      <File FileName="Notes/Controls/Note.cs" Line="31" Column="54" />
-      <File FileName="Notes/Controls/Parser.cs" Line="24" Column="1" />
-      <File FileName="Notes/Controls/Header.cs" Line="83" Column="103" />
+      <File FileName="Notes/PlatformUI/iOS/iOSRevealLabel.cs" Line="13" Column="13" />
+      <File FileName="Notes/PlatformUI/Droid/DroidRevealLabel.cs" Line="35" Column="35" />
+      <File FileName="Notes/PlatformUI/Droid/DroidNative/DroidFadeTextView.cs" Line="17" Column="17" />
+      <File FileName="Notes/PlatformUI/iOS/iOSLabel.cs" Line="14" Column="14" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="iOS" expanded="True" selected="True" />
+          <Node name="Droid" expanded="True" selected="True" />
+          <Node name="iOS" expanded="True" />
         </State>
       </Pad>
       <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
+        <State>
+          <Value>TIME_MASK_SCALAR</Value>
+          <Value>Label</Value>
+          <Value>(int)(73.64 + .5)</Value>
+          <Value>(int)(65.7 + .5)</Value>
+          <Value>(237 / 2) - (2429 / 2)</Value>
+          <Value>final</Value>
+          <Value>hundredthNancoseconds</Value>
+          <Value>milliseconds * 10000</Value>
+          <Value>tickFrequency</Value>
+          <Value>Label.Frame.Size.Height</Value>
+        </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>

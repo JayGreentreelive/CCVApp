@@ -33,58 +33,64 @@ namespace Notes
 
         public static void ParseBounds( XmlReader reader, ref RectangleF bounds )
         {
+            // first check without the Margin prefix.
             string result = reader.GetAttribute( "Left" );
             if( string.IsNullOrEmpty( result ) == false )
             {
-                float denominator = 1.0f;
-                if( result.Contains( "%" ) )
-                {
-                    result = result.Trim( '%' );
-                    denominator = 100.0f;
-                }
-
-                bounds.X = float.Parse( result ) / denominator;
+                bounds.X = ParseBoundValue( result );
             }
 
             result = reader.GetAttribute( "Top" );
             if( string.IsNullOrEmpty( result ) == false )
             {
-                float denominator = 1.0f;
-                if( result.Contains( "%" ) )
-                {
-                    result = result.Trim( '%' );
-                    denominator = 100.0f;
-                }
-
-                bounds.Y = float.Parse( result ) / denominator;
+                bounds.Y = ParseBoundValue( result );
             }
 
+            //TODO: Support Right, Bottom
+
+
+            // now with the margin prefix. And it's ok if it overwrites the equivalent non-margin version.
+            result = reader.GetAttribute( "MarginLeft" );
+            if( string.IsNullOrEmpty( result ) == false )
+            {
+                bounds.X = ParseBoundValue( result );
+            }
+
+            result = reader.GetAttribute( "MarginTop" );
+            if( string.IsNullOrEmpty( result ) == false )
+            {
+                bounds.Y = ParseBoundValue( result );
+            }
+
+            //TODO: Support MarginRight / MarginBottom
+
+
+            // Get width/height
             result = reader.GetAttribute( "Width" );
             if( string.IsNullOrEmpty( result ) == false )
             {
-                float denominator = 1.0f;
-                if( result.Contains( "%" ) )
-                {
-                    result = result.Trim( '%' );
-                    denominator = 100.0f;
-                }
-
-                bounds.Width = float.Parse( result ) / denominator;
+                bounds.Width = ParseBoundValue( result );
             }
 
             result = reader.GetAttribute( "Height" );
             if( string.IsNullOrEmpty( result ) == false )
             {
-                float denominator = 1.0f;
-                if( result.Contains( "%" ) )
-                {
-                    result = result.Trim( '%' );
-                    denominator = 100.0f;
-                }
-
-                bounds.Height = float.Parse( result ) / denominator;
+                bounds.Height = ParseBoundValue( result );
             }
         }
+
+        static float ParseBoundValue( string value )
+        {
+            float denominator = 1.0f;
+            if( value.Contains( "%" ) )
+            {
+                value = value.Trim( '%' );
+                denominator = 100.0f;
+            }
+
+            return float.Parse( value ) / denominator;
+        }
+
 
         // Return a rect that contains both rects A and B (sort of a bounding box)
         public static RectangleF CalcBoundingFrame( RectangleF frameA, RectangleF frameB )

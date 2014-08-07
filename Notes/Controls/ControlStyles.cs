@@ -20,6 +20,16 @@ namespace Notes
         }
 
         /// <summary>
+        /// Casing options for text within controls.
+        /// </summary>
+        public enum TextCase
+        {
+            Normal,
+            Upper,
+            Lower
+        }
+
+        /// <summary>
         /// Defines the font a control's text should use.
         /// Anything null uses values from the control's default style.
         /// </summary>
@@ -86,6 +96,11 @@ namespace Notes
             /// The indention amount for lists
             /// </summary>
             public float? mListIndention;
+
+            /// <summary>
+            /// The casing for the text within a control. As is, Upper or Lower.
+            /// </summary>
+            public TextCase? mTextCase;
 
             public void Initialize( )
             {
@@ -161,6 +176,20 @@ namespace Notes
                         case "Center": style.mAlignment = Styles.Alignment.Center; break;
 
                         default: throw new Exception( "Unknown alignment type specified." );
+                    }
+                }
+
+                // check text casing
+                result = reader.GetAttribute( "TextCase" );
+                if( string.IsNullOrEmpty( result ) == false )
+                {
+                    switch( result )
+                    {
+                        case "Normal": style.mTextCase = Styles.TextCase.Normal; break;
+                        case "Upper": style.mTextCase = Styles.TextCase.Upper; break;
+                        case "Lower": style.mTextCase = Styles.TextCase.Lower; break;
+
+                        default: throw new Exception( "Unknown text case specified." );
                     }
                 }
 
@@ -320,6 +349,12 @@ namespace Notes
                     style.mAlignment = defaultStyle.mAlignment;
                 }
 
+                // check for text case
+                if ( style.mTextCase.HasValue == false )
+                {
+                    style.mTextCase = defaultStyle.mTextCase;
+                }
+
                 // check for list specifics
                 if ( style.mListBullet == null )
                 {
@@ -454,7 +489,7 @@ namespace Notes
 
         static void CreateHeaderStyle()
         {
-            // Default the header container to no padding and left alignment
+            // Default the header container to no padding and left alignment.
             mHeaderContainer = new Styles.Style( );
             mHeaderContainer.Initialize();
             mHeaderContainer.mAlignment = Styles.Alignment.Left;
@@ -465,9 +500,11 @@ namespace Notes
 
 
             //Title should be large, bevan, centered and white
+            // Also, prefer an upper case title.
             mHeaderTitle = new Styles.Style( );
             mHeaderTitle.Initialize();
             mHeaderTitle.mAlignment = Styles.Alignment.Center;
+            mHeaderTitle.mTextCase = Styles.TextCase.Upper;
             mHeaderTitle.mFont.mName = "Bevan";
             mHeaderTitle.mFont.mSize = 18;
             mHeaderTitle.mFont.mColor = 0xFFFFFFFF;
@@ -476,6 +513,7 @@ namespace Notes
             mHeaderDate = new Styles.Style( );
             mHeaderDate.Initialize();
             mHeaderDate.mAlignment = Styles.Alignment.Left;
+            mHeaderDate.mTextCase = Styles.TextCase.Normal;
             mHeaderDate.mFont.mName = "Bevan";
             mHeaderDate.mFont.mSize = 12;
             mHeaderDate.mFont.mColor = 0xFFFFFFFF;
@@ -484,6 +522,7 @@ namespace Notes
             mHeaderSpeaker = new Styles.Style( );
             mHeaderSpeaker.Initialize();
             mHeaderSpeaker.mAlignment = Styles.Alignment.Right;
+            mHeaderSpeaker.mTextCase = Styles.TextCase.Normal;
             mHeaderSpeaker.mFont.mName = "Bevan";
             mHeaderSpeaker.mFont.mSize = 12;
             mHeaderSpeaker.mFont.mColor = 0xFFFFFFFF;
@@ -526,6 +565,7 @@ namespace Notes
             mRevealBox.mFont.mName = "Bevan";
             mRevealBox.mFont.mSize = 12;
             mRevealBox.mFont.mColor = 0x6d1c1cFF;
+            mRevealBox.mTextCase = Styles.TextCase.Normal;
         }
 
         static void CreateTextInputStyle()
@@ -538,6 +578,7 @@ namespace Notes
             mTextInput.mFont.mName = "Bevan";
             mTextInput.mFont.mSize = 8;
             mTextInput.mFont.mColor = 0xFFFFFFFF;
+            mTextInput.mTextCase = Styles.TextCase.Normal;
         }
 
         static void CreateQuoteStyle()
@@ -550,6 +591,7 @@ namespace Notes
             mQuote.mFont.mName = "Bevan";
             mQuote.mFont.mSize = 12;
             mQuote.mFont.mColor = 0x6d1c1cFF;
+            mQuote.mTextCase = Styles.TextCase.Normal;
         }
 
         static void CreateTextStyle()
@@ -561,6 +603,7 @@ namespace Notes
             mText.mFont.mName = "Bevan";
             mText.mFont.mSize = 12;
             mText.mFont.mColor = 0xFFFFFFFF;
+            mText.mTextCase = Styles.TextCase.Normal;
         }
 
         static void CreateListStyle()

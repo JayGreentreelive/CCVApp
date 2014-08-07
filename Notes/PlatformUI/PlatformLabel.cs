@@ -10,6 +10,17 @@ namespace Notes
         /// </summary>
         public abstract class PlatformLabel : PlatformBaseUI
         {
+            public static PlatformLabel CreateRevealLabel( )
+            {
+                #if __IOS__
+                return new iOSRevealLabel( );
+                #endif
+
+                #if __ANDROID__
+                return new DroidRevealLabel( );
+                #endif
+            }
+
             public static PlatformLabel Create( )
             {
                 #if __IOS__
@@ -20,6 +31,10 @@ namespace Notes
                 return new DroidLabel( );
                 #endif
             }
+
+            public abstract float GetFade();
+            public abstract void SetFade( float fadeAmount );
+            public abstract void AnimateToFade( float fadeAmount );
         }
     }
 }

@@ -115,6 +115,22 @@ namespace Notes
                 }
             }
 
+            // adjust the text according to the style
+            switch( mStyle.mTextCase )
+            {
+                case Styles.TextCase.Upper:
+                {
+                    TextField.Placeholder = TextField.Placeholder.ToUpper( );
+                    break;
+                }
+
+                case Styles.TextCase.Lower:
+                {
+                    TextField.Placeholder = TextField.Placeholder.ToLower( );
+                    break;
+                }
+            }
+
             // size to fit to calculate the height, then reset our width with that height.
             TextField.SizeToFit( );
             TextField.Frame = new RectangleF( bounds.X, bounds.Y, parentParams.Width, TextField.Bounds.Height );

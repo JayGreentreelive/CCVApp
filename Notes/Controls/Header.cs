@@ -199,7 +199,26 @@ namespace Notes
             element.Bounds = elementBounds;
 
             // get text
-            element.Text = reader.ReadElementContentAsString( );
+            switch( elementStyle.mTextCase )
+            {
+                case Styles.TextCase.Upper:
+                {
+                    element.Text = reader.ReadElementContentAsString( ).ToUpper( );
+                    break;
+                }
+
+                case Styles.TextCase.Lower:
+                {
+                    element.Text = reader.ReadElementContentAsString( ).ToLower( );
+                    break;
+                }
+
+                case Styles.TextCase.Normal:
+                {
+                    element.Text = reader.ReadElementContentAsString( );
+                    break;
+                }
+            }
             element.SizeToFit( );
 
 

@@ -33,11 +33,15 @@
     <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\Droid\DroidCommon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ListItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\List.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\Droid\DroidRevealLabel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\Droid\DroidNative\DroidFadeTextView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\iOS\iOSRevealLabel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)PlatformUI\" />
     <Folder Include="$(MSBuildThisFileDirectory)PlatformUI\iOS\" />
     <Folder Include="$(MSBuildThisFileDirectory)Controls\" />
     <Folder Include="$(MSBuildThisFileDirectory)PlatformUI\Droid\" />
+    <Folder Include="$(MSBuildThisFileDirectory)PlatformUI\Droid\DroidNative\" />
   </ItemGroup>
 </Project>

@@ -4,6 +4,10 @@ using System.Drawing;
 using Android.Widget;
 using Android.Graphics;
 using Android.Views;
+using Android.Graphics.Drawables;
+using Android.Graphics.Drawables.Shapes;
+using Java.IO;
+using Droid;
 
 namespace Notes
 {
@@ -14,12 +18,12 @@ namespace Notes
         /// </summary>
         public class DroidLabel : PlatformLabel
         {
-            TextView Label { get; set; }
+            protected TextView Label { get; set; }
 
             public DroidLabel( )
             {
                 Label = new TextView( DroidCommon.Context );
-                Label.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.FillParent, ViewGroup.LayoutParams.WrapContent );
+                Label.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
             }
 
             // Properties
@@ -54,14 +58,13 @@ namespace Notes
 
             protected override float getZPosition( )
             {
-                // TODO: There's no current way I can find in Android to do this. But,
-                // we only use it for debugging.
+                //Android doesn't use/need a Z position for its layers. (It goes based on order added)
                 return 0.0f;
             }
 
             protected override void setZPosition( float zPosition )
             {
-                // TODO: There's no current way I can find in Android to do this.
+                //Android doesn't use/need a Z position for its layers. (It goes based on order added)
             }
 
             protected override RectangleF getBounds( )
@@ -130,13 +133,21 @@ namespace Notes
                 switch( Label.Gravity )
                 {
                     case GravityFlags.Center:
-                    return TextAlignment.Center;
+                    {
+                        return TextAlignment.Center;
+                    }
                     case GravityFlags.Left:
-                    return TextAlignment.Left;
+                    {
+                        return TextAlignment.Left;
+                    }
                     case GravityFlags.Right:
-                    return TextAlignment.Right;
+                    {
+                        return TextAlignment.Right;
+                    }
                     default:
-                    return TextAlignment.Left;
+                    {
+                        return TextAlignment.Left;
+                    }
                 }
             }
 
@@ -146,17 +157,25 @@ namespace Notes
                 switch( alignment )
                 {
                     case TextAlignment.Center:
-                    Label.Gravity = GravityFlags.Center;
-                    break;
+                    {
+                        Label.Gravity = GravityFlags.Center;
+                        break;
+                    }
                     case TextAlignment.Left:
-                    Label.Gravity = GravityFlags.Left;
-                    break;
+                    {
+                        Label.Gravity = GravityFlags.Left;
+                        break;
+                    }
                     case TextAlignment.Right:
-                    Label.Gravity = GravityFlags.Right;
-                    break;
+                    {
+                        Label.Gravity = GravityFlags.Right;
+                        break;
+                    }
                     default:
-                    Label.Gravity = GravityFlags.Left;
-                    break;
+                    {
+                        Label.Gravity = GravityFlags.Left;
+                        break;
+                    }
                 }
             }
 
@@ -199,6 +218,19 @@ namespace Notes
 
                 // set the height which will include the wrapped lines
                 Label.LayoutParameters.Height = Label.MeasuredHeight;
+            }
+
+            public override float GetFade()
+            {
+                return 1.0f;
+            }
+
+            public override void SetFade( float fadeAmount )
+            {
+            }
+
+            public override void AnimateToFade( float fadeAmount )
+            {
             }
         }
     }

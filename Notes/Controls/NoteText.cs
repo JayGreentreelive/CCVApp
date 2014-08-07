@@ -17,20 +17,15 @@ namespace Notes
         /// <value>The platform label.</value>
         protected PlatformLabel PlatformLabel { get; set; }
 
-        protected override void Initialize( )
-        {
-            base.Initialize( );
-
-            PlatformLabel = PlatformLabel.Create( );
-        }
-
         protected NoteText( )
         {
         }
 
         public NoteText( CreateParams parentParams, string text )
         {
-            Initialize( );
+            base.Initialize( );
+
+            PlatformLabel = PlatformLabel.Create( );
 
             // check for attributes we support
             RectangleF bounds = new RectangleF( );
@@ -65,7 +60,26 @@ namespace Notes
 
         public void SetText( string text )
         {
-            PlatformLabel.Text = text;
+            switch( mStyle.mTextCase )
+            {
+                case Styles.TextCase.Upper:
+                {
+                    PlatformLabel.Text = text.ToUpper( );
+                    break;
+                }
+
+                case Styles.TextCase.Lower:
+                {
+                    PlatformLabel.Text = text.ToLower( );
+                    break;
+                }
+
+                case Styles.TextCase.Normal:
+                {
+                    PlatformLabel.Text = text;
+                    break;
+                }
+            }
 
             // resize the label to fit the text
             PlatformLabel.SizeToFit( );

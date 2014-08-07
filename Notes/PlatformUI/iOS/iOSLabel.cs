@@ -15,7 +15,7 @@ namespace Notes
         /// </summary>
         public class iOSLabel : PlatformLabel
         {
-            UILabel Label { get; set; }
+            protected UILabel Label { get; set; }
 
             public iOSLabel( )
             {
@@ -140,6 +140,19 @@ namespace Notes
             public override void SizeToFit( )
             {
                 Label.SizeToFit( );
+            }
+
+            public override float GetFade()
+            {
+                return 1.00f;
+            }
+
+            public override void SetFade( float fadeAmount )
+            {
+            }
+
+            public override void AnimateToFade( float fadeAmount )
+            {
             }
         }
     }

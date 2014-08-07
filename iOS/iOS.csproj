@@ -220,6 +220,7 @@
     <BundleResource Include="..\Assets\Fonts\RobotoSlab-Thin.ttf">
       <Link>Resources\Fonts\RobotoSlab-Thin.ttf</Link>
     </BundleResource>
+    <BundleResource Include="Resources\spot_mask.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -234,6 +235,7 @@
   <Import Project="..\Notes\Notes.projitems" Label="Shared" Condition="Exists('..\Notes\Notes.projitems')" />
   <Import Project="..\..\RockMobile\RockMobile.projitems" Label="Shared" Condition="Exists('..\..\RockMobile\RockMobile.projitems')" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
     <InterfaceDefinition Include="NotesViewController.xib" />
   </ItemGroup>

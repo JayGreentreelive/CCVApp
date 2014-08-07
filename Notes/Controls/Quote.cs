@@ -151,6 +151,24 @@ namespace Notes
                 }
             }
 
+            // adjust the text
+            switch( mStyle.mTextCase )
+            {
+                case Styles.TextCase.Upper:
+                {
+                    QuoteLabel.Text = QuoteLabel.Text.ToUpper( );
+                    Citation.Text = Citation.Text.ToUpper( );
+                    break;
+                }
+
+                case Styles.TextCase.Lower:
+                {
+                    QuoteLabel.Text = QuoteLabel.Text.ToLower( );
+                    Citation.Text = Citation.Text.ToLower( );
+                    break;
+                }
+            }
+
             // We forced the text to fit within the width specified above, so this will simply calculate the height.
             QuoteLabel.SizeToFit( );
 

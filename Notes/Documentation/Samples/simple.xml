@@ -61,17 +61,17 @@
     <!--Text in a paragraph can be positioned within its parent, and the text itself can be aligned-->
     <Paragraph Debug="True" 
                Width="50%" 
-               Top="25" 
+               MarginTop="25" 
                Alignment="Center" 
                ChildAlignment="Right">
      
-     Heres some text in a paragraph. The width is set to 50 percent, and we set its top 25 pixels down from 
+     Heres some text in a paragraph. The width is set to 50 percent, and we set its top margin 25 pixels down from 
      the control above it. We request the paragraph container to be centered, and this text within it to 
      be right aligned. Pretty cool huh?
      </Paragraph>
      
      <!--Demonstrate a canvas that allows laying out stacks side by side.-->
-     <Canvas Top="5"
+     <Canvas MarginTop="5"
              Alignment="Center"
              Debug="True">
              
