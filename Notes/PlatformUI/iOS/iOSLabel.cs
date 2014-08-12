@@ -119,6 +119,16 @@ namespace Notes
                 Label.TextAlignment = ( UITextAlignment )alignment;
             }
 
+            protected override bool getHidden( )
+            {
+                return Label.Hidden;
+            }
+
+            protected override void setHidden( bool hidden )
+            {
+                Label.Hidden = hidden;
+            }
+
             public override void AddAsSubview( object masterView )
             {
                 // we know that masterView will be an iOS View.

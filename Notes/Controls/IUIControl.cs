@@ -16,7 +16,11 @@ namespace Notes
 
         void RemoveFromView( object obj );
 
-        void TouchesEnded( PointF touch );
+        bool TouchesBegan( PointF touch );
+
+        void TouchesMoved( PointF touch );
+
+        bool TouchesEnded( PointF touch );
 
         Styles.Alignment GetHorzAlignment( );
 

@@ -63,7 +63,7 @@ namespace Notes
             /// The amount of time to take to scale. This should be adjusted based on
             /// the width of the text label
             /// </summary>
-            float SCALE_TIME_SECONDS = .40f; 
+            float SCALE_TIME_SECONDS = .20f; 
 
             float MaxScale { get; set; }
 

@@ -102,18 +102,21 @@ namespace Notes
             PlatformLabel.Position = new PointF( bounds.X, bounds.Y );
         }
 
-        public override void TouchesEnded( PointF touch )
+        public override bool TouchesEnded( PointF touch )
         {
-            // if the touch that was released was in our region, toggle the text
-            PointF point = new PointF( touch.X - PlatformLabel.Position.X, touch.Y - PlatformLabel.Position.Y );
-
-            //TODO: We can expand this to a radius to make it easier to tap.
-			
-            if( PlatformLabel.Bounds.Contains( point ) )
+            // create an expanded bounding box and see if the touch fell within that.
+            // we expand the height by 50% in both directions
+            RectangleF boundingBox = new RectangleF( PlatformLabel.Frame.Left, 
+                                                     PlatformLabel.Frame.Top - (PlatformLabel.Bounds.Height / 2), 
+                                                     PlatformLabel.Bounds.Right, 
+                                                     PlatformLabel.Bounds.Bottom + PlatformLabel.Bounds.Height );
+            if( boundingBox.Contains( touch ) )
             {
-                //SetText( HiddenText );
                 PlatformLabel.AnimateToFade( 1.0f );
+                return true;
             }
+
+            return false;
         }
     }
 }

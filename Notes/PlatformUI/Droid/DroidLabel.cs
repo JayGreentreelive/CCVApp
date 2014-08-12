@@ -127,6 +127,16 @@ namespace Notes
                 Label.Text = text;
             }
 
+            protected override bool getHidden( )
+            {
+                return Label.Visibility == ViewStates.Gone ? true : false;
+            }
+
+            protected override void setHidden( bool hidden )
+            {
+                Label.Visibility = hidden == true ? ViewStates.Gone : ViewStates.Visible;
+            }
+
             protected override TextAlignment getTextAlignment( )
             {
                 // gonna have to do a stupid transform

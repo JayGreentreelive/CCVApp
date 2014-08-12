@@ -5,6 +5,7 @@ using MonoTouch.UIKit;
 using MonoTouch.Foundation;
 using MonoTouch.CoreGraphics;
 using MonoTouch.CoreText;
+using Notes.PlatformUI.iOSNative;
 
 namespace Notes
 {
@@ -15,13 +16,15 @@ namespace Notes
         /// </summary>
         public class iOSTextField : PlatformTextField
         {
-            UITextField TextField { get; set; }
+            DynamicUITextView TextField { get; set; }
 
             public iOSTextField( )
             {
-                TextField = new UITextField( );
+                TextField = new DynamicUITextView( );
                 TextField.Layer.AnchorPoint = new PointF( 0, 0 );
                 TextField.TextAlignment = UITextAlignment.Left;
+
+                TextField.Editable = true;
             }
 
             // Properties
@@ -84,12 +87,22 @@ namespace Notes
 
             protected override  PointF getPosition( )
             {
-                return TextField.Layer.Position;
+                return TextField.Position;
             }
 
             protected override void setPosition( PointF position )
             {
-                TextField.Layer.Position = position;
+                TextField.Position = position;
+            }
+
+            protected override bool getHidden( )
+            {
+                return TextField.Hidden;
+            }
+
+            protected override void setHidden( bool hidden )
+            {
+                TextField.Hidden = hidden;
             }
 
             protected override void setTextColor( uint color )
@@ -99,11 +112,7 @@ namespace Notes
 
             protected override void setPlaceholderTextColor( uint color )
             {
-                TextField.AttributedPlaceholder = new NSAttributedString(
-                    TextField.Placeholder,
-                    font: TextField.Font,
-                    foregroundColor: GetUIColor( color )
-                );
+                TextField.PlaceholderTextColor = GetUIColor( color );
             }
 
             protected override string getText( )
@@ -136,6 +145,16 @@ namespace Notes
                 TextField.Placeholder = placeholder;
             }
 
+            protected override bool getScaleHeightForText( )
+            {
+                return TextField.ScaleHeightForText;
+            }
+
+            protected override void setScaleHeightForText( bool scale )
+            {
+                TextField.ScaleHeightForText = scale;
+            }
+
             public override void ResignFirstResponder( )
             {
                 TextField.ResignFirstResponder( );
@@ -150,7 +169,7 @@ namespace Notes
                     throw new Exception( "Object passed to iOS AddAsSubview must be a UIView." );
                 }
 
-                view.AddSubview( TextField );
+                TextField.AddAsSubview( view );
             }
 
             public override void RemoveAsSubview( object obj )

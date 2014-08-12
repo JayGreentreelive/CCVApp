@@ -336,13 +336,19 @@ namespace Notes
             base.DebugFrameView.Frame = Frame;
         }
 
-        public override void TouchesEnded( PointF touch )
+        public override bool TouchesEnded( PointF touch )
         {
             // let each child handle it
             foreach( IUIControl control in ChildControls )
             {
-                control.TouchesEnded( touch );
+                // if a child consumes it, stop and report it was consumed.
+                if(control.TouchesEnded( touch ))
+                {
+                    return true;
+                }
             }
+
+            return false;
         }
 
         public override void AddToView( object obj )

@@ -16,6 +16,93 @@ using System.Drawing;
 
 namespace Droid
 {
+    public class DoubleTap : GestureDetector.SimpleOnGestureListener
+    {
+        public NotesActivity NotesActivity { get; set; }
+
+        public DoubleTap( NotesActivity notesActivity )
+        {
+            NotesActivity = notesActivity;
+        }
+
+        public override bool OnDoubleTap(MotionEvent e)
+        {
+            return NotesActivity.OnDoubleTap( e );
+        }
+    }
+
+    public class LockableScrollView : ScrollView
+    {
+        public bool ScrollEnabled { get; set; }
+
+        public LockableScrollView( Context c ) : base( c )
+        {
+            ScrollEnabled = true;
+        }
+
+        //This is a total hack but it works perfectly.
+        //For some reason, when focus is changed to a text element, the
+        //RelativeView gets focus first. Since it's at 0, 0,
+        //The scrollView wants to scroll to the TOP, then when the editText
+        //gets focus, it jumps back down to its position.
+        // This is not an acceptable long term solution, but I really need to move on right now.
+        public override void ScrollTo(int x, int y)
+        {
+            //base.ScrollTo(x, y);
+        }
+
+        public override void ScrollBy(int x, int y)
+        {
+            //base.ScrollBy(x, y);
+        }
+
+        public override bool PageScroll(FocusSearchDirection direction)
+        {
+            return base.PageScroll(direction);
+        }
+
+        public override void RequestChildFocus(View child, View focused)
+        {
+            base.RequestChildFocus(child, focused);
+        }
+
+        protected override void OnLayout(bool changed, int left, int top, int right, int bottom)
+        {
+            base.OnLayout(changed, left, top, right, bottom);
+        }
+
+        public override View FindFocus()
+        {
+            return base.FindFocus();
+        }
+
+        public override bool OnTouchEvent( MotionEvent ev )
+        {
+            switch( ev.Action )
+            {
+                case MotionEventActions.Down:
+                {
+                    if( ScrollEnabled )
+                    {
+                        return base.OnTouchEvent( ev );
+                    }
+                    break;
+                }
+            }
+
+            return base.OnTouchEvent( ev );
+        }
+
+        public override bool OnInterceptTouchEvent(MotionEvent ev)
+        {
+            if( ScrollEnabled == true )
+            {
+                return base.OnInterceptTouchEvent(ev);
+            }
+            return false;
+        }
+    }
+
     [Activity( Label = "NotesActivity" )]            
     public class NotesActivity : Activity, View.IOnTouchListener
     {
@@ -35,7 +122,7 @@ namespace Droid
         /// Displays the Note
         /// </summary>
         /// <value>The scroll view.</value>
-        ScrollView ScrollView { get; set; }
+        LockableScrollView ScrollView { get; set; }
 
         /// <summary>
         /// Immediate child of the ScrollView. Parent to all content
@@ -61,6 +148,14 @@ namespace Droid
         /// <value>The note.</value>
         Note Note { get; set; }
 
+        GestureDetector GestureDetector { get; set; }
+
+        public bool OnDoubleTap(MotionEvent e)
+        {
+            Note.DidDoubleTap( new PointF( e.GetX( ), e.GetY( ) ) );
+            return true;
+        }
+
         protected override void OnCreate( Bundle bundle )
         {
             base.OnCreate( bundle );
@@ -70,14 +165,37 @@ namespace Droid
             // Set our view from the "main" layout resource
             SetContentView( Resource.Layout.Notes );
 
-            ScrollView = FindViewById<ScrollView>( Resource.Id.scrollView );
+            // create our overridden lockable scroll view
+            ScrollView = new LockableScrollView( this );
+            ScrollView.ScrollBarStyle = ScrollbarStyles.InsideInset;
+            ScrollView.OverScrollMode = OverScrollMode.Always;
+            ScrollView.VerticalScrollbarPosition = ScrollbarPosition.Default;
+            ScrollView.Focusable = false;
+            ScrollView.FocusableInTouchMode = false;
+            ScrollView.DescendantFocusability = DescendantFocusability.AfterDescendants;
+
+            //This is here for reference, in case one of these isn't the default for a scroll view.
+            /*<Droid.Droid.LockableScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical"*/
+
+            // add it to our main layout.
+            LinearLayout layout = FindViewById<LinearLayout>( Resource.Id.linearLayout );
+            layout.AddView( ScrollView );
+
             RefreshButton = FindViewById<Button>( Resource.Id.refreshButton );
+
             Indicator = FindViewById<ProgressBar>( Resource.Id.progressBar );
             Indicator.Visibility = ViewStates.Gone;
 
             ScrollViewLayout = new RelativeLayout( this );
             ScrollView.AddView( ScrollViewLayout );
             ScrollViewLayout.SetOnTouchListener( this );
+            ScrollViewLayout.DescendantFocusability = DescendantFocusability.AfterDescendants;
+
+
+            GestureDetector = new GestureDetector( this, new DoubleTap( this ) );
 
             RefreshButton.Click += (object sender, EventArgs e ) =>
             {
@@ -110,16 +228,46 @@ namespace Droid
 
         public bool OnTouch( View v, MotionEvent e )
         {
+            if( GestureDetector.OnTouchEvent( e ) )
+            {
+                return true;
+            }
+
             base.OnTouchEvent( e );
 
             switch( e.Action )
             {
+                case MotionEventActions.Down:
+                {
+                    if( Note != null )
+                    {
+                        if( Note.TouchesBegan( new PointF( e.GetX( ), e.GetY( ) ) ) )
+                        {
+                            ScrollView.ScrollEnabled = false;
+                        }
+                    }
+
+                    break;
+                }
+
+                case MotionEventActions.Move:
+                {
+                    if( Note != null )
+                    {
+                        Note.TouchesMoved( new PointF( e.GetX( ), e.GetY( ) ) );
+                    }
+
+                    break;
+                }
+
                 case MotionEventActions.Up:
                 {
                     if( Note != null )
                     {
                         Note.TouchesEnded( new PointF( e.GetX( ), e.GetY( ) ) );
                     }
+
+                    ScrollView.ScrollEnabled = true;
 
                     break;
                 }
@@ -198,8 +346,7 @@ namespace Droid
                         {
                             // Use the metrics and not ScrollView for dimensions, because depending on when this gets called the ScrollView
                             // may not have its dimensions set yet.
-                            Note.Create( this.Resources.DisplayMetrics.WidthPixels, this.Resources.DisplayMetrics.HeightPixels );
-                            Note.AddToView( ScrollViewLayout );
+                            Note.Create( this.Resources.DisplayMetrics.WidthPixels, this.Resources.DisplayMetrics.HeightPixels, ScrollViewLayout );
 
                             // set the requested background color
                             ScrollView.SetBackgroundColor( ( Android.Graphics.Color )Notes.PlatformUI.DroidLabel.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value ) );

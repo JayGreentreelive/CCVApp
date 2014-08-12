@@ -6,6 +6,7 @@ using Droid;
 using Android.Graphics.Drawables;
 using Android.Widget;
 using Notes.PlatformUI.DroidNative;
+using System.IO;
 
 namespace Notes
 {
@@ -50,7 +51,7 @@ namespace Notes
                 Label = new FadeTextView( DroidCommon.Context ) as TextView;
                 Label.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
 
-                ((FadeTextView)Label).CreateAlphaMask( DroidCommon.Context, Resource.Drawable.spot_mask );
+                ((FadeTextView)Label).CreateAlphaMask( DroidCommon.Context, "spot_mask.png" );
 
 
                 // Define a gradiant underline that will be shown underneath the text

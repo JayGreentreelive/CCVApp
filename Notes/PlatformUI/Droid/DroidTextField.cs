@@ -30,6 +30,9 @@ namespace Notes
                 TextField = new EditText( DroidCommon.Context );
                 TextField.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
 
+                // default gravity to top for text input (why would you want it centered?)
+                //TextField.Gravity = GravityFlags.Top;
+
                 // create a dummy view that can take focus to de-select the text field
                 DummyView = new View( DroidCommon.Context );
                 DummyView.Focusable = true;
@@ -125,6 +128,16 @@ namespace Notes
                 TextField.SetY( position.Y );
             }
 
+            protected override bool getHidden( )
+            {
+                return TextField.Visibility == ViewStates.Gone ? true : false;
+            }
+
+            protected override void setHidden( bool hidden )
+            {
+                TextField.Visibility = hidden == true ? ViewStates.Gone : ViewStates.Visible;
+            }
+
             protected override void setTextColor( uint color )
             {
                 TextField.SetTextColor( GetUIColor( color ) );
@@ -173,7 +186,6 @@ namespace Notes
 
             protected override void setTextAlignment( TextAlignment alignment )
             {
-                // gonna have to do a stupid transform
                 switch( alignment )
                 {
                     case TextAlignment.Center:
@@ -189,6 +201,17 @@ namespace Notes
                         TextField.Gravity = GravityFlags.Left;
                         break;
                 }
+            }
+
+            protected override void setScaleHeightForText( bool scale )
+            {
+                // might not need this
+            }
+
+            protected override bool getScaleHeightForText( )
+            {
+                // might not need this
+                return false;
             }
 
             public override void AddAsSubview( object masterView )
@@ -236,8 +259,9 @@ namespace Notes
 
             public override void ResignFirstResponder( )
             {
+                // only allow this text edit to hide the keyboard if it's the text field with focus.
                 Activity activity = ( Activity )DroidCommon.Context;
-                if( activity.CurrentFocus != null && ( activity.CurrentFocus as EditText ) != null )
+                if( activity.CurrentFocus != null && ( activity.CurrentFocus as EditText ) == TextField )
                 {
                     InputMethodManager imm = ( InputMethodManager )DroidCommon.Context.GetSystemService( Android.Content.Context.InputMethodService );
 

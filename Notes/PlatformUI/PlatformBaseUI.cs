@@ -5,18 +5,8 @@ namespace Notes
 {
     namespace PlatformUI
     {
-        // put common utility things here (enums, etc)
-        public enum TextAlignment
-        {
-            Left,
-            Center,
-            Right,
-            Justified,
-            Natural
-        }
-
         /// <summary>
-        /// The base platformUI that provides an interface to platform specific UI controls.
+        /// The base platformUI that provides an interface to platform specific UI controls. All our platform wrappers derive from this.
         /// </summary>
         public abstract class PlatformBaseUI
         {
@@ -35,18 +25,16 @@ namespace Notes
             #if __IOS__
             public static MonoTouch.UIKit.UIColor GetUIColor( uint color )
             {
-                // break out the colors and convert to 0-1 for iOS
-                return new MonoTouch.UIKit.UIColor(
-                    ( float )( ( color & 0xFF000000 ) >> 24 ) / 255,
-                    ( float )( ( color & 0x00FF0000 ) >> 16 ) / 255, 
-                    ( float )( ( color & 0x0000FF00 ) >> 8 ) / 255, 
-                    ( float )( ( color & 0x000000FF ) ) / 255 );
+            // break out the colors and convert to 0-1 for iOS
+            return new MonoTouch.UIKit.UIColor(
+            ( float )( ( color & 0xFF000000 ) >> 24 ) / 255,
+            ( float )( ( color & 0x00FF0000 ) >> 16 ) / 255, 
+            ( float )( ( color & 0x0000FF00 ) >> 8 ) / 255, 
+            ( float )( ( color & 0x000000FF ) ) / 255 );
             }
             #endif
 
             // Properties
-            public abstract void SetFont( string fontName, float fontSize );
-
             public uint BackgroundColor
             {
                 set { setBackgroundColor( value ); }
@@ -104,40 +92,17 @@ namespace Notes
 
             protected abstract void setPosition( PointF position );
 
-            public uint TextColor
+            public bool Hidden
             {
-                //get { return getTextColor(); }
-                set { setTextColor( value ); }
+                get { return getHidden( ); }
+                set { setHidden( value ); }
             }
-            //protected abstract uint getTextColor();
-            protected abstract void setTextColor( uint color );
-
-            public string Text
-            {
-                get { return getText( ); }
-                set { setText( value ); }
-            }
-
-            protected abstract string getText( );
-
-            protected abstract void setText( string text );
-
-            public TextAlignment TextAlignment
-            {
-                get { return getTextAlignment( ); }
-                set { setTextAlignment( value ); }
-            }
-
-            protected abstract TextAlignment getTextAlignment( );
-
-            protected abstract void setTextAlignment( TextAlignment alignment );
-
+            protected abstract bool getHidden( );
+            protected abstract void setHidden( bool hidden );
 
             public abstract void AddAsSubview( object masterView );
 
             public abstract void RemoveAsSubview( object masterView );
-
-            public abstract void SizeToFit( );
         }
     }
 }

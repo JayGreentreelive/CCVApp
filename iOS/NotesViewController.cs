@@ -15,6 +15,22 @@ namespace CCVApp
     {
         public UIViewController Interceptor { get; set; }
 
+        public override void TouchesBegan(NSSet touches, UIEvent evt)
+        {
+            if( Interceptor != null )
+            {
+                Interceptor.TouchesBegan( touches, evt );
+            }
+        }
+
+        public override void TouchesMoved(NSSet touches, UIEvent evt)
+        {
+            if( Interceptor != null )
+            {
+                Interceptor.TouchesMoved( touches, evt );
+            }
+        }
+
         public override void TouchesEnded( NSSet touches, UIEvent evt )
         {
             if( Interceptor != null )
@@ -55,6 +71,9 @@ namespace CCVApp
         /// </summary>
         /// <value>The note.</value>
         Note Note { get; set; }
+
+        bool NeedsRestoreFromKeyboard { get; set; }
+        RectangleF TappedTextFieldFrame { get; set; }
 
         public NotesViewController( ) : base( "NotesViewController", null )
         {
@@ -99,14 +118,23 @@ namespace CCVApp
         {
             base.ViewDidLoad( );
 
+            // monitor for text field being edited, and keyboard show/hide notitications
+            NSNotificationCenter.DefaultCenter.AddObserver ("TextFieldDidBeginEditing", OnTextFieldDidBeginEditing);
+            NSNotificationCenter.DefaultCenter.AddObserver (UIKeyboard.WillHideNotification, OnKeyboardNotification);
+            NSNotificationCenter.DefaultCenter.AddObserver (UIKeyboard.WillShowNotification, OnKeyboardNotification);
+
             UIScrollView = new CustomScrollView( );
             UIScrollView.Interceptor = this;
             UIScrollView.Frame = View.Frame;
             UIScrollView.BackgroundColor = UIColor.Black;
 
+            UITapGestureRecognizer tapGesture = new UITapGestureRecognizer();
+            tapGesture.NumberOfTapsRequired = 2;
+            tapGesture.AddTarget (this, new MonoTouch.ObjCRuntime.Selector("DoubleTapSelector:"));
+            UIScrollView.AddGestureRecognizer( tapGesture );
+
             View.BackgroundColor = UIScrollView.BackgroundColor;
             View.AddSubview( UIScrollView );
-
 
             // add a busy indicator
             Indicator = new UIActivityIndicatorView( UIActivityIndicatorViewStyle.White );
@@ -125,9 +153,47 @@ namespace CCVApp
             View.AddSubview( RefreshButton );
         }
 
+        public override void TouchesBegan(NSSet touches, UIEvent evt)
+        {
+            base.TouchesBegan(touches, evt);
+
+            Console.WriteLine( "Touches Began" );
+
+            UITouch touch = touches.AnyObject as UITouch;
+            if( touch != null )
+            {
+                if( Note != null )
+                {
+                    // if the note consumed touches Began, don't allow the UIScroll View to scroll.
+                    if( Note.TouchesBegan( touch.LocationInView( UIScrollView ) ) == true )
+                    {
+                        UIScrollView.ScrollEnabled = false;
+                    }
+                }
+            }
+        }
+
+        public override void TouchesMoved(NSSet touches, UIEvent evt)
+        {
+            base.TouchesMoved( touches, evt );
+
+            Console.WriteLine( "Touches MOVED" );
+
+            UITouch touch = touches.AnyObject as UITouch;
+            if( touch != null )
+            {
+                if( Note != null )
+                {
+                    Note.TouchesMoved( touch.LocationInView( UIScrollView ) );
+                }
+            }
+        }
+
         public override void TouchesEnded( NSSet touches, UIEvent evt )
         {
             base.TouchesEnded( touches, evt );
+
+            Console.WriteLine( "Touches Ended" );
 
             UITouch touch = touches.AnyObject as UITouch;
             if( touch != null )
@@ -137,6 +203,83 @@ namespace CCVApp
                     Note.TouchesEnded( touch.LocationInView( UIScrollView ) );
                 }
             }
+
+            // when a touch is released, re-enabled scrolling
+            UIScrollView.ScrollEnabled = true;
+        }
+
+        [MonoTouch.Foundation.Export("DoubleTapSelector:")]
+        public void HandleTapGesture(UITapGestureRecognizer tap)
+        {
+            if( Note != null )
+            {
+                if( tap.State == UIGestureRecognizerState.Ended )
+                {
+                    Note.DidDoubleTap( tap.LocationInView( UIScrollView ) );
+                }
+            }
+        }
+
+        public void OnKeyboardNotification( NSNotification notification )
+        {
+            //Start an animation, using values from the keyboard
+            UIView.BeginAnimations ("AnimateForKeyboard");
+            UIView.SetAnimationBeginsFromCurrentState (true);
+            UIView.SetAnimationDuration (UIKeyboard.AnimationDurationFromNotification (notification));
+            UIView.SetAnimationCurve ((UIViewAnimationCurve)UIKeyboard.AnimationCurveFromNotification (notification));
+
+            //Check if the keyboard is becoming visible
+            if( notification.Name == UIKeyboard.WillShowNotification )
+            {
+                // get the keyboard frame and transform it into our view's space
+                RectangleF keyboardFrame = UIKeyboard.FrameEndFromNotification (notification);
+                keyboardFrame = View.ConvertRectToView( keyboardFrame, null );
+
+                // get the height remaining after the keyboard is displayed
+                float viewHeight = View.Bounds.Height - keyboardFrame.Height;
+
+                // if the bottom of the text frame is beyond the remaining height,
+                // the keyboard will cover it, so we want to adjust.
+                if(TappedTextFieldFrame.Bottom >= viewHeight)
+                {
+                    NeedsRestoreFromKeyboard = true;
+                    UIScrollView.Layer.Position = new PointF( UIScrollView.Layer.Position.X, UIScrollView.Layer.Position.Y - keyboardFrame.Height );
+                }
+            }
+            else
+            {
+                // get the keyboard frame and transform it into our view's space
+                RectangleF keyboardFrame = UIKeyboard.FrameBeginFromNotification (notification);
+                keyboardFrame = View.ConvertRectToView( keyboardFrame, null );
+
+                // use a flag for restoring the keyboard because we can't trust the latest edited text field.
+                // It's possible that they clicked one that invoked a shift, then immediately started editing
+                // a text field that does NOT need a shift.
+                if(NeedsRestoreFromKeyboard == true)
+                {
+                    NeedsRestoreFromKeyboard = false;
+                    UIScrollView.Layer.Position = new PointF( UIScrollView.Layer.Position.X, UIScrollView.Layer.Position.Y + keyboardFrame.Height );
+                }
+            }
+
+            //Commit the animation
+            UIView.CommitAnimations (); 
+        }
+
+        public void OnTextFieldDidBeginEditing( NSNotification notification )
+        {
+            // put the text frame in absolute screen coordinates
+            RectangleF textFrame = ((NSValue)notification.Object).RectangleFValue;
+
+            // first subtract the amount scrolled by the view.
+            float yPos = textFrame.Y - UIScrollView.ContentOffset.Y;
+            float xPos = textFrame.X - UIScrollView.ContentOffset.X;
+
+            // now subtract however far down the scroll view is from the top.
+            yPos -= View.Frame.Y - UIScrollView.Frame.Y;
+            xPos -= View.Frame.X - UIScrollView.Frame.X;
+
+            TappedTextFieldFrame = new RectangleF( xPos, yPos, textFrame.Width, textFrame.Height );
         }
 
         public void DestroyNotes( )
@@ -208,10 +351,10 @@ namespace CCVApp
 
                         try
                         {
-                            Note.Create( UIScrollView.Bounds.Width, UIScrollView.Bounds.Height );
+                            Note.Create( UIScrollView.Bounds.Width, UIScrollView.Bounds.Height, this.UIScrollView );
 
-                            //todo: we can't pass in an iOS type like this...
-                            Note.AddToView( this.UIScrollView );
+                            // enable scrolling
+                            UIScrollView.ScrollEnabled = true;
 
                             // take the requested background color
                             UIScrollView.BackgroundColor = Notes.PlatformUI.iOSLabel.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value );

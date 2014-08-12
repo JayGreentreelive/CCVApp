@@ -1,9 +1,9 @@
-﻿
-#if __ANDROID__
+﻿#if __ANDROID__
 using System;
 using Android.Widget;
 using Android.Graphics;
 using Android.Animation;
+using Java.IO;
 
 namespace Notes
 {
@@ -16,31 +16,59 @@ namespace Notes
             /// </summary>
             public class FadeTextView : TextView, Android.Animation.ValueAnimator.IAnimatorUpdateListener
             {
-                public FadeTextView( Android.Content.Context context ) : base( context )
-                {
-                    MaskScale = 1.0f;
-
-                    RenderBuffersValid = false;
-
-                    TextPaint = new Paint();
-                    TextTransform = new Matrix();
-                }
-
-                Bitmap RGBMask { get; set; }
+                /// <summary>
+                /// An alpha-only version of the RGBAMask. This is what we'll actually use to mask.
+                /// </summary>
+                /// <value>The alpha mask.</value>
                 Bitmap AlphaMask { get; set; }
 
-                bool RenderBuffersValid { get; set; }
-
+                /// <summary>
+                /// The text to display rendered to an offscreen bmp
+                /// </summary>
+                /// <value>The text bmp.</value>
                 Bitmap TextBmp { get; set; }
+
+                /// <summary>
+                /// The paint that specifies how to render the mask with the text.
+                /// </summary>
+                /// <value>The text paint.</value>
                 Paint TextPaint { get; set; }
+
+                /// <summary>
+                /// The transform needed to ensure the mask remains centered on the text.
+                /// </summary>
+                /// <value>The text transform.</value>
                 Matrix TextTransform { get; set; }
 
+                /// <summary>
+                /// The offscreen bitmap that the text and mask are both rendered into.
+                /// This is what is then rendered to the android back buffer.
+                /// </summary>
+                /// <value>The result bmp.</value>
                 Bitmap ResultBmp { get; set; }
+
+                /// <summary>
+                /// The canvas used in conjunction with the ResultBmp
+                /// </summary>
+                /// <value>The result canvas.</value>
                 Android.Graphics.Canvas ResultCanvas { get; set; }
 
-                int CurrHeight { get; set; }
+                /// <summary>
+                /// The current width of the text. If this changes the text buffer is redrawn.
+                /// </summary>
+                /// <value>The width of the curr.</value>
                 int CurrWidth { get; set; }
+                 
+                /// <summary>
+                /// The current height of the text. If this changes the text buffer is redrawn.
+                /// </summary>
+                /// <value>The height of the curr.</value>
+                int CurrHeight { get; set; }
 
+                /// <summary>
+                /// The current value to scale the alpha mask to. (Larger number means bigger mask, and
+                /// more visible text underneath.
+                /// </summary>
                 float _MaskScale;
                 public float MaskScale 
                 { 
@@ -53,6 +81,14 @@ namespace Notes
                     {
                         _MaskScale = Math.Max(value, .01f);
                     }
+                }
+
+                public FadeTextView( Android.Content.Context context ) : base( context )
+                {
+                    MaskScale = 1.0f;
+
+                    TextPaint = new Paint();
+                    TextTransform = new Matrix();
                 }
 
                 public void AnimateMaskScale( float targetScale, long duration )
@@ -70,23 +106,29 @@ namespace Notes
 
                 public void OnAnimationUpdate(ValueAnimator animation)
                 {
+                    // update the mask scale
                     _MaskScale = ((Java.Lang.Float)animation.GetAnimatedValue("")).FloatValue();
+
+                    // force the view to be dirty so we get a redraw call.
                     Invalidate();
                 }
 
-                public void CreateAlphaMask( Android.Content.Context context, int sourceMaskId )
+                public void CreateAlphaMask( Android.Content.Context context, string fileName )
                 {
-                    // grab the RGB mask
-                    RGBMask = BitmapFactory.DecodeResource( context.Resources, sourceMaskId );
+                    // load the stream from assets
+                    System.IO.Stream assetStream = context.Assets.Open( fileName );
+
+                    // grab the RGBA mask
+                    Bitmap rgbaMask = BitmapFactory.DecodeStream( assetStream );
 
                     // convert it to an alpha mask
-                    AlphaMask = Bitmap.CreateBitmap( RGBMask.Width, RGBMask.Height, Bitmap.Config.Alpha8 );
+                    AlphaMask = Bitmap.CreateBitmap( rgbaMask.Width, rgbaMask.Height, Bitmap.Config.Alpha8 );
 
                     // put the 8bit mask into a canvas
                     Android.Graphics.Canvas maskCanvas = new Android.Graphics.Canvas( AlphaMask );
 
                     // render the rgb mask into the canvas, which writes the result into the AlphaMask bitmap
-                    maskCanvas.DrawBitmap( RGBMask, 0.0f, 0.0f, null );
+                    maskCanvas.DrawBitmap( rgbaMask, 0.0f, 0.0f, null );
                 }
 
                 protected void CreateTextBitmaps( int width, int height )

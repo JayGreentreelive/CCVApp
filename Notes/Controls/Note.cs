@@ -25,6 +25,19 @@ namespace Notes
         protected List<IUIControl> ChildControls { get; set; }
 
         /// <summary>
+        /// A seperate list of User Notes.
+        /// </summary>
+        /// <value>The user note controls.</value>
+        protected List<UserNote> UserNoteControls { get; set; }
+
+        /// <summary>
+        /// a reference to the Anchor being touched or moved. This
+        /// does NOT point to a note being edited. That's different.
+        /// </summary>
+        /// <value>The active user note anchor.</value>
+        protected IUIControl ActiveUserNoteAnchor { get; set; }
+
+        /// <summary>
         /// The NoteScript XML. Stored for rebuilding notes on an orientation change.
         /// </summary>
         /// <value>The note xml.</value>
@@ -40,6 +53,12 @@ namespace Notes
         /// </summary>
         /// <value>The bounds.</value>
         protected RectangleF Frame { get; set; }
+
+        /// <summary>
+        /// The view that actually contains all controls
+        /// </summary>
+        /// <value>The master view.</value>
+        protected object MasterView { get; set; }
 
         public static void HandlePreReqs( string noteXml, string styleXml, OnPreReqsComplete onPreReqsComplete )
         {
@@ -93,10 +112,13 @@ namespace Notes
             mStyle.Initialize( );
         }
 
-        public void Create( float parentWidth, float parentHeight )
+        public void Create( float parentWidth, float parentHeight, object masterView )
         {
+            MasterView = masterView;
+
             // create a child control list
             ChildControls = new List<IUIControl>( );
+            UserNoteControls = new List<UserNote>( ); //store these seperately so we can back them up and test touch input.
 
             // now use a reader to get each element
             XmlReader reader = XmlReader.Create( new StringReader( NoteXml ) );
@@ -137,9 +159,20 @@ namespace Notes
 
                 // and clear our UI list
                 ChildControls.Clear( );
-
-                NoteXml = null;
             }
+
+            if( UserNoteControls != null )
+            {
+                // remove (but don't destroy) the notes
+                foreach( IUIControl uiControl in UserNoteControls )
+                {
+                    uiControl.RemoveFromView( obj );
+                }
+
+                UserNoteControls.Clear();
+            }
+
+            NoteXml = null;
         }
 
         void ParseNote( XmlReader reader, float parentWidth, float parentHeight )
@@ -238,15 +271,18 @@ namespace Notes
                 yOffset = control.GetFrame( ).Bottom;
             }
 
+            bounds.Width = parentWidth;
             bounds.Height = ( yOffset - bounds.Y ) + bottomPadding;
             Frame = bounds;
+
+            AddControlsToView( );
         }
 
-        public void AddToView( object view )
+        protected void AddControlsToView( )
         {
             foreach( IUIControl uiControl in ChildControls )
             {
-                uiControl.AddToView( view );
+                uiControl.AddToView( MasterView );
             }
         }
 
@@ -255,12 +291,115 @@ namespace Notes
             return Frame;
         }
 
+        public bool TouchesBegan( PointF touch )
+        {
+            // We receive TouchesBegan if anything except a TextField was tapped.
+            // The only control we have that needs this is the UserNote for its Anchor.
+
+            // So, see if the user is tapping on a UserNoteAnchor.
+            foreach( IUIControl control in UserNoteControls )
+            {
+                // If a user note returns true, its anchor is being touched.
+                if( control.TouchesBegan( touch ) == true )
+                {
+                    // Begin tracking this anchor for movement and touchEnd
+                    ActiveUserNoteAnchor = control;
+                    return true;
+                }
+            }
+
+            // No UserNote Anchors were touched, so do not
+            // say we consumed this.
+            return false;
+        }
+
+        public void TouchesMoved( PointF touch )
+        {
+            // If a UserNote anchor was tapped in TouchesBegan,
+            // we will have an active Anchor, so notify it of the new position.
+            if( ActiveUserNoteAnchor != null )
+            {
+                ActiveUserNoteAnchor.TouchesMoved( touch );
+            }
+        }
+
         public void TouchesEnded( PointF touch )
         {
-            // notify all controls
-            foreach( IUIControl control in ChildControls )
+            // TouchesEnded is tricky. It's reasonable a User will have
+            // the keyboard up and decide to open/close/move another Note.
+            // This should NOT cause the keyboard to hide. The only time a keyboard
+            // should hide is if a User taps on a general area of the screen.
+
+            // To accomplish this, we rely on ActiveUserNoteAnchor. If it's valid in TouchesEnded,
+            // that means the touch was in an anchor and not a general part of the screen.
+
+            // If there's an active UserNote Anchor, notify only it.
+            if( ActiveUserNoteAnchor != null )
             {
-                control.TouchesEnded( touch );
+                // Notify the active anchor, and clear it since the user released input.
+                ActiveUserNoteAnchor.TouchesEnded( touch );
+                ActiveUserNoteAnchor = null;
+            }
+            else
+            {
+                // Since a UserNote Anchor was NOT touched, we know it was a "general"
+                // area of the screen, and can allow the keyboard to hide.
+                foreach( UserNote userNote in UserNoteControls )
+                {
+                    userNote.ResignFirstResponder( );
+                }
+
+
+                // Now notify all remaining controls until we find out one consumed it.
+                // This is purely for efficiency.
+                bool consumed = false;
+                foreach( IUIControl control in UserNoteControls )
+                {
+                    // was it consumed?
+                    consumed = control.TouchesEnded( touch );
+                    if( consumed )
+                    {
+                        break;
+                    }
+                }
+
+                // if no user note consumed it, notify all regular controls
+                if( consumed == false )
+                {
+                    // notify all controls
+                    foreach( IUIControl control in ChildControls )
+                    {
+                        // was it consumed?
+                        consumed = control.TouchesEnded( touch );
+                        
+                        if( consumed )
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        public void DidDoubleTap(PointF touch)
+        {
+            // do not allow a new note within range of another's anchor.
+            bool allowNoteCreation = true;
+
+            foreach( UserNote userNote in UserNoteControls )
+            {
+                if( userNote.TouchInAnchorRange( touch ) )
+                {
+                    allowNoteCreation = false;
+                }
+            }
+
+            if( allowNoteCreation )
+            {
+                UserNote userNote = new UserNote( new BaseControl.CreateParams( Frame.Width, Frame.Height, ref mStyle ), touch );
+                UserNoteControls.Add( userNote );
+
+                userNote.AddToView( MasterView );
             }
         }
     }

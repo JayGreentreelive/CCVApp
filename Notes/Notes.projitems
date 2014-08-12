@@ -9,7 +9,6 @@
     <Import_RootNamespace>Notes</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\PlatformCommon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\PlatformLabel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\iOS\iOSLabel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\BaseControl.cs" />
@@ -36,6 +35,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\Droid\DroidRevealLabel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\Droid\DroidNative\DroidFadeTextView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\iOS\iOSRevealLabel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\UserNote.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\PlatformView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\iOS\iOSView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\PlatformBaseUI.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\Droid\DroidView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\iOS\iOSNative\iOSDynamicUITextField.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)PlatformUI\" />
@@ -43,5 +48,6 @@
     <Folder Include="$(MSBuildThisFileDirectory)Controls\" />
     <Folder Include="$(MSBuildThisFileDirectory)PlatformUI\Droid\" />
     <Folder Include="$(MSBuildThisFileDirectory)PlatformUI\Droid\DroidNative\" />
+    <Folder Include="$(MSBuildThisFileDirectory)PlatformUI\iOS\iOSNative\" />
   </ItemGroup>
 </Project>

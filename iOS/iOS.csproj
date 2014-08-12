@@ -220,7 +220,9 @@
     <BundleResource Include="..\Assets\Fonts\RobotoSlab-Thin.ttf">
       <Link>Resources\Fonts\RobotoSlab-Thin.ttf</Link>
     </BundleResource>
-    <BundleResource Include="Resources\spot_mask.png" />
+    <BundleResource Include="..\Assets\spot_mask.png">
+      <Link>Resources\spot_mask.png</Link>
+    </BundleResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />

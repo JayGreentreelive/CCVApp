@@ -117,8 +117,18 @@ namespace Notes
             }
         }
 
-        public virtual void TouchesEnded( PointF touch )
+        public virtual bool TouchesBegan( PointF touch )
         {
+            return false;
+        }
+
+        public virtual void TouchesMoved( PointF touch )
+        {
+        }
+
+        public virtual bool TouchesEnded( PointF touch )
+        {
+            return false;
         }
 
         public Alignment GetHorzAlignment( )

@@ -139,10 +139,12 @@ namespace Notes
             TextField.PlaceholderTextColor = mStyle.mFont.mColor.Value;
         }
 
-        public override void TouchesEnded( PointF touch )
+        public override bool TouchesEnded( PointF touch )
         {
             // hide the keyboard
             TextField.ResignFirstResponder( );
+
+            return false;
         }
 
         public override void AddOffset( float xOffset, float yOffset )
