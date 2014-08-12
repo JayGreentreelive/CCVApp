@@ -4,7 +4,6 @@ using System;
 using MonoTouch.UIKit;
 using MonoTouch.Foundation;
 using System.Drawing;
-
 namespace Notes
 {
     namespace PlatformUI
@@ -43,10 +42,12 @@ namespace Notes
                     NSNotificationCenter.DefaultCenter.AddObserver( UITextView.TextDidChangeNotification, OnTextChanged );
                     Delegate = new TextViewDelegate();
 
-                    // Create our placeholder label
-                    PlaceholderLabel.Text = Placeholder;
+                    Layer.BackgroundColor = UIColor.Clear.CGColor;
+
+                    // initialize our placeholder label. Its z pos should ALWAYS be just in front of us.
                     PlaceholderLabel.Layer.AnchorPoint = new PointF( 0, 0 );
-                    PlaceholderLabel.Layer.ZPosition = 1000;
+                    PlaceholderLabel.Layer.ZPosition = Layer.ZPosition + 1;
+                    PlaceholderLabel.BackgroundColor = UIColor.Clear;
                 }
 
                 public void AddAsSubview(UIView view)
@@ -76,8 +77,13 @@ namespace Notes
                         // determine the base height of this text field.
                         if( ScaleHeightForText )
                         {
+                            // measure the font
                             SizeF size = SizeThatFits( new SizeF( base.Bounds.Width, base.Bounds.Height ) );
+
+                            // round up
                             base.Bounds = new RectangleF( base.Bounds.X, base.Bounds.Y, base.Bounds.Width, (float) Math.Ceiling( size.Height ) );
+
+                            // update our content size AND placeholder
                             ContentSize = base.Bounds.Size;
                             PlaceholderLabel.Bounds = base.Bounds;
                         }
@@ -106,6 +112,33 @@ namespace Notes
                     set
                     {
                         PlaceholderLabel.TextColor = value;
+                    }
+                }
+
+                public float Opacity
+                {
+                    get
+                    {
+                        return Layer.Opacity;
+                    }
+                    set
+                    {
+                        Layer.Opacity = value;
+                        PlaceholderLabel.Layer.Opacity = value;
+                    }
+                }
+
+                public float ZPosition
+                {
+                    get
+                    {
+                        return Layer.ZPosition;
+                    }
+                    set
+                    {
+                        // always make the placeholder be in front of us.
+                        Layer.ZPosition = value;
+                        PlaceholderLabel.Layer.ZPosition = value + 1;
                     }
                 }
 

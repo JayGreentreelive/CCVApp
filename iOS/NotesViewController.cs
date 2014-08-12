@@ -13,7 +13,21 @@ namespace CCVApp
     // create a subclass of UIScrollView so we can intercept its touch events
     public class CustomScrollView : UIScrollView
     {
-        public UIViewController Interceptor { get; set; }
+        public NotesViewController Interceptor { get; set; }
+
+        // UIScrollView will check for scrolling and suppress touches began
+        // if the user is scrolling. We want to allow our controls to consume it
+        public override UIView HitTest(PointF point, UIEvent uievent)
+        {
+            if ( Frame.Contains( point ) )
+            {
+                if( Interceptor.HandleTouchBegan( point ) )
+                {
+                    return null;
+                }
+            }
+            return base.HitTest(point, uievent);
+        }
 
         public override void TouchesBegan(NSSet touches, UIEvent evt)
         {
@@ -133,6 +147,7 @@ namespace CCVApp
             tapGesture.AddTarget (this, new MonoTouch.ObjCRuntime.Selector("DoubleTapSelector:"));
             UIScrollView.AddGestureRecognizer( tapGesture );
 
+
             View.BackgroundColor = UIScrollView.BackgroundColor;
             View.AddSubview( UIScrollView );
 
@@ -153,6 +168,21 @@ namespace CCVApp
             View.AddSubview( RefreshButton );
         }
 
+        public bool HandleTouchBegan( PointF point )
+        {
+            if( Note != null )
+            {
+                // if the note consumed touches Began, don't allow the UIScroll View to scroll.
+                if( Note.TouchesBegan( point ) == true )
+                {
+                    UIScrollView.ScrollEnabled = false;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public override void TouchesBegan(NSSet touches, UIEvent evt)
         {
             base.TouchesBegan(touches, evt);
@@ -162,14 +192,7 @@ namespace CCVApp
             UITouch touch = touches.AnyObject as UITouch;
             if( touch != null )
             {
-                if( Note != null )
-                {
-                    // if the note consumed touches Began, don't allow the UIScroll View to scroll.
-                    if( Note.TouchesBegan( touch.LocationInView( UIScrollView ) ) == true )
-                    {
-                        UIScrollView.ScrollEnabled = false;
-                    }
-                }
+                HandleTouchBegan( touch.LocationInView( UIScrollView ) );
             }
         }
 

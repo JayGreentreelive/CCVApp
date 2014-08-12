@@ -25,13 +25,15 @@ namespace Notes
             /// <value>The dummy view.</value>
             View DummyView { get; set; }
 
+            bool mScaleHeightForText = false;
+
             public DroidTextField( )
             {
                 TextField = new EditText( DroidCommon.Context );
                 TextField.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-
-                // default gravity to top for text input (why would you want it centered?)
-                //TextField.Gravity = GravityFlags.Top;
+                TextField.SetScrollContainer( true );
+                TextField.InputType |= Android.Text.InputTypes.TextFlagMultiLine;
+                TextField.SetHorizontallyScrolling( false );
 
                 // create a dummy view that can take focus to de-select the text field
                 DummyView = new View( DroidCommon.Context );
@@ -50,6 +52,11 @@ namespace Notes
                     Typeface fontFace = Typeface.CreateFromAsset( DroidCommon.Context.Assets, "Fonts/" + fontName + ".ttf" );
                     TextField.SetTypeface( fontFace, TypefaceStyle.Normal );
                     TextField.SetTextSize( Android.Util.ComplexUnitType.Pt, fontSize );
+
+                    if( mScaleHeightForText )
+                    {
+                        SizeToFit( );
+                    }
                 } 
                 catch
                 {
@@ -96,9 +103,13 @@ namespace Notes
                 //Bounds is simply the localSpace coordinates of the edges.
                 // NOTE: On android we're not supporting a non-0 left/top. I don't know why you'd EVER
                 // want this, but it's possible to set on iOS.
-                TextField.LayoutParameters.Width = ( int )bounds.Width;
+                TextField.SetMinWidth( (int)bounds.Width );
                 TextField.SetMaxWidth( TextField.LayoutParameters.Width );
-                TextField.LayoutParameters.Height = ( int )bounds.Height;
+
+                if( mScaleHeightForText == false )
+                {
+                    TextField.LayoutParameters.Height = ( int )bounds.Height;
+                }
             }
 
             protected override RectangleF getFrame( )
@@ -205,13 +216,12 @@ namespace Notes
 
             protected override void setScaleHeightForText( bool scale )
             {
-                // might not need this
+                mScaleHeightForText = scale;
             }
 
             protected override bool getScaleHeightForText( )
             {
-                // might not need this
-                return false;
+                return mScaleHeightForText;
             }
 
             public override void AddAsSubview( object masterView )
@@ -250,11 +260,14 @@ namespace Notes
                 TextField.Measure( widthMeasureSpec, heightMeasureSpec );
 
                 // update its width
-                TextField.LayoutParameters.Width = TextField.MeasuredWidth;
-                TextField.SetMaxWidth( TextField.LayoutParameters.Width );
+                TextField.SetMinWidth( TextField.MeasuredWidth );
+                TextField.SetMaxWidth( TextField.MeasuredWidth );
 
                 // set the height which will include the wrapped lines
-                TextField.LayoutParameters.Height = TextField.MeasuredHeight;
+                if( mScaleHeightForText == false )
+                {
+                    TextField.LayoutParameters.Height = TextField.MeasuredHeight;
+                }
             }
 
             public override void ResignFirstResponder( )

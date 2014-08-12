@@ -47,22 +47,22 @@ namespace Notes
 
             protected override float getOpacity( )
             {
-                return TextField.Layer.Opacity;
+                return TextField.Opacity;
             }
 
             protected override void setOpacity( float opacity )
             {
-                TextField.Layer.Opacity = opacity;
+                TextField.Opacity = opacity;
             }
 
             protected override float getZPosition( )
             {
-                return TextField.Layer.ZPosition;
+                return TextField.ZPosition;
             }
 
             protected override void setZPosition( float zPosition )
             {
-                TextField.Layer.ZPosition = zPosition;
+                TextField.ZPosition = zPosition;
             }
 
             protected override RectangleF getBounds( )

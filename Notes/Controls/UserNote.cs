@@ -36,12 +36,15 @@ namespace Notes
 
         protected PointF TrackingLastPos { get; set; }
         protected TrackingState Tracking { get; set; }
-        protected System.Timers.Timer TrackingTimer { get; set; }
+        //protected System.Timers.Timer TrackingTimer { get; set; }
 
         protected float MaxAvailableWidth { get; set; }
+        protected float MaxAvailableHeight { get; set; }
+
         protected float MaxNoteWidth { get; set; }
         protected float MinNoteWidth { get; set; }
-        protected float HeightPerLine { get; set; }
+
+        protected bool DidMoveNote { get; set; }
 
         protected override void Initialize( )
         {
@@ -58,9 +61,10 @@ namespace Notes
             Initialize( );
 
             //setup our timer for allowing movement/
-            TrackingTimer = new System.Timers.Timer();
-            TrackingTimer.Interval = 500;
+            /*TrackingTimer = new System.Timers.Timer();
+            TrackingTimer.Interval = 10;
             TrackingTimer.Elapsed += HoldTimerDidFire;
+            TrackingTimer.AutoReset = false;*/
 
 
             // take our parent's style or in defaults
@@ -93,7 +97,8 @@ namespace Notes
             Anchor.Bounds = new RectangleF( 0, 0, parentParams.Width * .05f, parentParams.Width * .05f );
 
             // the text field should scale based on how close to the edge.
-            MaxAvailableWidth = (parentParams.Width - Anchor.Bounds.Width);
+            MaxAvailableWidth = ( parentParams.Width - Anchor.Bounds.Width );
+            MaxAvailableHeight = ( parentParams.Height - Anchor.Bounds.Height );
             MinNoteWidth = (parentParams.Width * .10f );
             MaxNoteWidth = (parentParams.Width - Anchor.Bounds.Width) / 2;
 
@@ -143,13 +148,22 @@ namespace Notes
             // if the touch is in our region, begin tracking
             if( TouchInAnchorRange( touch ) )
             {
-                Console.WriteLine( "UserNote BEGAN HOLDING");
+                //Console.WriteLine( "UserNote BEGAN HOLDING");
+
+                //DidMoveNote = false;
 
                 // flag that they're now holding
-                Tracking = TrackingState.Holding;
+                //Tracking = TrackingState.Holding;
 
-                TrackingTimer.Start();
-                TrackingLastPos = touch;
+                //TrackingTimer.Start();
+                //TrackingLastPos = touch;
+
+                // Begin tracking for movement
+                Tracking               = TrackingState.Moving;
+                DidMoveNote            = false;
+                TrackingLastPos        = touch;
+                Anchor.BackgroundColor = 0x00FF00FF;
+                Console.WriteLine( "UserNote WILL BEGIN MOVING" );
 
                 return true;
             }
@@ -157,7 +171,7 @@ namespace Notes
             return false;
         }
 
-        protected void HoldTimerDidFire(object sender, System.Timers.ElapsedEventArgs e)
+        /*protected void HoldTimerDidFire(object sender, System.Timers.ElapsedEventArgs e)
         {
             if( Tracking == TrackingState.Holding )
             {
@@ -182,19 +196,19 @@ namespace Notes
                 Console.WriteLine( "UserNote WAS NOT HOLDING WHEN TIMER FIRED." );
             }
 
-            TrackingTimer.Stop();
-        }
+            //TrackingTimer.Stop();
+        }*/
 
         public override void TouchesMoved( PointF touch )
         {
             // are we moving?
-            if( Tracking == TrackingState.Holding )
+            /*if( Tracking == TrackingState.Holding )
             {
                 // are we holding to see if they want to move?
                 TrackingLastPos = touch;
 
                 Console.WriteLine( "UserNote HOLDING MOVING" );
-            }
+            }*/
             if (Tracking == TrackingState.Moving )
             {
                 // if we're moving, update by the amount we moved.
@@ -205,6 +219,8 @@ namespace Notes
                 // stamp our position
                 TrackingLastPos = touch;
 
+                DidMoveNote = true;
+
                 Console.WriteLine( "UserNote MOVING" );
             }
         }
@@ -214,8 +230,9 @@ namespace Notes
             bool consumed = false;
 
             // first, if we were moving, don't do anything except cancel movement.
-            if( Tracking == TrackingState.Moving )
+            if( DidMoveNote == true)
             {
+                DidMoveNote = false;
                 consumed = true;
             }
             // manage the note only if it's not none, because that means we
@@ -243,7 +260,7 @@ namespace Notes
             // always turn off tracking once we've released
             Anchor.BackgroundColor = 0xFF0000FF; //revert the color to red
             Tracking = TrackingState.None;
-            TrackingTimer.Stop();
+            //TrackingTimer.Stop();
 
             return consumed;
         }
@@ -263,10 +280,10 @@ namespace Notes
         {
             // clamp X & Y movement to within margin of the screen
             float maxX = MaxAvailableWidth - AnchorFrame.Width;
-            if( Anchor.Position.X + xOffset < (AnchorFrame.Width * 2) )
+            if( Anchor.Position.X + xOffset < AnchorFrame.Width )
             {
                 // watch the left side
-                xOffset += (AnchorFrame.Width * 2) - (Anchor.Position.X + xOffset);
+                xOffset += AnchorFrame.Width - (Anchor.Position.X + xOffset);
             }
             else if( Anchor.Position.X + xOffset > maxX )
             {
@@ -274,13 +291,18 @@ namespace Notes
                 xOffset -= (Anchor.Position.X + xOffset) - maxX;
             }
 
-            //TODO - add Y
-            /*float maxY = MaxAvailableWidth - AnchorFrame.Width;
-            if( Anchor.Position.X + xOffset > maxX )
+            // Check Y...
+            float maxY = MaxAvailableHeight - AnchorFrame.Height;
+            if( Anchor.Position.Y + yOffset < AnchorFrame.Height )
             {
-                xOffset -= (Anchor.Position.X + xOffset) - maxX;
-            }*/
+                yOffset += AnchorFrame.Height - (Anchor.Position.Y + yOffset);
+            }
+            else if (Anchor.Position.Y + yOffset > maxY )
+            {
+                yOffset -= (Anchor.Position.Y + yOffset) - maxY;
+            }
 
+            // Now that offsets have been clamped, reposition the note
             base.AddOffset( xOffset, yOffset );
 
             TextField.Position = new PointF( TextField.Position.X + xOffset, 
