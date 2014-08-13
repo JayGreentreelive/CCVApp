@@ -1,12 +1,11 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" PreferredExecutionTarget="Android.094c904b" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Notes/Controls/UserNote.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Notes/Models/MobileNote.cs">
     <Files>
-      <File FileName="Droid/NotesActivity.cs" Line="1" Column="1" />
-      <File FileName="Notes/Controls/Note.cs" Line="1" Column="1" />
-      <File FileName="Notes/Controls/UserNote.cs" Line="44" Column="44" />
-      <File FileName="Notes/PlatformUI/Droid/DroidTextField.cs" Line="27" Column="27" />
-      <File FileName="Notes/PlatformUI/PlatformBaseUI.cs" Line="1" Column="1" />
+      <File FileName="Notes/Controls/Note.cs" Line="2" Column="2" />
+      <File FileName="Notes/Controls/UserNote.cs" Line="23" Column="23" />
+      <File FileName="Notes/PlatformUI/Droid/DroidTextField.cs" Line="1" Column="1" />
+      <File FileName="Notes/Models/MobileNote.cs" Line="30" Column="30" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

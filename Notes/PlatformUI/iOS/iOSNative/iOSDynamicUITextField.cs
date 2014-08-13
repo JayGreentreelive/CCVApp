@@ -201,6 +201,25 @@ namespace Notes
                         PlaceholderLabel.Frame = base.Frame;
                     }
                 }
+
+                public override string Text
+                {
+                    get
+                    {
+                        return base.Text;
+                    }
+                    set
+                    {
+                        base.Text = value;
+
+                        // if directly setting text to the control, hide the label if
+                        // it's a non-emty string.
+                        if( string.IsNullOrEmpty( value ) == false )
+                        {
+                            PlaceholderLabel.Hidden = true;
+                        }
+                    }
+                }
                 //
 
                 protected void OnTextChanged( NSNotification notification )

@@ -13,11 +13,18 @@ using Android.Widget;
 using RockMobile.Network;
 using Notes;
 using System.Drawing;
+using System.IO;
 
 namespace Droid
 {
+    /// <summary>
+    /// Double tap listener
+    /// </summary>
     public class DoubleTap : GestureDetector.SimpleOnGestureListener
     {
+        /// <summary>
+        /// The notes activity that needs notification of a double tap.
+        /// </summary>
         public NotesActivity NotesActivity { get; set; }
 
         public DoubleTap( NotesActivity notesActivity )
@@ -31,8 +38,14 @@ namespace Droid
         }
     }
 
+    /// <summary>
+    /// Subclass of Android's ScrollView to allow us to disable scrolling.
+    /// </summary>
     public class LockableScrollView : ScrollView
     {
+        /// <summary>
+        /// True when the scroll view can scroll. False when it cannot.
+        /// </summary>
         public bool ScrollEnabled { get; set; }
 
         public LockableScrollView( Context c ) : base( c )
@@ -148,6 +161,9 @@ namespace Droid
         /// <value>The note.</value>
         Note Note { get; set; }
 
+        /// <summary>
+        /// Used for notification of a double tap.
+        /// </summary>
         GestureDetector GestureDetector { get; set; }
 
         public bool OnDoubleTap(MotionEvent e)
@@ -220,6 +236,8 @@ namespace Droid
             // if we have a note and aren't in the middle of refreshing, store what we have.
             if( Note != null && RefreshingNotes == false )
             {
+                Note.Destroy( ScrollViewLayout );
+
                 // store out xml in the bundle so we don't have to re-download it
                 outState.PutString( XML_NOTE_KEY, Note.NoteXml );
                 outState.PutString( XML_STYLE_KEY, ControlStyles.StyleSheetXml );

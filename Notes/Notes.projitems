@@ -41,6 +41,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\PlatformBaseUI.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\Droid\DroidView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\iOS\iOSNative\iOSDynamicUITextField.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\MobileNote.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)PlatformUI\" />
@@ -49,5 +50,6 @@
     <Folder Include="$(MSBuildThisFileDirectory)PlatformUI\Droid\" />
     <Folder Include="$(MSBuildThisFileDirectory)PlatformUI\Droid\DroidNative\" />
     <Folder Include="$(MSBuildThisFileDirectory)PlatformUI\iOS\iOSNative\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Models\" />
   </ItemGroup>
 </Project>

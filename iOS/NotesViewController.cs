@@ -7,6 +7,7 @@ using MonoTouch.UIKit;
 using RockMobile.Network;
 using Notes;
 using System.Collections.Generic;
+using System.IO;
 
 namespace CCVApp
 {
@@ -15,8 +16,9 @@ namespace CCVApp
     {
         public NotesViewController Interceptor { get; set; }
 
-        // UIScrollView will check for scrolling and suppress touches began
+        // UIScrollView will check for scrolling and suppress touchesBegan
         // if the user is scrolling. We want to allow our controls to consume it
+        // before that.
         public override UIView HitTest(PointF point, UIEvent uievent)
         {
             if ( Frame.Contains( point ) )
@@ -86,7 +88,14 @@ namespace CCVApp
         /// <value>The note.</value>
         Note Note { get; set; }
 
+        /// <summary>
+        /// True when the view should lower when the keyboard hides.
+        /// </summary>
         bool NeedsRestoreFromKeyboard { get; set; }
+
+        /// <summary>
+        /// The frame of the text field that was tapped when the keyboard was shown.
+        /// </summary>
         RectangleF TappedTextFieldFrame { get; set; }
 
         public NotesViewController( ) : base( "NotesViewController", null )
@@ -146,7 +155,6 @@ namespace CCVApp
             tapGesture.NumberOfTapsRequired = 2;
             tapGesture.AddTarget (this, new MonoTouch.ObjCRuntime.Selector("DoubleTapSelector:"));
             UIScrollView.AddGestureRecognizer( tapGesture );
-
 
             View.BackgroundColor = UIScrollView.BackgroundColor;
             View.AddSubview( UIScrollView );

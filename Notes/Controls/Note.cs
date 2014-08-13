@@ -13,6 +13,8 @@ namespace Notes
     /// </summary>
     public class Note
     {
+        const string USER_NOTE_FILENAME = "userNotes.txt";
+
         /// <summary>
         /// Delegate for notifying the caller when a note is ready to be created via Note.Create()
         /// </summary>
@@ -59,6 +61,8 @@ namespace Notes
         /// </summary>
         /// <value>The master view.</value>
         protected object MasterView { get; set; }
+
+        protected string UserNotePath { get; set; }
 
         public static void HandlePreReqs( string noteXml, string styleXml, OnPreReqsComplete onPreReqsComplete )
         {
@@ -110,6 +114,8 @@ namespace Notes
 
             mStyle = new Style( );
             mStyle.Initialize( );
+
+            UserNotePath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), USER_NOTE_FILENAME);
         }
 
         public void Create( float parentWidth, float parentHeight, object masterView )
@@ -149,6 +155,9 @@ namespace Notes
 
         public void Destroy( object obj )
         {
+            // before destroying notes, save them
+            SaveUserNotes( UserNotePath );
+
             // release references to our UI objects
             if( ChildControls != null )
             {
@@ -276,6 +285,9 @@ namespace Notes
             Frame = bounds;
 
             AddControlsToView( );
+
+            // finally, load the user notes for this note
+            LoadUserNotes( UserNotePath );
         }
 
         protected void AddControlsToView( )
@@ -400,6 +412,46 @@ namespace Notes
                 UserNoteControls.Add( userNote );
 
                 userNote.AddToView( MasterView );
+            }
+        }
+
+        protected void LoadUserNotes( string filePath )
+        {
+            // if the file exists
+            if(System.IO.File.Exists(filePath) == true)
+            {
+                // read it
+                using (StreamReader reader = new StreamReader(filePath))
+                {
+                    // for each note found
+                    string noteJson = reader.ReadLine();
+                    while( noteJson != null )
+                    {
+                        // create the note, add it to our list, and to the view
+                        UserNote note = new UserNote( new BaseControl.CreateParams( Frame.Width, Frame.Height, ref mStyle ), noteJson );
+                        UserNoteControls.Add( note );
+                        note.AddToView( MasterView );
+
+                        noteJson = reader.ReadLine();
+                    }
+                }
+            }
+        }
+
+        protected void SaveUserNotes( string filePath )
+        {
+            // if there are any user notes
+            if( UserNoteControls.Count > 0 )
+            {
+                // open a stream
+                using (StreamWriter writer = new StreamWriter(filePath))
+                {
+                    // write the serialized json for each note
+                    foreach( UserNote note in UserNoteControls )
+                    {
+                        writer.WriteLine( note.Serialize( ) );
+                    }
+                }
             }
         }
     }

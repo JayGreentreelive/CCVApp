@@ -44,6 +44,9 @@
     <Reference Include="RN_iBeacon_Bindings">
       <HintPath>..\..\RockMobile\Lib\Android\RN_iBeacon_Bindings.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\Components\json.net-4.5.11\lib\android\Newtonsoft.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
@@ -199,5 +202,11 @@
     <AndroidAsset Include="..\Assets\spot_mask.png">
       <Link>Assets\spot_mask.png</Link>
     </AndroidAsset>
+  </ItemGroup>
+  <ItemGroup>
+    <XamarinComponentReference Include="json.net">
+      <Version>4.5.11</Version>
+      <Visible>False</Visible>
+    </XamarinComponentReference>
   </ItemGroup>
 </Project>
