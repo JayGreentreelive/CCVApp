@@ -1,5 +1,5 @@
 ﻿using System;
-using Notes.PlatformUI;
+using RockMobile.PlatformUI;
 using System.Xml;
 using System.Drawing;
 using System.Text.RegularExpressions;

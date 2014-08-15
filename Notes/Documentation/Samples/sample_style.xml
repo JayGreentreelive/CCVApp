@@ -8,8 +8,8 @@
      
      <Header.Container PaddingBottom="5%" Alignment="Center"/>
      <Header.Title Alignment="Center" FontName="Bevan" FontSize="18" FontColor="#AFAFAFFF"/>
-     <Header.Speaker Alignment="Left" FontName="Bevan" FontSize="12" FontColor="#AFAFAFFF"/>
-     <Header.Date Alignment="Right" FontName="Bevan" FontSize="12" FontColor="#AFAFAFFF"/>
+     <Header.Speaker FontName="Bevan" FontSize="12" FontColor="#AFAFAFFF"/>
+     <Header.Date FontName="Bevan" FontSize="12" FontColor="#AFAFAFFF"/>
      
      <Text FontName="Bevan" FontSize="12" FontColor="#AFAFAFFF"/>
      

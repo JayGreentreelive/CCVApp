@@ -30,11 +30,37 @@ namespace CCVApp
 			
             // If you have defined a root view controller, set it here:
             window.RootViewController = new NotesViewController( );
+            //window.RootViewController = new NavigationViewController( );
 			
             // make the window visible
             window.MakeKeyAndVisible( );
 			
             return true;
+        }
+
+        public override void OnActivated(UIApplication application)
+        {
+            Console.WriteLine("OnActivated called, App is active.");
+        }
+        public override void WillEnterForeground(UIApplication application)
+        {
+            Console.WriteLine("App will enter foreground");
+        }
+        public override void OnResignActivation(UIApplication application)
+        {
+            Console.WriteLine("OnResignActivation called, App moving to inactive state.");
+            (window.RootViewController as NotesViewController).OnResignActive( );
+        }
+        public override void DidEnterBackground(UIApplication application)
+        {
+            Console.WriteLine("App entering background state.");
+            (window.RootViewController as NotesViewController).DidEnterBackground( );
+        }
+        // not guaranteed that this will run
+        public override void WillTerminate(UIApplication application)
+        {
+            Console.WriteLine("App is terminating.");
+            (window.RootViewController as NotesViewController).WillTerminate( );
         }
     }
 }

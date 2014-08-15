@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml;
 using System.Drawing;
-using Notes.PlatformUI;
+using RockMobile.PlatformUI;
 
 namespace Notes
 {

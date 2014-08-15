@@ -166,6 +166,24 @@ namespace Droid
         /// </summary>
         GestureDetector GestureDetector { get; set; }
 
+        /// <summary>
+        /// Our wake lock that will keep the device from sleeping while notes are up.
+        /// </summary>
+        /// <value>The wake lock.</value>
+        PowerManager.WakeLock WakeLock { get; set; }
+
+        /// <summary>
+        /// reference to the note XML for re-creating the notes in OnResume()
+        /// </summary>
+        /// <value>The note XM.</value>
+        string NoteXml { get; set; }
+
+        /// <summary>
+        /// reference to the style XML for re-creating the notes in OnResume()
+        /// </summary>
+        /// <value>The note XM.</value>
+        string StyleSheetXml { get; set; }
+
         public bool OnDoubleTap(MotionEvent e)
         {
             Note.DidDoubleTap( new PointF( e.GetX( ), e.GetY( ) ) );
@@ -176,7 +194,7 @@ namespace Droid
         {
             base.OnCreate( bundle );
 
-            Notes.PlatformUI.DroidCommon.Context = this;
+            RockMobile.PlatformCommon.Droid.Context = this;
 
             // Set our view from the "main" layout resource
             SetContentView( Resource.Layout.Notes );
@@ -189,12 +207,6 @@ namespace Droid
             ScrollView.Focusable = false;
             ScrollView.FocusableInTouchMode = false;
             ScrollView.DescendantFocusability = DescendantFocusability.AfterDescendants;
-
-            //This is here for reference, in case one of these isn't the default for a scroll view.
-            /*<Droid.Droid.LockableScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="vertical"*/
 
             // add it to our main layout.
             LinearLayout layout = FindViewById<LinearLayout>( Resource.Id.linearLayout );
@@ -218,15 +230,58 @@ namespace Droid
                 CreateNotes( null, null );
             };
 
-            string noteXml = null;
-            string styleSheetXml = null;
+            // get our power management control
+            PowerManager pm = PowerManager.FromContext( this );
+            WakeLock = pm.NewWakeLock(WakeLockFlags.Full, "Notes");
+
+            //
+            NoteXml = null;
+            StyleSheetXml = null;
             if( bundle != null )
             {
-                noteXml = bundle.GetString( XML_NOTE_KEY );
-                styleSheetXml = bundle.GetString( XML_STYLE_KEY );
+                NoteXml = bundle.GetString( XML_NOTE_KEY );
+                StyleSheetXml = bundle.GetString( XML_STYLE_KEY );
             }
+        }
 
-            CreateNotes( noteXml, styleSheetXml );
+        protected override void OnResume()
+        {
+            // when we're resuming, take a lock on the device sleeping to prevent it
+            base.OnResume( );
+
+            WakeLock.Acquire( );
+
+            // create the notes
+            CreateNotes( NoteXml, StyleSheetXml );
+        }
+
+        protected override void OnPause()
+        {
+            // when we're being backgrounded, release our lock so we don't force
+            // the device to stay on
+            base.OnPause( );
+
+            WakeLock.Release( );
+
+            // what can I say? If we are getting backgounded, android is going to destroy
+            // our views, so we need to store off our XML and re-create the note
+            // when we resume. Thanks android!
+            if( Note != null )
+            {
+                NoteXml = Note.NoteXml;
+                StyleSheetXml = ControlStyles.StyleSheetXml;
+            }
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy( );
+
+            // save the note state
+            if( Note != null && RefreshingNotes == false )
+            {
+                Note.SaveState( );
+            }
         }
 
         protected override void OnSaveInstanceState( Bundle outState )
@@ -236,6 +291,7 @@ namespace Droid
             // if we have a note and aren't in the middle of refreshing, store what we have.
             if( Note != null && RefreshingNotes == false )
             {
+                Note.SaveState( );
                 Note.Destroy( ScrollViewLayout );
 
                 // store out xml in the bundle so we don't have to re-download it
@@ -308,6 +364,11 @@ namespace Droid
             {
                 RefreshingNotes = true;
 
+                if( Note != null )
+                {
+                    Note.SaveState( );
+                }
+
                 DestroyNotes( );
 
                 // show a busy indicator
@@ -367,7 +428,7 @@ namespace Droid
                             Note.Create( this.Resources.DisplayMetrics.WidthPixels, this.Resources.DisplayMetrics.HeightPixels, ScrollViewLayout );
 
                             // set the requested background color
-                            ScrollView.SetBackgroundColor( ( Android.Graphics.Color )Notes.PlatformUI.DroidLabel.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value ) );
+                            ScrollView.SetBackgroundColor( ( Android.Graphics.Color )RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value ) );
 
                             // update the height of the scroll view to fit all content
                             RectangleF frame = Note.GetFrame( );

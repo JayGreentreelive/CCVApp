@@ -37,7 +37,7 @@ namespace Notes
         /// does NOT point to a note being edited. That's different.
         /// </summary>
         /// <value>The active user note anchor.</value>
-        protected IUIControl ActiveUserNoteAnchor { get; set; }
+        protected UserNote ActiveUserNoteAnchor { get; set; }
 
         /// <summary>
         /// The NoteScript XML. Stored for rebuilding notes on an orientation change.
@@ -62,7 +62,17 @@ namespace Notes
         /// <value>The master view.</value>
         protected object MasterView { get; set; }
 
+        /// <summary>
+        /// The path for loading/saving user notes
+        /// </summary>
+        /// <value>The user note path.</value>
         protected string UserNotePath { get; set; }
+
+        /// <summary>
+        /// The height of the device, used during user note creation.
+        /// </summary>
+        /// <value>The height of the device.</value>
+        protected float DeviceHeight { get; set; }
 
         public static void HandlePreReqs( string noteXml, string styleXml, OnPreReqsComplete onPreReqsComplete )
         {
@@ -155,9 +165,6 @@ namespace Notes
 
         public void Destroy( object obj )
         {
-            // before destroying notes, save them
-            SaveUserNotes( UserNotePath );
-
             // release references to our UI objects
             if( ChildControls != null )
             {
@@ -186,6 +193,8 @@ namespace Notes
 
         void ParseNote( XmlReader reader, float parentWidth, float parentHeight )
         {
+            DeviceHeight = parentHeight;
+
             // check for attributes we support
             RectangleF bounds = new RectangleF( );
             Parser.ParseBounds( reader, ref bounds );
@@ -303,13 +312,28 @@ namespace Notes
             return Frame;
         }
 
+        public bool HitTest( PointF touch )
+        {
+            // So, see if the user is tapping on a UserNoteAnchor.
+            foreach( UserNote control in UserNoteControls )
+            {
+                // If a user note returns true, its anchor is being touched.
+                if( control.HitTest( touch ) == true )
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public bool TouchesBegan( PointF touch )
         {
             // We receive TouchesBegan if anything except a TextField was tapped.
             // The only control we have that needs this is the UserNote for its Anchor.
 
             // So, see if the user is tapping on a UserNoteAnchor.
-            foreach( IUIControl control in UserNoteControls )
+            foreach( UserNote control in UserNoteControls )
             {
                 // If a user note returns true, its anchor is being touched.
                 if( control.TouchesBegan( touch ) == true )
@@ -350,6 +374,18 @@ namespace Notes
             {
                 // Notify the active anchor, and clear it since the user released input.
                 ActiveUserNoteAnchor.TouchesEnded( touch );
+
+                // does this note want to be deleted?
+                if( ActiveUserNoteAnchor.State == UserNote.TouchState.Delete )
+                {
+                    ActiveUserNoteAnchor.Dispose( MasterView );
+
+                    // remove it from our list. Because our next step will be
+                    // to clear the anchor ref, that will effectively delete the note (eligible for garbage collection)
+                    UserNoteControls.Remove( ActiveUserNoteAnchor );
+                }
+
+                // clear the user note
                 ActiveUserNoteAnchor = null;
             }
             else
@@ -358,7 +394,7 @@ namespace Notes
                 // area of the screen, and can allow the keyboard to hide.
                 foreach( UserNote userNote in UserNoteControls )
                 {
-                    userNote.ResignFirstResponder( );
+                    userNote.NoteTouchesCleared( );
                 }
 
 
@@ -408,11 +444,18 @@ namespace Notes
 
             if( allowNoteCreation )
             {
-                UserNote userNote = new UserNote( new BaseControl.CreateParams( Frame.Width, Frame.Height, ref mStyle ), touch );
+                UserNote userNote = new UserNote( new BaseControl.CreateParams( Frame.Width, Frame.Height, ref mStyle ), DeviceHeight, touch );
                 UserNoteControls.Add( userNote );
 
                 userNote.AddToView( MasterView );
             }
+        }
+
+        public void SaveState()
+        {
+            // this will save the user notes and any other
+            // interactions the user has made.
+            SaveUserNotes( UserNotePath );
         }
 
         protected void LoadUserNotes( string filePath )
@@ -428,7 +471,7 @@ namespace Notes
                     while( noteJson != null )
                     {
                         // create the note, add it to our list, and to the view
-                        UserNote note = new UserNote( new BaseControl.CreateParams( Frame.Width, Frame.Height, ref mStyle ), noteJson );
+                        UserNote note = new UserNote( new BaseControl.CreateParams( Frame.Width, Frame.Height, ref mStyle ), DeviceHeight, noteJson );
                         UserNoteControls.Add( note );
                         note.AddToView( MasterView );
 
@@ -440,17 +483,13 @@ namespace Notes
 
         protected void SaveUserNotes( string filePath )
         {
-            // if there are any user notes
-            if( UserNoteControls.Count > 0 )
+            // open a stream
+            using (StreamWriter writer = new StreamWriter(filePath, false))
             {
-                // open a stream
-                using (StreamWriter writer = new StreamWriter(filePath))
+                // write the serialized json for each note (or none if there aren't any)
+                foreach( UserNote note in UserNoteControls )
                 {
-                    // write the serialized json for each note
-                    foreach( UserNote note in UserNoteControls )
-                    {
-                        writer.WriteLine( note.Serialize( ) );
-                    }
+                    writer.WriteLine( note.Serialize( ) );
                 }
             }
         }

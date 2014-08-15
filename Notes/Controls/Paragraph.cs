@@ -123,6 +123,8 @@ namespace Notes
             // now calculate the available width based on padding. (Don't actually change our width)
             float availableWidth = bounds.Width - leftPadding - rightPadding;
 
+            bool didAddInteractiveControl = false;
+
             bool finishedReading = false;
             while( finishedReading == false && reader.Read( ) )
             {
@@ -139,6 +141,8 @@ namespace Notes
                                 throw new Exception( String.Format("Paragraph only supports children of type <RevealBox> and <TextInput>. Found <{0}>", control.GetType()) );
                             }
                             ChildControls.Add( control );
+
+                            didAddInteractiveControl = true;
                         }
                         break;
                     }
@@ -155,7 +159,17 @@ namespace Notes
                             // create labels out of each one
                             if( string.IsNullOrEmpty( word ) == false )
                             {
-                                NoteText textLabel = new NoteText( new CreateParams( availableWidth, parentParams.Height, ref mStyle ), word + " " );
+                                // if the last thing we added was a special control like a reveal box, we 
+                                // need the first label after that to have a leading space so it doesn't bunch up against
+                                // the control
+                                string nextWord = word;
+                                if( didAddInteractiveControl )
+                                {
+                                    nextWord = word.Insert(0, " ");
+                                    didAddInteractiveControl = false;
+                                }
+
+                                NoteText textLabel = new NoteText( new CreateParams( availableWidth, parentParams.Height, ref mStyle ), nextWord + " " );
 
                                 ChildControls.Add( textLabel );
                             }

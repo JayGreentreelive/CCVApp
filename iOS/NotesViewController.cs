@@ -23,7 +23,12 @@ namespace CCVApp
         {
             if ( Frame.Contains( point ) )
             {
-                if( Interceptor.HandleTouchBegan( point ) )
+                // Base OS controls need to know whether to process & consume
+                // input or pass it up to the higher level (us.)
+                // We decide that based on whether the HitTest intersects any of our controls.
+                // By returning true, it can know "Yes, this hits something we need to know about"
+                // and it will result in us receiving TouchBegan
+                if( Interceptor.HitTest( point ) )
                 {
                     return null;
                 }
@@ -51,6 +56,9 @@ namespace CCVApp
         {
             if( Interceptor != null )
             {
+                Console.WriteLine( "TOUCH ENDED" );
+
+                //DidHit = false;
                 Interceptor.TouchesEnded( touches, evt );
             }
         }
@@ -108,6 +116,38 @@ namespace CCVApp
             base.DidReceiveMemoryWarning( );
 			
             // Release any cached data, images, etc that aren't in use.
+        }
+
+        public void OnResignActive( )
+        {
+            SaveNoteState( );
+        }
+
+        public void DidEnterBackground( )
+        {
+            SaveNoteState( );
+        }
+
+        public void WillTerminate( )
+        {
+            SaveNoteState( );
+
+            DestroyNotes( );
+
+            UIApplication.SharedApplication.IdleTimerDisabled = false;
+        }
+
+        protected void SaveNoteState( )
+        {
+            // request quick backgrounding so we can save our user notes
+            int taskID = UIApplication.SharedApplication.BeginBackgroundTask( () => {});
+
+            if( Note != null )
+            {
+                Note.SaveState( );
+            }
+
+            UIApplication.SharedApplication.EndBackgroundTask(taskID);
         }
 
         public override void ViewWillLayoutSubviews( )
@@ -174,6 +214,26 @@ namespace CCVApp
                 CreateNotes( null, null );
             };
             View.AddSubview( RefreshButton );
+
+            UIApplication.SharedApplication.IdleTimerDisabled = true;
+        }
+
+        public bool HitTest( PointF point )
+        {
+            if( Note != null )
+            {
+                // Base OS controls need to know whether to process & consume
+                // input or pass it up to the higher level (us.)
+                // We decide that based on whether the HitTest intersects any of our controls.
+                // By returning true, it can know "Yes, this hits something we need to know about"
+                // and it will result in us receiving TouchBegan
+                if( Note.HitTest( point ) == true )
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public bool HandleTouchBegan( PointF point )
@@ -328,6 +388,8 @@ namespace CCVApp
             {
                 RefreshingNotes = true;
 
+                SaveNoteState( );
+
                 DestroyNotes( );
 
                 // show a busy indicator
@@ -388,7 +450,7 @@ namespace CCVApp
                             UIScrollView.ScrollEnabled = true;
 
                             // take the requested background color
-                            UIScrollView.BackgroundColor = Notes.PlatformUI.iOSLabel.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value );
+                            UIScrollView.BackgroundColor = RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value );
                             View.BackgroundColor = UIScrollView.BackgroundColor; //Make the view itself match too
 
                             // update the height of the scroll view to fit all content

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml;
 using System.Drawing;
-using Notes.PlatformUI;
+using RockMobile.PlatformUI;
 
 namespace Notes
 {
@@ -104,7 +104,7 @@ namespace Notes
                             case "Title":
                             {   
                                 // check for attributes we support
-                                RectangleF elementBounds = new RectangleF( 0, 0, availableWidth, 0 );
+                                RectangleF elementBounds = new RectangleF( 0, 0, availableWidth, parentParams.Height );
                                 Parser.ParseBounds( reader, ref elementBounds );
 
                                 ParseHeaderElement( reader, availableWidth, parentParams.Height, out mTitle, ref elementBounds, ref ControlStyles.mHeaderTitle );
@@ -114,7 +114,7 @@ namespace Notes
                             case "Date":
                             {
                                 // check for attributes we support
-                                RectangleF elementBounds = new RectangleF( 0, parentParams.Height * DEFAULT_DATE_Y_OFFSET, availableWidth, 0 );
+                                RectangleF elementBounds = new RectangleF( 0, 0, availableWidth, parentParams.Height );
                                 Parser.ParseBounds( reader, ref elementBounds );
 
                                 ParseHeaderElement( reader, availableWidth, parentParams.Height, out mDate, ref elementBounds, ref ControlStyles.mHeaderDate );
@@ -124,7 +124,7 @@ namespace Notes
                             case "Speaker":
                             {
                                 // check for attributes we support
-                                RectangleF elementBounds = new RectangleF( 0, parentParams.Height * DEFAULT_SPEAKER_Y_OFFSET, availableWidth, 0 );
+                                RectangleF elementBounds = new RectangleF( 0, 0, availableWidth, parentParams.Height );
                                 Parser.ParseBounds( reader, ref elementBounds );
 
                                 ParseHeaderElement( reader, availableWidth, parentParams.Height, out mSpeaker, ref elementBounds, ref ControlStyles.mHeaderSpeaker );
@@ -150,11 +150,12 @@ namespace Notes
             mTitle.Position = new PointF( mTitle.Position.X + bounds.X + leftPadding, 
                                           mTitle.Position.Y + bounds.Y + topPadding );
 
+            // guarantee date and speaker are below title.
             mDate.Position = new PointF( mDate.Position.X + bounds.X + leftPadding, 
-                                         mDate.Position.Y + bounds.Y + topPadding );
+                                         mTitle.Frame.Bottom + mDate.Position.Y + bounds.Y + topPadding );
 
             mSpeaker.Position = new PointF( mSpeaker.Position.X + bounds.X + leftPadding, 
-                                            mSpeaker.Position.Y + bounds.Y + topPadding );
+                                            mTitle.Frame.Bottom + mSpeaker.Position.Y + bounds.Y + topPadding );
 
             // determine the lowest control
             float bottomY = mSpeaker.Frame.Bottom > mTitle.Frame.Bottom ? mSpeaker.Frame.Bottom : mTitle.Frame.Bottom;

@@ -9,8 +9,6 @@
     <Import_RootNamespace>Notes</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\PlatformLabel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\iOS\iOSLabel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\BaseControl.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ControlStyles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Header.cs" />
@@ -22,34 +20,15 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controls\RevealBox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\StackPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\TextInput.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\PlatformTextField.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\iOS\iOSTextField.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\Droid\DroidLabel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\Droid\DroidTextField.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\NoteText.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Canvas.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\iOS\iOSCommon.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\Droid\DroidCommon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ListItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\List.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\Droid\DroidRevealLabel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\Droid\DroidNative\DroidFadeTextView.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\iOS\iOSRevealLabel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\UserNote.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\PlatformView.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\iOS\iOSView.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\PlatformBaseUI.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\Droid\DroidView.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PlatformUI\iOS\iOSNative\iOSDynamicUITextField.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\MobileNote.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)PlatformUI\" />
-    <Folder Include="$(MSBuildThisFileDirectory)PlatformUI\iOS\" />
     <Folder Include="$(MSBuildThisFileDirectory)Controls\" />
-    <Folder Include="$(MSBuildThisFileDirectory)PlatformUI\Droid\" />
-    <Folder Include="$(MSBuildThisFileDirectory)PlatformUI\Droid\DroidNative\" />
-    <Folder Include="$(MSBuildThisFileDirectory)PlatformUI\iOS\iOSNative\" />
     <Folder Include="$(MSBuildThisFileDirectory)Models\" />
   </ItemGroup>
 </Project>

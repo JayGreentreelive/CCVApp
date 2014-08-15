@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml;
 using System.Drawing;
-using Notes.PlatformUI;
+using RockMobile.PlatformUI;
 
 namespace Notes
 {
@@ -112,7 +112,8 @@ namespace Notes
                                                      PlatformLabel.Bounds.Bottom + PlatformLabel.Bounds.Height );
             if( boundingBox.Contains( touch ) )
             {
-                PlatformLabel.AnimateToFade( 1.0f );
+                float targetFade = 1.0f - PlatformLabel.GetFade( );
+                PlatformLabel.AnimateToFade( targetFade );
                 return true;
             }
 
