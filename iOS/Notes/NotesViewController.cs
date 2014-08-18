@@ -9,7 +9,7 @@ using Notes;
 using System.Collections.Generic;
 using System.IO;
 
-namespace CCVApp
+namespace iOS
 {
     // create a subclass of UIScrollView so we can intercept its touch events
     public class CustomScrollView : UIScrollView
@@ -106,7 +106,7 @@ namespace CCVApp
         /// </summary>
         RectangleF TappedTextFieldFrame { get; set; }
 
-        public NotesViewController( ) : base( "NotesViewController", null )
+        public NotesViewController( ) : base( )
         {
         }
 
@@ -114,7 +114,7 @@ namespace CCVApp
         {
             // Releases the view if it doesn't have a superview.
             base.DidReceiveMemoryWarning( );
-			
+
             // Release any cached data, images, etc that aren't in use.
         }
 
@@ -210,9 +210,9 @@ namespace CCVApp
 
             // if they tap the refresh button, refresh the list
             RefreshButton.TouchUpInside += (object sender, EventArgs e ) =>
-            {
-                CreateNotes( null, null );
-            };
+                {
+                    CreateNotes( null, null );
+                };
             View.AddSubview( RefreshButton );
 
             UIApplication.SharedApplication.IdleTimerDisabled = true;

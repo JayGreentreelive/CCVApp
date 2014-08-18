@@ -4,6 +4,7 @@ using System.Linq;
 
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
+using iOS;
 
 namespace CCVApp
 {
@@ -15,6 +16,8 @@ namespace CCVApp
     {
         // class-level declarations
         UIWindow window;
+
+        public static UIStoryboard Storyboard = UIStoryboard.FromName ("MainStoryboard", null);
 
         //
         // This method is invoked when the application has loaded and is ready to run. In this
@@ -29,8 +32,8 @@ namespace CCVApp
             window = new UIWindow( UIScreen.MainScreen.Bounds );
 			
             // If you have defined a root view controller, set it here:
-            window.RootViewController = new NotesViewController( );
-            //window.RootViewController = new NavigationViewController( );
+            //window.RootViewController = new NotesViewController( );
+            window.RootViewController = Storyboard.InstantiateInitialViewController() as UIViewController;
 			
             // make the window visible
             window.MakeKeyAndVisible( );
@@ -49,18 +52,18 @@ namespace CCVApp
         public override void OnResignActivation(UIApplication application)
         {
             Console.WriteLine("OnResignActivation called, App moving to inactive state.");
-            (window.RootViewController as NotesViewController).OnResignActive( );
+            (window.RootViewController as SpringboardViewController).OnResignActive( );
         }
         public override void DidEnterBackground(UIApplication application)
         {
             Console.WriteLine("App entering background state.");
-            (window.RootViewController as NotesViewController).DidEnterBackground( );
+            (window.RootViewController as SpringboardViewController).DidEnterBackground( );
         }
         // not guaranteed that this will run
         public override void WillTerminate(UIApplication application)
         {
             Console.WriteLine("App is terminating.");
-            (window.RootViewController as NotesViewController).WillTerminate( );
+            (window.RootViewController as SpringboardViewController).WillTerminate( );
         }
     }
 }
