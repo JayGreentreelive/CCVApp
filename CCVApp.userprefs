@@ -1,25 +1,12 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhoneRetina.7.1" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/Notes/NotesViewController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/MainUINavigationController.cs">
     <Files>
-      <File FileName="iOS/AppDelegate.cs" Line="10" Column="10" />
-      <File FileName="iOS/SpringboardViewController.cs" Line="67" Column="67" />
-      <File FileName="iOS/MainUINavigationController.cs" Line="13" Column="13" />
-      <File FileName="iOS/ContainerViewController.cs" Line="13" Column="13" />
-      <File FileName="iOS/Notes/NotesActivity.cs" Line="60" Column="60" />
-      <File FileName="iOS/Notes/NotesViewController.cs" Line="54" Column="54" />
+      <File FileName="iOS/SpringboardViewController.cs" Line="42" Column="42" />
+      <File FileName="iOS/About/AboutActivity.cs" Line="67" Column="67" />
+      <File FileName="iOS/MainUINavigationController.cs" Line="10" Column="10" />
+      <File FileName="iOS/NavChildUIViewController.cs" Line="13" Column="13" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="iOS" expanded="True">
-            <Node name="Notes" expanded="True">
-              <Node name="NotesViewController.cs" selected="True" />
-            </Node>
-          </Node>
-        </State>
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />

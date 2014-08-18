@@ -7,20 +7,24 @@ namespace iOS
     public class NewsActivity : Activity
     {
         UIViewController MainPageVC { get; set; }
+        NavChildUIViewController DetailsPageVC { get; set; }
+        UIViewController MoreDetailsPageVC { get; set; }
 
         public NewsActivity( string storyboardName ) : base( storyboardName )
         {
             MainPageVC = Storyboard.InstantiateViewController( "MainPageViewController" ) as UIViewController;
+            DetailsPageVC = Storyboard.InstantiateViewController( "DetailsViewController" ) as NavChildUIViewController;
+            MoreDetailsPageVC = Storyboard.InstantiateViewController( "MoreDetailsViewController" ) as UIViewController;
         }
 
-        public override void Present( UIViewController parentViewController, PointF position )
+        public override void MakeActive( UIViewController parentViewController, PointF position )
         {
-            base.Present( parentViewController, position );
+            base.MakeActive( parentViewController, position );
 
             MainPageVC.View.Layer.Position = position;
 
-            parentViewController.AddChildViewController( MainPageVC );
-            parentViewController.View.AddSubview( MainPageVC.View );
+            ParentViewController.AddChildViewController( MainPageVC );
+            ParentViewController.View.AddSubview( MainPageVC.View );
         }
 
         public override void OnResignActive( )

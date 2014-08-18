@@ -6,7 +6,7 @@ namespace iOS
 {
     public class Activity
     {
-        UIViewController ParentViewController { get; set; }
+        protected UIViewController ParentViewController { get; set; }
         protected UIStoryboard Storyboard { get; set; }
 
         public Activity( string storyboardName )
@@ -18,12 +18,15 @@ namespace iOS
             }
         }
 
-        public virtual void Present( UIViewController parentViewController, PointF position )
+        public virtual void MakeActive( UIViewController parentViewController, PointF position )
         {
+            ParentViewController = parentViewController;
         }
 
         public virtual void OnResignActive( )
         {
+            // always clear our parent view controller when resigning
+            ParentViewController = null;
         }
 
         public virtual void DidEnterBackground( )

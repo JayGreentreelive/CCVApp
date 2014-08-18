@@ -17,14 +17,16 @@ namespace iOS
         {
             base.ViewDidLoad();
 
-            this.NavigationItem.SetLeftBarButtonItem(
+            this.NavigationItem.SetLeftBarButtonItem
+            (
                 new UIBarButtonItem(UIBarButtonSystemItem.Action, (sender,args) => 
                 {
                     (ParentViewController as MainUINavigationController).CheeseburgerTouchUp( );
-                }), true);
+                }), true
+            );
         }
 
-        public void PresentActivity( Activity activity )
+        public void ActivateActivity( Activity activity )
         {
             if( CurrentActivity != null )
             {
@@ -32,7 +34,7 @@ namespace iOS
             }
 
             CurrentActivity = activity;
-            CurrentActivity.Present( this, new System.Drawing.PointF( View.Layer.Position.X, View.Layer.Position.Y + NavigationController.NavigationBar.Frame.Height ) );
+            CurrentActivity.MakeActive( this, new System.Drawing.PointF( View.Layer.Position.X, View.Layer.Position.Y + NavigationController.NavigationBar.Frame.Height ) );
         }
 
         public void OnResignActive()

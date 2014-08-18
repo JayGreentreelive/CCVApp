@@ -11,7 +11,7 @@ namespace iOS
         const float SLIDE_AMOUNT = 250.0f;
         bool SpringboardRevealed { get; set; }
 
-        ContainerViewController Container { get; set; }
+        public ContainerViewController Container { get; set; }
 
 		public MainUINavigationController (IntPtr handle) : base (handle)
 		{
@@ -37,9 +37,11 @@ namespace iOS
             RevealSpringboard( !SpringboardRevealed );
         }
 
-        public void PresentActivity( Activity activity )
+        public void ActivateActivity( Activity activity )
         {
-            Container.PresentActivity( activity );
+            Container.ActivateActivity( activity );
+
+            PopToRootViewController( false );
 
             RevealSpringboard( false );
         }

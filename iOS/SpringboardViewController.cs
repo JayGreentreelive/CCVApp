@@ -29,17 +29,17 @@ namespace iOS
 
             NewsButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
-                    NavViewController.PresentActivity( News );
+                    NavViewController.ActivateActivity( News );
                 };
 
             SermonNotesButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
-                    NavViewController.PresentActivity( Notes );
+                    NavViewController.ActivateActivity( Notes );
                 };
 
             AboutCCVButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
-                    NavViewController.PresentActivity( About );
+                    NavViewController.ActivateActivity( About );
                 };
 
             AddChildViewController( NavViewController );
@@ -61,7 +61,7 @@ namespace iOS
             base.ViewDidAppear(animated);
 
             // always start up the app with the news visible
-            NavViewController.PresentActivity( News );
+            NavViewController.ActivateActivity( News );
         }
 
         public void OnResignActive( )

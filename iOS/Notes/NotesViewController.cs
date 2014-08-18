@@ -56,9 +56,6 @@ namespace iOS
         {
             if( Interceptor != null )
             {
-                Console.WriteLine( "TOUCH ENDED" );
-
-                //DidHit = false;
                 Interceptor.TouchesEnded( touches, evt );
             }
         }
