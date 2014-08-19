@@ -22,6 +22,8 @@ namespace iOS
         {
             base.ViewDidLoad();
 
+            View.BackgroundColor = UIColor.Black;
+
             //TODO: Allow these to be set in data
             NavigationBar.TintColor = RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( 0xFFFFFFFF );
             NavigationBar.BarTintColor = RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( 0x1C1C1CFF );

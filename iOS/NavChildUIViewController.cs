@@ -17,15 +17,15 @@ namespace iOS
 
             NavigationItem.SetLeftBarButtonItems( new UIBarButtonItem[] 
                 { 
-                    new UIBarButtonItem(UIBarButtonSystemItem.Rewind, (sender,args) => 
-                        {
-                            NavigationController.PopViewControllerAnimated( true );
-                        }), 
-
                     new UIBarButtonItem(UIBarButtonSystemItem.Action, (sender,args) => 
                         {
                             (ParentViewController as MainUINavigationController).CheeseburgerTouchUp( );
-                        }) 
+                        }),
+
+                    new UIBarButtonItem(UIBarButtonSystemItem.Rewind, (sender,args) => 
+                        {
+                            NavigationController.PopViewControllerAnimated( true );
+                        })
                 }, 
 
                 true);

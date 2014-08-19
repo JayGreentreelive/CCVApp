@@ -29,6 +29,8 @@ namespace iOS
         {
             base.ViewDidLoad( );
 
+            View.BackgroundColor = UIColor.Black;
+
             // set our image up
             string imagePath = NSBundle.MainBundle.BundlePath + "/me.jpg";
 
@@ -90,7 +92,7 @@ namespace iOS
             base.ViewDidAppear(animated);
 
             // always start up the app with the news visible
-            NavViewController.ActivateActivity( News );
+            NavViewController.ActivateActivity( About );
         }
 
         public void OnResignActive( )
