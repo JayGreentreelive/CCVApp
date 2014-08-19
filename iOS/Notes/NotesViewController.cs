@@ -156,7 +156,7 @@ namespace iOS
         {
             base.ViewDidLayoutSubviews( );
 
-            RefreshButton.Layer.Position = new PointF( View.Bounds.Width / 2, RefreshButton.Bounds.Height + 10 );
+            RefreshButton.Layer.Position = new PointF( View.Bounds.Width / 2, 75 );
 
             UIScrollView.Frame = new RectangleF( 0, 0, View.Bounds.Width, View.Bounds.Height );
             UIScrollView.Layer.Position = new PointF( UIScrollView.Layer.Position.X, UIScrollView.Layer.Position.Y + RefreshButton.Frame.Bottom);
@@ -186,7 +186,7 @@ namespace iOS
             UIScrollView = new CustomScrollView( );
             UIScrollView.Interceptor = this;
             UIScrollView.Frame = View.Frame;
-            UIScrollView.BackgroundColor = UIColor.Black;
+            UIScrollView.BackgroundColor = RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( 0x1C1C1CFF );
 
             UITapGestureRecognizer tapGesture = new UITapGestureRecognizer();
             tapGesture.NumberOfTapsRequired = 2;

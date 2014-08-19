@@ -13,11 +13,9 @@ namespace iOS
             NotesViewController = new NotesViewController( );
         }
 
-        public override void MakeActive( UIViewController parentViewController, PointF position )
+        public override void MakeActive( UIViewController parentViewController )
         {
-            base.MakeActive( parentViewController, position );
-
-            NotesViewController.View.Layer.Position = position;
+            base.MakeActive( parentViewController );
 
             ParentViewController.AddChildViewController( NotesViewController );
             ParentViewController.View.AddSubview( NotesViewController.View );

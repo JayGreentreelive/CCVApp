@@ -30,7 +30,7 @@ namespace iOS
 
                 true);
 
-            NavigationItem.Title = "CCV App Logo";
+            //NavigationItem.Title = "CCV App Logo";
         }
 	}
 }

@@ -23,13 +23,12 @@ namespace iOS
             MoreDetailsPageVC = Storyboard.InstantiateViewController( "MoreDetailsViewController" ) as UIViewController;
         }
 
-        public override void MakeActive( UIViewController parentViewController, PointF position )
+        public override void MakeActive( UIViewController parentViewController )
         {
-            base.MakeActive( parentViewController, position );
+            base.MakeActive( parentViewController );
 
             // for now always make the main page the starting vc
             CurrentVC = MainPageVC;
-            CurrentVC.View.Layer.Position = position;
 
             // start with the root controller
             ParentViewController.AddChildViewController( CurrentVC );
@@ -46,7 +45,7 @@ namespace iOS
             destViewController.View.Layer.Position = new PointF( CurrentVC.View.Layer.Position.X + CurrentVC.View.Frame.Width, CurrentVC.View.Layer.Position.Y );
 
             // Animate the new VC in on top of the existing one.
-            UIView.Animate( .50f, 0, UIViewAnimationOptions.CurveEaseInOut, 
+            UIView.Animate( .30f, 0, UIViewAnimationOptions.CurveEaseInOut, 
                 new NSAction( 
                     delegate 
                     { 
@@ -76,7 +75,7 @@ namespace iOS
             destViewController.View.Layer.ZPosition = CurrentVC.View.Layer.ZPosition - 1;
 
             // Animate the CURRENT vc off screen, which will reveal the view controller to show
-            UIView.Animate( .50f, 0, UIViewAnimationOptions.CurveEaseInOut, 
+            UIView.Animate( .30f, 0, UIViewAnimationOptions.CurveEaseInOut, 
                 new NSAction( 
                     delegate 
                     { 

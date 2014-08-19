@@ -226,6 +226,12 @@
     <BundleResource Include="..\Assets\spot_mask.png">
       <Link>Resources\spot_mask.png</Link>
     </BundleResource>
+    <BundleResource Include="..\Assets\me.jpg">
+      <Link>Resources\me.jpg</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\ccvLogo.png">
+      <Link>Resources\ccvLogo.png</Link>
+    </BundleResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />

@@ -18,7 +18,7 @@ namespace iOS
             }
         }
 
-        public virtual void MakeActive( UIViewController parentViewController, PointF position )
+        public virtual void MakeActive( UIViewController parentViewController )
         {
             ParentViewController = parentViewController;
         }

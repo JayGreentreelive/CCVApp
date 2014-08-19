@@ -14,18 +14,21 @@
                     <view key="view" contentMode="scaleToFill" id="6">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" customColorSpace="calibratedWhite" colorSpace="calibratedRGB" red="0.082352941176470587" green="0.082352941176470587" blue="0.082352941176470587" alpha="1"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="News: Main Page" lineBreakMode="tailTruncation" minimumFontSize="10" id="9" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO">
-                                <rect key="frame" x="60" y="102" width="178" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="News: Main Page" lineBreakMode="tailTruncation" minimumFontSize="10" id="9" translatesAutoresizingMaskIntoConstraints="NO">
+                                <rect key="frame" x="91" y="95" width="137" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" colorSpace="calibratedRGB" red="1" green="1" blue="1" alpha="1"/>
                                 <nil key="highlightedColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="137" id="94"/>
+                                </constraints>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="21" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO">
-                                <rect key="frame" x="76" y="185" width="147" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="21" translatesAutoresizingMaskIntoConstraints="NO">
+                                <rect key="frame" x="86" y="186" width="147" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Click for details">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -33,8 +36,17 @@
                                 <connections>
                                     <segue destination="16" kind="push" id="22"/>
                                 </connections>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="147" id="91"/>
+                                </constraints>
                             </button>
                         </subviews>
+                        <constraints>
+                            <constraint id="89" firstItem="21" firstAttribute="leading" secondItem="6" secondAttribute="leading" constant="86"/>
+                            <constraint id="90" firstItem="21" firstAttribute="top" secondItem="6" secondAttribute="top" constant="186"/>
+                            <constraint id="92" firstItem="9" firstAttribute="leading" secondItem="6" secondAttribute="leading" constant="91"/>
+                            <constraint id="93" firstItem="9" firstAttribute="top" secondItem="6" secondAttribute="top" constant="95"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -51,18 +63,21 @@
                     <view key="view" contentMode="scaleToFill" id="17">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" customColorSpace="calibratedWhite" colorSpace="calibratedRGB" red="0.082352941176470587" green="0.082352941176470587" blue="0.082352941176470587" alpha="1"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="News: Details" lineBreakMode="tailTruncation" minimumFontSize="10" id="20" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO">
-                                <rect key="frame" x="72" y="94" width="131" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="News: Details" lineBreakMode="tailTruncation" minimumFontSize="10" id="20" translatesAutoresizingMaskIntoConstraints="NO">
+                                <rect key="frame" x="106" y="95" width="109" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" colorSpace="calibratedRGB" red="1" green="1" blue="1" alpha="1"/>
                                 <nil key="highlightedColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="109" id="85"/>
+                                </constraints>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="34" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO">
-                                <rect key="frame" x="62" y="188" width="183" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="34" translatesAutoresizingMaskIntoConstraints="NO">
+                                <rect key="frame" x="72" y="186" width="177" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Click for even more info">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -70,8 +85,17 @@
                                 <connections>
                                     <segue destination="29" kind="push" id="37"/>
                                 </connections>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="177" id="88"/>
+                                </constraints>
                             </button>
                         </subviews>
+                        <constraints>
+                            <constraint id="83" firstItem="17" firstAttribute="trailing" secondItem="20" secondAttribute="trailing" constant="105"/>
+                            <constraint id="84" firstItem="20" firstAttribute="top" secondItem="17" secondAttribute="top" constant="95"/>
+                            <constraint id="86" firstItem="17" firstAttribute="trailing" secondItem="34" secondAttribute="trailing" constant="71"/>
+                            <constraint id="87" firstItem="34" firstAttribute="top" secondItem="17" secondAttribute="top" constant="186"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="18" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -88,17 +112,24 @@
                     <view key="view" contentMode="scaleToFill" id="30">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" customColorSpace="calibratedWhite" colorSpace="calibratedRGB" red="0.082352941176470587" green="0.082352941176470587" blue="0.082352941176470587" alpha="1"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="News: Two Pages Deep" lineBreakMode="tailTruncation" minimumFontSize="10" id="33" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO">
-                                <rect key="frame" x="50" y="74" width="189" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="News: Two Pages Deep" lineBreakMode="tailTruncation" minimumFontSize="10" id="33" translatesAutoresizingMaskIntoConstraints="NO">
+                                <rect key="frame" x="66" y="95" width="189" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" colorSpace="calibratedRGB" red="1" green="1" blue="1" alpha="1"/>
                                 <nil key="highlightedColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="189" id="75"/>
+                                </constraints>
                             </label>
                         </subviews>
+                        <constraints>
+                            <constraint id="73" firstItem="30" firstAttribute="trailing" secondItem="33" secondAttribute="trailing" constant="65"/>
+                            <constraint id="74" firstItem="33" firstAttribute="top" secondItem="30" secondAttribute="top" constant="95"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="31" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -114,5 +145,7 @@
     <resources>
         <image name="Default-568h.png" width="640" height="1136"/>
         <image name="spot_mask.png" width="128" height="128"/>
+        <image name="me.jpg" width="471" height="480"/>
+        <image name="ccvLogo.png" width="82" height="40"/>
     </resources>
 </document>

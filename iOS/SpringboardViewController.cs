@@ -2,6 +2,8 @@ using System;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using System.CodeDom.Compiler;
+using MonoTouch.CoreAnimation;
+using System.Drawing;
 
 namespace iOS
 {
@@ -27,6 +29,19 @@ namespace iOS
         {
             base.ViewDidLoad( );
 
+            // set our image up
+            string imagePath = NSBundle.MainBundle.BundlePath + "/me.jpg";
+
+            ProfileImage.Layer.Contents = new UIImage( imagePath ).CGImage;
+
+            CALayer maskLayer = new CALayer();
+            maskLayer.AnchorPoint = new PointF( 0, 0 );
+            maskLayer.Bounds = ProfileImage.Layer.Bounds;
+            maskLayer.CornerRadius = ProfileImage.Layer.Bounds.Width / 2;
+            maskLayer.BackgroundColor = UIColor.Black.CGColor;
+            ProfileImage.Layer.Mask = maskLayer;
+            //
+
             NewsButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
                     NavViewController.ActivateActivity( News );
@@ -44,6 +59,20 @@ namespace iOS
 
             AddChildViewController( NavViewController );
             View.AddSubview( NavViewController.View );
+
+            SetNeedsStatusBarAppearanceUpdate( );
+        }
+
+        public override UIStatusBarStyle PreferredStatusBarStyle()
+        {
+            return UIStatusBarStyle.LightContent;
+        }
+
+        public override void TouchesEnded(NSSet touches, UIEvent evt)
+        {
+            base.TouchesEnded(touches, evt);
+
+            NavViewController.RevealSpringboard( false );
         }
 
         public override void ViewWillLayoutSubviews()

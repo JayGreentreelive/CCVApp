@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Styles>
-     <Note Padding="5%" BackgroundColor="#000000FF"/>
+     <Note Padding="5%" BackgroundColor="#1c1c1cFF"/>
      <Paragraph PaddingBottom="1%"/>
      <RevealBox FontName="Bevan" FontSize="12" FontColor="#6d1c1cFF"/>
      <Quote FontName="Merriweather-BoldItalic" FontSize="12" FontColor="#6d1c1cFF"/>

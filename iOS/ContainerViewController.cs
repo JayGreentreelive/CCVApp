@@ -2,6 +2,7 @@ using System;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using System.CodeDom.Compiler;
+using System.Drawing;
 
 namespace iOS
 {
@@ -34,7 +35,7 @@ namespace iOS
             }
 
             CurrentActivity = activity;
-            CurrentActivity.MakeActive( this, new System.Drawing.PointF( View.Layer.Position.X, View.Layer.Position.Y + NavigationController.NavigationBar.Frame.Height ) );
+            CurrentActivity.MakeActive( this );
         }
 
         public void OnResignActive()

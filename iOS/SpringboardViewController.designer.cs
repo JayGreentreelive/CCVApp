@@ -24,6 +24,10 @@ namespace iOS
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
+		UIView ProfileImage { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
 		UIButton SermonNotesButton { get; set; }
 
 		[Outlet]
@@ -39,6 +43,10 @@ namespace iOS
 			if (NewsButton != null) {
 				NewsButton.Dispose ();
 				NewsButton = null;
+			}
+			if (ProfileImage != null) {
+				ProfileImage.Dispose ();
+				ProfileImage = null;
 			}
 			if (SermonNotesButton != null) {
 				SermonNotesButton.Dispose ();

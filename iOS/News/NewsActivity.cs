@@ -17,11 +17,9 @@ namespace iOS
             MoreDetailsPageVC = Storyboard.InstantiateViewController( "MoreDetailsViewController" ) as UIViewController;
         }
 
-        public override void MakeActive( UIViewController parentViewController, PointF position )
+        public override void MakeActive( UIViewController parentViewController )
         {
-            base.MakeActive( parentViewController, position );
-
-            MainPageVC.View.Layer.Position = position;
+            base.MakeActive( parentViewController );
 
             ParentViewController.AddChildViewController( MainPageVC );
             ParentViewController.View.AddSubview( MainPageVC.View );
