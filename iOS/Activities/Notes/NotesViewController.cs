@@ -8,6 +8,8 @@ using RockMobile.Network;
 using Notes;
 using System.Collections.Generic;
 using System.IO;
+using MonoTouch.CoreAnimation;
+using MonoTouch.CoreGraphics;
 
 namespace iOS
 {
@@ -103,6 +105,8 @@ namespace iOS
         /// </summary>
         RectangleF TappedTextFieldFrame { get; set; }
 
+        NSObject Observer { get; set; }
+
         public NotesViewController( ) : base( )
         {
         }
@@ -113,6 +117,18 @@ namespace iOS
             base.DidReceiveMemoryWarning( );
 
             // Release any cached data, images, etc that aren't in use.
+        }
+
+        public void MakeActive( )
+        {
+            UIApplication.SharedApplication.IdleTimerDisabled = true;
+        }
+
+        public void MakeInActive( )
+        {
+            SaveNoteState( );
+
+            UIApplication.SharedApplication.IdleTimerDisabled = false;
         }
 
         public void OnResignActive( )
@@ -130,8 +146,6 @@ namespace iOS
             SaveNoteState( );
 
             DestroyNotes( );
-
-            UIApplication.SharedApplication.IdleTimerDisabled = false;
         }
 
         protected void SaveNoteState( )
@@ -145,11 +159,6 @@ namespace iOS
             }
 
             UIApplication.SharedApplication.EndBackgroundTask(taskID);
-        }
-
-        public override void ViewWillLayoutSubviews( )
-        {
-            base.ViewWillLayoutSubviews( );
         }
 
         public override void ViewDidLayoutSubviews( )
@@ -211,8 +220,6 @@ namespace iOS
                     CreateNotes( null, null );
                 };
             View.AddSubview( RefreshButton );
-
-            UIApplication.SharedApplication.IdleTimerDisabled = true;
         }
 
         public bool HitTest( PointF point )

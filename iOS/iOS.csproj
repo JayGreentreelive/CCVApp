@@ -229,8 +229,35 @@
     <BundleResource Include="..\Assets\me.jpg">
       <Link>Resources\me.jpg</Link>
     </BundleResource>
+    <BundleResource Include="..\Assets\ccvLogo%402x.png">
+      <Link>Resources\ccvLogo%402x.png</Link>
+    </BundleResource>
     <BundleResource Include="..\Assets\ccvLogo.png">
       <Link>Resources\ccvLogo.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\cheeseburger.png">
+      <Link>Resources\cheeseburger.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\cheeseburger%402x.png">
+      <Link>Resources\cheeseburger%402x.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\notes%402x.png">
+      <Link>Resources\notes%402x.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\info%402x.png">
+      <Link>Resources\info%402x.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\watch%402x.png">
+      <Link>Resources\watch%402x.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\groupfinder%402x.png">
+      <Link>Resources\groupfinder%402x.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\prayer%402x.png">
+      <Link>Resources\prayer%402x.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\give%402x.png">
+      <Link>Resources\give%402x.png</Link>
     </BundleResource>
   </ItemGroup>
   <ItemGroup>
@@ -249,18 +276,22 @@
       <DependentUpon>MainUINavigationController.cs</DependentUpon>
     </Compile>
     <Compile Include="Activity.cs" />
-    <Compile Include="About\AboutActivity.cs" />
-    <Compile Include="News\NewsActivity.cs" />
-    <Compile Include="Notes\NotesActivity.cs" />
     <Compile Include="ContainerViewController.cs" />
     <Compile Include="ContainerViewController.designer.cs">
       <DependentUpon>ContainerViewController.cs</DependentUpon>
     </Compile>
-    <Compile Include="Notes\NotesViewController.cs" />
     <Compile Include="NavChildUIViewController.cs" />
     <Compile Include="NavChildUIViewController.designer.cs">
       <DependentUpon>NavChildUIViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="Activities\About\AboutActivity.cs" />
+    <Compile Include="Activities\Give\GiveActivity.cs" />
+    <Compile Include="Activities\GroupFinder\GroupFinderActivity.cs" />
+    <Compile Include="Activities\News\NewsActivity.cs" />
+    <Compile Include="Activities\Notes\NotesActivity.cs" />
+    <Compile Include="Activities\Notes\NotesViewController.cs" />
+    <Compile Include="Activities\Prayer\PrayerActivity.cs" />
+    <Compile Include="Activities\Watch\WatchActivity.cs" />
   </ItemGroup>
   <Import Project="..\Notes\Notes.projitems" Label="Shared" Condition="Exists('..\Notes\Notes.projitems')" />
   <Import Project="..\..\RockMobile\RockMobile.projitems" Label="Shared" Condition="Exists('..\..\RockMobile\RockMobile.projitems')" />
@@ -268,14 +299,13 @@
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
     <InterfaceDefinition Include="MainStoryboard.storyboard" />
-    <InterfaceDefinition Include="News\NewsStoryboard_iPhone.storyboard" />
-    <InterfaceDefinition Include="About\AboutStoryboard_iPhone.storyboard" />
+    <InterfaceDefinition Include="Activities\About\AboutStoryboard_iPhone.storyboard" />
+    <InterfaceDefinition Include="Activities\News\NewsStoryboard_iPhone.storyboard" />
+    <InterfaceDefinition Include="Activities\Give\GiveStoryboard_iPhone.storyboard" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\Fonts\" />
-    <Folder Include="About\" />
-    <Folder Include="News\" />
-    <Folder Include="Notes\" />
+    <Folder Include="Activities\" />
   </ItemGroup>
   <ItemGroup>
     <XamarinComponentReference Include="json.net">

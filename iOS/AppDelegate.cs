@@ -17,7 +17,8 @@ namespace CCVApp
         // class-level declarations
         UIWindow window;
 
-        public static UIStoryboard Storyboard = UIStoryboard.FromName ("MainStoryboard", null);
+        protected static UIStoryboard Storyboard = UIStoryboard.FromName ("MainStoryboard", null);
+        private SpringboardViewController Springboard { get; set; }
 
         //
         // This method is invoked when the application has loaded and is ready to run. In this
@@ -32,8 +33,8 @@ namespace CCVApp
             window = new UIWindow( UIScreen.MainScreen.Bounds );
 			
             // If you have defined a root view controller, set it here:
-            //window.RootViewController = new NotesViewController( );
-            window.RootViewController = Storyboard.InstantiateInitialViewController() as UIViewController;
+            Springboard = Storyboard.InstantiateInitialViewController() as SpringboardViewController;
+            window.RootViewController = Springboard;
 			
             // make the window visible
             window.MakeKeyAndVisible( );
@@ -44,26 +45,28 @@ namespace CCVApp
         public override void OnActivated(UIApplication application)
         {
             Console.WriteLine("OnActivated called, App is active.");
+            Springboard.OnActivated( );
         }
         public override void WillEnterForeground(UIApplication application)
         {
             Console.WriteLine("App will enter foreground");
+            Springboard.WillEnterForeground( );
         }
         public override void OnResignActivation(UIApplication application)
         {
             Console.WriteLine("OnResignActivation called, App moving to inactive state.");
-            (window.RootViewController as SpringboardViewController).OnResignActive( );
+            Springboard.OnResignActive( );
         }
         public override void DidEnterBackground(UIApplication application)
         {
             Console.WriteLine("App entering background state.");
-            (window.RootViewController as SpringboardViewController).DidEnterBackground( );
+            Springboard.DidEnterBackground( );
         }
         // not guaranteed that this will run
         public override void WillTerminate(UIApplication application)
         {
             Console.WriteLine("App is terminating.");
-            (window.RootViewController as SpringboardViewController).WillTerminate( );
+            Springboard.WillTerminate( );
         }
     }
 }

@@ -34,6 +34,44 @@ namespace iOS
             ((UINavigationController)parentViewController).NavigationBarHidden = true;
         }
 
+        public override void MakeInActive( )
+        {
+            base.MakeInActive( );
+
+            // clean up main
+            if( MainPageVC.View != null )
+            {
+                MainPageVC.View.RemoveFromSuperview( );
+            }
+
+            if( MainPageVC.ParentViewController != null )
+            {
+                MainPageVC.RemoveFromParentViewController( );
+            }
+
+            // clean up details
+            if(DetailsPageVC.View != null )
+            {
+                DetailsPageVC.View.RemoveFromSuperview( );
+            }
+            if( DetailsPageVC.ParentViewController != null )
+            {
+                DetailsPageVC.RemoveFromParentViewController( );
+            }
+
+            // cleanup more details
+            if( MoreDetailsPageVC.View != null )
+            {
+                MoreDetailsPageVC.View.RemoveFromSuperview( );
+            }
+            if( MoreDetailsPageVC.ParentViewController != null )
+            {
+                MoreDetailsPageVC.RemoveFromParentViewController( );
+            }
+
+            CurrentVC = null;
+        }
+
         public void PushViewController( UIViewController destinationViewController )
         {
             if( destinationViewController != MainPageVC )
@@ -50,21 +88,9 @@ namespace iOS
             CurrentVC = destinationViewController;
         }
 
-        public override void OnResignActive( )
+        public override void AppOnResignActive( )
         {
-            base.OnResignActive( );
-
-            // always remove view controllers from the hierarchy
-            MainPageVC.View.RemoveFromSuperview( );
-            MainPageVC.RemoveFromParentViewController( );
-
-            DetailsPageVC.View.RemoveFromSuperview( );
-            DetailsPageVC.RemoveFromParentViewController( );
-
-            MoreDetailsPageVC.View.RemoveFromSuperview( );
-            MoreDetailsPageVC.RemoveFromParentViewController( );
-
-            CurrentVC = null;
+            base.AppOnResignActive( );
         }
     }
 

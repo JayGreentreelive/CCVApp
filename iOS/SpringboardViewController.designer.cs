@@ -20,7 +20,19 @@ namespace iOS
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
+		UIButton GiveButton { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UIButton GroupFinderButton { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
 		UIButton NewsButton { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UIButton PrayerButton { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
@@ -34,15 +46,31 @@ namespace iOS
 		[GeneratedCode ("iOS Designer", "1.0")]
 		UIButton ViewProfileButton { get; set; }
 
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UIButton WatchButton { get; set; }
+
 		void ReleaseDesignerOutlets ()
 		{
 			if (AboutCCVButton != null) {
 				AboutCCVButton.Dispose ();
 				AboutCCVButton = null;
 			}
+			if (GiveButton != null) {
+				GiveButton.Dispose ();
+				GiveButton = null;
+			}
+			if (GroupFinderButton != null) {
+				GroupFinderButton.Dispose ();
+				GroupFinderButton = null;
+			}
 			if (NewsButton != null) {
 				NewsButton.Dispose ();
 				NewsButton = null;
+			}
+			if (PrayerButton != null) {
+				PrayerButton.Dispose ();
+				PrayerButton = null;
 			}
 			if (ProfileImage != null) {
 				ProfileImage.Dispose ();
@@ -55,6 +83,10 @@ namespace iOS
 			if (ViewProfileButton != null) {
 				ViewProfileButton.Dispose ();
 				ViewProfileButton = null;
+			}
+			if (WatchButton != null) {
+				WatchButton.Dispose ();
+				WatchButton = null;
 			}
 		}
 	}

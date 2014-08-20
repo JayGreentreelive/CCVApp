@@ -11,26 +11,35 @@ namespace iOS
 		{
 		}
 
-        public override void ViewWillAppear(bool animated)
+        public override void ViewDidLoad()
         {
-            base.ViewWillAppear(animated);
+            base.ViewDidLoad();
 
-            NavigationItem.SetLeftBarButtonItems( new UIBarButtonItem[] 
-                { 
-                    new UIBarButtonItem(UIBarButtonSystemItem.Action, (sender,args) => 
-                        {
-                            (ParentViewController as MainUINavigationController).CheeseburgerTouchUp( );
-                        }),
+            if( NavigationController != null )
+            {
+                // create the cheese burger button
+                UIButton cheeseburgerButton = ( (MainUINavigationController)NavigationController).CreateCheeseburgerButton( );
+                cheeseburgerButton.TouchUpInside += (object sender, EventArgs e) => 
+                    {
+                        (ParentViewController as MainUINavigationController).CheeseburgerTouchUp( );
+                    };
 
-                    new UIBarButtonItem(UIBarButtonSystemItem.Rewind, (sender,args) => 
-                        {
-                            NavigationController.PopViewControllerAnimated( true );
-                        })
-                }, 
+                // create the back button
+                UIButton backButton = ( (MainUINavigationController)NavigationController).CreateBackButton( );
+                backButton.TouchUpInside += (object sender, EventArgs e) => 
+                    {
+                        NavigationController.PopViewControllerAnimated( true );
+                    };
 
-                true);
+                NavigationItem.SetLeftBarButtonItems( new UIBarButtonItem[] 
+                    { 
+                        new UIBarButtonItem( cheeseburgerButton ),
 
-            //NavigationItem.Title = "CCV App Logo";
+                        new UIBarButtonItem( backButton )
+                    }, 
+
+                    false);
+            }
         }
 	}
 }

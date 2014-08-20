@@ -1,29 +1,13 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhoneRetina.7.1" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/News/NewsActivity.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/SpringboardViewController.cs">
     <Files>
-      <File FileName="iOS/SpringboardViewController.cs" Line="34" Column="34" />
-      <File FileName="iOS/MainUINavigationController.cs" Line="68" Column="68" />
-      <File FileName="iOS/ContainerViewController.cs" Line="48" Column="48" />
-      <File FileName="iOS/About/AboutActivity.cs" Line="31" Column="31" />
-      <File FileName="iOS/Activity.cs" Line="1" Column="1" />
-      <File FileName="iOS/News/NewsActivity.cs" Line="14" Column="14" />
+      <File FileName="iOS/SpringboardViewController.cs" Line="58" Column="58" />
+      <File FileName="iOS/MainUINavigationController.cs" Line="1" Column="1" />
+      <File FileName="iOS/ContainerViewController.cs" Line="1" Column="1" />
+      <File FileName="iOS/NavChildUIViewController.cs" Line="1" Column="1" />
+      <File FileName="iOS/Activities/Give/GiveActivity.cs" Line="1" Column="1" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="iOS" expanded="True">
-            <Node name="About" expanded="True" />
-            <Node name="News" expanded="True">
-              <Node name="NewsActivity.cs" selected="True" />
-            </Node>
-          </Node>
-        </State>
-      </Pad>
-      <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />

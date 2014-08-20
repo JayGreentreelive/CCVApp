@@ -8,7 +8,8 @@ namespace iOS
 {
 	partial class ContainerViewController : UIViewController
 	{
-        Activity CurrentActivity { get; set; }
+        Activity _CurrentActivity;
+        public Activity CurrentActivity { get { return _CurrentActivity; } }
 
         public UINavigationController SubNavigationController { get; set; }
 
@@ -21,13 +22,12 @@ namespace iOS
             base.ViewDidLoad();
             View.BackgroundColor = UIColor.Black;
 
-            this.NavigationItem.SetLeftBarButtonItem
-            (
-                new UIBarButtonItem(UIBarButtonSystemItem.Action, (sender,args) => 
+            UIButton button = ( (MainUINavigationController)NavigationController).CreateCheeseburgerButton( );
+            button.TouchUpInside += (object sender, EventArgs e) => 
                 {
                     (ParentViewController as MainUINavigationController).CheeseburgerTouchUp( );
-                }), true
-            );
+                };
+            this.NavigationItem.SetLeftBarButtonItem( new UIBarButtonItem( button ), true );
 
             CreateSubNavBar( );
         }
@@ -38,6 +38,7 @@ namespace iOS
 
             SubNavigationController.NavigationBar.TintColor = RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( 0xFFFFFFFF );
             SubNavigationController.NavigationBar.BarTintColor = RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( 0x1C1C1CFF );
+            SubNavigationController.NavigationBar.SetBackgroundImage( null, UIBarMetrics.Default );
 
             SubNavigationController.View.Frame = new RectangleF( 0, 
                 NavigationController.NavigationBar.Frame.Height + UIApplication.SharedApplication.StatusBarFrame.Height, 
@@ -47,12 +48,15 @@ namespace iOS
 
         public void ActivateActivity( Activity activity )
         {
+            // reset our stack before changing activities
+            SubNavigationController.PopToRootViewController( false );
+
             if( CurrentActivity != null )
             {
-                CurrentActivity.OnResignActive( );
+                CurrentActivity.MakeInActive( );
             }
 
-            CurrentActivity = activity;
+            _CurrentActivity = activity;
 
             if( activity as AboutActivity != null )
             {
@@ -74,7 +78,7 @@ namespace iOS
         {
             if( CurrentActivity != null )
             {
-                CurrentActivity.OnResignActive( );
+                CurrentActivity.AppOnResignActive( );
             }
         }
 
@@ -82,7 +86,7 @@ namespace iOS
         {
             if( CurrentActivity != null )
             {
-                CurrentActivity.DidEnterBackground( );
+                CurrentActivity.AppDidEnterBackground( );
             }
         }
 
@@ -90,7 +94,7 @@ namespace iOS
         {
             if( CurrentActivity != null )
             {
-                CurrentActivity.WillTerminate( );
+                CurrentActivity.AppWillTerminate( );
             }
         }
 	}

@@ -4,6 +4,7 @@ using MonoTouch.UIKit;
 using System.CodeDom.Compiler;
 using MonoTouch.CoreAnimation;
 using System.Drawing;
+using System.Collections.Generic;
 
 namespace iOS
 {
@@ -11,29 +12,83 @@ namespace iOS
 	{
         MainUINavigationController NavViewController { get; set; }
 
-        AboutActivity About { get; set; }
-        NewsActivity News { get; set; }
-        NotesActivity Notes { get; set; }
+        /// <summary>
+        /// Represents a selectable element on the springboard. 
+        /// Contains its button and the associated activity.
+        /// </summary>
+        protected class SpringboardElement
+        {
+            public SpringboardViewController SpringboardViewController { get; set; }
+
+            public Activity Activity { get; set; }
+            public UIButton Button { get; set; }
+
+            public SpringboardElement( SpringboardViewController controller, Activity activity, UIButton button )
+            {
+                SpringboardViewController = controller;
+                Activity = activity;
+                Button = button;
+
+                Button.TouchUpInside += (object sender, EventArgs e) => 
+                    {
+                        SpringboardViewController.ActivateElement( this );
+                    };
+            }
+        };
+
+        /// <summary>
+        /// A list of all the elements on the springboard page.
+        /// </summary>
+        /// <value>The elements.</value>
+        protected List<SpringboardElement> Elements { get; set; }
 
 		public SpringboardViewController (IntPtr handle) : base (handle)
 		{
             NavViewController = Storyboard.InstantiateViewController( "MainUINavigationController" ) as MainUINavigationController;
-
-            // Instantiate all activities
-            About = new AboutActivity( "AboutStoryboard_iPhone" );
-            News = new NewsActivity( "NewsStoryboard_iPhone" );
-            Notes = new NotesActivity( "" );
+            Elements = new List<SpringboardElement>( );
 		}
+
+        public override bool ShouldAutorotate()
+        {
+            switch( UIDevice.CurrentDevice.Orientation )
+            {
+                case UIDeviceOrientation.Portrait:
+                {
+                    NavViewController.SetNavigationBarHidden( false, true );
+                    return true;
+                }
+
+                case UIDeviceOrientation.LandscapeLeft:
+                case UIDeviceOrientation.LandscapeRight:
+                {
+                    // only allow landscape for the notes.
+                    if( (NavViewController.CurrentActivity as NotesActivity) != null && NavViewController.IsSpringboardClosed( ) )
+                    {
+                        NavViewController.SetNavigationBarHidden( true, true );
+                        return true;
+                    }
+                    return false;
+                }
+            }
+
+            return false;
+        }
 
         public override void ViewDidLoad()
         {
             base.ViewDidLoad( );
 
-            View.BackgroundColor = UIColor.Black;
+            // Instantiate all activities
+            Elements.Add( new SpringboardElement( this, new NewsActivity( "NewsStoryboard_iPhone" )  , NewsButton ) );
+            Elements.Add( new SpringboardElement( this, new NotesActivity( "" )                      , SermonNotesButton ) );
+            Elements.Add( new SpringboardElement( this, new GiveActivity( "GiveStoryboard_iPhone" ), GroupFinderButton ) );//todo: Implement
+            Elements.Add( new SpringboardElement( this, new GiveActivity( "GiveStoryboard_iPhone" ), PrayerButton ) );//todo: Implement
+            Elements.Add( new SpringboardElement( this, new GiveActivity( "GiveStoryboard_iPhone" ), WatchButton ) );//todo: Implement
+            Elements.Add( new SpringboardElement( this, new GiveActivity( "GiveStoryboard_iPhone" ), GiveButton ) );//todo: Implement
+            Elements.Add( new SpringboardElement( this, new AboutActivity( "AboutStoryboard_iPhone" ), AboutCCVButton ) );
 
             // set our image up
             string imagePath = NSBundle.MainBundle.BundlePath + "/me.jpg";
-
             ProfileImage.Layer.Contents = new UIImage( imagePath ).CGImage;
 
             CALayer maskLayer = new CALayer();
@@ -44,25 +99,25 @@ namespace iOS
             ProfileImage.Layer.Mask = maskLayer;
             //
 
-            NewsButton.TouchUpInside += (object sender, EventArgs e) => 
-                {
-                    NavViewController.ActivateActivity( News );
-                };
-
-            SermonNotesButton.TouchUpInside += (object sender, EventArgs e) => 
-                {
-                    NavViewController.ActivateActivity( Notes );
-                };
-
-            AboutCCVButton.TouchUpInside += (object sender, EventArgs e) => 
-                {
-                    NavViewController.ActivateActivity( About );
-                };
 
             AddChildViewController( NavViewController );
             View.AddSubview( NavViewController.View );
 
             SetNeedsStatusBarAppearanceUpdate( );
+        }
+
+        protected void ActivateElement( SpringboardElement activeElement )
+        {
+            foreach( SpringboardElement element in Elements )
+            {
+                if( element != activeElement )
+                {
+                    element.Button.BackgroundColor = UIColor.Clear;
+                }
+            }
+
+            NavViewController.ActivateActivity( activeElement.Activity );
+            activeElement.Button.BackgroundColor = RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( 0x7a1315FF);
         }
 
         public override UIStatusBarStyle PreferredStatusBarStyle()
@@ -91,8 +146,18 @@ namespace iOS
         {
             base.ViewDidAppear(animated);
 
-            // always start up the app with the news visible
-            NavViewController.ActivateActivity( About );
+            // start up the app with the first element
+            ActivateElement( Elements[0] );
+        }
+
+        public void OnActivated( )
+        {
+            NavViewController.OnActivated( );
+        }
+
+        public void WillEnterForeground( )
+        {
+            NavViewController.WillEnterForeground( );
         }
 
         public void OnResignActive( )

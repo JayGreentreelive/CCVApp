@@ -19,15 +19,28 @@ namespace iOS
 
             ParentViewController.AddChildViewController( NotesViewController );
             ParentViewController.View.AddSubview( NotesViewController.View );
+
+            NotesViewController.MakeActive( );
         }
 
-        public override void OnResignActive( )
+        public override void MakeInActive( )
         {
-            base.OnResignActive( );
+            base.MakeInActive( );
+
+            NotesViewController.MakeInActive( );
 
             NotesViewController.View.RemoveFromSuperview( );
             NotesViewController.RemoveFromParentViewController( );
         }
+
+        public override void AppOnResignActive()
+        {
+            NotesViewController.OnResignActive( );
+        }
+
+        public override void AppWillTerminate()
+        {
+            NotesViewController.WillTerminate( );
+        }
     }
 }
-
