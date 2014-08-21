@@ -69,7 +69,9 @@ namespace Notes
         /// with the timer callback thread.
         /// </summary>
         /// <value>The lock.</value>
-        protected Mutex Lock { get; set; }
+        // JHM: Don't think we need this because we're simply invoking on the main thread,
+        // therefore there cannot be a race condition, since everything gets serialized to a single thread.
+        //protected Mutex Lock { get; set; }
 
         /// <summary>
         /// The timer monitoring whether the user held long enough to
@@ -111,7 +113,7 @@ namespace Notes
         {
             base.Initialize( );
 
-            Lock = new Mutex( );
+            //Lock = new Mutex( );
 
             TextField = PlatformTextField.Create( );
             Anchor = PlatformView.Create( );
@@ -344,7 +346,7 @@ namespace Notes
         public override bool TouchesEnded( PointF touch )
         {
             // wait for the timer thread to be finished
-            Lock.WaitOne( );
+            //Lock.WaitOne( );
 
             bool consumed = false;
 
@@ -402,7 +404,7 @@ namespace Notes
 
             DeleteTimer.Stop();
 
-            Lock.ReleaseMutex( );
+            //Lock.ReleaseMutex( );
 
             return consumed;
         }
@@ -410,7 +412,9 @@ namespace Notes
         protected void DeleteTimerDidFire(object sender, System.Timers.ElapsedEventArgs e)
         {
             // wait for the main thread to be finished
-            Lock.WaitOne( );
+            // JHM: Don't think we need this because we're simply invoking on the main thread,
+            // therefore there cannot be a race condition, since everything gets serialized to a single thread.
+            //Lock.WaitOne( );
 
             // if they're still in range and haven't moved the note yet, activate delete mode.
             if ( TouchInAnchorRange( TrackingLastPos ) && State == TouchState.Hold )
@@ -420,13 +424,13 @@ namespace Notes
                 DeleteEnabled = true;
             }
 
-            Lock.ReleaseMutex( );
+            //Lock.ReleaseMutex( );
         }
 
         public void Dispose( object masterView )
         {
             // release the mutex
-            Lock.Dispose( );
+            //Lock.Dispose( );
 
             // remove it from the UI
             RemoveFromView( masterView );

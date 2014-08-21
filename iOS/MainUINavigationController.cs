@@ -6,15 +6,40 @@ using System.Drawing;
 
 namespace iOS
 {
+    /// <summary>
+    /// The entire app lives underneath a main navigation bar. This is the control
+    /// that drives that navigation bar and manages sliding in and out to reveal the springboard.
+    /// </summary>
 	partial class MainUINavigationController : UINavigationController
 	{
-        const float SLIDE_AMOUNT = 230.0f;
-
+        /// <summary>
+        /// Flag determining whether the springboard is revealed. Revealed means
+        /// this view controller has been slid over to show the springboard.
+        /// </summary>
+        /// <value><c>true</c> if springboard revealed; otherwise, <c>false</c>.</value>
         protected bool SpringboardRevealed { get; set; }
+
+        /// <summary>
+        /// True when this view controller is in the process of moving.
+        /// </summary>
+        /// <value><c>true</c> if animating; otherwise, <c>false</c>.</value>
         protected bool Animating { get; set; }
 
-        protected UIImage _CheeseburgerIcon;
-        public UIImage CheeseburgerIcon { get { return _CheeseburgerIcon; } }
+        /// <summary>
+        /// The view controller that actually contains the active content.
+        /// </summary>
+        /// <value>The container.</value>
+        protected ContainerViewController Container { get; set; }
+
+        /// <summary>
+        /// A wrapper for Container.CurrentActivity, since Container is protected.
+        /// </summary>
+        /// <value>The current activity.</value>
+        public Activity CurrentActivity { get { return Container != null ? Container.CurrentActivity : null; } }
+
+		public MainUINavigationController (IntPtr handle) : base (handle)
+		{
+        }
 
         /// <summary>
         /// Determines whether the springboard is fully closed or not.
@@ -31,70 +56,35 @@ namespace iOS
             return false;
         }
 
-        public UIButton CreateCheeseburgerButton( )
-        {
-            UIButton button = new UIButton(UIButtonType.Custom);
-            button.SetImage( _CheeseburgerIcon, UIControlState.Normal );
-            button.Bounds = new RectangleF( 0, 0, _CheeseburgerIcon.Size.Width, _CheeseburgerIcon.Size.Height );
-
-            return button;
-        }
-
-        public UIButton CreateBackButton( )
-        {
-            UIButton button = new UIButton(UIButtonType.System);
-            button.SetTitle( "<", UIControlState.Normal );
-            button.Bounds = new RectangleF( 0, 0, _CheeseburgerIcon.Size.Width, _CheeseburgerIcon.Size.Height );
-
-            return button;
-        }
-
-        protected ContainerViewController Container { get; set; }
-        public Activity CurrentActivity { get { return Container != null ? Container.CurrentActivity : null; } }
-
-		public MainUINavigationController (IntPtr handle) : base (handle)
-		{
-        }
-
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
 
+            // MainNavigationController must have a black background so that the ticks
+            // before the activity displays don't cause a flash
             View.BackgroundColor = UIColor.Black;
 
-            //TODO: Allow these to be set in data
-            NavigationBar.TintColor = RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( 0xFFFFFFFF );
-            NavigationBar.BarTintColor = RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( 0x1C1C1CFF );
+            // setup the style of the nav bar
+            NavigationBar.TintColor = RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.PrimaryNavBar.TextColor );
+            NavigationBar.BarTintColor = RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.PrimaryNavBar.BackgroundColor );
 
-            string imagePath = NSBundle.MainBundle.BundlePath + "/ccvLogo.png";
+            string imagePath = NSBundle.MainBundle.BundlePath + "/" + CCVApp.Config.PrimaryNavBar.LogoFile;
             NavigationBar.SetBackgroundImage( new UIImage( imagePath ), UIBarMetrics.Default );
 
-            //todo: datadrive this too
-            imagePath = NSBundle.MainBundle.BundlePath + "/cheeseburger.png";
-            _CheeseburgerIcon = new UIImage( imagePath );
-
+            // our first (and only) child IS a ContainerViewController.
             Container = ChildViewControllers[0] as ContainerViewController;
+            if( Container == null ) throw new InvalidCastException( String.Format( "MainUINavigationController's first child must be a ContainerViewController.") );
 
-            // setup a shadow
+            // setup a shadow that provides depth when this panel is slid "out" from the springboard.
             UIBezierPath shadowPath = UIBezierPath.FromRect( View.Bounds );
             View.Layer.MasksToBounds = false;
-            View.Layer.ShadowColor = UIColor.Black.CGColor;
-            View.Layer.ShadowOffset = new SizeF( 0.0f, 5.0f );
-            View.Layer.ShadowOpacity = .6f;
+            View.Layer.ShadowColor = RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.PrimaryContainer.ShadowColor ).CGColor;
+            View.Layer.ShadowOffset = CCVApp.Config.PrimaryContainer.ShadowOffset;
+            View.Layer.ShadowOpacity = CCVApp.Config.PrimaryContainer.ShadowOpacity;
             View.Layer.ShadowPath = shadowPath.CGPath;
         }
 
-        public override bool ShouldAutorotate()
-        {
-            return base.ShouldAutorotate();
-        }
-
-        public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations()
-        {
-            return base.GetSupportedInterfaceOrientations();
-        }
-
-        public void CheeseburgerTouchUp( )
+        public void SpringboardRevealButtonTouchUp( )
         {
             // best practice states that we should let the view controller who presented us also dismiss us.
             // however, we have a unique situation where we are the parent to ALL OTHER view controllers,
@@ -146,11 +136,11 @@ namespace iOS
                     Animating = true;
 
                     // Animate the front panel out
-                    UIView.Animate( .50f, 0, UIViewAnimationOptions.CurveEaseInOut, 
+                    UIView.Animate( CCVApp.Config.PrimaryContainer.SlideRate, 0, UIViewAnimationOptions.CurveEaseInOut, 
                         new NSAction( 
                             delegate 
                             { 
-                                float deltaPosition = revealed ? SLIDE_AMOUNT : -SLIDE_AMOUNT;
+                                float deltaPosition = revealed ? CCVApp.Config.PrimaryContainer.SlideAmount : -CCVApp.Config.PrimaryContainer.SlideAmount;
 
                                 View.Layer.Position = new PointF( View.Layer.Position.X + deltaPosition, View.Layer.Position.Y ); 
                             })

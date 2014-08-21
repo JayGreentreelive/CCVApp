@@ -16,11 +16,11 @@ namespace iOS
 	{
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UIButton AboutCCVButton { get; set; }
+		UIButton AboutButton { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UIButton GiveButton { get; set; }
+		UIButton EpisodesButton { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
@@ -38,27 +38,15 @@ namespace iOS
 		[GeneratedCode ("iOS Designer", "1.0")]
 		UIView ProfileImage { get; set; }
 
-		[Outlet]
-		[GeneratedCode ("iOS Designer", "1.0")]
-		UIButton SermonNotesButton { get; set; }
-
-		[Outlet]
-		[GeneratedCode ("iOS Designer", "1.0")]
-		UIButton ViewProfileButton { get; set; }
-
-		[Outlet]
-		[GeneratedCode ("iOS Designer", "1.0")]
-		UIButton WatchButton { get; set; }
-
 		void ReleaseDesignerOutlets ()
 		{
-			if (AboutCCVButton != null) {
-				AboutCCVButton.Dispose ();
-				AboutCCVButton = null;
+			if (AboutButton != null) {
+				AboutButton.Dispose ();
+				AboutButton = null;
 			}
-			if (GiveButton != null) {
-				GiveButton.Dispose ();
-				GiveButton = null;
+			if (EpisodesButton != null) {
+				EpisodesButton.Dispose ();
+				EpisodesButton = null;
 			}
 			if (GroupFinderButton != null) {
 				GroupFinderButton.Dispose ();
@@ -75,18 +63,6 @@ namespace iOS
 			if (ProfileImage != null) {
 				ProfileImage.Dispose ();
 				ProfileImage = null;
-			}
-			if (SermonNotesButton != null) {
-				SermonNotesButton.Dispose ();
-				SermonNotesButton = null;
-			}
-			if (ViewProfileButton != null) {
-				ViewProfileButton.Dispose ();
-				ViewProfileButton = null;
-			}
-			if (WatchButton != null) {
-				WatchButton.Dispose ();
-				WatchButton = null;
 			}
 		}
 	}

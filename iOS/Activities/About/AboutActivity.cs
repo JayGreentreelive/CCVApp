@@ -15,23 +15,37 @@ namespace iOS
 
         public AboutActivity( string storyboardName ) : base( storyboardName )
         {
-            PushTransition.AboutActivity = this;
-
             MainPageVC = Storyboard.InstantiateViewController( "MainPageViewController" ) as UIViewController;
             DetailsPageVC = Storyboard.InstantiateViewController( "DetailsPageViewController" ) as UIViewController;
             MoreDetailsPageVC = Storyboard.InstantiateViewController( "MoreDetailsViewController" ) as UIViewController;
+
+
         }
 
-        public override void MakeActive( UIViewController parentViewController )
+        public override void MakeActive( UIViewController parentViewController, NavToolbar navToolbar )
         {
-            base.MakeActive( parentViewController );
+            base.MakeActive( parentViewController, navToolbar );
 
             // for now always make the main page the starting vc
             CurrentVC = MainPageVC;
 
             // set our current page as root
             ((UINavigationController)parentViewController).PushViewController(CurrentVC, false);
-            ((UINavigationController)parentViewController).NavigationBarHidden = true;
+        }
+
+        public override void WillShowViewController(UIViewController viewController)
+        {
+            // if it's the main page, disable the back button on the toolbar
+            if ( viewController == MainPageVC )
+            {
+                NavToolbar.SetBackButtonEnabled( false );
+                NavToolbar.Reveal( false );
+            }
+            else
+            {
+                NavToolbar.SetBackButtonEnabled( true );
+                NavToolbar.RevealForTime( 3.0f );
+            }
         }
 
         public override void MakeInActive( )
@@ -72,40 +86,9 @@ namespace iOS
             CurrentVC = null;
         }
 
-        public void PushViewController( UIViewController destinationViewController )
-        {
-            if( destinationViewController != MainPageVC )
-            {
-                ((UINavigationController)ParentViewController).NavigationBarHidden = false;
-            }
-            else
-            {
-                ((UINavigationController)ParentViewController).NavigationBarHidden = true;
-            }
-
-            ((UINavigationController)ParentViewController).PushViewController( destinationViewController, true );
-
-            CurrentVC = destinationViewController;
-        }
-
         public override void AppOnResignActive( )
         {
             base.AppOnResignActive( );
-        }
-    }
-
-    [Register("PushTransition")]
-    public class PushTransition : UIStoryboardSegue
-    {
-        public static AboutActivity AboutActivity { get; set; }
-
-        public PushTransition (IntPtr param) : base (param)
-        {
-        }
-
-        public override void Perform()
-        {
-            AboutActivity.PushViewController( DestinationViewController );
         }
     }
 }

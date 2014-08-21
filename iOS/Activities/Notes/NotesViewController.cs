@@ -165,7 +165,7 @@ namespace iOS
         {
             base.ViewDidLayoutSubviews( );
 
-            RefreshButton.Layer.Position = new PointF( View.Bounds.Width / 2, 75 );
+            RefreshButton.Layer.Position = new PointF( View.Bounds.Width / 2, RefreshButton.Frame.Height / 2 );
 
             UIScrollView.Frame = new RectangleF( 0, 0, View.Bounds.Width, View.Bounds.Height );
             UIScrollView.Layer.Position = new PointF( UIScrollView.Layer.Position.X, UIScrollView.Layer.Position.Y + RefreshButton.Frame.Bottom);

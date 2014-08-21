@@ -10,9 +10,9 @@ namespace iOS
         {
         }
 
-        public override void MakeActive( UIViewController parentViewController )
+        public override void MakeActive( UIViewController parentViewController, NavToolbar navToolbar )
         {
-            base.MakeActive( parentViewController );
+            base.MakeActive( parentViewController, navToolbar );
         }
 
         public override void MakeInActive( )

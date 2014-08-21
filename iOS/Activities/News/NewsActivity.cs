@@ -6,23 +6,38 @@ namespace iOS
 {
     public class NewsActivity : Activity
     {
-        NavChildUIViewController MainPageVC { get; set; }
-        NavChildUIViewController DetailsPageVC { get; set; }
-        NavChildUIViewController MoreDetailsPageVC { get; set; }
+        UIViewController MainPageVC { get; set; }
+        UIViewController DetailsPageVC { get; set; }
+        UIViewController MoreDetailsPageVC { get; set; }
 
         public NewsActivity( string storyboardName ) : base( storyboardName )
         {
-            MainPageVC = Storyboard.InstantiateViewController( "MainPageViewController" ) as NavChildUIViewController;
-            DetailsPageVC = Storyboard.InstantiateViewController( "DetailsViewController" ) as NavChildUIViewController;
-            MoreDetailsPageVC = Storyboard.InstantiateViewController( "MoreDetailsViewController" ) as NavChildUIViewController;
+            MainPageVC = Storyboard.InstantiateViewController( "MainPageViewController" ) as UIViewController;
+            DetailsPageVC = Storyboard.InstantiateViewController( "DetailsViewController" ) as UIViewController;
+            MoreDetailsPageVC = Storyboard.InstantiateViewController( "MoreDetailsViewController" ) as UIViewController;
         }
 
-        public override void MakeActive( UIViewController parentViewController )
+        public override void MakeActive( UIViewController parentViewController, NavToolbar navToolbar )
         {
-            base.MakeActive( parentViewController );
+            base.MakeActive( parentViewController, navToolbar );
 
-            ParentViewController.AddChildViewController( MainPageVC );
-            ParentViewController.View.AddSubview( MainPageVC.View );
+            // set our current page as root
+            ((UINavigationController)parentViewController).PushViewController(MainPageVC, false);
+        }
+
+        public override void WillShowViewController(UIViewController viewController)
+        {
+            // if it's the main page, disable the back button on the toolbar
+            if ( viewController == MainPageVC )
+            {
+                NavToolbar.SetBackButtonEnabled( false );
+                NavToolbar.Reveal( false );
+            }
+            else
+            {
+                NavToolbar.SetBackButtonEnabled( true );
+                NavToolbar.RevealForTime( 3.0f );
+            }
         }
 
         public override void MakeInActive( )

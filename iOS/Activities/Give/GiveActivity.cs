@@ -6,16 +6,16 @@ namespace iOS
 {
     public class GiveActivity : Activity
     {
-        NavChildUIViewController MainPageVC { get; set; }
+        UIViewController MainPageVC { get; set; }
 
         public GiveActivity( string storyboardName ) : base( storyboardName )
         {
-            MainPageVC = Storyboard.InstantiateViewController( "MainPageViewController" ) as NavChildUIViewController;
+            MainPageVC = Storyboard.InstantiateViewController( "MainPageViewController" ) as UIViewController;
         }
 
-        public override void MakeActive( UIViewController parentViewController )
+        public override void MakeActive( UIViewController parentViewController, NavToolbar navToolbar )
         {
-            base.MakeActive( parentViewController );
+            base.MakeActive( parentViewController, navToolbar );
 
             ParentViewController.AddChildViewController( MainPageVC );
         }

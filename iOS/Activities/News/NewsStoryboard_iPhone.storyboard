@@ -6,7 +6,7 @@
     <scenes>
         <scene sceneID="4">
             <objects>
-                <viewController id="5" sceneMemberID="viewController" storyboardIdentifier="MainPageViewController" customClass="NavChildUIViewController">
+                <viewController id="5" sceneMemberID="viewController" storyboardIdentifier="MainPageViewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="2"/>
                         <viewControllerLayoutGuide type="bottom" id="3"/>
@@ -16,19 +16,18 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" customColorSpace="calibratedWhite" colorSpace="calibratedRGB" red="0.082352941176470587" green="0.082352941176470587" blue="0.082352941176470587" alpha="1"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="News: Main Page" lineBreakMode="tailTruncation" minimumFontSize="10" id="9" translatesAutoresizingMaskIntoConstraints="NO">
-                                <rect key="frame" x="91" y="95" width="137" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="News: Main Page" lineBreakMode="tailTruncation" minimumFontSize="10" id="9" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES">
+                                <rect key="frame" x="92" y="99" width="137" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" colorSpace="calibratedRGB" red="1" green="1" blue="1" alpha="1"/>
                                 <nil key="highlightedColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="137" id="94"/>
                                 </constraints>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="21" translatesAutoresizingMaskIntoConstraints="NO">
-                                <rect key="frame" x="86" y="186" width="147" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="21" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES">
+                                <rect key="frame" x="86" y="195" width="147" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Click for details">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -37,15 +36,10 @@
                                     <segue destination="16" kind="push" id="22"/>
                                 </connections>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="147" id="91"/>
                                 </constraints>
                             </button>
                         </subviews>
                         <constraints>
-                            <constraint id="89" firstItem="21" firstAttribute="leading" secondItem="6" secondAttribute="leading" constant="86"/>
-                            <constraint id="90" firstItem="21" firstAttribute="top" secondItem="6" secondAttribute="top" constant="186"/>
-                            <constraint id="92" firstItem="9" firstAttribute="leading" secondItem="6" secondAttribute="leading" constant="91"/>
-                            <constraint id="93" firstItem="9" firstAttribute="top" secondItem="6" secondAttribute="top" constant="95"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -55,7 +49,7 @@
         </scene>
         <scene sceneID="15">
             <objects>
-                <viewController id="16" sceneMemberID="viewController" storyboardIdentifier="DetailsViewController" customClass="NavChildUIViewController">
+                <viewController id="16" sceneMemberID="viewController" storyboardIdentifier="DetailsViewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="13"/>
                         <viewControllerLayoutGuide type="bottom" id="14"/>
@@ -104,7 +98,7 @@
         </scene>
         <scene sceneID="28">
             <objects>
-                <viewController id="29" sceneMemberID="viewController" storyboardIdentifier="MoreDetailsViewController" customClass="NavChildUIViewController">
+                <viewController id="29" sceneMemberID="viewController" storyboardIdentifier="MoreDetailsViewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="26"/>
                         <viewControllerLayoutGuide type="bottom" id="27"/>
@@ -146,6 +140,13 @@
         <image name="Default-568h.png" width="640" height="1136"/>
         <image name="spot_mask.png" width="128" height="128"/>
         <image name="me.jpg" width="471" height="480"/>
-        <image name="ccvLogo.png" width="82" height="40"/>
+        <image name="ccvLogo.png" width="320" height="64"/>
+        <image name="cheeseburger.png" width="22" height="19"/>
+        <image name="notes.png" width="31" height="38"/>
+        <image name="info.png" width="38" height="38"/>
+        <image name="watch.png" width="38" height="39"/>
+        <image name="groupfinder.png" width="33" height="42"/>
+        <image name="prayer.png" width="47" height="35"/>
+        <image name="give.png" width="44" height="35"/>
     </resources>
 </document>

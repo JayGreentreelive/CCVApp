@@ -7,6 +7,7 @@ namespace iOS
     public class Activity
     {
         protected UIViewController ParentViewController { get; set; }
+        protected NavToolbar NavToolbar { get; set; }
         protected UIStoryboard Storyboard { get; set; }
 
         public Activity( string storyboardName )
@@ -25,9 +26,10 @@ namespace iOS
         /// This is NOT called when the application comes into the foreground.
         /// </summary>
         /// <param name="parentViewController">Parent view controller.</param>
-        public virtual void MakeActive( UIViewController parentViewController )
+        public virtual void MakeActive( UIViewController parentViewController, NavToolbar navToolbar )
         {
             ParentViewController = parentViewController;
+            NavToolbar = navToolbar;
         }
 
         /// <summary>
@@ -40,6 +42,17 @@ namespace iOS
         {
             // always clear our parent view controller when going inactive
             ParentViewController = null;
+            NavToolbar = null;
+        }
+
+        /// <summary>
+        /// Called when a new view controller is shown by the parent navigation controller.
+        /// This is useful so the activity can evaluate what viewcontroller was just shown
+        /// and update itself or the toolbar accordingly.
+        /// </summary>
+        /// <param name="viewController">View controller.</param>
+        public virtual void WillShowViewController( UIViewController viewController )
+        {
         }
 
         /// <summary>

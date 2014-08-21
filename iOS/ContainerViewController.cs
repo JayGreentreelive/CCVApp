@@ -3,15 +3,59 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using System.CodeDom.Compiler;
 using System.Drawing;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace iOS
 {
-	partial class ContainerViewController : UIViewController
+    /// <summary>
+    /// A delegate managing the navBar owned by ContainerViewController.
+    /// ContainerViewController needs to know when a user changes controllers via the navBar.
+    /// </summary>
+    public class NavBarDelegate : UINavigationControllerDelegate
+    {
+        public ContainerViewController ParentController { get; set; }
+       
+        public override void WillShowViewController(UINavigationController navigationController, UIViewController viewController, bool animated)
+        {
+            // notify our parent
+            ParentController.NavWillShowViewController( viewController );
+        }
+
+        public override void DidShowViewController(UINavigationController navigationController, UIViewController viewController, bool animated)
+        {
+            // notify our parent
+            ParentController.NavDidShowViewController( viewController );
+        }
+    }
+
+    /// <summary>
+    /// The "frame" surrounding all activities. This manages the main navigation bar
+    /// that contains the Springboard Reveal button so that it can be in one place rather
+    /// than making every single view controller do it.
+    /// </summary>
+	public partial class ContainerViewController : UIViewController
 	{
+        /// <summary>
+        /// The activity currently being displayed.
+        /// </summary>
         Activity _CurrentActivity;
         public Activity CurrentActivity { get { return _CurrentActivity; } }
 
+        /// <summary>
+        /// Each activity is placed as a child within this SubNavigation controller.
+        /// Instead of using a NavigationBar to go back, however, they use the SubNavToolbar.
+        /// </summary>
+        /// <value>The sub navigation controller.</value>
         public UINavigationController SubNavigationController { get; set; }
+        public NavToolbar SubNavToolbar { get; set; }
+
+        /// <summary>
+        /// True when the controller within an activity is animating (from a navigate forward/backward)
+        /// This is tracked so we don't allow multiple navigation requests at once (like if a user spammed the back button)
+        /// </summary>
+        /// <value><c>true</c> if activity controller animating; otherwise, <c>false</c>.</value>
+        bool ActivityControllerAnimating { get; set; }
 
 		public ContainerViewController (IntPtr handle) : base (handle)
 		{
@@ -20,30 +64,99 @@ namespace iOS
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
+
+            // container view must have a black background so that the ticks
+            // before the activity displays don't cause a flash
             View.BackgroundColor = UIColor.Black;
 
-            UIButton button = ( (MainUINavigationController)NavigationController).CreateCheeseburgerButton( );
-            button.TouchUpInside += (object sender, EventArgs e) => 
-                {
-                    (ParentViewController as MainUINavigationController).CheeseburgerTouchUp( );
-                };
-            this.NavigationItem.SetLeftBarButtonItem( new UIBarButtonItem( button ), true );
+            // First setup the SpringboardReveal button, which rests in the upper left
+            // of the MainNavigationUI. (We must do it here because the ContainerViewController's
+            // NavBar is the active one.)
+            string imagePath = NSBundle.MainBundle.BundlePath + "/" + CCVApp.Config.PrimaryNavBar.SpringboardRevealFile;
+            UIImage springboardRevealImage = new UIImage( imagePath );
 
-            CreateSubNavBar( );
+            UIButton springboardRevealButton = new UIButton(UIButtonType.Custom);
+            springboardRevealButton.SetImage( springboardRevealImage, UIControlState.Normal );
+            springboardRevealButton.Bounds = new RectangleF( 0, 0, springboardRevealImage.Size.Width, springboardRevealImage.Size.Height );
+            springboardRevealButton.TouchUpInside += (object sender, EventArgs e) => 
+                {
+                    (ParentViewController as MainUINavigationController).SpringboardRevealButtonTouchUp( );
+                };
+            this.NavigationItem.SetLeftBarButtonItem( new UIBarButtonItem( springboardRevealButton ), false );
+            //
+
+
+            // Now create the sub-navigation, which includes
+            // the NavToolbar used to let the user navigate
+            CreateSubNavigationController( );
         }
 
-        protected void CreateSubNavBar( )
+        protected void CreateSubNavigationController( )
         {
+            // Load the navigationController from the storyboard.
             SubNavigationController = Storyboard.InstantiateViewController( "SubNavController" ) as UINavigationController;
+            SubNavigationController.Delegate = new NavBarDelegate( ) { ParentController = this };
 
-            SubNavigationController.NavigationBar.TintColor = RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( 0xFFFFFFFF );
-            SubNavigationController.NavigationBar.BarTintColor = RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( 0x1C1C1CFF );
-            SubNavigationController.NavigationBar.SetBackgroundImage( null, UIBarMetrics.Default );
-
+            // the sub navigation control should go below the primary navigation bar.
             SubNavigationController.View.Frame = new RectangleF( 0, 
-                NavigationController.NavigationBar.Frame.Height + UIApplication.SharedApplication.StatusBarFrame.Height, 
+                NavigationController.NavigationBar.Frame.Height, 
                 SubNavigationController.View.Frame.Width, 
-                SubNavigationController.View.Frame.Height);
+                SubNavigationController.View.Frame.Height - NavigationController.NavigationBar.Frame.Height);
+
+
+            // setup the toolbar that will manage activity navigation and any other tasks the activity needs
+            SubNavToolbar = new NavToolbar();
+            SubNavToolbar.Frame = new RectangleF( 0, SubNavigationController.View.Frame.Height, View.Frame.Width, CCVApp.Config.SubNavToolbar.Height);
+            SubNavToolbar.BarTintColor = RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.SubNavToolbar.BackgroundColor );
+            SubNavToolbar.Layer.Opacity = CCVApp.Config.SubNavToolbar.Opacity;
+            SubNavigationController.View.AddSubview( SubNavToolbar );
+
+
+            // create the back button and place it in the nav bar
+            NSString buttonLabel = new NSString(CCVApp.Config.SubNavToolbar.BackButton_Text);
+
+            UIButton backButton = new UIButton(UIButtonType.System);
+            backButton.Font = UIFont.SystemFontOfSize( CCVApp.Config.SubNavToolbar.BackButton_Size );
+            backButton.SetTitle( buttonLabel.ToString( ), UIControlState.Normal );
+
+            // determine its dimensions
+            SizeF buttonSize = buttonLabel.StringSize( backButton.Font );
+            backButton.Bounds = new RectangleF( 0, 0, buttonSize.Width, buttonSize.Height );
+
+            backButton.TouchUpInside += (object sender, EventArgs e) => 
+                {
+                    // don't allow multiple back presses at once
+                    if( ActivityControllerAnimating == false )
+                    {
+                        ActivityControllerAnimating = true;
+                        SubNavigationController.PopViewControllerAnimated( true );
+                    }
+                };
+
+            SubNavToolbar.SetBackButton( backButton );
+
+
+            // add this navigation controller (and its toolbar) as a child
+            // of this ContainerViewController, which will effectively make it a child
+            // of the primary navigation controller.
+            AddChildViewController( SubNavigationController );
+            View.AddSubview( SubNavigationController.View );
+        }
+
+        public void NavWillShowViewController( UIViewController viewController )
+        {
+            // let the current activity know which of its view controllers was just shown.
+            if( CurrentActivity != null )
+            {
+                CurrentActivity.WillShowViewController( viewController );
+            }
+        }
+
+        public void NavDidShowViewController( UIViewController viewController )
+        {
+            // once the animation is COMPLETE, we can turn off the flag
+            // and allow another back press.
+            ActivityControllerAnimating = false;
         }
 
         public void ActivateActivity( Activity activity )
@@ -58,20 +171,7 @@ namespace iOS
 
             _CurrentActivity = activity;
 
-            if( activity as AboutActivity != null )
-            {
-                AddChildViewController( SubNavigationController );
-                View.AddSubview( SubNavigationController.View );
-
-                CurrentActivity.MakeActive( SubNavigationController );
-            }
-            else
-            {
-                SubNavigationController.RemoveFromParentViewController( );
-                SubNavigationController.View.RemoveFromSuperview( );
-
-                CurrentActivity.MakeActive( this );
-            }
+            CurrentActivity.MakeActive( SubNavigationController, SubNavToolbar );
         }
 
         public void OnResignActive()

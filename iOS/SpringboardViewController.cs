@@ -8,23 +8,51 @@ using System.Collections.Generic;
 
 namespace iOS
 {
+    /// <summary>
+    /// The springboard acts as the core navigation for the user. From here
+    /// they may launch any of the app's activities.
+    /// </summary>
 	partial class SpringboardViewController : UIViewController
 	{
         MainUINavigationController NavViewController { get; set; }
 
         /// <summary>
-        /// Represents a selectable element on the springboard. 
+        /// Represents a selectable element on the springboard.
         /// Contains its button and the associated activity.
         /// </summary>
         protected class SpringboardElement
         {
+            /// <summary>
+            /// Reference to our parent view controller
+            /// </summary>
+            /// <value>The springboard view controller.</value>
             public SpringboardViewController SpringboardViewController { get; set; }
 
+            /// <summary>
+            /// The activity that is launched by this element.
+            /// </summary>
+            /// <value>The activity.</value>
             public Activity Activity { get; set; }
+
+            /// <summary>
+            /// The view that rests behind the button, graphic and text, and is colored when 
+            /// the activity is active.
+            /// </summary>
+            /// <value>The backing view.</value>
+            public UIView BackingView { get; set; }
+
+            /// <summary>
+            /// The button itself. Because we have special display needs, we
+            /// break the button apart, and this ends up being an empty container that lies
+            /// on top of the BackingView, LogoView and TextView.
+            /// </summary>
+            /// <value>The button.</value>
             public UIButton Button { get; set; }
 
-            public SpringboardElement( SpringboardViewController controller, Activity activity, UIButton button )
+            public SpringboardElement( SpringboardViewController controller, Activity activity, UIButton button, string imageName )
             {
+                UIView parentView = button.Superview;
+
                 SpringboardViewController = controller;
                 Activity = activity;
                 Button = button;
@@ -33,6 +61,49 @@ namespace iOS
                     {
                         SpringboardViewController.ActivateElement( this );
                     };
+
+
+                //The button should look as follows:
+                // [ X Text ]
+                // To make sure the icons and text are all aligned vertically,
+                // we will actually create a backing view that can highlight (the []s)
+                // and place a logo view (the X), and a text view (the Text) on top.
+                // Finally, we'll make the button clear with no text and place it over the
+                // backing view.
+
+                // start by loading the image
+                string imagePath = NSBundle.MainBundle.BundlePath + "/" + imageName;
+                UIImage image = new UIImage( imagePath );
+
+                // Create the backing view
+                BackingView = new UIView( );
+                BackingView.Frame = Button.Frame;
+                BackingView.BackgroundColor = UIColor.Clear;
+                parentView.AddSubview( BackingView );
+
+                // Create the logo view containing the image.
+                UIView logoView = new UIView( );
+                logoView.Bounds = new RectangleF( 0, 0, image.Size.Width, image.Size.Height );
+                logoView.Layer.Position = new PointF( CCVApp.Config.Springboard.Element_LogoOffsetX, Button.Layer.Position.Y );
+                logoView.Layer.Contents = image.CGImage;
+                logoView.BackgroundColor = UIColor.Clear;
+                parentView.AddSubview( logoView );
+
+                // Create the text, and populate it with the button's requested text, color and font.
+                UILabel TextLabel = new UILabel( );
+                TextLabel.Text = Button.Title( UIControlState.Normal );
+                TextLabel.TextColor = Button.TitleColor( UIControlState.Normal );
+                TextLabel.Font = Button.Font;
+                TextLabel.BackgroundColor = UIColor.Clear;
+                TextLabel.SizeToFit( );
+                TextLabel.Layer.Position = new PointF( CCVApp.Config.Springboard.Element_LabelOffsetX + (TextLabel.Frame.Width / 2), Button.Layer.Position.Y );
+                parentView.AddSubview( TextLabel );
+
+                // now clear out the button so it just lays on top of the contents
+                Button.SetTitle( "", UIControlState.Normal );
+                Button.BackgroundColor = UIColor.Clear;
+
+                parentView.BringSubviewToFront( Button );
             }
         };
 
@@ -50,6 +121,8 @@ namespace iOS
 
         public override bool ShouldAutorotate()
         {
+            // We only want to allow landscape orientation when in the NotesActivity.
+            // All other times the app should be in Portrait mode.
             switch( UIDevice.CurrentDevice.Orientation )
             {
                 case UIDeviceOrientation.Portrait:
@@ -79,18 +152,17 @@ namespace iOS
             base.ViewDidLoad( );
 
             // Instantiate all activities
-            Elements.Add( new SpringboardElement( this, new NewsActivity( "NewsStoryboard_iPhone" )  , NewsButton ) );
-            Elements.Add( new SpringboardElement( this, new NotesActivity( "" )                      , SermonNotesButton ) );
-            Elements.Add( new SpringboardElement( this, new GiveActivity( "GiveStoryboard_iPhone" ), GroupFinderButton ) );//todo: Implement
-            Elements.Add( new SpringboardElement( this, new GiveActivity( "GiveStoryboard_iPhone" ), PrayerButton ) );//todo: Implement
-            Elements.Add( new SpringboardElement( this, new GiveActivity( "GiveStoryboard_iPhone" ), WatchButton ) );//todo: Implement
-            Elements.Add( new SpringboardElement( this, new GiveActivity( "GiveStoryboard_iPhone" ), GiveButton ) );//todo: Implement
-            Elements.Add( new SpringboardElement( this, new AboutActivity( "AboutStoryboard_iPhone" ), AboutCCVButton ) );
+            Elements.Add( new SpringboardElement( this, new NewsActivity( "NewsStoryboard_iPhone" )  , NewsButton       , "watch.png" ) );
+            Elements.Add( new SpringboardElement( this, new NotesActivity( "" )                      , EpisodesButton   , "notes.png" ) );
+            Elements.Add( new SpringboardElement( this, new GiveActivity( "GiveStoryboard_iPhone" )  , GroupFinderButton, "groupfinder.png" ) );
+            Elements.Add( new SpringboardElement( this, new GiveActivity( "GiveStoryboard_iPhone" )  , PrayerButton     , "prayer.png" ) );
+            Elements.Add( new SpringboardElement( this, new AboutActivity( "AboutStoryboard_iPhone" ), AboutButton      , "info.png" ) );
 
-            // set our image up
-            string imagePath = NSBundle.MainBundle.BundlePath + "/me.jpg";
+            // set the profile image.
+            string imagePath = NSBundle.MainBundle.BundlePath + "/" + CCVApp.Config.Springboard.NoProfileFile;
             ProfileImage.Layer.Contents = new UIImage( imagePath ).CGImage;
 
+            // apply a circular mask
             CALayer maskLayer = new CALayer();
             maskLayer.AnchorPoint = new PointF( 0, 0 );
             maskLayer.Bounds = ProfileImage.Layer.Bounds;
@@ -106,23 +178,34 @@ namespace iOS
             SetNeedsStatusBarAppearanceUpdate( );
         }
 
-        protected void ActivateElement( SpringboardElement activeElement )
+        public override bool PrefersStatusBarHidden()
         {
-            foreach( SpringboardElement element in Elements )
-            {
-                if( element != activeElement )
-                {
-                    element.Button.BackgroundColor = UIColor.Clear;
-                }
-            }
-
-            NavViewController.ActivateActivity( activeElement.Activity );
-            activeElement.Button.BackgroundColor = RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( 0x7a1315FF);
+            // don't show the status bar when running this app.
+            return true;
         }
 
         public override UIStatusBarStyle PreferredStatusBarStyle()
         {
+            // only needed when we were showing the status bar. Causes
+            // the status bar text to be white.
             return UIStatusBarStyle.LightContent;
+        }
+
+        protected void ActivateElement( SpringboardElement activeElement )
+        {
+            // first turn "off" the backingView selection for all but the element
+            // becoming active.
+            foreach( SpringboardElement element in Elements )
+            {
+                if( element != activeElement )
+                {
+                    element.BackingView.BackgroundColor = UIColor.Clear;
+                }
+            }
+
+            // activate the element and its associated activity
+            activeElement.BackingView.BackgroundColor = RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( 0x7a1315FF);
+            NavViewController.ActivateActivity( activeElement.Activity );
         }
 
         public override void TouchesEnded(NSSet touches, UIEvent evt)
@@ -146,7 +229,7 @@ namespace iOS
         {
             base.ViewDidAppear(animated);
 
-            // start up the app with the first element
+            // start up the app with the first activity
             ActivateElement( Elements[0] );
         }
 
