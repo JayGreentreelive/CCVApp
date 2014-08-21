@@ -59,6 +59,7 @@ namespace iOS
 
 		public ContainerViewController (IntPtr handle) : base (handle)
 		{
+            ActivityTransition.ContainerViewController = this;
 		}
 
         public override void ViewDidLoad()
@@ -174,6 +175,24 @@ namespace iOS
             CurrentActivity.MakeActive( SubNavigationController, SubNavToolbar );
         }
 
+        public void PerformSegue( UIViewController sourceViewController, UIViewController destinationViewController )
+        {
+            // notify the active activity regarding the change.
+            if( CurrentActivity != null )
+            {
+                // take this opportunity to give the presenting view controller a pointer to the active activity
+                // so it can receive callbacks.
+                ActivityUIViewController viewController = destinationViewController as ActivityUIViewController;
+                if( viewController == null )
+                {
+                    throw new InvalidCastException( "View Controllers used by Activities must be of type ActivityUIViewController" );
+                }
+
+                viewController.Activity = CurrentActivity;
+                SubNavigationController.PushViewController( destinationViewController, true );
+            }
+        }
+
         public void OnResignActive()
         {
             if( CurrentActivity != null )
@@ -198,4 +217,23 @@ namespace iOS
             }
         }
 	}
+
+    // Define our activity transition class that notifies the container
+    // about the transition, so it can ensure the next view controller receives
+    // a reference to the active activity.
+    [Register("ActivityTransition")]
+    class ActivityTransition : UIStoryboardSegue
+    {
+        public static ContainerViewController ContainerViewController { get; set; }
+
+        public ActivityTransition( IntPtr handle ) : base( handle )
+        {
+        }
+
+        public override void Perform()
+        {
+            ContainerViewController.PerformSegue( SourceViewController, DestinationViewController );
+        }
+
+    }
 }

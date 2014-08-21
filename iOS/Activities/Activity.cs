@@ -1,6 +1,7 @@
 ﻿using System;
 using MonoTouch.UIKit;
 using System.Drawing;
+using MonoTouch.Foundation;
 
 namespace iOS
 {
@@ -52,6 +53,17 @@ namespace iOS
         /// </summary>
         /// <param name="viewController">View controller.</param>
         public virtual void WillShowViewController( UIViewController viewController )
+        {
+        }
+
+        /// <summary>
+        /// Called by the active view controller when touches ended. Allows the activity to perform any
+        /// necessary actions, like revealing the nav bar.
+        /// </summary>
+        /// <param name="activityUIViewController">Activity user interface view controller.</param>
+        /// <param name="touches">Touches.</param>
+        /// <param name="evt">Evt.</param>
+        public virtual void TouchesEnded( ActivityUIViewController activityUIViewController, NSSet touches, UIEvent evt )
         {
         }
 

@@ -1,20 +1,18 @@
 ﻿using System;
 using MonoTouch.UIKit;
 using System.Drawing;
+using MonoTouch.Foundation;
 
 namespace iOS
 {
     public class NewsActivity : Activity
     {
-        UIViewController MainPageVC { get; set; }
-        UIViewController DetailsPageVC { get; set; }
-        UIViewController MoreDetailsPageVC { get; set; }
+        ActivityUIViewController MainPageVC { get; set; }
 
         public NewsActivity( string storyboardName ) : base( storyboardName )
         {
-            MainPageVC = Storyboard.InstantiateViewController( "MainPageViewController" ) as UIViewController;
-            DetailsPageVC = Storyboard.InstantiateViewController( "DetailsViewController" ) as UIViewController;
-            MoreDetailsPageVC = Storyboard.InstantiateViewController( "MoreDetailsViewController" ) as UIViewController;
+            MainPageVC = Storyboard.InstantiateViewController( "MainPageViewController" ) as ActivityUIViewController;
+            MainPageVC.Activity = this;
         }
 
         public override void MakeActive( UIViewController parentViewController, NavToolbar navToolbar )
@@ -40,6 +38,14 @@ namespace iOS
             }
         }
 
+        public override void TouchesEnded(ActivityUIViewController activityUIViewController, NSSet touches, UIEvent evt)
+        {
+            base.TouchesEnded(activityUIViewController, touches, evt);
+
+            // if they touched a dead area, reveal the nav toolbar again.
+            NavToolbar.RevealForTime( 3.0f );
+        }
+
         public override void MakeInActive( )
         {
             base.MakeInActive( );
@@ -53,26 +59,6 @@ namespace iOS
             if( MainPageVC.ParentViewController != null )
             {
                 MainPageVC.RemoveFromParentViewController( );
-            }
-
-            // clean up details
-            if(DetailsPageVC.View != null )
-            {
-                DetailsPageVC.View.RemoveFromSuperview( );
-            }
-            if( DetailsPageVC.ParentViewController != null )
-            {
-                DetailsPageVC.RemoveFromParentViewController( );
-            }
-
-            // cleanup more details
-            if( MoreDetailsPageVC.View != null )
-            {
-                MoreDetailsPageVC.View.RemoveFromSuperview( );
-            }
-            if( MoreDetailsPageVC.ParentViewController != null )
-            {
-                MoreDetailsPageVC.RemoveFromParentViewController( );
             }
         }
 

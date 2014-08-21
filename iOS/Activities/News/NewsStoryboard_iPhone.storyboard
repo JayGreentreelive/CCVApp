@@ -6,7 +6,7 @@
     <scenes>
         <scene sceneID="4">
             <objects>
-                <viewController id="5" sceneMemberID="viewController" storyboardIdentifier="MainPageViewController">
+                <viewController id="5" sceneMemberID="viewController" storyboardIdentifier="MainPageViewController" customClass="ActivityUIViewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="2"/>
                         <viewControllerLayoutGuide type="bottom" id="3"/>
@@ -33,7 +33,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="16" kind="push" id="22"/>
+                                    <segue destination="16" kind="custom" id="94" customClass="ActivityTransition"/>
                                 </connections>
                                 <constraints>
                                 </constraints>
@@ -45,11 +45,11 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-235" y="-288"/>
+            <point key="canvasLocation" x="-234" y="-289"/>
         </scene>
         <scene sceneID="15">
             <objects>
-                <viewController id="16" sceneMemberID="viewController" storyboardIdentifier="DetailsViewController">
+                <viewController id="16" sceneMemberID="viewController" storyboardIdentifier="DetailsViewController" customClass="ActivityUIViewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="13"/>
                         <viewControllerLayoutGuide type="bottom" id="14"/>
@@ -77,7 +77,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="29" kind="push" id="37"/>
+                                    <segue destination="29" kind="custom" id="96" customClass="ActivityTransition"/>
                                 </connections>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="177" id="88"/>
@@ -98,7 +98,7 @@
         </scene>
         <scene sceneID="28">
             <objects>
-                <viewController id="29" sceneMemberID="viewController" storyboardIdentifier="MoreDetailsViewController">
+                <viewController id="29" sceneMemberID="viewController" storyboardIdentifier="MoreDetailsViewController" customClass="ActivityUIViewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="26"/>
                         <viewControllerLayoutGuide type="bottom" id="27"/>
@@ -148,5 +148,6 @@
         <image name="groupfinder.png" width="33" height="42"/>
         <image name="prayer.png" width="47" height="35"/>
         <image name="give.png" width="44" height="35"/>
+        <image name="noprofile.png" width="223" height="223"/>
     </resources>
 </document>
