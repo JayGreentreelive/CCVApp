@@ -282,20 +282,20 @@
     <Compile Include="ContainerViewController.designer.cs">
       <DependentUpon>ContainerViewController.cs</DependentUpon>
     </Compile>
-    <Compile Include="Activities\About\AboutActivity.cs" />
-    <Compile Include="Activities\Give\GiveActivity.cs" />
-    <Compile Include="Activities\GroupFinder\GroupFinderActivity.cs" />
-    <Compile Include="Activities\News\NewsActivity.cs" />
-    <Compile Include="Activities\Notes\NotesActivity.cs" />
-    <Compile Include="Activities\Notes\NotesViewController.cs" />
-    <Compile Include="Activities\Prayer\PrayerActivity.cs" />
-    <Compile Include="Activities\Watch\WatchActivity.cs" />
-    <Compile Include="Activities\Activity.cs" />
     <Compile Include="NavToolbar.cs" />
-    <Compile Include="Activities\ActivityUIViewController.cs" />
-    <Compile Include="Activities\ActivityUIViewController.designer.cs">
-      <DependentUpon>ActivityUIViewController.cs</DependentUpon>
+    <Compile Include="Tasks\Notes\NotesViewController.cs" />
+    <Compile Include="Tasks\Task.cs" />
+    <Compile Include="Tasks\TaskUIViewController.cs" />
+    <Compile Include="Tasks\TaskUIViewController.designer.cs">
+      <DependentUpon>TaskUIViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="Tasks\About\AboutTask.cs" />
+    <Compile Include="Tasks\Give\GiveTask.cs" />
+    <Compile Include="Tasks\GroupFinder\GroupFinderTask.cs" />
+    <Compile Include="Tasks\News\NewsTask.cs" />
+    <Compile Include="Tasks\Notes\NotesTask.cs" />
+    <Compile Include="Tasks\Prayer\PrayerTask.cs" />
+    <Compile Include="Tasks\Watch\WatchTask.cs" />
   </ItemGroup>
   <Import Project="..\Notes\Notes.projitems" Label="Shared" Condition="Exists('..\Notes\Notes.projitems')" />
   <Import Project="..\..\RockMobile\RockMobile.projitems" Label="Shared" Condition="Exists('..\..\RockMobile\RockMobile.projitems')" />
@@ -304,13 +304,13 @@
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
     <InterfaceDefinition Include="MainStoryboard.storyboard" />
-    <InterfaceDefinition Include="Activities\About\AboutStoryboard_iPhone.storyboard" />
-    <InterfaceDefinition Include="Activities\News\NewsStoryboard_iPhone.storyboard" />
-    <InterfaceDefinition Include="Activities\Give\GiveStoryboard_iPhone.storyboard" />
+    <InterfaceDefinition Include="Tasks\About\AboutStoryboard_iPhone.storyboard" />
+    <InterfaceDefinition Include="Tasks\News\NewsStoryboard_iPhone.storyboard" />
+    <InterfaceDefinition Include="Tasks\Give\GiveStoryboard_iPhone.storyboard" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\Fonts\" />
-    <Folder Include="Activities\" />
+    <Folder Include="Tasks\" />
   </ItemGroup>
   <ItemGroup>
     <XamarinComponentReference Include="json.net">

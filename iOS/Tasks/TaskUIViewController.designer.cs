@@ -11,8 +11,8 @@ using System.CodeDom.Compiler;
 
 namespace iOS
 {
-	[Register ("ActivityUIViewController")]
-	partial class ActivityUIViewController
+	[Register ("TaskUIViewController")]
+	partial class TaskUIViewController
 	{
 		void ReleaseDesignerOutlets ()
 		{

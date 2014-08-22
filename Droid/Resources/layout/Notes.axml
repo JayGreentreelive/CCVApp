@@ -5,7 +5,8 @@
     android:layout_height="fill_parent"
     android:minWidth="25px"
     android:minHeight="25px"
-    android:id="@+id/linearLayout">
+    android:id="@+id/linearLayout"
+    android:background="#ff000000">
     <Button
         android:width="@android:dimen/notification_large_icon_width"
         android:height="@android:dimen/notification_large_icon_height"
@@ -17,7 +18,7 @@
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|center_vertical"
         android:id="@+id/progressBar"
-        android:indeterminate="true" />
+        android:indeterminate="true"
+        android:layout_centerHorizontal="true" />
 </LinearLayout>

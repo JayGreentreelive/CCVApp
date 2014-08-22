@@ -5,15 +5,15 @@ using System.CodeDom.Compiler;
 
 namespace iOS
 {
-	public partial class ActivityUIViewController : UIViewController
+	public partial class TaskUIViewController : UIViewController
 	{
         /// <summary>
-        /// The owning activity
+        /// The owning task
         /// </summary>
-        /// <value>The activity.</value>
-        public Activity Activity { get; set; }
+        /// <value>The task.</value>
+        public Task Task { get; set; }
 
-		public ActivityUIViewController (IntPtr handle) : base (handle)
+		public TaskUIViewController (IntPtr handle) : base (handle)
 		{
 		}
 
@@ -21,7 +21,7 @@ namespace iOS
         {
             base.TouchesEnded(touches, evt);
 
-            Activity.TouchesEnded( this, touches, evt );
+            Task.TouchesEnded( this, touches, evt );
         }
 	}
 }

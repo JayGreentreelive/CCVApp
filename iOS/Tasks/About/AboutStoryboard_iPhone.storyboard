@@ -6,7 +6,7 @@
     <scenes>
         <scene sceneID="4">
             <objects>
-                <viewController id="5" sceneMemberID="viewController" storyboardIdentifier="MainPageViewController" customClass="ActivityUIViewController">
+                <viewController id="5" sceneMemberID="viewController" storyboardIdentifier="MainPageViewController" customClass="TaskUIViewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="2"/>
                         <viewControllerLayoutGuide type="bottom" id="3"/>
@@ -34,7 +34,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="14" kind="custom" id="134" customClass="ActivityTransition"/>
+                                    <segue destination="14" kind="custom" id="134" customClass="TaskTransition"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -50,7 +50,7 @@
         </scene>
         <scene sceneID="13">
             <objects>
-                <viewController id="14" sceneMemberID="viewController" storyboardIdentifier="DetailsPageViewController" customClass="ActivityUIViewController">
+                <viewController id="14" sceneMemberID="viewController" storyboardIdentifier="DetailsPageViewController" customClass="TaskUIViewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="11"/>
                         <viewControllerLayoutGuide type="bottom" id="12"/>
@@ -78,7 +78,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="94" kind="custom" id="150" customClass="ActivityTransition"/>
+                                    <segue destination="94" kind="custom" id="150" customClass="TaskTransition"/>
                                 </connections>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="156" id="114"/>
@@ -99,7 +99,7 @@
         </scene>
         <scene sceneID="93">
             <objects>
-                <viewController id="94" sceneMemberID="viewController" storyboardIdentifier="MoreDetailsViewController" customClass="ActivityUIViewController">
+                <viewController id="94" sceneMemberID="viewController" storyboardIdentifier="MoreDetailsViewController" customClass="TaskUIViewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="91"/>
                         <viewControllerLayoutGuide type="bottom" id="92"/>

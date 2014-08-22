@@ -4,11 +4,11 @@ using System.Drawing;
 
 namespace iOS
 {
-    public class NotesActivity : Activity
+    public class NotesTask : Task
     {
         NotesViewController NotesViewController { get; set; }
 
-        public NotesActivity( string storyboardName ) : base( storyboardName )
+        public NotesTask( string storyboardName ) : base( storyboardName )
         {
             NotesViewController = new NotesViewController( );
         }

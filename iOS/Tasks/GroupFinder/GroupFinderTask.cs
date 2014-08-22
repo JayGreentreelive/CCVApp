@@ -4,9 +4,9 @@ using System.Drawing;
 
 namespace iOS
 {
-    public class PrayerActivity : Activity
+    public class GroupFinderTask : Task
     {
-        public PrayerActivity( string storyboardName ) : base( storyboardName )
+        public GroupFinderTask( string storyboardName ) : base( storyboardName )
         {
         }
 

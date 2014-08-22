@@ -16,12 +16,12 @@ namespace Droid
         {
             base.OnCreate( bundle );
 
+            RockMobile.PlatformCommon.Droid.Context = this;
+
             // Set our view from the "main" layout resource
             SetContentView( Resource.Layout.Main );
 
-            // kick off our intent for the Notes activity
-            Intent intent = new Intent( this, typeof( NotesActivity ) );
-            StartActivity( intent );
+            ActionBar.Hide();
         }
     }
 }

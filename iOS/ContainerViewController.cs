@@ -37,13 +37,13 @@ namespace iOS
 	public partial class ContainerViewController : UIViewController
 	{
         /// <summary>
-        /// The activity currently being displayed.
+        /// The task currently being displayed.
         /// </summary>
-        Activity _CurrentActivity;
-        public Activity CurrentActivity { get { return _CurrentActivity; } }
+        Task _CurrentTask;
+        public Task CurrentTask { get { return _CurrentTask; } }
 
         /// <summary>
-        /// Each activity is placed as a child within this SubNavigation controller.
+        /// Each task is placed as a child within this SubNavigation controller.
         /// Instead of using a NavigationBar to go back, however, they use the SubNavToolbar.
         /// </summary>
         /// <value>The sub navigation controller.</value>
@@ -51,15 +51,15 @@ namespace iOS
         public NavToolbar SubNavToolbar { get; set; }
 
         /// <summary>
-        /// True when the controller within an activity is animating (from a navigate forward/backward)
+        /// True when the controller within an task is animating (from a navigate forward/backward)
         /// This is tracked so we don't allow multiple navigation requests at once (like if a user spammed the back button)
         /// </summary>
-        /// <value><c>true</c> if activity controller animating; otherwise, <c>false</c>.</value>
-        bool ActivityControllerAnimating { get; set; }
+        /// <value><c>true</c> if task controller animating; otherwise, <c>false</c>.</value>
+        bool TaskControllerAnimating { get; set; }
 
 		public ContainerViewController (IntPtr handle) : base (handle)
 		{
-            ActivityTransition.ContainerViewController = this;
+            TaskTransition.ContainerViewController = this;
 		}
 
         public override void ViewDidLoad()
@@ -67,7 +67,7 @@ namespace iOS
             base.ViewDidLoad();
 
             // container view must have a black background so that the ticks
-            // before the activity displays don't cause a flash
+            // before the task displays don't cause a flash
             View.BackgroundColor = UIColor.Black;
 
             // First setup the SpringboardReveal button, which rests in the upper left
@@ -105,7 +105,7 @@ namespace iOS
                 SubNavigationController.View.Frame.Height - NavigationController.NavigationBar.Frame.Height);
 
 
-            // setup the toolbar that will manage activity navigation and any other tasks the activity needs
+            // setup the toolbar that will manage task navigation and any other tasks the task needs
             SubNavToolbar = new NavToolbar();
             SubNavToolbar.Frame = new RectangleF( 0, SubNavigationController.View.Frame.Height, View.Frame.Width, CCVApp.Config.SubNavToolbar.Height);
             SubNavToolbar.BarTintColor = RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.SubNavToolbar.BackgroundColor );
@@ -127,9 +127,9 @@ namespace iOS
             backButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
                     // don't allow multiple back presses at once
-                    if( ActivityControllerAnimating == false )
+                    if( TaskControllerAnimating == false )
                     {
-                        ActivityControllerAnimating = true;
+                        TaskControllerAnimating = true;
                         SubNavigationController.PopViewControllerAnimated( true );
                     }
                 };
@@ -146,10 +146,10 @@ namespace iOS
 
         public void NavWillShowViewController( UIViewController viewController )
         {
-            // let the current activity know which of its view controllers was just shown.
-            if( CurrentActivity != null )
+            // let the current task know which of its view controllers was just shown.
+            if( CurrentTask != null )
             {
-                CurrentActivity.WillShowViewController( viewController );
+                CurrentTask.WillShowViewController( viewController );
             }
         }
 
@@ -157,76 +157,76 @@ namespace iOS
         {
             // once the animation is COMPLETE, we can turn off the flag
             // and allow another back press.
-            ActivityControllerAnimating = false;
+            TaskControllerAnimating = false;
         }
 
-        public void ActivateActivity( Activity activity )
+        public void ActivateTask( Task task )
         {
             // reset our stack before changing activities
             SubNavigationController.PopToRootViewController( false );
 
-            if( CurrentActivity != null )
+            if( CurrentTask != null )
             {
-                CurrentActivity.MakeInActive( );
+                CurrentTask.MakeInActive( );
             }
 
-            _CurrentActivity = activity;
+            _CurrentTask = task;
 
-            CurrentActivity.MakeActive( SubNavigationController, SubNavToolbar );
+            CurrentTask.MakeActive( SubNavigationController, SubNavToolbar );
         }
 
         public void PerformSegue( UIViewController sourceViewController, UIViewController destinationViewController )
         {
-            // notify the active activity regarding the change.
-            if( CurrentActivity != null )
+            // notify the active task regarding the change.
+            if( CurrentTask != null )
             {
-                // take this opportunity to give the presenting view controller a pointer to the active activity
+                // take this opportunity to give the presenting view controller a pointer to the active task
                 // so it can receive callbacks.
-                ActivityUIViewController viewController = destinationViewController as ActivityUIViewController;
+                TaskUIViewController viewController = destinationViewController as TaskUIViewController;
                 if( viewController == null )
                 {
-                    throw new InvalidCastException( "View Controllers used by Activities must be of type ActivityUIViewController" );
+                    throw new InvalidCastException( "View Controllers used by Activities must be of type TaskUIViewController" );
                 }
 
-                viewController.Activity = CurrentActivity;
+                viewController.Task = CurrentTask;
                 SubNavigationController.PushViewController( destinationViewController, true );
             }
         }
 
         public void OnResignActive()
         {
-            if( CurrentActivity != null )
+            if( CurrentTask != null )
             {
-                CurrentActivity.AppOnResignActive( );
+                CurrentTask.AppOnResignActive( );
             }
         }
 
         public void DidEnterBackground( )
         {
-            if( CurrentActivity != null )
+            if( CurrentTask != null )
             {
-                CurrentActivity.AppDidEnterBackground( );
+                CurrentTask.AppDidEnterBackground( );
             }
         }
 
         public void WillTerminate( )
         {
-            if( CurrentActivity != null )
+            if( CurrentTask != null )
             {
-                CurrentActivity.AppWillTerminate( );
+                CurrentTask.AppWillTerminate( );
             }
         }
 	}
 
-    // Define our activity transition class that notifies the container
+    // Define our task transition class that notifies the container
     // about the transition, so it can ensure the next view controller receives
-    // a reference to the active activity.
-    [Register("ActivityTransition")]
-    class ActivityTransition : UIStoryboardSegue
+    // a reference to the active task.
+    [Register("TaskTransition")]
+    class TaskTransition : UIStoryboardSegue
     {
         public static ContainerViewController ContainerViewController { get; set; }
 
-        public ActivityTransition( IntPtr handle ) : base( handle )
+        public TaskTransition( IntPtr handle ) : base( handle )
         {
         }
 

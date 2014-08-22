@@ -4,11 +4,11 @@ using System.Drawing;
 
 namespace iOS
 {
-    public class GiveActivity : Activity
+    public class GiveTask : Task
     {
         UIViewController MainPageVC { get; set; }
 
-        public GiveActivity( string storyboardName ) : base( storyboardName )
+        public GiveTask( string storyboardName ) : base( storyboardName )
         {
             MainPageVC = Storyboard.InstantiateViewController( "MainPageViewController" ) as UIViewController;
         }

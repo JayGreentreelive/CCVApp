@@ -5,27 +5,22 @@ using MonoTouch.Foundation;
 
 namespace iOS
 {
-    public class AboutActivity : Activity
+    public class NewsTask : Task
     {
-        protected ActivityUIViewController MainPageVC { get; set; }
+        TaskUIViewController MainPageVC { get; set; }
 
-        protected UIViewController CurrentVC { get; set; }
-
-        public AboutActivity( string storyboardName ) : base( storyboardName )
+        public NewsTask( string storyboardName ) : base( storyboardName )
         {
-            MainPageVC = Storyboard.InstantiateViewController( "MainPageViewController" ) as ActivityUIViewController;
-            MainPageVC.Activity = this;
+            MainPageVC = Storyboard.InstantiateViewController( "MainPageViewController" ) as TaskUIViewController;
+            MainPageVC.Task = this;
         }
 
         public override void MakeActive( UIViewController parentViewController, NavToolbar navToolbar )
         {
             base.MakeActive( parentViewController, navToolbar );
 
-            // for now always make the main page the starting vc
-            CurrentVC = MainPageVC;
-
             // set our current page as root
-            ((UINavigationController)parentViewController).PushViewController(CurrentVC, false);
+            ((UINavigationController)parentViewController).PushViewController(MainPageVC, false);
         }
 
         public override void WillShowViewController(UIViewController viewController)
@@ -43,9 +38,9 @@ namespace iOS
             }
         }
 
-        public override void TouchesEnded(ActivityUIViewController activityUIViewController, NSSet touches, UIEvent evt)
+        public override void TouchesEnded(TaskUIViewController taskUIViewController, NSSet touches, UIEvent evt)
         {
-            base.TouchesEnded(activityUIViewController, touches, evt);
+            base.TouchesEnded(taskUIViewController, touches, evt);
 
             // if they touched a dead area, reveal the nav toolbar again.
             NavToolbar.RevealForTime( 3.0f );
@@ -65,8 +60,6 @@ namespace iOS
             {
                 MainPageVC.RemoveFromParentViewController( );
             }
-
-            CurrentVC = null;
         }
 
         public override void AppOnResignActive( )
@@ -75,3 +68,4 @@ namespace iOS
         }
     }
 }
+

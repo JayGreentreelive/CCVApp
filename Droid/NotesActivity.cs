@@ -25,16 +25,16 @@ namespace Droid
         /// <summary>
         /// The notes activity that needs notification of a double tap.
         /// </summary>
-        public NotesActivity NotesActivity { get; set; }
+        public NotesFragment Notes { get; set; }
 
-        public DoubleTap( NotesActivity notesActivity )
+        public DoubleTap( NotesFragment notes )
         {
-            NotesActivity = notesActivity;
+            Notes = notes;
         }
 
         public override bool OnDoubleTap(MotionEvent e)
         {
-            return NotesActivity.OnDoubleTap( e );
+            return Notes.OnDoubleTap( e );
         }
     }
 
@@ -116,8 +116,8 @@ namespace Droid
         }
     }
 
-    [Activity( Label = "NotesActivity" )]            
-    public class NotesActivity : Activity, View.IOnTouchListener
+    //[Fragment( Label = "NotesFragment" )]            
+    public class NotesFragment : Fragment, View.IOnTouchListener
     {
         /// <summary>
         /// Tags for storing the NoteScript and Style XML during an orientation change.
@@ -190,40 +190,33 @@ namespace Droid
             return true;
         }
 
-        protected override void OnCreate( Bundle bundle )
+        public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-            base.OnCreate( bundle );
+            base.OnCreateView( inflater, container, savedInstanceState );
 
-            RockMobile.PlatformCommon.Droid.Context = this;
-
-            // Set our view from the "main" layout resource
-            SetContentView( Resource.Layout.Notes );
+            // get the root control from our .axml
+            var layout = inflater.Inflate(Resource.Layout.Notes, container, false) as LinearLayout;
 
             // create our overridden lockable scroll view
-            ScrollView = new LockableScrollView( this );
+            ScrollView = new LockableScrollView( RockMobile.PlatformCommon.Droid.Context );
             ScrollView.ScrollBarStyle = ScrollbarStyles.InsideInset;
             ScrollView.OverScrollMode = OverScrollMode.Always;
             ScrollView.VerticalScrollbarPosition = ScrollbarPosition.Default;
-            ScrollView.Focusable = false;
-            ScrollView.FocusableInTouchMode = false;
-            ScrollView.DescendantFocusability = DescendantFocusability.AfterDescendants;
 
             // add it to our main layout.
-            LinearLayout layout = FindViewById<LinearLayout>( Resource.Id.linearLayout );
             layout.AddView( ScrollView );
 
-            RefreshButton = FindViewById<Button>( Resource.Id.refreshButton );
+            RefreshButton = layout.FindViewById<Button>( Resource.Id.refreshButton );
 
-            Indicator = FindViewById<ProgressBar>( Resource.Id.progressBar );
+            Indicator = layout.FindViewById<ProgressBar>( Resource.Id.progressBar );
             Indicator.Visibility = ViewStates.Gone;
 
-            ScrollViewLayout = new RelativeLayout( this );
+            ScrollViewLayout = new RelativeLayout( RockMobile.PlatformCommon.Droid.Context );
             ScrollView.AddView( ScrollViewLayout );
             ScrollViewLayout.SetOnTouchListener( this );
-            ScrollViewLayout.DescendantFocusability = DescendantFocusability.AfterDescendants;
 
 
-            GestureDetector = new GestureDetector( this, new DoubleTap( this ) );
+            GestureDetector = new GestureDetector( RockMobile.PlatformCommon.Droid.Context, new DoubleTap( this ) );
 
             RefreshButton.Click += (object sender, EventArgs e ) =>
             {
@@ -231,20 +224,22 @@ namespace Droid
             };
 
             // get our power management control
-            PowerManager pm = PowerManager.FromContext( this );
+            PowerManager pm = PowerManager.FromContext( RockMobile.PlatformCommon.Droid.Context );
             WakeLock = pm.NewWakeLock(WakeLockFlags.Full, "Notes");
 
             //
             NoteXml = null;
             StyleSheetXml = null;
-            if( bundle != null )
+            if( savedInstanceState != null )
             {
-                NoteXml = bundle.GetString( XML_NOTE_KEY );
-                StyleSheetXml = bundle.GetString( XML_STYLE_KEY );
+                NoteXml = savedInstanceState.GetString( XML_NOTE_KEY );
+                StyleSheetXml = savedInstanceState.GetString( XML_STYLE_KEY );
             }
+
+            return layout;
         }
 
-        protected override void OnResume()
+        public override void OnResume()
         {
             // when we're resuming, take a lock on the device sleeping to prevent it
             base.OnResume( );
@@ -255,7 +250,7 @@ namespace Droid
             CreateNotes( NoteXml, StyleSheetXml );
         }
 
-        protected override void OnPause()
+        public override void OnPause()
         {
             // when we're being backgrounded, release our lock so we don't force
             // the device to stay on
@@ -273,7 +268,7 @@ namespace Droid
             }
         }
 
-        protected override void OnDestroy()
+        public override void OnDestroy()
         {
             base.OnDestroy( );
 
@@ -284,7 +279,7 @@ namespace Droid
             }
         }
 
-        protected override void OnSaveInstanceState( Bundle outState )
+        public override void OnSaveInstanceState( Bundle outState )
         {
             base.OnSaveInstanceState( outState );
 
@@ -306,8 +301,6 @@ namespace Droid
             {
                 return true;
             }
-
-            base.OnTouchEvent( e );
 
             switch( e.Action )
             {
@@ -417,7 +410,7 @@ namespace Droid
             }
             else
             {
-                RunOnUiThread( delegate
+                RockMobile.Threading.UIThreading.PerformOnUIThread( delegate
                     {
                         Note = note;
 
@@ -456,9 +449,9 @@ namespace Droid
 
         protected void ReportException( string errorMsg, Exception e )
         {
-            RunOnUiThread( delegate
+            RockMobile.Threading.UIThreading.PerformOnUIThread( delegate
                 {
-                    AlertDialog.Builder dlgAlert = new AlertDialog.Builder( this );                      
+                    AlertDialog.Builder dlgAlert = new AlertDialog.Builder( RockMobile.PlatformCommon.Droid.Context );                      
                     dlgAlert.SetTitle( "Note Error" ); 
                     dlgAlert.SetMessage( errorMsg + "\n" + e.Message ); 
                     dlgAlert.SetPositiveButton( "Ok", delegate(object sender, DialogClickEventArgs ev )

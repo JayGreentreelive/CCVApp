@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linear_layout"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:minWidth="25px"
+    android:minHeight="25px">
+    <ImageView
+        android:src="@android:drawable/ic_menu_gallery"
+        android:layout_width="76.7dp"
+        android:layout_height="62.0dp"
+        android:id="@+id/imageView1" />
+    <Button
+        android:text="News"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageView1"
+        android:id="@+id/news_button" />
+    <Button
+        android:text="Group Finder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/news_button"
+        android:id="@+id/groupfinder_button" />
+    <Button
+        android:text="Prayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/groupfinder_button"
+        android:id="@+id/prayer_button" />
+    <Button
+        android:text="Episodes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/prayer_button"
+        android:id="@+id/episodes_button" />
+    <Button
+        android:text="About"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/episodes_button"
+        android:id="@+id/about_button" />
+</RelativeLayout>

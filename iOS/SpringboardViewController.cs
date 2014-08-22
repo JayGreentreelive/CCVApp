@@ -18,7 +18,7 @@ namespace iOS
 
         /// <summary>
         /// Represents a selectable element on the springboard.
-        /// Contains its button and the associated activity.
+        /// Contains its button and the associated task.
         /// </summary>
         protected class SpringboardElement
         {
@@ -29,14 +29,14 @@ namespace iOS
             public SpringboardViewController SpringboardViewController { get; set; }
 
             /// <summary>
-            /// The activity that is launched by this element.
+            /// The task that is launched by this element.
             /// </summary>
-            /// <value>The activity.</value>
-            public Activity Activity { get; set; }
+            /// <value>The task.</value>
+            public Task Task { get; set; }
 
             /// <summary>
             /// The view that rests behind the button, graphic and text, and is colored when 
-            /// the activity is active.
+            /// the task is active.
             /// </summary>
             /// <value>The backing view.</value>
             public UIView BackingView { get; set; }
@@ -49,12 +49,12 @@ namespace iOS
             /// <value>The button.</value>
             public UIButton Button { get; set; }
 
-            public SpringboardElement( SpringboardViewController controller, Activity activity, UIButton button, string imageName )
+            public SpringboardElement( SpringboardViewController controller, Task task, UIButton button, string imageName )
             {
                 UIView parentView = button.Superview;
 
                 SpringboardViewController = controller;
-                Activity = activity;
+                Task = task;
                 Button = button;
 
                 Button.TouchUpInside += (object sender, EventArgs e) => 
@@ -121,7 +121,7 @@ namespace iOS
 
         public override bool ShouldAutorotate()
         {
-            // We only want to allow landscape orientation when in the NotesActivity.
+            // We only want to allow landscape orientation when in the NotesTask.
             // All other times the app should be in Portrait mode.
             switch( UIDevice.CurrentDevice.Orientation )
             {
@@ -135,7 +135,7 @@ namespace iOS
                 case UIDeviceOrientation.LandscapeRight:
                 {
                     // only allow landscape for the notes.
-                    if( (NavViewController.CurrentActivity as NotesActivity) != null && NavViewController.IsSpringboardClosed( ) )
+                    if( (NavViewController.CurrentTask as NotesTask) != null && NavViewController.IsSpringboardClosed( ) )
                     {
                         NavViewController.SetNavigationBarHidden( true, true );
                         return true;
@@ -152,11 +152,11 @@ namespace iOS
             base.ViewDidLoad( );
 
             // Instantiate all activities
-            Elements.Add( new SpringboardElement( this, new NewsActivity( "NewsStoryboard_iPhone" )  , NewsButton       , "watch.png" ) );
-            Elements.Add( new SpringboardElement( this, new NotesActivity( "" )                      , EpisodesButton   , "notes.png" ) );
-            Elements.Add( new SpringboardElement( this, new GiveActivity( "GiveStoryboard_iPhone" )  , GroupFinderButton, "groupfinder.png" ) );
-            Elements.Add( new SpringboardElement( this, new GiveActivity( "GiveStoryboard_iPhone" )  , PrayerButton     , "prayer.png" ) );
-            Elements.Add( new SpringboardElement( this, new AboutActivity( "AboutStoryboard_iPhone" ), AboutButton      , "info.png" ) );
+            Elements.Add( new SpringboardElement( this, new NewsTask( "NewsStoryboard_iPhone" )  , NewsButton       , "watch.png" ) );
+            Elements.Add( new SpringboardElement( this, new NotesTask( "" )                      , EpisodesButton   , "notes.png" ) );
+            Elements.Add( new SpringboardElement( this, new GiveTask( "GiveStoryboard_iPhone" )  , GroupFinderButton, "groupfinder.png" ) );
+            Elements.Add( new SpringboardElement( this, new GiveTask( "GiveStoryboard_iPhone" )  , PrayerButton     , "prayer.png" ) );
+            Elements.Add( new SpringboardElement( this, new AboutTask( "AboutStoryboard_iPhone" ), AboutButton      , "info.png" ) );
 
             // set the profile image.
             string imagePath = NSBundle.MainBundle.BundlePath + "/" + CCVApp.Config.Springboard.NoProfileFile;
@@ -203,9 +203,9 @@ namespace iOS
                 }
             }
 
-            // activate the element and its associated activity
+            // activate the element and its associated task
             activeElement.BackingView.BackgroundColor = RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( 0x7a1315FF);
-            NavViewController.ActivateActivity( activeElement.Activity );
+            NavViewController.ActivateTask( activeElement.Task );
         }
 
         public override void TouchesEnded(NSSet touches, UIEvent evt)
@@ -229,7 +229,7 @@ namespace iOS
         {
             base.ViewDidAppear(animated);
 
-            // start up the app with the first activity
+            // start up the app with the first task
             ActivateElement( Elements[0] );
         }
 

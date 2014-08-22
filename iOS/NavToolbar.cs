@@ -16,13 +16,13 @@ namespace iOS
         // therefore there cannot be a race condition, since everything gets serialized to a single thread.
 
         /// <summary>
-        /// The button used to go back a page in an activity.
+        /// The button used to go back a page in an task.
         /// </summary>
         /// <value>The back button.</value>
         UIBarButtonItem BackButton { get; set; }
 
         /// <summary>
-        /// Button used when an activity wishes to let the user share something
+        /// Button used when an task wishes to let the user share something
         /// </summary>
         /// <value>The share button.</value>
         UIBarButtonItem ShareButton { get; set; }
@@ -75,7 +75,7 @@ namespace iOS
         void UpdateButtons( )
         {
             // This sets the valid buttons TO the toolbar.
-            // Since an activity could request one, the other, or both,
+            // Since an task could request one, the other, or both,
             // we build a list and then add that list to the toolbar.
             List<UIBarButtonItem> itemList = new List<UIBarButtonItem>( );
 

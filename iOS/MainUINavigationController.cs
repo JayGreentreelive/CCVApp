@@ -32,10 +32,10 @@ namespace iOS
         protected ContainerViewController Container { get; set; }
 
         /// <summary>
-        /// A wrapper for Container.CurrentActivity, since Container is protected.
+        /// A wrapper for Container.CurrentTask, since Container is protected.
         /// </summary>
-        /// <value>The current activity.</value>
-        public Activity CurrentActivity { get { return Container != null ? Container.CurrentActivity : null; } }
+        /// <value>The current task.</value>
+        public Task CurrentTask { get { return Container != null ? Container.CurrentTask : null; } }
 
 		public MainUINavigationController (IntPtr handle) : base (handle)
 		{
@@ -61,7 +61,7 @@ namespace iOS
             base.ViewDidLoad();
 
             // MainNavigationController must have a black background so that the ticks
-            // before the activity displays don't cause a flash
+            // before the task displays don't cause a flash
             View.BackgroundColor = UIColor.Black;
 
             // setup the style of the nav bar
@@ -92,9 +92,9 @@ namespace iOS
             RevealSpringboard( !SpringboardRevealed );
         }
 
-        public void ActivateActivity( Activity activity )
+        public void ActivateTask( Task task )
         {
-            Container.ActivateActivity( activity );
+            Container.ActivateTask( task );
 
             PopToRootViewController( false );
 

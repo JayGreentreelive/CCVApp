@@ -4,9 +4,9 @@ using System.Drawing;
 
 namespace iOS
 {
-    public class WatchActivity : Activity
+    public class WatchTask : Task
     {
-        public WatchActivity( string storyboardName ) : base( storyboardName )
+        public WatchTask( string storyboardName ) : base( storyboardName )
         {
         }
 
