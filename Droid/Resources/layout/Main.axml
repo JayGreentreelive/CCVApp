@@ -16,8 +16,9 @@
         android:layout_height="match_parent"
         android:layout_weight="1" />
     <FrameLayout
-        android:id="@+id/notes"
+        android:id="@+id/activetask"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:background="#FF000000" />
 </RelativeLayout>
