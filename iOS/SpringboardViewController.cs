@@ -204,7 +204,7 @@ namespace iOS
             }
 
             // activate the element and its associated task
-            activeElement.BackingView.BackgroundColor = RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( 0x7a1315FF);
+            activeElement.BackingView.BackgroundColor = RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.Springboard.Element_SelectedColor );
             NavViewController.ActivateTask( activeElement.Task );
         }
 

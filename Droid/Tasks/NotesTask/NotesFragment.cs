@@ -119,8 +119,7 @@ namespace Droid
                     return false;
                 }
             }
-
-            //[Fragment( Label = "NotesFragment" )]            
+                       
             public class NotesFragment : TaskFragment, View.IOnTouchListener
             {
                 /// <summary>

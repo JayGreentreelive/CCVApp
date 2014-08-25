@@ -14,11 +14,52 @@ using Android.Widget;
 
 namespace Droid
 {
-    public class Springboard : Fragment
+    /// <summary>
+    /// The springboard acts as the core navigation for the user. From here
+    /// they may launch any of the app's activities.
+    /// </summary>
+    public class Springboard : Fragment, View.IOnTouchListener
     {
+        /// <summary>
+        /// The top navigation bar that acts as the container for Tasks
+        /// </summary>
+        /// <value>The navbar fragment.</value>
         protected NavbarFragment NavbarFragment { get; set; }
-        protected Tasks.News.NewsTask News { get; set; }
-        protected Tasks.Notes.NotesTask Notes { get; set; }
+
+        protected class SpringboardElement
+        {
+            public Tasks.Task Task { get; set; }
+
+            public RelativeLayout Layout { get; set; }
+            public int LayoutId { get; set; }
+
+            public Button Button { get; set; }
+            public int ButtonId { get; set; }
+
+            public ImageView Icon { get; set; }
+            public int IconId { get; set; }
+
+            public SpringboardElement( Tasks.Task task, int layoutId, int iconId, int buttonId )
+            {
+                Task = task;
+                LayoutId = layoutId;
+                ButtonId = buttonId;
+                IconId = iconId;
+            }
+
+            public void OnCreateView( View parentView, EventHandler buttonDelegate )
+            {
+                Layout = parentView.FindViewById<RelativeLayout>( LayoutId );
+                Icon = parentView.FindViewById<ImageView>( IconId );
+                Button = parentView.FindViewById<Button>( ButtonId );
+
+                Icon.SetX( Icon.GetX() - Icon.Drawable.IntrinsicWidth / 2 );
+
+                Button.Background = null;
+                Button.Click += buttonDelegate;
+            }
+        }
+        protected List<SpringboardElement> Elements { get; set; }
 
         public override void OnCreate( Bundle savedInstanceState )
         {
@@ -39,8 +80,12 @@ namespace Droid
             }
 
             // create our tasks
-            News = new Droid.Tasks.News.NewsTask( NavbarFragment );
-            Notes = new Droid.Tasks.Notes.NotesTask( NavbarFragment );
+            Elements = new List<SpringboardElement>();
+            Elements.Add( new SpringboardElement( new Droid.Tasks.News.NewsTask( NavbarFragment ), Resource.Id.springboard_news_frame, Resource.Id.springboard_news_icon, Resource.Id.springboard_news_button ) );
+            Elements.Add( new SpringboardElement( new Droid.Tasks.Placeholder.PlaceholderTask( NavbarFragment ), Resource.Id.springboard_groupfinder_frame, Resource.Id.springboard_groupfinder_icon, Resource.Id.springboard_groupfinder_button ) );
+            Elements.Add( new SpringboardElement( new Droid.Tasks.Placeholder.PlaceholderTask( NavbarFragment ), Resource.Id.springboard_prayer_frame, Resource.Id.springboard_prayer_icon, Resource.Id.springboard_prayer_button ) );
+            Elements.Add( new SpringboardElement( new Droid.Tasks.Notes.NotesTask( NavbarFragment ), Resource.Id.springboard_notes_frame, Resource.Id.springboard_notes_icon, Resource.Id.springboard_notes_button ) );
+            Elements.Add( new SpringboardElement( new Droid.Tasks.Placeholder.PlaceholderTask( NavbarFragment ), Resource.Id.springboard_about_frame, Resource.Id.springboard_about_icon, Resource.Id.springboard_about_button ) );
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -48,28 +93,52 @@ namespace Droid
             // grab our resource file
             View view = inflater.Inflate(Resource.Layout.Springboard, container, false);
 
-            // setup the buttons
-            Button newsButton = view.FindViewById<Button>( Resource.Id.news_button );
-            Button notesButton = view.FindViewById<Button>( Resource.Id.episodes_button );
+            // let the springboard elements setup their buttons
+            foreach( SpringboardElement element in Elements )
+            {
+                element.OnCreateView( view, delegate { ActivateElement( element ); } );
+            }
 
-            newsButton.Click += (object sender, EventArgs e) => 
-                {
-                    NavbarFragment.SetActiveTask( News );
-                };
-
-            notesButton.Click += (object sender, EventArgs e) => 
-                {
-                    NavbarFragment.SetActiveTask( Notes );
-                };
+            view.SetOnTouchListener( this );
+            view.SetBackgroundColor( RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.Springboard.BackgroundColor ) );
 
             return view;
+        }
+
+        public bool OnTouch( View v, MotionEvent e )
+        {
+            switch( e.Action )
+            {
+                case MotionEventActions.Up:
+                {
+                    NavbarFragment.RevealSpringboard( false );
+
+                    break;
+                }
+            }
+            return true;
         }
 
         public void SetActiveTaskFrame( FrameLayout layout )
         {
             // once we receive the active task frame, we can start our task
             NavbarFragment.ActiveTaskFrame = layout;
-            NavbarFragment.SetActiveTask( News );
+
+            ActivateElement( Elements[0] );
+        }
+
+        protected void ActivateElement( SpringboardElement activeElement )
+        {
+            foreach( SpringboardElement element in Elements )
+            {
+                if( activeElement != element )
+                {
+                    element.Layout.SetBackgroundColor( RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( 0x00000000 ) );
+                }
+            }
+
+            activeElement.Layout.SetBackgroundColor( RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.Springboard.Element_SelectedColor ) );
+            NavbarFragment.SetActiveTask( activeElement.Task );
         }
 
         public override void OnStop()
@@ -83,4 +152,3 @@ namespace Droid
         }
     }
 }
-

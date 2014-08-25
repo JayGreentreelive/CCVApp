@@ -1,28 +1,34 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.094c904b" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.192.168.56.101:5555" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Droid/NavbarFragment.cs">
     <Files>
-      <File FileName="Droid/NavbarFragment.cs" Line="1" Column="1" />
-      <File FileName="Droid/Tasks/NewsTask/NewsTask.cs" Line="10" Column="10" />
-      <File FileName="Droid/Tasks/NewsTask/NewsPrimaryFragment.cs" Line="43" Column="43" />
-      <File FileName="Droid/Tasks/NewsTask/NewsDetailsFragment.cs" Line="78" Column="78" />
-      <File FileName="Droid/MainActivity.cs" Line="39" Column="39" />
+      <File FileName="Droid/NavbarFragment.cs" Line="23" Column="23" />
+      <File FileName="Droid/Springboard.cs" Line="30" Column="30" />
+      <File FileName="Droid/Tasks/PlaceholderTask.cs" Line="1" Column="1" />
+      <File FileName="Droid/Tasks/NewsTask/NewsTask.cs" Line="1" Column="1" />
+      <File FileName="Droid/Tasks/NotesTask/NotesTask.cs" Line="1" Column="1" />
+      <File FileName="Droid/Tasks/NotesTask/NotesFragment.cs" Line="1" Column="1" />
+      <File FileName="Config/Settings.cs" Line="30" Column="30" />
+      <File FileName="../RockMobile/PlatformUI/Droid/DroidRevealLabel.cs" Line="45" Column="45" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
+          <Node name="Config" expanded="True" />
           <Node name="Droid" expanded="True">
             <Node name="Resources" expanded="True">
-              <Node name="layout" expanded="True">
-                <Node name="Main.axml" selected="True" />
-              </Node>
-            </Node>
-            <Node name="Tasks" expanded="True">
-              <Node name="NewsTask" expanded="True" />
-              <Node name="NotesTask" expanded="True" />
+              <Node name="layout" expanded="True" />
             </Node>
           </Node>
           <Node name="iOS" expanded="True" />
+          <Node name="RockMobile" expanded="True">
+            <Node name="PlatformUI" expanded="True">
+              <Node name="Droid" expanded="True">
+                <Node name="DroidNative" expanded="True" />
+                <Node name="DroidRevealLabel.cs" selected="True" />
+              </Node>
+            </Node>
+          </Node>
         </State>
       </Pad>
     </Pads>

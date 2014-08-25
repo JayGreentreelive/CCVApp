@@ -15,6 +15,9 @@ using Android.Animation;
 
 namespace Droid
 {
+    /// <summary>
+    /// Forwards the finished animation notification to the actual navbar fragment
+    /// </summary>
     public class NavbarAnimationListener : Android.Animation.AnimatorListenerAdapter
     {
         public NavbarFragment NavbarFragment { get; set; }
@@ -28,12 +31,33 @@ namespace Droid
         }
     }
 
+    /// <summary>
+    /// The navbar fragment acts as the container for the active task.
+    /// </summary>
     public class NavbarFragment : Fragment, Android.Animation.ValueAnimator.IAnimatorUpdateListener
     {
+        /// <summary>
+        /// Reference to the currently active task
+        /// </summary>
+        /// <value>The active task.</value>
         protected Tasks.Task ActiveTask { get; set; }
 
+        /// <summary>
+        /// True when the navbar fragment and task are slid "out" to reveal the springboard
+        /// </summary>
+        /// <value><c>true</c> if springboard revealed; otherwise, <c>false</c>.</value>
         protected bool SpringboardRevealed { get; set; }
+
+        /// <summary>
+        /// True when the navbar fragment and container are in the process of sliding in our out
+        /// </summary>
+        /// <value><c>true</c> if animating; otherwise, <c>false</c>.</value>
         protected bool Animating { get; set; }
+
+        /// <summary>
+        /// The frame that stores the active task
+        /// </summary>
+        /// <value>The active task frame.</value>
         public FrameLayout ActiveTaskFrame { get; set; }
 
         public override void OnCreate( Bundle savedInstanceState )
@@ -49,19 +73,24 @@ namespace Droid
                 return null;
             }
 
+            //The navbar should basically be a background with logo and a springboard reveal button in the upper left.
             RelativeLayout relativeLayout = new RelativeLayout( Activity );
             relativeLayout.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
 
+            // create the background
             View view = new View( Activity );
-            view.SetBackgroundColor( RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( 0xFF0000FF ) );
+            view.SetBackgroundResource( Resource.Drawable.ccvLogo );
             view.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
-            view.LayoutParameters.Height = 300;
+            view.LayoutParameters.Height = view.Background.IntrinsicHeight;
             relativeLayout.AddView( view );
 
-            Button springboardReveal = new Button( Activity );
+            // create the springboard reveal button
+            ImageButton springboardReveal = new ImageButton( Activity );
+            springboardReveal.SetImageResource(Resource.Drawable.cheeseburger);
+            springboardReveal.Background = null;
             springboardReveal.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-            springboardReveal.LayoutParameters.Width = 300;
-            springboardReveal.LayoutParameters.Height = 300;
+            springboardReveal.SetX( 10 );
+            springboardReveal.SetY( (view.Background.IntrinsicHeight - springboardReveal.Drawable.IntrinsicHeight) / 2 );
             relativeLayout.AddView( springboardReveal );
 
             springboardReveal.Click += (object sender, System.EventArgs e) => 
@@ -155,4 +184,3 @@ namespace Droid
         }
     }
 }
-

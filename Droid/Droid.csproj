@@ -25,8 +25,8 @@
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AndroidLinkMode>None</AndroidLinkMode>
     <ConsolePause>false</ConsolePause>
+    <AndroidLinkMode>None</AndroidLinkMode>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
@@ -61,6 +61,7 @@
     <Compile Include="Tasks\TaskFragment.cs" />
     <Compile Include="Tasks\NewsTask\NewsDetailsFragment.cs" />
     <Compile Include="Tasks\NewsTask\NewsPrimaryFragment.cs" />
+    <Compile Include="Tasks\PlaceholderTask.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
@@ -73,9 +74,31 @@
     <AndroidResource Include="Resources\layout\Springboard.axml" />
     <AndroidResource Include="Resources\layout\PrimaryNews.axml" />
     <AndroidResource Include="Resources\layout\News_Details.axml" />
+    <AndroidResource Include="..\Assets\cheeseburger%402x.png">
+      <Link>Resources\drawable\cheeseburger.png</Link>
+    </AndroidResource>
+    <AndroidResource Include="..\Assets\ccvLogo%402x.png">
+      <Link>Resources\drawable\ccvLogo.png</Link>
+    </AndroidResource>
+    <AndroidResource Include="..\Assets\info%402x.png">
+      <Link>Resources\drawable\info.png</Link>
+    </AndroidResource>
+    <AndroidResource Include="..\Assets\groupfinder%402x.png">
+      <Link>Resources\drawable\groupfinder.png</Link>
+    </AndroidResource>
+    <AndroidResource Include="..\Assets\prayer%402x.png">
+      <Link>Resources\drawable\prayer.png</Link>
+    </AndroidResource>
+    <AndroidResource Include="..\Assets\notes%402x.png">
+      <Link>Resources\drawable\notes.png</Link>
+    </AndroidResource>
+    <AndroidResource Include="..\Assets\noprofile%402x.png">
+      <Link>Resources\drawable\noprofile.png</Link>
+    </AndroidResource>
   </ItemGroup>
   <Import Project="..\Notes\Notes.projitems" Label="Shared" Condition="Exists('..\Notes\Notes.projitems')" />
   <Import Project="..\..\RockMobile\RockMobile.projitems" Label="Shared" Condition="Exists('..\..\RockMobile\RockMobile.projitems')" />
+  <Import Project="..\Config\Config.projitems" Label="Shared" Condition="Exists('..\Config\Config.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Assets\Fonts\" />

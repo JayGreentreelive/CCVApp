@@ -21,6 +21,16 @@ namespace CCVApp
             /// The X offset to place the LEFT EDGE of the element's text.
             /// </summary>
             public const int Element_LabelOffsetX = 40;
+
+            /// <summary>
+            /// The background color of a selected element.
+            /// </summary>
+            public const int Element_SelectedColor = 0x7a1315FF;
+
+            /// <summary>
+            /// The background color of the springboard.
+            /// </summary>
+            public const int BackgroundColor = 0x1C1C1CFF;
         }
 
         public class SubNavToolbar

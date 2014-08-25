@@ -16,6 +16,11 @@ namespace Droid
 {
     namespace Tasks
     {
+        /// <summary>
+        /// A task fragment is simply a fragment for a page of a task.
+        /// This provides a common interface that allows us
+        /// to work with the fragments of tasks in an abstract manner.
+        /// </summary>
         public class TaskFragment : Fragment
         {
             protected Task ParentTask { get; set; }
