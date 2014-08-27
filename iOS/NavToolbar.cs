@@ -19,7 +19,13 @@ namespace iOS
         /// The button used to go back a page in an task.
         /// </summary>
         /// <value>The back button.</value>
-        UIBarButtonItem BackButton { get; set; }
+        UIButton BackButton { get; set; }
+
+        /// <summary>
+        /// True if the back button should exist on the toolbar. False if not.
+        /// </summary>
+        /// <value><c>true</c> if back button displayed; otherwise, <c>false</c>.</value>
+        bool BackButtonDisplayed { get; set; }
 
         /// <summary>
         /// Button used when an task wishes to let the user share something
@@ -57,19 +63,34 @@ namespace iOS
                     // on the main (UI) thread, we don't have to worry about race conditions.
                     RockMobile.Threading.UIThreading.PerformOnUIThread( delegate { Reveal( false ); } );
                 };
+
+
+            // create the back button
+            NSString buttonLabel = new NSString(CCVApp.Config.SubNavToolbar.BackButton_Text);
+
+            BackButton = new UIButton(UIButtonType.System);
+            BackButton.Font = RockMobile.PlatformCommon.iOS.LoadFontDynamic( CCVApp.Config.SubNavToolbar.BackButton_Font, CCVApp.Config.SubNavToolbar.BackButton_Size );
+            BackButton.SetTitle( buttonLabel.ToString( ), UIControlState.Normal );
+            BackButton.SetTitleColor( RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.SubNavToolbar.BackButton_EnabledColor ), UIControlState.Normal );
+            BackButton.SetTitleColor( RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.SubNavToolbar.BackButton_DisabledColor ), UIControlState.Disabled );
+
+            // determine its dimensions
+            SizeF buttonSize = buttonLabel.StringSize( BackButton.Font );
+            BackButton.Bounds = new RectangleF( 0, 0, buttonSize.Width, buttonSize.Height );
         }
 
-        public void SetBackButton( UIButton backButton )
+        public void DisplayBackButton( bool display, EventHandler handler )
         {
-            BackButton = new UIBarButtonItem( backButton );
+            BackButtonDisplayed = display;
+
+            BackButton.TouchUpInside += handler;
 
             UpdateButtons( );
         }
 
         public void SetBackButtonEnabled( bool enabled )
         {
-            UIButton button = (UIButton) BackButton.CustomView;
-            button.Enabled = enabled;
+            BackButton.Enabled = enabled;
         }
 
         void UpdateButtons( )
@@ -79,9 +100,9 @@ namespace iOS
             // we build a list and then add that list to the toolbar.
             List<UIBarButtonItem> itemList = new List<UIBarButtonItem>( );
 
-            if( BackButton != null )
+            if( BackButtonDisplayed == true )
             {
-                itemList.Add( BackButton );
+                itemList.Add( new UIBarButtonItem( BackButton ) );
             }
 
             if( ShareButton != null )

@@ -10,6 +10,10 @@ namespace Droid
         {
             public class PlaceholderFragment : TaskFragment
             {
+                public PlaceholderFragment( ) : base( )
+                {
+                }
+
                 public PlaceholderFragment( Task parentTask ) : base( parentTask )
                 {
                 }
@@ -41,7 +45,7 @@ namespace Droid
                     MainPage = new PlaceholderFragment( this );
                 }
 
-                public override Android.App.Fragment StartingFragment()
+                public override TaskFragment StartingFragment()
                 {
                     return MainPage;
                 }

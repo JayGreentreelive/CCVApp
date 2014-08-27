@@ -187,6 +187,10 @@ namespace Droid
                 /// <value>The note XM.</value>
                 string StyleSheetXml { get; set; }
 
+                public NotesFragment( ) : base( )
+                {
+                }
+
                 public NotesFragment( Task parentTask ) : base( parentTask )
                 {
                 }
@@ -302,7 +306,7 @@ namespace Droid
                     }
                 }
 
-                public bool OnTouch( View v, MotionEvent e )
+                public override bool OnTouch( View v, MotionEvent e )
                 {
                     if( GestureDetector.OnTouchEvent( e ) )
                     {

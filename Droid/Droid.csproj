@@ -62,6 +62,7 @@
     <Compile Include="Tasks\NewsTask\NewsDetailsFragment.cs" />
     <Compile Include="Tasks\NewsTask\NewsPrimaryFragment.cs" />
     <Compile Include="Tasks\PlaceholderTask.cs" />
+    <Compile Include="NavToolbar.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
@@ -74,9 +75,6 @@
     <AndroidResource Include="Resources\layout\Springboard.axml" />
     <AndroidResource Include="Resources\layout\PrimaryNews.axml" />
     <AndroidResource Include="Resources\layout\News_Details.axml" />
-    <AndroidResource Include="..\Assets\cheeseburger%402x.png">
-      <Link>Resources\drawable\cheeseburger.png</Link>
-    </AndroidResource>
     <AndroidResource Include="..\Assets\ccvLogo%402x.png">
       <Link>Resources\drawable\ccvLogo.png</Link>
     </AndroidResource>
@@ -238,6 +236,9 @@
     </AndroidAsset>
     <AndroidAsset Include="..\Assets\spot_mask.png">
       <Link>Assets\spot_mask.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Fonts\FontAwesome.ttf">
+      <Link>Assets\Fonts\FontAwesome.ttf</Link>
     </AndroidAsset>
   </ItemGroup>
   <ItemGroup>

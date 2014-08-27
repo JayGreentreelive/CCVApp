@@ -226,20 +226,11 @@
     <BundleResource Include="..\Assets\spot_mask.png">
       <Link>Resources\spot_mask.png</Link>
     </BundleResource>
-    <BundleResource Include="..\Assets\me.jpg">
-      <Link>Resources\me.jpg</Link>
-    </BundleResource>
     <BundleResource Include="..\Assets\ccvLogo%402x.png">
       <Link>Resources\ccvLogo%402x.png</Link>
     </BundleResource>
     <BundleResource Include="..\Assets\ccvLogo.png">
       <Link>Resources\ccvLogo.png</Link>
-    </BundleResource>
-    <BundleResource Include="..\Assets\cheeseburger.png">
-      <Link>Resources\cheeseburger.png</Link>
-    </BundleResource>
-    <BundleResource Include="..\Assets\cheeseburger%402x.png">
-      <Link>Resources\cheeseburger%402x.png</Link>
     </BundleResource>
     <BundleResource Include="..\Assets\notes%402x.png">
       <Link>Resources\notes%402x.png</Link>
@@ -261,6 +252,9 @@
     </BundleResource>
     <BundleResource Include="..\Assets\noprofile%402x.png">
       <Link>Resources\noprofile%402x.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\Fonts\FontAwesome.ttf">
+      <Link>Resources\Fonts\FontAwesome.ttf</Link>
     </BundleResource>
   </ItemGroup>
   <ItemGroup>

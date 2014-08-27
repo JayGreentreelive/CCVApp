@@ -15,7 +15,7 @@ namespace Droid
                     MainPage = new NotesFragment( this );
                 }
 
-                public override Android.App.Fragment StartingFragment()
+                public override TaskFragment StartingFragment()
                 {
                     return MainPage;
                 }

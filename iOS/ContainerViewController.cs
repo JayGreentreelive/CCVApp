@@ -73,12 +73,17 @@ namespace iOS
             // First setup the SpringboardReveal button, which rests in the upper left
             // of the MainNavigationUI. (We must do it here because the ContainerViewController's
             // NavBar is the active one.)
-            string imagePath = NSBundle.MainBundle.BundlePath + "/" + CCVApp.Config.PrimaryNavBar.SpringboardRevealFile;
-            UIImage springboardRevealImage = new UIImage( imagePath );
+            NSString buttonLabel = new NSString(CCVApp.Config.PrimaryNavBar.RevealButton_Text);
 
-            UIButton springboardRevealButton = new UIButton(UIButtonType.Custom);
-            springboardRevealButton.SetImage( springboardRevealImage, UIControlState.Normal );
-            springboardRevealButton.Bounds = new RectangleF( 0, 0, springboardRevealImage.Size.Width, springboardRevealImage.Size.Height );
+            UIButton springboardRevealButton = new UIButton(UIButtonType.System);
+            springboardRevealButton.Font = RockMobile.PlatformCommon.iOS.LoadFontDynamic( CCVApp.Config.PrimaryNavBar.RevealButton_Font, CCVApp.Config.PrimaryNavBar.RevealButton_Size );
+            springboardRevealButton.SetTitle( buttonLabel.ToString( ), UIControlState.Normal );
+
+            // determine its dimensions
+            SizeF buttonSize = buttonLabel.StringSize( springboardRevealButton.Font );
+            springboardRevealButton.Bounds = new RectangleF( 0, 0, buttonSize.Width, buttonSize.Height );
+
+            // set its callback
             springboardRevealButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
                     (ParentViewController as MainUINavigationController).SpringboardRevealButtonTouchUp( );
@@ -112,29 +117,16 @@ namespace iOS
             SubNavToolbar.Layer.Opacity = CCVApp.Config.SubNavToolbar.Opacity;
             SubNavigationController.View.AddSubview( SubNavToolbar );
 
-
-            // create the back button and place it in the nav bar
-            NSString buttonLabel = new NSString(CCVApp.Config.SubNavToolbar.BackButton_Text);
-
-            UIButton backButton = new UIButton(UIButtonType.System);
-            backButton.Font = UIFont.SystemFontOfSize( CCVApp.Config.SubNavToolbar.BackButton_Size );
-            backButton.SetTitle( buttonLabel.ToString( ), UIControlState.Normal );
-
-            // determine its dimensions
-            SizeF buttonSize = buttonLabel.StringSize( backButton.Font );
-            backButton.Bounds = new RectangleF( 0, 0, buttonSize.Width, buttonSize.Height );
-
-            backButton.TouchUpInside += (object sender, EventArgs e) => 
-                {
+            // add the back button
+            SubNavToolbar.DisplayBackButton( true, delegate 
+                { 
                     // don't allow multiple back presses at once
                     if( TaskControllerAnimating == false )
                     {
                         TaskControllerAnimating = true;
                         SubNavigationController.PopViewControllerAnimated( true );
                     }
-                };
-
-            SubNavToolbar.SetBackButton( backButton );
+                });
 
 
             // add this navigation controller (and its toolbar) as a child

@@ -12,6 +12,8 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using Android.Animation;
+using Droid.Tasks;
+using Android.Graphics;
 
 namespace Droid
 {
@@ -60,9 +62,30 @@ namespace Droid
         /// <value>The active task frame.</value>
         public FrameLayout ActiveTaskFrame { get; set; }
 
+        public NavToolbarFragment NavToolbar { get; set; }
+
+        public NavbarFragment( ) : base( )
+        {
+        }
+
         public override void OnCreate( Bundle savedInstanceState )
         {
             base.OnCreate( savedInstanceState );
+
+            NavToolbar = FragmentManager.FindFragmentById(Resource.Id.navtoolbar) as NavToolbarFragment;
+            if (NavToolbar == null)
+            {
+                NavToolbar = new NavToolbarFragment();
+
+                NavToolbar.DisplayBackButton( true );
+
+                // Execute a transaction, replacing any existing
+                // fragment with this one inside the frame.
+                var ft = FragmentManager.BeginTransaction();
+                ft.Replace(Resource.Id.navtoolbar, NavToolbar);
+                ft.SetTransition(FragmentTransit.FragmentFade);
+                ft.Commit();
+            }
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -85,24 +108,57 @@ namespace Droid
             relativeLayout.AddView( view );
 
             // create the springboard reveal button
-            ImageButton springboardReveal = new ImageButton( Activity );
-            springboardReveal.SetImageResource(Resource.Drawable.cheeseburger);
-            springboardReveal.Background = null;
-            springboardReveal.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-            springboardReveal.SetX( 10 );
-            springboardReveal.SetY( (view.Background.IntrinsicHeight - springboardReveal.Drawable.IntrinsicHeight) / 2 );
-            relativeLayout.AddView( springboardReveal );
-
-            springboardReveal.Click += (object sender, System.EventArgs e) => 
-                {
-                    RevealSpringboard( !SpringboardRevealed );
-                };
+            CreateSpringboardButton( relativeLayout );
 
             // by now we should have our active task frame, so update its position.
             if ( ActiveTaskFrame == null ) throw new Exception( "ActiveTaskFrame must not be null. Set before OnCreateView()." );
             ActiveTaskFrame.SetY( view.LayoutParameters.Height );
 
             return relativeLayout;
+        }
+
+        void CreateSpringboardButton( RelativeLayout relativeLayout )
+        {
+            // create the button
+            Button springboardReveal = new Button( Activity );
+
+            // clear the background outline
+            springboardReveal.Background = null;
+
+            // position it vertically centered and a little right indented
+            springboardReveal.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+            ((RelativeLayout.LayoutParams)springboardReveal.LayoutParameters).AddRule( LayoutRules.CenterVertical );
+            springboardReveal.SetX( 10 );
+
+
+            // set the font and text
+            Typeface fontFace = Typeface.CreateFromAsset( RockMobile.PlatformCommon.Droid.Context.Assets, "Fonts/" + CCVApp.Config.PrimaryNavBar.RevealButton_Font + ".ttf" );
+            springboardReveal.SetTypeface( fontFace, TypefaceStyle.Normal );
+            springboardReveal.SetTextSize( Android.Util.ComplexUnitType.Dip, CCVApp.Config.PrimaryNavBar.RevealButton_Size );
+            springboardReveal.Text = CCVApp.Config.PrimaryNavBar.RevealButton_Text;
+
+            // use the completely overcomplicated color states to set the normal vs pressed color state.
+            int [][] states = new int[][] 
+                {
+                    new int[] { Android.Resource.Attribute.StatePressed },
+                    new int[] { Android.Resource.Attribute.StateEnabled },
+                };
+
+            int [] colors = new int[]
+                {
+                    RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.PrimaryNavBar.RevealButton_PressedColor ),
+                    RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.PrimaryNavBar.RevealButton_DepressedColor ),
+                };
+            springboardReveal.SetTextColor( new Android.Content.Res.ColorStateList( states, colors ) );
+
+
+            // setup the click callback
+            springboardReveal.Click += (object sender, System.EventArgs e) => 
+                {
+                    RevealSpringboard( !SpringboardRevealed );
+                };
+
+            relativeLayout.AddView( springboardReveal );
         }
 
         public void RevealSpringboard( bool revealed )
@@ -123,8 +179,6 @@ namespace Droid
                     animator.SetDuration( 500 );
 
                     animator.Start();
-
-                    SpringboardRevealed = revealed;
                 }
             }
         }
@@ -137,47 +191,66 @@ namespace Droid
             View.SetX( xPos );
 
             ActiveTaskFrame.SetX( xPos );
+            NavToolbar.RelativeLayout.SetX( xPos );
         }
 
         public void OnAnimationEnd( Animator animation )
         {
             Animating = false;
+            SpringboardRevealed = !SpringboardRevealed;
+
+            if( SpringboardRevealed == true )
+            {
+                EnableControls( false );
+            }
+            else
+            {
+                EnableControls( true );
+            }
         }
 
-        public void PresentFragment( Fragment fragment, bool allowBack )
+        public void EnableControls( bool enabled )
         {
-            // get the fragment manager
-            var ft = FragmentManager.BeginTransaction();
+            // toggle the task frame and all its children
+            EnableViews( ActiveTaskFrame, enabled );
 
-            // set this as the active visible fragment in the task frame.
-            ft.Replace(Resource.Id.activetask, fragment );
+            // toggle the sub nav bar
+            EnableViews( NavToolbar.RelativeLayout, enabled );
+        }
 
-            // do a nice crossfade
-            ft.SetTransition(FragmentTransit.FragmentFade);
+        public void EnableViews( ViewGroup view, bool enabled )
+        {
+            view.Enabled = enabled;
 
-            // if back was requested, put it in our stack
-            if( allowBack )
+            int i;
+            for( i = 0; i < view.ChildCount; i++ )
             {
-                ft.AddToBackStack( fragment.ToString() );
+                // if the child view is itself a view group, recursively toggle them
+                View childView = view.GetChildAt( i );
+                if( (childView as ViewGroup) != null )
+                {
+                    EnableViews( (ViewGroup)childView, enabled );
+                }
+                else
+                {
+                    childView.Enabled = enabled;
+                }
             }
-
-            // do the transaction
-            ft.Commit();
         }
 
         public void SetActiveTask( Tasks.Task activeTask )
         {
+            // deactivate any current task
+            if( ActiveTask != null )
+            {
+                ActiveTask.Deactivate( );
+            }
+
             // store a ref to the task task
             ActiveTask = activeTask;
 
-            // get its starting fragment
-            Fragment startFragment = ActiveTask.StartingFragment( );
-
-            // get the fragment manager, set the fragment, and start it
-            var ft = FragmentManager.BeginTransaction();
-            ft.Replace(Resource.Id.activetask, startFragment );
-            ft.SetTransition(FragmentTransit.FragmentFade);
-            ft.Commit();
+            // activate it
+            ActiveTask.Activate( );
 
             // force the springboard to close
             RevealSpringboard( false );

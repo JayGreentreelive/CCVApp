@@ -20,6 +20,10 @@ namespace Droid
         {
             public class NewsDetailsFragment : TaskFragment
             {
+                public NewsDetailsFragment( ) : base( )
+                {
+                }
+
                 public NewsDetailsFragment( Task parentTask ) : base( parentTask )
                 {
                 }
@@ -38,6 +42,7 @@ namespace Droid
                     }
 
                     View view = inflater.Inflate(Resource.Layout.News_Details, container, false);
+                    view.SetOnTouchListener( this );
 
                     Button modeDetailsButton = view.FindViewById<Button>(Resource.Id.moreDetailsButton);
 
@@ -47,7 +52,16 @@ namespace Droid
                             ParentTask.OnClick( this, modeDetailsButton.Id );
                         };
 
+                    ParentTask.NavbarFragment.NavToolbar.SetBackButtonEnabled( true );
+                    ParentTask.NavbarFragment.NavToolbar.RevealForTime( 3.00f );
+
                     return view;
+                }
+
+                protected override void TouchUpInside(View v)
+                {
+                    // reveal the nav bar temporarily
+                    ParentTask.NavbarFragment.NavToolbar.RevealForTime( 3.00f );
                 }
             }
         }

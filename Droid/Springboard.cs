@@ -20,12 +20,6 @@ namespace Droid
     /// </summary>
     public class Springboard : Fragment, View.IOnTouchListener
     {
-        /// <summary>
-        /// The top navigation bar that acts as the container for Tasks
-        /// </summary>
-        /// <value>The navbar fragment.</value>
-        protected NavbarFragment NavbarFragment { get; set; }
-
         protected class SpringboardElement
         {
             public Tasks.Task Task { get; set; }
@@ -60,6 +54,12 @@ namespace Droid
             }
         }
         protected List<SpringboardElement> Elements { get; set; }
+
+        /// <summary>
+        /// The top navigation bar that acts as the container for Tasks
+        /// </summary>
+        /// <value>The navbar fragment.</value>
+        protected NavbarFragment NavbarFragment { get; set; }
 
         public override void OnCreate( Bundle savedInstanceState )
         {

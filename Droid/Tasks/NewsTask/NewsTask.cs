@@ -18,7 +18,7 @@ namespace Droid
                     DetailsPage = new NewsDetailsFragment( this );
                 }
 
-                public override Android.App.Fragment StartingFragment()
+                public override TaskFragment StartingFragment()
                 {
                     return MainPage;
                 }
@@ -30,8 +30,7 @@ namespace Droid
                     {
                         if( buttonId == Resource.Id.detailsButton )
                         {
-                            //Console.WriteLine( "Would switch to details fragment" );
-                            NavbarFragment.PresentFragment( DetailsPage, true );
+                            PresentFragment( DetailsPage, true );
                         }
                     }
                 }

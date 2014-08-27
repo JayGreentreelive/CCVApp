@@ -65,7 +65,7 @@ namespace iOS
             View.BackgroundColor = UIColor.Black;
 
             // setup the style of the nav bar
-            NavigationBar.TintColor = RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.PrimaryNavBar.TextColor );
+            NavigationBar.TintColor = RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.PrimaryNavBar.RevealButton_DepressedColor );
             NavigationBar.BarTintColor = RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.PrimaryNavBar.BackgroundColor );
 
             string imagePath = NSBundle.MainBundle.BundlePath + "/" + CCVApp.Config.PrimaryNavBar.LogoFile;

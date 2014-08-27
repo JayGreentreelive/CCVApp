@@ -58,9 +58,29 @@ namespace CCVApp
             public const float SlideRate = .50f;
 
             /// <summary>
+            /// The font to use for displaying the subNavigation toolbar's back button. (the one at the bottom)
+            /// </summary>
+            public const string BackButton_Font = "FontAwesome";
+
+            /// <summary>
+            /// The color to use for displaying the subNavigation toolbar's back button when enabled. (the one at the bottom)
+            /// </summary>
+            public const uint BackButton_EnabledColor = 0xFFFFFFFF;
+
+            /// <summary>
+            /// The color to use for displaying the subNavigation toolbar's back button when pressed. (Android Only) (the one at the bottom)
+            /// </summary>
+            public const uint BackButton_PressedColor = 0x444444FF;
+
+            /// <summary>
+            /// The color to use for displaying the subNavigation toolbar's back button when disabled. (the one at the bottom)
+            /// </summary>
+            public const uint BackButton_DisabledColor = 0x444444FF;
+
+            /// <summary>
             /// The text to display for the subNavigation toolbar's back button. (the one at the bottom)
             /// </summary>
-            public const string BackButton_Text = "<";
+            public const string BackButton_Text = "";
 
             /// <summary>
             /// The size (in font points) of the sub nav toolbar back button. (the one at the bottom)
@@ -79,14 +99,29 @@ namespace CCVApp
             public const string LogoFile = "ccvLogo.png";
 
             /// <summary>
-            /// The image to be displayed representing the springboard reveal icon.
+            /// The character to be displayed representing the reveal button.
             /// </summary>
-            public const string SpringboardRevealFile = "cheeseburger.png";
+            public const string RevealButton_Text = "";
 
             /// <summary>
-            /// The color of the primary nav bar text.
+            /// The font to use for displaying the reveal button.
             /// </summary>
-            public const uint TextColor = 0xFFFFFFFF;
+            public const string RevealButton_Font = "FontAwesome";
+
+            /// <summary>
+            /// The color of the reveal button when not pressed.
+            /// </summary>
+            public const uint RevealButton_DepressedColor = 0x818181FF;
+
+            /// <summary>
+            /// The color of the reveal button when pressed. (Android Only)
+            /// </summary>
+            public const uint RevealButton_PressedColor = 0x444444FF;
+
+            /// <summary>
+            /// The size of the character representing the reveal button.
+            /// </summary>
+            public const int RevealButton_Size = 36;
 
             /// <summary>
             /// The color of the primary nav bar background.
