@@ -1,4 +1,5 @@
 ﻿using System;
+using Android.App;
 
 namespace Droid
 {
@@ -14,8 +15,19 @@ namespace Droid
                 public NewsTask( NavbarFragment navFragment ) : base( navFragment )
                 {
                     // create our fragments (which are basically equivalent to iOS ViewControllers)
-                    MainPage = new NewsPrimaryFragment( this );
-                    DetailsPage = new NewsDetailsFragment( this );
+                    MainPage = (NewsPrimaryFragment) NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.News.NewsPrimaryFragment" );
+                    if( MainPage == null )
+                    {
+                        MainPage = new NewsPrimaryFragment( );
+                    }
+                    MainPage.ParentTask = this;
+
+                    DetailsPage = (NewsDetailsFragment) NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.News.NewsDetailsFragment" );
+                    if( DetailsPage == null )
+                    {
+                        DetailsPage = new NewsDetailsFragment( );
+                    }
+                    DetailsPage.ParentTask = this;
                 }
 
                 public override TaskFragment StartingFragment()

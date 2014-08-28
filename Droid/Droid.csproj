@@ -14,7 +14,7 @@
     <AndroidApplication>True</AndroidApplication>
     <AndroidUseLatestPlatformSdk>False</AndroidUseLatestPlatformSdk>
     <AssemblyName>Droid</AssemblyName>
-    <TargetFrameworkVersion>v4.3</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.1</TargetFrameworkVersion>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -68,31 +68,51 @@
     <None Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\Main.axml" />
     <AndroidResource Include="Resources\values\Strings.xml" />
-    <AndroidResource Include="Resources\drawable\Icon.png" />
-    <AndroidResource Include="Resources\layout\Notes.axml" />
-    <AndroidResource Include="Resources\layout\Springboard.axml" />
-    <AndroidResource Include="Resources\layout\PrimaryNews.axml" />
-    <AndroidResource Include="Resources\layout\News_Details.axml" />
-    <AndroidResource Include="..\Assets\ccvLogo%402x.png">
-      <Link>Resources\drawable\ccvLogo.png</Link>
-    </AndroidResource>
     <AndroidResource Include="..\Assets\info%402x.png">
-      <Link>Resources\drawable\info.png</Link>
+      <Link>Resources\drawable-hdpi\info.png</Link>
     </AndroidResource>
     <AndroidResource Include="..\Assets\groupfinder%402x.png">
-      <Link>Resources\drawable\groupfinder.png</Link>
+      <Link>Resources\drawable-hdpi\groupfinder.png</Link>
     </AndroidResource>
     <AndroidResource Include="..\Assets\prayer%402x.png">
-      <Link>Resources\drawable\prayer.png</Link>
+      <Link>Resources\drawable-hdpi\prayer.png</Link>
     </AndroidResource>
     <AndroidResource Include="..\Assets\notes%402x.png">
-      <Link>Resources\drawable\notes.png</Link>
+      <Link>Resources\drawable-hdpi\notes.png</Link>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout-sw600dp\Main.axml" />
+    <AndroidResource Include="Resources\layout-sw600dp\News_Details.axml" />
+    <AndroidResource Include="Resources\layout-sw600dp\Notes.axml" />
+    <AndroidResource Include="Resources\layout-sw600dp\PrimaryNews.axml" />
+    <AndroidResource Include="Resources\layout-sw600dp\Springboard.axml" />
+    <AndroidResource Include="..\Assets\give%402x.png">
+      <Link>Resources\drawable-hdpi\give.png</Link>
+    </AndroidResource>
+    <AndroidResource Include="..\Assets\watch%402x.png">
+      <Link>Resources\drawable-hdpi\watch.png</Link>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable-hdpi\Icon.png" />
+    <AndroidResource Include="..\Assets\ccvLogo%402x.png">
+      <Link>Resources\drawable-hdpi\ccvLogo.png</Link>
     </AndroidResource>
     <AndroidResource Include="..\Assets\noprofile%402x.png">
-      <Link>Resources\drawable\noprofile.png</Link>
+      <Link>Resources\drawable-mdpi\noprofile_sw600dp.png</Link>
     </AndroidResource>
+    <AndroidResource Include="..\Assets\noprofile.png">
+      <Link>Resources\drawable-hdpi\noprofile.png</Link>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable-mdpi\Icon.png" />
+    <AndroidResource Include="Resources\layout-sw480dp\Main.axml" />
+    <AndroidResource Include="Resources\layout-sw480dp\Notes.axml" />
+    <AndroidResource Include="Resources\layout-sw480dp\Springboard.axml" />
+    <AndroidResource Include="Resources\layout-sw480dp\PrimaryNews.axml" />
+    <AndroidResource Include="Resources\layout-sw480dp\News_Details.axml" />
+    <AndroidResource Include="Resources\layout-sw320dp\Main.axml" />
+    <AndroidResource Include="Resources\layout-sw320dp\News_Details.axml" />
+    <AndroidResource Include="Resources\layout-sw320dp\Notes.axml" />
+    <AndroidResource Include="Resources\layout-sw320dp\PrimaryNews.axml" />
+    <AndroidResource Include="Resources\layout-sw320dp\Springboard.axml" />
   </ItemGroup>
   <Import Project="..\Notes\Notes.projitems" Label="Shared" Condition="Exists('..\Notes\Notes.projitems')" />
   <Import Project="..\..\RockMobile\RockMobile.projitems" Label="Shared" Condition="Exists('..\..\RockMobile\RockMobile.projitems')" />
@@ -103,6 +123,10 @@
     <Folder Include="Tasks\" />
     <Folder Include="Tasks\NewsTask\" />
     <Folder Include="Tasks\NotesTask\" />
+    <Folder Include="Resources\layout-sw600dp\" />
+    <Folder Include="Resources\drawable-hdpi\" />
+    <Folder Include="Resources\drawable-mdpi\" />
+    <Folder Include="Resources\layout-sw320dp\" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="..\Assets\Fonts\Bevan.ttf">

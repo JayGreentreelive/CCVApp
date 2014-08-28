@@ -16,6 +16,8 @@ namespace Droid
         {
             base.OnCreate( bundle );
 
+            //RequestedOrientation = Android.Content.PM.ScreenOrientation.Nosensor;
+
             // If the Android version is lower than Jellybean, use this call to hide
             // the status bar.
             if (Build.VERSION.SdkInt < Android.OS.BuildVersionCodes.JellyBean) 

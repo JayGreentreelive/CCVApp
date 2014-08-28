@@ -20,14 +20,6 @@ namespace Droid
         {
             public class NewsPrimaryFragment : TaskFragment
             {
-                public NewsPrimaryFragment( ) : base( )
-                {
-                }
-
-                public NewsPrimaryFragment( Task parentTask ) : base( parentTask )
-                {
-                }
-
                 public override void OnCreate( Bundle savedInstanceState )
                 {
                     base.OnCreate( savedInstanceState );
@@ -52,10 +44,15 @@ namespace Droid
                             ParentTask.OnClick( this, detailsButton.Id );
                         };
 
+                    return view;
+                }
+
+                public override void OnResume()
+                {
+                    base.OnResume();
+
                     ParentTask.NavbarFragment.NavToolbar.SetBackButtonEnabled( false );
                     ParentTask.NavbarFragment.NavToolbar.Reveal( false );
-
-                    return view;
                 }
 
                 protected override void TouchUpInside(View v)

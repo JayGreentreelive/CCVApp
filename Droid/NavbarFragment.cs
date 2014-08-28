@@ -76,16 +76,16 @@ namespace Droid
             if (NavToolbar == null)
             {
                 NavToolbar = new NavToolbarFragment();
-
-                NavToolbar.DisplayBackButton( true );
-
-                // Execute a transaction, replacing any existing
-                // fragment with this one inside the frame.
-                var ft = FragmentManager.BeginTransaction();
-                ft.Replace(Resource.Id.navtoolbar, NavToolbar);
-                ft.SetTransition(FragmentTransit.FragmentFade);
-                ft.Commit();
             }
+
+            // Execute a transaction, replacing any existing
+            // fragment with this one inside the frame.
+            var ft = FragmentManager.BeginTransaction();
+            ft.Replace(Resource.Id.navtoolbar, NavToolbar);
+            ft.SetTransition(FragmentTransit.FragmentFade);
+            ft.Commit();
+
+            NavToolbar.DisplayBackButton( true );
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -169,7 +169,7 @@ namespace Droid
                 {
                     Animating = true;
 
-                    int xOffset = revealed ? View.Width / 2 : 0;
+                    int xOffset = revealed ? (int) (View.Width * .65f) : 0;
 
                     // setup an animation from our current mask scale to the new one.
                     ValueAnimator animator = ValueAnimator.OfInt((int)View.GetX( ) , xOffset);

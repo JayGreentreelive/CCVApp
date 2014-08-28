@@ -89,6 +89,9 @@ namespace Droid
 
             BackButton.Click += delegate{ Activity.OnBackPressed(); };
 
+            // default to NOT enabled
+            BackButton.Enabled = false;
+
             // use the completely overcomplicated color states to set the normal vs pressed color state.
             int [][] states = new int[][] 
                 {
@@ -105,11 +108,16 @@ namespace Droid
                 };
             BackButton.SetTextColor( new Android.Content.Res.ColorStateList( states, colors ) );    
 
-            UpdateButtons( );
+            return RelativeLayout;
+        }
+
+        public override void OnResume()
+        {
+            base.OnResume();
 
             RelativeLayout.SetY( 150 );
 
-            return RelativeLayout;
+            UpdateButtons( );
         }
 
         public void DisplayBackButton( bool display )

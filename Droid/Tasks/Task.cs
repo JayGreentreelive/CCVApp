@@ -45,7 +45,8 @@ namespace Droid
                 var ft = NavbarFragment.FragmentManager.BeginTransaction();
 
                 // set this as the active visible fragment in the task frame.
-                ft.Replace(Resource.Id.activetask, fragment );
+                string typestr = fragment.GetType().ToString();
+                ft.Replace(Resource.Id.activetask, fragment, typestr );
 
                 // do a nice crossfade
                 ft.SetTransition(FragmentTransit.FragmentFade);

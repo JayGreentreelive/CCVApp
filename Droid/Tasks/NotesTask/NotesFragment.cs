@@ -187,14 +187,6 @@ namespace Droid
                 /// <value>The note XM.</value>
                 string StyleSheetXml { get; set; }
 
-                public NotesFragment( ) : base( )
-                {
-                }
-
-                public NotesFragment( Task parentTask ) : base( parentTask )
-                {
-                }
-
                 public bool OnDoubleTap(MotionEvent e)
                 {
                     Note.DidDoubleTap( new PointF( e.GetX( ), e.GetY( ) ) );

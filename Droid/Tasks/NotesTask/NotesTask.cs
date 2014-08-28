@@ -12,7 +12,13 @@ namespace Droid
 
                 public NotesTask( NavbarFragment navFragment ) : base( navFragment )
                 {
-                    MainPage = new NotesFragment( this );
+                    // create our fragments (which are basically equivalent to iOS ViewControllers)
+                    MainPage = (NotesFragment) NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.Notes.NotesFragment" );
+                    if( MainPage == null )
+                    {
+                        MainPage = new NotesFragment( );
+                    }
+                    MainPage.ParentTask = this;
                 }
 
                 public override TaskFragment StartingFragment()

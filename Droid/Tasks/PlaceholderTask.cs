@@ -10,14 +10,6 @@ namespace Droid
         {
             public class PlaceholderFragment : TaskFragment
             {
-                public PlaceholderFragment( ) : base( )
-                {
-                }
-
-                public PlaceholderFragment( Task parentTask ) : base( parentTask )
-                {
-                }
-
                 public override void OnCreate( Bundle savedInstanceState )
                 {
                     base.OnCreate( savedInstanceState );
@@ -42,7 +34,13 @@ namespace Droid
 
                 public PlaceholderTask( NavbarFragment navFragment ) : base( navFragment )
                 {
-                    MainPage = new PlaceholderFragment( this );
+                    // create our fragments (which are basically equivalent to iOS ViewControllers)
+                    MainPage = (PlaceholderFragment) NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.Placeholder.PlaceholderFragment" );
+                    if( MainPage == null )
+                    {
+                        MainPage = new PlaceholderFragment( );
+                    }
+                    MainPage.ParentTask = this;
                 }
 
                 public override TaskFragment StartingFragment()

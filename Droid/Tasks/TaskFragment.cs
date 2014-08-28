@@ -23,16 +23,7 @@ namespace Droid
         /// </summary>
         public class TaskFragment : Fragment, View.IOnTouchListener
         {
-            protected Task ParentTask { get; set; }
-
-            public TaskFragment( ) : base( )
-            {
-            }
-
-            public TaskFragment( Task parentTask ) : base( )
-            {
-                ParentTask = parentTask;
-            }
+            public Task ParentTask { get; set; }
 
             public virtual bool OnTouch( View v, MotionEvent e )
             {

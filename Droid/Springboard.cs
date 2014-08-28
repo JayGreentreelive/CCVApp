@@ -61,6 +61,8 @@ namespace Droid
         /// <value>The navbar fragment.</value>
         protected NavbarFragment NavbarFragment { get; set; }
 
+        protected int ActiveElementIndex { get; set; }
+
         public override void OnCreate( Bundle savedInstanceState )
         {
             base.OnCreate( savedInstanceState );
@@ -70,14 +72,14 @@ namespace Droid
             if (NavbarFragment == null)
             {
                 NavbarFragment = new NavbarFragment();
-
-                // Execute a transaction, replacing any existing
-                // fragment with this one inside the frame.
-                var ft = FragmentManager.BeginTransaction();
-                ft.Replace(Resource.Id.navbar, NavbarFragment);
-                ft.SetTransition(FragmentTransit.FragmentFade);
-                ft.Commit();
             }
+
+            // Execute a transaction, replacing any existing
+            // fragment with this one inside the frame.
+            var ft = FragmentManager.BeginTransaction();
+            ft.Replace(Resource.Id.navbar, NavbarFragment);
+            ft.SetTransition(FragmentTransit.FragmentFade);
+            ft.Commit();
 
             // create our tasks
             Elements = new List<SpringboardElement>();
@@ -86,6 +88,21 @@ namespace Droid
             Elements.Add( new SpringboardElement( new Droid.Tasks.Placeholder.PlaceholderTask( NavbarFragment ), Resource.Id.springboard_prayer_frame, Resource.Id.springboard_prayer_icon, Resource.Id.springboard_prayer_button ) );
             Elements.Add( new SpringboardElement( new Droid.Tasks.Notes.NotesTask( NavbarFragment ), Resource.Id.springboard_notes_frame, Resource.Id.springboard_notes_icon, Resource.Id.springboard_notes_button ) );
             Elements.Add( new SpringboardElement( new Droid.Tasks.Placeholder.PlaceholderTask( NavbarFragment ), Resource.Id.springboard_about_frame, Resource.Id.springboard_about_icon, Resource.Id.springboard_about_button ) );
+
+            ActiveElementIndex = 0;
+            if( savedInstanceState != null )
+            {
+                // grab the last active element
+                ActiveElementIndex = savedInstanceState.GetInt( "LastActiveElement" );
+            }
+        }
+
+        public override void OnSaveInstanceState( Bundle outState )
+        {
+            base.OnSaveInstanceState( outState );
+
+            // store the last activity we were in
+            outState.PutInt( "LastActiveElement", ActiveElementIndex );
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -96,13 +113,20 @@ namespace Droid
             // let the springboard elements setup their buttons
             foreach( SpringboardElement element in Elements )
             {
-                element.OnCreateView( view, delegate { ActivateElement( element ); } );
+                element.OnCreateView( view, delegate { ActiveElementIndex = Elements.IndexOf( element ); ActivateElement( element ); } );
             }
 
             view.SetOnTouchListener( this );
             view.SetBackgroundColor( RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.Springboard.BackgroundColor ) );
 
             return view;
+        }
+
+        public override void OnResume()
+        {
+            base.OnResume();
+
+            ActivateElement( Elements[ ActiveElementIndex ] );
         }
 
         public bool OnTouch( View v, MotionEvent e )
@@ -123,8 +147,6 @@ namespace Droid
         {
             // once we receive the active task frame, we can start our task
             NavbarFragment.ActiveTaskFrame = layout;
-
-            ActivateElement( Elements[0] );
         }
 
         protected void ActivateElement( SpringboardElement activeElement )
