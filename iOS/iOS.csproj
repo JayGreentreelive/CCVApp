@@ -256,6 +256,9 @@
     <BundleResource Include="..\Assets\Fonts\FontAwesome.ttf">
       <Link>Resources\Fonts\FontAwesome.ttf</Link>
     </BundleResource>
+    <BundleResource Include="..\Assets\blackTile.png">
+      <Link>Resources\blackTile.png</Link>
+    </BundleResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />

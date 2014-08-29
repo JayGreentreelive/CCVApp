@@ -119,6 +119,11 @@ namespace CCVApp
             public const uint RevealButton_PressedColor = 0x444444FF;
 
             /// <summary>
+            /// The color of the reveal button when disabled. (Android Only)
+            /// </summary>
+            public const uint RevealButton_DisabledColor = 0x444444FF;
+
+            /// <summary>
             /// The size of the character representing the reveal button.
             /// </summary>
             public const int RevealButton_Size = 36;

@@ -41,6 +41,16 @@ namespace iOS
 		{
         }
 
+        public void EnableSpringboardRevealButton( bool enabled )
+        {
+            Container.EnableSpringboardRevealButton( enabled );
+
+            if( enabled == false )
+            {
+                RevealSpringboard( false );
+            }
+        }
+
         /// <summary>
         /// Determines whether the springboard is fully closed or not.
         /// If its state is open OR animation is going on, consider it open.
@@ -68,8 +78,7 @@ namespace iOS
             NavigationBar.TintColor = RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.PrimaryNavBar.RevealButton_DepressedColor );
             NavigationBar.BarTintColor = RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.PrimaryNavBar.BackgroundColor );
 
-            string imagePath = NSBundle.MainBundle.BundlePath + "/" + CCVApp.Config.PrimaryNavBar.LogoFile;
-            NavigationBar.SetBackgroundImage( new UIImage( imagePath ), UIBarMetrics.Default );
+
 
             // our first (and only) child IS a ContainerViewController.
             Container = ChildViewControllers[0] as ContainerViewController;

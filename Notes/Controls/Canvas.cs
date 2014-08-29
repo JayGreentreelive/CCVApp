@@ -48,7 +48,7 @@ namespace Notes
 
             // take our parent's style but override with anything we set
             mStyle = parentParams.Style;
-            Styles.Style.ParseStyleAttributes( reader, ref mStyle );
+            Styles.Style.ParseStyleAttributesWithDefaults( reader, ref mStyle, ref ControlStyles.mCanvas );
 
 
             // now read what our children's alignment should be

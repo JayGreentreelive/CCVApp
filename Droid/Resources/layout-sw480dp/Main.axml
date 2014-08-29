@@ -13,12 +13,13 @@
     <FrameLayout
         android:id="@+id/navbar"
         android:layout_width="fill_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1" />
     <FrameLayout
         android:id="@+id/activetask"
         android:layout_width="fill_parent"
-        android:layout_height="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/navbar"
         android:layout_weight="1"
         android:background="#FF000000" />
     <FrameLayout

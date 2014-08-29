@@ -113,6 +113,8 @@ namespace iOS
         /// <value>The elements.</value>
         protected List<SpringboardElement> Elements { get; set; }
 
+        protected UIDeviceOrientation CurrentOrientation { get; set; }
+
 		public SpringboardViewController (IntPtr handle) : base (handle)
 		{
             NavViewController = Storyboard.InstantiateViewController( "MainUINavigationController" ) as MainUINavigationController;
@@ -121,26 +123,34 @@ namespace iOS
 
         public override bool ShouldAutorotate()
         {
-            // We only want to allow landscape orientation when in the NotesTask.
-            // All other times the app should be in Portrait mode.
-            switch( UIDevice.CurrentDevice.Orientation )
+            if( CurrentOrientation != UIDevice.CurrentDevice.Orientation )
             {
-                case UIDeviceOrientation.Portrait:
+                // We only want to allow landscape orientation when in the NotesTask.
+                // All other times the app should be in Portrait mode.
+                switch( UIDevice.CurrentDevice.Orientation )
                 {
-                    NavViewController.SetNavigationBarHidden( false, true );
-                    return true;
-                }
-
-                case UIDeviceOrientation.LandscapeLeft:
-                case UIDeviceOrientation.LandscapeRight:
-                {
-                    // only allow landscape for the notes.
-                    if( (NavViewController.CurrentTask as NotesTask) != null && NavViewController.IsSpringboardClosed( ) )
+                    case UIDeviceOrientation.Portrait:
                     {
-                        NavViewController.SetNavigationBarHidden( true, true );
+                        CurrentOrientation = UIDevice.CurrentDevice.Orientation;
+
+                        NavViewController.EnableSpringboardRevealButton( true );
                         return true;
                     }
-                    return false;
+
+                    case UIDeviceOrientation.LandscapeLeft:
+                    case UIDeviceOrientation.LandscapeRight:
+                    {
+                        // only allow landscape for the notes.
+                        if( (NavViewController.CurrentTask as NotesTask) != null && NavViewController.IsSpringboardClosed( ) )
+                        {
+                            CurrentOrientation = UIDevice.CurrentDevice.Orientation;
+
+                            NavViewController.EnableSpringboardRevealButton( false );
+
+                            return true;
+                        }
+                        return false;
+                    }
                 }
             }
 
@@ -150,6 +160,8 @@ namespace iOS
         public override void ViewDidLoad()
         {
             base.ViewDidLoad( );
+
+            CurrentOrientation = UIDevice.CurrentDevice.Orientation;
 
             // Instantiate all activities
             Elements.Add( new SpringboardElement( this, new NewsTask( "NewsStoryboard_iPhone" )  , NewsButton       , "watch.png" ) );

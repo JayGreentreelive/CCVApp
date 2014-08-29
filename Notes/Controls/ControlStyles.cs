@@ -437,6 +437,11 @@ namespace Notes
         public static Styles.Style mStackPanel;
 
         /// <summary>
+        /// Canvas' default style if none are specified by a parent or in NoteScript XML.
+        /// </summary>
+        public static Styles.Style mCanvas;
+
+        /// <summary>
         /// Revealbox's control's default styles if none are specified by a parent or in NoteScript XML.
         /// </summary>
         public static Styles.Style mRevealBox;
@@ -555,6 +560,16 @@ namespace Notes
             mStackPanel.mAlignment = Styles.Alignment.Left;
         }
 
+        static void CreateCanvasStyle()
+        {
+            // like stacks and paragraphs, canvas shouldn't care about anything
+            // but alignment
+            mCanvas = new Styles.Style( );
+            mCanvas.Initialize( );
+
+            mCanvas.mAlignment = Styles.Alignment.Left;
+        }
+
         static void CreateRevealBoxStyle()
         {
             mRevealBox = new Styles.Style( );
@@ -629,6 +644,7 @@ namespace Notes
             CreateMainNoteStyle();
             CreateParagraphStyle();
             CreateStackPanelStyle();
+            CreateCanvasStyle();
             CreateRevealBoxStyle();
             CreateTextInputStyle();
             CreateQuoteStyle();

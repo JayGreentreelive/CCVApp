@@ -165,9 +165,11 @@ namespace iOS
         {
             base.ViewDidLayoutSubviews( );
 
-            RefreshButton.Layer.Position = new PointF( View.Bounds.Width / 2, RefreshButton.Frame.Height / 2 );
+            //note: the frame height of the nav bar is what it CURRENTLY is, not what it WILL be after we rotate. So, when we go from Portrait to Landscape,
+            // it says 40, but it's gonna be 32. Conversely, going back, we use 32 and it's actually 40, which causes us to start this view 8px too high.
+            RefreshButton.Layer.Position = new PointF( View.Bounds.Width / 2, NavigationController.NavigationBar.Frame.Height + (RefreshButton.Frame.Height / 2) );
 
-            UIScrollView.Frame = new RectangleF( 0, 0, View.Bounds.Width, View.Bounds.Height );
+            UIScrollView.Frame = new RectangleF( 0, 0, View.Bounds.Width, View.Bounds.Height - RefreshButton.Frame.Height - NavigationController.NavigationBar.Frame.Height );
             UIScrollView.Layer.Position = new PointF( UIScrollView.Layer.Position.X, UIScrollView.Layer.Position.Y + RefreshButton.Frame.Bottom);
 
             Indicator.Layer.Position = new PointF( View.Bounds.Width / 2, View.Bounds.Height / 2 );

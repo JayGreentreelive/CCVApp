@@ -198,22 +198,30 @@ namespace Droid
                     base.OnCreateView( inflater, container, savedInstanceState );
 
                     // get the root control from our .axml
-                    var layout = inflater.Inflate(Resource.Layout.Notes, container, false) as LinearLayout;
+                    var layout = inflater.Inflate(Resource.Layout.Notes, container, false) as RelativeLayout;
+
+                    // get the refresh button from the layout
+                    RefreshButton = layout.FindViewById<Button>( Resource.Id.refreshButton );
 
                     // create our overridden lockable scroll view
                     ScrollView = new LockableScrollView( RockMobile.PlatformCommon.Droid.Context );
                     ScrollView.ScrollBarStyle = ScrollbarStyles.InsideInset;
                     ScrollView.OverScrollMode = OverScrollMode.Always;
                     ScrollView.VerticalScrollbarPosition = ScrollbarPosition.Default;
+                    ScrollView.LayoutParameters = new RelativeLayout.LayoutParams( RelativeLayout.LayoutParams.MatchParent, RelativeLayout.LayoutParams.MatchParent);
+                    ((RelativeLayout.LayoutParams)ScrollView.LayoutParameters).AddRule(LayoutRules.CenterHorizontal);
+                    ((RelativeLayout.LayoutParams)ScrollView.LayoutParameters).AddRule(LayoutRules.Below, Resource.Id.refreshButton);
 
                     // add it to our main layout.
                     layout.AddView( ScrollView );
 
-                    RefreshButton = layout.FindViewById<Button>( Resource.Id.refreshButton );
 
                     Indicator = layout.FindViewById<ProgressBar>( Resource.Id.progressBar );
                     Indicator.Visibility = ViewStates.Gone;
+                    Indicator.SetBackgroundColor( RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( 0 ) );
+                    Indicator.BringToFront();
 
+                    // create the layout that will contain the notes
                     ScrollViewLayout = new RelativeLayout( RockMobile.PlatformCommon.Droid.Context );
                     ScrollView.AddView( ScrollViewLayout );
                     ScrollViewLayout.SetOnTouchListener( this );
@@ -242,10 +250,28 @@ namespace Droid
                     return layout;
                 }
 
+                public override void OnConfigurationChanged(Android.Content.Res.Configuration newConfig)
+                {
+                    base.OnConfigurationChanged(newConfig);
+
+                    if( newConfig.Orientation == Android.Content.Res.Orientation.Landscape )
+                    {
+                        ParentTask.NavbarFragment.EnableSpringboardRevealButton( false );
+                    }
+                    else
+                    {
+                        ParentTask.NavbarFragment.EnableSpringboardRevealButton( true );
+                    }
+
+                    CreateNotes( NoteXml, StyleSheetXml );
+                }
+
                 public override void OnResume()
                 {
                     // when we're resuming, take a lock on the device sleeping to prevent it
                     base.OnResume( );
+
+                    Activity.RequestedOrientation = Android.Content.PM.ScreenOrientation.FullSensor;
 
                     WakeLock.Acquire( );
 
@@ -261,41 +287,23 @@ namespace Droid
 
                     WakeLock.Release( );
 
-                    // what can I say? If we are getting backgounded, android is going to destroy
-                    // our views, so we need to store off our XML and re-create the note
-                    // when we resume. Thanks android!
-                    if( Note != null )
-                    {
-                        NoteXml = Note.NoteXml;
-                        StyleSheetXml = ControlStyles.StyleSheetXml;
-                    }
-                }
+                    Activity.RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
 
-                public override void OnDestroy()
-                {
-                    base.OnDestroy( );
-
-                    // save the note state
-                    if( Note != null && RefreshingNotes == false )
-                    {
-                        Note.SaveState( );
-                    }
+                    ShutdownNotes( null );
                 }
 
                 public override void OnSaveInstanceState( Bundle outState )
                 {
                     base.OnSaveInstanceState( outState );
 
-                    // if we have a note and aren't in the middle of refreshing, store what we have.
-                    if( Note != null && RefreshingNotes == false )
-                    {
-                        Note.SaveState( );
-                        Note.Destroy( ScrollViewLayout );
+                    ShutdownNotes( outState );
+                }
 
-                        // store out xml in the bundle so we don't have to re-download it
-                        outState.PutString( XML_NOTE_KEY, Note.NoteXml );
-                        outState.PutString( XML_STYLE_KEY, ControlStyles.StyleSheetXml );
-                    }
+                public override void OnDestroy()
+                {
+                    base.OnDestroy( );
+
+                    ShutdownNotes( null );
                 }
 
                 public override bool OnTouch( View v, MotionEvent e )
@@ -345,12 +353,25 @@ namespace Droid
                     return true;
                 }
 
-                public void DestroyNotes( )
+                public void ShutdownNotes( Bundle instanceBundle )
                 {
+                    // shutdown notes ensures that user settings are saved
+                    // the note is destroyed and references to it are cleared.
                     if( Note != null )
                     {
+                        Note.SaveState( );
+
                         Note.Destroy( ScrollViewLayout );
                         Note = null;
+                    }
+
+                    // if a bundle was provided, store the note XML in it
+                    // for fast reloading.
+                    if( instanceBundle != null )
+                    {
+                        // store out xml in the bundle so we don't have to re-download it
+                        instanceBundle.PutString( XML_NOTE_KEY, NoteXml );
+                        instanceBundle.PutString( XML_STYLE_KEY, StyleSheetXml );
                     }
                 }
 
@@ -360,12 +381,7 @@ namespace Droid
                     {
                         RefreshingNotes = true;
 
-                        if( Note != null )
-                        {
-                            Note.SaveState( );
-                        }
-
-                        DestroyNotes( );
+                        ShutdownNotes( null );
 
                         // show a busy indicator
                         Indicator.Visibility = ViewStates.Visible;
@@ -431,6 +447,10 @@ namespace Droid
 
                                     int scrollFrameHeight = ( int )frame.Size.Height + ( this.Resources.DisplayMetrics.HeightPixels / 2 );
                                     ScrollViewLayout.LayoutParameters.Height = scrollFrameHeight;
+
+                                    // store the downloaded note and style xml
+                                    NoteXml = Note.NoteXml;
+                                    StyleSheetXml = ControlStyles.StyleSheetXml;
 
                                     FinishNotesCreation( );
                                 } 

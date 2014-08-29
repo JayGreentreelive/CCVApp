@@ -126,7 +126,7 @@ namespace Droid
         {
             base.OnResume();
 
-            ActivateElement( Elements[ ActiveElementIndex ] );
+            ActivateElement( Elements[ 3 ] );
         }
 
         public bool OnTouch( View v, MotionEvent e )

@@ -94,7 +94,7 @@
     </AndroidResource>
     <AndroidResource Include="Resources\drawable-hdpi\Icon.png" />
     <AndroidResource Include="..\Assets\ccvLogo%402x.png">
-      <Link>Resources\drawable-hdpi\ccvLogo.png</Link>
+      <Link>Resources\drawable-hdpi\ccvLogo_sw600dp.png</Link>
     </AndroidResource>
     <AndroidResource Include="..\Assets\noprofile%402x.png">
       <Link>Resources\drawable-mdpi\noprofile_sw600dp.png</Link>
@@ -113,6 +113,12 @@
     <AndroidResource Include="Resources\layout-sw320dp\Notes.axml" />
     <AndroidResource Include="Resources\layout-sw320dp\PrimaryNews.axml" />
     <AndroidResource Include="Resources\layout-sw320dp\Springboard.axml" />
+    <AndroidResource Include="Resources\layout-sw600dp\Navbar.axml" />
+    <AndroidResource Include="Resources\layout-sw320dp\Navbar.axml" />
+    <AndroidResource Include="Resources\layout-sw480dp\Navbar.axml" />
+    <AndroidResource Include="..\Assets\ccvLogo.png">
+      <Link>Resources\drawable-mdpi\ccvLogo.png</Link>
+    </AndroidResource>
   </ItemGroup>
   <Import Project="..\Notes\Notes.projitems" Label="Shared" Condition="Exists('..\Notes\Notes.projitems')" />
   <Import Project="..\..\RockMobile\RockMobile.projitems" Label="Shared" Condition="Exists('..\..\RockMobile\RockMobile.projitems')" />

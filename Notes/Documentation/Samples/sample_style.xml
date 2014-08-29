@@ -13,6 +13,6 @@
      
      <Text FontName="Bevan" FontSize="12" FontColor="#AFAFAFFF"/>
      
-     <List Indentation="5%" BulletPoint="☛"/>
+     <List Indentation="5%" BulletPoint="☞"/>
      <ListItem PaddingBottom="5%"/>
 </Styles>

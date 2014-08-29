@@ -6,17 +6,16 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
+using Android.Util;
 
 namespace Droid
 {
-    [Activity( Label = "CCVApp Proto", MainLauncher = true, Icon = "@drawable/icon" )]
+    [Activity( Label = "CCVApp Proto", MainLauncher = true, Icon = "@drawable/icon", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize )]
     public class MainActivity : Activity
     {
         protected override void OnCreate( Bundle bundle )
         {
             base.OnCreate( bundle );
-
-            //RequestedOrientation = Android.Content.PM.ScreenOrientation.Nosensor;
 
             // If the Android version is lower than Jellybean, use this call to hide
             // the status bar.
@@ -29,7 +28,13 @@ namespace Droid
                 this.Window.AddFlags(WindowManagerFlags.Fullscreen);
             }
 
+            // default our app to protrait mode, and let the notes change it.
+            RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
+
             RockMobile.PlatformCommon.Droid.Context = this;
+
+            DisplayMetrics metrics = Resources.DisplayMetrics;
+            Console.WriteLine("Android Device detected dpi: {0}", metrics.DensityDpi );
 
             // Set our view from the "main" layout resource
             SetContentView( Resource.Layout.Main );

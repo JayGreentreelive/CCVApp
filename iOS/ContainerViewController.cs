@@ -57,6 +57,8 @@ namespace iOS
         /// <value><c>true</c> if task controller animating; otherwise, <c>false</c>.</value>
         bool TaskControllerAnimating { get; set; }
 
+        protected UIButton SpringboardRevealButton { get; set; }
+
 		public ContainerViewController (IntPtr handle) : base (handle)
 		{
             TaskTransition.ContainerViewController = this;
@@ -75,26 +77,44 @@ namespace iOS
             // NavBar is the active one.)
             NSString buttonLabel = new NSString(CCVApp.Config.PrimaryNavBar.RevealButton_Text);
 
-            UIButton springboardRevealButton = new UIButton(UIButtonType.System);
-            springboardRevealButton.Font = RockMobile.PlatformCommon.iOS.LoadFontDynamic( CCVApp.Config.PrimaryNavBar.RevealButton_Font, CCVApp.Config.PrimaryNavBar.RevealButton_Size );
-            springboardRevealButton.SetTitle( buttonLabel.ToString( ), UIControlState.Normal );
+            SpringboardRevealButton = new UIButton(UIButtonType.System);
+            SpringboardRevealButton.Font = RockMobile.PlatformCommon.iOS.LoadFontDynamic( CCVApp.Config.PrimaryNavBar.RevealButton_Font, CCVApp.Config.PrimaryNavBar.RevealButton_Size );
+            SpringboardRevealButton.SetTitle( buttonLabel.ToString( ), UIControlState.Normal );
 
             // determine its dimensions
-            SizeF buttonSize = buttonLabel.StringSize( springboardRevealButton.Font );
-            springboardRevealButton.Bounds = new RectangleF( 0, 0, buttonSize.Width, buttonSize.Height );
+            SizeF buttonSize = buttonLabel.StringSize( SpringboardRevealButton.Font );
+            SpringboardRevealButton.Bounds = new RectangleF( 0, 0, buttonSize.Width, buttonSize.Height );
 
             // set its callback
-            springboardRevealButton.TouchUpInside += (object sender, EventArgs e) => 
+            SpringboardRevealButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
                     (ParentViewController as MainUINavigationController).SpringboardRevealButtonTouchUp( );
                 };
-            this.NavigationItem.SetLeftBarButtonItem( new UIBarButtonItem( springboardRevealButton ), false );
+            this.NavigationItem.SetLeftBarButtonItem( new UIBarButtonItem( SpringboardRevealButton ), false );
             //
 
+            // set the title image for the bar
+            string imagePath = NSBundle.MainBundle.BundlePath + "/" + CCVApp.Config.PrimaryNavBar.LogoFile;
+            this.NavigationItem.TitleView = new UIImageView( new UIImage( imagePath ) );
+
+            //todo: add a 2x2 tile color background if desired/needed
+            //if( string.IsNullOrEmpty( CCVApp.Config.PrimaryNavBar.BackgroundTileImage ) == false )
+            {
+                //imagePath = NSBundle.MainBundle.BundlePath + "/" + CCVApp.Config.PrimaryNavBar.BackgroundTileImage;
+                //NavigationController.NavigationBar.SetBackgroundImage( new UIImage( imagePath ), UIBarMetrics.Default );
+            }
 
             // Now create the sub-navigation, which includes
             // the NavToolbar used to let the user navigate
             CreateSubNavigationController( );
+        }
+
+        public void EnableSpringboardRevealButton( bool enabled )
+        {
+            if( SpringboardRevealButton != null )
+            {
+                SpringboardRevealButton.Enabled = enabled;
+            }
         }
 
         protected void CreateSubNavigationController( )
@@ -102,13 +122,6 @@ namespace iOS
             // Load the navigationController from the storyboard.
             SubNavigationController = Storyboard.InstantiateViewController( "SubNavController" ) as UINavigationController;
             SubNavigationController.Delegate = new NavBarDelegate( ) { ParentController = this };
-
-            // the sub navigation control should go below the primary navigation bar.
-            SubNavigationController.View.Frame = new RectangleF( 0, 
-                NavigationController.NavigationBar.Frame.Height, 
-                SubNavigationController.View.Frame.Width, 
-                SubNavigationController.View.Frame.Height - NavigationController.NavigationBar.Frame.Height);
-
 
             // setup the toolbar that will manage task navigation and any other tasks the task needs
             SubNavToolbar = new NavToolbar();
@@ -127,7 +140,6 @@ namespace iOS
                         SubNavigationController.PopViewControllerAnimated( true );
                     }
                 });
-
 
             // add this navigation controller (and its toolbar) as a child
             // of this ContainerViewController, which will effectively make it a child
