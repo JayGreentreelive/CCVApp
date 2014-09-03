@@ -28,6 +28,10 @@ namespace iOS
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
+		UIButton LoginButton { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
 		UIButton NewsButton { get; set; }
 
 		[Outlet]
@@ -36,7 +40,7 @@ namespace iOS
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UIView ProfileImage { get; set; }
+		UITextField UserNameField { get; set; }
 
 		void ReleaseDesignerOutlets ()
 		{
@@ -52,6 +56,10 @@ namespace iOS
 				GroupFinderButton.Dispose ();
 				GroupFinderButton = null;
 			}
+			if (LoginButton != null) {
+				LoginButton.Dispose ();
+				LoginButton = null;
+			}
 			if (NewsButton != null) {
 				NewsButton.Dispose ();
 				NewsButton = null;
@@ -60,9 +68,9 @@ namespace iOS
 				PrayerButton.Dispose ();
 				PrayerButton = null;
 			}
-			if (ProfileImage != null) {
-				ProfileImage.Dispose ();
-				ProfileImage = null;
+			if (UserNameField != null) {
+				UserNameField.Dispose ();
+				UserNameField = null;
 			}
 		}
 	}

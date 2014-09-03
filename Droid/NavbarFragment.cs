@@ -100,7 +100,7 @@ namespace Droid
 
             //The navbar should basically be a background with logo and a springboard reveal button in the upper left.
             var relativeLayout = inflater.Inflate(Resource.Layout.Navbar, container, false) as RelativeLayout;
-            relativeLayout.SetBackgroundColor( RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.PrimaryNavBar.BackgroundColor ) );
+            relativeLayout.SetBackgroundColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.PrimaryNavBar.BackgroundColor ) );
 
             // create the springboard reveal button
             CreateSpringboardButton( relativeLayout );
@@ -123,7 +123,7 @@ namespace Droid
 
 
             // set the font and text
-            Typeface fontFace = Typeface.CreateFromAsset( RockMobile.PlatformCommon.Droid.Context.Assets, "Fonts/" + CCVApp.Config.PrimaryNavBar.RevealButton_Font + ".ttf" );
+            Typeface fontFace = Typeface.CreateFromAsset( Rock.Mobile.PlatformCommon.Droid.Context.Assets, "Fonts/" + CCVApp.Config.PrimaryNavBar.RevealButton_Font + ".ttf" );
             SpringboardReveal.SetTypeface( fontFace, TypefaceStyle.Normal );
             SpringboardReveal.SetTextSize( Android.Util.ComplexUnitType.Dip, CCVApp.Config.PrimaryNavBar.RevealButton_Size );
             SpringboardReveal.Text = CCVApp.Config.PrimaryNavBar.RevealButton_Text;
@@ -138,9 +138,9 @@ namespace Droid
 
             int [] colors = new int[]
                 {
-                    RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.PrimaryNavBar.RevealButton_PressedColor ),
-                    RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.PrimaryNavBar.RevealButton_DepressedColor ),
-                    RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.PrimaryNavBar.RevealButton_DisabledColor ),
+                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.PrimaryNavBar.RevealButton_PressedColor ),
+                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.PrimaryNavBar.RevealButton_DepressedColor ),
+                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.PrimaryNavBar.RevealButton_DisabledColor ),
                 };
             SpringboardReveal.SetTextColor( new Android.Content.Res.ColorStateList( states, colors ) );
 

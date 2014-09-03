@@ -117,7 +117,7 @@ namespace Droid
             }
 
             view.SetOnTouchListener( this );
-            view.SetBackgroundColor( RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.Springboard.BackgroundColor ) );
+            view.SetBackgroundColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.Springboard.BackgroundColor ) );
 
             return view;
         }
@@ -126,7 +126,7 @@ namespace Droid
         {
             base.OnResume();
 
-            ActivateElement( Elements[ 3 ] );
+            ActivateElement( Elements[ 0 ] );
         }
 
         public bool OnTouch( View v, MotionEvent e )
@@ -155,11 +155,11 @@ namespace Droid
             {
                 if( activeElement != element )
                 {
-                    element.Layout.SetBackgroundColor( RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( 0x00000000 ) );
+                    element.Layout.SetBackgroundColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( 0x00000000 ) );
                 }
             }
 
-            activeElement.Layout.SetBackgroundColor( RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.Springboard.Element_SelectedColor ) );
+            activeElement.Layout.SetBackgroundColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.Springboard.Element_SelectedColor ) );
             NavbarFragment.SetActiveTask( activeElement.Task );
         }
 

@@ -10,7 +10,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using RockMobile.Network;
+using Rock.Mobile.Network;
 using Notes;
 using System.Drawing;
 using System.IO;
@@ -204,7 +204,7 @@ namespace Droid
                     RefreshButton = layout.FindViewById<Button>( Resource.Id.refreshButton );
 
                     // create our overridden lockable scroll view
-                    ScrollView = new LockableScrollView( RockMobile.PlatformCommon.Droid.Context );
+                    ScrollView = new LockableScrollView( Rock.Mobile.PlatformCommon.Droid.Context );
                     ScrollView.ScrollBarStyle = ScrollbarStyles.InsideInset;
                     ScrollView.OverScrollMode = OverScrollMode.Always;
                     ScrollView.VerticalScrollbarPosition = ScrollbarPosition.Default;
@@ -218,16 +218,16 @@ namespace Droid
 
                     Indicator = layout.FindViewById<ProgressBar>( Resource.Id.progressBar );
                     Indicator.Visibility = ViewStates.Gone;
-                    Indicator.SetBackgroundColor( RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( 0 ) );
+                    Indicator.SetBackgroundColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( 0 ) );
                     Indicator.BringToFront();
 
                     // create the layout that will contain the notes
-                    ScrollViewLayout = new RelativeLayout( RockMobile.PlatformCommon.Droid.Context );
+                    ScrollViewLayout = new RelativeLayout( Rock.Mobile.PlatformCommon.Droid.Context );
                     ScrollView.AddView( ScrollViewLayout );
                     ScrollViewLayout.SetOnTouchListener( this );
 
 
-                    GestureDetector = new GestureDetector( RockMobile.PlatformCommon.Droid.Context, new DoubleTap( this ) );
+                    GestureDetector = new GestureDetector( Rock.Mobile.PlatformCommon.Droid.Context, new DoubleTap( this ) );
 
                     RefreshButton.Click += (object sender, EventArgs e ) =>
                     {
@@ -235,7 +235,7 @@ namespace Droid
                     };
 
                     // get our power management control
-                    PowerManager pm = PowerManager.FromContext( RockMobile.PlatformCommon.Droid.Context );
+                    PowerManager pm = PowerManager.FromContext( Rock.Mobile.PlatformCommon.Droid.Context );
                     WakeLock = pm.NewWakeLock(WakeLockFlags.Full, "Notes");
 
                     //
@@ -429,7 +429,7 @@ namespace Droid
                     }
                     else
                     {
-                        RockMobile.Threading.UIThreading.PerformOnUIThread( delegate
+                        Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate
                             {
                                 Note = note;
 
@@ -440,7 +440,7 @@ namespace Droid
                                     Note.Create( this.Resources.DisplayMetrics.WidthPixels, this.Resources.DisplayMetrics.HeightPixels, ScrollViewLayout );
 
                                     // set the requested background color
-                                    ScrollView.SetBackgroundColor( ( Android.Graphics.Color )RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value ) );
+                                    ScrollView.SetBackgroundColor( ( Android.Graphics.Color )Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value ) );
 
                                     // update the height of the scroll view to fit all content
                                     RectangleF frame = Note.GetFrame( );
@@ -472,9 +472,9 @@ namespace Droid
 
                 protected void ReportException( string errorMsg, Exception e )
                 {
-                    RockMobile.Threading.UIThreading.PerformOnUIThread( delegate
+                    Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate
                         {
-                            AlertDialog.Builder dlgAlert = new AlertDialog.Builder( RockMobile.PlatformCommon.Droid.Context );                      
+                            AlertDialog.Builder dlgAlert = new AlertDialog.Builder( Rock.Mobile.PlatformCommon.Droid.Context );                      
                             dlgAlert.SetTitle( "Note Error" ); 
                             dlgAlert.SetMessage( errorMsg + "\n" + e.Message ); 
                             dlgAlert.SetPositiveButton( "Ok", delegate(object sender, DialogClickEventArgs ev )

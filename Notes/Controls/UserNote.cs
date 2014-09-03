@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml;
 using System.Drawing;
-using RockMobile.PlatformUI;
+using Rock.Mobile.PlatformUI;
 using System.Threading;
 
 namespace Notes
@@ -236,7 +236,7 @@ namespace Notes
             PointF labelToTouch = new PointF( touch.X - (DeleteButton.Frame.X + DeleteButton.Frame.Width / 2), 
                                               touch.Y - (DeleteButton.Frame.Y + DeleteButton.Frame.Height / 2));
 
-            float distSquared = RockMobile.Math.Util.MagnitudeSquared( labelToTouch );
+            float distSquared = Rock.Mobile.Math.Util.MagnitudeSquared( labelToTouch );
             if( distSquared < AnchorTouchMaxDist )
             {
                 return true;
@@ -251,7 +251,7 @@ namespace Notes
             PointF labelToTouch = new PointF( touch.X - (AnchorFrame.X + AnchorFrame.Width / 2), 
                                               touch.Y - (AnchorFrame.Y + AnchorFrame.Height / 2));
 
-            float distSquared = RockMobile.Math.Util.MagnitudeSquared( labelToTouch );
+            float distSquared = Rock.Mobile.Math.Util.MagnitudeSquared( labelToTouch );
             if( distSquared < AnchorTouchMaxDist )
             {
                 return true;
@@ -321,7 +321,7 @@ namespace Notes
                 // if we're in the hold state, require a small amount of moving before committing to movement.
                 if( State == TouchState.Hold )
                 {
-                    float magSquared = RockMobile.Math.Util.MagnitudeSquared( delta );
+                    float magSquared = Rock.Mobile.Math.Util.MagnitudeSquared( delta );
                     if( magSquared > sMinDistForMove )
                     {
                         // stamp our position as the new starting position so we don't
@@ -420,7 +420,7 @@ namespace Notes
             if ( TouchInAnchorRange( TrackingLastPos ) && State == TouchState.Hold )
             {
                 // reveal the delete button
-                RockMobile.Threading.UIThreading.PerformOnUIThread( delegate {  DeleteButton.Hidden = false; } );
+                Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate {  DeleteButton.Hidden = false; } );
                 DeleteEnabled = true;
             }
 

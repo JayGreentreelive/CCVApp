@@ -1,15 +1,17 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iOS", "iOS\iOS.csproj", "{8493BB83-6542-4BAE-BE1B-FCFE349AF1E6}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Notes", "Notes\Notes.shproj", "{CED4668A-3978-4548-8291-B72682C483B4}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "RockMobile", "..\RockMobile\RockMobile.shproj", "{A72997A9-2CAA-402A-AA22-632CB99DC3DD}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Rock.Mobile", "..\Rock.Mobile\Rock.Mobile.shproj", "{A72997A9-2CAA-402A-AA22-632CB99DC3DD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Droid", "Droid\Droid.csproj", "{68BFCE9C-3ABC-4ACC-9054-BA9340AA598C}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Config", "Config\Config.shproj", "{044AC65E-ABEB-4BC0-A437-AECABC946595}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Rock.Client.Models", "..\Rock\Rock.Client\Rock.Client.Models.shproj", "{633206D3-C28A-481F-8CF3-2C9A9877FAC3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +49,6 @@ Global
 		{8493BB83-6542-4BAE-BE1B-FCFE349AF1E6}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Droid\Droid.csproj
+		StartupItem = iOS\iOS.csproj
 	EndGlobalSection
 EndGlobal

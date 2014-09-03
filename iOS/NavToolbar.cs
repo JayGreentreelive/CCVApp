@@ -61,7 +61,7 @@ namespace iOS
                     // when the timer fires, hide the toolbar.
                     // Although the timer fires on a seperate thread, because we queue the reveal
                     // on the main (UI) thread, we don't have to worry about race conditions.
-                    RockMobile.Threading.UIThreading.PerformOnUIThread( delegate { Reveal( false ); } );
+                    Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate { Reveal( false ); } );
                 };
 
 
@@ -69,10 +69,10 @@ namespace iOS
             NSString buttonLabel = new NSString(CCVApp.Config.SubNavToolbar.BackButton_Text);
 
             BackButton = new UIButton(UIButtonType.System);
-            BackButton.Font = RockMobile.PlatformCommon.iOS.LoadFontDynamic( CCVApp.Config.SubNavToolbar.BackButton_Font, CCVApp.Config.SubNavToolbar.BackButton_Size );
+            BackButton.Font = Rock.Mobile.PlatformCommon.iOS.LoadFontDynamic( CCVApp.Config.SubNavToolbar.BackButton_Font, CCVApp.Config.SubNavToolbar.BackButton_Size );
             BackButton.SetTitle( buttonLabel.ToString( ), UIControlState.Normal );
-            BackButton.SetTitleColor( RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.SubNavToolbar.BackButton_EnabledColor ), UIControlState.Normal );
-            BackButton.SetTitleColor( RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.SubNavToolbar.BackButton_DisabledColor ), UIControlState.Disabled );
+            BackButton.SetTitleColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.SubNavToolbar.BackButton_EnabledColor ), UIControlState.Normal );
+            BackButton.SetTitleColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.SubNavToolbar.BackButton_DisabledColor ), UIControlState.Disabled );
 
             // determine its dimensions
             SizeF buttonSize = buttonLabel.StringSize( BackButton.Font );

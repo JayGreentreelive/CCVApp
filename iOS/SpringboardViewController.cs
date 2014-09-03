@@ -5,6 +5,7 @@ using System.CodeDom.Compiler;
 using MonoTouch.CoreAnimation;
 using System.Drawing;
 using System.Collections.Generic;
+using Rock.Mobile.Network;
 
 namespace iOS
 {
@@ -115,6 +116,8 @@ namespace iOS
 
         protected UIDeviceOrientation CurrentOrientation { get; set; }
 
+        protected LoginViewController ActiveLoginController { get; set; }
+
 		public SpringboardViewController (IntPtr handle) : base (handle)
 		{
             NavViewController = Storyboard.InstantiateViewController( "MainUINavigationController" ) as MainUINavigationController;
@@ -170,24 +173,38 @@ namespace iOS
             Elements.Add( new SpringboardElement( this, new GiveTask( "GiveStoryboard_iPhone" )  , PrayerButton     , "prayer.png" ) );
             Elements.Add( new SpringboardElement( this, new AboutTask( "AboutStoryboard_iPhone" ), AboutButton      , "info.png" ) );
 
-            // set the profile image.
-            string imagePath = NSBundle.MainBundle.BundlePath + "/" + CCVApp.Config.Springboard.NoProfileFile;
-            ProfileImage.Layer.Contents = new UIImage( imagePath ).CGImage;
-
-            // apply a circular mask
+            // set the profile image mask so it's circular
             CALayer maskLayer = new CALayer();
             maskLayer.AnchorPoint = new PointF( 0, 0 );
-            maskLayer.Bounds = ProfileImage.Layer.Bounds;
-            maskLayer.CornerRadius = ProfileImage.Layer.Bounds.Width / 2;
+            maskLayer.Bounds = LoginButton.Layer.Bounds;
+            maskLayer.CornerRadius = LoginButton.Layer.Bounds.Width / 2;
             maskLayer.BackgroundColor = UIColor.Black.CGColor;
-            ProfileImage.Layer.Mask = maskLayer;
+            LoginButton.Layer.Mask = maskLayer;
             //
-
 
             AddChildViewController( NavViewController );
             View.AddSubview( NavViewController.View );
 
             SetNeedsStatusBarAppearanceUpdate( );
+        }
+
+        public void LoginWantsResign( )
+        {
+            ActiveLoginController.DismissViewController( true, null );
+            ActiveLoginController = null;
+        }
+
+        public override void PrepareForSegue ( UIStoryboardSegue segue,  NSObject sender )
+        {
+            base.PrepareForSegue (segue, sender);
+
+            // give the login controller a pointer to use so we can resign it.
+            ActiveLoginController = segue.DestinationViewController as LoginViewController;
+
+            if (ActiveLoginController != null) 
+            {
+                ActiveLoginController.Springboard = this;
+            }
         }
 
         public override bool PrefersStatusBarHidden()
@@ -205,26 +222,34 @@ namespace iOS
 
         protected void ActivateElement( SpringboardElement activeElement )
         {
-            // first turn "off" the backingView selection for all but the element
-            // becoming active.
-            foreach( SpringboardElement element in Elements )
+            // don't allow any navigation while the login controller is active
+            if( ActiveLoginController == null )
             {
-                if( element != activeElement )
+                // first turn "off" the backingView selection for all but the element
+                // becoming active.
+                foreach( SpringboardElement element in Elements )
                 {
-                    element.BackingView.BackgroundColor = UIColor.Clear;
+                    if( element != activeElement )
+                    {
+                        element.BackingView.BackgroundColor = UIColor.Clear;
+                    }
                 }
-            }
 
-            // activate the element and its associated task
-            activeElement.BackingView.BackgroundColor = RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.Springboard.Element_SelectedColor );
-            NavViewController.ActivateTask( activeElement.Task );
+                // activate the element and its associated task
+                activeElement.BackingView.BackgroundColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.Springboard.Element_SelectedColor );
+                NavViewController.ActivateTask( activeElement.Task );
+            }
         }
 
         public override void TouchesEnded(NSSet touches, UIEvent evt)
         {
             base.TouchesEnded(touches, evt);
 
-            NavViewController.RevealSpringboard( false );
+            // don't allow any navigation while the login controller is active
+            if( ActiveLoginController == null )
+            {
+                NavViewController.RevealSpringboard( false );
+            }
         }
 
         public override void ViewWillLayoutSubviews()
@@ -241,8 +266,23 @@ namespace iOS
         {
             base.ViewDidAppear(animated);
 
-            // start up the app with the first task
-            ActivateElement( Elements[0] );
+            // if we're appearing and no task is active, start one.
+            // (this will only happen when the app is first launched)
+            if( NavViewController.CurrentTask == null )
+            {
+                ActivateElement( Elements[0] );
+            }
+
+            // are we logged in?
+            if( MobileUser.Instance.LoggedIn )
+            {
+                // get their profile
+                UserNameField.Text = MobileUser.Instance.Person.FirstName + " " + MobileUser.Instance.Person.LastName;
+            }
+            else
+            {
+                UserNameField.Text = "Login to enable additional features.";
+            }
         }
 
         public void OnActivated( )

@@ -75,8 +75,8 @@ namespace iOS
             View.BackgroundColor = UIColor.Black;
 
             // setup the style of the nav bar
-            NavigationBar.TintColor = RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.PrimaryNavBar.RevealButton_DepressedColor );
-            NavigationBar.BarTintColor = RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.PrimaryNavBar.BackgroundColor );
+            NavigationBar.TintColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.PrimaryNavBar.RevealButton_DepressedColor );
+            NavigationBar.BarTintColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.PrimaryNavBar.BackgroundColor );
 
 
 
@@ -87,7 +87,7 @@ namespace iOS
             // setup a shadow that provides depth when this panel is slid "out" from the springboard.
             UIBezierPath shadowPath = UIBezierPath.FromRect( View.Bounds );
             View.Layer.MasksToBounds = false;
-            View.Layer.ShadowColor = RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.PrimaryContainer.ShadowColor ).CGColor;
+            View.Layer.ShadowColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.PrimaryContainer.ShadowColor ).CGColor;
             View.Layer.ShadowOffset = CCVApp.Config.PrimaryContainer.ShadowOffset;
             View.Layer.ShadowOpacity = CCVApp.Config.PrimaryContainer.ShadowOpacity;
             View.Layer.ShadowPath = shadowPath.CGPath;

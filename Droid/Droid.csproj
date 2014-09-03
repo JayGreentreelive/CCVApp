@@ -42,10 +42,13 @@
     <Reference Include="System.Core" />
     <Reference Include="Mono.Android" />
     <Reference Include="RN_iBeacon_Bindings">
-      <HintPath>..\..\RockMobile\Lib\Android\RN_iBeacon_Bindings.dll</HintPath>
+      <HintPath>..\..\Rock.Mobile\Lib\Android\RN_iBeacon_Bindings.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\Components\json.net-4.5.11\lib\android\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp.MonoDroid">
+      <HintPath>..\Components\restsharp-104.4.0\lib\android\RestSharp.MonoDroid.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -121,8 +124,9 @@
     </AndroidResource>
   </ItemGroup>
   <Import Project="..\Notes\Notes.projitems" Label="Shared" Condition="Exists('..\Notes\Notes.projitems')" />
-  <Import Project="..\..\RockMobile\RockMobile.projitems" Label="Shared" Condition="Exists('..\..\RockMobile\RockMobile.projitems')" />
   <Import Project="..\Config\Config.projitems" Label="Shared" Condition="Exists('..\Config\Config.projitems')" />
+  <Import Project="..\..\Rock.Mobile\Rock.Mobile.projitems" Label="Shared" Condition="Exists('..\..\Rock.Mobile\Rock.Mobile.projitems')" />
+  <Import Project="..\..\Rock\Rock.Client\Rock.Client.Models.projitems" Label="Shared" Condition="Exists('..\..\Rock\Rock.Client\Rock.Client.Models.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Assets\Fonts\" />
@@ -274,6 +278,10 @@
   <ItemGroup>
     <XamarinComponentReference Include="json.net">
       <Version>4.5.11</Version>
+      <Visible>False</Visible>
+    </XamarinComponentReference>
+    <XamarinComponentReference Include="restsharp">
+      <Version>104.4.0</Version>
       <Visible>False</Visible>
     </XamarinComponentReference>
   </ItemGroup>

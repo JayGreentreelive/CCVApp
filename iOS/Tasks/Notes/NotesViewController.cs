@@ -4,7 +4,7 @@ using System.Drawing;
 
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using RockMobile.Network;
+using Rock.Mobile.Network;
 using Notes;
 using System.Collections.Generic;
 using System.IO;
@@ -197,7 +197,7 @@ namespace iOS
             UIScrollView = new CustomScrollView( );
             UIScrollView.Interceptor = this;
             UIScrollView.Frame = View.Frame;
-            UIScrollView.BackgroundColor = RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( 0x1C1C1CFF );
+            UIScrollView.BackgroundColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( 0x1C1C1CFF );
 
             UITapGestureRecognizer tapGesture = new UITapGestureRecognizer();
             tapGesture.NumberOfTapsRequired = 2;
@@ -456,7 +456,7 @@ namespace iOS
                             UIScrollView.ScrollEnabled = true;
 
                             // take the requested background color
-                            UIScrollView.BackgroundColor = RockMobile.PlatformUI.PlatformBaseUI.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value );
+                            UIScrollView.BackgroundColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value );
                             View.BackgroundColor = UIScrollView.BackgroundColor; //Make the view itself match too
 
                             // update the height of the scroll view to fit all content

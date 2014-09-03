@@ -3,7 +3,7 @@ using System.Xml;
 using System.IO;
 using System.Collections.Generic;
 using System.Drawing;
-using RockMobile.Network;
+using Rock.Mobile.Network;
 
 namespace Notes
 {

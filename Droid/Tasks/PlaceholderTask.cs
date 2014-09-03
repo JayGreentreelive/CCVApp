@@ -23,7 +23,7 @@ namespace Droid
                         return null;
                     }
 
-                    View view = new View( RockMobile.PlatformCommon.Droid.Context );
+                    View view = new View( Rock.Mobile.PlatformCommon.Droid.Context );
                     return view;
                 }
             }
