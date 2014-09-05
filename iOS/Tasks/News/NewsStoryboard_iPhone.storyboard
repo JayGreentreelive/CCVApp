@@ -6,7 +6,7 @@
     <scenes>
         <scene sceneID="4">
             <objects>
-                <viewController id="5" sceneMemberID="viewController" storyboardIdentifier="MainPageViewController" customClass="TaskUIViewController">
+                <viewController id="5" sceneMemberID="viewController" storyboardIdentifier="MainPageViewController" customClass="NewsMainUIViewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="2"/>
                         <viewControllerLayoutGuide type="bottom" id="3"/>
@@ -16,32 +16,47 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" customColorSpace="calibratedWhite" colorSpace="calibratedRGB" red="0.082352941176470587" green="0.082352941176470587" blue="0.082352941176470587" alpha="1"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="News: Main Page" lineBreakMode="tailTruncation" minimumFontSize="10" id="9" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES">
-                                <rect key="frame" x="92" y="99" width="137" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" colorSpace="calibratedRGB" red="1" green="1" blue="1" alpha="1"/>
-                                <nil key="highlightedColor"/>
-                                <constraints>
-                                </constraints>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="21" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES">
-                                <rect key="frame" x="86" y="195" width="147" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Click for details">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <segue destination="16" kind="custom" id="94" customClass="TaskTransition"/>
-                                </connections>
-                                <constraints>
-                                </constraints>
-                            </button>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="102" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO">
+                                <rect key="frame" x="0.0" y="45" width="320" height="523"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="103">
+                                        <rect key="frame" x="0.0" y="22" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="104" tableViewCell="103">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="105">
+                                        <rect key="frame" x="0.0" y="66" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="106" tableViewCell="105">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="107">
+                                        <rect key="frame" x="0.0" y="110" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="108" tableViewCell="107">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
                         </subviews>
                         <constraints>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="NewsTableView" destination="102" id="name-outlet-102"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -49,7 +64,7 @@
         </scene>
         <scene sceneID="15">
             <objects>
-                <viewController id="16" sceneMemberID="viewController" storyboardIdentifier="DetailsViewController" customClass="TaskUIViewController">
+                <viewController id="16" sceneMemberID="viewController" storyboardIdentifier="NewsDetailsUIViewController" customClass="NewsDetailsUIViewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="13"/>
                         <viewControllerLayoutGuide type="bottom" id="14"/>
@@ -59,7 +74,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" customColorSpace="calibratedWhite" colorSpace="calibratedRGB" red="0.082352941176470587" green="0.082352941176470587" blue="0.082352941176470587" alpha="1"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="News: Details" lineBreakMode="tailTruncation" minimumFontSize="10" id="20" translatesAutoresizingMaskIntoConstraints="NO">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" lineBreakMode="tailTruncation" minimumFontSize="10" id="20" translatesAutoresizingMaskIntoConstraints="NO">
                                 <rect key="frame" x="106" y="95" width="109" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -68,10 +83,11 @@
                                 <nil key="highlightedColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="109" id="85"/>
+                                    <constraint firstAttribute="height" constant="21" id="126"/>
                                 </constraints>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="34" translatesAutoresizingMaskIntoConstraints="NO">
-                                <rect key="frame" x="72" y="186" width="177" height="30"/>
+                                <rect key="frame" x="72" y="321" width="177" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Click for even more info">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -81,16 +97,35 @@
                                 </connections>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="177" id="88"/>
+                                    <constraint firstAttribute="height" constant="30" id="134"/>
                                 </constraints>
                             </button>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" lineBreakMode="tailTruncation" minimumFontSize="10" id="114" translatesAutoresizingMaskIntoConstraints="NO" numberOfLines="2">
+                                <rect key="frame" x="82" y="144" width="156" height="41"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" colorSpace="calibratedRGB" red="1" green="1" blue="1" alpha="1"/>
+                                <nil key="highlightedColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="156" id="122"/>
+                                    <constraint firstAttribute="height" constant="41" id="123"/>
+                                </constraints>
+                            </label>
                         </subviews>
                         <constraints>
-                            <constraint id="83" firstItem="17" firstAttribute="trailing" secondItem="20" secondAttribute="trailing" constant="105"/>
-                            <constraint id="84" firstItem="20" firstAttribute="top" secondItem="17" secondAttribute="top" constant="95"/>
-                            <constraint id="86" firstItem="17" firstAttribute="trailing" secondItem="34" secondAttribute="trailing" constant="71"/>
-                            <constraint id="87" firstItem="34" firstAttribute="top" secondItem="17" secondAttribute="top" constant="186"/>
+                            <constraint firstItem="17" firstAttribute="trailing" secondItem="114" secondAttribute="trailing" constant="82" id="120"/>
+                            <constraint id="121" firstItem="114" firstAttribute="top" secondItem="17" secondAttribute="top" constant="144"/>
+                            <constraint firstItem="17" firstAttribute="trailing" secondItem="20" secondAttribute="trailing" constant="105" id="124"/>
+                            <constraint id="125" firstItem="20" firstAttribute="top" secondItem="17" secondAttribute="top" constant="95"/>
+                            <constraint id="135" firstItem="17" firstAttribute="trailing" secondItem="34" secondAttribute="trailing" constant="71"/>
+                            <constraint id="136" firstItem="17" firstAttribute="bottom" secondItem="34" secondAttribute="bottom" constant="217"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="NewsTitleLabel" destination="20" id="name-outlet-20"/>
+                        <outlet property="NewsDescriptionLabel" destination="114" id="name-outlet-114"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="18" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -140,7 +175,7 @@
         <image name="Default-568h.png" width="640" height="1136"/>
         <image name="spot_mask.png" width="128" height="128"/>
         <image name="me.jpg" width="471" height="480"/>
-        <image name="ccvLogo.png" width="320" height="64"/>
+        <image name="ccvLogo.png" width="57" height="28"/>
         <image name="cheeseburger.png" width="22" height="19"/>
         <image name="notes.png" width="31" height="38"/>
         <image name="info.png" width="38" height="38"/>
@@ -149,5 +184,9 @@
         <image name="prayer.png" width="47" height="35"/>
         <image name="give.png" width="44" height="35"/>
         <image name="noprofile.png" width="223" height="223"/>
+        <image name="addphoto.png" width="223" height="223"/>
+        <image name="Default.png" width="320" height="480"/>
+        <image name="Icon-60.png" width="120" height="120"/>
+        <image name="Icon.png" width="57" height="57"/>
     </resources>
 </document>

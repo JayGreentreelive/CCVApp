@@ -3,6 +3,7 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using System.CodeDom.Compiler;
 using Rock.Mobile.Network;
+using CCVApp.Shared.Network;
 
 namespace iOS
 {
@@ -87,7 +88,7 @@ namespace iOS
                             if( ev.ButtonIndex == actionSheet.DestructiveButtonIndex )
                             {
                                 // then log them out.
-                                MobileUser.Instance.Logout( );
+                                RockMobileUser.Instance.Logout( );
 
                                 Springboard.ResignModelViewController( this );
                             }
@@ -128,18 +129,18 @@ namespace iOS
         void SubmitChanges()
         {
             // copy all the edited fields into the person object
-            MobileUser.Instance.Person.Email = EmailField.Text;
+            RockMobileUser.Instance.Person.Email = EmailField.Text;
 
-            MobileUser.Instance.Person.MiddleName = MiddleNameField.Text;
+            RockMobileUser.Instance.Person.MiddleName = MiddleNameField.Text;
 
-            MobileUser.Instance.Person.NickName = NickNameField.Text;
+            RockMobileUser.Instance.Person.NickName = NickNameField.Text;
 
-            MobileUser.Instance.Person.FirstName = FirstNameField.Text;
-            MobileUser.Instance.Person.LastName = LastNameField.Text;
+            RockMobileUser.Instance.Person.FirstName = FirstNameField.Text;
+            RockMobileUser.Instance.Person.LastName = LastNameField.Text;
 
             // request the person object be sync'd with the server. because we save the object locally,
             // if the sync fails, the profile will try again at the next login
-            MobileUser.Instance.UpdateProfile( delegate { Springboard.ResignModelViewController( this ); });
+            RockMobileUser.Instance.UpdateProfile( delegate { Springboard.ResignModelViewController( this ); });
         }
 
         public override void TouchesEnded(NSSet touches, UIEvent evt)
@@ -166,19 +167,19 @@ namespace iOS
             Dirty = false;
 
             // logged in sanity check.
-            if( MobileUser.Instance.LoggedIn == false ) throw new Exception("A user must be logged in before viewing a profile. How did you do this?" );
+            if( RockMobileUser.Instance.LoggedIn == false ) throw new Exception("A user must be logged in before viewing a profile. How did you do this?" );
 
-            HeaderLabel.Text = string.Format( "Hey {0}", MobileUser.Instance.PreferredName( ) );
+            HeaderLabel.Text = string.Format( "Hey {0}", RockMobileUser.Instance.PreferredName( ) );
 
             TitleField.Text = "";
 
-            FirstNameField.Text = MobileUser.Instance.Person.FirstName;
-            MiddleNameField.Text = MobileUser.Instance.Person.MiddleName;
-            LastNameField.Text = MobileUser.Instance.Person.LastName;
+            FirstNameField.Text = RockMobileUser.Instance.Person.FirstName;
+            MiddleNameField.Text = RockMobileUser.Instance.Person.MiddleName;
+            LastNameField.Text = RockMobileUser.Instance.Person.LastName;
 
-            NickNameField.Text = MobileUser.Instance.Person.NickName;
+            NickNameField.Text = RockMobileUser.Instance.Person.NickName;
 
-            EmailField.Text = MobileUser.Instance.Person.Email;
+            EmailField.Text = RockMobileUser.Instance.Person.Email;
         }
 	}
 }

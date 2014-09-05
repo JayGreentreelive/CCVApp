@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,10 +9,11 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using Rock.Mobile.Network;
-using Notes;
 using System.Drawing;
 using System.IO;
+
+using Rock.Mobile.Network;
+using CCVApp.Shared.Notes;
 
 namespace Droid
 {

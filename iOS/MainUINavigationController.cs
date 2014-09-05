@@ -75,8 +75,8 @@ namespace iOS
             View.BackgroundColor = UIColor.Black;
 
             // setup the style of the nav bar
-            NavigationBar.TintColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.PrimaryNavBar.RevealButton_DepressedColor );
-            NavigationBar.BarTintColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.PrimaryNavBar.BackgroundColor );
+            NavigationBar.TintColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.PrimaryNavBar.RevealButton_DepressedColor );
+            NavigationBar.BarTintColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.PrimaryNavBar.BackgroundColor );
 
 
 
@@ -87,9 +87,9 @@ namespace iOS
             // setup a shadow that provides depth when this panel is slid "out" from the springboard.
             UIBezierPath shadowPath = UIBezierPath.FromRect( View.Bounds );
             View.Layer.MasksToBounds = false;
-            View.Layer.ShadowColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.PrimaryContainer.ShadowColor ).CGColor;
-            View.Layer.ShadowOffset = CCVApp.Config.PrimaryContainer.ShadowOffset;
-            View.Layer.ShadowOpacity = CCVApp.Config.PrimaryContainer.ShadowOpacity;
+            View.Layer.ShadowColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.PrimaryContainer.ShadowColor ).CGColor;
+            View.Layer.ShadowOffset = CCVApp.Shared.Config.PrimaryContainer.ShadowOffset;
+            View.Layer.ShadowOpacity = CCVApp.Shared.Config.PrimaryContainer.ShadowOpacity;
             View.Layer.ShadowPath = shadowPath.CGPath;
         }
 
@@ -145,11 +145,11 @@ namespace iOS
                     Animating = true;
 
                     // Animate the front panel out
-                    UIView.Animate( CCVApp.Config.PrimaryContainer.SlideRate, 0, UIViewAnimationOptions.CurveEaseInOut, 
+                    UIView.Animate( CCVApp.Shared.Config.PrimaryContainer.SlideRate, 0, UIViewAnimationOptions.CurveEaseInOut, 
                         new NSAction( 
                             delegate 
                             { 
-                                float deltaPosition = revealed ? CCVApp.Config.PrimaryContainer.SlideAmount : -CCVApp.Config.PrimaryContainer.SlideAmount;
+                                float deltaPosition = revealed ? CCVApp.Shared.Config.PrimaryContainer.SlideAmount : -CCVApp.Shared.Config.PrimaryContainer.SlideAmount;
 
                                 View.Layer.Position = new PointF( View.Layer.Position.X + deltaPosition, View.Layer.Position.Y ); 
                             })

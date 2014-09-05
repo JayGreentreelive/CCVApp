@@ -3,6 +3,7 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using System.CodeDom.Compiler;
 using Rock.Mobile.Network;
+using CCVApp.Shared.Network;
 
 namespace iOS
 {
@@ -63,9 +64,9 @@ namespace iOS
             // obviously attempt a login if login is pressed
             LoginButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
-                    if( MobileUser.Instance.LoggedIn == true )
+                    if( RockMobileUser.Instance.LoggedIn == true )
                     {
-                        MobileUser.Instance.Logout( );
+                        RockMobileUser.Instance.Logout( );
 
                         SetUIState( LoginState.Out );
                     }
@@ -92,11 +93,11 @@ namespace iOS
             CreateAccountButton.Hidden = false;
 
             // if we're logged in, the UI should be slightly different
-            if( MobileUser.Instance.LoggedIn )
+            if( RockMobileUser.Instance.LoggedIn )
             {
                 // populate them with the user's info
-                UsernameField.Text = MobileUser.Instance.Username;
-                PasswordField.Text = MobileUser.Instance.Password;
+                UsernameField.Text = RockMobileUser.Instance.Username;
+                PasswordField.Text = RockMobileUser.Instance.Password;
 
                 SetUIState( LoginState.In );
             }
@@ -134,7 +135,7 @@ namespace iOS
             {
                 SetUIState( LoginState.Trying );
 
-                MobileUser.Instance.Login( UsernameField.Text, PasswordField.Text, LoginComplete );
+                RockMobileUser.Instance.Login( UsernameField.Text, PasswordField.Text, LoginComplete );
             }
         }
 
@@ -203,7 +204,7 @@ namespace iOS
                 // if we received No Content, we're logged in
                 case System.Net.HttpStatusCode.NoContent:
                 {
-                    MobileUser.Instance.GetProfile( ProfileComplete );
+                    RockMobileUser.Instance.GetProfile( ProfileComplete );
                     break;
                 }
 
@@ -264,7 +265,7 @@ namespace iOS
                     // if we couldn't get their profile, that should still count as a failed login.
                     SetUIState( LoginState.Out );
 
-                    MobileUser.Instance.Logout( );
+                    RockMobileUser.Instance.Logout( );
 
                     LoginResultLabel.Text = "Unable to Login. Try Again";
                     break;

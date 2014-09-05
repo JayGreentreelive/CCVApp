@@ -66,13 +66,13 @@ namespace iOS
 
 
             // create the back button
-            NSString buttonLabel = new NSString(CCVApp.Config.SubNavToolbar.BackButton_Text);
+            NSString buttonLabel = new NSString(CCVApp.Shared.Config.SubNavToolbar.BackButton_Text);
 
             BackButton = new UIButton(UIButtonType.System);
-            BackButton.Font = Rock.Mobile.PlatformCommon.iOS.LoadFontDynamic( CCVApp.Config.SubNavToolbar.BackButton_Font, CCVApp.Config.SubNavToolbar.BackButton_Size );
+            BackButton.Font = Rock.Mobile.PlatformCommon.iOS.LoadFontDynamic( CCVApp.Shared.Config.SubNavToolbar.BackButton_Font, CCVApp.Shared.Config.SubNavToolbar.BackButton_Size );
             BackButton.SetTitle( buttonLabel.ToString( ), UIControlState.Normal );
-            BackButton.SetTitleColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.SubNavToolbar.BackButton_EnabledColor ), UIControlState.Normal );
-            BackButton.SetTitleColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.SubNavToolbar.BackButton_DisabledColor ), UIControlState.Disabled );
+            BackButton.SetTitleColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.BackButton_EnabledColor ), UIControlState.Normal );
+            BackButton.SetTitleColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.BackButton_DisabledColor ), UIControlState.Disabled );
 
             // determine its dimensions
             SizeF buttonSize = buttonLabel.StringSize( BackButton.Font );
@@ -138,7 +138,7 @@ namespace iOS
                     Animating = true;
 
                     // Animate the front panel out
-                    UIView.Animate( CCVApp.Config.SubNavToolbar.SlideRate, 0, UIViewAnimationOptions.CurveEaseInOut, 
+                    UIView.Animate( CCVApp.Shared.Config.SubNavToolbar.SlideRate, 0, UIViewAnimationOptions.CurveEaseInOut, 
                         new NSAction( 
                             delegate 
                             { 

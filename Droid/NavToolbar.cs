@@ -70,7 +70,7 @@ namespace Droid
                 };
 
             RelativeLayout.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
-            RelativeLayout.SetBackgroundColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.SubNavToolbar.BackgroundColor ) );
+            RelativeLayout.SetBackgroundColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.BackgroundColor ) );
 
             RelativeLayout.LayoutParameters.Height = 150;
 
@@ -80,11 +80,11 @@ namespace Droid
             ((RelativeLayout.LayoutParams)BackButton.LayoutParameters).AddRule( LayoutRules.CenterVertical );
 
             // set the back button's font
-            Typeface fontFace = Typeface.CreateFromAsset( Rock.Mobile.PlatformCommon.Droid.Context.Assets, "Fonts/" + CCVApp.Config.SubNavToolbar.BackButton_Font + ".ttf" );
+            Typeface fontFace = Typeface.CreateFromAsset( Rock.Mobile.PlatformCommon.Droid.Context.Assets, "Fonts/" + CCVApp.Shared.Config.SubNavToolbar.BackButton_Font + ".ttf" );
             BackButton.SetTypeface( fontFace, TypefaceStyle.Normal );
-            BackButton.SetTextSize( Android.Util.ComplexUnitType.Dip, CCVApp.Config.SubNavToolbar.BackButton_Size );
+            BackButton.SetTextSize( Android.Util.ComplexUnitType.Dip, CCVApp.Shared.Config.SubNavToolbar.BackButton_Size );
 
-            BackButton.Text = CCVApp.Config.SubNavToolbar.BackButton_Text;
+            BackButton.Text = CCVApp.Shared.Config.SubNavToolbar.BackButton_Text;
             BackButton.SetBackgroundColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( 0x00000000 ) );
 
             BackButton.Click += delegate{ Activity.OnBackPressed(); };
@@ -102,9 +102,9 @@ namespace Droid
 
             int [] colors = new int[]
                 {
-                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.SubNavToolbar.BackButton_PressedColor ),
-                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.SubNavToolbar.BackButton_EnabledColor ),
-                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.SubNavToolbar.BackButton_DisabledColor ),
+                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.BackButton_PressedColor ),
+                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.BackButton_EnabledColor ),
+                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.BackButton_DisabledColor ),
                 };
             BackButton.SetTextColor( new Android.Content.Res.ColorStateList( states, colors ) );    
 
@@ -198,7 +198,7 @@ namespace Droid
 
                     animator.AddUpdateListener( this );
                     animator.AddListener( new NavToolbarAnimationListener( ) { NavbarToolbar = this } );
-                    animator.SetDuration( (long) (CCVApp.Config.SubNavToolbar.SlideRate * 1000.0f) );
+                    animator.SetDuration( (long) (CCVApp.Shared.Config.SubNavToolbar.SlideRate * 1000.0f) );
 
                     animator.Start();
                 }

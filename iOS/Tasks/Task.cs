@@ -7,7 +7,7 @@ namespace iOS
 {
     public class Task
     {
-        protected UIViewController ParentViewController { get; set; }
+        protected UINavigationController ParentViewController { get; set; }
         protected NavToolbar NavToolbar { get; set; }
         protected UIStoryboard Storyboard { get; set; }
 
@@ -21,13 +21,34 @@ namespace iOS
         }
 
         /// <summary>
+        /// The root function to call when changing view controllers within a task. If changing in code,
+        /// directly call this from the view controller. If using a storyboard, hook the segue to TaskTransition
+        /// in ContainerViewController.cs, which will cause this function to be called.
+        /// </summary>
+        /// <param name="sourceViewController">Source view controller.</param>
+        /// <param name="destinationViewController">Destination view controller.</param>
+        public void PerformSegue( UIViewController sourceViewController, UIViewController destinationViewController )
+        {
+            // take this opportunity to give the presenting view controller a pointer to the active task
+            // so it can receive callbacks.
+            TaskUIViewController viewController = destinationViewController as TaskUIViewController;
+            if( viewController == null )
+            {
+                throw new InvalidCastException( "View Controllers used by Activities must be of type TaskUIViewController" );
+            }
+
+            viewController.Task = this;
+            ParentViewController.PushViewController( destinationViewController, true );
+        }
+
+        /// <summary>
         /// Called when the task is going to be the forefront task.
         /// Allows it to do any work necessary before being interacted with.
         /// Ex: Notes might disable the phone's sleep
         /// This is NOT called when the application comes into the foreground.
         /// </summary>
         /// <param name="parentViewController">Parent view controller.</param>
-        public virtual void MakeActive( UIViewController parentViewController, NavToolbar navToolbar )
+        public virtual void MakeActive( UINavigationController parentViewController, NavToolbar navToolbar )
         {
             ParentViewController = parentViewController;
             NavToolbar = navToolbar;

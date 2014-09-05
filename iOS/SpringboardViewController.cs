@@ -6,6 +6,7 @@ using MonoTouch.CoreAnimation;
 using System.Drawing;
 using System.Collections.Generic;
 using Rock.Mobile.Network;
+using CCVApp.Shared.Network;
 
 namespace iOS
 {
@@ -83,7 +84,7 @@ namespace iOS
                 // Create the logo view containing the image.
                 UIView logoView = new UIView( );
                 logoView.Bounds = new RectangleF( 0, 0, image.Size.Width, image.Size.Height );
-                logoView.Layer.Position = new PointF( CCVApp.Config.Springboard.Element_LogoOffsetX, Button.Layer.Position.Y );
+                logoView.Layer.Position = new PointF( CCVApp.Shared.Config.Springboard.Element_LogoOffsetX, Button.Layer.Position.Y );
                 logoView.Layer.Contents = image.CGImage;
                 logoView.BackgroundColor = UIColor.Clear;
                 parentView.AddSubview( logoView );
@@ -95,7 +96,7 @@ namespace iOS
                 TextLabel.Font = Button.Font;
                 TextLabel.BackgroundColor = UIColor.Clear;
                 TextLabel.SizeToFit( );
-                TextLabel.Layer.Position = new PointF( CCVApp.Config.Springboard.Element_LabelOffsetX + (TextLabel.Frame.Width / 2), Button.Layer.Position.Y );
+                TextLabel.Layer.Position = new PointF( CCVApp.Shared.Config.Springboard.Element_LabelOffsetX + (TextLabel.Frame.Width / 2), Button.Layer.Position.Y );
                 parentView.AddSubview( TextLabel );
 
                 // now clear out the button so it just lays on top of the contents
@@ -230,7 +231,7 @@ namespace iOS
 
             LoginButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
-                    if( MobileUser.Instance.LoggedIn == true )
+                    if( RockMobileUser.Instance.LoggedIn == true )
                     {
                         // todo: start picture taker guy
                     }
@@ -245,10 +246,59 @@ namespace iOS
                     PresentModelViewController( ProfileViewController );
                 };
 
+
+            // Perform initial setup. Todo: Should we move this to a Network Manager?
+
             // load our objects and sync with the server any unsaved changes.
+            Console.WriteLine( "Loading objects from device." );
             RockApi.Instance.LoadObjectsFromDevice( );
-            RockApi.Instance.SyncWithServer( );
+            Console.WriteLine( "Loading objects done." );
+
+            // if we're logged in, sync any changes we've made with the server.
+            if( RockMobileUser.Instance.LoggedIn == true )
+            {
+                Console.WriteLine( "Logged in. Syncing out-of-sync data." );
+
+                //( this includes notes, profile changes, etc.)
+                RockApi.Instance.SyncWithServer( delegate 
+                    {
+                        // failure or not, server syncing is finished, so let's go ahead and 
+                        // get launch data.
+                        GetInitialData( );
+                    });
+            }
+            else
+            {
+                Console.WriteLine( "Not Logged In. Skipping sync." );
+
+                GetInitialData( );
+            }
         }
+
+        void GetInitialData( )
+        {
+            // this should only run once every few months.
+            if( 0 != 0 )
+            {
+                RockApi.Instance.GetDefaultData( delegate
+                    {
+                        Console.WriteLine( "Get Default Data Complete." );
+                        RockApi.Instance.GetLaunchData( LaunchDataReceived );
+                    });
+            }
+            else
+            {
+                // this is going to happen each and every run
+                RockApi.Instance.GetLaunchData( LaunchDataReceived );
+            }
+        }
+
+        void LaunchDataReceived(System.Net.HttpStatusCode statusCode, string statusDescription)
+        {
+            //todo: we can update our various areas of code with all the launch data
+            Console.WriteLine( "Launch Data Complete" );
+        }
+        // - End Initial Setup
 
         void PresentModelViewController( UIViewController modelViewController )
         {
@@ -291,7 +341,7 @@ namespace iOS
                 }
 
                 // activate the element and its associated task
-                activeElement.BackingView.BackgroundColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Config.Springboard.Element_SelectedColor );
+                activeElement.BackingView.BackgroundColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.Springboard.Element_SelectedColor );
                 NavViewController.ActivateTask( activeElement.Task );
             }
         }
@@ -329,10 +379,10 @@ namespace iOS
             }
 
             // are we logged in?
-            if( MobileUser.Instance.LoggedIn )
+            if( RockMobileUser.Instance.LoggedIn )
             {
                 // get their profile
-                UserNameField.Text = MobileUser.Instance.PreferredName( ) + " " + MobileUser.Instance.Person.LastName;
+                UserNameField.Text = RockMobileUser.Instance.PreferredName( ) + " " + RockMobileUser.Instance.Person.LastName;
             }
             else
             {
@@ -347,10 +397,10 @@ namespace iOS
             // the image depends on the user's status.
             string imagePath = NSBundle.MainBundle.BundlePath + "/";
 
-            if( MobileUser.Instance.LoggedIn )
+            if( RockMobileUser.Instance.LoggedIn )
             {
                 // todo: get their pic, else...
-                imagePath += CCVApp.Config.Springboard.NoPhotoFile;
+                imagePath += CCVApp.Shared.Config.Springboard.NoPhotoFile;
 
                 // if we're logged in, also display the View Profile button
                 ViewProfileButton.Enabled = true;
@@ -359,7 +409,7 @@ namespace iOS
             else
             {
                 // otherwise display the no profile image.
-                imagePath += CCVApp.Config.Springboard.NoProfileFile;
+                imagePath += CCVApp.Shared.Config.Springboard.NoProfileFile;
 
                 // if we're logged out, hide the view profile button
                 ViewProfileButton.Enabled = false;

@@ -1,15 +1,14 @@
-﻿
-using System;
+﻿using System;
 using System.Drawing;
-
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using Rock.Mobile.Network;
-using Notes;
 using System.Collections.Generic;
 using System.IO;
 using MonoTouch.CoreAnimation;
 using MonoTouch.CoreGraphics;
+
+using Rock.Mobile.Network;
+using CCVApp.Shared.Notes;
 
 namespace iOS
 {

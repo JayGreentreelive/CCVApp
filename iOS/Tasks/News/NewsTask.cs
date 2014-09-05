@@ -7,20 +7,23 @@ namespace iOS
 {
     public class NewsTask : Task
     {
-        TaskUIViewController MainPageVC { get; set; }
+        NewsMainUIViewController MainPageVC { get; set; }
 
         public NewsTask( string storyboardName ) : base( storyboardName )
         {
-            MainPageVC = Storyboard.InstantiateViewController( "MainPageViewController" ) as TaskUIViewController;
+            MainPageVC = Storyboard.InstantiateViewController( "MainPageViewController" ) as NewsMainUIViewController;
             MainPageVC.Task = this;
         }
 
-        public override void MakeActive( UIViewController parentViewController, NavToolbar navToolbar )
+        public override void MakeActive( UINavigationController parentViewController, NavToolbar navToolbar )
         {
             base.MakeActive( parentViewController, navToolbar );
 
+            // provide the news to the viewer
+            MainPageVC.News = CCVApp.Shared.Network.RockGeneralData.Instance.News;
+
             // set our current page as root
-            ((UINavigationController)parentViewController).PushViewController(MainPageVC, false);
+            parentViewController.PushViewController(MainPageVC, false);
         }
 
         public override void WillShowViewController(UIViewController viewController)
@@ -68,4 +71,3 @@ namespace iOS
         }
     }
 }
-

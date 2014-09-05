@@ -13,12 +13,12 @@ namespace iOS
             NotesViewController = new NotesViewController( );
         }
 
-        public override void MakeActive( UIViewController parentViewController, NavToolbar navToolbar )
+        public override void MakeActive( UINavigationController parentViewController, NavToolbar navToolbar )
         {
             base.MakeActive( parentViewController, navToolbar );
 
             // set our current page as root
-            ((UINavigationController)parentViewController).PushViewController(NotesViewController, false);
+            parentViewController.PushViewController(NotesViewController, false);
 
             NotesViewController.MakeActive( );
 

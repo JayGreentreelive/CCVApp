@@ -17,7 +17,7 @@ namespace iOS
             MainPageVC.Task = this;
         }
 
-        public override void MakeActive( UIViewController parentViewController, NavToolbar navToolbar )
+        public override void MakeActive( UINavigationController parentViewController, NavToolbar navToolbar )
         {
             base.MakeActive( parentViewController, navToolbar );
 
@@ -25,7 +25,7 @@ namespace iOS
             CurrentVC = MainPageVC;
 
             // set our current page as root
-            ((UINavigationController)parentViewController).PushViewController(CurrentVC, false);
+            parentViewController.PushViewController(CurrentVC, false);
         }
 
         public override void WillShowViewController(UIViewController viewController)
