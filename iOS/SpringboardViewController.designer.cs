@@ -42,6 +42,10 @@ namespace iOS
 		[GeneratedCode ("iOS Designer", "1.0")]
 		UITextField UserNameField { get; set; }
 
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UIButton ViewProfileButton { get; set; }
+
 		void ReleaseDesignerOutlets ()
 		{
 			if (AboutButton != null) {
@@ -71,6 +75,10 @@ namespace iOS
 			if (UserNameField != null) {
 				UserNameField.Dispose ();
 				UserNameField = null;
+			}
+			if (ViewProfileButton != null) {
+				ViewProfileButton.Dispose ();
+				ViewProfileButton = null;
 			}
 		}
 	}

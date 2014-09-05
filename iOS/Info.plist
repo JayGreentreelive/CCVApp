@@ -37,5 +37,11 @@
 	<string>MainStoryboard</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>CFBundleIconFiles</key>
+	<array>
+		<string>Icon-60@2x</string>
+		<string>Icon@2x</string>
+		<string>Icon</string>
+	</array>
 </dict>
 </plist>

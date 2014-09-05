@@ -15,8 +15,6 @@ namespace iOS
     /// </summary>
 	partial class SpringboardViewController : UIViewController
 	{
-        MainUINavigationController NavViewController { get; set; }
-
         /// <summary>
         /// Represents a selectable element on the springboard.
         /// Contains its button and the associated task.
@@ -116,10 +114,25 @@ namespace iOS
 
         protected UIDeviceOrientation CurrentOrientation { get; set; }
 
-        protected LoginViewController ActiveLoginController { get; set; }
+        protected MainUINavigationController NavViewController { get; set; }
+
+        protected UIStoryboard UserManagementStoryboard { get; set; }
+
+        protected LoginViewController LoginViewController { get; set; }
+        protected ProfileViewController ProfileViewController { get; set; }
+
+
+
+        /// <summary>
+        /// When true, we are doing something else, like logging in, editing the profile, etc.
+        /// </summary>
+        /// <value><c>true</c> if modal controller visible; otherwise, <c>false</c>.</value>
+        protected bool ModalControllerVisible { get; set; } 
 
 		public SpringboardViewController (IntPtr handle) : base (handle)
 		{
+            UserManagementStoryboard = UIStoryboard.FromName( "UserManagement", null );
+
             NavViewController = Storyboard.InstantiateViewController( "MainUINavigationController" ) as MainUINavigationController;
             Elements = new List<SpringboardElement>( );
 		}
@@ -164,6 +177,13 @@ namespace iOS
         {
             base.ViewDidLoad( );
 
+            // create the login controller
+            LoginViewController = UserManagementStoryboard.InstantiateViewController( "LoginViewController" ) as LoginViewController;
+            LoginViewController.Springboard = this;
+
+            ProfileViewController = UserManagementStoryboard.InstantiateViewController( "ProfileViewController" ) as ProfileViewController;
+            ProfileViewController.Springboard = this;
+
             CurrentOrientation = UIDevice.CurrentDevice.Orientation;
 
             // Instantiate all activities
@@ -186,25 +206,39 @@ namespace iOS
             View.AddSubview( NavViewController.View );
 
             SetNeedsStatusBarAppearanceUpdate( );
+
+            LoginButton.TouchUpInside += (object sender, EventArgs e) => 
+                {
+                    if( MobileUser.Instance.LoggedIn == true )
+                    {
+                        // todo: start picture taker guy
+                    }
+                    else
+                    {
+                        PresentModelViewController(  LoginViewController );
+                    }
+                };
+
+            ViewProfileButton.TouchUpInside += (object sender, EventArgs e) => 
+                {
+                    PresentModelViewController( ProfileViewController );
+                };
+
+            // load our objects and sync with the server any unsaved changes.
+            RockApi.Instance.LoadObjectsFromDevice( );
+            RockApi.Instance.SyncWithServer( );
         }
 
-        public void LoginWantsResign( )
+        void PresentModelViewController( UIViewController modelViewController )
         {
-            ActiveLoginController.DismissViewController( true, null );
-            ActiveLoginController = null;
+            PresentViewController( modelViewController, true, null );
+            ModalControllerVisible = true;
         }
 
-        public override void PrepareForSegue ( UIStoryboardSegue segue,  NSObject sender )
+        public void ResignModelViewController( UIViewController modelViewController )
         {
-            base.PrepareForSegue (segue, sender);
-
-            // give the login controller a pointer to use so we can resign it.
-            ActiveLoginController = segue.DestinationViewController as LoginViewController;
-
-            if (ActiveLoginController != null) 
-            {
-                ActiveLoginController.Springboard = this;
-            }
+            modelViewController.DismissViewController( true, null );
+            ModalControllerVisible = false;
         }
 
         public override bool PrefersStatusBarHidden()
@@ -223,7 +257,7 @@ namespace iOS
         protected void ActivateElement( SpringboardElement activeElement )
         {
             // don't allow any navigation while the login controller is active
-            if( ActiveLoginController == null )
+            if( ModalControllerVisible == false )
             {
                 // first turn "off" the backingView selection for all but the element
                 // becoming active.
@@ -246,7 +280,7 @@ namespace iOS
             base.TouchesEnded(touches, evt);
 
             // don't allow any navigation while the login controller is active
-            if( ActiveLoginController == null )
+            if( ModalControllerVisible == false )
             {
                 NavViewController.RevealSpringboard( false );
             }
@@ -277,12 +311,42 @@ namespace iOS
             if( MobileUser.Instance.LoggedIn )
             {
                 // get their profile
-                UserNameField.Text = MobileUser.Instance.Person.FirstName + " " + MobileUser.Instance.Person.LastName;
+                UserNameField.Text = MobileUser.Instance.PreferredName( ) + " " + MobileUser.Instance.Person.LastName;
             }
             else
             {
                 UserNameField.Text = "Login to enable additional features.";
             }
+
+            UpdateLoginState( );
+        }
+
+        protected void UpdateLoginState( )
+        {
+            // the image depends on the user's status.
+            string imagePath = NSBundle.MainBundle.BundlePath + "/";
+
+            if( MobileUser.Instance.LoggedIn )
+            {
+                // todo: get their pic, else...
+                imagePath += CCVApp.Config.Springboard.NoPhotoFile;
+
+                // if we're logged in, also display the View Profile button
+                ViewProfileButton.Enabled = true;
+                ViewProfileButton.Hidden = false;
+            }
+            else
+            {
+                // otherwise display the no profile image.
+                imagePath += CCVApp.Config.Springboard.NoProfileFile;
+
+                // if we're logged out, hide the view profile button
+                ViewProfileButton.Enabled = false;
+                ViewProfileButton.Hidden = true;
+            }
+            
+            UIImage image = new UIImage( imagePath );
+            LoginButton.SetImage( image, UIControlState.Normal );
         }
 
         public void OnActivated( )
@@ -303,6 +367,13 @@ namespace iOS
         public void DidEnterBackground( )
         {
             NavViewController.DidEnterBackground( );
+
+            // request quick backgrounding so we can save objects
+            int taskID = UIApplication.SharedApplication.BeginBackgroundTask( () => {});
+
+            RockApi.Instance.SaveObjectsToDevice( );
+
+            UIApplication.SharedApplication.EndBackgroundTask(taskID);
         }
 
         public void WillTerminate( )

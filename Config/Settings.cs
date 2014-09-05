@@ -13,6 +13,11 @@ namespace CCVApp
             public const string NoProfileFile = "noprofile.png";
 
             /// <summary>
+            /// Image to display when a user is logged in without a profile picture.
+            /// </summary>
+            public const string NoPhotoFile = "addphoto.png";
+
+            /// <summary>
             /// The X offset to place the CENTER of the element's logo.
             /// </summary>
             public const int Element_LogoOffsetX = 20;

@@ -259,6 +259,17 @@
     <BundleResource Include="..\Assets\Fonts\FontAwesome.ttf">
       <Link>Resources\Fonts\FontAwesome.ttf</Link>
     </BundleResource>
+    <BundleResource Include="..\Assets\addphoto.png">
+      <Link>Resources\addphoto.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\addphoto%402x.png">
+      <Link>Resources\addphoto%402x.png</Link>
+    </BundleResource>
+    <BundleResource Include="Resources\Default%402x.png" />
+    <BundleResource Include="Resources\Default.png" />
+    <BundleResource Include="Resources\Icon-60%402x.png" />
+    <BundleResource Include="Resources\Icon%402x.png" />
+    <BundleResource Include="Resources\Icon.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -293,9 +304,13 @@
     <Compile Include="Tasks\Notes\NotesTask.cs" />
     <Compile Include="Tasks\Prayer\PrayerTask.cs" />
     <Compile Include="Tasks\Watch\WatchTask.cs" />
-    <Compile Include="LoginViewController.cs" />
-    <Compile Include="LoginViewController.designer.cs">
+    <Compile Include="UserManagement\LoginViewController.cs" />
+    <Compile Include="UserManagement\LoginViewController.designer.cs">
       <DependentUpon>LoginViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserManagement\ProfileViewController.cs" />
+    <Compile Include="UserManagement\ProfileViewController.designer.cs">
+      <DependentUpon>ProfileViewController.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <Import Project="..\Notes\Notes.projitems" Label="Shared" Condition="Exists('..\Notes\Notes.projitems')" />
@@ -309,10 +324,12 @@
     <InterfaceDefinition Include="Tasks\About\AboutStoryboard_iPhone.storyboard" />
     <InterfaceDefinition Include="Tasks\News\NewsStoryboard_iPhone.storyboard" />
     <InterfaceDefinition Include="Tasks\Give\GiveStoryboard_iPhone.storyboard" />
+    <InterfaceDefinition Include="UserManagement\UserManagement.storyboard" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\Fonts\" />
     <Folder Include="Tasks\" />
+    <Folder Include="UserManagement\" />
   </ItemGroup>
   <ItemGroup>
     <XamarinComponentReference Include="json.net">
