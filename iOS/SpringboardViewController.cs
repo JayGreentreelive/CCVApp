@@ -112,13 +112,34 @@ namespace iOS
         /// <value>The elements.</value>
         protected List<SpringboardElement> Elements { get; set; }
 
+        /// <summary>
+        /// Gets or sets the current device orientation.
+        /// </summary>
+        /// <value>The current orientation.</value>
         protected UIDeviceOrientation CurrentOrientation { get; set; }
 
+        /// <summary>
+        /// The primary navigation for activities.
+        /// </summary>
+        /// <value>The nav view controller.</value>
         protected MainUINavigationController NavViewController { get; set; }
 
+        /// <summary>
+        /// Storyboard for the user management area of the app (Login, Profile, etc)
+        /// </summary>
+        /// <value>The user management storyboard.</value>
         protected UIStoryboard UserManagementStoryboard { get; set; }
 
+        /// <summary>
+        /// Controller managing a user logging in or out
+        /// </summary>
+        /// <value>The login view controller.</value>
         protected LoginViewController LoginViewController { get; set; }
+
+        /// <summary>
+        /// Controller managing the user's profile. Lets a user view or edit their profile.
+        /// </summary>
+        /// <value>The profile view controller.</value>
         protected ProfileViewController ProfileViewController { get; set; }
 
 

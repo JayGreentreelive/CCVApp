@@ -14,6 +14,11 @@ namespace iOS
         /// <value>The springboard.</value>
         public SpringboardViewController Springboard { get; set; }
 
+        /// <summary>
+        /// True when a change to the profile was made and the user should be prompted
+        /// to submit changes.
+        /// </summary>
+        /// <value><c>true</c> if dirty; otherwise, <c>false</c>.</value>
         protected bool Dirty { get; set; }
 
 		public ProfileViewController (IntPtr handle) : base (handle)
@@ -46,6 +51,7 @@ namespace iOS
 
             EmailField.ShouldReturn += TextFieldShouldReturn;
 
+            // If submit is pressed with dirty changes, prompt the user to save them.
             SubmitButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
                     if( Dirty == true )
@@ -58,7 +64,7 @@ namespace iOS
 
                         actionSheet.CancelButtonIndex = 2;
 
-                        actionSheet.Clicked += ActionSheetClicked;
+                        actionSheet.Clicked += SubmitActionSheetClicked;
 
                         actionSheet.ShowInView( View );
                     }
@@ -68,6 +74,7 @@ namespace iOS
                     }
                 };
 
+            // On logout, make sure the user really wants to log out.
             LogOutButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
                     // if they tap logout, and confirm it
@@ -89,28 +96,18 @@ namespace iOS
                 };
         }
 
-        public void ActionSheetClicked(object sender, UIButtonEventArgs e)
+        public void SubmitActionSheetClicked(object sender, UIButtonEventArgs e)
         {
             switch( e.ButtonIndex )
             {
-                case 0:
-                {
-                    SubmitChanges( );
-                    break;
-                }
+                // submit
+                case 0: SubmitChanges( ); break;
 
-                case 1:
-                {
-                    // just leave
-                    Springboard.ResignModelViewController( this );
-                    break;
-                }
+                // No, don't submit
+                case 1: Springboard.ResignModelViewController( this ); break;
 
-                case 2:
-                {
-                    // stay here. do nothing.
-                    break;
-                }
+                // cancel
+                case 2: break;
             }
         }
 
@@ -130,6 +127,7 @@ namespace iOS
 
         void SubmitChanges()
         {
+            // copy all the edited fields into the person object
             MobileUser.Instance.Person.Email = EmailField.Text;
 
             MobileUser.Instance.Person.MiddleName = MiddleNameField.Text;
@@ -139,6 +137,8 @@ namespace iOS
             MobileUser.Instance.Person.FirstName = FirstNameField.Text;
             MobileUser.Instance.Person.LastName = LastNameField.Text;
 
+            // request the person object be sync'd with the server. because we save the object locally,
+            // if the sync fails, the profile will try again at the next login
             MobileUser.Instance.UpdateProfile( delegate { Springboard.ResignModelViewController( this ); });
         }
 
