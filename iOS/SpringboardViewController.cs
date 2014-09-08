@@ -264,39 +264,34 @@ namespace iOS
                     {
                         // failure or not, server syncing is finished, so let's go ahead and 
                         // get launch data.
-                        GetInitialData( );
+                        RockLaunchData.Instance.GetLaunchData( LaunchDataReceived );
                     });
             }
             else
             {
                 Console.WriteLine( "Not Logged In. Skipping sync." );
-
-                GetInitialData( );
-            }
-        }
-
-        void GetInitialData( )
-        {
-            // this should only run once every few months.
-            if( 0 != 0 )
-            {
-                RockApi.Instance.GetDefaultData( delegate
-                    {
-                        Console.WriteLine( "Get Default Data Complete." );
-                        RockApi.Instance.GetLaunchData( LaunchDataReceived );
-                    });
-            }
-            else
-            {
-                // this is going to happen each and every run
-                RockApi.Instance.GetLaunchData( LaunchDataReceived );
+                RockLaunchData.Instance.GetLaunchData( LaunchDataReceived );
             }
         }
 
         void LaunchDataReceived(System.Net.HttpStatusCode statusCode, string statusDescription)
         {
             //todo: we can update our various areas of code with all the launch data
-            Console.WriteLine( "Launch Data Complete" );
+
+            // if there's a newer General Data, grab it.
+            if( RockGeneralData.Instance.Data.Version < RockLaunchData.Instance.Data.GeneralDataVersion )
+            {
+                RockGeneralData.Instance.GetGeneralData( GeneralDataReceived );
+            }
+            else
+            {
+                // May not have anything else to do here
+            }
+        }
+
+        void GeneralDataReceived(System.Net.HttpStatusCode statusCode, string statusDescription)
+        {
+            // New general data received. Save it, update fields, etc.
         }
         // - End Initial Setup
 

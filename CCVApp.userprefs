@@ -1,13 +1,27 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhoneRetina.7.1" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/SpringboardViewController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="CCVApp.Shared/RockApi/RockGeneralData.cs">
     <Files>
-      <File FileName="iOS/SpringboardViewController.cs" Line="1" Column="1" />
-      <File FileName="CCVApp.Shared/RockApi/RockApi.cs" Line="1" Column="1" />
-      <File FileName="iOS/Tasks/News/NewsTask.cs" Line="1" Column="1" />
-      <File FileName="iOS/Tasks/News/NewsMainUIViewController.cs" Line="1" Column="1" />
-      <File FileName="iOS/Tasks/News/NewsDetailsUIViewController.cs" Line="1" Column="1" />
+      <File FileName="iOS/SpringboardViewController.cs" Line="41" Column="41" />
+      <File FileName="CCVApp.Shared/RockApi/RockApi.cs" Line="40" Column="40" />
+      <File FileName="CCVApp.Shared/RockApi/RockNews.cs" Line="1" Column="1" />
+      <File FileName="CCVApp.Shared/RockApi/RockGeneralData.cs" Line="17" Column="17" />
+      <File FileName="CCVApp.Shared/RockApi/RockLaunchData.cs" Line="76" Column="76" />
     </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="iOS" expanded="True">
+            <Node name="Tasks" expanded="True">
+              <Node name="Notes" expanded="True" />
+            </Node>
+            <Node name="UserManagement" expanded="True">
+              <Node name="ProfileViewController.cs" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />

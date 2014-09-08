@@ -20,7 +20,7 @@ namespace iOS
             base.MakeActive( parentViewController, navToolbar );
 
             // provide the news to the viewer
-            MainPageVC.News = CCVApp.Shared.Network.RockGeneralData.Instance.News;
+            MainPageVC.News = CCVApp.Shared.Network.RockGeneralData.Instance.Data.News;
 
             // set our current page as root
             parentViewController.PushViewController(MainPageVC, false);

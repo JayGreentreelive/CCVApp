@@ -35,5 +35,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Config.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RockApi\RockGeneralData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RockApi\RockNews.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RockApi\RockLaunchData.cs" />
   </ItemGroup>
 </Project>

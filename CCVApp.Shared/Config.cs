@@ -175,6 +175,29 @@ namespace CCVApp
                 /// </summary>
                 public const uint ShadowColor = 0x000000FF;
             }
+
+            public sealed class News
+            {
+                /// <summary>
+                /// The color of the news table background. (You most likely want this to match Table_CellBackgroundColor)
+                /// </summary>
+                public const uint Table_BackgroundColor = 0x1C1C1CFF;
+
+                /// <summary>
+                /// The color of the news table cell seperators.
+                /// </summary>
+                public const uint Table_SeperatorBackgroundColor = 0x000000FF;
+
+                /// <summary>
+                /// The color of an in-use table cell. (You most likely want this to match Table_BackgroundColor)
+                /// </summary>
+                public const uint Table_CellBackgroundColor = 0x1C1C1CFF;
+
+                /// <summary>
+                /// The color of an in-use table cell. (You most likely want this to match Table_BackgroundColor)
+                /// </summary>
+                public const uint Table_CellTextColor = 0xFFFFFFFF;
+            }
         }
     }
 }

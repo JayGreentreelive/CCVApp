@@ -177,9 +177,11 @@ namespace CCVApp
                     QuoteLabel.SizeToFit( );
 
                     // now that we know our text size, we can adjust the citation
+                    // for citation width, attempt to use quote width, but if there was no quote text,
+                    // the width will be 0, so we'll fallback to the citation width.
                     Citation.Frame = new RectangleF( QuoteLabel.Frame.Left, 
                         QuoteLabel.Frame.Bottom, 
-                        QuoteLabel.Frame.Width,
+                        QuoteLabel.Frame.Width != 0 ? QuoteLabel.Frame.Width : Citation.Frame.Width,
                         Citation.Frame.Height );
 
 

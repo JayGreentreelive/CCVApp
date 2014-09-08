@@ -102,7 +102,7 @@ namespace iOS
             switch( e.ButtonIndex )
             {
                 // submit
-                case 0: SubmitChanges( ); break;
+                case 0: SubmitChanges( ); Springboard.ResignModelViewController( this ); break;
 
                 // No, don't submit
                 case 1: Springboard.ResignModelViewController( this ); break;
@@ -140,7 +140,7 @@ namespace iOS
 
             // request the person object be sync'd with the server. because we save the object locally,
             // if the sync fails, the profile will try again at the next login
-            RockMobileUser.Instance.UpdateProfile( delegate { Springboard.ResignModelViewController( this ); });
+            RockMobileUser.Instance.UpdateProfile( null );
         }
 
         public override void TouchesEnded(NSSet touches, UIEvent evt)

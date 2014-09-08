@@ -123,6 +123,18 @@ namespace CCVApp
                     ExecuteAsync( request, resultHandler);
                 }
 
+                public void GetLaunchData( RequestResult<RockLaunchData.LaunchData> resultHandler )
+                {
+                    // todo: add a "get LaunchData" end point.
+                    resultHandler( HttpStatusCode.OK, "Success", RockLaunchData.Instance.Data );
+                }
+
+                public void GetGeneralData( RequestResult<RockGeneralData.GeneralData> resultHandler )
+                {
+                    // todo: add a "get GeneralData" end point.
+                    resultHandler( HttpStatusCode.OK, "Success", RockGeneralData.Instance.Data );
+                }
+
                 /// <summary>
                 /// Wrapper for ExecuteAsync<> that requires no generic Type.
                 /// </summary>
@@ -227,22 +239,6 @@ namespace CCVApp
                             // or notify the caller.
                             result( statusCode, statusDescription );
                         });
-                }
-
-                public void GetDefaultData( RequestResult result )
-                {
-                    Console.WriteLine( "Get Default Data" );
-
-                    // todo: add a "get default data" end point.
-                    result( HttpStatusCode.OK, "Success" );
-                }
-
-                public void GetLaunchData( RequestResult result )
-                {
-                    Console.WriteLine( "Get Launch Data" );
-
-                    // todo: add a "get launch data" end point.
-                    result( HttpStatusCode.OK, "Success" );
                 }
             }
         }

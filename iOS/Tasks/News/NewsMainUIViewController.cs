@@ -4,6 +4,7 @@ using MonoTouch.UIKit;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using CCVApp.Shared.Network;
+using System.Drawing;
 
 namespace iOS
 {
@@ -13,14 +14,18 @@ namespace iOS
         {
             NewsMainUIViewController Parent { get; set; }
 
-            public List<RockNews> News { get; set; }
+            List<RockNews> News { get; set; }
+            List<UIImageView> NewsImage { get; set; }
+
             string cellIdentifier = "TableCell";
 
-            public TableSource (NewsMainUIViewController parent, List<RockNews> newsList)
+            public TableSource (NewsMainUIViewController parent, List<RockNews> newsList, List<UIImageView> newsImage )
             {
                 Parent = parent;
 
                 News = newsList;
+
+                NewsImage = newsImage;
             }
 
             public override int RowsInSection (UITableView tableview, int section)
@@ -30,11 +35,16 @@ namespace iOS
 
             public override void RowSelected (UITableView tableView, NSIndexPath indexPath)
             {
-                //new UIAlertView("Row Selected", tableItems[indexPath.Row], null, "OK", null).Show();
-                tableView.DeselectRow(indexPath, true); // normal iOS behaviour is to remove the blue highlight
+                tableView.DeselectRow( indexPath, true );
 
                 // notify our parent
                 Parent.RowClicked( indexPath.Row );
+            }
+
+            public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
+            {
+                // check the height of the image and let that be the height for this row
+                return NewsImage[ indexPath.Row ].Bounds.Height;
             }
 
             public override UITableViewCell GetCell (UITableView tableView, MonoTouch.Foundation.NSIndexPath indexPath)
@@ -44,27 +54,58 @@ namespace iOS
                 if (cell == null)
                 {
                     cell = new UITableViewCell (UITableViewCellStyle.Default, cellIdentifier);
+
+                    // configure the cell colors
+                    cell.BackgroundColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.News.Table_CellBackgroundColor );
+                    cell.TextLabel.TextColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.News.Table_CellTextColor );
+                    cell.SelectionStyle = UITableViewCellSelectionStyle.Default;
                 }
 
-                cell.TextLabel.Text = News[indexPath.Row].Title;
+                // set the image for the cell
+                UIImageView imageView = NewsImage[ indexPath.Row ];
+                cell.ContentView.AddSubview( imageView );
+                cell.Bounds = imageView.Bounds;
+
                 return cell;
             }
         }
 
         public List<RockNews> News { get; set; }
+        List<UIImageView> NewsImage { get; set; }
 
 		public NewsMainUIViewController (IntPtr handle) : base (handle)
 		{
             News = new List<RockNews>( );
+            NewsImage = new List<UIImageView>( );
 		}
 
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
 
+            // load the news images for each item
+            foreach( RockNews news in News )
+            {
+                UIImageView imageView = new UIImageView( new UIImage( NSBundle.MainBundle.BundlePath + "/" + news.ImageName ) );
+
+                NewsImage.Add( imageView );
+            }
+
             // populate our table
-            TableSource source = new TableSource( this, News );
+            TableSource source = new TableSource( this, News, NewsImage );
             NewsTableView.Source = source;
+
+            NewsTableView.BackgroundColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.News.Table_BackgroundColor );
+            NewsTableView.SeparatorColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.News.Table_SeperatorBackgroundColor );
+            NewsTableView.SeparatorStyle = UITableViewCellSeparatorStyle.None;
+        }
+
+        public override void ViewDidAppear(bool animated)
+        {
+            base.ViewDidAppear(animated);
+
+            // configure the table to be below the nav bar
+            NewsTableView.Frame = new RectangleF( 0, NavigationController.NavigationBar.Frame.Height, View.Bounds.Width, View.Bounds.Height - NavigationController.NavigationBar.Frame.Height );
         }
 
         public void RowClicked( int row )
