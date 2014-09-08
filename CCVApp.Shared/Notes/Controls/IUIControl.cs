@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Collections.Generic;
 
 namespace CCVApp
 {
@@ -15,6 +16,8 @@ namespace CCVApp
                 void AddOffset( float xOffset, float yOffset );
 
                 System.Drawing.RectangleF GetFrame( );
+
+                void GetControlOfType<TControlType>( List<IUIControl> controlList ) where TControlType : class;
 
                 void AddToView( object obj );
 

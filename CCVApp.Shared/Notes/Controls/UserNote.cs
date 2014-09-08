@@ -124,16 +124,13 @@ namespace CCVApp
                     DeleteButton = PlatformView.Create( );
                 }
 
-                public UserNote( BaseControl.CreateParams createParams, float deviceHeight, string noteText )
+                public UserNote( BaseControl.CreateParams createParams, float deviceHeight, Model.NoteState.UserNoteContent userNoteContent )
                 {
-                    // first de-serialize this note
-                    Model.MobileNote mobileNote = Notes.Model.MobileNote.Deserialize( noteText );
-
-                    Create( createParams, deviceHeight, mobileNote.Position, mobileNote.Text );
+                    Create( createParams, deviceHeight, userNoteContent.Position, userNoteContent.Text );
 
                     // new notes are open by default. So if we're restoring one that was closed,
                     // keep it closed.
-                    if( mobileNote.WasOpen == false )
+                    if( userNoteContent.WasOpen == false )
                     {
                         CloseNote( );
                     }
@@ -560,9 +557,9 @@ namespace CCVApp
                     return TextField.Frame;
                 }
 
-                public string Serialize( )
+                public Notes.Model.NoteState.UserNoteContent GetContent( )
                 {
-                    return Notes.Model.MobileNote.Serialize( new PointF( AnchorFrame.X, AnchorFrame.Y ), TextField.Text, !TextField.Hidden );
+                    return new Notes.Model.NoteState.UserNoteContent( new PointF( AnchorFrame.X, AnchorFrame.Y ), TextField.Text, !TextField.Hidden );
                 }
             }
         }

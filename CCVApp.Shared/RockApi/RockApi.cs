@@ -12,7 +12,7 @@ namespace CCVApp
         {
             /// <summary>
             /// Rock API contains methods for making REST calls to Rock.
-            /// This should only be used directly if an object doesn't
+            /// This should only be used directly if an object doesn't exist
             /// that does what is needed. Ex: RockMobileUser should be used
             /// in place of directly calling Profile end points when needing
             /// to manage the primary user's account.

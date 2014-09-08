@@ -396,6 +396,11 @@ namespace CCVApp
                 {
                     return Frame;
                 }
+
+                protected override List<IUIControl> GetChildControls( )
+                {
+                    return ChildControls;
+                }
             }
         }
     }

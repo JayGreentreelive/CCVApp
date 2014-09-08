@@ -104,7 +104,12 @@ namespace iOS
         /// </summary>
         RectangleF TappedTextFieldFrame { get; set; }
 
-        NSObject Observer { get; set; }
+        /// <summary>
+        /// The URL for this note
+        /// </summary>
+        /// <value>The note URL.</value>
+        public string NoteBaseURL { get; set; }
+        public string NoteName { get; set; }
 
         public NotesViewController( ) : base( )
         {
@@ -403,7 +408,7 @@ namespace iOS
                 // if we don't have BOTH xml strings, re-download
                 if( noteXml == null || styleSheetXml == null )
                 {
-                    HttpWebRequest.Instance.MakeAsyncRequest( "http://www.jeredmcferron.com/sample_note.xml", (Exception ex, Dictionary<string, string> responseHeaders, string body ) =>
+                    HttpWebRequest.Instance.MakeAsyncRequest( CCVApp.Shared.Config.Note.BaseURL + NoteName + CCVApp.Shared.Config.Note.Extension, (Exception ex, Dictionary<string, string> responseHeaders, string body ) =>
                         {
                             if( ex == null )
                             {
@@ -449,7 +454,7 @@ namespace iOS
 
                         try
                         {
-                            Note.Create( UIScrollView.Bounds.Width, UIScrollView.Bounds.Height, this.UIScrollView );
+                            Note.Create( UIScrollView.Bounds.Width, UIScrollView.Bounds.Height, this.UIScrollView, NoteName + CCVApp.Shared.Config.Note.UserNoteSuffix );
 
                             // enable scrolling
                             UIScrollView.ScrollEnabled = true;

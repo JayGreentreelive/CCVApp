@@ -198,6 +198,15 @@ namespace CCVApp
                 /// </summary>
                 public const uint Table_CellTextColor = 0xFFFFFFFF;
             }
+
+            public sealed class Note
+            {
+                public const string UserNoteSuffix = "_user_note.dat";
+
+                public const string NamePrefix = "message";
+                public const string Extension = ".xml";
+                public const string BaseURL = "http://www.jeredmcferron.com/";
+            }
         }
     }
 }

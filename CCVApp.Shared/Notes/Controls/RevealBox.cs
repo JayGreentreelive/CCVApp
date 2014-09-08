@@ -2,6 +2,7 @@
 using System.Xml;
 using System.Drawing;
 using Rock.Mobile.PlatformUI;
+using CCVApp.Shared.Notes.Model;
 
 namespace CCVApp
 {
@@ -14,10 +15,21 @@ namespace CCVApp
             /// </summary>
             public class RevealBox : NoteText
             {
+                /// <summary>
+                /// True when the text is revealed, false when it isn't.
+                /// We can't just rely on the fade value because it's a bit different across android / ios.
+                /// </summary>
+                /// <value><c>true</c> if revealed; otherwise, <c>false</c>.</value>
+                public bool Revealed { get; protected set; }
+
+                public string Text { get { return PlatformLabel != null ? PlatformLabel.Text : ""; } }
+
                 public RevealBox( CreateParams parentParams, XmlReader reader ) : base( )
                 {
                     // don't call the base constructor that reads. we'll do the reading here.
                     base.Initialize( );
+
+                    Revealed = false;
 
                     PlatformLabel = PlatformLabel.CreateRevealLabel( );
 
@@ -116,12 +128,26 @@ namespace CCVApp
                                                              PlatformLabel.Bounds.Bottom + PlatformLabel.Bounds.Height );
                     if( boundingBox.Contains( touch ) )
                     {
+                        Revealed = !Revealed;
+
                         float targetFade = 1.0f - PlatformLabel.GetFade( );
+
                         PlatformLabel.AnimateToFade( targetFade );
                         return true;
                     }
 
                     return false;
+                }
+
+                public NoteState.RevealBoxState GetState( )
+                {
+                    return new NoteState.RevealBoxState( PlatformLabel.Text, Revealed );
+                }
+
+                public void SetRevealed( bool revealed )
+                {
+                    Revealed = revealed;
+                    PlatformLabel.SetFade( revealed == true ? 1.0f : 0.0f );
                 }
             }
         }

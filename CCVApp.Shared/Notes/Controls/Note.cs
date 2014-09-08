@@ -5,6 +5,8 @@ using System.Drawing;
 using System.IO;
 
 using CCVApp.Shared.Notes.Styles;
+using CCVApp.Shared.Notes.Model;
+using Newtonsoft.Json;
 
 namespace CCVApp
 {
@@ -18,8 +20,6 @@ namespace CCVApp
             /// </summary>
             public class Note
             {
-                const string USER_NOTE_FILENAME = "userNotes.txt";
-
                 /// <summary>
                 /// Delegate for notifying the caller when a note is ready to be created via Note.Create()
                 /// </summary>
@@ -129,12 +129,12 @@ namespace CCVApp
 
                     mStyle = new Style( );
                     mStyle.Initialize( );
-
-                    UserNotePath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), USER_NOTE_FILENAME);
                 }
 
-                public void Create( float parentWidth, float parentHeight, object masterView )
+                public void Create( float parentWidth, float parentHeight, object masterView, string userNoteFileName )
                 {
+                    UserNotePath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), userNoteFileName);
+
                     MasterView = masterView;
 
                     // create a child control list
@@ -301,7 +301,7 @@ namespace CCVApp
                     AddControlsToView( );
 
                     // finally, load the user notes for this note
-                    LoadUserNotes( UserNotePath );
+                    LoadState( UserNotePath );
                 }
 
                 protected void AddControlsToView( )
@@ -315,6 +315,15 @@ namespace CCVApp
                 public RectangleF GetFrame( )
                 {
                     return Frame;
+                }
+
+                public void GetControlOfType<TControlType>( List<IUIControl> controlList ) where TControlType : class
+                {
+                    // let each child add itself and its children
+                    foreach( IUIControl control in ChildControls )
+                    {
+                        control.GetControlOfType<TControlType>( controlList );
+                    }
                 }
 
                 public bool HitTest( PointF touch )
@@ -458,43 +467,76 @@ namespace CCVApp
 
                 public void SaveState()
                 {
-                    // this will save the user notes and any other
-                    // interactions the user has made.
-                    SaveUserNotes( UserNotePath );
+                    // open a stream
+                    using (StreamWriter writer = new StreamWriter(UserNotePath, false))
+                    {
+                        NoteState noteState = new NoteState( );
+
+                        // User Notes
+                        noteState.UserNoteContentList = new List<NoteState.UserNoteContent>( );
+                        foreach( UserNote note in UserNoteControls )
+                        {
+                            noteState.UserNoteContentList.Add( note.GetContent( ) );
+                        }
+                        //
+
+
+                        //Reveal Boxes
+                        List<IUIControl> revealBoxes = new List<IUIControl>( );
+                        GetControlOfType<RevealBox>( revealBoxes );
+
+                        noteState.RevealBoxStateList = new List<NoteState.RevealBoxState>( );
+                        foreach( RevealBox revealBox in revealBoxes )
+                        {
+                            noteState.RevealBoxStateList.Add( revealBox.GetState( ) );
+                        }
+                        //
+
+                        // now we can serialize this and save it.
+                        string json = JsonConvert.SerializeObject( noteState );
+                        writer.WriteLine( json );
+                    }
                 }
 
-                protected void LoadUserNotes( string filePath )
+                protected void LoadState( string filePath )
                 {
+                    NoteState noteState = null;
+
                     // if the file exists
                     if(System.IO.File.Exists(filePath) == true)
                     {
                         // read it
                         using (StreamReader reader = new StreamReader(filePath))
                         {
-                            // for each note found
-                            string noteJson = reader.ReadLine();
-                            while( noteJson != null )
-                            {
-                                // create the note, add it to our list, and to the view
-                                UserNote note = new UserNote( new BaseControl.CreateParams( Frame.Width, Frame.Height, ref mStyle ), DeviceHeight, noteJson );
-                                UserNoteControls.Add( note );
-                                note.AddToView( MasterView );
-
-                                noteJson = reader.ReadLine();
-                            }
+                            // grab the stream that reprents a list of all their notes
+                            string json = reader.ReadLine();
+                            noteState = JsonConvert.DeserializeObject<NoteState>( json ) as NoteState;
                         }
                     }
-                }
 
-                protected void SaveUserNotes( string filePath )
-                {
-                    // open a stream
-                    using (StreamWriter writer = new StreamWriter(filePath, false))
+                    if( noteState != null )
                     {
-                        // write the serialized json for each note (or none if there aren't any)
-                        foreach( UserNote note in UserNoteControls )
+                        // restore each user note
+                        foreach( NoteState.UserNoteContent note in noteState.UserNoteContentList )
                         {
-                            writer.WriteLine( note.Serialize( ) );
+                            // create the note, add it to our list, and to the view
+                            UserNote userNote = new UserNote( new BaseControl.CreateParams( Frame.Width, Frame.Height, ref mStyle ), DeviceHeight, note );
+                            UserNoteControls.Add( userNote );
+                            userNote.AddToView( MasterView );
+                        }
+
+                        // collect all the reveal boxes and restore them
+                        List<IUIControl> revealBoxes = new List<IUIControl>( );
+                        GetControlOfType<RevealBox>( revealBoxes );
+
+                        foreach(RevealBox revealBox in revealBoxes )
+                        {
+                            // for each reveal box, find its appropriate state object by matching the content text.
+                            NoteState.RevealBoxState state = noteState.RevealBoxStateList.Find( rbs => rbs.Text == revealBox.Text );
+                            if( state != null )
+                            {
+                                revealBox.SetRevealed( state.Revealed );
+                            }
                         }
                     }
                 }

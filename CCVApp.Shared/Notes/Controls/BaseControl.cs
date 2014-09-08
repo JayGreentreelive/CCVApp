@@ -4,6 +4,7 @@ using System.Xml;
 
 using CCVApp.Shared.Notes.Styles;
 using Rock.Mobile.PlatformUI;
+using System.Collections.Generic;
 
 namespace CCVApp
 {
@@ -139,6 +140,30 @@ namespace CCVApp
                 public Alignment GetHorzAlignment( )
                 {
                     return mStyle.mAlignment.Value;
+                }
+
+                public void GetControlOfType<TControlType>( List<IUIControl> controlList ) where TControlType : class
+                {
+                    // if we're what is being looked for, add ourselves
+                    if( (this as TControlType) != null )
+                    {
+                        controlList.Add( this );
+                    }
+
+                    // let each child do the same thing
+                    List<IUIControl> childControls = GetChildControls( );
+                    if( childControls != null )
+                    {
+                        foreach( IUIControl control in childControls )
+                        {
+                            control.GetControlOfType<TControlType>( controlList );
+                        }
+                    }
+                }
+
+                protected virtual List<IUIControl> GetChildControls( )
+                {
+                    return null;
                 }
 
                 public virtual RectangleF GetFrame( )

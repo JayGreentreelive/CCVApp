@@ -261,6 +261,11 @@ namespace CCVApp
                     return Bounds;
                 }
 
+                protected override List<IUIControl> GetChildControls( )
+                {
+                    return ChildControls;
+                }
+
                 public override bool ShouldShowBulletPoint( )
                 {
                     // as a container, it wouldn't really make sense to show a bullet point.

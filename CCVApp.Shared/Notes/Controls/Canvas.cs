@@ -259,6 +259,11 @@ namespace CCVApp
                     // as a container, it wouldn't really make sense to show a bullet point.
                     return false;
                 }
+
+                protected override List<IUIControl> GetChildControls( )
+                {
+                    return ChildControls;
+                }
             }
         }
     }

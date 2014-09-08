@@ -105,6 +105,11 @@ namespace CCVApp
                     // let our first control (which will be displayed first) decide
                     return ChildControls[0].ShouldShowBulletPoint( );
                 }
+
+                protected override List<IUIControl> GetChildControls( )
+                {
+                    return ChildControls;
+                }
             }
         }
     }
