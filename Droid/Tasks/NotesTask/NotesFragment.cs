@@ -191,7 +191,6 @@ namespace Droid
                 /// The URL for this note
                 /// </summary>
                 /// <value>The note URL.</value>
-                public string NoteBaseURL { get; set; }
                 public string NoteName { get; set; }
 
                 public bool OnDoubleTap(MotionEvent e)
@@ -396,7 +395,7 @@ namespace Droid
                         // if we don't have BOTH xml strings, re-download
                         if( noteXml == null || styleSheetXml == null )
                         {
-                            HttpWebRequest.Instance.MakeAsyncRequest( NoteBaseURL + NoteName, ( Exception ex, Dictionary<string, string> responseHeaders, string body ) =>
+                            HttpWebRequest.Instance.MakeAsyncRequest( CCVApp.Shared.Config.Note.BaseURL + NoteName + CCVApp.Shared.Config.Note.Extension, ( Exception ex, Dictionary<string, string> responseHeaders, string body ) =>
                                 {
                                     if( ex == null )
                                     {
@@ -444,7 +443,7 @@ namespace Droid
                                 {
                                     // Use the metrics and not ScrollView for dimensions, because depending on when this gets called the ScrollView
                                     // may not have its dimensions set yet.
-                                    Note.Create( this.Resources.DisplayMetrics.WidthPixels, this.Resources.DisplayMetrics.HeightPixels, ScrollViewLayout, NoteName );
+                                    Note.Create( this.Resources.DisplayMetrics.WidthPixels, this.Resources.DisplayMetrics.HeightPixels, ScrollViewLayout, NoteName + CCVApp.Shared.Config.Note.UserNoteSuffix );
 
                                     // set the requested background color
                                     ScrollView.SetBackgroundColor( ( Android.Graphics.Color )Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value ) );

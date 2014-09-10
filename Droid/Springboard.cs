@@ -89,7 +89,7 @@ namespace Droid
             Elements.Add( new SpringboardElement( new Droid.Tasks.Notes.NotesTask( NavbarFragment ), Resource.Id.springboard_notes_frame, Resource.Id.springboard_notes_icon, Resource.Id.springboard_notes_button ) );
             Elements.Add( new SpringboardElement( new Droid.Tasks.Placeholder.PlaceholderTask( NavbarFragment ), Resource.Id.springboard_about_frame, Resource.Id.springboard_about_icon, Resource.Id.springboard_about_button ) );
 
-            ActiveElementIndex = 0;
+            ActiveElementIndex = 3;
             if( savedInstanceState != null )
             {
                 // grab the last active element
@@ -126,7 +126,7 @@ namespace Droid
         {
             base.OnResume();
 
-            ActivateElement( Elements[ 0 ] );
+            ActivateElement( Elements[ ActiveElementIndex ] );
         }
 
         public bool OnTouch( View v, MotionEvent e )

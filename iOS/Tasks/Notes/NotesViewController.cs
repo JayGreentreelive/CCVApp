@@ -108,7 +108,6 @@ namespace iOS
         /// The URL for this note
         /// </summary>
         /// <value>The note URL.</value>
-        public string NoteBaseURL { get; set; }
         public string NoteName { get; set; }
 
         public NotesViewController( ) : base( )

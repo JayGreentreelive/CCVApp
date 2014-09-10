@@ -25,14 +25,14 @@ namespace CCVApp
                 /// <summary>
                 /// The view representing the note's "Anchor"
                 /// </summary>
-                protected PlatformView Anchor { get; set; }
+                protected PlatformLabel Anchor { get; set; }
                 protected RectangleF AnchorFrame { get; set; }
 
                 /// <summary>
                 /// Delete button
                 /// </summary>
                 /// <value>The anchor.</value>
-                protected PlatformView DeleteButton { get; set; }
+                protected PlatformLabel DeleteButton { get; set; }
 
                 /// <summary>
                 /// Tracks the movement of the note as a user repositions it.
@@ -67,15 +67,6 @@ namespace CCVApp
                 /// The minimum width of the note.
                 /// </summary>
                 protected float MinNoteWidth { get; set; }
-
-                /// <summary>
-                /// Protects the main thread TouchesEnded from race conditions
-                /// with the timer callback thread.
-                /// </summary>
-                /// <value>The lock.</value>
-                // JHM: Don't think we need this because we're simply invoking on the main thread,
-                // therefore there cannot be a race condition, since everything gets serialized to a single thread.
-                //protected Mutex Lock { get; set; }
 
                 /// <summary>
                 /// The timer monitoring whether the user held long enough to
@@ -117,11 +108,9 @@ namespace CCVApp
                 {
                     base.Initialize( );
 
-                    //Lock = new Mutex( );
-
                     TextField = PlatformTextField.Create( );
-                    Anchor = PlatformView.Create( );
-                    DeleteButton = PlatformView.Create( );
+                    Anchor = PlatformLabel.Create( );
+                    DeleteButton = PlatformLabel.Create( );
                 }
 
                 public UserNote( BaseControl.CreateParams createParams, float deviceHeight, Model.NoteState.UserNoteContent userNoteContent )
@@ -182,16 +171,26 @@ namespace CCVApp
                     {
                         TextField.BackgroundColor = mStyle.mBackgroundColor.Value;
                     }
-                    TextField.BackgroundColor = 0xFFFFFFFF;
+                    TextField.BackgroundColor = 0xFFFFFFFF; 
+                    TextField.BorderColor = 0x777777FF;
+                    TextField.CornerRadius = 5;
+                    TextField.BorderWidth = 4;
 
 
                     // Setup the anchor color
-                    Anchor.BackgroundColor = 0x0000FFFF;
+                    Anchor.Text = CCVApp.Shared.Config.Note.UserNoteIcon;
+                    Anchor.TextColor = CCVApp.Shared.Config.Note.UserNoteIconColor;
+                    Anchor.SetFont( CCVApp.Shared.Config.Note.UserNoteIconFont, CCVApp.Shared.Config.Note.UserNoteIconSize );
+                    Anchor.SizeToFit();
+                    if( mStyle.mBackgroundColor.HasValue )
+                    {
+                        Anchor.BackgroundColor = mStyle.mBackgroundColor.Value;
+                    }
+                    else
+                    {
+                        Anchor.BackgroundColor = 0;
+                    }
 
-
-                    // Setup the dimensions.
-                    // The anchor is always the same.
-                    Anchor.Bounds = new RectangleF( 0, 0, parentParams.Width * .05f, parentParams.Width * .05f );
 
                     // the text field should scale based on how close to the edge.
                     MaxAvailableWidth = ( parentParams.Width - Anchor.Bounds.Width );
@@ -199,11 +198,25 @@ namespace CCVApp
                     MinNoteWidth = (parentParams.Width * .10f );
                     MaxNoteWidth = (parentParams.Width - Anchor.Bounds.Width) / 2;
 
-
                     float width = Math.Max( MinNoteWidth, Math.Min( MaxNoteWidth, MaxAvailableWidth - startPos.X ) );
                     TextField.Bounds = new RectangleF( 0, 0, width, 0 );
 
-                    DeleteButton.Bounds = new RectangleF( 0, 0, Anchor.Bounds.Width / 2, Anchor.Bounds.Height / 2 );
+
+                    // setup the delete button
+                    DeleteButton.Text = CCVApp.Shared.Config.Note.UserNote_DeleteIcon;
+                    DeleteButton.TextColor = CCVApp.Shared.Config.Note.UserNote_DeleteIconColor;
+                    DeleteButton.SetFont( CCVApp.Shared.Config.Note.UserNoteIconFont, CCVApp.Shared.Config.Note.UserNote_DeleteIconSize );
+                    DeleteButton.Hidden = true;
+                    DeleteButton.SizeToFit( );
+                    if( mStyle.mBackgroundColor.HasValue )
+                    {
+                        DeleteButton.BackgroundColor = mStyle.mBackgroundColor.Value;
+                    }
+                    else
+                    {
+                        DeleteButton.BackgroundColor = 0;
+                    }
+
 
 
                     // Setup the position
@@ -217,12 +230,9 @@ namespace CCVApp
                     DeleteButton.Position = new PointF( AnchorFrame.Left - DeleteButton.Bounds.Width / 2, 
                                                         AnchorFrame.Top - DeleteButton.Bounds.Height / 2 );
 
-                    DeleteButton.BackgroundColor = 0xFF0000FF;
-                    DeleteButton.Hidden = true;
-
                     // set the actual note textfield relative to the anchor
-                    TextField.Position = new PointF( AnchorFrame.Right, 
-                        AnchorFrame.Bottom );
+                    TextField.Position = new PointF( AnchorFrame.Left, 
+                                                     AnchorFrame.Bottom );
 
                     // set the starting text if it was provided
                     if( startingText != null )
@@ -298,8 +308,7 @@ namespace CCVApp
                             State = TouchState.Hold;
 
                             // Store our starting touch and kick off our delete timer
-                            TrackingLastPos        = touch;
-                            Anchor.BackgroundColor = 0x00FF00FF;
+                            TrackingLastPos = touch;
                             DeleteTimer.Start();
                             Console.WriteLine( "UserNote Hold" );
                         }
@@ -346,9 +355,6 @@ namespace CCVApp
                 // By design, this will only be called on the UserNote that received a TouchesBegan IN ANCHOR RANGE.
                 public override bool TouchesEnded( PointF touch )
                 {
-                    // wait for the timer thread to be finished
-                    //Lock.WaitOne( );
-
                     bool consumed = false;
 
                     switch( State )
@@ -365,7 +371,6 @@ namespace CCVApp
                             consumed = true;
                             State = TouchState.None;
 
-                            Anchor.BackgroundColor = 0x0000FFFF;
                             Console.WriteLine( "UserNote Finished Moving" );
                             break;
                         }
@@ -391,8 +396,6 @@ namespace CCVApp
                                     OpenNote( );
                                 }
                             }
-
-                            Anchor.BackgroundColor = 0x0000FFFF;
                             break;
                         }
 
@@ -405,18 +408,11 @@ namespace CCVApp
 
                     DeleteTimer.Stop();
 
-                    //Lock.ReleaseMutex( );
-
                     return consumed;
                 }
 
                 protected void DeleteTimerDidFire(object sender, System.Timers.ElapsedEventArgs e)
                 {
-                    // wait for the main thread to be finished
-                    // JHM: Don't think we need this because we're simply invoking on the main thread,
-                    // therefore there cannot be a race condition, since everything gets serialized to a single thread.
-                    //Lock.WaitOne( );
-
                     // if they're still in range and haven't moved the note yet, activate delete mode.
                     if ( TouchInAnchorRange( TrackingLastPos ) && State == TouchState.Hold )
                     {
@@ -424,15 +420,10 @@ namespace CCVApp
                         Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate {  DeleteButton.Hidden = false; } );
                         DeleteEnabled = true;
                     }
-
-                    //Lock.ReleaseMutex( );
                 }
 
                 public void Dispose( object masterView )
                 {
-                    // release the mutex
-                    //Lock.Dispose( );
-
                     // remove it from the UI
                     RemoveFromView( masterView );
 

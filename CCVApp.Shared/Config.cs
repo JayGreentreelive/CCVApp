@@ -206,6 +206,15 @@ namespace CCVApp
                 public const string NamePrefix = "message";
                 public const string Extension = ".xml";
                 public const string BaseURL = "http://www.jeredmcferron.com/";
+
+                public const string UserNoteIconFont = "FontAwesome";
+                public const string UserNoteIcon = "";
+                public const int UserNoteIconSize = 24;
+                public const uint UserNoteIconColor = 0x7a1315FF;
+
+                public const string UserNote_DeleteIcon = "";
+                public const uint UserNote_DeleteIconColor = 0x444444FF;
+                public const int UserNote_DeleteIconSize = 24;
             }
         }
     }

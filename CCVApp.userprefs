@@ -1,24 +1,20 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhoneRetina.7.1" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="CCVApp.Shared/Notes/Controls/Note.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.192.168.56.101:5555" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="../Rock.Mobile/PlatformUI/Droid/DroidNative/BorderedRectViews.cs">
     <Files>
-      <File FileName="iOS/SpringboardViewController.cs" Line="13" Column="13" />
-      <File FileName="iOS/Tasks/Notes/NotesTask.cs" Line="103" Column="103" />
-      <File FileName="iOS/Tasks/Notes/NotesViewController.cs" Line="28" Column="28" />
-      <File FileName="CCVApp.Shared/Notes/Controls/Note.cs" Line="21" Column="21" />
-      <File FileName="CCVApp.Shared/RockApi/RockApi.cs" Line="52" Column="52" />
-      <File FileName="CCVApp.Shared/Notes/Controls/RevealBox.cs" Line="55" Column="55" />
-      <File FileName="CCVApp.Shared/Notes/Models/MobileNote.cs" Line="67" Column="67" />
-      <File FileName="CCVApp.Shared/Notes/Controls/UserNote.cs" Line="69" Column="69" />
+      <File FileName="CCVApp.Shared/Notes/Controls/Note.cs" Line="1" Column="1" />
+      <File FileName="CCVApp.Shared/Notes/Controls/UserNote.cs" Line="18" Column="18" />
+      <File FileName="../Rock.Mobile/PlatformUI/Droid/DroidLabel.cs" Line="17" Column="17" />
+      <File FileName="../Rock.Mobile/PlatformUI/Droid/DroidTextField.cs" Line="14" Column="14" />
+      <File FileName="../Rock.Mobile/PlatformUI/Droid/DroidView.cs" Line="61" Column="61" />
+      <File FileName="../Rock.Mobile/PlatformUI/Droid/DroidNative/BorderedRectViews.cs" Line="25" Column="25" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="CCVApp.Shared" expanded="True">
             <Node name="Notes" expanded="True">
-              <Node name="Models" expanded="True">
-                <Node name="MobileNote.cs" selected="True" />
-              </Node>
+              <Node name="Controls" expanded="True" />
             </Node>
           </Node>
           <Node name="Droid" expanded="True">
@@ -30,12 +26,23 @@
             <Node name="Tasks" expanded="True">
               <Node name="Notes" expanded="True" />
             </Node>
-            <Node name="UserManagement" expanded="True" />
+          </Node>
+          <Node name="Rock.Mobile" expanded="True">
+            <Node name="PlatformUI" expanded="True">
+              <Node name="Droid" expanded="True">
+                <Node name="DroidNative" expanded="True">
+                  <Node name="BorderedRectViews.cs" selected="True" />
+                </Node>
+              </Node>
+            </Node>
           </Node>
         </State>
       </Pad>
       <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
+        <State>
+          <Value>e</Value>
+          <Value>backgroundColor</Value>
+        </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>

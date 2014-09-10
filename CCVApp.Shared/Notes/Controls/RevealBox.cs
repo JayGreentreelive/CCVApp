@@ -65,7 +65,6 @@ namespace CCVApp
                         PlatformLabel.BackgroundColor = mStyle.mBackgroundColor.Value;
                     }
 
-
                     // parse the stream
                     string revealText = "";
                     if( reader.IsEmptyElement == false )
