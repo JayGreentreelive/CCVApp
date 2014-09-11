@@ -95,14 +95,17 @@ namespace iOS
         Note Note { get; set; }
 
         /// <summary>
-        /// True when the view should lower when the keyboard hides.
+        /// The frame of the text field that was tapped when the keyboard was shown.
+        /// Used so we know whether to scroll up the text field or not.
         /// </summary>
-        bool NeedsRestoreFromKeyboard { get; set; }
+        RectangleF Edit_TappedTextFieldFrame { get; set; }
 
         /// <summary>
-        /// The frame of the text field that was tapped when the keyboard was shown.
+        /// The amount the scrollView was scrolled when editing began.
+        /// Used so we can restore the scrollView position when editing is finished.
         /// </summary>
-        RectangleF TappedTextFieldFrame { get; set; }
+        /// <value>The edit start scroll offset.</value>
+        PointF Edit_StartScrollOffset { get; set; }
 
         /// <summary>
         /// The URL for this note
@@ -194,6 +197,7 @@ namespace iOS
 
             // monitor for text field being edited, and keyboard show/hide notitications
             NSNotificationCenter.DefaultCenter.AddObserver ("TextFieldDidBeginEditing", OnTextFieldDidBeginEditing);
+            NSNotificationCenter.DefaultCenter.AddObserver ("TextFieldChanged", OnTextFieldChanged);
             NSNotificationCenter.DefaultCenter.AddObserver (UIKeyboard.WillHideNotification, OnKeyboardNotification);
             NSNotificationCenter.DefaultCenter.AddObserver (UIKeyboard.WillShowNotification, OnKeyboardNotification);
 
@@ -322,6 +326,9 @@ namespace iOS
 
         public void OnKeyboardNotification( NSNotification notification )
         {
+            // Issues: Appears like a bug when it can't scroll "up" anymore and the keyboard
+            // obstructs a note
+
             //Start an animation, using values from the keyboard
             UIView.BeginAnimations ("AnimateForKeyboard");
             UIView.SetAnimationBeginsFromCurrentState (true);
@@ -331,20 +338,44 @@ namespace iOS
             //Check if the keyboard is becoming visible
             if( notification.Name == UIKeyboard.WillShowNotification )
             {
+                // store the original scroll offset. No matter what, we wil
+                // undo any scrolling the user did while editing.
+                Edit_StartScrollOffset = UIScrollView.ContentOffset;
+
                 // get the keyboard frame and transform it into our view's space
                 RectangleF keyboardFrame = UIKeyboard.FrameEndFromNotification (notification);
                 keyboardFrame = View.ConvertRectToView( keyboardFrame, null );
 
-                // get the height remaining after the keyboard is displayed
-                float viewHeight = View.Bounds.Height - keyboardFrame.Height;
+                // PLUS makes it scroll "up"
+                // NEG makes it scroll "down"
+                // TextField position MOVES AS THE PAGE IS SCROLLED.
+                // It is always relative, however, to the screen. So, if it's near the top, it's 0,
+                // whether that's because it was moved down and the screen scrolled up, or it's just at the top naturally.
 
-                // if the bottom of the text frame is beyond the remaining height,
-                // the keyboard will cover it, so we want to adjust.
-                if(TappedTextFieldFrame.Bottom >= viewHeight)
-                {
-                    NeedsRestoreFromKeyboard = true;
-                    UIScrollView.Layer.Position = new PointF( UIScrollView.Layer.Position.X, UIScrollView.Layer.Position.Y - keyboardFrame.Height );
-                }
+
+                // Goal - Scroll the view so tha the bottom of the text field is as close as possible to
+                // the top of the keyboard without violating scroll constraints
+
+                // first, get the bottom point of the visible area.
+                float visibleAreaWithKeyboardBot = View.Bounds.Height - keyboardFrame.Height;;
+
+                // now get the dist between the bottom of the visible area and the text field (text field's pos also changes as we scroll)
+                float scrollAmount = (visibleAreaWithKeyboardBot - Edit_TappedTextFieldFrame.Bottom);
+
+                // clamp to the legal amount we can scroll "down"
+                scrollAmount = Math.Min( scrollAmount, UIScrollView.ContentOffset.Y );
+
+
+                // Now determine the amount of "up" scroll remaining
+                float maxScrollAmount = UIScrollView.ContentSize.Height - UIScrollView.Bounds.Height;
+                float scrollAmountDistRemainingDown = -(maxScrollAmount - UIScrollView.ContentOffset.Y);
+
+                // and clamp the scroll amount to that, so we don't scroll "up" beyond the contraints
+                scrollAmount = Math.Max( scrollAmount, scrollAmountDistRemainingDown );
+
+                // now apply the scroll, which will have the effect of SCROLLING the view so the bottom of the text field
+                // is as close as possible to the top of the keyboard.
+                UIScrollView.ContentOffset = new PointF( UIScrollView.ContentOffset.X, UIScrollView.ContentOffset.Y - scrollAmount );
             }
             else
             {
@@ -352,14 +383,8 @@ namespace iOS
                 RectangleF keyboardFrame = UIKeyboard.FrameBeginFromNotification (notification);
                 keyboardFrame = View.ConvertRectToView( keyboardFrame, null );
 
-                // use a flag for restoring the keyboard because we can't trust the latest edited text field.
-                // It's possible that they clicked one that invoked a shift, then immediately started editing
-                // a text field that does NOT need a shift.
-                if(NeedsRestoreFromKeyboard == true)
-                {
-                    NeedsRestoreFromKeyboard = false;
-                    UIScrollView.Layer.Position = new PointF( UIScrollView.Layer.Position.X, UIScrollView.Layer.Position.Y + keyboardFrame.Height );
-                }
+                // restore any changes the user made
+                UIScrollView.ContentOffset = Edit_StartScrollOffset;
             }
 
             //Commit the animation
@@ -379,7 +404,29 @@ namespace iOS
             yPos -= View.Frame.Y - UIScrollView.Frame.Y;
             xPos -= View.Frame.X - UIScrollView.Frame.X;
 
-            TappedTextFieldFrame = new RectangleF( xPos, yPos, textFrame.Width, textFrame.Height );
+            Edit_TappedTextFieldFrame = new RectangleF( xPos, yPos, textFrame.Width, textFrame.Height );
+        }
+
+        public void OnTextFieldChanged( NSNotification notification )
+        {
+            // put the text frame in absolute screen coordinates
+            RectangleF textFrame = ((NSValue)notification.Object).RectangleFValue;
+
+            // first subtract the amount scrolled by the view.
+            float yPos = textFrame.Y - UIScrollView.ContentOffset.Y;
+            float xPos = textFrame.X - UIScrollView.ContentOffset.X;
+
+            // now subtract however far down the scroll view is from the top.
+            yPos -= View.Frame.Y - UIScrollView.Frame.Y;
+            xPos -= View.Frame.X - UIScrollView.Frame.X;
+
+            // get the amount of change for this text field
+            float deltaHeight = textFrame.Height - Edit_TappedTextFieldFrame.Height;
+
+            // update it 
+            Edit_TappedTextFieldFrame = new RectangleF( xPos, yPos, textFrame.Width, textFrame.Height );
+
+            UIScrollView.ContentOffset = new PointF( UIScrollView.ContentOffset.X, UIScrollView.ContentOffset.Y + deltaHeight );
         }
 
         public void DestroyNotes( )

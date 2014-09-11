@@ -45,18 +45,14 @@ namespace CCVApp
                 protected bool DidMoveNote { get; set; }
 
                 /// <summary>
-                /// The width of the note's parent. Used to 
-                /// create the initial size as a percentage of the available width,
-                /// and to keep the note within boundaries.
+                /// The furthest on X a note is allowed to be moved.
                 /// </summary>
-                protected float MaxAvailableWidth { get; set; }
+                protected float MaxAllowedX { get; set; }
 
                 /// <summary>
-                /// The height of the note's parent. Used to 
-                /// create the initial size as a percentage of the available height,
-                /// and to keep the note within boundaries.
+                /// The furthest on Y a note is allowed to be moved.
                 /// </summary>
-                protected float MaxAvailableHeight { get; set; }
+                protected float MaxAllowedY { get; set; }
 
                 /// <summary>
                 /// The maximum width of the note.
@@ -103,6 +99,12 @@ namespace CCVApp
                 /// <value>The anchor touch range.</value>
                 float AnchorTouchMaxDist { get; set; }
 
+                /// <summary>
+                /// the width of the screen so we know
+                /// what the remaining width is when moving the note around.
+                /// </summary>
+                /// <value>The width of the screen.</value>
+                float ScreenWidth { get; set; }
 
                 protected override void Initialize( )
                 {
@@ -123,6 +125,21 @@ namespace CCVApp
                     {
                         CloseNote( );
                     }
+
+                    // since we're restoring an existing user note,
+                    // we want to turn off scaling so we can adjust the height 
+                    // for all the text
+                    TextField.ScaleHeightForText = false;
+
+                    TextField.SizeToFit( );
+
+                    // a small hack, but calling SizeToFit breaks
+                    // the note width, so this will restore it.
+                    ValidateBounds( );
+
+                    // now we can turn it back on so that if they continue to edit,
+                    // it will grow.
+                    TextField.ScaleHeightForText = true;
                 }
 
                 public UserNote( CreateParams parentParams, float deviceHeight, PointF startPos )
@@ -166,21 +183,17 @@ namespace CCVApp
                     TextField.TextColor = mStyle.mFont.mColor.Value;
                     TextField.Placeholder = "Enter note";
                     TextField.PlaceholderTextColor = mStyle.mFont.mColor.Value;
-
-                    if( mStyle.mBackgroundColor.HasValue )
-                    {
-                        TextField.BackgroundColor = mStyle.mBackgroundColor.Value;
-                    }
-                    TextField.BackgroundColor = 0xFFFFFFFF; 
+                     
                     TextField.BorderColor = 0x777777FF;
                     TextField.CornerRadius = 5;
                     TextField.BorderWidth = 4;
+                    TextField.BackgroundColor = 0xFFFFFFFF;
 
 
                     // Setup the anchor color
-                    Anchor.Text = CCVApp.Shared.Config.Note.UserNoteIcon;
-                    Anchor.TextColor = CCVApp.Shared.Config.Note.UserNoteIconColor;
-                    Anchor.SetFont( CCVApp.Shared.Config.Note.UserNoteIconFont, CCVApp.Shared.Config.Note.UserNoteIconSize );
+                    Anchor.Text = CCVApp.Shared.Config.Note.UserNote_Icon;
+                    Anchor.TextColor = CCVApp.Shared.Config.Note.UserNote_IconColor;
+                    Anchor.SetFont( CCVApp.Shared.Config.Note.UserNote_IconFont, CCVApp.Shared.Config.Note.UserNote_IconSize );
                     Anchor.SizeToFit();
                     if( mStyle.mBackgroundColor.HasValue )
                     {
@@ -191,21 +204,30 @@ namespace CCVApp
                         Anchor.BackgroundColor = 0;
                     }
 
+                    // store the width of the screen so we know
+                    // what the remaining width is when moving the note around.
+                    ScreenWidth = parentParams.Width;
 
-                    // the text field should scale based on how close to the edge.
-                    MaxAvailableWidth = ( parentParams.Width - Anchor.Bounds.Width );
-                    MaxAvailableHeight = ( parentParams.Height - Anchor.Bounds.Height );
-                    MinNoteWidth = (parentParams.Width * .10f );
-                    MaxNoteWidth = (parentParams.Width - Anchor.Bounds.Width) / 2;
+                    // Don't let the note's width be less than twice the anchor width. Any less
+                    // and we end up with text clipping.
+                    MinNoteWidth = (Anchor.Bounds.Width * 2);
 
-                    float width = Math.Max( MinNoteWidth, Math.Min( MaxNoteWidth, MaxAvailableWidth - startPos.X ) );
+                    // Dont let the note be any wider than the screen - twice the min width. This allows a little
+                    // free play so it doesn't feel like the note is always attached to the right edge.
+                    MaxNoteWidth = parentParams.Width - (MinNoteWidth * 2);
+
+                    // set the allowed X/Y so we don't let the user move the note off-screen.
+                    MaxAllowedX = ( parentParams.Width - MinNoteWidth );
+                    MaxAllowedY = ( parentParams.Height - Anchor.Bounds.Height );
+
+                    float width = Math.Max( MinNoteWidth, Math.Min( MaxNoteWidth, MaxAllowedX - startPos.X ) );
                     TextField.Bounds = new RectangleF( 0, 0, width, 0 );
 
 
                     // setup the delete button
                     DeleteButton.Text = CCVApp.Shared.Config.Note.UserNote_DeleteIcon;
                     DeleteButton.TextColor = CCVApp.Shared.Config.Note.UserNote_DeleteIconColor;
-                    DeleteButton.SetFont( CCVApp.Shared.Config.Note.UserNoteIconFont, CCVApp.Shared.Config.Note.UserNote_DeleteIconSize );
+                    DeleteButton.SetFont( CCVApp.Shared.Config.Note.UserNote_DeleteIconFont, CCVApp.Shared.Config.Note.UserNote_DeleteIconSize );
                     DeleteButton.Hidden = true;
                     DeleteButton.SizeToFit( );
                     if( mStyle.mBackgroundColor.HasValue )
@@ -451,27 +473,25 @@ namespace CCVApp
                 public override void AddOffset( float xOffset, float yOffset )
                 {
                     // clamp X & Y movement to within margin of the screen
-                    float maxX = MaxAvailableWidth - AnchorFrame.Width;
-                    if( Anchor.Position.X + xOffset < AnchorFrame.Width )
+                    if( Anchor.Position.X + xOffset < MinNoteWidth )
                     {
                         // watch the left side
-                        xOffset += AnchorFrame.Width - (Anchor.Position.X + xOffset);
+                        xOffset += MinNoteWidth - (Anchor.Position.X + xOffset);
                     }
-                    else if( Anchor.Position.X + xOffset > maxX )
+                    else if( Anchor.Position.X + xOffset > MaxAllowedX )
                     {
                         // and the right
-                        xOffset -= (Anchor.Position.X + xOffset) - maxX;
+                        xOffset -= (Anchor.Position.X + xOffset) - MaxAllowedX;
                     }
 
                     // Check Y...
-                    float maxY = MaxAvailableHeight - AnchorFrame.Height;
                     if( Anchor.Position.Y + yOffset < AnchorFrame.Height )
                     {
                         yOffset += AnchorFrame.Height - (Anchor.Position.Y + yOffset);
                     }
-                    else if (Anchor.Position.Y + yOffset > maxY )
+                    else if (Anchor.Position.Y + yOffset > MaxAllowedY )
                     {
-                        yOffset -= (Anchor.Position.Y + yOffset) - maxY;
+                        yOffset -= (Anchor.Position.Y + yOffset) - MaxAllowedY;
                     }
 
                     // Now that offsets have been clamped, reposition the note
@@ -491,24 +511,22 @@ namespace CCVApp
 
 
                     // Scale the textfield to no larger than the remaining width of the screen 
-                    float width = Math.Max( MinNoteWidth, Math.Min( MaxNoteWidth, MaxAvailableWidth - AnchorFrame.X ) );
+                    float width = Math.Max( MinNoteWidth, Math.Min( MaxNoteWidth, ScreenWidth - AnchorFrame.X ) );
                     TextField.Bounds = new RectangleF( 0, 0, width, TextField.Bounds.Height);
                 }
 
                 void ValidateBounds()
                 {
                     // clamp X & Y movement to within margin of the screen
-                    float maxX = MaxAvailableWidth - MaxNoteWidth;//AnchorFrame.Width;
-                    float xPos = Math.Max( Math.Min( AnchorFrame.X, maxX ), AnchorFrame.Width );
+                    float xPos = Math.Max( Math.Min( AnchorFrame.X, MaxAllowedX ), MinNoteWidth );
 
-                    float maxY = MaxAvailableHeight - AnchorFrame.Height;
-                    float yPos = Math.Max( Math.Min( AnchorFrame.Y, maxY ), AnchorFrame.Height );
+                    float yPos = Math.Max( Math.Min( AnchorFrame.Y, MaxAllowedY ), AnchorFrame.Height );
 
                     Anchor.Position = new PointF( xPos, yPos );
                     AnchorFrame = Anchor.Frame;
 
                     // Scale the textfield to no larger than the remaining width of the screen 
-                    float width = Math.Max( MinNoteWidth, Math.Min( MaxNoteWidth, MaxAvailableWidth - AnchorFrame.X ) );
+                    float width = Math.Max( MinNoteWidth, Math.Min( MaxNoteWidth, ScreenWidth - AnchorFrame.X ) );
                     TextField.Bounds = new RectangleF( 0, 0, width, TextField.Bounds.Height);
                 }
 
