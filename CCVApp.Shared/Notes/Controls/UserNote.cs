@@ -206,7 +206,7 @@ namespace CCVApp
 
                     // store the width of the screen so we know
                     // what the remaining width is when moving the note around.
-                    ScreenWidth = parentParams.Width;
+                    ScreenWidth = parentParams.Width * .95f;
 
                     // Don't let the note's width be less than twice the anchor width. Any less
                     // and we end up with text clipping.
@@ -214,10 +214,10 @@ namespace CCVApp
 
                     // Dont let the note be any wider than the screen - twice the min width. This allows a little
                     // free play so it doesn't feel like the note is always attached to the right edge.
-                    MaxNoteWidth = parentParams.Width - (MinNoteWidth * 2);
+                    MaxNoteWidth = ScreenWidth - (MinNoteWidth * 2);
 
                     // set the allowed X/Y so we don't let the user move the note off-screen.
-                    MaxAllowedX = ( parentParams.Width - MinNoteWidth );
+                    MaxAllowedX = ( ScreenWidth - MinNoteWidth );
                     MaxAllowedY = ( parentParams.Height - Anchor.Bounds.Height );
 
                     float width = Math.Max( MinNoteWidth, Math.Min( MaxNoteWidth, MaxAllowedX - startPos.X ) );
