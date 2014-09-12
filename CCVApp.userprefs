@@ -1,32 +1,9 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.192.168.56.101:5555" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Tasks/NotesTask/NotesFragment.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" PreferredExecutionTarget="Android.094c904b" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/Tasks/Notes/NotesTask.cs">
     <Files>
-      <File FileName="Droid/Springboard.cs" Line="34" Column="34" />
-      <File FileName="Droid/NavbarFragment.cs" Line="40" Column="40" />
-      <File FileName="Droid/Tasks/NotesTask/NotesFragment.cs" Line="21" Column="21" />
-      <File FileName="Droid/Tasks/NotesTask/NotesTask.cs" Line="48" Column="48" />
-      <File FileName="Droid/Tasks/Task.cs" Line="13" Column="13" />
+      <File FileName="iOS/Tasks/Notes/NotesTask.cs" Line="10" Column="10" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="Droid" expanded="True">
-            <Node name="Resources" expanded="True">
-              <Node name="layout-sw320dp" expanded="True" />
-            </Node>
-            <Node name="Tasks" expanded="True">
-              <Node name="NotesTask" expanded="True">
-                <Node name="NotesFragment.cs" selected="True" />
-              </Node>
-            </Node>
-          </Node>
-        </State>
-      </Pad>
-      <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
