@@ -176,7 +176,7 @@ namespace CCVApp
 
                     // flag that we want this text field to grow as more text is added
                     TextField.ScaleHeightForText = true;
-
+                    TextField.DynamicTextMaxHeight = CCVApp.Shared.Config.Note.UserNote_MaxHeight;
 
                     // Setup the font
                     TextField.SetFont( mStyle.mFont.mName, mStyle.mFont.mSize.Value );

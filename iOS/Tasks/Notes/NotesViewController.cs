@@ -108,6 +108,18 @@ namespace iOS
         PointF Edit_StartScrollOffset { get; set; }
 
         /// <summary>
+        /// The position of the UIScrollView when text editing began.
+        /// </summary>
+        /// <value>The edit start screen offset.</value>
+        PointF Edit_StartScreenOffset { get; set; }
+
+        /// <summary>
+        /// The bottom position of the visible area when the keyboard is up.
+        /// </summary>
+        /// <value>The edit visible area with keyboard bot.</value>
+        float Edit_VisibleAreaWithKeyboardBot { get; set; }
+
+        /// <summary>
         /// The URL for this note
         /// </summary>
         /// <value>The note URL.</value>
@@ -338,44 +350,20 @@ namespace iOS
             //Check if the keyboard is becoming visible
             if( notification.Name == UIKeyboard.WillShowNotification )
             {
-                // store the original scroll offset. No matter what, we wil
+                // store the original screen positioning / scroll. No matter what, we will
                 // undo any scrolling the user did while editing.
                 Edit_StartScrollOffset = UIScrollView.ContentOffset;
+                Edit_StartScreenOffset = UIScrollView.Layer.Position;
 
                 // get the keyboard frame and transform it into our view's space
                 RectangleF keyboardFrame = UIKeyboard.FrameEndFromNotification (notification);
                 keyboardFrame = View.ConvertRectToView( keyboardFrame, null );
 
-                // PLUS makes it scroll "up"
-                // NEG makes it scroll "down"
-                // TextField position MOVES AS THE PAGE IS SCROLLED.
-                // It is always relative, however, to the screen. So, if it's near the top, it's 0,
-                // whether that's because it was moved down and the screen scrolled up, or it's just at the top naturally.
-
-
-                // Goal - Scroll the view so tha the bottom of the text field is as close as possible to
-                // the top of the keyboard without violating scroll constraints
-
                 // first, get the bottom point of the visible area.
-                float visibleAreaWithKeyboardBot = View.Bounds.Height - keyboardFrame.Height;;
+                Edit_VisibleAreaWithKeyboardBot = View.Bounds.Height - keyboardFrame.Height;
 
                 // now get the dist between the bottom of the visible area and the text field (text field's pos also changes as we scroll)
-                float scrollAmount = (visibleAreaWithKeyboardBot - Edit_TappedTextFieldFrame.Bottom);
-
-                // clamp to the legal amount we can scroll "down"
-                scrollAmount = Math.Min( scrollAmount, UIScrollView.ContentOffset.Y );
-
-
-                // Now determine the amount of "up" scroll remaining
-                float maxScrollAmount = UIScrollView.ContentSize.Height - UIScrollView.Bounds.Height;
-                float scrollAmountDistRemainingDown = -(maxScrollAmount - UIScrollView.ContentOffset.Y);
-
-                // and clamp the scroll amount to that, so we don't scroll "up" beyond the contraints
-                scrollAmount = Math.Max( scrollAmount, scrollAmountDistRemainingDown );
-
-                // now apply the scroll, which will have the effect of SCROLLING the view so the bottom of the text field
-                // is as close as possible to the top of the keyboard.
-                UIScrollView.ContentOffset = new PointF( UIScrollView.ContentOffset.X, UIScrollView.ContentOffset.Y - scrollAmount );
+                MaintainEditTextVisibility( );
             }
             else
             {
@@ -383,8 +371,9 @@ namespace iOS
                 RectangleF keyboardFrame = UIKeyboard.FrameBeginFromNotification (notification);
                 keyboardFrame = View.ConvertRectToView( keyboardFrame, null );
 
-                // restore any changes the user made
+                // restore the screen to the way it was before editing
                 UIScrollView.ContentOffset = Edit_StartScrollOffset;
+                UIScrollView.Layer.Position = Edit_StartScreenOffset;
             }
 
             //Commit the animation
@@ -420,13 +409,40 @@ namespace iOS
             yPos -= View.Frame.Y - UIScrollView.Frame.Y;
             xPos -= View.Frame.X - UIScrollView.Frame.X;
 
-            // get the amount of change for this text field
-            float deltaHeight = textFrame.Height - Edit_TappedTextFieldFrame.Height;
-
-            // update it 
+            // update it
             Edit_TappedTextFieldFrame = new RectangleF( xPos, yPos, textFrame.Width, textFrame.Height );
 
-            UIScrollView.ContentOffset = new PointF( UIScrollView.ContentOffset.X, UIScrollView.ContentOffset.Y + deltaHeight );
+            MaintainEditTextVisibility( );
+        }
+
+        protected void MaintainEditTextVisibility( )
+        {
+            // PLUS makes it scroll "up"
+            // NEG makes it scroll "down"
+            // TextField position MOVES AS THE PAGE IS SCROLLED.
+            // It is always relative, however, to the screen. So, if it's near the top, it's 0,
+            // whether that's because it was moved down and the screen scrolled up, or it's just at the top naturally.
+
+            // Scroll the view so tha the bottom of the text field is as close as possible to
+            // the top of the keyboard without violating scroll constraints
+
+            // determine if they're typing near the bottom of the screen and it needs to scroll.
+            float scrollAmount = (Edit_VisibleAreaWithKeyboardBot - Edit_TappedTextFieldFrame.Bottom);
+
+            // clamp to the legal amount we can scroll "down"
+            scrollAmount = Math.Min( scrollAmount, UIScrollView.ContentOffset.Y );
+
+            // Now determine the amount of "up" scroll remaining
+            float maxScrollAmount = UIScrollView.ContentSize.Height - UIScrollView.Bounds.Height;
+            float scrollAmountDistRemainingDown = -(maxScrollAmount - UIScrollView.ContentOffset.Y);
+
+            // and clamp the scroll amount to that, so we don't scroll "up" beyond the contraints
+            float allowedScrollAmount = Math.Max( scrollAmount, scrollAmountDistRemainingDown );
+            UIScrollView.ContentOffset = new PointF( UIScrollView.ContentOffset.X, UIScrollView.ContentOffset.Y - allowedScrollAmount );
+
+            // if we STILL haven't scrolled enough "up" because of scroll contraints, we'll allow the window itself to move up.
+            float scrollDistNeeded = -Math.Min( 0, scrollAmount - scrollAmountDistRemainingDown );
+            UIScrollView.Layer.Position = new PointF( UIScrollView.Layer.Position.X, UIScrollView.Layer.Position.Y - scrollDistNeeded );
         }
 
         public void DestroyNotes( )

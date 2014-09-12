@@ -1,25 +1,51 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhoneRetina.7.1" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="../Rock.Mobile/PlatformUI/iOS/iOSNative/iOSDynamicUITextField.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="../Rock.Mobile/PlatformUI/Droid/DroidTextField.cs">
     <Files>
-      <File FileName="Droid/Tasks/NotesTask/NotesFragment.cs" Line="1" Column="1" />
-      <File FileName="CCVApp.Shared/Config.cs" Line="1" Column="1" />
-      <File FileName="CCVApp.Shared/Notes/Controls/UserNote.cs" Line="48" Column="48" />
-      <File FileName="iOS/Tasks/Notes/NotesViewController.cs" Line="86" Column="86" />
-      <File FileName="CCVApp.Shared/Notes/Controls/Note.cs" Line="1" Column="1" />
-      <File FileName="../Rock.Mobile/PlatformUI/iOS/iOSTextField.cs" Line="23" Column="23" />
-      <File FileName="../Rock.Mobile/PlatformUI/iOS/iOSNative/iOSDynamicUITextField.cs" Line="10" Column="10" />
-      <File FileName="../Rock.Mobile/PlatformUI/PlatformTextField.cs" Line="1" Column="1" />
-      <File FileName="../Rock.Mobile/PlatformUI/PlatformLabel.cs" Line="1" Column="1" />
+      <File FileName="Droid/Tasks/NotesTask/NotesFragment.cs" Line="63" Column="63" />
+      <File FileName="CCVApp.Shared/Notes/Controls/UserNote.cs" Line="21" Column="21" />
+      <File FileName="iOS/Tasks/Notes/NotesViewController.cs" Line="53" Column="53" />
+      <File FileName="CCVApp.Shared/Notes/Controls/Note.cs" Line="34" Column="34" />
+      <File FileName="../Rock.Mobile/PlatformUI/iOS/iOSTextField.cs" Line="13" Column="13" />
+      <File FileName="../Rock.Mobile/PlatformUI/iOS/iOSNative/iOSDynamicUITextField.cs" Line="30" Column="30" />
+      <File FileName="../Rock.Mobile/PlatformUI/PlatformTextField.cs" Line="74" Column="74" />
+      <File FileName="../Rock.Mobile/PlatformUI/Droid/DroidTextField.cs" Line="38" Column="38" />
+      <File FileName="CCVApp.Shared/Config.cs" Line="54" Column="54" />
     </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="Droid" expanded="True">
+            <Node name="Tasks" expanded="True">
+              <Node name="NotesTask" expanded="True" />
+            </Node>
+          </Node>
+          <Node name="iOS" expanded="True">
+            <Node name="Tasks" expanded="True">
+              <Node name="Notes" expanded="True">
+                <Node name="NotesViewController.cs" selected="True" />
+              </Node>
+            </Node>
+          </Node>
+          <Node name="Rock.Mobile" expanded="True" />
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State>
+          <Value>View.Frame</Value>
+          <Value>TappedTextFieldFrame.Top - keyboardFrame.Height</Value>
+          <Value>scrollAmount</Value>
+          <Value>UIScrollView.ContentSize</Value>
+          <Value>UIScrollView.Bounds.Size.Height</Value>
+          <Value>Edit_TappedTextFieldFrame.Bottom - Edit_VisibleHeightWithKeyboard</Value>
+          <Value>(Edit_TappedTextFieldFrame.Top + Edit_TappedTextFieldFrame.Height)</Value>
+          <Value>Edit_TappedTextFieldFrame.Bottom</Value>
+        </State>
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="/Users/jeredmcferron/Projects/Rock.Mobile/PlatformUI/iOS/iOSNative/iOSDynamicUITextField.cs" line="42" column="67" />
-      <Breakpoint file="/Users/jeredmcferron/Projects/Rock.Mobile/PlatformUI/iOS/iOSNative/iOSDynamicUITextField.cs" line="33" column="65" />
-      <Breakpoint file="/Users/jeredmcferron/Projects/Rock.Mobile/PlatformUI/iOS/iOSNative/iOSDynamicUITextField.cs" line="38" column="49" />
-      <Breakpoint file="/Users/jeredmcferron/Projects/Rock.Mobile/PlatformUI/iOS/iOSNative/iOSDynamicUITextField.cs" line="27" column="1" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches>
     <Watch file="CCVApp.Shared/Notes/Controls/Note.cs" line="533" offsetX="1058" offsetY="7980" expression="state" liveUpdate="False" />

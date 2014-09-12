@@ -201,19 +201,69 @@ namespace CCVApp
 
             public sealed class Note
             {
+                /// <summary>
+                /// The suffix to use for the user note filename.
+                /// </summary>
                 public const string UserNoteSuffix = "_user_note.dat";
 
+                /// <summary>
+                /// The prefix to attach when building the note name.
+                /// </summary>
                 public const string NamePrefix = "message";
+
+                /// <summary>
+                /// The extension of the note to download.
+                /// </summary>
                 public const string Extension = ".xml";
+
+                /// <summary>
+                /// The base URL to look for Notes. (this may be removed in a future version)
+                /// </summary>
                 public const string BaseURL = "http://www.jeredmcferron.com/";
 
-                public const string UserNoteIconFont = "FontAwesome";
-                public const string UserNoteIcon = "";
-                public const int UserNoteIconSize = 24;
-                public const uint UserNoteIconColor = 0x7a1315FF;
+                /// <summary>
+                /// The font to use for displaying the user note icon.
+                /// </summary>
+                public const string UserNote_IconFont = "FontAwesome";
 
+                /// <summary>
+                /// The icon to use for displaying the user note icon.
+                /// </summary>
+                public const string UserNote_Icon = "";
+
+                /// <summary>
+                /// The size of the font/icon when displaying the user note icon.
+                /// </summary>
+                public const int UserNote_IconSize = 24;
+
+                /// <summary>
+                /// The max height of a user note.
+                /// </summary>
+                public const float UserNote_MaxHeight = 200;
+
+                /// <summary>
+                /// The color of the font/icon when displaying the user note icon.
+                /// </summary>
+                public const uint UserNote_IconColor = 0x7a1315FF;
+
+                /// <summary>
+                /// The font to use for displaying the delete icon on user notes.
+                /// </summary>
+                public const string UserNote_DeleteIconFont = "FontAwesome";
+
+                /// <summary>
+                /// The icon to use for displaying the delete icon on user notes.
+                /// </summary>
                 public const string UserNote_DeleteIcon = "";
+
+                /// <summary>
+                /// The color of the font/icon when displaying the delete icon on user notes.
+                /// </summary>
                 public const uint UserNote_DeleteIconColor = 0x444444FF;
+
+                /// <summary>
+                /// The size of the font/icon when displaying the delete icon on user notes.
+                /// </summary>
                 public const int UserNote_DeleteIconSize = 24;
             }
         }
