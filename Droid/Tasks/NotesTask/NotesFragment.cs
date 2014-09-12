@@ -48,6 +48,12 @@ namespace Droid
             public class LockableScrollView : ScrollView
             {
                 /// <summary>
+                /// The Notes Fragment, so we can notify on input
+                /// </summary>
+                /// <value>The notes.</value>
+                public NotesFragment Notes { get; set; }
+
+                /// <summary>
                 /// True when the scroll view can scroll. False when it cannot.
                 /// </summary>
                 public bool ScrollEnabled { get; set; }
@@ -73,49 +79,14 @@ namespace Droid
                     //base.ScrollBy(x, y);
                 }
 
-                public override bool PageScroll(FocusSearchDirection direction)
-                {
-                    return base.PageScroll(direction);
-                }
-
-                public override void RequestChildFocus(View child, View focused)
-                {
-                    base.RequestChildFocus(child, focused);
-                }
-
-                protected override void OnLayout(bool changed, int left, int top, int right, int bottom)
-                {
-                    base.OnLayout(changed, left, top, right, bottom);
-                }
-
-                public override View FindFocus()
-                {
-                    return base.FindFocus();
-                }
-
-                public override bool OnTouchEvent( MotionEvent ev )
-                {
-                    switch( ev.Action )
-                    {
-                        case MotionEventActions.Down:
-                        {
-                            if( ScrollEnabled )
-                            {
-                                return base.OnTouchEvent( ev );
-                            }
-                            break;
-                        }
-                    }
-
-                    return base.OnTouchEvent( ev );
-                }
-
                 public override bool OnInterceptTouchEvent(MotionEvent ev)
                 {
-                    if( ScrollEnabled == true )
+                    // verify from our parent we can scroll, and that scrolling is enabled
+                    if( Notes.OnInterceptTouchEvent( ev ) && ScrollEnabled == true )
                     {
                         return base.OnInterceptTouchEvent(ev);
                     }
+
                     return false;
                 }
             }
@@ -215,6 +186,7 @@ namespace Droid
                     ScrollView.OverScrollMode = OverScrollMode.Always;
                     ScrollView.VerticalScrollbarPosition = ScrollbarPosition.Default;
                     ScrollView.LayoutParameters = new RelativeLayout.LayoutParams( RelativeLayout.LayoutParams.MatchParent, RelativeLayout.LayoutParams.MatchParent);
+                    ScrollView.Notes = this;
                     ((RelativeLayout.LayoutParams)ScrollView.LayoutParameters).AddRule(LayoutRules.CenterHorizontal);
                     ((RelativeLayout.LayoutParams)ScrollView.LayoutParameters).AddRule(LayoutRules.Below, Resource.Id.refreshButton);
 
@@ -310,6 +282,18 @@ namespace Droid
                     base.OnDestroy( );
 
                     ShutdownNotes( null );
+                }
+
+                public bool OnInterceptTouchEvent(MotionEvent ev)
+                {
+                    // called by the LockableScrollView. This allows us to shut the
+                    // springboard if it's open and the user touches the note.
+                    if( ParentTask.NavbarFragment.SpringboardRevealed == true )
+                    {
+                        ParentTask.NavbarFragment.RevealSpringboard( false );
+                        return false;
+                    }
+                    return true;
                 }
 
                 public override bool OnTouch( View v, MotionEvent e )

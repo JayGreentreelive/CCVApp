@@ -41,7 +41,7 @@ namespace Droid
                 IconId = iconId;
             }
 
-            public void OnCreateView( View parentView, EventHandler buttonDelegate )
+            public void OnCreateView( View parentView )
             {
                 Layout = parentView.FindViewById<RelativeLayout>( LayoutId );
                 Icon = parentView.FindViewById<ImageView>( IconId );
@@ -50,7 +50,6 @@ namespace Droid
                 Icon.SetX( Icon.GetX() - Icon.Drawable.IntrinsicWidth / 2 );
 
                 Button.Background = null;
-                Button.Click += buttonDelegate;
             }
         }
         protected List<SpringboardElement> Elements { get; set; }
@@ -113,7 +112,9 @@ namespace Droid
             // let the springboard elements setup their buttons
             foreach( SpringboardElement element in Elements )
             {
-                element.OnCreateView( view, delegate { ActiveElementIndex = Elements.IndexOf( element ); ActivateElement( element ); } );
+                element.OnCreateView( view );
+
+                element.Button.SetOnTouchListener( this );
             }
 
             view.SetOnTouchListener( this );
@@ -135,8 +136,22 @@ namespace Droid
             {
                 case MotionEventActions.Up:
                 {
+                    // no matter what, close the springboard
                     NavbarFragment.RevealSpringboard( false );
 
+                    // did we tap a button?
+                    SpringboardElement element = Elements.Where( el => el.Button == v ).SingleOrDefault();
+                    if( element != null )
+                    {
+                        // did we tap within the revealed springboard area?
+                        float visibleButtonWidth = NavbarFragment.View.Width * CCVApp.Shared.Config.PrimaryNavBar.RevealPercentage;
+                        if( e.GetX() < visibleButtonWidth )
+                        {
+                            // we did, so activate the element associated with that button
+                            ActiveElementIndex = Elements.IndexOf( element ); 
+                            ActivateElement( element );
+                        }
+                    }
                     break;
                 }
             }

@@ -134,6 +134,11 @@ namespace CCVApp
                 public const uint RevealButton_DisabledColor = 0x444444FF;
 
                 /// <summary>
+                /// The percentage of the navbar width to slide over when revealing the Springboard. (Android Only)
+                /// </summary>
+                public const float RevealPercentage = .65f;
+
+                /// <summary>
                 /// The size of the character representing the reveal button.
                 /// </summary>
                 public const int RevealButton_Size = 36;

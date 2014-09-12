@@ -48,7 +48,7 @@ namespace Droid
         /// True when the navbar fragment and task are slid "out" to reveal the springboard
         /// </summary>
         /// <value><c>true</c> if springboard revealed; otherwise, <c>false</c>.</value>
-        protected bool SpringboardRevealed { get; set; }
+        public bool SpringboardRevealed { get; protected set; }
 
         /// <summary>
         /// True when the navbar fragment and container are in the process of sliding in our out
@@ -172,7 +172,7 @@ namespace Droid
                 {
                     Animating = true;
 
-                    int xOffset = revealed ? (int) (View.Width * .65f) : 0;
+                    int xOffset = revealed ? (int) (View.Width * CCVApp.Shared.Config.PrimaryNavBar.RevealPercentage) : 0;
 
                     // setup an animation from our current mask scale to the new one.
                     ValueAnimator animator = ValueAnimator.OfInt((int)View.GetX( ) , xOffset);
