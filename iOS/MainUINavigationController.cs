@@ -101,13 +101,21 @@ namespace iOS
             RevealSpringboard( !SpringboardRevealed );
         }
 
-        public void ActivateTask( Task task )
+        public bool ActivateTask( Task task )
         {
-            Container.ActivateTask( task );
+            // don't allow switching activites while we're animating.
+            if( Animating == false )
+            {
+                Container.ActivateTask( task );
 
-            PopToRootViewController( false );
+                PopToRootViewController( false );
 
-            RevealSpringboard( false );
+                RevealSpringboard( false );
+
+                return true;
+            }
+
+            return false;
         }
 
         public void OnActivated( )

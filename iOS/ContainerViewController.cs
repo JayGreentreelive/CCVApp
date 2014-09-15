@@ -153,6 +153,7 @@ namespace iOS
             // let the current task know which of its view controllers was just shown.
             if( CurrentTask != null )
             {
+                TaskControllerAnimating = true;
                 CurrentTask.WillShowViewController( viewController );
             }
         }

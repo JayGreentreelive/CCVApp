@@ -325,19 +325,22 @@ namespace iOS
             // don't allow any navigation while the login controller is active
             if( ModalControllerVisible == false )
             {
-                // first turn "off" the backingView selection for all but the element
-                // becoming active.
-                foreach( SpringboardElement element in Elements )
+                // make sure we're allowed to switch activities
+                if( NavViewController.ActivateTask( activeElement.Task ) == true )
                 {
-                    if( element != activeElement )
+                    // first turn "off" the backingView selection for all but the element
+                    // becoming active.
+                    foreach( SpringboardElement element in Elements )
                     {
-                        element.BackingView.BackgroundColor = UIColor.Clear;
+                        if( element != activeElement )
+                        {
+                            element.BackingView.BackgroundColor = UIColor.Clear;
+                        }
                     }
-                }
 
-                // activate the element and its associated task
-                activeElement.BackingView.BackgroundColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.Springboard.Element_SelectedColor );
-                NavViewController.ActivateTask( activeElement.Task );
+                    // activate the element and its associated task
+                    activeElement.BackingView.BackgroundColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.Springboard.Element_SelectedColor );
+                }
             }
         }
 
