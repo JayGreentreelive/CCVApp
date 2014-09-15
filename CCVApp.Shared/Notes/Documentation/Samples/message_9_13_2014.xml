@@ -30,8 +30,8 @@
 	
 	<Paragraph MarginTop="10%">Our problem with direction:</Paragraph>
 	
-	<Quote Citation="Jeremiah 17:9"></Quote>
-	<Quote Citation="Matthew 7:13-14"></Quote>
+	<Quote MarginTop="5%" Citation="Jeremiah 17:9"></Quote>
+	<Quote MarginTop="5%" Citation="Matthew 7:13-14"></Quote>
 	
 	<Paragraph MarginTop="10%">God's solution to getting on the right path:</Paragraph>
 	

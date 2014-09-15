@@ -60,9 +60,32 @@ namespace CCVApp
                     PlatformLabel.SetFont( mStyle.mFont.mName, mStyle.mFont.mSize.Value );
                     PlatformLabel.TextColor = mStyle.mFont.mColor.Value;
 
-                    if( mStyle.mBackgroundColor.HasValue )
+                    // check for border styling
+                    if ( mStyle.mBorderColor.HasValue )
                     {
-                        PlatformLabel.BackgroundColor = mStyle.mBackgroundColor.Value;
+                        PlatformLabel.BorderColor = mStyle.mBorderColor.Value;
+                    }
+
+                    if( mStyle.mBorderRadius.HasValue )
+                    {
+                        PlatformLabel.CornerRadius = mStyle.mBorderRadius.Value;
+                    }
+
+                    if( mStyle.mBorderWidth.HasValue )
+                    {
+                        PlatformLabel.BorderWidth = mStyle.mBorderWidth.Value;
+                    }
+
+                    if( mStyle.mTextInputBackgroundColor.HasValue )
+                    {
+                        PlatformLabel.BackgroundColor = mStyle.mTextInputBackgroundColor.Value;
+                    }
+                    else
+                    {
+                        if( mStyle.mBackgroundColor.HasValue )
+                        {
+                            PlatformLabel.BackgroundColor = mStyle.mBackgroundColor.Value;
+                        }
                     }
 
                     // parse the stream

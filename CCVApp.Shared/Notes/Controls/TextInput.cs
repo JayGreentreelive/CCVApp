@@ -44,9 +44,32 @@ namespace CCVApp
                     TextField.SetFont( mStyle.mFont.mName, mStyle.mFont.mSize.Value );
                     TextField.TextColor = mStyle.mFont.mColor.Value;
                    
-                    if( mStyle.mBackgroundColor.HasValue )
+                    // check for border styling
+                    if ( mStyle.mBorderColor.HasValue )
                     {
-                        TextField.BackgroundColor = mStyle.mBackgroundColor.Value;
+                        TextField.BorderColor = mStyle.mBorderColor.Value;
+                    }
+
+                    if( mStyle.mBorderRadius.HasValue )
+                    {
+                        TextField.CornerRadius = mStyle.mBorderRadius.Value;
+                    }
+
+                    if( mStyle.mBorderWidth.HasValue )
+                    {
+                        TextField.BorderWidth = mStyle.mBorderWidth.Value;
+                    }
+
+                    if( mStyle.mTextInputBackgroundColor.HasValue )
+                    {
+                        TextField.BackgroundColor = mStyle.mTextInputBackgroundColor.Value;
+                    }
+                    else
+                    {
+                        if( mStyle.mBackgroundColor.HasValue )
+                        {
+                            TextField.BackgroundColor = mStyle.mBackgroundColor.Value;
+                        }
                     }
 
                     // if our left position is requested as a %, then that needs to be % of parent width

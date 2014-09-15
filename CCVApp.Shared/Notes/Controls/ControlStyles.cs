@@ -106,6 +106,26 @@ namespace CCVApp
                     /// </summary>
                     public TextCase? mTextCase;
 
+                    /// <summary>
+                    /// The background color for a text input field (if it should differ from the background color of the Note)
+                    /// </summary>
+                    public uint? mTextInputBackgroundColor;
+
+                    /// <summary>
+                    /// The thickness of any border desired around the control
+                    /// </summary>
+                    public float? mBorderWidth;
+
+                    /// <summary>
+                    /// The color of the border
+                    /// </summary>
+                    public uint? mBorderColor;
+
+                    /// <summary>
+                    /// The amount of curvature for the border corners
+                    /// </summary>
+                    public float? mBorderRadius;
+
                     public void Initialize( )
                     {
                         mFont = new FontParams( );
@@ -138,7 +158,10 @@ namespace CCVApp
 
                     public static UInt32 ParseColor( string color )
                     {
-                        if( color[0] != '#' ) throw new Exception( String.Format( "Colors must be in the format #RRGGBBAA. Color found: {0}", color ) );
+                        if( color[0] != '#' ) 
+                        {
+                            throw new Exception( String.Format( "Colors must be in the format #RRGGBBAA. Color found: {0}", color ) );
+                        }
                         return Convert.ToUInt32( color.Substring( 1 ), 16 ); //skip the first character
                     }
 
@@ -204,6 +227,13 @@ namespace CCVApp
                             style.mBackgroundColor = ParseColor( result );
                         }
 
+                        // check for text input background color
+                        result = reader.GetAttribute( "TextInputBackgroundColor" );
+                        if( string.IsNullOrEmpty( result ) == false )
+                        {
+                            style.mTextInputBackgroundColor = ParseColor( result );
+                        }
+
                         // check for list bullet point (lists only)
                         result = reader.GetAttribute( "BulletPoint" );
                         if( string.IsNullOrEmpty( result ) == false )
@@ -225,6 +255,26 @@ namespace CCVApp
                             style.mListIndention = float.Parse( result ) / denominator;
                         }
 
+                        // Check for border color
+                        result = reader.GetAttribute( "BorderColor" );
+                        if( string.IsNullOrEmpty( result ) == false )
+                        {
+                            style.mBorderColor = ParseColor( result );
+                        }
+
+                        // check for border width
+                        result = reader.GetAttribute( "BorderWidth" );
+                        if( string.IsNullOrEmpty( result ) == false )
+                        {
+                            style.mBorderWidth = float.Parse( result );
+                        }
+
+                        // check for border radius
+                        result = reader.GetAttribute( "BorderRadius" );
+                        if( string.IsNullOrEmpty( result ) == false )
+                        {
+                            style.mBorderRadius = float.Parse( result );
+                        }
 
                         // check for padding; DOES NOT INHERIT
                         result = reader.GetAttribute( "Padding" );
@@ -359,6 +409,12 @@ namespace CCVApp
                             style.mTextCase = defaultStyle.mTextCase;
                         }
 
+                        // check for textInput background color
+                        if( style.mTextInputBackgroundColor.HasValue == false )
+                        {
+                            style.mTextInputBackgroundColor = defaultStyle.mTextInputBackgroundColor;
+                        }
+
                         // check for list specifics
                         if ( style.mListBullet == null )
                         {
@@ -368,6 +424,22 @@ namespace CCVApp
                         if ( style.mListIndention.HasValue == false )
                         {
                             style.mListIndention = defaultStyle.mListIndention;
+                        }
+
+                        // check for border values
+                        if( style.mBorderColor == null )
+                        {
+                            style.mBorderColor = defaultStyle.mBorderColor;
+                        }
+
+                        if ( style.mBorderWidth == null )
+                        {
+                            style.mBorderWidth = defaultStyle.mBorderWidth;
+                        }
+
+                        if( style.mBorderRadius == null )
+                        {
+                            style.mBorderRadius = defaultStyle.mBorderRadius;
                         }
 
                         // check for padding
@@ -496,6 +568,11 @@ namespace CCVApp
                 /// </summary>
                 public static Styles.Style mList;
 
+                /// <summary>
+                /// User note appearance's default style if none are specified by a parent or in NoteScript XML.
+                /// </summary>
+                public static Styles.Style mUserNote;
+
                 static void CreateHeaderStyle()
                 {
                     // Default the header container to no padding and left alignment.
@@ -508,7 +585,7 @@ namespace CCVApp
                     mHeaderContainer.mPaddingBottom = 0;
 
 
-                    //Title should be large, bevan, centered and white
+                    // Title should be large, bevan, centered and white
                     // Also, prefer an upper case title.
                     mHeaderTitle = new Styles.Style( );
                     mHeaderTitle.Initialize();
@@ -598,6 +675,12 @@ namespace CCVApp
                     mTextInput.mFont.mSize = 8;
                     mTextInput.mFont.mColor = 0xFFFFFFFF;
                     mTextInput.mTextCase = Styles.TextCase.Normal;
+
+                    mTextInput.mBorderColor = 0x777777FF;
+                    mTextInput.mBorderRadius = 5;
+                    mTextInput.mBorderWidth = 4;
+
+                    mTextInput.mTextInputBackgroundColor = 0xFFFFFFFF;
                 }
 
                 static void CreateQuoteStyle()
@@ -641,6 +724,24 @@ namespace CCVApp
                     mListItem.Initialize( );
                 }
 
+                static void CreateUserNoteStyle()
+                {
+                    mUserNote = new Styles.Style( );
+                    mUserNote.Initialize( );
+
+                    mUserNote.mBorderColor = 0x777777FF;
+                    mUserNote.mBorderRadius = 5;
+                    mUserNote.mBorderWidth = 4;
+
+                    mUserNote.mTextInputBackgroundColor = 0xFFFFFFFF;
+
+                    mUserNote.mAlignment = Styles.Alignment.Left;
+                    mUserNote.mFont.mName = "Bevan";
+                    mUserNote.mFont.mSize = 8;
+                    mUserNote.mFont.mColor = 0x777777FF;
+                    mUserNote.mTextCase = Styles.TextCase.Normal;
+                }
+
                 public static void Initialize( string styleSheetUrl, string styleSheetXml, StylesCreated stylesCreatedDelegate )
                 {
                     // Create each control's default style. And put some defaults...for the defaults.
@@ -656,6 +757,7 @@ namespace CCVApp
                     CreateHeaderStyle();
                     CreateListItemStyle();
                     CreateListStyle();
+                    CreateUserNoteStyle();
 
                     mStylesCreatedDelegate = stylesCreatedDelegate;
 
@@ -724,6 +826,7 @@ namespace CCVApp
                                         case "Text": Notes.Styles.Style.ParseStyleAttributes( reader, ref mText ); break;
                                         case "List": Notes.Styles.Style.ParseStyleAttributes( reader, ref mList ); break;
                                         case "ListItem": Notes.Styles.Style.ParseStyleAttributes( reader, ref mListItem ); break;
+                                        case "UserNote": Notes.Styles.Style.ParseStyleAttributes( reader, ref mUserNote ); break;
                                     }
                                     break;
                                 }

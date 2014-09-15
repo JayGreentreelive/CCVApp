@@ -172,7 +172,7 @@ namespace CCVApp
 
                     // take our parent's style or in defaults
                     mStyle = parentParams.Style;
-                    Styles.Style.MergeStyleAttributesWithDefaults( ref mStyle, ref ControlStyles.mTextInput );
+                    Styles.Style.MergeStyleAttributesWithDefaults( ref mStyle, ref ControlStyles.mUserNote );
 
                     // flag that we want this text field to grow as more text is added
                     TextField.ScaleHeightForText = true;
@@ -184,11 +184,33 @@ namespace CCVApp
                     TextField.Placeholder = "Enter note";
                     TextField.PlaceholderTextColor = mStyle.mFont.mColor.Value;
                      
-                    TextField.BorderColor = 0x777777FF;
-                    TextField.CornerRadius = 5;
-                    TextField.BorderWidth = 4;
-                    TextField.BackgroundColor = 0xFFFFFFFF;
+                    // check for border styling
+                    if ( mStyle.mBorderColor.HasValue )
+                    {
+                        TextField.BorderColor = mStyle.mBorderColor.Value;
+                    }
 
+                    if( mStyle.mBorderRadius.HasValue )
+                    {
+                        TextField.CornerRadius = mStyle.mBorderRadius.Value;
+                    }
+
+                    if( mStyle.mBorderWidth.HasValue )
+                    {
+                        TextField.BorderWidth = mStyle.mBorderWidth.Value;
+                    }
+
+                    if( mStyle.mTextInputBackgroundColor.HasValue )
+                    {
+                        TextField.BackgroundColor = mStyle.mTextInputBackgroundColor.Value;
+                    }
+                    else
+                    {
+                        if( mStyle.mBackgroundColor.HasValue )
+                        {
+                            TextField.BackgroundColor = mStyle.mBackgroundColor.Value;
+                        }
+                    }
 
                     // Setup the anchor color
                     Anchor.Text = CCVApp.Shared.Config.Note.UserNote_Icon;

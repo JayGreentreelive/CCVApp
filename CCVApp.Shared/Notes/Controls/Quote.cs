@@ -29,6 +29,8 @@ namespace CCVApp
                 /// <value>The citation.</value>
                 protected PlatformLabel Citation { get; set; }
 
+                protected PlatformView BorderView { get; set; }
+
                 /// <summary>
                 /// The bounds (including position) of the quote.
                 /// </summary>
@@ -41,6 +43,7 @@ namespace CCVApp
 
                     QuoteLabel = PlatformLabel.Create( );
                     Citation = PlatformLabel.Create( );
+                    BorderView = PlatformView.Create( );
                 }
 
                 public Quote( CreateParams parentParams, XmlReader reader )
@@ -63,10 +66,36 @@ namespace CCVApp
                     QuoteLabel.TextColor = mStyle.mFont.mColor.Value;
                     Citation.TextColor = mStyle.mFont.mColor.Value;
 
-                    if( mStyle.mBackgroundColor.HasValue )
+                    Citation.BackgroundColor = 0;
+                    QuoteLabel.BackgroundColor = 0;
+
+
+                    // check for border styling
+                    if ( mStyle.mBorderColor.HasValue )
                     {
-                        QuoteLabel.BackgroundColor = mStyle.mBackgroundColor.Value;
-                        Citation.BackgroundColor = mStyle.mBackgroundColor.Value;
+                        BorderView.BorderColor = mStyle.mBorderColor.Value;
+                    }
+
+                    if( mStyle.mBorderRadius.HasValue )
+                    {
+                        BorderView.CornerRadius = mStyle.mBorderRadius.Value;
+                    }
+
+                    if( mStyle.mBorderWidth.HasValue )
+                    {
+                        BorderView.BorderWidth = mStyle.mBorderWidth.Value;
+                    }
+
+                    if( mStyle.mTextInputBackgroundColor.HasValue )
+                    {
+                        BorderView.BackgroundColor = mStyle.mTextInputBackgroundColor.Value;
+                    }
+                    else
+                    {
+                        if( mStyle.mBackgroundColor.HasValue )
+                        {
+                            BorderView.BackgroundColor = mStyle.mBackgroundColor.Value;
+                        }
                     }
 
 
@@ -179,24 +208,47 @@ namespace CCVApp
                     // now that we know our text size, we can adjust the citation
                     // for citation width, attempt to use quote width, but if there was no quote text,
                     // the width will be 0, so we'll fallback to the citation width.
-                    Citation.Frame = new RectangleF( QuoteLabel.Frame.Left, 
-                        QuoteLabel.Frame.Bottom, 
-                        QuoteLabel.Frame.Width != 0 ? QuoteLabel.Frame.Width : Citation.Frame.Width,
-                        Citation.Frame.Height );
+
+                    RectangleF frame;
+                    if( string.IsNullOrEmpty( QuoteLabel.Text ) != true )
+                    {   
+                        // when taking the citation frame, use whichever width is larger,
+                        // because it's certainly possible the quote is shorter than the citation.
+                        Citation.Frame = new RectangleF( QuoteLabel.Frame.Left, 
+                                                         QuoteLabel.Frame.Bottom, 
+                                                         Math.Max( Citation.Frame.Width, QuoteLabel.Frame.Width ),
+                                                         Citation.Frame.Height );
+
+                        // get a bounding frame for the quote and citation
+                        frame = Parser.CalcBoundingFrame( QuoteLabel.Frame, Citation.Frame );
+                    }
+                    else
+                    {
+                        Citation.Frame = new RectangleF( QuoteLabel.Frame.Left, 
+                                                         QuoteLabel.Frame.Top, 
+                                                         Citation.Frame.Width,
+                                                         Citation.Frame.Height );
+
+                        // get a bounding frame for the quote and citation
+                        frame = Citation.Frame;
+                    }
 
 
                     Citation.TextAlignment = TextAlignment.Right;
 
-
-                    // get a bounding frame for the quote and citation
-                    RectangleF frame = Parser.CalcBoundingFrame( QuoteLabel.Frame, Citation.Frame );
-
                     // reintroduce vertical padding
-                    bounds.Height = frame.Height + topPadding + bottomPadding;
+                    frame.Height = frame.Height + topPadding + bottomPadding;
+
+                    // setup our bounding rect for the border
+                    frame = new RectangleF( frame.X - CCVApp.Shared.Config.Note.Quote_BorderPadding, 
+                                            frame.Y - CCVApp.Shared.Config.Note.Quote_BorderPadding, 
+                                            frame.Width + CCVApp.Shared.Config.Note.Quote_BorderPadding * 2, 
+                                            frame.Height + CCVApp.Shared.Config.Note.Quote_BorderPadding * 2 );
 
                     // and store that as our bounds
-                    Frame = bounds;
-                    base.DebugFrameView.Frame = Frame;
+                    BorderView.Frame = frame;
+                    Frame = frame;
+                    base.DebugFrameView.Frame = frame;
                 }
 
                 public override void AddOffset( float xOffset, float yOffset )
@@ -209,13 +261,18 @@ namespace CCVApp
                     Citation.Position = new PointF( Citation.Position.X + xOffset, 
                         Citation.Position.Y + yOffset );
 
+                    BorderView.Position = new PointF( BorderView.Position.X + xOffset,
+                        BorderView.Position.Y + yOffset );
+
                     // update our bounds by the new offsets.
                     Frame = new RectangleF( Frame.X + xOffset, Frame.Y + yOffset, Frame.Width, Frame.Height );
+
                     base.DebugFrameView.Frame = Frame;
                 }
 
                 public override void AddToView( object obj )
                 {
+                    BorderView.AddAsSubview( obj );
                     QuoteLabel.AddAsSubview( obj );
                     Citation.AddAsSubview( obj );
 
@@ -224,6 +281,7 @@ namespace CCVApp
 
                 public override void RemoveFromView( object obj )
                 {
+                    BorderView.RemoveAsSubview( obj );
                     QuoteLabel.RemoveAsSubview( obj );
                     Citation.RemoveAsSubview( obj );
 
