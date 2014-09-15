@@ -100,11 +100,13 @@ namespace iOS
             NewsTableView.SeparatorStyle = UITableViewCellSeparatorStyle.None;
         }
 
-        public override void ViewDidAppear(bool animated)
+        public override void ViewDidLayoutSubviews()
         {
-            base.ViewDidAppear(animated);
+            base.ViewDidLayoutSubviews();
 
-            // configure the table to be below the nav bar
+            // adjust the table height for our navbar.
+            // We MUST do it here, and we also have to set ContentType to Top, as opposed to ScaleToFill, on the view itself,
+            // or our changes will be overwritten
             NewsTableView.Frame = new RectangleF( 0, NavigationController.NavigationBar.Frame.Height, View.Bounds.Width, View.Bounds.Height - NavigationController.NavigationBar.Frame.Height );
         }
 

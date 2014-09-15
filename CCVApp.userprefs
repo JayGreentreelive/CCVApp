@@ -1,8 +1,10 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" PreferredExecutionTarget="Android.SelectDevice" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/Tasks/Notes/NotesTask.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhoneRetina.7.1" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/Tasks/News/NewsMainUIViewController.cs">
     <Files>
-      <File FileName="iOS/Tasks/Notes/NotesTask.cs" Line="45" Column="45" />
+      <File FileName="iOS/SpringboardViewController.cs" Line="27" Column="27" />
+      <File FileName="iOS/Tasks/News/NewsMainUIViewController.cs" Line="78" Column="78" />
+      <File FileName="iOS/Main.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
