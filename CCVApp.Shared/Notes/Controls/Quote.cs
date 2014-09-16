@@ -29,6 +29,10 @@ namespace CCVApp
                 /// <value>The citation.</value>
                 protected PlatformLabel Citation { get; set; }
 
+                /// <summary>
+                /// The view representing any surrounding border for the quote.
+                /// </summary>
+                /// <value>The border view.</value>
                 protected PlatformView BorderView { get; set; }
 
                 /// <summary>
@@ -71,6 +75,7 @@ namespace CCVApp
 
 
                     // check for border styling
+                    int borderPaddingPx = 0;
                     if ( mStyle.mBorderColor.HasValue )
                     {
                         BorderView.BorderColor = mStyle.mBorderColor.Value;
@@ -84,6 +89,7 @@ namespace CCVApp
                     if( mStyle.mBorderWidth.HasValue )
                     {
                         BorderView.BorderWidth = mStyle.mBorderWidth.Value;
+                        borderPaddingPx = (int)Rock.Mobile.PlatformUI.PlatformBaseUI.UnitToPx( mStyle.mBorderWidth.Value + CCVApp.Shared.Config.Note.BorderPadding );
                     }
 
                     if( mStyle.mTextInputBackgroundColor.HasValue )
@@ -130,10 +136,10 @@ namespace CCVApp
                     float bottomPadding = Styles.Style.GetStyleValue( mStyle.mPaddingBottom, parentParams.Height );
 
                     // now calculate the available width based on padding. (Don't actually change our width)
-                    float availableWidth = bounds.Width - leftPadding - rightPadding;
+                    float availableWidth = bounds.Width - leftPadding - rightPadding - (borderPaddingPx * 2);
 
                     // Set the bounds and position for the frame (except Height, which we'll calculate based on the text)
-                    QuoteLabel.Frame = new RectangleF( bounds.X + leftPadding, bounds.Y + topPadding, availableWidth, 0 );
+                    QuoteLabel.Frame = new RectangleF( bounds.X + leftPadding + borderPaddingPx, bounds.Y + topPadding + borderPaddingPx, availableWidth, 0 );
 
 
                     // expect the citation to be an attribute
@@ -142,7 +148,7 @@ namespace CCVApp
                     {
                         // set and resize the citation to fit
                         Citation.Text = result;
-                        Citation.Bounds = bounds;
+                        Citation.Bounds = new RectangleF( bounds.X + leftPadding + borderPaddingPx, bounds.Y + topPadding + borderPaddingPx, availableWidth, 0 );
                         Citation.SizeToFit( );
                     }
 
@@ -233,17 +239,19 @@ namespace CCVApp
                         frame = Citation.Frame;
                     }
 
-
                     Citation.TextAlignment = TextAlignment.Right;
 
                     // reintroduce vertical padding
                     frame.Height = frame.Height + topPadding + bottomPadding;
 
                     // setup our bounding rect for the border
-                    frame = new RectangleF( frame.X - CCVApp.Shared.Config.Note.Quote_BorderPadding, 
-                                            frame.Y - CCVApp.Shared.Config.Note.Quote_BorderPadding, 
-                                            frame.Width + CCVApp.Shared.Config.Note.Quote_BorderPadding * 2, 
-                                            frame.Height + CCVApp.Shared.Config.Note.Quote_BorderPadding * 2 );
+
+                    // because we're basing it off of the largest control (quote or citation),
+                    // we need to reintroduce the border padding.
+                    frame = new RectangleF( frame.X - borderPaddingPx, 
+                                            frame.Y - borderPaddingPx, 
+                                            frame.Width + borderPaddingPx * 2, 
+                                            frame.Height + borderPaddingPx * 2 );
 
                     // and store that as our bounds
                     BorderView.Frame = frame;

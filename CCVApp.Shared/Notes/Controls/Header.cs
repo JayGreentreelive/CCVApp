@@ -38,6 +38,12 @@ namespace CCVApp
                 /// <value>The frame.</value>
                 protected RectangleF Frame { get; set; }
 
+                /// <summary>
+                /// The view representing any surrounding border for the quote.
+                /// </summary>
+                /// <value>The border view.</value>
+                protected PlatformView BorderView { get; set; }
+
                 protected override void Initialize( )
                 {
                     base.Initialize( );
@@ -45,6 +51,8 @@ namespace CCVApp
                     mTitle = null;
                     mDate = null;
                     mSpeaker = null;
+
+                    BorderView = PlatformView.Create( );
                 }
 
                 public Header( CreateParams parentParams, XmlReader reader )
@@ -58,6 +66,37 @@ namespace CCVApp
                     // take our parent's style but override with anything we set
                     mStyle = parentParams.Style;
                     Styles.Style.ParseStyleAttributesWithDefaults( reader, ref mStyle, ref ControlStyles.mHeaderContainer );
+
+                    // check for border styling
+                    int borderPaddingPx = 0;
+                    if ( mStyle.mBorderColor.HasValue )
+                    {
+                        BorderView.BorderColor = mStyle.mBorderColor.Value;
+                    }
+
+                    if( mStyle.mBorderRadius.HasValue )
+                    {
+                        BorderView.CornerRadius = mStyle.mBorderRadius.Value;
+                    }
+
+                    if( mStyle.mBorderWidth.HasValue )
+                    {
+                        BorderView.BorderWidth = mStyle.mBorderWidth.Value;
+                        borderPaddingPx = (int)Rock.Mobile.PlatformUI.PlatformBaseUI.UnitToPx( mStyle.mBorderWidth.Value + CCVApp.Shared.Config.Note.BorderPadding );
+                    }
+
+                    if( mStyle.mTextInputBackgroundColor.HasValue )
+                    {
+                        BorderView.BackgroundColor = mStyle.mTextInputBackgroundColor.Value;
+                    }
+                    else
+                    {
+                        if( mStyle.mBackgroundColor.HasValue )
+                        {
+                            BorderView.BackgroundColor = mStyle.mBackgroundColor.Value;
+                        }
+                    }
+                    //
 
                     // if our left position is requested as a %, then that needs to be % of parent width
                     if( bounds.X < 1 )
@@ -90,7 +129,7 @@ namespace CCVApp
                     float bottomPadding = Styles.Style.GetStyleValue( mStyle.mPaddingBottom, parentParams.Height );
 
                     // now calculate the available width based on padding. (Don't actually change our width)
-                    float availableWidth = bounds.Width - leftPadding - rightPadding;
+                    float availableWidth = bounds.Width - leftPadding - rightPadding - (borderPaddingPx * 2);
 
 
                     bool finishedHeader = false;
@@ -151,14 +190,14 @@ namespace CCVApp
                     }
 
                     // offset the controls according to our layout
-                    mTitle.Position = new PointF( mTitle.Position.X + bounds.X + leftPadding, 
-                                                  mTitle.Position.Y + bounds.Y + topPadding );
+                    mTitle.Position = new PointF( mTitle.Position.X + bounds.X + leftPadding + borderPaddingPx, 
+                                                  mTitle.Position.Y + bounds.Y + topPadding + borderPaddingPx );
 
                     // guarantee date and speaker are below title.
-                    mDate.Position = new PointF( mDate.Position.X + bounds.X + leftPadding, 
+                    mDate.Position = new PointF( mDate.Position.X + bounds.X + leftPadding + borderPaddingPx, 
                                                  mTitle.Frame.Bottom + mDate.Position.Y + bounds.Y + topPadding );
 
-                    mSpeaker.Position = new PointF( mSpeaker.Position.X + bounds.X + leftPadding, 
+                    mSpeaker.Position = new PointF( mSpeaker.Position.X + bounds.X + leftPadding + borderPaddingPx, 
                                                     mTitle.Frame.Bottom + mSpeaker.Position.Y + bounds.Y + topPadding );
 
                     // determine the lowest control
@@ -166,7 +205,10 @@ namespace CCVApp
                     bottomY = bottomY > mDate.Frame.Bottom ? bottomY : mDate.Frame.Bottom;
 
                     // set our bounds
-                    Frame = new RectangleF( bounds.X, bounds.Y, bounds.Width, bottomY + bottomPadding);
+                    Frame = new RectangleF( bounds.X, bounds.Y, bounds.Width + borderPaddingPx, bottomY + bottomPadding + borderPaddingPx);
+
+                    BorderView.Frame = Frame;
+
                     base.DebugFrameView.Frame = Frame;
                 }
 
@@ -273,6 +315,9 @@ namespace CCVApp
                     mSpeaker.Position = new PointF( mSpeaker.Position.X + xOffset, 
                                                     mSpeaker.Position.Y + yOffset );
 
+                    BorderView.Position = new PointF( BorderView.Position.X + xOffset,
+                                                      BorderView.Position.Y + yOffset );
+
                     // update our bounds by the new offsets.
                     Frame = new RectangleF( Frame.X + xOffset, Frame.Y + yOffset, Frame.Width, Frame.Height );
                     base.DebugFrameView.Frame = Frame;
@@ -280,6 +325,8 @@ namespace CCVApp
 
                 public override void AddToView( object obj )
                 {
+                    BorderView.AddAsSubview( obj );
+
                     mTitle.AddAsSubview( obj );
                     mDate.AddAsSubview( obj );
                     mSpeaker.AddAsSubview( obj );
@@ -289,6 +336,8 @@ namespace CCVApp
 
                 public override void RemoveFromView( object obj )
                 {
+                    BorderView.RemoveAsSubview( obj );
+
                     mTitle.RemoveAsSubview( obj );
                     mDate.RemoveAsSubview( obj );
                     mSpeaker.RemoveAsSubview( obj );

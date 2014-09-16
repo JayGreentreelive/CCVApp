@@ -4,6 +4,7 @@ using System.Xml;
 using System.Drawing;
 
 using CCVApp.Shared.Notes.Styles;
+using Rock.Mobile.PlatformUI;
 
 namespace CCVApp
 {
@@ -26,6 +27,12 @@ namespace CCVApp
                 protected List<IUIControl> ChildControls { get; set; }
 
                 /// <summary>
+                /// The view representing any surrounding border for the canvas.
+                /// </summary>
+                /// <value>The border view.</value>
+                protected PlatformView BorderView { get; set; }
+
+                /// <summary>
                 /// The bounds (including position) of the stack panel.
                 /// </summary>
                 /// <value>The bounds.</value>
@@ -36,6 +43,8 @@ namespace CCVApp
                     base.Initialize( );
 
                     ChildControls = new List<IUIControl>( );
+
+                    BorderView = PlatformView.Create( );
                 }
 
                 public List( CreateParams parentParams, XmlReader reader )
@@ -49,6 +58,37 @@ namespace CCVApp
                     // take our parent's style but override with anything we set
                     mStyle = parentParams.Style;
                     Styles.Style.ParseStyleAttributesWithDefaults( reader, ref mStyle, ref ControlStyles.mList );
+
+                    // check for border styling
+                    int borderPaddingPx = 0;
+                    if ( mStyle.mBorderColor.HasValue )
+                    {
+                        BorderView.BorderColor = mStyle.mBorderColor.Value;
+                    }
+
+                    if( mStyle.mBorderRadius.HasValue )
+                    {
+                        BorderView.CornerRadius = mStyle.mBorderRadius.Value;
+                    }
+
+                    if( mStyle.mBorderWidth.HasValue )
+                    {
+                        BorderView.BorderWidth = mStyle.mBorderWidth.Value;
+                        borderPaddingPx = (int)Rock.Mobile.PlatformUI.PlatformBaseUI.UnitToPx( mStyle.mBorderWidth.Value + CCVApp.Shared.Config.Note.BorderPadding );
+                    }
+
+                    if( mStyle.mTextInputBackgroundColor.HasValue )
+                    {
+                        BorderView.BackgroundColor = mStyle.mTextInputBackgroundColor.Value;
+                    }
+                    else
+                    {
+                        if( mStyle.mBackgroundColor.HasValue )
+                        {
+                            BorderView.BackgroundColor = mStyle.mBackgroundColor.Value;
+                        }
+                    }
+                    //
 
                     // parse for the desired list style. Default to Bullet if they didn't put anything.
                     string listTypeStr = reader.GetAttribute( "Type" );
@@ -98,18 +138,21 @@ namespace CCVApp
 
                     // now calculate the available width based on padding. (Don't actually change our width)
                     // also consider the indention amount of the list.
-                    float availableWidth = bounds.Width - leftPadding - rightPadding - listIndentation;
+                    float availableWidth = bounds.Width - leftPadding - rightPadding - listIndentation - (borderPaddingPx * 2);
 
 
                     // Parse Child Controls
                     int numberedCount = 1;
 
-                    // don't force our alignment, bullet style or indentation on children.
+                    // don't force our alignment, borders, bullet style or indentation on children.
                     Style style = new Style( );
                     style = mStyle;
                     style.mAlignment = null;
                     style.mListIndention = null;
                     style.mListBullet = null;
+                    style.mBorderColor = null;
+                    style.mBorderRadius = null;
+                    style.mBorderWidth = null;
 
                     bool finishedParsing = false;
                     while( finishedParsing == false && reader.Read( ) )
@@ -125,12 +168,12 @@ namespace CCVApp
                                     listItemPrefixStr = numberedCount.ToString() + ". ";
                                 }
 
-                                NoteText textLabel = new NoteText( new CreateParams( availableWidth, parentParams.Height, ref style ), listItemPrefixStr );
+                                NoteText textLabel = new NoteText( new CreateParams( this, availableWidth, parentParams.Height, ref style ), listItemPrefixStr );
                                 ChildControls.Add( textLabel );
 
 
                                 // create our actual child, but throw an exception if it's anything but a ListItem.
-                                IUIControl control = Parser.TryParseControl( new CreateParams( availableWidth - textLabel.GetFrame().Width, parentParams.Height, ref style ), reader );
+                                IUIControl control = Parser.TryParseControl( new CreateParams( this, availableWidth - textLabel.GetFrame().Width, parentParams.Height, ref style ), reader );
 
                                 ListItem listItem = control as ListItem;
                                 if( listItem == null ) throw new Exception( String.Format("Only a <ListItem> may be a child of a <List>. Found element <{0}>.", control.GetType( ) ) );
@@ -168,7 +211,7 @@ namespace CCVApp
 
                     // layout all controls
                     float xAdjust = bounds.X + listIndentation; 
-                    float yOffset = bounds.Y + topPadding; //vertically they should just stack
+                    float yOffset = bounds.Y + topPadding + borderPaddingPx; //vertically they should just stack
 
                     // we know each child is a NoteText followed by ListItem. So, lay them out 
                     // as: * - ListItem
@@ -178,7 +221,7 @@ namespace CCVApp
                         RectangleF controlFrame = control.GetFrame( );
 
                         // position the control
-                        control.AddOffset( xAdjust + leftPadding, yOffset );
+                        control.AddOffset( xAdjust + leftPadding + borderPaddingPx, yOffset );
 
                         // is this the item prefix?
                         if( (control as NoteText) != null )
@@ -197,8 +240,10 @@ namespace CCVApp
                     // we need to store our bounds. We cannot
                     // calculate them on the fly because we
                     // would lose any control defined offsets, which would throw everything off.
-                    bounds.Height = ( yOffset - bounds.Y ) + bottomPadding;
+                    bounds.Height = ( yOffset - bounds.Y ) + bottomPadding + borderPaddingPx;
                     Bounds = bounds;
+
+                    BorderView.Frame = bounds;
 
                     // store our debug frame
                     base.DebugFrameView.Frame = Bounds;
@@ -229,6 +274,9 @@ namespace CCVApp
                         control.AddOffset( xOffset, yOffset );
                     }
 
+                    BorderView.Position = new PointF( BorderView.Position.X + xOffset,
+                                                      BorderView.Position.Y + yOffset );
+
                     // update our bounds by the new offsets.
                     Bounds = new RectangleF( Bounds.X + xOffset, Bounds.Y + yOffset, Bounds.Width, Bounds.Height );
                     base.DebugFrameView.Frame = Bounds;
@@ -236,6 +284,8 @@ namespace CCVApp
 
                 public override void AddToView( object obj )
                 {
+                    BorderView.AddAsSubview( obj );
+
                     // let each child do the same thing
                     foreach( IUIControl control in ChildControls )
                     {
@@ -247,6 +297,8 @@ namespace CCVApp
 
                 public override void RemoveFromView( object obj )
                 {
+                    BorderView.RemoveAsSubview( obj );
+
                     // let each child do the same thing
                     foreach( IUIControl control in ChildControls )
                     {

@@ -4,6 +4,7 @@ using System.Xml;
 using System.Drawing;
 
 using CCVApp.Shared.Notes.Styles;
+using Rock.Mobile.PlatformUI;
 
 namespace CCVApp
 {
@@ -21,6 +22,12 @@ namespace CCVApp
                 /// </summary>
                 /// <value>The child controls.</value>
                 protected List<IUIControl> ChildControls { get; set; }
+
+                /// <summary>
+                /// The view representing any surrounding border for the canvas.
+                /// </summary>
+                /// <value>The border view.</value>
+                protected PlatformView BorderView { get; set; }
 
                 /// <summary>
                 /// The bounds (including position) of this control.
@@ -41,6 +48,8 @@ namespace CCVApp
                     ChildControls = new List<IUIControl>( );
 
                     ChildHorzAlignment = Alignment.Inherit;
+
+                    BorderView = PlatformView.Create( );
                 }
 
                 public Canvas( CreateParams parentParams, XmlReader reader )
@@ -54,6 +63,37 @@ namespace CCVApp
                     // take our parent's style but override with anything we set
                     mStyle = parentParams.Style;
                     Styles.Style.ParseStyleAttributesWithDefaults( reader, ref mStyle, ref ControlStyles.mCanvas );
+
+                    // check for border styling
+                    int borderPaddingPx = 0;
+                    if ( mStyle.mBorderColor.HasValue )
+                    {
+                        BorderView.BorderColor = mStyle.mBorderColor.Value;
+                    }
+
+                    if( mStyle.mBorderRadius.HasValue )
+                    {
+                        BorderView.CornerRadius = mStyle.mBorderRadius.Value;
+                    }
+
+                    if( mStyle.mBorderWidth.HasValue )
+                    {
+                        BorderView.BorderWidth = mStyle.mBorderWidth.Value;
+                        borderPaddingPx = (int)Rock.Mobile.PlatformUI.PlatformBaseUI.UnitToPx( mStyle.mBorderWidth.Value + CCVApp.Shared.Config.Note.BorderPadding );
+                    }
+
+                    if( mStyle.mTextInputBackgroundColor.HasValue )
+                    {
+                        BorderView.BackgroundColor = mStyle.mTextInputBackgroundColor.Value;
+                    }
+                    else
+                    {
+                        if( mStyle.mBackgroundColor.HasValue )
+                        {
+                            BorderView.BackgroundColor = mStyle.mBackgroundColor.Value;
+                        }
+                    }
+                    //
 
 
                     // now read what our children's alignment should be
@@ -115,7 +155,7 @@ namespace CCVApp
                     float bottomPadding = Styles.Style.GetStyleValue( mStyle.mPaddingBottom, parentParams.Height );
 
                     // now calculate the available width based on padding. (Don't actually change our width)
-                    float availableWidth = bounds.Width - leftPadding - rightPadding;
+                    float availableWidth = bounds.Width - leftPadding - rightPadding - (borderPaddingPx * 2);
 
 
                     // Parse Child Controls
@@ -130,7 +170,7 @@ namespace CCVApp
                                     Style style = new Style( );
                                     style = mStyle;
                                     style.mAlignment = ChildHorzAlignment;
-                                    IUIControl control = Parser.TryParseControl( new CreateParams( availableWidth, parentParams.Height, ref style ), reader );
+                                    IUIControl control = Parser.TryParseControl( new CreateParams( this, availableWidth, parentParams.Height, ref style ), reader );
                                     if( control != null )
                                     {
                                         ChildControls.Add( control );
@@ -153,7 +193,7 @@ namespace CCVApp
 
 
                     // layout all controls
-                    float yOffset = bounds.Y + topPadding; //vertically they should just stack
+                    float yOffset = bounds.Y + topPadding + borderPaddingPx; //vertically they should just stack
                     float height = 0;
 
                     // now we must center each control within the stack.
@@ -181,7 +221,7 @@ namespace CCVApp
                         }
 
                         // adjust the next sibling by yOffset
-                        control.AddOffset( xAdjust + leftPadding, yOffset );
+                        control.AddOffset( xAdjust + leftPadding + borderPaddingPx, yOffset );
 
                         // track the height of the grid by the control lowest control 
                         height = control.GetFrame( ).Bottom > height ? control.GetFrame( ).Bottom : height;
@@ -190,7 +230,17 @@ namespace CCVApp
                     // we need to store our bounds. We cannot
                     // calculate them on the fly because we
                     // would lose any control defined offsets, which would throw everything off.
-                    bounds.Height = height + bottomPadding;
+                    bounds.Height = height + bottomPadding + borderPaddingPx;
+
+                    // setup our bounding rect for the border
+                    bounds = new RectangleF( bounds.X, 
+                                             bounds.Y,
+                                             bounds.Width, 
+                                             bounds.Height);
+
+                    // and store that as our bounds
+                    BorderView.Frame = bounds;
+
                     Frame = bounds;
 
                     // store our debug frame
@@ -222,6 +272,9 @@ namespace CCVApp
                         control.AddOffset( xOffset, yOffset );
                     }
 
+                    BorderView.Position = new PointF( BorderView.Position.X + xOffset,
+                                                      BorderView.Position.Y + yOffset );
+
                     // update our bounds by the new offsets.
                     Frame = new RectangleF( Frame.X + xOffset, Frame.Y + yOffset, Frame.Width, Frame.Height );
                     base.DebugFrameView.Frame = Frame;
@@ -229,6 +282,8 @@ namespace CCVApp
 
                 public override void AddToView( object obj )
                 {
+                    BorderView.AddAsSubview( obj );
+
                     // let each child do the same thing
                     foreach( IUIControl control in ChildControls )
                     {
@@ -240,6 +295,8 @@ namespace CCVApp
 
                 public override void RemoveFromView( object obj )
                 {
+                    BorderView.RemoveAsSubview( obj );
+
                     // let each child do the same thing
                     foreach( IUIControl control in ChildControls )
                     {

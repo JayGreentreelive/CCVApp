@@ -19,6 +19,12 @@ namespace CCVApp
             {
                 public ListItem( CreateParams parentParams, XmlReader reader )
                 {
+                    // verify that our parent is a list. That's the only acceptable place for us.
+                    if( (parentParams.Parent as List) == null )
+                    {
+                        throw new Exception( string.Format( "<ListItem> parent must be <List>. This <ListItem> parent is: <{0}>", parentParams.Parent.GetType() ) );
+                    }
+
                     Initialize( );
 
                     // check for attributes we support
@@ -34,6 +40,37 @@ namespace CCVApp
                     Styles.Style.ParseStyleAttributesWithDefaults( reader, ref mStyle, ref ControlStyles.mListItem );
                     mStyle.mAlignment = null; //don't use alignment
 
+                    // check for border styling
+                    int borderPaddingPx = 0;
+                    if ( mStyle.mBorderColor.HasValue )
+                    {
+                        BorderView.BorderColor = mStyle.mBorderColor.Value;
+                    }
+
+                    if( mStyle.mBorderRadius.HasValue )
+                    {
+                        BorderView.CornerRadius = mStyle.mBorderRadius.Value;
+                    }
+
+                    if( mStyle.mBorderWidth.HasValue )
+                    {
+                        BorderView.BorderWidth = mStyle.mBorderWidth.Value;
+                        borderPaddingPx = (int)Rock.Mobile.PlatformUI.PlatformBaseUI.UnitToPx( mStyle.mBorderWidth.Value + CCVApp.Shared.Config.Note.BorderPadding );
+                    }
+
+                    if( mStyle.mTextInputBackgroundColor.HasValue )
+                    {
+                        BorderView.BackgroundColor = mStyle.mTextInputBackgroundColor.Value;
+                    }
+                    else
+                    {
+                        if( mStyle.mBackgroundColor.HasValue )
+                        {
+                            BorderView.BackgroundColor = mStyle.mBackgroundColor.Value;
+                        }
+                    }
+                    //
+
                     // PADDING
                     float leftPadding = Styles.Style.GetStyleValue( mStyle.mPaddingLeft, parentParams.Width );
                     float rightPadding = Styles.Style.GetStyleValue( mStyle.mPaddingRight, parentParams.Width );
@@ -41,7 +78,7 @@ namespace CCVApp
                     float bottomPadding = Styles.Style.GetStyleValue( mStyle.mPaddingBottom, parentParams.Height );
 
                     // now calculate the available width based on padding. (Don't actually change our width)
-                    float availableWidth = bounds.Width - leftPadding - rightPadding;
+                    float availableWidth = bounds.Width - leftPadding - rightPadding - (borderPaddingPx * 2);
 
                     // Parse Child Controls
                     bool finishedParsing = false;
@@ -52,7 +89,7 @@ namespace CCVApp
                             case XmlNodeType.Element:
                             {
                                 // let each child have our available width.
-                                IUIControl control = Parser.TryParseControl( new CreateParams( availableWidth, parentParams.Height, ref mStyle ), reader );
+                                IUIControl control = Parser.TryParseControl( new CreateParams( this, availableWidth, parentParams.Height, ref mStyle ), reader );
                                 if( control != null )
                                 {
                                     ChildControls.Add( control );
@@ -79,7 +116,7 @@ namespace CCVApp
                                     }
                                 }
 
-                                NoteText textLabel = new NoteText( new CreateParams( availableWidth, parentParams.Height, ref mStyle ), sentence );
+                                NoteText textLabel = new NoteText( new CreateParams( this, availableWidth, parentParams.Height, ref mStyle ), sentence );
                                 ChildControls.Add( textLabel );
                                 break;
                             }
@@ -97,7 +134,7 @@ namespace CCVApp
                         }
                     }
 
-                    LayoutStackPanel( bounds, leftPadding, topPadding, availableWidth, bottomPadding );
+                    LayoutStackPanel( bounds, leftPadding, topPadding, availableWidth, bottomPadding, borderPaddingPx );
                 }
 
                 public override bool ShouldShowBulletPoint()

@@ -255,11 +255,15 @@ namespace CCVApp
                             style.mListIndention = float.Parse( result ) / denominator;
                         }
 
-                        // Check for border color
+                        // Check for borders: DOES NOT INHERIT
                         result = reader.GetAttribute( "BorderColor" );
                         if( string.IsNullOrEmpty( result ) == false )
                         {
                             style.mBorderColor = ParseColor( result );
+                        }
+                        else
+                        {
+                            style.mBorderColor = null;
                         }
 
                         // check for border width
@@ -268,12 +272,20 @@ namespace CCVApp
                         {
                             style.mBorderWidth = float.Parse( result );
                         }
+                        else
+                        {
+                            style.mBorderWidth = null;
+                        }
 
                         // check for border radius
                         result = reader.GetAttribute( "BorderRadius" );
                         if( string.IsNullOrEmpty( result ) == false )
                         {
                             style.mBorderRadius = float.Parse( result );
+                        }
+                        else
+                        {
+                            style.mBorderRadius = null;
                         }
 
                         // check for padding; DOES NOT INHERIT
@@ -427,17 +439,17 @@ namespace CCVApp
                         }
 
                         // check for border values
-                        if( style.mBorderColor == null )
+                        if( style.mBorderColor.HasValue == false )
                         {
                             style.mBorderColor = defaultStyle.mBorderColor;
                         }
 
-                        if ( style.mBorderWidth == null )
+                        if ( style.mBorderWidth.HasValue == false )
                         {
                             style.mBorderWidth = defaultStyle.mBorderWidth;
                         }
 
-                        if( style.mBorderRadius == null )
+                        if( style.mBorderRadius.HasValue == false )
                         {
                             style.mBorderRadius = defaultStyle.mBorderRadius;
                         }

@@ -37,14 +37,17 @@ namespace CCVApp
                 /// </summary>
                 public class CreateParams
                 {
+                    public object Parent { get; set; }
+
                     public float Height { get; set; }
 
                     public float Width { get; set; }
 
                     public Style Style { get; set; }
 
-                    public CreateParams( float width, float height, ref Style style )
+                    public CreateParams( object parent, float width, float height, ref Style style )
                     {
+                        Parent = parent;
                         Height = height;
                         Width = width;
                         Style = style;

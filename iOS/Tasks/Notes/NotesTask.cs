@@ -59,8 +59,6 @@ namespace iOS
 
         public override void ViewDidScroll( float scrollDelta )
         {
-            Console.WriteLine( "Move Rate: {0}", scrollDelta );
-
             // did the user's finger go "up"?
             if( scrollDelta >= CCVApp.Shared.Config.Note.ScrollRateForNavBarHide )
             {

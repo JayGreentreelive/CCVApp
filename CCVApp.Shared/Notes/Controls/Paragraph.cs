@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Text.RegularExpressions;
 
 using CCVApp.Shared.Notes.Styles;
+using Rock.Mobile.PlatformUI;
 
 namespace CCVApp
 {
@@ -33,6 +34,12 @@ namespace CCVApp
                 protected Alignment ChildHorzAlignment { get; set; }
 
                 /// <summary>
+                /// The view representing any surrounding border for the quote.
+                /// </summary>
+                /// <value>The border view.</value>
+                protected PlatformView BorderView { get; set; }
+
+                /// <summary>
                 /// The actual bounds (including position) of the paragraph.
                 /// </summary>
                 /// <value>The bounds.</value>
@@ -45,6 +52,8 @@ namespace CCVApp
                     ChildControls = new List<IUIControl>( );
 
                     ChildHorzAlignment = Alignment.Inherit;
+
+                    BorderView = PlatformView.Create( );
                 }
 
                 public Paragraph( CreateParams parentParams, XmlReader reader )
@@ -58,6 +67,37 @@ namespace CCVApp
                     // take our parent's style but override with anything we set
                     mStyle = parentParams.Style;
                     Styles.Style.ParseStyleAttributesWithDefaults( reader, ref mStyle, ref ControlStyles.mParagraph );
+
+                    // check for border styling
+                    int borderPaddingPx = 0;
+                    if ( mStyle.mBorderColor.HasValue )
+                    {
+                        BorderView.BorderColor = mStyle.mBorderColor.Value;
+                    }
+
+                    if( mStyle.mBorderRadius.HasValue )
+                    {
+                        BorderView.CornerRadius = mStyle.mBorderRadius.Value;
+                    }
+
+                    if( mStyle.mBorderWidth.HasValue )
+                    {
+                        BorderView.BorderWidth = mStyle.mBorderWidth.Value;
+                        borderPaddingPx = (int)Rock.Mobile.PlatformUI.PlatformBaseUI.UnitToPx( mStyle.mBorderWidth.Value + CCVApp.Shared.Config.Note.BorderPadding );
+                    }
+
+                    if( mStyle.mTextInputBackgroundColor.HasValue )
+                    {
+                        BorderView.BackgroundColor = mStyle.mTextInputBackgroundColor.Value;
+                    }
+                    else
+                    {
+                        if( mStyle.mBackgroundColor.HasValue )
+                        {
+                            BorderView.BackgroundColor = mStyle.mBackgroundColor.Value;
+                        }
+                    }
+                    //
 
 
                     // now read what our children's alignment should be
@@ -91,8 +131,8 @@ namespace CCVApp
                     }
                     else
                     {
-                        // if it wasn't specified, use OUR alignment.
-                        ChildHorzAlignment = mStyle.mAlignment.Value;
+                        // if it wasn't specified, use LEFT alignment.
+                        ChildHorzAlignment = Alignment.Left;
                     }
 
                     // if our left position is requested as a %, then that needs to be % of parent width
@@ -126,7 +166,7 @@ namespace CCVApp
                     float bottomPadding = Styles.Style.GetStyleValue( mStyle.mPaddingBottom, parentParams.Height );
 
                     // now calculate the available width based on padding. (Don't actually change our width)
-                    float availableWidth = bounds.Width - leftPadding - rightPadding;
+                    float availableWidth = bounds.Width - leftPadding - rightPadding - (borderPaddingPx * 2);
 
                     bool didAddInteractiveControl = false;
 
@@ -137,7 +177,7 @@ namespace CCVApp
                         {
                             case XmlNodeType.Element:
                             {
-                                IUIControl control = Parser.TryParseControl( new CreateParams( availableWidth, parentParams.Height, ref mStyle ), reader );
+                                IUIControl control = Parser.TryParseControl( new CreateParams( this, availableWidth, parentParams.Height, ref mStyle ), reader );
                                 if( control != null )
                                 {
                                     // only allow RevealBoxes as children.
@@ -154,6 +194,12 @@ namespace CCVApp
 
                             case XmlNodeType.Text:
                             {
+                                // give the text a style that doesn't include things it shouldn't inherit
+                                Styles.Style textStyle = mStyle;
+                                textStyle.mBorderColor = null;
+                                textStyle.mBorderRadius = null;
+                                textStyle.mBorderWidth = null;
+
                                 // grab the text. remove any weird characters
                                 string text = Regex.Replace( reader.Value, @"\t|\n|\r", "" );
 
@@ -174,7 +220,7 @@ namespace CCVApp
                                             didAddInteractiveControl = false;
                                         }
 
-                                        NoteText textLabel = new NoteText( new CreateParams( availableWidth, parentParams.Height, ref mStyle ), nextWord + " " );
+                                        NoteText textLabel = new NoteText( new CreateParams( this, availableWidth, parentParams.Height, ref textStyle ), nextWord + " " );
 
                                         ChildControls.Add( textLabel );
                                     }
@@ -211,11 +257,11 @@ namespace CCVApp
 
                     // track where within a row we need to start a control
                     float rowRemainingWidth = availableWidth;
-                    float startingX = bounds.X + leftPadding;
+                    float startingX = bounds.X + leftPadding + borderPaddingPx;
 
                     // always store the last placed control's height so that should 
                     // our NEXT control need to wrap, we know how far down to wrap.
-                    float yOffset = bounds.Y + topPadding;
+                    float yOffset = bounds.Y + topPadding + borderPaddingPx;
                     float lastControlHeight = 0;
                     float rowWidth = 0;
 
@@ -235,7 +281,7 @@ namespace CCVApp
 
                             // Reset values for the new row
                             rowRemainingWidth = availableWidth;
-                            startingX = bounds.X + leftPadding;
+                            startingX = bounds.X + leftPadding + borderPaddingPx;
                             lastControlHeight = 0;
                             rowWidth = 0;
 
@@ -260,11 +306,16 @@ namespace CCVApp
                         maxRowWidth = rowWidth > maxRowWidth ? rowWidth : maxRowWidth;
                     }
 
+                    // give each row the legal bounds it may work with
+                    RectangleF availableBounds = new RectangleF( bounds.X + leftPadding + borderPaddingPx, 
+                                                                 bounds.Y + borderPaddingPx + topPadding, 
+                                                                 availableWidth, 
+                                                                 bounds.Height );
 
                     // Now that we know the widest row, align all the rows
                     foreach( List<IUIControl> row in rowList )
                     {
-                        AlignRow( bounds, row, maxRowWidth );
+                        AlignRow( availableBounds, row, maxRowWidth );
                     }
 
 
@@ -280,8 +331,19 @@ namespace CCVApp
 
                     frame.Y = bounds.Y;
                     frame.X = bounds.X;
-                    frame.Height += bottomPadding + topPadding; //add in padding
+                    frame.Height += bottomPadding + topPadding + (borderPaddingPx * 2); //add in padding
                     frame.Width = bounds.Width;
+
+
+
+                    // setup our bounding rect for the border
+                    frame = new RectangleF( frame.X, 
+                                            frame.Y,
+                                            frame.Width, 
+                                            frame.Height );
+
+                    // and store that as our bounds
+                    BorderView.Frame = frame;
 
                     Frame = frame;
                     base.DebugFrameView.Frame = Frame;
@@ -350,6 +412,9 @@ namespace CCVApp
                         control.AddOffset( xOffset, yOffset );
                     }
 
+                    BorderView.Position = new PointF( BorderView.Position.X + xOffset,
+                                                      BorderView.Position.Y + yOffset );
+
                     // update our bounds by the new offsets.
                     Frame = new RectangleF( Frame.X + xOffset, Frame.Y + yOffset, Frame.Width, Frame.Height );
                     base.DebugFrameView.Frame = Frame;
@@ -372,6 +437,8 @@ namespace CCVApp
 
                 public override void AddToView( object obj )
                 {
+                    BorderView.AddAsSubview( obj );
+
                     // let each child do the same thing
                     foreach( IUIControl control in ChildControls )
                     {
@@ -383,6 +450,8 @@ namespace CCVApp
 
                 public override void RemoveFromView( object obj )
                 {
+                    BorderView.RemoveAsSubview( obj );
+
                     // let each child do the same thing
                     foreach( IUIControl control in ChildControls )
                     {

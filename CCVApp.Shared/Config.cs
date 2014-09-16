@@ -227,10 +227,10 @@ namespace CCVApp
                 public const string BaseURL = "http://www.jeredmcferron.com/";
 
                 /// <summary>
-                /// The space between the border of a quote and the contents.
-                /// Only applies to quotes with borders.
+                /// The space between the border of a view and the contents.
+                /// Only applies when a border is rendered.
                 /// </summary>
-                public const int Quote_BorderPadding = 5;
+                public const int BorderPadding = 2;
 
                 /// <summary>
                 /// The font to use for displaying the user note icon.

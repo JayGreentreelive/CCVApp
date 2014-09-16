@@ -237,7 +237,7 @@ namespace CCVApp
                         {
                             case XmlNodeType.Element:
                             {
-                                IUIControl control = Parser.TryParseControl( new BaseControl.CreateParams( availableWidth, parentHeight, ref mStyle ), reader );
+                                IUIControl control = Parser.TryParseControl( new BaseControl.CreateParams( this, availableWidth, parentHeight, ref mStyle ), reader );
                                 ChildControls.Add( control );
                                 break;
                             }
@@ -458,7 +458,7 @@ namespace CCVApp
 
                     if( allowNoteCreation )
                     {
-                        UserNote userNote = new UserNote( new BaseControl.CreateParams( Frame.Width, Frame.Height, ref mStyle ), DeviceHeight, touch );
+                        UserNote userNote = new UserNote( new BaseControl.CreateParams( this, Frame.Width, Frame.Height, ref mStyle ), DeviceHeight, touch );
                         UserNoteControls.Add( userNote );
 
                         userNote.AddToView( MasterView );
@@ -520,7 +520,7 @@ namespace CCVApp
                         foreach( NoteState.UserNoteContent note in noteState.UserNoteContentList )
                         {
                             // create the note, add it to our list, and to the view
-                            UserNote userNote = new UserNote( new BaseControl.CreateParams( Frame.Width, Frame.Height, ref mStyle ), DeviceHeight, note );
+                            UserNote userNote = new UserNote( new BaseControl.CreateParams( this, Frame.Width, Frame.Height, ref mStyle ), DeviceHeight, note );
                             UserNoteControls.Add( userNote );
                             userNote.AddToView( MasterView );
                         }

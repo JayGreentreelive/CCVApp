@@ -91,11 +91,6 @@ namespace iOS
                 LastPos = scrollView.ContentOffset;
             }
         }
-
-        public override void DecelerationEnded(UIScrollView scrollView)
-        {
-            Console.WriteLine( "User decelerating at: {0}", scrollView.DecelerationRate );
-        }
     }
 
     public partial class NotesViewController : TaskUIViewController
