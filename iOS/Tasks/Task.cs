@@ -89,6 +89,15 @@ namespace iOS
         }
 
         /// <summary>
+        /// Called by the active view controller when a user scrolls.
+        /// This allows the task to perform any scroll dependent actions, like revealing the nav bar.
+        /// </summary>
+        /// <param name"scrollDelta">The change in scroll since the last call.</param>
+        public virtual void ViewDidScroll( float scrollDelta )
+        {
+        }
+
+        /// <summary>
         /// Called when the application will go into the background.
         /// This is NOT called when the task goes into the background.
         /// </summary>

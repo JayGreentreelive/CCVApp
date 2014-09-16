@@ -17,6 +17,10 @@ namespace iOS
 		{
 		}
 
+        public TaskUIViewController () : base ()
+        {
+        }
+
         public override void TouchesEnded(NSSet touches, UIEvent evt)
         {
             base.TouchesEnded(touches, evt);

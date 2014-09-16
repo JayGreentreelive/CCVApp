@@ -70,7 +70,11 @@ namespace Droid
                 };
 
             RelativeLayout.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
-            RelativeLayout.SetBackgroundColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.BackgroundColor ) );
+
+            // set the nav subBar color (including opacity)
+            Color navColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.BackgroundColor );
+            navColor.A = (Byte) ( (float) navColor.A * CCVApp.Shared.Config.SubNavToolbar.Opacity );
+            RelativeLayout.SetBackgroundColor( navColor );
 
             RelativeLayout.LayoutParameters.Height = 150;
 

@@ -89,6 +89,13 @@ namespace Droid
 
                     return false;
                 }
+
+                protected override void OnScrollChanged(int l, int t, int oldl, int oldt)
+                {
+                    base.OnScrollChanged(l, t, oldl, oldt);
+
+                    Notes.OnScrollChanged( t - oldt );
+                }
             }
                        
             public class NotesFragment : TaskFragment, View.IOnTouchListener
@@ -204,7 +211,6 @@ namespace Droid
                     ScrollView.AddView( ScrollViewLayout );
                     ScrollViewLayout.SetOnTouchListener( this );
 
-
                     GestureDetector = new GestureDetector( Rock.Mobile.PlatformCommon.Droid.Context, new DoubleTap( this ) );
 
                     RefreshButton.Click += (object sender, EventArgs e ) =>
@@ -255,6 +261,9 @@ namespace Droid
 
                     // create the notes
                     CreateNotes( NoteXml, StyleSheetXml );
+
+                    ParentTask.NavbarFragment.NavToolbar.SetBackButtonEnabled( false );
+                    ParentTask.NavbarFragment.NavToolbar.Reveal( true );
                 }
 
                 public override void OnPause()
@@ -282,6 +291,21 @@ namespace Droid
                     base.OnDestroy( );
 
                     ShutdownNotes( null );
+                }
+
+                public void OnScrollChanged( float scrollDelta )
+                {
+                    // did the user's finger go "up"?
+                    if( scrollDelta >= CCVApp.Shared.Config.Note.ScrollRateForNavBarHide )
+                    {
+                        // hide the nav bar
+                        ParentTask.NavbarFragment.NavToolbar.Reveal( false );
+                    }
+                    // did the user scroll "down"? Android is a little less sensitive, so use 75% of it.
+                    else if ( scrollDelta <= (CCVApp.Shared.Config.Note.ScrollRateForNavBarReveal * CCVApp.Shared.Config.Note.ScrollRateForNavBarReveal_AndroidScalar) )
+                    {
+                        ParentTask.NavbarFragment.NavToolbar.Reveal( true );
+                    }
                 }
 
                 public bool OnInterceptTouchEvent(MotionEvent ev)

@@ -11,6 +11,7 @@ namespace iOS
         public NotesTask( string storyboardName ) : base( storyboardName )
         {
             NotesViewController = new NotesViewController( );
+            NotesViewController.Task = this;
         }
 
         public override void MakeActive( UINavigationController parentViewController, NavToolbar navToolbar )
@@ -32,8 +33,6 @@ namespace iOS
             parentViewController.PushViewController(NotesViewController, false);
 
             NotesViewController.MakeActive( );
-
-            NavToolbar.Reveal( true );
         }
 
         public override void MakeInActive( )
@@ -44,6 +43,35 @@ namespace iOS
 
             NotesViewController.View.RemoveFromSuperview( );
             NotesViewController.RemoveFromParentViewController( );
+        }
+
+        public override void WillShowViewController(UIViewController viewController)
+        {
+            // if it's the main page, disable the back button on the toolbar
+            if ( viewController == NotesViewController )
+            {
+                NavToolbar.SetBackButtonEnabled( false );
+
+                // go ahead and show the bar, because we're at the top of the page.
+                NavToolbar.Reveal( true );
+            }
+        }
+
+        public override void ViewDidScroll( float scrollDelta )
+        {
+            Console.WriteLine( "Move Rate: {0}", scrollDelta );
+
+            // did the user's finger go "up"?
+            if( scrollDelta >= CCVApp.Shared.Config.Note.ScrollRateForNavBarHide )
+            {
+                // hide the nav bar
+                NavToolbar.Reveal( false );
+            }
+            // did the user scroll "down"?
+            else if ( scrollDelta <= CCVApp.Shared.Config.Note.ScrollRateForNavBarReveal )
+            {
+                NavToolbar.Reveal( true );
+            }
         }
 
         public override void AppOnResignActive()

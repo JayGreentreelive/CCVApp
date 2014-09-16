@@ -62,7 +62,43 @@ namespace iOS
         }
     }
 
-    public partial class NotesViewController : UIViewController
+    public class NotesScrollViewDelegate : UIScrollViewDelegate
+    {
+        public NotesViewController Parent { get; set; }
+
+        PointF LastPos { get; set; }
+
+        double LastTime { get; set; }
+
+        public override void DraggingStarted(UIScrollView scrollView)
+        {
+            LastTime = NSDate.Now.SecondsSinceReferenceDate;
+            LastPos = scrollView.ContentOffset;
+        }
+
+        public override void Scrolled( UIScrollView scrollView )
+        {
+            double timeLapsed = NSDate.Now.SecondsSinceReferenceDate - LastTime;
+
+            if( timeLapsed > .10f )
+            {
+                float delta = scrollView.ContentOffset.Y - LastPos.Y;
+
+                // notify our parent
+                Parent.ViewDidScroll( delta );
+
+                LastTime = NSDate.Now.SecondsSinceReferenceDate;
+                LastPos = scrollView.ContentOffset;
+            }
+        }
+
+        public override void DecelerationEnded(UIScrollView scrollView)
+        {
+            Console.WriteLine( "User decelerating at: {0}", scrollView.DecelerationRate );
+        }
+    }
+
+    public partial class NotesViewController : TaskUIViewController
     {
         /// <summary>
         /// Displays when content is being downloaded.
@@ -217,6 +253,7 @@ namespace iOS
             UIScrollView.Interceptor = this;
             UIScrollView.Frame = View.Frame;
             UIScrollView.BackgroundColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( 0x1C1C1CFF );
+            UIScrollView.Delegate = new NotesScrollViewDelegate() { Parent = this };
 
             UITapGestureRecognizer tapGesture = new UITapGestureRecognizer();
             tapGesture.NumberOfTapsRequired = 2;
@@ -322,6 +359,12 @@ namespace iOS
 
             // when a touch is released, re-enabled scrolling
             UIScrollView.ScrollEnabled = true;
+        }
+
+        public void ViewDidScroll( float scrollDelta )
+        {
+            // notify our task that fast scrolling was detected
+            Task.ViewDidScroll( scrollDelta );
         }
 
         [MonoTouch.Foundation.Export("DoubleTapSelector:")]
