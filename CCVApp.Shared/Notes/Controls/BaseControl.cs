@@ -17,15 +17,19 @@ namespace CCVApp
             /// </summary>
             public abstract class BaseControl : IUIControl
             {
+                #if DEBUG
                 /// <summary>
                 /// Layer used for the debug frame.
                 /// </summary>
                 protected PlatformLabel DebugFrameView { get; set; }
+                #endif
 
+                #if DEBUG
                 /// <summary>
                 /// If true, displays a debug frame around the bounds of the control.
                 /// </summary>
                 protected bool ShowDebugFrame { get; set; }
+                #endif
 
                 /// <summary>
                 /// Defines the style that this control should use.
@@ -61,10 +65,12 @@ namespace CCVApp
                     mStyle.mAlignment = Alignment.Inherit;
 
                     //Debugging - show the grid frames
+                    #if DEBUG
                     DebugFrameView = PlatformLabel.Create( );
                     DebugFrameView.Opacity = .50f;
                     DebugFrameView.BackgroundColor = 0x0000FFFF;
                     DebugFrameView.ZPosition = 100;
+                    #endif
                     //Debugging
                 }
 
@@ -78,6 +84,7 @@ namespace CCVApp
                     Parser.ParseBounds( reader, ref bounds );
 
                     // check for a debug frame
+                    #if DEBUG
                     string result = reader.GetAttribute( "Debug" );
                     if( string.IsNullOrEmpty( result ) == false )
                     {
@@ -87,15 +94,25 @@ namespace CCVApp
                     {
                         ShowDebugFrame = false;
                     }
+                    #endif
+                }
+
+                public void SetDebugFrame( RectangleF frame )
+                {
+                    #if DEBUG
+                    DebugFrameView.Frame = frame;
+                    #endif
                 }
 
                 public virtual void AddOffset( float xOffset, float yOffset )
                 {
+                    #if DEBUG
                     if( ShowDebugFrame )
                     {
                         DebugFrameView.Position = new PointF( DebugFrameView.Position.X + xOffset, 
                             DebugFrameView.Position.Y + yOffset );
                     }
+                    #endif
                 }
 
                 public virtual void AddToView( object obj )
@@ -110,20 +127,24 @@ namespace CCVApp
                 {
                     // call this at the _end_ so it is the highest level 
                     // view on Android.
+                    #if DEBUG
                     if( ShowDebugFrame )
                     {
                         DebugFrameView.AddAsSubview( obj );
                     }
+                    #endif
                 }
 
                 public void TryRemoveDebugLayer( object obj )
                 {
                     // call this at the _end_ so it is the highest level 
                     // view on Android.
+                    #if DEBUG
                     if( ShowDebugFrame )
                     {
                         DebugFrameView.RemoveAsSubview( obj );
                     }
+                    #endif
                 }
 
                 public virtual bool TouchesBegan( PointF touch )

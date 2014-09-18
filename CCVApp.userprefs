@@ -1,13 +1,13 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.192.168.56.101:5555" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Tasks/NotesTask/NotesFragment.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhoneRetina.7.1" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/NavToolbar.cs">
     <Files>
+      <File FileName="Droid/Springboard.cs" Line="30" Column="30" />
       <File FileName="Droid/Tasks/NotesTask/NotesTask.cs" Line="22" Column="22" />
-      <File FileName="Droid/Tasks/NotesTask/NotesFragment.cs" Line="19" Column="19" />
-      <File FileName="Droid/Tasks/Task.cs" Line="23" Column="23" />
-      <File FileName="Droid/NavbarFragment.cs" Line="56" Column="56" />
-      <File FileName="Droid/NavToolbar.cs" Line="37" Column="37" />
-      <File FileName="CCVApp.Shared/Config.cs" Line="36" Column="36" />
+      <File FileName="Droid/Tasks/NotesTask/NotesFragment.cs" Line="21" Column="21" />
+      <File FileName="Droid/Tasks/Task.cs" Line="14" Column="14" />
+      <File FileName="Droid/NavToolbar.cs" Line="9" Column="9" />
+      <File FileName="Droid/Tasks/NewsTask/NewsPrimaryFragment.cs" Line="33" Column="33" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -15,21 +15,16 @@
           <Node name="Droid" expanded="True">
             <Node name="Tasks" expanded="True">
               <Node name="NewsTask" expanded="True" />
-              <Node name="NotesTask" expanded="True">
-                <Node name="NotesFragment.cs" selected="True" />
-              </Node>
+              <Node name="NotesTask" expanded="True" />
             </Node>
           </Node>
-          <Node name="iOS" expanded="True">
-            <Node name="Tasks" expanded="True">
-              <Node name="News" expanded="True" />
-              <Node name="Notes" expanded="True" />
-            </Node>
-          </Node>
+          <Node name="iOS" selected="True" />
         </State>
       </Pad>
       <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
+        <State>
+          <Value>BackButton.Enabled</Value>
+        </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>

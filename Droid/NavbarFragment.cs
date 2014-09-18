@@ -66,6 +66,12 @@ namespace Droid
 
         protected Button SpringboardReveal { get; set; }
 
+        /// <summary>
+        /// True when OnResume has been called. False when it has not.
+        /// </summary>
+        /// <value><c>true</c> if this instance is fragment active; otherwise, <c>false</c>.</value>
+        protected bool IsFragmentActive { get; set; }
+
         public NavbarFragment( ) : base( )
         {
         }
@@ -210,6 +216,9 @@ namespace Droid
             {
                 EnableControls( true );
             }
+
+            // notify the task regarding what happened
+            ActiveTask.SpringboardDidAnimate( SpringboardRevealed );
         }
 
         public void EnableControls( bool enabled )
@@ -218,7 +227,7 @@ namespace Droid
             EnableViews( ActiveTaskFrame, enabled );
 
             // toggle the sub nav bar
-            EnableViews( NavToolbar.RelativeLayout, enabled );
+            NavToolbar.Suspend( !enabled );
         }
 
         public void EnableViews( ViewGroup view, bool enabled )
@@ -241,22 +250,52 @@ namespace Droid
             }
         }
 
-        public void SetActiveTask( Tasks.Task activeTask )
+        public override void OnPause( )
         {
-            // deactivate any current task
+            base.OnPause( );
+
             if( ActiveTask != null )
             {
                 ActiveTask.Deactivate( );
             }
 
-            // store a ref to the task task
-            ActiveTask = activeTask;
+            IsFragmentActive = false;
+        }
 
-            // activate it
-            ActiveTask.Activate( );
+        public override void OnResume( )
+        {
+            base.OnResume( );
 
-            // force the springboard to close
-            RevealSpringboard( false );
+            IsFragmentActive = true;
+
+            if( ActiveTask != null )
+            {
+                ActiveTask.Activate( );
+            }
+        }
+
+        public void SetActiveTask( Tasks.Task newTask )
+        {
+            // first, are we active? If we aren't, there's no way
+            // we ever activated a task, so there's no need to deactivate anything.
+            if( IsFragmentActive == true )
+            {
+                // we are active, so if we have a current task, deactivate it.
+                if( ActiveTask != null )
+                {
+                    ActiveTask.Deactivate( );
+                }
+
+                // activate the new task
+                newTask.Activate( );
+
+                // force the springboard to close
+                RevealSpringboard( false );
+            }
+
+            // take our active task. If we didn't activate it because we aren't
+            // ready, we'll do it as soon as OnResume is called.
+            ActiveTask = newTask;
         }
     }
 }

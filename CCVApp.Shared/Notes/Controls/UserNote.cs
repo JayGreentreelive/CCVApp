@@ -283,6 +283,8 @@ namespace CCVApp
                     {
                         TextField.Text = startingText;
                     }
+
+                    SetDebugFrame( TextField.Frame );
                 }
 
                 public bool TouchInDeleteButtonRange( PointF touch )
@@ -584,7 +586,6 @@ namespace CCVApp
 
                 public override RectangleF GetFrame( )
                 {
-                    base.DebugFrameView.Frame = TextField.Frame;
                     return TextField.Frame;
                 }
 

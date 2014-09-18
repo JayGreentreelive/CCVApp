@@ -198,7 +198,6 @@ namespace CCVApp
 
                 public override RectangleF GetFrame( )
                 {
-                    base.DebugFrameView.Frame = TextField.Frame;
                     return TextField.Frame;
                 }
             }

@@ -120,14 +120,15 @@ namespace Droid
             view.SetOnTouchListener( this );
             view.SetBackgroundColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.Springboard.BackgroundColor ) );
 
+            // set the task we wish to have active
+            ActivateElement( Elements[ ActiveElementIndex ] );
+
             return view;
         }
 
         public override void OnResume()
         {
             base.OnResume();
-
-            ActivateElement( Elements[ ActiveElementIndex ] );
         }
 
         public bool OnTouch( View v, MotionEvent e )

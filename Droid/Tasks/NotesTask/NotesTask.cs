@@ -33,6 +33,45 @@ namespace Droid
                     MainPage.ParentTask = this;
                 }
 
+                public override void SpringboardDidAnimate( bool springboardRevealed )
+                {
+                    // did the springboard just close?
+                    if( springboardRevealed == false )
+                    {
+                        // if we weren't ready, let the notes know we now are.
+                        if( TaskReadyForFragmentDisplay == false )
+                        {
+                            TaskReadyForFragmentDisplay = true;
+
+                            MainPage.TaskReadyForFragmentDisplay( );
+                        }
+                    }
+                }
+
+                public override void Activate( )
+                {
+                    base.Activate( );
+
+                    // if the springboard is already closed, set ourselves as ready.
+                    // This is always called before any fragment methods, so the fragment
+                    // will be able to know if it can display or not.
+                    if( NavbarFragment.SpringboardRevealed == false )
+                    {
+                        TaskReadyForFragmentDisplay = true;
+                    }
+                    else
+                    {
+                        TaskReadyForFragmentDisplay = false;
+                    }
+                }
+
+                public override void Deactivate( )
+                {
+                    base.Deactivate( );
+
+                    TaskReadyForFragmentDisplay = false;
+                }
+
                 public override TaskFragment StartingFragment()
                 {
                     return MainPage;

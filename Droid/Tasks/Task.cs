@@ -18,6 +18,14 @@ namespace Droid
             /// <value>The navbar fragment.</value>
             public NavbarFragment NavbarFragment { get; set; }
 
+            /// <summary>
+            /// True when the task is ready for the fragment to display.
+            /// This could be false if, say, the task wants the fragment to wait
+            /// for the springboard to close.
+            /// </summary>
+            /// <value><c>true</c> if task ready; otherwise, <c>false</c>.</value>
+            public bool TaskReadyForFragmentDisplay { get; protected set; }
+
             public Task( NavbarFragment navFragment )
             {
                 NavbarFragment = navFragment;
@@ -59,6 +67,10 @@ namespace Droid
 
                 // do the transaction
                 ft.Commit();
+            }
+
+            public virtual void SpringboardDidAnimate( bool springboardRevealed )
+            {
             }
 
             public virtual void OnClick( Fragment source, int buttonId )

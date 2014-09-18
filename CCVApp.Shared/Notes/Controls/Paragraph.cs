@@ -168,7 +168,7 @@ namespace CCVApp
                     // now calculate the available width based on padding. (Don't actually change our width)
                     float availableWidth = bounds.Width - leftPadding - rightPadding - (borderPaddingPx * 2);
 
-                    bool didAddInteractiveControl = false;
+                    //bool didAddInteractiveControl = false;
 
                     bool finishedReading = false;
                     while( finishedReading == false && reader.Read( ) )
@@ -187,7 +187,7 @@ namespace CCVApp
                                     }
                                     ChildControls.Add( control );
 
-                                    didAddInteractiveControl = true;
+                                    //didAddInteractiveControl = true;
                                 }
                                 break;
                             }
@@ -203,6 +203,16 @@ namespace CCVApp
                                 // grab the text. remove any weird characters
                                 string text = Regex.Replace( reader.Value, @"\t|\n|\r", "" );
 
+
+                                // Note - Treating the entire block of text as a single NoteText has an advantage and disadvantage.
+                                // The advantage is it's extremely fast. It causes note creation to go from 1500ms to about 800ms in debug.
+                                // The disadvantage is we can't have quite as precise word wrapping. So, if the ENTIRE block of text doesn't fit on the line,
+                                // it will be forced to the line below. This is extremely rare tho, and I've never seen it in normal notes.
+                                // If it does become an issue, we can revert to the slower code below.
+                                NoteText textLabel = new NoteText( new CreateParams( this, availableWidth, parentParams.Height, ref textStyle ), text + " " );
+                                ChildControls.Add( textLabel );
+
+                                /*
                                 // now break it into words so we can do word wrapping
                                 string[] words = text.Split( ' ' );
                                 foreach( string word in words )
@@ -220,11 +230,13 @@ namespace CCVApp
                                             didAddInteractiveControl = false;
                                         }
 
-                                        NoteText textLabel = new NoteText( new CreateParams( this, availableWidth, parentParams.Height, ref textStyle ), nextWord + " " );
+                                        NoteText wordLabel = new NoteText( new CreateParams( this, availableWidth, parentParams.Height, ref textStyle ), nextWord + " " );
 
-                                        ChildControls.Add( textLabel );
+                                        ChildControls.Add( wordLabel );
                                     }
                                 }
+                                */
+
                                 break;
                             }
 
@@ -346,7 +358,7 @@ namespace CCVApp
                     BorderView.Frame = frame;
 
                     Frame = frame;
-                    base.DebugFrameView.Frame = Frame;
+                    SetDebugFrame( Frame );
                 }
 
                 void AlignRow( RectangleF bounds, List<IUIControl> currentRow, float maxWidth )
@@ -417,7 +429,6 @@ namespace CCVApp
 
                     // update our bounds by the new offsets.
                     Frame = new RectangleF( Frame.X + xOffset, Frame.Y + yOffset, Frame.Width, Frame.Height );
-                    base.DebugFrameView.Frame = Frame;
                 }
 
                 public override bool TouchesEnded( PointF touch )

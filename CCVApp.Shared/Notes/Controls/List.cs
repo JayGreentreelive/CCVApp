@@ -246,7 +246,7 @@ namespace CCVApp
                     BorderView.Frame = bounds;
 
                     // store our debug frame
-                    base.DebugFrameView.Frame = Bounds;
+                    SetDebugFrame( Bounds );
                 }
 
                 public override bool TouchesEnded( PointF touch )
@@ -279,7 +279,6 @@ namespace CCVApp
 
                     // update our bounds by the new offsets.
                     Bounds = new RectangleF( Bounds.X + xOffset, Bounds.Y + yOffset, Bounds.Width, Bounds.Height );
-                    base.DebugFrameView.Frame = Bounds;
                 }
 
                 public override void AddToView( object obj )

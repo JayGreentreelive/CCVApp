@@ -171,6 +171,12 @@ namespace Droid
                 /// <value>The note URL.</value>
                 public string NoteName { get; set; }
 
+                /// <summary>
+                /// True when WE are ready to create notes
+                /// </summary>
+                /// <value><c>true</c> if fragment ready; otherwise, <c>false</c>.</value>
+                bool FragmentReady { get; set; }
+
                 public bool OnDoubleTap(MotionEvent e)
                 {
                     Note.DidDoubleTap( new PointF( e.GetX( ), e.GetY( ) ) );
@@ -259,11 +265,28 @@ namespace Droid
 
                     WakeLock.Acquire( );
 
-                    // create the notes
-                    CreateNotes( NoteXml, StyleSheetXml );
-
                     ParentTask.NavbarFragment.NavToolbar.SetBackButtonEnabled( false );
                     ParentTask.NavbarFragment.NavToolbar.Reveal( true );
+
+                    // if the task is ready, go ahead and create the notes.
+                    FragmentReady = true;
+                    if( ParentTask.TaskReadyForFragmentDisplay == true )
+                    {
+                        CreateNotes( NoteXml, StyleSheetXml );
+                    }
+                }
+
+                public void TaskReadyForFragmentDisplay()
+                {
+                    // our parent task is letting us know it's ready.
+                    // if we've had our OnResume called, then we're ready too.
+
+                    // Otherwise, when OnResume IS called, the parent task will be ready
+                    // and we'll create the notes then.
+                    if( FragmentReady == true )
+                    {
+                        CreateNotes( NoteXml, StyleSheetXml );
+                    }
                 }
 
                 public override void OnPause()
@@ -271,6 +294,8 @@ namespace Droid
                     // when we're being backgrounded, release our lock so we don't force
                     // the device to stay on
                     base.OnPause( );
+
+                    FragmentReady = false;
 
                     WakeLock.Release( );
 
@@ -451,7 +476,9 @@ namespace Droid
                                 {
                                     // Use the metrics and not ScrollView for dimensions, because depending on when this gets called the ScrollView
                                     // may not have its dimensions set yet.
+                                    Rock.Mobile.Profiler.Instance.Start( "Note.Create" );
                                     Note.Create( this.Resources.DisplayMetrics.WidthPixels, this.Resources.DisplayMetrics.HeightPixels, ScrollViewLayout, NoteName + CCVApp.Shared.Config.Note.UserNoteSuffix );
+                                    Rock.Mobile.Profiler.Instance.Stop( "Note.Create" );
 
                                     // set the requested background color
                                     ScrollView.SetBackgroundColor( ( Android.Graphics.Color )Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value ) );

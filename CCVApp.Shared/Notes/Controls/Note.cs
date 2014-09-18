@@ -79,6 +79,8 @@ namespace CCVApp
                 /// <value>The height of the device.</value>
                 protected float DeviceHeight { get; set; }
 
+                protected System.Timers.Timer LoadStateTimer { get; set; }
+
                 public static void HandlePreReqs( string noteXml, string styleXml, OnPreReqsComplete onPreReqsComplete )
                 {
                     // now use a reader to get each element
@@ -133,6 +135,19 @@ namespace CCVApp
 
                 public void Create( float parentWidth, float parentHeight, object masterView, string userNoteFileName )
                 {
+                    // setup our note timer that will wait to load our notes until AFTER the notes are created,
+                    // as opposed to the same tick. This cuts down 500ms from the create time.
+                    LoadStateTimer = new System.Timers.Timer();
+                    LoadStateTimer.AutoReset = false;
+                    LoadStateTimer.Interval = 250;
+                    LoadStateTimer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e) => 
+                        {
+                            // when the timer fires, hide the toolbar.
+                            // Although the timer fires on a seperate thread, because we queue the reveal
+                            // on the main (UI) thread, we don't have to worry about race conditions.
+                            Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate { LoadState( UserNotePath ); } );
+                        };
+
                     UserNotePath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), userNoteFileName);
 
                     MasterView = masterView;
@@ -300,8 +315,8 @@ namespace CCVApp
 
                     AddControlsToView( );
 
-                    // finally, load the user notes for this note
-                    LoadState( UserNotePath );
+                    // kick off the timer that will load the user note state
+                    LoadStateTimer.Start( );
                 }
 
                 protected void AddControlsToView( )

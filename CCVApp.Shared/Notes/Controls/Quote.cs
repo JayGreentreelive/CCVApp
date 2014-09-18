@@ -256,7 +256,7 @@ namespace CCVApp
                     // and store that as our bounds
                     BorderView.Frame = frame;
                     Frame = frame;
-                    base.DebugFrameView.Frame = frame;
+                    SetDebugFrame( Frame );
                 }
 
                 public override void AddOffset( float xOffset, float yOffset )
@@ -274,8 +274,6 @@ namespace CCVApp
 
                     // update our bounds by the new offsets.
                     Frame = new RectangleF( Frame.X + xOffset, Frame.Y + yOffset, Frame.Width, Frame.Height );
-
-                    base.DebugFrameView.Frame = Frame;
                 }
 
                 public override void AddToView( object obj )

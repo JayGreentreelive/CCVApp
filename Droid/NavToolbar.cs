@@ -31,9 +31,11 @@ namespace Droid
 
         Button BackButton { get; set; }
         bool BackButtonDisplayed { get; set; }
+        bool BackButtonEnabledPreSuspension { get; set; }
 
         Button ShareButton { get; set; }
         bool ShareButtonDisplayed { get; set; }
+        bool ShareButtonEnabledPreSuspension { get; set; }
 
         bool Revealed { get; set; }
 
@@ -122,6 +124,26 @@ namespace Droid
             RelativeLayout.SetY( 150 );
 
             UpdateButtons( );
+        }
+
+        public void Suspend( bool suspend )
+        {
+            // if we're going to be suspended, store
+            // the current state of the button
+            if( suspend == true )
+            {
+                BackButtonEnabledPreSuspension = BackButton.Enabled;
+                //ShareButtonEnabledPreSuspension = ShareButton.Enabled;
+
+                BackButton.Enabled = false;
+                //ShareButton.Enabled = false;
+            }
+            else
+            {
+                // restore them to their pre-suspension state
+                BackButton.Enabled = BackButtonEnabledPreSuspension;
+                //ShareButton.Enabled = ShareButtonEnabledPreSuspension;
+            }
         }
 
         public void DisplayBackButton( bool display )
