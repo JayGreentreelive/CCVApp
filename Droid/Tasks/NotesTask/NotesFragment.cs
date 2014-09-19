@@ -172,6 +172,12 @@ namespace Droid
                 public string NoteName { get; set; }
 
                 /// <summary>
+                /// A presentable name for the note. Used for things like email subjects
+                /// </summary>
+                /// <value>The name of the note presentable.</value>
+                public string NotePresentableName { get; set; }
+
+                /// <summary>
                 /// True when WE are ready to create notes
                 /// </summary>
                 /// <value><c>true</c> if fragment ready; otherwise, <c>false</c>.</value>
@@ -264,6 +270,24 @@ namespace Droid
                     Activity.RequestedOrientation = Android.Content.PM.ScreenOrientation.FullSensor;
 
                     WakeLock.Acquire( );
+
+                    ParentTask.NavbarFragment.NavToolbar.DisplayShareButton( true, delegate 
+                        {
+                            Intent sendIntent = new Intent();
+                            sendIntent.SetAction( Intent.ActionSend );
+
+                            //todo: build a nice subject line
+                            sendIntent.PutExtra( Intent.ExtraSubject, NotePresentableName );
+
+                            string noteString = null;
+                            Note.GetNotesForEmail( out noteString );
+
+                            sendIntent.PutExtra( Intent.ExtraText, noteString );
+                            sendIntent.SetType( "text/plain" );
+                            StartActivity( sendIntent );
+                        } );
+
+                    ParentTask.NavbarFragment.NavToolbar.SetShareButtonEnabled( true );
 
                     ParentTask.NavbarFragment.NavToolbar.SetBackButtonEnabled( false );
                     ParentTask.NavbarFragment.NavToolbar.Reveal( true );

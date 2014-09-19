@@ -316,6 +316,14 @@ namespace CCVApp
                     return false;
                 }
 
+                public override void GetNotesForEmail( List<PlatformBaseUI> controlList )
+                {
+                    foreach( IUIControl control in ChildControls )
+                    {
+                        control.GetNotesForEmail( controlList );
+                    }
+                }
+
                 protected override List<IUIControl> GetChildControls( )
                 {
                     return ChildControls;

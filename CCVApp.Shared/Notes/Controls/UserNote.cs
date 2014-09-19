@@ -3,6 +3,7 @@ using System.Xml;
 using System.Drawing;
 using Rock.Mobile.PlatformUI;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace CCVApp
 {
@@ -587,6 +588,11 @@ namespace CCVApp
                 public override RectangleF GetFrame( )
                 {
                     return TextField.Frame;
+                }
+
+                public override void GetNotesForEmail( List<PlatformBaseUI> controlList )
+                {
+                    controlList.Add( TextField );
                 }
 
                 public Notes.Model.NoteState.UserNoteContent GetContent( )

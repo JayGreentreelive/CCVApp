@@ -12,9 +12,6 @@ namespace iOS
     /// </summary>
     public class NavToolbar : UIToolbar
     {
-        // JHM: Don't think we need a mutex because we're simply invoking on the main thread,
-        // therefore there cannot be a race condition, since everything gets serialized to a single thread.
-
         /// <summary>
         /// The button used to go back a page in an task.
         /// </summary>
@@ -28,10 +25,16 @@ namespace iOS
         bool BackButtonDisplayed { get; set; }
 
         /// <summary>
+        /// True if the share button should exist on the toolbar. False if not.
+        /// </summary>
+        /// <value><c>true</c> if share button displayed; otherwise, <c>false</c>.</value>
+        bool ShareButtonDisplayed { get; set; }
+
+        /// <summary>
         /// Button used when an task wishes to let the user share something
         /// </summary>
         /// <value>The share button.</value>
-        UIBarButtonItem ShareButton { get; set; }
+        UIButton ShareButton { get; set; }
 
         /// <summary>
         /// True when this toolbar is showing. False when it is hidden.
@@ -66,17 +69,29 @@ namespace iOS
 
 
             // create the back button
-            NSString buttonLabel = new NSString(CCVApp.Shared.Config.SubNavToolbar.BackButton_Text);
+            NSString backLabel = new NSString(CCVApp.Shared.Config.SubNavToolbar.BackButton_Text);
 
             BackButton = new UIButton(UIButtonType.System);
             BackButton.Font = Rock.Mobile.PlatformCommon.iOS.LoadFontDynamic( CCVApp.Shared.Config.SubNavToolbar.BackButton_Font, CCVApp.Shared.Config.SubNavToolbar.BackButton_Size );
-            BackButton.SetTitle( buttonLabel.ToString( ), UIControlState.Normal );
+            BackButton.SetTitle( backLabel.ToString( ), UIControlState.Normal );
             BackButton.SetTitleColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.BackButton_EnabledColor ), UIControlState.Normal );
             BackButton.SetTitleColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.BackButton_DisabledColor ), UIControlState.Disabled );
 
-            // determine its dimensions
-            SizeF buttonSize = buttonLabel.StringSize( BackButton.Font );
+            SizeF buttonSize = backLabel.StringSize( BackButton.Font );
             BackButton.Bounds = new RectangleF( 0, 0, buttonSize.Width, buttonSize.Height );
+
+            // create the share button
+            NSString shareLabel = new NSString(CCVApp.Shared.Config.SubNavToolbar.ShareButton_Text);
+
+            ShareButton = new UIButton(UIButtonType.System);
+            ShareButton.Font = Rock.Mobile.PlatformCommon.iOS.LoadFontDynamic( CCVApp.Shared.Config.SubNavToolbar.ShareButton_Font, CCVApp.Shared.Config.SubNavToolbar.ShareButton_Size );
+            ShareButton.SetTitle( shareLabel.ToString( ), UIControlState.Normal );
+            ShareButton.SetTitleColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.ShareButton_EnabledColor ), UIControlState.Normal );
+            ShareButton.SetTitleColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.ShareButton_DisabledColor ), UIControlState.Disabled );
+
+            // determine its dimensions
+            buttonSize = shareLabel.StringSize( ShareButton.Font );
+            ShareButton.Bounds = new RectangleF( 0, 0, buttonSize.Width, buttonSize.Height );
         }
 
         public void DisplayBackButton( bool display, EventHandler handler )
@@ -93,6 +108,23 @@ namespace iOS
             BackButton.Enabled = enabled;
         }
 
+        public void DisplayShareButton( bool display, EventHandler handler = null )
+        {
+            ShareButtonDisplayed = display;
+
+            if( handler != null )
+            {
+                ShareButton.TouchUpInside += handler;
+            }
+
+            UpdateButtons( );
+        }
+
+        public void SetShareButtonEnabled( bool enabled )
+        {
+            ShareButton.Enabled = enabled;
+        }
+
         void UpdateButtons( )
         {
             // This sets the valid buttons TO the toolbar.
@@ -105,10 +137,15 @@ namespace iOS
                 itemList.Add( new UIBarButtonItem( BackButton ) );
             }
 
-            if( ShareButton != null )
+            if( ShareButtonDisplayed == true )
             {
-                itemList.Add( ShareButton );
+                itemList.Add( new UIBarButtonItem( ShareButton ) );
             }
+
+            // for some reason, it will not accept a new array of items
+            // until we clear the existing.
+            SetItems( new UIBarButtonItem[0], false );
+
 
             SetItems( itemList.ToArray( ), false );
         }

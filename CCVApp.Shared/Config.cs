@@ -96,6 +96,36 @@ namespace CCVApp
                 /// The size (in font points) of the sub nav toolbar back button. (the one at the bottom)
                 /// </summary>
                 public const int BackButton_Size = 36;
+
+                /// <summary>
+                /// The font to use for displaying the subNavigation toolbar's share button. (the one at the bottom)
+                /// </summary>
+                public const string ShareButton_Font = "FontAwesome";
+
+                /// <summary>
+                /// The color to use for displaying the subNavigation toolbar's share button when enabled. (the one at the bottom)
+                /// </summary>
+                public const uint ShareButton_EnabledColor = 0xFFFFFFFF;
+
+                /// <summary>
+                /// The color to use for displaying the subNavigation toolbar's share button when pressed. (Android Only) (the one at the bottom)
+                /// </summary>
+                public const uint ShareButton_PressedColor = 0x444444FF;
+
+                /// <summary>
+                /// The color to use for displaying the subNavigation toolbar's share button when disabled. (the one at the bottom)
+                /// </summary>
+                public const uint ShareButton_DisabledColor = 0x444444FF;
+
+                /// <summary>
+                /// The text to display for the subNavigation toolbar's share button. (the one at the bottom)
+                /// </summary>
+                public const string ShareButton_Text = "";
+
+                /// <summary>
+                /// The size (in font points) of the sub nav toolbar share button. (the one at the bottom)
+                /// </summary>
+                public const int ShareButton_Size = 36;
             }
 
             /// <summary>

@@ -156,6 +156,12 @@ namespace iOS
         /// <value>The note URL.</value>
         public string NoteName { get; set; }
 
+        /// <summary>
+        /// A presentable name for the note. Used for things like email subjects
+        /// </summary>
+        /// <value>The name of the note presentable.</value>
+        public string NotePresentableName { get; set; }
+
         public NotesViewController( ) : base( )
         {
         }
@@ -273,6 +279,21 @@ namespace iOS
                     CreateNotes( null, null );
                 };
             View.AddSubview( RefreshButton );
+        }
+
+        public void ShareNotes()
+        {
+            string emailNote;
+            Note.GetNotesForEmail( out emailNote );
+
+            var items = new NSObject[] { new NSString( emailNote ) };
+
+            UIActivityViewController shareController = new UIActivityViewController( items, null );
+            shareController.SetValueForKey( new NSString( NotePresentableName ), new NSString( "subject" ) );
+
+            shareController.ExcludedActivityTypes = new NSString[] { UIActivityType.CopyToPasteboard, UIActivityType.Message };
+
+            PresentViewController( shareController, true, null );
         }
 
         public bool HitTest( PointF point )

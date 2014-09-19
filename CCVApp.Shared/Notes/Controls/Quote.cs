@@ -3,6 +3,7 @@ using Rock.Mobile.PlatformUI;
 using System.Xml;
 using System.Drawing;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 namespace CCVApp
 {
@@ -292,6 +293,12 @@ namespace CCVApp
                     Citation.RemoveAsSubview( obj );
 
                     TryRemoveDebugLayer( obj );
+                }
+
+                public override void GetNotesForEmail( List<PlatformBaseUI> controlList )
+                {
+                    controlList.Add( QuoteLabel );
+                    controlList.Add( Citation );
                 }
 
                 public override RectangleF GetFrame( )

@@ -2,6 +2,7 @@
 using System.Xml;
 using System.Drawing;
 using Rock.Mobile.PlatformUI;
+using System.Collections.Generic;
 
 namespace CCVApp
 {
@@ -194,6 +195,11 @@ namespace CCVApp
                     TextField.RemoveAsSubview( obj );
 
                     TryRemoveDebugLayer( obj );
+                }
+
+                public override void GetNotesForEmail( List<PlatformBaseUI> controlList )
+                {
+                    controlList.Add( TextField );
                 }
 
                 public override RectangleF GetFrame( )

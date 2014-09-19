@@ -317,6 +317,14 @@ namespace CCVApp
                     return ChildControls;
                 }
 
+                public override void GetNotesForEmail( List<PlatformBaseUI> controlList )
+                {
+                    foreach( IUIControl control in ChildControls )
+                    {
+                        control.GetNotesForEmail( controlList );
+                    }
+                }
+
                 public override bool ShouldShowBulletPoint( )
                 {
                     // as a container, it wouldn't really make sense to show a bullet point.

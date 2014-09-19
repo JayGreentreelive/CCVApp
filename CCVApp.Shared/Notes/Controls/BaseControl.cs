@@ -190,6 +190,10 @@ namespace CCVApp
                     return null;
                 }
 
+                public virtual void GetNotesForEmail( List<PlatformBaseUI> controlList )
+                {
+                }
+
                 public virtual RectangleF GetFrame( )
                 {
                     return new RectangleF( );

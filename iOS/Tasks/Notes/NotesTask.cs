@@ -26,6 +26,8 @@ namespace iOS
             {
                 time = time.Subtract( new TimeSpan( (int)time.DayOfWeek + 1, 0, 0, 0 ) );
             }
+
+            NotesViewController.NotePresentableName = string.Format( "Sermon Note - {0}.{1}.{2}", time.Month, time.Day, time.Year );
             NotesViewController.NoteName = string.Format("{0}_{1}_{2}_{3}", CCVApp.Shared.Config.Note.NamePrefix, time.Month, time.Day, time.Year );
             //
 
@@ -50,6 +52,10 @@ namespace iOS
             // if it's the main page, disable the back button on the toolbar
             if ( viewController == NotesViewController )
             {
+                NavToolbar.DisplayShareButton( true, delegate
+                    { 
+                        NotesViewController.ShareNotes( );
+                    } );
                 NavToolbar.SetBackButtonEnabled( false );
 
                 // go ahead and show the bar, because we're at the top of the page.

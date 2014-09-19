@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Collections.Generic;
+using Rock.Mobile.PlatformUI;
 
 namespace CCVApp
 {
@@ -32,6 +33,8 @@ namespace CCVApp
                 Styles.Alignment GetHorzAlignment( );
 
                 bool ShouldShowBulletPoint();
+
+                void GetNotesForEmail( List<PlatformBaseUI> controlList );
             }
         }
     }

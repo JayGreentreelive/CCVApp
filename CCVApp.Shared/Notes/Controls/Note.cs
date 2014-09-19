@@ -7,6 +7,7 @@ using System.IO;
 using CCVApp.Shared.Notes.Styles;
 using CCVApp.Shared.Notes.Model;
 using Newtonsoft.Json;
+using Rock.Mobile.PlatformUI;
 
 namespace CCVApp
 {
@@ -552,6 +553,63 @@ namespace CCVApp
                             {
                                 revealBox.SetRevealed( state.Revealed );
                             }
+                        }
+                    }
+                }
+
+                public void GetNotesForEmail( out string emailString )
+                {
+                    // first setup the string that will contain the notes
+                    emailString = "";
+
+                    // go through all controls, and let them place their text labels into a list.
+                    List<PlatformBaseUI> controlList = new List<PlatformBaseUI>( );
+                    foreach( IUIControl control in ChildControls )
+                    {
+                        control.GetNotesForEmail( controlList );
+                    }
+
+                    // add the user notes!
+                    foreach( IUIControl control in UserNoteControls )
+                    {
+                        control.GetNotesForEmail( controlList );
+                    }
+
+                    // sort by y. This is important in case the XML lists the text in one order,
+                    // but when positioned on screen it's in another. This ensures the 
+                    // user receives it in the same order they read it on the device.
+                    controlList.Sort( delegate(PlatformBaseUI x, PlatformBaseUI y) 
+                        {
+                            // if Y is the same, check X.
+                            if( y.Frame.Y == x.Frame.Y )
+                            {
+                                if( y.Frame.X == x.Frame.X )
+                                {
+                                    return 0;
+                                }
+                                return y.Frame.X > x.Frame.X ? -1 : 1;
+                            }
+                            return y.Frame.Y > x.Frame.Y ? -1 : 1;
+                        });
+
+
+                    // now generate our text
+                    float currentY = controlList[0].Frame.Y;
+
+                    foreach( PlatformBaseUI uiObject in controlList )
+                    {
+                        PlatformBaseLabelUI label = uiObject as PlatformBaseLabelUI;
+                        if( label != null )
+                        {
+                            // if this label has a lower Y, put a carriage
+                            // return before the word.
+                            if( currentY < label.Frame.Y )
+                            {
+                                currentY = label.Frame.Y;
+                                emailString += "\r\n\r\n";
+                            }
+
+                            emailString += label.Text;
                         }
                     }
                 }

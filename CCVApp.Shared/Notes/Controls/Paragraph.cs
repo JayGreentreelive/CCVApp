@@ -472,6 +472,14 @@ namespace CCVApp
                     TryRemoveDebugLayer( obj );
                 }
 
+                public override void GetNotesForEmail( List<PlatformBaseUI> controlList )
+                {
+                    foreach( IUIControl control in ChildControls )
+                    {
+                        control.GetNotesForEmail( controlList );
+                    }
+                }
+
                 public override RectangleF GetFrame( )
                 {
                     return Frame;

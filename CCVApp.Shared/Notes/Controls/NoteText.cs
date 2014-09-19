@@ -134,6 +134,11 @@ namespace CCVApp
                     TryRemoveDebugLayer( obj );
                 }
 
+                public override void GetNotesForEmail( List<PlatformBaseUI> controlList )
+                {
+                    controlList.Add( PlatformLabel );
+                }
+
                 public override RectangleF GetFrame( )
                 {
                     return PlatformLabel.Frame;

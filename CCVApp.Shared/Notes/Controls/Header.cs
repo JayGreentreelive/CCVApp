@@ -2,6 +2,7 @@
 using System.Xml;
 using System.Drawing;
 using Rock.Mobile.PlatformUI;
+using System.Collections.Generic;
 
 namespace CCVApp
 {
@@ -347,6 +348,13 @@ namespace CCVApp
                 public override RectangleF GetFrame( )
                 {
                     return Frame;
+                }
+
+                public override void GetNotesForEmail( List<PlatformBaseUI> controlList )
+                {
+                    controlList.Add( mTitle );
+                    controlList.Add( mSpeaker );
+                    controlList.Add( mDate );
                 }
 
                 public override bool ShouldShowBulletPoint( )

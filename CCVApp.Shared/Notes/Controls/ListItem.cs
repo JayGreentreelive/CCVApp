@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Text.RegularExpressions;
 
 using CCVApp.Shared.Notes.Styles;
+using Rock.Mobile.PlatformUI;
 
 namespace CCVApp
 {
@@ -141,6 +142,14 @@ namespace CCVApp
                 {
                     // let our first control (which will be displayed first) decide
                     return ChildControls[0].ShouldShowBulletPoint( );
+                }
+
+                public override void GetNotesForEmail( List<PlatformBaseUI> controlList )
+                {
+                    foreach( IUIControl control in ChildControls )
+                    {
+                        control.GetNotesForEmail( controlList );
+                    }
                 }
 
                 protected override List<IUIControl> GetChildControls( )

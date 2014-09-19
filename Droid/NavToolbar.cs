@@ -27,7 +27,7 @@ namespace Droid
 
     public class NavToolbarFragment : Fragment, Android.Animation.ValueAnimator.IAnimatorUpdateListener
     {
-        public RelativeLayout RelativeLayout { get; set; }
+        public LinearLayout RelativeLayout { get; set; }
 
         Button BackButton { get; set; }
         bool BackButtonDisplayed { get; set; }
@@ -50,7 +50,8 @@ namespace Droid
         public NavToolbarFragment( ) : base( )
         {
             BackButton = new Button( Rock.Mobile.PlatformCommon.Droid.Context );
-            RelativeLayout = new RelativeLayout( Rock.Mobile.PlatformCommon.Droid.Context );
+            ShareButton = new Button( Rock.Mobile.PlatformCommon.Droid.Context );
+            RelativeLayout = new LinearLayout( Rock.Mobile.PlatformCommon.Droid.Context );
         }
 
         public override void OnCreate( Bundle savedInstanceState )
@@ -112,7 +113,44 @@ namespace Droid
                     Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.BackButton_EnabledColor ),
                     Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.BackButton_DisabledColor ),
                 };
-            BackButton.SetTextColor( new Android.Content.Res.ColorStateList( states, colors ) );    
+            BackButton.SetTextColor( new Android.Content.Res.ColorStateList( states, colors ) );
+
+
+
+            // create the share button
+            ShareButton.LayoutParameters = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+            ((RelativeLayout.LayoutParams)BackButton.LayoutParameters).AddRule( LayoutRules.CenterVertical );
+
+            ShareButton.SetX( BackButton.LayoutParameters.Width + 10 );
+
+            // set the share button's font
+            fontFace = Typeface.CreateFromAsset( Rock.Mobile.PlatformCommon.Droid.Context.Assets, "Fonts/" + CCVApp.Shared.Config.SubNavToolbar.ShareButton_Font + ".ttf" );
+            ShareButton.SetTypeface( fontFace, TypefaceStyle.Normal );
+            ShareButton.SetTextSize( Android.Util.ComplexUnitType.Dip, CCVApp.Shared.Config.SubNavToolbar.ShareButton_Size );
+
+            ShareButton.Text = CCVApp.Shared.Config.SubNavToolbar.ShareButton_Text;
+            ShareButton.SetBackgroundColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( 0x00000000 ) );
+
+            //ShareButton.Click += delegate{ Activity.OnSharePressed(); };
+
+            // default to NOT enabled
+            ShareButton.Enabled = false;
+
+            // use the completely overcomplicated color states to set the normal vs pressed color state.
+            states = new int[][] 
+                {
+                    new int[] { Android.Resource.Attribute.StatePressed },
+                    new int[] { Android.Resource.Attribute.StateEnabled },
+                    new int[] { -Android.Resource.Attribute.StateEnabled },
+                };
+
+            colors = new int[]
+                {
+                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.BackButton_PressedColor ),
+                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.BackButton_EnabledColor ),
+                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.BackButton_DisabledColor ),
+                };
+            ShareButton.SetTextColor( new Android.Content.Res.ColorStateList( states, colors ) );
 
             return RelativeLayout;
         }
@@ -133,16 +171,16 @@ namespace Droid
             if( suspend == true )
             {
                 BackButtonEnabledPreSuspension = BackButton.Enabled;
-                //ShareButtonEnabledPreSuspension = ShareButton.Enabled;
+                ShareButtonEnabledPreSuspension = ShareButton.Enabled;
 
                 BackButton.Enabled = false;
-                //ShareButton.Enabled = false;
+                ShareButton.Enabled = false;
             }
             else
             {
                 // restore them to their pre-suspension state
                 BackButton.Enabled = BackButtonEnabledPreSuspension;
-                //ShareButton.Enabled = ShareButtonEnabledPreSuspension;
+                ShareButton.Enabled = ShareButtonEnabledPreSuspension;
             }
         }
 
@@ -158,6 +196,20 @@ namespace Droid
             BackButton.Enabled = enabled;
         }
 
+        public void DisplayShareButton( bool display, EventHandler sharePressed )
+        {
+            ShareButton.Click += sharePressed;
+
+            ShareButtonDisplayed = display;
+
+            UpdateButtons( );
+        }
+
+        public void SetShareButtonEnabled( bool enabled )
+        {
+            ShareButton.Enabled = enabled;
+        }
+
         void UpdateButtons( )
         {
             if( RelativeLayout != null )
@@ -171,7 +223,7 @@ namespace Droid
                     RelativeLayout.AddView( BackButton );
                 }
 
-                if( ShareButton != null )
+                if( ShareButtonDisplayed == true )
                 {
                     RelativeLayout.AddView( ShareButton );
                 }
@@ -232,4 +284,3 @@ namespace Droid
         }
     }
 }
-
