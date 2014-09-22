@@ -107,6 +107,12 @@ namespace CCVApp
                 /// <value>The width of the screen.</value>
                 float ScreenWidth { get; set; }
 
+                /// <summary>
+                /// The value to scale the positions by to get percentage and back
+                /// </summary>
+                /// <value>The position scalar.</value>
+                PointF PositionTransform { get; set; }
+
                 protected override void Initialize( )
                 {
                     base.Initialize( );
@@ -118,7 +124,10 @@ namespace CCVApp
 
                 public UserNote( BaseControl.CreateParams createParams, float deviceHeight, Model.NoteState.UserNoteContent userNoteContent )
                 {
-                    Create( createParams, deviceHeight, userNoteContent.Position, userNoteContent.Text );
+                    PositionTransform = new PointF( createParams.Width, createParams.Height );
+
+                    PointF startPos = new PointF( userNoteContent.PositionPercX * PositionTransform.X, userNoteContent.PositionPercY * PositionTransform.Y );
+                    Create( createParams, deviceHeight, startPos, userNoteContent.Text );
 
                     // new notes are open by default. So if we're restoring one that was closed,
                     // keep it closed.
@@ -151,6 +160,8 @@ namespace CCVApp
                 public void Create( CreateParams parentParams, float deviceHeight, PointF startPos, string startingText )
                 {
                     Initialize( );
+
+                    PositionTransform = new PointF( parentParams.Width, parentParams.Height );
 
                     //magic number ratio that works well!
                     #if __IOS__
@@ -597,7 +608,7 @@ namespace CCVApp
 
                 public Notes.Model.NoteState.UserNoteContent GetContent( )
                 {
-                    return new Notes.Model.NoteState.UserNoteContent( new PointF( AnchorFrame.X, AnchorFrame.Y ), TextField.Text, !TextField.Hidden );
+                    return new Notes.Model.NoteState.UserNoteContent( AnchorFrame.X / PositionTransform.X, AnchorFrame.Y / PositionTransform.Y, TextField.Text, !TextField.Hidden );
                 }
             }
         }

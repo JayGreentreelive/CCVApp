@@ -80,6 +80,19 @@ namespace CCVApp
                 /// <value>The height of the device.</value>
                 protected float DeviceHeight { get; set; }
 
+                /// <summary>
+                /// When true we're waiting for our timer to tick and load notes.
+                /// This prevents the note state from being overwritten by the notes reloading
+                /// while the timer is still pending
+                /// </summary>
+                /// <value><c>true</c> if loading note state; otherwise, <c>false</c>.</value>
+                protected bool LoadingNoteState { get; set; }
+
+                /// <summary>
+                /// To speed up note generation, we delay note state loading with a timer.
+                /// This allows the notes to draw and then the 500ms file i/o to occur after.
+                /// </summary>
+                /// <value>The load state timer.</value>
                 protected System.Timers.Timer LoadStateTimer { get; set; }
 
                 public static void HandlePreReqs( string noteXml, string styleXml, OnPreReqsComplete onPreReqsComplete )
@@ -140,7 +153,7 @@ namespace CCVApp
                     // as opposed to the same tick. This cuts down 500ms from the create time.
                     LoadStateTimer = new System.Timers.Timer();
                     LoadStateTimer.AutoReset = false;
-                    LoadStateTimer.Interval = 250;
+                    LoadStateTimer.Interval = 25;
                     LoadStateTimer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e) => 
                         {
                             // when the timer fires, hide the toolbar.
@@ -308,7 +321,11 @@ namespace CCVApp
                     AddControlsToView( );
 
                     // kick off the timer that will load the user note state
-                    LoadStateTimer.Start( );
+                    if( LoadingNoteState == false )
+                    {
+                        LoadingNoteState = true;
+                        LoadStateTimer.Start( );
+                    }
                 }
 
                 protected void AddControlsToView( )
@@ -474,77 +491,92 @@ namespace CCVApp
 
                 public void SaveState()
                 {
-                    // open a stream
-                    using (StreamWriter writer = new StreamWriter(UserNotePath, false))
+                    // if we're waiting for our notes to load, don't allow saving! We'll
+                    // save a blank state over our real notes!
+                    if( LoadingNoteState == false )
                     {
-                        NoteState noteState = new NoteState( );
-
-                        // User Notes
-                        noteState.UserNoteContentList = new List<NoteState.UserNoteContent>( );
-                        foreach( UserNote note in UserNoteControls )
+                        // open a stream
+                        using (StreamWriter writer = new StreamWriter(UserNotePath, false))
                         {
-                            noteState.UserNoteContentList.Add( note.GetContent( ) );
+                            NoteState noteState = new NoteState( );
+
+                            // User Notes
+                            noteState.UserNoteContentList = new List<NoteState.UserNoteContent>( );
+                            foreach( UserNote note in UserNoteControls )
+                            {
+                                noteState.UserNoteContentList.Add( note.GetContent( ) );
+                            }
+                            //
+
+
+                            //Reveal Boxes
+                            List<IUIControl> revealBoxes = new List<IUIControl>( );
+                            GetControlOfType<RevealBox>( revealBoxes );
+
+                            noteState.RevealBoxStateList = new List<NoteState.RevealBoxState>( );
+                            foreach( RevealBox revealBox in revealBoxes )
+                            {
+                                noteState.RevealBoxStateList.Add( revealBox.GetState( ) );
+                            }
+                            //
+
+                            // now we can serialize this and save it.
+                            string json = JsonConvert.SerializeObject( noteState );
+                            writer.WriteLine( json );
                         }
-                        //
-
-
-                        //Reveal Boxes
-                        List<IUIControl> revealBoxes = new List<IUIControl>( );
-                        GetControlOfType<RevealBox>( revealBoxes );
-
-                        noteState.RevealBoxStateList = new List<NoteState.RevealBoxState>( );
-                        foreach( RevealBox revealBox in revealBoxes )
-                        {
-                            noteState.RevealBoxStateList.Add( revealBox.GetState( ) );
-                        }
-                        //
-
-                        // now we can serialize this and save it.
-                        string json = JsonConvert.SerializeObject( noteState );
-                        writer.WriteLine( json );
                     }
                 }
 
                 protected void LoadState( string filePath )
                 {
-                    NoteState noteState = null;
-
-                    // if the file exists
-                    if(System.IO.File.Exists(filePath) == true)
+                    // sanity check to make sure the notes were requested to load.
+                    if( LoadingNoteState == true )
                     {
-                        // read it
-                        using (StreamReader reader = new StreamReader(filePath))
-                        {
-                            // grab the stream that reprents a list of all their notes
-                            string json = reader.ReadLine();
-                            noteState = JsonConvert.DeserializeObject<NoteState>( json ) as NoteState;
-                        }
-                    }
+                        NoteState noteState = null;
 
-                    if( noteState != null )
-                    {
-                        // restore each user note
-                        foreach( NoteState.UserNoteContent note in noteState.UserNoteContentList )
+                        // if the file exists
+                        if(System.IO.File.Exists(filePath) == true)
                         {
-                            // create the note, add it to our list, and to the view
-                            UserNote userNote = new UserNote( new BaseControl.CreateParams( this, Frame.Width, Frame.Height, ref mStyle ), DeviceHeight, note );
-                            UserNoteControls.Add( userNote );
-                            userNote.AddToView( MasterView );
-                        }
-
-                        // collect all the reveal boxes and restore them
-                        List<IUIControl> revealBoxes = new List<IUIControl>( );
-                        GetControlOfType<RevealBox>( revealBoxes );
-
-                        foreach(RevealBox revealBox in revealBoxes )
-                        {
-                            // for each reveal box, find its appropriate state object by matching the content text.
-                            NoteState.RevealBoxState state = noteState.RevealBoxStateList.Find( rbs => rbs.Text == revealBox.Text );
-                            if( state != null )
+                            // read it
+                            using (StreamReader reader = new StreamReader(filePath))
                             {
-                                revealBox.SetRevealed( state.Revealed );
+                                // grab the stream that reprents a list of all their notes
+                                string json = reader.ReadLine();
+
+                                if( json != null )
+                                {
+                                    noteState = JsonConvert.DeserializeObject<NoteState>( json ) as NoteState;
+                                }
                             }
                         }
+
+                        if( noteState != null )
+                        {
+                            // restore each user note
+                            foreach( NoteState.UserNoteContent note in noteState.UserNoteContentList )
+                            {
+                                // create the note, add it to our list, and to the view
+                                UserNote userNote = new UserNote( new BaseControl.CreateParams( this, Frame.Width, Frame.Height, ref mStyle ), DeviceHeight, note );
+                                UserNoteControls.Add( userNote );
+                                userNote.AddToView( MasterView );
+                            }
+
+                            // collect all the reveal boxes and restore them
+                            List<IUIControl> revealBoxes = new List<IUIControl>( );
+                            GetControlOfType<RevealBox>( revealBoxes );
+
+                            foreach(RevealBox revealBox in revealBoxes )
+                            {
+                                // for each reveal box, find its appropriate state object by matching the content text.
+                                NoteState.RevealBoxState state = noteState.RevealBoxStateList.Find( rbs => rbs.Text == revealBox.Text );
+                                if( state != null )
+                                {
+                                    revealBox.SetRevealed( state.Revealed );
+                                }
+                            }
+                        }
+
+                        LoadingNoteState = false;
                     }
                 }
 

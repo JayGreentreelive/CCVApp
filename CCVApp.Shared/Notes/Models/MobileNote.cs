@@ -23,9 +23,11 @@ namespace CCVApp
                     public class UserNoteContent
                     {
                         /// <summary>
-                        /// The position of this note on screen.
+                        /// The percentage position of this note on screen. (So that should they
+                        /// view this note on another device, it'll be in the appropriate spot)
                         /// </summary>
-                        public PointF Position { get; set; }
+                        public float PositionPercX { get; set; }
+                        public float PositionPercY { get; set; }
 
                         /// <summary>
                         /// The note's contents.
@@ -37,9 +39,11 @@ namespace CCVApp
                         /// </summary>
                         public bool WasOpen { get; set; }
 
-                        public UserNoteContent( PointF position, string text, bool wasOpen )
+                        public UserNoteContent( float positionPercX, float positionPercY, string text, bool wasOpen )
                         {
-                            Position = position;
+                            PositionPercX = positionPercX;
+                            PositionPercY = positionPercY;
+
                             Text = text;
                             WasOpen = wasOpen;
                         }
