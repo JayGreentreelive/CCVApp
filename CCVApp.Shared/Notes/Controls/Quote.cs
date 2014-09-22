@@ -55,13 +55,23 @@ namespace CCVApp
                 {
                     Initialize( );
 
-                    // check for attributes we support
-                    RectangleF bounds = new RectangleF( );
-                    base.ParseCommonAttribs( reader, ref bounds );
-
-                    // take our parent's style but override with anything we set
+                    // Always get our style first
                     mStyle = parentParams.Style;
                     Styles.Style.ParseStyleAttributesWithDefaults( reader, ref mStyle, ref ControlStyles.mQuote );
+
+                    // check for attributes we support
+                    RectangleF bounds = new RectangleF( );
+                    SizeF parentSize = new SizeF( parentParams.Width, parentParams.Height );
+                    ParseCommonAttribs( reader, ref parentSize, ref bounds );
+
+                    // Get margins and padding
+                    RectangleF padding;
+                    RectangleF margin;
+                    GetMarginsAndPadding( ref mStyle, ref parentSize, ref bounds, out margin, out padding );
+
+                    // apply margins to as much of the bounds as we can (bottom must be done by our parent container)
+                    ApplyImmediateMargins( ref bounds, ref margin, ref parentSize );
+                    Margin = margin;
 
 
                     // create the font that either we or our parent defined
@@ -105,42 +115,11 @@ namespace CCVApp
                         }
                     }
 
-
-                    // if our left position is requested as a %, then that needs to be % of parent width
-                    if( bounds.X < 1 )
-                    {
-                        bounds.X = parentParams.Width * bounds.X;
-                    }
-
-                    // if our top position is requested as a %, then that needs to be % of parent width
-                    if( bounds.Y < 1 )
-                    {
-                        bounds.Y = parentParams.Height * bounds.Y;
-                    }
-
-                    //WIDTH
-                    if( bounds.Width == 0 )
-                    {
-                        // if 0, just take the our parents width
-                        bounds.Width = Math.Max( 1, parentParams.Width - bounds.X );
-                    }
-                    // if < 1 it's a percent and we should convert
-                    else if( bounds.Width <= 1 )
-                    {
-                        bounds.Width = Math.Max( 1, parentParams.Width - bounds.X ) * bounds.Width;
-                    }
-
-                    // PADDING
-                    float leftPadding = Styles.Style.GetStyleValue( mStyle.mPaddingLeft, parentParams.Width );
-                    float rightPadding = Styles.Style.GetStyleValue( mStyle.mPaddingRight, parentParams.Width );
-                    float topPadding = Styles.Style.GetStyleValue( mStyle.mPaddingTop, parentParams.Height );
-                    float bottomPadding = Styles.Style.GetStyleValue( mStyle.mPaddingBottom, parentParams.Height );
-
                     // now calculate the available width based on padding. (Don't actually change our width)
-                    float availableWidth = bounds.Width - leftPadding - rightPadding - (borderPaddingPx * 2);
+                    float availableWidth = bounds.Width - padding.Left - padding.Width - (borderPaddingPx * 2);
 
                     // Set the bounds and position for the frame (except Height, which we'll calculate based on the text)
-                    QuoteLabel.Frame = new RectangleF( bounds.X + leftPadding + borderPaddingPx, bounds.Y + topPadding + borderPaddingPx, availableWidth, 0 );
+                    QuoteLabel.Frame = new RectangleF( bounds.X + padding.Left + borderPaddingPx, bounds.Y + padding.Top + borderPaddingPx, availableWidth, 0 );
 
 
                     // expect the citation to be an attribute
@@ -149,7 +128,7 @@ namespace CCVApp
                     {
                         // set and resize the citation to fit
                         Citation.Text = result;
-                        Citation.Bounds = new RectangleF( bounds.X + leftPadding + borderPaddingPx, bounds.Y + topPadding + borderPaddingPx, availableWidth, 0 );
+                        Citation.Bounds = new RectangleF( bounds.X + padding.Left + borderPaddingPx, bounds.Y + padding.Top + borderPaddingPx, availableWidth, 0 );
                         Citation.SizeToFit( );
                     }
 
@@ -243,7 +222,7 @@ namespace CCVApp
                     Citation.TextAlignment = TextAlignment.Right;
 
                     // reintroduce vertical padding
-                    frame.Height = frame.Height + topPadding + bottomPadding;
+                    frame.Height = frame.Height + padding.Top + padding.Height;
 
                     // setup our bounding rect for the border
 

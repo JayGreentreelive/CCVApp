@@ -1,18 +1,34 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|iPhoneSimulator" PreferredExecutionTarget="Android.SelectDevice" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Tasks/NotesTask/NotesFragment.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.192.168.56.101:5555" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="CCVApp.Shared/Notes/Controls/RevealBox.cs">
     <Files>
-      <File FileName="Droid/Springboard.cs" Line="1" Column="1" />
-      <File FileName="iOS/Tasks/Notes/NotesViewController.cs" Line="1" Column="1" />
-      <File FileName="iOS/Tasks/Notes/NotesTask.cs" Line="1" Column="1" />
-      <File FileName="iOS/NavToolbar.cs" Line="1" Column="1" />
-      <File FileName="CCVApp.Shared/Config.cs" Line="1" Column="1" />
-      <File FileName="iOS/Tasks/About/AboutTask.cs" Line="1" Column="1" />
-      <File FileName="iOS/Tasks/News/NewsTask.cs" Line="1" Column="1" />
       <File FileName="CCVApp.Shared/Notes/Controls/Note.cs" Line="1" Column="1" />
-      <File FileName="Droid/Tasks/NotesTask/NotesFragment.cs" Line="37" Column="37" />
-      <File FileName="Droid/Tasks/NotesTask/NotesTask.cs" Line="1" Column="1" />
+      <File FileName="CCVApp.Shared/Notes/Controls/Parser.cs" Line="17" Column="17" />
+      <File FileName="CCVApp.Shared/Notes/Controls/BaseControl.cs" Line="21" Column="21" />
+      <File FileName="CCVApp.Shared/Notes/Controls/Header.cs" Line="46" Column="46" />
+      <File FileName="CCVApp.Shared/Notes/Controls/Canvas.cs" Line="35" Column="35" />
+      <File FileName="CCVApp.Shared/Notes/Controls/RevealBox.cs" Line="40" Column="40" />
     </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="CCVApp.Shared" expanded="True">
+            <Node name="Notes" expanded="True">
+              <Node name="Controls" expanded="True" />
+            </Node>
+          </Node>
+          <Node name="Droid" expanded="True" selected="True" />
+          <Node name="iOS" expanded="True">
+            <Node name="Tasks" expanded="True">
+              <Node name="Notes" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />

@@ -17,6 +17,7 @@ namespace CCVApp
                 void AddOffset( float xOffset, float yOffset );
 
                 System.Drawing.RectangleF GetFrame( );
+                System.Drawing.RectangleF GetMargin( );
 
                 void GetControlOfType<TControlType>( List<IUIControl> controlList ) where TControlType : class;
 

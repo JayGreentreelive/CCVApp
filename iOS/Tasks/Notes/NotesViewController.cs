@@ -162,6 +162,8 @@ namespace iOS
         /// <value>The name of the note presentable.</value>
         public string NotePresentableName { get; set; }
 
+		UIDeviceOrientation Orientation { get; set; }
+
         public NotesViewController( ) : base( )
         {
         }
@@ -220,29 +222,36 @@ namespace iOS
         {
             base.ViewDidLayoutSubviews( );
 
-            //note: the frame height of the nav bar is what it CURRENTLY is, not what it WILL be after we rotate. So, when we go from Portrait to Landscape,
-            // it says 40, but it's gonna be 32. Conversely, going back, we use 32 and it's actually 40, which causes us to start this view 8px too high.
-            RefreshButton.Layer.Position = new PointF( View.Bounds.Width / 2, NavigationController.NavigationBar.Frame.Height + (RefreshButton.Frame.Height / 2) );
+			if (Orientation != UIDevice.CurrentDevice.Orientation) 
+			{
+				Orientation = UIDevice.CurrentDevice.Orientation;
 
-            UIScrollView.Frame = new RectangleF( 0, 0, View.Bounds.Width, View.Bounds.Height - RefreshButton.Frame.Height - NavigationController.NavigationBar.Frame.Height );
-            UIScrollView.Layer.Position = new PointF( UIScrollView.Layer.Position.X, UIScrollView.Layer.Position.Y + RefreshButton.Frame.Bottom);
+				//note: the frame height of the nav bar is what it CURRENTLY is, not what it WILL be after we rotate. So, when we go from Portrait to Landscape,
+				// it says 40, but it's gonna be 32. Conversely, going back, we use 32 and it's actually 40, which causes us to start this view 8px too high.
+				RefreshButton.Layer.Position = new PointF (View.Bounds.Width / 2, NavigationController.NavigationBar.Frame.Height + (RefreshButton.Frame.Height / 2));
 
-            Indicator.Layer.Position = new PointF( View.Bounds.Width / 2, View.Bounds.Height / 2 );
+				UIScrollView.Frame = new RectangleF (0, 0, View.Bounds.Width, View.Bounds.Height - RefreshButton.Frame.Height - NavigationController.NavigationBar.Frame.Height);
+				UIScrollView.Layer.Position = new PointF (UIScrollView.Layer.Position.X, UIScrollView.Layer.Position.Y + RefreshButton.Frame.Bottom);
 
-            // re-create our notes with the new dimensions
-            string noteXml = null;
-            string styleSheetXml = null;
-            if( Note != null )
-            {
-                noteXml = Note.NoteXml;
-                styleSheetXml = ControlStyles.StyleSheetXml;
-            }
-            CreateNotes( noteXml, styleSheetXml );
+				Indicator.Layer.Position = new PointF (View.Bounds.Width / 2, View.Bounds.Height / 2);
+
+				// re-create our notes with the new dimensions
+				string noteXml = null;
+				string styleSheetXml = null;
+				if (Note != null) 
+                {
+					noteXml = Note.NoteXml;
+					styleSheetXml = ControlStyles.StyleSheetXml;
+				}
+				CreateNotes (noteXml, styleSheetXml);
+			}
         }
 
         public override void ViewDidLoad( )
         {
             base.ViewDidLoad( );
+
+            Orientation = UIDeviceOrientation.Unknown;
 
             // monitor for text field being edited, and keyboard show/hide notitications
             NSNotificationCenter.DefaultCenter.AddObserver ("TextFieldDidBeginEditing", OnTextFieldDidBeginEditing);

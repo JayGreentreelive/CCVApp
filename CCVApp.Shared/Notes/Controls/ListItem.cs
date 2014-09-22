@@ -28,18 +28,29 @@ namespace CCVApp
 
                     Initialize( );
 
+                    // Always get our style first
+                    mStyle = parentParams.Style;
+                    Styles.Style.ParseStyleAttributesWithDefaults( reader, ref mStyle, ref ControlStyles.mListItem );
+                    mStyle.mAlignment = null; //don't use alignment
+
                     // check for attributes we support
                     RectangleF bounds = new RectangleF( );
-                    ParseCommonAttribs( reader, ref bounds );
+                    SizeF parentSize = new SizeF( parentParams.Width, parentParams.Height );
+                    ParseCommonAttribs( reader, ref parentSize, ref bounds );
 
                     //ignore positioning attributes.
                     bounds = new RectangleF( );
                     bounds.Width = parentParams.Width;
 
-                    // take our parent's style but override with anything we set
-                    mStyle = parentParams.Style;
-                    Styles.Style.ParseStyleAttributesWithDefaults( reader, ref mStyle, ref ControlStyles.mListItem );
-                    mStyle.mAlignment = null; //don't use alignment
+                    // Get margins and padding
+                    RectangleF padding;
+                    RectangleF margin;
+                    GetMarginsAndPadding( ref mStyle, ref parentSize, ref bounds, out margin, out padding );
+
+                    // apply margins to as much of the bounds as we can (bottom must be done by our parent container)
+                    ApplyImmediateMargins( ref bounds, ref margin, ref parentSize );
+                    Margin = margin;
+
 
                     // check for border styling
                     int borderPaddingPx = 0;
@@ -72,14 +83,8 @@ namespace CCVApp
                     }
                     //
 
-                    // PADDING
-                    float leftPadding = Styles.Style.GetStyleValue( mStyle.mPaddingLeft, parentParams.Width );
-                    float rightPadding = Styles.Style.GetStyleValue( mStyle.mPaddingRight, parentParams.Width );
-                    float topPadding = Styles.Style.GetStyleValue( mStyle.mPaddingTop, parentParams.Height );
-                    float bottomPadding = Styles.Style.GetStyleValue( mStyle.mPaddingBottom, parentParams.Height );
-
                     // now calculate the available width based on padding. (Don't actually change our width)
-                    float availableWidth = bounds.Width - leftPadding - rightPadding - (borderPaddingPx * 2);
+                    float availableWidth = bounds.Width - padding.Left - padding.Width - (borderPaddingPx * 2);
 
                     // Parse Child Controls
                     bool finishedParsing = false;
@@ -135,7 +140,7 @@ namespace CCVApp
                         }
                     }
 
-                    LayoutStackPanel( bounds, leftPadding, topPadding, availableWidth, bottomPadding, borderPaddingPx );
+                    LayoutStackPanel( bounds, padding.Left, padding.Top, availableWidth, padding.Height, borderPaddingPx );
                 }
 
                 public override bool ShouldShowBulletPoint()

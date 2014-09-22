@@ -51,13 +51,23 @@ namespace CCVApp
                 {
                     Initialize( );
 
-                    // check for attributes we support
-                    RectangleF bounds = new RectangleF( );
-                    ParseCommonAttribs( reader, ref bounds );
-
-                    // take our parent's style but override with anything we set
+                    // Always get our style first
                     mStyle = parentParams.Style;
                     Styles.Style.ParseStyleAttributesWithDefaults( reader, ref mStyle, ref ControlStyles.mList );
+
+                    // check for attributes we support
+                    RectangleF bounds = new RectangleF( );
+                    SizeF parentSize = new SizeF( parentParams.Width, parentParams.Height );
+                    ParseCommonAttribs( reader, ref parentSize, ref bounds );
+
+                    // Get margins and padding
+                    RectangleF padding;
+                    RectangleF margin;
+                    GetMarginsAndPadding( ref mStyle, ref parentSize, ref bounds, out margin, out padding );
+
+                    // apply margins to as much of the bounds as we can (bottom must be done by our parent container)
+                    ApplyImmediateMargins( ref bounds, ref margin, ref parentSize );
+                    Margin = margin;
 
                     // check for border styling
                     int borderPaddingPx = 0;
@@ -90,13 +100,6 @@ namespace CCVApp
                     }
                     //
 
-                    // parse for the desired list style. Default to Bullet if they didn't put anything.
-                    string listTypeStr = reader.GetAttribute( "Type" );
-                    if( string.IsNullOrEmpty( listTypeStr ) == true)
-                    {
-                        listTypeStr = ListTypeBullet;
-                    }
-
                     // convert indentation if it's a percentage
                     float listIndentation = mStyle.mListIndention.Value;
                     if( listIndentation < 1 )
@@ -104,42 +107,17 @@ namespace CCVApp
                         listIndentation = parentParams.Width * listIndentation;
                     }
 
-
-                    // LEFT/TOP POSITIONING
-                    if( bounds.X < 1 )
-                    {
-                        // convert % to pixel, based on parent's width
-                        bounds.X = parentParams.Width * bounds.X;
-                    }
-
-                    if( bounds.Y < 1 )
-                    {
-                        // convert % to pixel, based on parent's width
-                        bounds.Y = parentParams.Height * bounds.Y;
-                    }
-
-                    //WIDTH
-                    if( bounds.Width == 0 )
-                    {
-                        // if 0, just take the our parents width
-                        bounds.Width = Math.Max( 1, parentParams.Width - bounds.X );
-                    }
-                    // if < 1 it's a percent and we should convert
-                    else if( bounds.Width <= 1 )
-                    {
-                        bounds.Width = Math.Max( 1, parentParams.Width - bounds.X ) * bounds.Width;
-                    }
-
-                    // PADDING
-                    float leftPadding = Styles.Style.GetStyleValue( mStyle.mPaddingLeft, parentParams.Width );
-                    float rightPadding = Styles.Style.GetStyleValue( mStyle.mPaddingRight, parentParams.Width );
-                    float topPadding = Styles.Style.GetStyleValue( mStyle.mPaddingTop, parentParams.Height );
-                    float bottomPadding = Styles.Style.GetStyleValue( mStyle.mPaddingBottom, parentParams.Height );
-
                     // now calculate the available width based on padding. (Don't actually change our width)
                     // also consider the indention amount of the list.
-                    float availableWidth = bounds.Width - leftPadding - rightPadding - listIndentation - (borderPaddingPx * 2);
+                    float availableWidth = bounds.Width - padding.Left - padding.Width - listIndentation - (borderPaddingPx * 2);
 
+
+                    // parse for the desired list style. Default to Bullet if they didn't put anything.
+                    string listTypeStr = reader.GetAttribute( "Type" );
+                    if( string.IsNullOrEmpty( listTypeStr ) == true)
+                    {
+                        listTypeStr = ListTypeBullet;
+                    }
 
                     // Parse Child Controls
                     int numberedCount = 1;
@@ -211,17 +189,18 @@ namespace CCVApp
 
                     // layout all controls
                     float xAdjust = bounds.X + listIndentation; 
-                    float yOffset = bounds.Y + topPadding + borderPaddingPx; //vertically they should just stack
+                    float yOffset = bounds.Y + padding.Top + borderPaddingPx; //vertically they should just stack
 
                     // we know each child is a NoteText followed by ListItem. So, lay them out 
                     // as: * - ListItem
                     //     * - ListItem
                     foreach( IUIControl control in ChildControls )
                     {
-                        RectangleF controlFrame = control.GetFrame( );
-
                         // position the control
-                        control.AddOffset( xAdjust + leftPadding + borderPaddingPx, yOffset );
+                        control.AddOffset( xAdjust + padding.Left + borderPaddingPx, yOffset );
+
+                        RectangleF controlFrame = control.GetFrame( );
+                        RectangleF controlMargin = control.GetMargin( );
 
                         // is this the item prefix?
                         if( (control as NoteText) != null )
@@ -233,14 +212,14 @@ namespace CCVApp
                         {
                             // reset the values for the next line.
                             xAdjust = bounds.X + listIndentation;
-                            yOffset = control.GetFrame( ).Bottom;
+                            yOffset = controlFrame.Bottom + controlMargin.Height;
                         }
                     }
 
                     // we need to store our bounds. We cannot
                     // calculate them on the fly because we
                     // would lose any control defined offsets, which would throw everything off.
-                    bounds.Height = ( yOffset - bounds.Y ) + bottomPadding + borderPaddingPx;
+                    bounds.Height = ( yOffset - bounds.Y ) + padding.Height + borderPaddingPx;
                     Bounds = bounds;
 
                     BorderView.Frame = bounds;

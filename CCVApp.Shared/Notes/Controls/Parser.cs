@@ -35,55 +35,56 @@ namespace CCVApp
                     throw new Exception( String.Format( "Control of type {0} does not exist.", reader.Name ) );
                 }
 
-                public static void ParseBounds( XmlReader reader, ref RectangleF bounds )
+                public static void ParseBounds( XmlReader reader, ref SizeF parentSize, ref RectangleF bounds )
                 {
                     // first check without the Margin prefix.
                     string result = reader.GetAttribute( "Left" );
                     if( string.IsNullOrEmpty( result ) == false )
                     {
-                        bounds.X = ParseBoundValue( result );
+                        bounds.X = ParsePositioningValue( result );
                     }
 
                     result = reader.GetAttribute( "Top" );
                     if( string.IsNullOrEmpty( result ) == false )
                     {
-                        bounds.Y = ParseBoundValue( result );
+                        bounds.Y = ParsePositioningValue( result );
                     }
-
                     //TODO: Support Right, Bottom
-
-
-                    // now with the margin prefix. And it's ok if it overwrites the equivalent non-margin version.
-                    result = reader.GetAttribute( "MarginLeft" );
-                    if( string.IsNullOrEmpty( result ) == false )
-                    {
-                        bounds.X = ParseBoundValue( result );
-                    }
-
-                    result = reader.GetAttribute( "MarginTop" );
-                    if( string.IsNullOrEmpty( result ) == false )
-                    {
-                        bounds.Y = ParseBoundValue( result );
-                    }
-
-                    //TODO: Support MarginRight / MarginBottom
-
 
                     // Get width/height
                     result = reader.GetAttribute( "Width" );
                     if( string.IsNullOrEmpty( result ) == false )
                     {
-                        bounds.Width = ParseBoundValue( result );
+                        bounds.Width = ParsePositioningValue( result );
                     }
 
                     result = reader.GetAttribute( "Height" );
                     if( string.IsNullOrEmpty( result ) == false )
                     {
-                        bounds.Height = ParseBoundValue( result );
+                        bounds.Height = ParsePositioningValue( result );
+                    }
+
+                    // Convert percentages to whole values
+                    if( bounds.X < 1 )
+                    {
+                        bounds.X = parentSize.Width * bounds.X;
+                    }
+                    if( bounds.Y < 1 )
+                    {
+                        bounds.Y = parentSize.Height * bounds.Y;
+                    }
+                    if( bounds.Width < 1 )
+                    {
+                        bounds.Width = Math.Max( 1, parentSize.Width - bounds.X ) * bounds.Width;
+                        if( bounds.Width == 0 )
+                        {
+                            // if 0, just take the our parents width
+                            bounds.Width = Math.Max( 1, parentSize.Width - bounds.X );
+                        }
                     }
                 }
 
-                static float ParseBoundValue( string value )
+                public static float ParsePositioningValue( string value )
                 {
                     float denominator = 1.0f;
                     if( value.Contains( "%" ) )
@@ -94,7 +95,6 @@ namespace CCVApp
 
                     return float.Parse( value ) / denominator;
                 }
-
 
                 // Return a rect that contains both rects A and B (sort of a bounding box)
                 public static RectangleF CalcBoundingFrame( RectangleF frameA, RectangleF frameB )

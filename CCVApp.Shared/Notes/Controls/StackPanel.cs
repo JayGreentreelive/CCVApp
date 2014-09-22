@@ -63,13 +63,23 @@ namespace CCVApp
                 {
                     Initialize( );
 
-                    // check for attributes we support
-                    RectangleF bounds = new RectangleF( );
-                    ParseCommonAttribs( reader, ref bounds );
-
-                    // take our parent's style but override with anything we set
+                    // Always get our style first
                     mStyle = parentParams.Style;
                     Styles.Style.ParseStyleAttributesWithDefaults( reader, ref mStyle, ref ControlStyles.mStackPanel );
+
+                    // check for attributes we support
+                    RectangleF bounds = new RectangleF( );
+                    SizeF parentSize = new SizeF( parentParams.Width, parentParams.Height );
+                    ParseCommonAttribs( reader, ref parentSize, ref bounds );
+
+                    // Get margins and padding
+                    RectangleF padding;
+                    RectangleF margin;
+                    GetMarginsAndPadding( ref mStyle, ref parentSize, ref bounds, out margin, out padding );
+
+                    // apply margins to as much of the bounds as we can (bottom must be done by our parent container)
+                    ApplyImmediateMargins( ref bounds, ref margin, ref parentSize );
+                    Margin = margin;
 
                     // check for border styling
                     int borderPaddingPx = 0;
@@ -102,6 +112,9 @@ namespace CCVApp
                     }
                     //
 
+                    // now calculate the available width based on padding. (Don't actually change our width)
+                    float availableWidth = bounds.Width - padding.Left - padding.Width - (borderPaddingPx * 2);
+
                     // now read what our children's alignment should be
                     // check for alignment
                     string result = reader.GetAttribute( "ChildAlignment" );
@@ -133,43 +146,9 @@ namespace CCVApp
                     }
                     else
                     {
-                        // if it wasn't specified, use OUR alignment.
-                        ChildHorzAlignment = mStyle.mAlignment.Value;
+                        // if it wasn't specified, use left alignment.
+                        ChildHorzAlignment = Alignment.Left;
                     }
-
-                    // LEFT/TOP POSITIONING
-                    if( bounds.X < 1 )
-                    {
-                        // convert % to pixel, based on parent's width
-                        bounds.X = parentParams.Width * bounds.X;
-                    }
-
-                    if( bounds.Y < 1 )
-                    {
-                        // convert % to pixel, based on parent's width
-                        bounds.Y = parentParams.Height * bounds.Y;
-                    }
-
-                    //WIDTH
-                    if( bounds.Width == 0 )
-                    {
-                        // if 0, just take the our parents width
-                        bounds.Width = Math.Max( 1, parentParams.Width - bounds.X );
-                    }
-                    // if < 1 it's a percent and we should convert
-                    else if( bounds.Width <= 1 )
-                    {
-                        bounds.Width = Math.Max( 1, parentParams.Width - bounds.X ) * bounds.Width;
-                    }
-
-                    // PADDING
-                    float leftPadding = Styles.Style.GetStyleValue( mStyle.mPaddingLeft, parentParams.Width );
-                    float rightPadding = Styles.Style.GetStyleValue( mStyle.mPaddingRight, parentParams.Width );
-                    float topPadding = Styles.Style.GetStyleValue( mStyle.mPaddingTop, parentParams.Height );
-                    float bottomPadding = Styles.Style.GetStyleValue( mStyle.mPaddingBottom, parentParams.Height );
-
-                    // now calculate the available width based on padding. (Don't actually change our width)
-                    float availableWidth = bounds.Width - leftPadding - rightPadding - (borderPaddingPx * 2);
 
 
                     // Parse Child Controls
@@ -205,7 +184,7 @@ namespace CCVApp
                         }
                     }
 
-                    LayoutStackPanel( bounds, leftPadding, topPadding, availableWidth, bottomPadding, borderPaddingPx );
+                    LayoutStackPanel( bounds, padding.Left, padding.Top, availableWidth, padding.Height, borderPaddingPx );
                 }
 
                 protected void LayoutStackPanel( RectangleF bounds, float leftPadding, float topPadding, float availableWidth, float bottomPadding, float borderPaddingPx )
@@ -217,6 +196,7 @@ namespace CCVApp
                     foreach( IUIControl control in ChildControls )
                     {
                         RectangleF controlFrame = control.GetFrame( );
+                        RectangleF controlMargin = control.GetMargin( );
 
                         // horizontally position the controls according to their 
                         // requested alignment
@@ -233,7 +213,7 @@ namespace CCVApp
                             }
                             case Alignment.Right:
                             {
-                                xAdjust = bounds.X + ( availableWidth - controlFrame.Width );
+                                xAdjust = bounds.X + ( availableWidth - (controlFrame.Width + controlMargin.Width) );
                                 break;
                             }
                             case Alignment.Left:
@@ -247,7 +227,7 @@ namespace CCVApp
                         control.AddOffset( xAdjust + leftPadding + borderPaddingPx, yOffset );
 
                         // and the next sibling must begin there
-                        yOffset = control.GetFrame( ).Bottom;
+                        yOffset = control.GetFrame( ).Bottom + controlMargin.Height;
                     }
 
                     // we need to store our bounds. We cannot

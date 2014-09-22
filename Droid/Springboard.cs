@@ -137,20 +137,24 @@ namespace Droid
             {
                 case MotionEventActions.Up:
                 {
-                    // no matter what, close the springboard
-                    NavbarFragment.RevealSpringboard( false );
-
-                    // did we tap a button?
-                    SpringboardElement element = Elements.Where( el => el.Button == v ).SingleOrDefault();
-                    if( element != null )
+                    // only allow changing tasks via button press if the springboard is open 
+                    if( NavbarFragment.SpringboardRevealed == true )
                     {
-                        // did we tap within the revealed springboard area?
-                        float visibleButtonWidth = NavbarFragment.View.Width * CCVApp.Shared.Config.PrimaryNavBar.RevealPercentage;
-                        if( e.GetX() < visibleButtonWidth )
+                        // no matter what, close the springboard
+                        NavbarFragment.RevealSpringboard( false );
+
+                        // did we tap a button?
+                        SpringboardElement element = Elements.Where( el => el.Button == v ).SingleOrDefault();
+                        if( element != null )
                         {
-                            // we did, so activate the element associated with that button
-                            ActiveElementIndex = Elements.IndexOf( element ); 
-                            ActivateElement( element );
+                            // did we tap within the revealed springboard area?
+                            float visibleButtonWidth = NavbarFragment.View.Width * CCVApp.Shared.Config.PrimaryNavBar.RevealPercentage;
+                            if( e.GetX() < visibleButtonWidth )
+                            {
+                                // we did, so activate the element associated with that button
+                                ActiveElementIndex = Elements.IndexOf( element ); 
+                                ActivateElement( element );
+                            }
                         }
                     }
                     break;

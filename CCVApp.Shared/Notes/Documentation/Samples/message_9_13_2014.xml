@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Note StyleSheet="http://www.jeredmcferron.com/sample_style.xml">    
-    <Header>
+    <Header MarginBottom="5%">
         <Title>#WISDOM - GETTING DIRECTIONS</Title>
         <Speaker>Ashley Wooldridge</Speaker>
         <Date>September 13 &amp; 14, 2014</Date>
@@ -12,11 +12,11 @@
 		<RevealBox>DIRECTION,</RevealBox> not intention, determines our <RevealBox>DESTINATION.</RevealBox> 
 	</Paragraph>
 	
-	<Quote MarginTop="5%" Citation="Proverbs 4:26-27">
+	<Quote MarginTop="10%" Citation="Proverbs 4:26-27">
 		Give careful thought to the paths for your feet and be steadfast in all your ways. 
 		Do not turn to the right or the left; keep your foot from evil.
 	</Quote>
-	
+
 	<Paragraph MarginTop="10%">Our problem with direction:</Paragraph>
 	
 	<Paragraph>

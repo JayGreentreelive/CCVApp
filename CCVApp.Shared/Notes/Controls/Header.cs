@@ -60,13 +60,23 @@ namespace CCVApp
                 {
                     Initialize( );
 
-                    // check for attributes we support
-                    RectangleF bounds = new RectangleF( );
-                    ParseCommonAttribs( reader, ref bounds );
-
-                    // take our parent's style but override with anything we set
+                    // Always get our style first
                     mStyle = parentParams.Style;
                     Styles.Style.ParseStyleAttributesWithDefaults( reader, ref mStyle, ref ControlStyles.mHeaderContainer );
+
+                    // check for attributes we support
+                    RectangleF bounds = new RectangleF( );
+                    SizeF parentSize = new SizeF( parentParams.Width, parentParams.Height );
+                    ParseCommonAttribs( reader, ref parentSize, ref bounds );
+
+                    // Get margins and padding
+                    RectangleF padding;
+                    RectangleF margin;
+                    GetMarginsAndPadding( ref mStyle, ref parentSize, ref bounds, out margin, out padding );
+
+                    // apply margins to as much of the bounds as we can (bottom must be done by our parent container)
+                    ApplyImmediateMargins( ref bounds, ref margin, ref parentSize );
+                    Margin = margin;
 
                     // check for border styling
                     int borderPaddingPx = 0;
@@ -99,38 +109,8 @@ namespace CCVApp
                     }
                     //
 
-                    // if our left position is requested as a %, then that needs to be % of parent width
-                    if( bounds.X < 1 )
-                    {
-                        bounds.X = parentParams.Width * bounds.X;
-                    }
-
-                    // if our top position is requested as a %, then that needs to be % of parent width
-                    if( bounds.Y < 1 )
-                    {
-                        bounds.Y = parentParams.Height * bounds.Y;
-                    }
-
-                    //WIDTH
-                    if( bounds.Width == 0 )
-                    {
-                        // if 0, just take the our parents width
-                        bounds.Width = Math.Max( 1, parentParams.Width - bounds.X );
-                    }
-                    // if < 1 it's a percent and we should convert
-                    else if( bounds.Width <= 1 )
-                    {
-                        bounds.Width = Math.Max( 1, parentParams.Width - bounds.X ) * bounds.Width;
-                    }
-
-                    // PADDING
-                    float leftPadding = Styles.Style.GetStyleValue( mStyle.mPaddingLeft, parentParams.Width );
-                    float rightPadding = Styles.Style.GetStyleValue( mStyle.mPaddingRight, parentParams.Width );
-                    float topPadding = Styles.Style.GetStyleValue( mStyle.mPaddingTop, parentParams.Height );
-                    float bottomPadding = Styles.Style.GetStyleValue( mStyle.mPaddingBottom, parentParams.Height );
-
                     // now calculate the available width based on padding. (Don't actually change our width)
-                    float availableWidth = bounds.Width - leftPadding - rightPadding - (borderPaddingPx * 2);
+                    float availableWidth = bounds.Width - padding.Left - padding.Width - (borderPaddingPx * 2);
 
 
                     bool finishedHeader = false;
@@ -149,7 +129,7 @@ namespace CCVApp
                                     {   
                                         // check for attributes we support
                                         RectangleF elementBounds = new RectangleF( 0, 0, availableWidth, parentParams.Height );
-                                        Parser.ParseBounds( reader, ref elementBounds );
+                                        Parser.ParseBounds( reader, ref parentSize, ref elementBounds );
 
                                         ParseHeaderElement( reader, availableWidth, parentParams.Height, mStyle.mBackgroundColor.Value, out mTitle, ref elementBounds, ref ControlStyles.mHeaderTitle );
                                         break;
@@ -159,7 +139,7 @@ namespace CCVApp
                                     {
                                         // check for attributes we support
                                         RectangleF elementBounds = new RectangleF( 0, 0, availableWidth, parentParams.Height );
-                                        Parser.ParseBounds( reader, ref elementBounds );
+                                        Parser.ParseBounds( reader, ref parentSize, ref elementBounds );
 
                                         ParseHeaderElement( reader, availableWidth, parentParams.Height, mStyle.mBackgroundColor.Value, out mDate, ref elementBounds, ref ControlStyles.mHeaderDate );
                                         break;
@@ -169,7 +149,7 @@ namespace CCVApp
                                     {
                                         // check for attributes we support
                                         RectangleF elementBounds = new RectangleF( 0, 0, availableWidth, parentParams.Height );
-                                        Parser.ParseBounds( reader, ref elementBounds );
+                                        Parser.ParseBounds( reader, ref parentSize, ref elementBounds );
 
                                         ParseHeaderElement( reader, availableWidth, parentParams.Height, mStyle.mBackgroundColor.Value, out mSpeaker, ref elementBounds, ref ControlStyles.mHeaderSpeaker );
                                         break;
@@ -191,22 +171,22 @@ namespace CCVApp
                     }
 
                     // offset the controls according to our layout
-                    mTitle.Position = new PointF( mTitle.Position.X + bounds.X + leftPadding + borderPaddingPx, 
-                                                  mTitle.Position.Y + bounds.Y + topPadding + borderPaddingPx );
+                    mTitle.Position = new PointF( mTitle.Position.X + bounds.X + padding.Left + borderPaddingPx, 
+                                                  mTitle.Position.Y + bounds.Y + padding.Top + borderPaddingPx );
 
                     // guarantee date and speaker are below title.
-                    mDate.Position = new PointF( mDate.Position.X + bounds.X + leftPadding + borderPaddingPx, 
-                                                 mTitle.Frame.Bottom + mDate.Position.Y + bounds.Y + topPadding );
+                    mDate.Position = new PointF( mDate.Position.X + bounds.X + padding.Left + borderPaddingPx, 
+                                                 mTitle.Frame.Bottom + mDate.Position.Y + bounds.Y + padding.Top );
 
-                    mSpeaker.Position = new PointF( mSpeaker.Position.X + bounds.X + leftPadding + borderPaddingPx, 
-                                                    mTitle.Frame.Bottom + mSpeaker.Position.Y + bounds.Y + topPadding );
+                    mSpeaker.Position = new PointF( mSpeaker.Position.X + bounds.X + padding.Left + borderPaddingPx, 
+                                                    mTitle.Frame.Bottom + mSpeaker.Position.Y + bounds.Y + padding.Top );
 
                     // determine the lowest control
                     float bottomY = mSpeaker.Frame.Bottom > mTitle.Frame.Bottom ? mSpeaker.Frame.Bottom : mTitle.Frame.Bottom;
                     bottomY = bottomY > mDate.Frame.Bottom ? bottomY : mDate.Frame.Bottom;
 
                     // set our bounds
-                    Frame = new RectangleF( bounds.X, bounds.Y, bounds.Width + borderPaddingPx, bottomY + bottomPadding + borderPaddingPx);
+                    Frame = new RectangleF( bounds.X, bounds.Y, bounds.Width, (bottomY + padding.Height + borderPaddingPx) - bounds.Y);
 
                     BorderView.Frame = Frame;
 
@@ -217,25 +197,14 @@ namespace CCVApp
                 {
                     element = PlatformLabel.Create( );
 
-                    // if our left position is requested as a %, then that needs to be % of parent width
-                    if( elementBounds.X < 1 )
-                    {
-                        elementBounds.X = parentWidth * elementBounds.X;
-                    }
-
-                    // if our top position is requested as a %, then that needs to be % of parent width
-                    if( elementBounds.Y < 1 )
-                    {
-                        elementBounds.Y = parentHeight * elementBounds.Y;
-                    }
-
                     // header elements are weird with styles. We don't want any of our parent's styles,
                     // so we create our own and mix that with our defaults
                     Styles.Style elementStyle = new Styles.Style( );
                     elementStyle.Initialize( );
                     elementStyle.mBackgroundColor = parentBGColor; //one exception is background color. We do want to inherit that.
-
                     Styles.Style.ParseStyleAttributesWithDefaults( reader, ref elementStyle, ref defaultStyle );
+
+                    // Note: Margins and padding are not supported by the individual elements of the header.
 
                     element.SetFont( elementStyle.mFont.mName, elementStyle.mFont.mSize.Value );
                     element.TextColor = elementStyle.mFont.mColor.Value;

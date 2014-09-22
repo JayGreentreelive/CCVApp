@@ -28,7 +28,11 @@ namespace iOS
             }
 
             NotesViewController.NotePresentableName = string.Format( "Sermon Note - {0}.{1}.{2}", time.Month, time.Day, time.Year );
+            #if DEBUG
+            NotesViewController.NoteName = "sample_note";
+            #else
             NotesViewController.NoteName = string.Format("{0}_{1}_{2}_{3}", CCVApp.Shared.Config.Note.NamePrefix, time.Month, time.Day, time.Year );
+            #endif
             //
 
             // set our current page as root

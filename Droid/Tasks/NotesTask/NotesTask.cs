@@ -28,7 +28,12 @@ namespace Droid
                         time = time.Subtract( new TimeSpan( (int)time.DayOfWeek + 1, 0, 0, 0 ) );
                     }
                     MainPage.NotePresentableName = string.Format( "Sermon Note - {0}.{1}.{2}", time.Month, time.Day, time.Year );
+
+                    #if DEBUG
+                    MainPage.NoteName = "sample_note";
+                    #else
                     MainPage.NoteName = string.Format("{0}_{1}_{2}_{3}", CCVApp.Shared.Config.Note.NamePrefix, time.Month, time.Day, time.Year );
+                    #endif
                     //
 
                     MainPage.ParentTask = this;

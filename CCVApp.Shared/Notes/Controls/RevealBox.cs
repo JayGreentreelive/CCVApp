@@ -32,29 +32,25 @@ namespace CCVApp
                     Revealed = false;
 
                     PlatformLabel = PlatformLabel.CreateRevealLabel( );
-
                     PlatformLabel.SetFade( 0.0f );
+
+                    // Always get our style first
+                    mStyle = parentParams.Style;
+                    Styles.Style.ParseStyleAttributesWithDefaults( reader, ref mStyle, ref ControlStyles.mRevealBox );
 
                     // check for attributes we support
                     RectangleF bounds = new RectangleF( );
-                    ParseCommonAttribs( reader, ref bounds );
+                    SizeF parentSize = new SizeF( parentParams.Width, parentParams.Height );
+                    ParseCommonAttribs( reader, ref parentSize, ref bounds );
 
-                    // if our left position is requested as a %, then that needs to be % of parent width
-                    if( bounds.X < 1 )
-                    {
-                        bounds.X = parentParams.Width * bounds.X;
-                    }
+                    // Get margins and padding
+                    RectangleF padding;
+                    RectangleF margin;
+                    GetMarginsAndPadding( ref mStyle, ref parentSize, ref bounds, out margin, out padding );
 
-                    // if our top position is requested as a %, then that needs to be % of parent width
-                    if( bounds.Y < 1 )
-                    {
-                        bounds.Y = parentParams.Height * bounds.Y;
-                    }
-
-
-                    // take our parent's style but override with anything we set
-                    mStyle = parentParams.Style;
-                    Styles.Style.ParseStyleAttributesWithDefaults( reader, ref mStyle, ref ControlStyles.mRevealBox );
+                    // apply margins to as much of the bounds as we can (bottom must be done by our parent container)
+                    ApplyImmediateMargins( ref bounds, ref margin, ref parentSize );
+                    Margin = margin;
 
                     // create the font that either we or our parent defined
                     PlatformLabel.SetFont( mStyle.mFont.mName, mStyle.mFont.mSize.Value );

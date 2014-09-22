@@ -36,6 +36,7 @@ namespace Droid
         Button ShareButton { get; set; }
         bool ShareButtonDisplayed { get; set; }
         bool ShareButtonEnabledPreSuspension { get; set; }
+        EventHandler ShareButtonDelegate { get; set; }
 
         bool Revealed { get; set; }
 
@@ -198,7 +199,16 @@ namespace Droid
 
         public void DisplayShareButton( bool display, EventHandler sharePressed )
         {
+            // if there's a current delegate listening, remove it
+            if( ShareButtonDelegate != null )
+            {
+                ShareButton.Click -= ShareButtonDelegate;
+            }
+
+            // set the new one and store a reference to it
             ShareButton.Click += sharePressed;
+
+            ShareButtonDelegate = sharePressed;
 
             ShareButtonDisplayed = display;
 

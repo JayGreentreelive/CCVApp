@@ -92,6 +92,26 @@ namespace CCVApp
                     public float? mPaddingBottom;
 
                     /// <summary>
+                    /// Amount of margin space along the left edge of the control.
+                    /// </summary>
+                    public float? mMarginLeft;
+
+                    /// <summary>
+                    /// Amount of margin space along the top edge of the control.
+                    /// </summary>
+                    public float? mMarginTop;
+
+                    /// <summary>
+                    /// Amount of margin space along the right edge of the control.
+                    /// </summary>
+                    public float? mMarginRight;
+
+                    /// <summary>
+                    /// Amount of margin space along the bottom edge of the control.
+                    /// </summary>
+                    public float? mMarginBottom;
+
+                    /// <summary>
                     /// The character to use for list bullet points
                     /// </summary>
                     public string mListBullet;
@@ -132,9 +152,10 @@ namespace CCVApp
                     }
 
                     // Utility function for retrieving a value without knowing if it's percent or not.
-                    public static float GetStyleValue( float? value, float valueForPerc )
+                    public static float GetValueForNullable( float? value, float valueForPerc, float nullDefault )
                     {
-                        float styleValue = 0;
+                        // set the default value we'll return if value is null.
+                        float styleValue = nullDefault;
 
                         if( value.HasValue )
                         {
@@ -166,6 +187,20 @@ namespace CCVApp
                     }
 
                     // Utility function for parsing common style attributes
+                    public static void ParseStyleAttributesWithDefaults( XmlReader reader, ref Style style, ref Style defaultStyle )
+                    {
+                        // This builds a style with the following conditions
+                        // Values from XML come first. This means the control specifically asked for this.
+                        // Values already set come second. This means the parent specifically asked for this.
+                        // Values from defaultStyle come last. This means no one set the style, so it should use the control default.
+
+                        // first use the normal parsing, which will result in a style with potential null values.
+                        ParseStyleAttributes( reader, ref style );
+
+                        // Lastly, merge defaultStyle values for anything null in style 
+                        MergeStyleAttributesWithDefaults( ref style, ref defaultStyle );
+                    }
+
                     public static void ParseStyleAttributes( XmlReader reader, ref Style style )
                     {
                         // This builds a style with the following conditions
@@ -285,6 +320,8 @@ namespace CCVApp
                         }
                         else
                         {
+                            // the control didn't request a value, so set null which will prevent
+                            // inheritence and get the default value here.
                             style.mBorderRadius = null;
                         }
 
@@ -292,32 +329,21 @@ namespace CCVApp
                         result = reader.GetAttribute( "Padding" );
                         if( string.IsNullOrEmpty( result ) == false )
                         {
-                            float denominator = 1.0f;
-                            if( result.Contains( "%" ) )
-                            {
-                                result = result.Trim( '%' );
-                                denominator = 100.0f;
-                            }
-
                             // set it for all padding values
-                            style.mPaddingLeft = float.Parse( result ) / denominator;
+                            style.mPaddingLeft = Parser.ParsePositioningValue( result );
                             style.mPaddingTop = style.mPaddingLeft;
                             style.mPaddingRight = style.mPaddingLeft;
                             style.mPaddingBottom = style.mPaddingLeft;
                         }
                         else
                         {
+                            // for anything NullOrEmpty, it means the control didn't request a value, 
+                            // so set null which will prevent inheritence and get the default value here.
+
                             result = reader.GetAttribute( "PaddingLeft" );
                             if( string.IsNullOrEmpty( result ) == false )
                             {
-                                float denominator = 1.0f;
-                                if( result.Contains( "%" ) )
-                                {
-                                    result = result.Trim( '%' );
-                                    denominator = 100.0f;
-                                }
-
-                                style.mPaddingLeft = float.Parse( result ) / denominator;
+                                style.mPaddingLeft = Parser.ParsePositioningValue( result );
                             }
                             else
                             {
@@ -327,14 +353,7 @@ namespace CCVApp
                             result = reader.GetAttribute( "PaddingTop" );
                             if( string.IsNullOrEmpty( result ) == false )
                             {
-                                float denominator = 1.0f;
-                                if( result.Contains( "%" ) )
-                                {
-                                    result = result.Trim( '%' );
-                                    denominator = 100.0f;
-                                }
-
-                                style.mPaddingTop = float.Parse( result ) / denominator;
+                                style.mPaddingTop = Parser.ParsePositioningValue( result );
                             }
                             else
                             {
@@ -344,14 +363,7 @@ namespace CCVApp
                             result = reader.GetAttribute( "PaddingRight" );
                             if( string.IsNullOrEmpty( result ) == false )
                             {
-                                float denominator = 1.0f;
-                                if( result.Contains( "%" ) )
-                                {
-                                    result = result.Trim( '%' );
-                                    denominator = 100.0f;
-                                }
-
-                                style.mPaddingRight = float.Parse( result ) / denominator;
+                                style.mPaddingRight = Parser.ParsePositioningValue( result );
                             }
                             else
                             {
@@ -361,34 +373,68 @@ namespace CCVApp
                             result = reader.GetAttribute( "PaddingBottom" );
                             if( string.IsNullOrEmpty( result ) == false )
                             {
-                                float denominator = 1.0f;
-                                if( result.Contains( "%" ) )
-                                {
-                                    result = result.Trim( '%' );
-                                    denominator = 100.0f;
-                                }
-
-                                style.mPaddingBottom = float.Parse( result ) / denominator;
+                                style.mPaddingBottom = Parser.ParsePositioningValue( result );
                             }
                             else
                             {
                                 style.mPaddingBottom = null;
                             }
                         }
-                    }
 
-                    public static void ParseStyleAttributesWithDefaults( XmlReader reader, ref Style style, ref Style defaultStyle )
-                    {
-                        // This builds a style with the following conditions
-                        // Values from XML come first. This means the control specifically asked for this.
-                        // Values already set come second. This means the parent specifically asked for this.
-                        // Values from defaultStyle come last. This means no one set the style, so it should use the control default.
+                        // check for margin; DOES NOT INHERIT
+                        result = reader.GetAttribute( "Margin" );
+                        if( string.IsNullOrEmpty( result ) == false )
+                        {
+                            style.mMarginLeft = Parser.ParsePositioningValue( result );
+                            style.mMarginTop = style.mMarginLeft;
+                            style.mMarginRight = style.mMarginLeft;
+                            style.mMarginBottom = style.mMarginLeft;
+                        }
+                        else
+                        {
+                            // for anything NullOrEmpty, it means the control didn't request a value, 
+                            // so set null which will prevent inheritence and get the default value here.
 
-                        // first use the normal parsing, which will result in a style with potential null values.
-                        ParseStyleAttributes( reader, ref style );
+                            result = reader.GetAttribute( "MarginLeft" );
+                            if( string.IsNullOrEmpty( result ) == false )
+                            {
+                                style.mMarginLeft = Parser.ParsePositioningValue( result );
+                            }
+                            else
+                            {
+                                style.mMarginLeft = null;
+                            }
 
-                        // Lastly, merge defaultStyle values for anything null in style 
-                        MergeStyleAttributesWithDefaults( ref style, ref defaultStyle );
+                            result = reader.GetAttribute( "MarginTop" );
+                            if( string.IsNullOrEmpty( result ) == false )
+                            {
+                                style.mMarginTop = Parser.ParsePositioningValue( result );
+                            }
+                            else
+                            {
+                                style.mMarginTop = null;
+                            }
+
+                            result = reader.GetAttribute( "MarginRight" );
+                            if( string.IsNullOrEmpty( result ) == false )
+                            {
+                                style.mMarginRight = Parser.ParsePositioningValue( result );
+                            }
+                            else
+                            {
+                                style.mMarginRight = null;
+                            }
+
+                            result = reader.GetAttribute( "MarginBottom" );
+                            if( string.IsNullOrEmpty( result ) == false )
+                            {
+                                style.mMarginBottom = Parser.ParsePositioningValue( result );
+                            }
+                            else
+                            {
+                                style.mMarginBottom = null;
+                            }
+                        }
                     }
 
                     public static void MergeStyleAttributesWithDefaults( ref Style style, ref Style defaultStyle )
@@ -473,6 +519,27 @@ namespace CCVApp
                         if( style.mPaddingBottom.HasValue == false )
                         {
                             style.mPaddingBottom = defaultStyle.mPaddingBottom;
+                        }
+
+                        // check for margin
+                        if( style.mMarginLeft.HasValue == false )
+                        {
+                            style.mMarginLeft = defaultStyle.mMarginLeft;
+                        }
+
+                        if( style.mMarginTop.HasValue == false )
+                        {
+                            style.mMarginTop = defaultStyle.mMarginTop;
+                        }
+
+                        if( style.mMarginRight.HasValue == false )
+                        {
+                            style.mMarginRight = defaultStyle.mMarginRight;
+                        }
+
+                        if( style.mMarginBottom.HasValue == false )
+                        {
+                            style.mMarginBottom = defaultStyle.mMarginBottom;
                         }
 
                         // check for background color
@@ -591,11 +658,6 @@ namespace CCVApp
                     mHeaderContainer = new Styles.Style( );
                     mHeaderContainer.Initialize();
                     mHeaderContainer.mAlignment = Styles.Alignment.Left;
-                    mHeaderContainer.mPaddingLeft = 0;
-                    mHeaderContainer.mPaddingTop = 0;
-                    mHeaderContainer.mPaddingRight = 0;
-                    mHeaderContainer.mPaddingBottom = 0;
-
 
                     // Title should be large, bevan, centered and white
                     // Also, prefer an upper case title.

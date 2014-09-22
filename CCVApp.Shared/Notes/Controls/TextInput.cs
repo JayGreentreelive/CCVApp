@@ -33,13 +33,23 @@ namespace CCVApp
                 {
                     Initialize( );
 
-                    // check for attributes we support
-                    RectangleF bounds = new RectangleF( );
-                    ParseCommonAttribs( reader, ref bounds );
-
-                    // take our parent's style but override with anything we set
+                    // Always get our style first
                     mStyle = parentParams.Style;
                     Styles.Style.ParseStyleAttributesWithDefaults( reader, ref mStyle, ref ControlStyles.mTextInput );
+
+                    // check for attributes we support
+                    RectangleF bounds = new RectangleF( );
+                    SizeF parentSize = new SizeF( parentParams.Width, parentParams.Height );
+                    ParseCommonAttribs( reader, ref parentSize, ref bounds );
+
+                    // Get margins and padding
+                    RectangleF padding;
+                    RectangleF margin;
+                    GetMarginsAndPadding( ref mStyle, ref parentSize, ref bounds, out margin, out padding );
+
+                    // apply margins to as much of the bounds as we can (bottom must be done by our parent container)
+                    ApplyImmediateMargins( ref bounds, ref margin, ref parentSize );
+                    Margin = margin;
 
                     // create the font that either we or our parent defined
                     TextField.SetFont( mStyle.mFont.mName, mStyle.mFont.mSize.Value );
@@ -73,30 +83,7 @@ namespace CCVApp
                         }
                     }
 
-                    // if our left position is requested as a %, then that needs to be % of parent width
-                    if( bounds.X < 1 )
-                    {
-                        bounds.X = parentParams.Width * bounds.X;
-                    }
-
-                    // if our top position is requested as a %, then that needs to be % of parent width
-                    if( bounds.Y < 1 )
-                    {
-                        bounds.Y = parentParams.Height * bounds.Y;
-                    }
-
-                    //WIDTH
-                    if( bounds.Width == 0 )
-                    {
-                        // if 0, just take the our parents width
-                        bounds.Width = Math.Max( 1, parentParams.Width - bounds.X );
-                    }
-                    // if < 1 it's a percent and we should convert
-                    else if( bounds.Width <= 1 )
-                    {
-                        bounds.Width = Math.Max( 1, parentParams.Width - bounds.X ) * bounds.Width;
-                    }
-
+                   
                     // set the dimensions and position
                     TextField.Bounds = bounds;
                     TextField.Placeholder = " ";
@@ -161,7 +148,7 @@ namespace CCVApp
 
                     // size to fit to calculate the height, then reset our width with that height.
                     TextField.SizeToFit( );
-                    TextField.Frame = new RectangleF( bounds.X, bounds.Y, parentParams.Width, TextField.Bounds.Height );
+                    TextField.Frame = new RectangleF( bounds.X, bounds.Y, bounds.Width, TextField.Bounds.Height );
 
                     // set the color of the hint text
                     TextField.PlaceholderTextColor = mStyle.mFont.mColor.Value;

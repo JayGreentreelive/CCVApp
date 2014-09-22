@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Styles>
      <Note Padding="5%" BackgroundColor="#1c1c1cFF"/>
-     <Paragraph PaddingBottom="1%"/>
+     <Paragraph/>
      <RevealBox FontName="Bevan" FontSize="12" FontColor="#6d1c1cFF"/>
-     <Quote FontName="Merriweather-BoldItalic" FontSize="12" FontColor="#6d1c1cFF"/>
-     <TextInput FontName="Bevan" FontSize="10" FontColor="#AFAFAFFF"/>
+     <Quote FontName="Merriweather-BoldItalic" FontSize="12" FontColor="#b52e2eFF"/>
+
+     <TextInput BorderWidth="2" BorderRadius="5" FontName="Bevan" FontSize="10" FontColor="#AFAFAFFF"/>
      
      <UserNote BorderWidth="2" BorderRadius="5" BorderColor="#777777FF" TextInputBackgroundColor="#FFFFFFFF"/>
      
-     <Header.Container PaddingBottom="5%" Alignment="Center"/>
+     <Header.Container MarginBottom="5%" BorderWidth="2" BorderRadius="3" BorderColor="#777777FF" Alignment="Left"/>
      <Header.Title Alignment="Center" FontName="Bevan" FontSize="18" FontColor="#AFAFAFFF"/>
      <Header.Speaker FontName="Bevan" FontSize="12" FontColor="#AFAFAFFF"/>
      <Header.Date FontName="Bevan" FontSize="12" FontColor="#AFAFAFFF"/>

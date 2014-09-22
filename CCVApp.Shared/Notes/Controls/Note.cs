@@ -216,31 +216,21 @@ namespace CCVApp
                 {
                     DeviceHeight = parentHeight;
 
-                    // check for attributes we support
-                    RectangleF bounds = new RectangleF( );
-                    Parser.ParseBounds( reader, ref bounds );
-
-                    // LEFT/TOP POSITIONING
-                    if( bounds.X < 1 )
-                    {
-                        // convert % to pixel, based on parent's width
-                        bounds.X = parentWidth * bounds.X;
-                    }
-
-                    if( bounds.Y < 1 )
-                    {
-                        // convert % to pixel, based on parent's width
-                        bounds.Y = parentHeight * bounds.Y;
-                    }
-
-                    // check for any styles requested in XML
+                    // get the style first
                     Styles.Style.ParseStyleAttributesWithDefaults( reader, ref mStyle, ref ControlStyles.mMainNote );
 
+                    // check for attributes we support
+                    RectangleF bounds = new RectangleF( );
+                    SizeF parentSize = new SizeF( parentWidth, parentHeight );
+                    Parser.ParseBounds( reader, ref parentSize, ref bounds );
+
+                    // Parent note doesn't support margins.
+
                     // PADDING
-                    float leftPadding = Styles.Style.GetStyleValue( mStyle.mPaddingLeft, parentWidth );
-                    float rightPadding = Styles.Style.GetStyleValue( mStyle.mPaddingRight, parentWidth );
-                    float topPadding = Styles.Style.GetStyleValue( mStyle.mPaddingTop, parentHeight );
-                    float bottomPadding = Styles.Style.GetStyleValue( mStyle.mPaddingBottom, parentHeight );
+                    float leftPadding = Styles.Style.GetValueForNullable( mStyle.mPaddingLeft, parentWidth, 0 );
+                    float rightPadding = Styles.Style.GetValueForNullable( mStyle.mPaddingRight, parentWidth, 0 );
+                    float topPadding = Styles.Style.GetValueForNullable( mStyle.mPaddingTop, parentHeight, 0 );
+                    float bottomPadding = Styles.Style.GetValueForNullable( mStyle.mPaddingBottom, parentHeight, 0 );
 
                     // now calculate the available width based on padding. (Don't actually change our width)
                     float availableWidth = parentWidth - leftPadding - rightPadding;
@@ -277,6 +267,7 @@ namespace CCVApp
                     foreach( IUIControl control in ChildControls )
                     {
                         RectangleF controlFrame = control.GetFrame( );
+                        RectangleF controlMargin = control.GetMargin( );
 
                         // horizontally position the controls according to their 
                         // requested alignment
@@ -293,7 +284,7 @@ namespace CCVApp
                             }
                             case Alignment.Right:
                             {
-                                xAdjust = bounds.X + ( availableWidth - controlFrame.Width );
+                                xAdjust = bounds.X + ( availableWidth - (controlFrame.Width + controlMargin.Width) );
                                 break;
                             }
                             case Alignment.Left:
@@ -307,7 +298,7 @@ namespace CCVApp
                         control.AddOffset( xAdjust + leftPadding, yOffset );
 
                         // and the next sibling must begin there
-                        yOffset = control.GetFrame( ).Bottom;
+                        yOffset = control.GetFrame( ).Bottom + controlMargin.Height;
                     }
 
                     bounds.Width = parentWidth;

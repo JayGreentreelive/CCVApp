@@ -37,6 +37,12 @@ namespace CCVApp
                 protected Style mStyle;
 
                 /// <summary>
+                /// The margin, needed when the parent aligns this control.
+                /// </summary>
+                /// <value>The margin.</value>
+                protected RectangleF Margin { get; set; }
+
+                /// <summary>
                 /// Used to pass creation params from parent to child.
                 /// </summary>
                 public class CreateParams
@@ -78,10 +84,10 @@ namespace CCVApp
                 {
                 }
 
-                protected virtual void ParseCommonAttribs( XmlReader reader, ref RectangleF bounds )
+                protected void ParseCommonAttribs( XmlReader reader, ref SizeF parentSize, ref RectangleF bounds )
                 {
                     // check for positioning attribs
-                    Parser.ParseBounds( reader, ref bounds );
+                    Parser.ParseBounds( reader, ref parentSize, ref bounds );
 
                     // check for a debug frame
                     #if DEBUG
@@ -96,6 +102,75 @@ namespace CCVApp
                     }
                     #endif
                 }
+
+                protected void GetMarginsAndPadding( ref Style style, ref SizeF parentSize, ref RectangleF bounds, out RectangleF margin, out RectangleF padding )
+                {
+                    padding = new RectangleF( );
+                    margin = new RectangleF( );
+
+                    // get padding values (this will ensure we get 0 if padding is null)
+                    padding.X = Styles.Style.GetValueForNullable( style.mPaddingLeft, parentSize.Width, 0 );
+                    padding.Width = Styles.Style.GetValueForNullable( style.mPaddingRight, parentSize.Width, 0 );
+                    padding.Y = Styles.Style.GetValueForNullable( style.mPaddingTop, parentSize.Height, 0 );
+                    padding.Height = Styles.Style.GetValueForNullable( style.mPaddingBottom, parentSize.Height, 0 );
+
+                    // get margin values (this will ensure we get 0 if padding is null)
+                    margin.X = Styles.Style.GetValueForNullable( style.mMarginLeft, parentSize.Width, 0 );
+
+                    // width needs to be the reciprocal (where 10% becomes 90%)
+                    margin.Width = Styles.Style.GetValueForNullable( style.mMarginRight, parentSize.Width, 0 );
+
+                    float remainingWidth = parentSize.Width - bounds.X;
+                    margin.Width = remainingWidth - (remainingWidth - margin.Width);
+
+                    margin.Y = Styles.Style.GetValueForNullable( style.mMarginTop, parentSize.Height, 0 );
+                    margin.Height = Styles.Style.GetValueForNullable( style.mMarginBottom, parentSize.Height, 0 );
+                }
+
+                protected void ApplyImmediateMargins( ref RectangleF bounds, ref RectangleF margin, ref SizeF parentSize )
+                {
+                    // this will apply the margins to our bounds that we can apply.
+                    // Bottom margin can only be applied by our parent, because we don't know where the
+                    // next control will go.
+                    bounds.X += margin.Left;
+                    bounds.Y += margin.Top;
+                    bounds.Width = Math.Min( bounds.Width, (parentSize.Width - margin.Width) - margin.Left );
+                }
+
+                /*protected void PrepareMargins( ref SizeF parentSize, ref RectangleF bounds, ref RectangleF margins )
+                {
+                    // inflate any margins that were percentages
+                    if( margins.X < 1 )
+                    {
+                        margins.X = parentSize.Width * margins.X;
+                    }
+
+                    if( margins.Y < 1 )
+                    {
+                        margins.Y = parentSize.Height * margins.Y;
+                    }
+
+                    float remainingWidth = parentSize.Width - bounds.X;
+                    if( margins.Width < 1 )
+                    {
+                        //margins.Width = remainingWidth - (remainingWidth * (1.0f - margins.Width));
+                        margins.Width = remainingWidth - (remainingWidth - margins.Width);
+                    }
+                    else
+                    {
+                        margins.Width = remainingWidth - margins.Width;
+                    }
+
+                    if( margins.Height < 1 )
+                    {
+                        margins.Height = parentSize.Height * margins.Height;
+                    }
+
+                    // apply margins to as much of the bounds as we can (bottom must be done by our parent container)
+                    bounds.X += margins.Left;
+                    bounds.Y += margins.Top;
+                    bounds.Width = Math.Min( bounds.Width, (parentSize.Width - margins.Width) - margins.Left );
+                }*/
 
                 public void SetDebugFrame( RectangleF frame )
                 {
@@ -193,10 +268,15 @@ namespace CCVApp
                 public virtual void GetNotesForEmail( List<PlatformBaseUI> controlList )
                 {
                 }
-
+                
                 public virtual RectangleF GetFrame( )
                 {
                     return new RectangleF( );
+                }
+
+                public RectangleF GetMargin( )
+                {
+                    return Margin;
                 }
 
                 public virtual bool ShouldShowBulletPoint( )
@@ -208,4 +288,3 @@ namespace CCVApp
         }
     }
 }
-    

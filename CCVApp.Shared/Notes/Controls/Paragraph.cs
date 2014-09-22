@@ -60,13 +60,23 @@ namespace CCVApp
                 {
                     Initialize( );
 
-                    // check for attributes we support
-                    RectangleF bounds = new RectangleF( );
-                    ParseCommonAttribs( reader, ref bounds );
-
-                    // take our parent's style but override with anything we set
+                    // Always get our style first
                     mStyle = parentParams.Style;
                     Styles.Style.ParseStyleAttributesWithDefaults( reader, ref mStyle, ref ControlStyles.mParagraph );
+
+                    // check for attributes we support
+                    RectangleF bounds = new RectangleF( );
+                    SizeF parentSize = new SizeF( parentParams.Width, parentParams.Height );
+                    ParseCommonAttribs( reader, ref parentSize, ref bounds );
+
+                    // Get margins and padding
+                    RectangleF padding;
+                    RectangleF margin;
+                    GetMarginsAndPadding( ref mStyle, ref parentSize, ref bounds, out margin, out padding );
+
+                    // apply margins to as much of the bounds as we can (bottom must be done by our parent container)
+                    ApplyImmediateMargins( ref bounds, ref margin, ref parentSize );
+                    Margin = margin;
 
                     // check for border styling
                     int borderPaddingPx = 0;
@@ -98,6 +108,9 @@ namespace CCVApp
                         }
                     }
                     //
+
+                    // now calculate the available width based on padding. (Don't actually change our width)
+                    float availableWidth = bounds.Width - padding.Left - padding.Width - (borderPaddingPx * 2);
 
 
                     // now read what our children's alignment should be
@@ -134,41 +147,6 @@ namespace CCVApp
                         // if it wasn't specified, use LEFT alignment.
                         ChildHorzAlignment = Alignment.Left;
                     }
-
-                    // if our left position is requested as a %, then that needs to be % of parent width
-                    if( bounds.X < 1 )
-                    {
-                        bounds.X = parentParams.Width * bounds.X;
-                    }
-
-                    // if our top position is requested as a %, then that needs to be % of parent width
-                    if( bounds.Y < 1 )
-                    {
-                        bounds.Y = parentParams.Height * bounds.Y;
-                    }
-
-                    //WIDTH
-                    if( bounds.Width == 0 )
-                    {
-                        // if 0, just take the our parents width
-                        bounds.Width = Math.Max( 1, parentParams.Width - bounds.X );
-                    }
-                    // if < 1 it's a percent and we should convert
-                    else if( bounds.Width <= 1 )
-                    {
-                        bounds.Width = Math.Max( 1, parentParams.Width - bounds.X ) * bounds.Width;
-                    }
-
-                    // PADDING
-                    float leftPadding = Styles.Style.GetStyleValue( mStyle.mPaddingLeft, parentParams.Width );
-                    float rightPadding = Styles.Style.GetStyleValue( mStyle.mPaddingRight, parentParams.Width );
-                    float topPadding = Styles.Style.GetStyleValue( mStyle.mPaddingTop, parentParams.Height );
-                    float bottomPadding = Styles.Style.GetStyleValue( mStyle.mPaddingBottom, parentParams.Height );
-
-                    // now calculate the available width based on padding. (Don't actually change our width)
-                    float availableWidth = bounds.Width - leftPadding - rightPadding - (borderPaddingPx * 2);
-
-                    //bool didAddInteractiveControl = false;
 
                     bool finishedReading = false;
                     while( finishedReading == false && reader.Read( ) )
@@ -269,11 +247,11 @@ namespace CCVApp
 
                     // track where within a row we need to start a control
                     float rowRemainingWidth = availableWidth;
-                    float startingX = bounds.X + leftPadding + borderPaddingPx;
+                    float startingX = bounds.X + padding.Left + borderPaddingPx;
 
                     // always store the last placed control's height so that should 
                     // our NEXT control need to wrap, we know how far down to wrap.
-                    float yOffset = bounds.Y + topPadding + borderPaddingPx;
+                    float yOffset = bounds.Y + padding.Top + borderPaddingPx;
                     float lastControlHeight = 0;
                     float rowWidth = 0;
 
@@ -293,7 +271,7 @@ namespace CCVApp
 
                             // Reset values for the new row
                             rowRemainingWidth = availableWidth;
-                            startingX = bounds.X + leftPadding + borderPaddingPx;
+                            startingX = bounds.X + padding.Left + borderPaddingPx;
                             lastControlHeight = 0;
                             rowWidth = 0;
 
@@ -319,8 +297,8 @@ namespace CCVApp
                     }
 
                     // give each row the legal bounds it may work with
-                    RectangleF availableBounds = new RectangleF( bounds.X + leftPadding + borderPaddingPx, 
-                                                                 bounds.Y + borderPaddingPx + topPadding, 
+                    RectangleF availableBounds = new RectangleF( bounds.X + padding.Left + borderPaddingPx, 
+                                                                 bounds.Y + borderPaddingPx + padding.Top, 
                                                                  availableWidth, 
                                                                  bounds.Height );
 
@@ -343,7 +321,7 @@ namespace CCVApp
 
                     frame.Y = bounds.Y;
                     frame.X = bounds.X;
-                    frame.Height += bottomPadding + topPadding + (borderPaddingPx * 2); //add in padding
+                    frame.Height += padding.Height + padding.Top + (borderPaddingPx * 2); //add in padding
                     frame.Width = bounds.Width;
 
 
