@@ -194,7 +194,7 @@ namespace CCVApp
                     TextField.SetFont( mStyle.mFont.mName, mStyle.mFont.mSize.Value );
                     TextField.TextColor = mStyle.mFont.mColor.Value;
                     TextField.Placeholder = "Enter note";
-                    TextField.PlaceholderTextColor = mStyle.mFont.mColor.Value;
+                    TextField.PlaceholderTextColor = CCVApp.Shared.Config.Note.UserNote_PlaceholderTextColor;
                      
                     // check for border styling
                     if ( mStyle.mBorderColor.HasValue )

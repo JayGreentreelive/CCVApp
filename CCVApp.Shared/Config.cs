@@ -308,7 +308,10 @@ namespace CCVApp
                 /// 
                 public const int UserNote_DeleteIconSize = 24;
 
-                public const int UserNote_MinDistance = 50;
+                /// <summary>
+                /// Color of the placeholder text displayed when the note is empty.
+                /// </summary>
+                public const uint UserNote_PlaceholderTextColor = 0xc7c7cdFF;
 
                 /// <summary>
                 /// The amount to scale the navBarReveal amount by for Android.
