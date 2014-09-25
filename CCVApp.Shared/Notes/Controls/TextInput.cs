@@ -184,9 +184,13 @@ namespace CCVApp
                     TryRemoveDebugLayer( obj );
                 }
 
-                public override void GetNotesForEmail( List<PlatformBaseUI> controlList )
+                public override void BuildHTMLContent( ref string htmlStream, List<IUIControl> userNotes )
                 {
-                    controlList.Add( TextField );
+                    htmlStream += TextField.Text;
+                }
+                public override PlatformBaseUI GetPlatformControl()
+                {
+                    return TextField;
                 }
 
                 public override RectangleF GetFrame( )

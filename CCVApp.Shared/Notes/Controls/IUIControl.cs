@@ -35,7 +35,9 @@ namespace CCVApp
 
                 bool ShouldShowBulletPoint();
 
-                void GetNotesForEmail( List<PlatformBaseUI> controlList );
+                void BuildHTMLContent( ref string htmlStream, List<IUIControl> userNotes );
+
+                PlatformBaseUI GetPlatformControl( );
             }
         }
     }

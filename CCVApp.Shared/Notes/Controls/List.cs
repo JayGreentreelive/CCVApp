@@ -226,6 +226,9 @@ namespace CCVApp
 
                     // store our debug frame
                     SetDebugFrame( Bounds );
+
+                    // sort everything
+                    ChildControls.Sort( BaseControl.Sort );
                 }
 
                 public override bool TouchesEnded( PointF touch )
@@ -296,12 +299,21 @@ namespace CCVApp
                     return ChildControls;
                 }
 
-                public override void GetNotesForEmail( List<PlatformBaseUI> controlList )
+                public override void BuildHTMLContent( ref string htmlStream, List<IUIControl> userNotes )
                 {
+                    // todo: any markup we want here
+                    htmlStream += "<p>LIST START</p>";
+
                     foreach( IUIControl control in ChildControls )
                     {
-                        control.GetNotesForEmail( controlList );
+                        control.BuildHTMLContent( ref htmlStream, userNotes );
                     }
+
+                    // handle user notes
+                    EmbedIntersectingUserNotes( ref htmlStream, userNotes );
+
+                    htmlStream += "<p>LIST END</p>";
+                    // closing markup
                 }
 
                 public override bool ShouldShowBulletPoint( )

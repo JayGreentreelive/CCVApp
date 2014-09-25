@@ -308,15 +308,17 @@ namespace CCVApp
                 /// 
                 public const int UserNote_DeleteIconSize = 24;
 
-                /// <summary>
-                /// The rate of scrolling "up" required to reveal the nav bar.
-                /// </summary>
-                public const float ScrollRateForNavBarReveal = -150;
+                public const int UserNote_MinDistance = 50;
 
                 /// <summary>
                 /// The amount to scale the navBarReveal amount by for Android.
                 /// </summary>
                 public const float ScrollRateForNavBarReveal_AndroidScalar = .75f;
+
+                /// <summary>
+                /// The rate of scrolling "up" required to reveal the nav bar.
+                /// </summary>
+                public const float ScrollRateForNavBarReveal = -75;
 
                 /// <summary>
                 /// The rate of scrolling "down" required to hide the nav bar.

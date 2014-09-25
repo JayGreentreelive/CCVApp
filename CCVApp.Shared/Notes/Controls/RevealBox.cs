@@ -3,6 +3,7 @@ using System.Xml;
 using System.Drawing;
 using Rock.Mobile.PlatformUI;
 using CCVApp.Shared.Notes.Model;
+using System.Collections.Generic;
 
 namespace CCVApp
 {
@@ -160,6 +161,16 @@ namespace CCVApp
                 public NoteState.RevealBoxState GetState( )
                 {
                     return new NoteState.RevealBoxState( PlatformLabel.Text, Revealed );
+                }
+
+                public override PlatformBaseUI GetPlatformControl()
+                {
+                    return PlatformLabel;
+                }
+
+                public override void BuildHTMLContent( ref string htmlStream, List<IUIControl> userNotes )
+                {
+                    htmlStream += PlatformLabel.Text;
                 }
 
                 public void SetRevealed( bool revealed )

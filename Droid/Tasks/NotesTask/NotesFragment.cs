@@ -282,8 +282,8 @@ namespace Droid
                             string noteString = null;
                             Note.GetNotesForEmail( out noteString );
 
-                            sendIntent.PutExtra( Intent.ExtraText, noteString );
-                            sendIntent.SetType( "text/plain" );
+                            sendIntent.PutExtra( Intent.ExtraText, Android.Text.Html.FromHtml( noteString ) );
+                            sendIntent.SetType( "text/html" );
                             StartActivity( sendIntent );
                         } );
 

@@ -319,11 +319,16 @@ namespace CCVApp
                     return Frame;
                 }
 
-                public override void GetNotesForEmail( List<PlatformBaseUI> controlList )
+                public override void BuildHTMLContent( ref string htmlStream, List<IUIControl> userNotes )
                 {
-                    controlList.Add( mTitle );
-                    controlList.Add( mSpeaker );
-                    controlList.Add( mDate );
+                    // todo: any markup we want here
+                    htmlStream += "<h1>" + mTitle.Text + "</h1>" + 
+                                  "<h3>" + mSpeaker.Text + "&nbsp;&nbsp;&nbsp;" + mDate.Text + "</h3><br>";
+
+
+                    // handle user notes
+                    EmbedIntersectingUserNotes( ref htmlStream, userNotes );
+                    // closing markup
                 }
 
                 public override bool ShouldShowBulletPoint( )

@@ -1,29 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Note StyleSheet="http://www.jeredmcferron.com/sample_style.xml">    
-	<StackPanel BorderWidth="1" BorderRadius="4" BorderColor="#777777FF">
-	    <Header>
-	        <Title>#WISDOM - ANGER</Title>
-	        <Speaker>Todd Clark</Speaker>
-	        <Date>September 20 &amp; 21, 2014</Date>
-	    </Header>
-	    <RevealBox Margin="5%" Debug="True">STAY</RevealBox>
-	</StackPanel>
+    <Header MarginBottom="5%">
+        <Title>#WISDOM - ANGER</Title>
+        <Speaker>Todd Clark</Speaker>
+        <Date>September 20 &amp; 21, 2014</Date>
+    </Header>
 
-    <List Debug="True" Margin="15%" Indentation="0%" BulletPoint="⚓︎">
-    	<ListItem Margin="15%">
-			<Quote Citation="Proverbs 20:2 (MSG)"></Quote>
+    <List Indentation="0%" BulletPoint="⚓︎">
+    	<ListItem>
+			<Quote MarginBottom="0%" Citation="Proverbs 20:2 (MSG)"></Quote>
 		</ListItem>
 		
 		<ListItem>
-			<Quote Citation="Proverbs 22:24 (NIV)"></Quote>
+			<Quote MarginBottom="0%" Citation="Proverbs 22:24 (NIV)"></Quote>
 		</ListItem>
 		
 		<ListItem>
-			<Quote Citation="Proverbs 29:11 (GNT)"></Quote>
+			<Quote MarginBottom="0%" Citation="Proverbs 29:11 (GNT)"></Quote>
 		</ListItem>
 
 		<ListItem>
-			<Quote Citation="Proverbs 14:29 (MSG)"></Quote>
+			<Quote MarginBottom="0%" Citation="Proverbs 14:29 (MSG)"></Quote>
 		</ListItem>
 	</List>
 
@@ -36,7 +33,7 @@
 			<Quote MarginBottom="2%" Citation="Ephesians 4:26a"></Quote>
 
 			<Paragraph MarginBottom="5%" MarginLeft="10%">
-					Anger is a <RevealBox>NEUTRAL</RevealBox> emotion.
+				Anger is a <RevealBox>NEUTRAL</RevealBox> emotion.
 			</Paragraph>
 		</ListItem>
 
@@ -55,7 +52,7 @@
 
 	<List MarginTop="5%" Indentation="0%" BulletPoint="☂">
 		<ListItem>
-			<Quote Debug="True" Margin="15%" Citation="Ephesians 4:27"></Quote>
+			<Quote Citation="Ephesians 4:27"></Quote>
 		</ListItem>
 
 		<ListItem>
@@ -77,5 +74,5 @@
 		</ListItem>
 	</List>
 
-	<TextInput Margin="15%" PlaceHolder="Takeaway"></TextInput>
+	<Paragraph MarginTop="5%" >TAKE AWAY: <TextInput PlaceHolder="Takeaway"></TextInput></Paragraph>
 </Note>

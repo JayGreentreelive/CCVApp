@@ -149,12 +149,21 @@ namespace CCVApp
                     return ChildControls[0].ShouldShowBulletPoint( );
                 }
 
-                public override void GetNotesForEmail( List<PlatformBaseUI> controlList )
+                public override void BuildHTMLContent( ref string htmlStream, List<IUIControl> userNotes )
                 {
+                    // todo: any markup we want here
+                    htmlStream += "<p>LIST ITEM START</p>";
+
                     foreach( IUIControl control in ChildControls )
                     {
-                        control.GetNotesForEmail( controlList );
+                        control.BuildHTMLContent( ref htmlStream, userNotes );
                     }
+
+                    // handle user notes
+                    EmbedIntersectingUserNotes( ref htmlStream, userNotes );
+
+                    // closing markup
+                    htmlStream += "<p>LIST ITEM END</p>";
                 }
 
                 protected override List<IUIControl> GetChildControls( )

@@ -274,10 +274,15 @@ namespace CCVApp
                     TryRemoveDebugLayer( obj );
                 }
 
-                public override void GetNotesForEmail( List<PlatformBaseUI> controlList )
+                public override void BuildHTMLContent( ref string htmlStream, List<IUIControl> userNotes )
                 {
-                    controlList.Add( QuoteLabel );
-                    controlList.Add( Citation );
+                    // todo: any markup we want here
+                    htmlStream += "<q>" + QuoteLabel.Text + "&nbsp; - " + Citation.Text + "</q>";
+
+                    // handle user notes
+                    EmbedIntersectingUserNotes( ref htmlStream, userNotes );
+
+                    // closing markup
                 }
 
                 public override RectangleF GetFrame( )

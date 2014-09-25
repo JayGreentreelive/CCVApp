@@ -580,59 +580,34 @@ namespace CCVApp
                     }
                 }
 
-                public void GetNotesForEmail( out string emailString )
+                public void GetNotesForEmail( out string htmlStream )
                 {
                     // first setup the string that will contain the notes
-                    emailString = "";
+                    htmlStream = "<!DOCTYPE html PUBLIC \"-//IETF//DTD HTML 2.0//EN\">\n<HTML><Body>\n";
 
-                    // go through all controls, and let them place their text labels into a list.
-                    List<PlatformBaseUI> controlList = new List<PlatformBaseUI>( );
+                    // make a COPY of the user notes so the html stream generator can modify it
+                    IUIControl[] userNotes = UserNoteControls.ToArray( );
+
+                    List<IUIControl> userNoteListCopy = new List<IUIControl>( );
+                    for(int i = 0; i < userNotes.Length; i++)
+                    {
+                        userNoteListCopy.Add( userNotes[i] );
+                    }
+
+
+                    // let each control recursively build its html stream.
+                    // provide the user note list so it can embed user notes in the appropriate spots.
                     foreach( IUIControl control in ChildControls )
                     {
-                        control.GetNotesForEmail( controlList );
+                        control.BuildHTMLContent( ref htmlStream, userNoteListCopy );
                     }
 
-                    // add the user notes!
-                    foreach( IUIControl control in UserNoteControls )
+                    // if there happened to be any user note that wasn't already added, drop it in at the bottom
+                    if( userNoteListCopy.Count > 0)
                     {
-                        control.GetNotesForEmail( controlList );
-                    }
-
-                    // sort by y. This is important in case the XML lists the text in one order,
-                    // but when positioned on screen it's in another. This ensures the 
-                    // user receives it in the same order they read it on the device.
-                    controlList.Sort( delegate(PlatformBaseUI x, PlatformBaseUI y) 
+                        foreach( UserNote note in userNoteListCopy )
                         {
-                            // if Y is the same, check X.
-                            if( y.Frame.Y == x.Frame.Y )
-                            {
-                                if( y.Frame.X == x.Frame.X )
-                                {
-                                    return 0;
-                                }
-                                return y.Frame.X > x.Frame.X ? -1 : 1;
-                            }
-                            return y.Frame.Y > x.Frame.Y ? -1 : 1;
-                        });
-
-
-                    // now generate our text
-                    float currentY = controlList[0].Frame.Y;
-
-                    foreach( PlatformBaseUI uiObject in controlList )
-                    {
-                        PlatformBaseLabelUI label = uiObject as PlatformBaseLabelUI;
-                        if( label != null )
-                        {
-                            // if this label has a lower Y, put a carriage
-                            // return before the word.
-                            if( currentY < label.Frame.Y )
-                            {
-                                currentY = label.Frame.Y;
-                                emailString += "\r\n\r\n";
-                            }
-
-                            emailString += label.Text;
+                            htmlStream += "UserNote - " + note.GetContent( ).Text + "\n";
                         }
                     }
                 }

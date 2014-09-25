@@ -25,8 +25,14 @@ namespace Droid
             }
             else
             {
-                this.Window.AddFlags(WindowManagerFlags.Fullscreen);
+                Window.AddFlags(WindowManagerFlags.Fullscreen);
             }
+
+            /*if(Build.VERSION.SdkInt >= BuildVersionCodes.Kitkat) 
+            {
+                //KitKat only code here
+                //Window.AddFlags( WindowManagerFlags.TranslucentNavigation );
+            }*/
 
             // default our app to protrait mode, and let the notes change it.
             RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;

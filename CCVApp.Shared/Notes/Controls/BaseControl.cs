@@ -64,6 +64,23 @@ namespace CCVApp
                     }
                 }
 
+                public static int Sort(IUIControl x, IUIControl y) 
+                {
+                    RectangleF xFrame = x.GetFrame( );
+                    RectangleF yFrame = y.GetFrame( );
+
+                    // if Y is the same, check X.
+                    if( yFrame.Y == xFrame.Y )
+                    {
+                        if( yFrame.X == xFrame.X )
+                        {
+                            return 0;
+                        }
+                        return yFrame.X > xFrame.X ? -1 : 1;
+                    }
+                    return yFrame.Y > xFrame.Y ? -1 : 1;
+                }
+
                 protected virtual void Initialize( )
                 {
                     mStyle = new Style( );
@@ -137,41 +154,6 @@ namespace CCVApp
                     bounds.Width = Math.Min( bounds.Width, (parentSize.Width - margin.Width) - margin.Left );
                 }
 
-                /*protected void PrepareMargins( ref SizeF parentSize, ref RectangleF bounds, ref RectangleF margins )
-                {
-                    // inflate any margins that were percentages
-                    if( margins.X < 1 )
-                    {
-                        margins.X = parentSize.Width * margins.X;
-                    }
-
-                    if( margins.Y < 1 )
-                    {
-                        margins.Y = parentSize.Height * margins.Y;
-                    }
-
-                    float remainingWidth = parentSize.Width - bounds.X;
-                    if( margins.Width < 1 )
-                    {
-                        //margins.Width = remainingWidth - (remainingWidth * (1.0f - margins.Width));
-                        margins.Width = remainingWidth - (remainingWidth - margins.Width);
-                    }
-                    else
-                    {
-                        margins.Width = remainingWidth - margins.Width;
-                    }
-
-                    if( margins.Height < 1 )
-                    {
-                        margins.Height = parentSize.Height * margins.Height;
-                    }
-
-                    // apply margins to as much of the bounds as we can (bottom must be done by our parent container)
-                    bounds.X += margins.Left;
-                    bounds.Y += margins.Top;
-                    bounds.Width = Math.Min( bounds.Width, (parentSize.Width - margins.Width) - margins.Left );
-                }*/
-
                 public void SetDebugFrame( RectangleF frame )
                 {
                     #if DEBUG
@@ -196,6 +178,31 @@ namespace CCVApp
 
                 public virtual void RemoveFromView( object obj )
                 {
+                }
+
+                public void EmbedIntersectingUserNotes( ref string htmlStream, List<IUIControl> userNotes )
+                {
+                    // this will test to see if any notes in the userNotes list intersect
+                    // the Y region of our bounding box. If any do, they will be embedded in the htmlStrea
+                    // and then removed from the list so other controls don't embed then.
+
+                    RectangleF controlFrame = GetFrame( );
+                    RectangleF userNoteFrame;
+
+                    for( int i = userNotes.Count - 1; i >= 0; i-- )
+                    {
+                        UserNote note = (UserNote) userNotes[ i ];
+                        userNoteFrame = note.GetFrame( );
+
+                        // if the user note is within the bounding vertical box of this control, embed it here
+                        if( userNoteFrame.Y >= controlFrame.Y && userNoteFrame.Y <= controlFrame.Bottom )
+                        {
+                            note.BuildHTMLContent( ref htmlStream, null );
+
+                            // this note has been placed, so remove it from the list.
+                            userNotes.Remove( userNotes[ i ] );
+                        }
+                    }
                 }
 
                 public void TryAddDebugLayer( object obj )
@@ -265,8 +272,13 @@ namespace CCVApp
                     return null;
                 }
 
-                public virtual void GetNotesForEmail( List<PlatformBaseUI> controlList )
+                public virtual void BuildHTMLContent( ref string htmlStream, List<IUIControl> userNotes )
                 {
+                }
+
+                public virtual PlatformBaseUI GetPlatformControl( )
+                {
+                    return null;
                 }
                 
                 public virtual RectangleF GetFrame( )

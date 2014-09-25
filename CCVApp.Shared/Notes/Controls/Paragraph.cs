@@ -148,6 +148,8 @@ namespace CCVApp
                         ChildHorzAlignment = Alignment.Left;
                     }
 
+                    bool removedLeadingWhitespace = false;
+
                     bool finishedReading = false;
                     while( finishedReading == false && reader.Read( ) )
                     {
@@ -165,7 +167,10 @@ namespace CCVApp
                                     }
                                     ChildControls.Add( control );
 
-                                    //didAddInteractiveControl = true;
+                                    // flag that whitespace is removed, because either
+                                    // this was the first control and we didn't want to, or
+                                    // it was removed by the first text we created.
+                                    removedLeadingWhitespace = true;
                                 }
                                 break;
                             }
@@ -181,13 +186,18 @@ namespace CCVApp
                                 // grab the text. remove any weird characters
                                 string text = Regex.Replace( reader.Value, @"\t|\n|\r", "" );
 
+                                if( removedLeadingWhitespace == false )
+                                {
+                                    removedLeadingWhitespace = true;
+                                    text = text.TrimStart( ' ' );
+                                }
 
                                 // Note - Treating the entire block of text as a single NoteText has an advantage and disadvantage.
                                 // The advantage is it's extremely fast. It causes note creation to go from 1500ms to about 800ms in debug.
                                 // The disadvantage is we can't have quite as precise word wrapping. So, if the ENTIRE block of text doesn't fit on the line,
                                 // it will be forced to the line below. This is extremely rare tho, and I've never seen it in normal notes.
                                 // If it does become an issue, we can revert to the slower code below.
-                                NoteText textLabel = new NoteText( new CreateParams( this, availableWidth, parentParams.Height, ref textStyle ), text + " " );
+                                NoteText textLabel = new NoteText( new CreateParams( this, availableWidth, parentParams.Height, ref textStyle ), text );
                                 ChildControls.Add( textLabel );
 
                                 /*
@@ -337,6 +347,9 @@ namespace CCVApp
 
                     Frame = frame;
                     SetDebugFrame( Frame );
+
+                    // sort everything
+                    ChildControls.Sort( BaseControl.Sort );
                 }
 
                 void AlignRow( RectangleF bounds, List<IUIControl> currentRow, float maxWidth )
@@ -450,12 +463,21 @@ namespace CCVApp
                     TryRemoveDebugLayer( obj );
                 }
 
-                public override void GetNotesForEmail( List<PlatformBaseUI> controlList )
+                public override void BuildHTMLContent( ref string htmlStream, List<IUIControl> userNotes )
                 {
+                    // todo: any markup we want here
+                    htmlStream += "<p>";
+
                     foreach( IUIControl control in ChildControls )
                     {
-                        control.GetNotesForEmail( controlList );
+                        control.BuildHTMLContent( ref htmlStream, userNotes );
                     }
+
+                    // handle user notes
+                    EmbedIntersectingUserNotes( ref htmlStream, userNotes );
+
+                    htmlStream += "</p>";
+                    // closing markup
                 }
 
                 public override RectangleF GetFrame( )

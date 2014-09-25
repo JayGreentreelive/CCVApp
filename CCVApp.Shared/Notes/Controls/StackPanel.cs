@@ -242,6 +242,9 @@ namespace CCVApp
 
                     // store our debug frame
                     SetDebugFrame( Frame );
+
+                    // sort everything
+                    ChildControls.Sort( BaseControl.Sort );
                 }
 
                 public override bool TouchesEnded( PointF touch )
@@ -313,12 +316,19 @@ namespace CCVApp
                     return false;
                 }
 
-                public override void GetNotesForEmail( List<PlatformBaseUI> controlList )
+                public override void BuildHTMLContent( ref string htmlStream, List<IUIControl> userNotes )
                 {
+                    htmlStream += "<p>STACK PANEL START</p>";
+
                     foreach( IUIControl control in ChildControls )
                     {
-                        control.GetNotesForEmail( controlList );
+                        control.BuildHTMLContent( ref htmlStream, userNotes );
                     }
+
+                    // handle user notes
+                    EmbedIntersectingUserNotes( ref htmlStream, userNotes );
+
+                    htmlStream += "<p>STACK PANEL END</p>";
                 }
 
                 protected override List<IUIControl> GetChildControls( )

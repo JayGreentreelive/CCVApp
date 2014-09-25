@@ -601,9 +601,9 @@ namespace CCVApp
                     return TextField.Frame;
                 }
 
-                public override void GetNotesForEmail( List<PlatformBaseUI> controlList )
+                public override void BuildHTMLContent( ref string htmlStream, List<IUIControl> userNotes )
                 {
-                    controlList.Add( TextField );
+                    htmlStream += "<br><br>User Note - " + TextField.Text + "<br><br>";
                 }
 
                 public Notes.Model.NoteState.UserNoteContent GetContent( )
