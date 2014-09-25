@@ -11,6 +11,7 @@ using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
+using CCVApp.Shared.Network;
 
 namespace Droid
 {
@@ -59,6 +60,10 @@ namespace Droid
         /// </summary>
         /// <value>The navbar fragment.</value>
         protected NavbarFragment NavbarFragment { get; set; }
+        protected LoginFragment LoginFragment { get; set; }
+
+        protected ImageButton LoginButton { get; set; }
+        protected TextView UserNameField { get; set; }
 
         protected int ActiveElementIndex { get; set; }
 
@@ -68,9 +73,15 @@ namespace Droid
 
             // get the navbar
             NavbarFragment = FragmentManager.FindFragmentById(Resource.Id.navbar) as NavbarFragment;
-            if (NavbarFragment == null)
+            if ( NavbarFragment == null )
             {
-                NavbarFragment = new NavbarFragment();
+                NavbarFragment = new NavbarFragment( );
+            }
+
+            LoginFragment = FragmentManager.FindFragmentByTag( "Droid.LoginFragment" ) as LoginFragment;
+            if( LoginFragment == null )
+            {
+                LoginFragment = new LoginFragment( );
             }
 
             // Execute a transaction, replacing any existing
@@ -94,6 +105,12 @@ namespace Droid
                 // grab the last active element
                 ActiveElementIndex = savedInstanceState.GetInt( "LastActiveElement" );
             }
+
+            CCVApp.Shared.Network.RockNetworkManager.Instance.Connect( 
+                delegate(System.Net.HttpStatusCode statusCode, string statusDescription)
+                {
+                    // here we know whether the initial handshake with Rock went ok or not
+                });
         }
 
         public override void OnSaveInstanceState( Bundle outState )
@@ -123,12 +140,62 @@ namespace Droid
             // set the task we wish to have active
             ActivateElement( Elements[ ActiveElementIndex ] );
 
+            // setup our login button
+            LoginButton = view.FindViewById<ImageButton>( Resource.Id.springboard_profile_image );
+            LoginButton.Click += (object sender, EventArgs e) => 
+                {
+                    // Execute a transaction, replacing any existing
+                    // fragment with this one inside the frame.
+                    var ft = FragmentManager.BeginTransaction();
+                    ft.Replace(Resource.Id.fragment_container, LoginFragment);
+                    ft.SetTransition(FragmentTransit.FragmentFade);
+                    ft.AddToBackStack( LoginFragment.ToString() );
+                    ft.Commit();
+                };
+
+            UserNameField = view.FindViewById<TextView>( Resource.Id.springboard_login_text );
+
             return view;
+        }
+
+        public override void OnPause()
+        {
+            base.OnPause();
+
+            RockApi.Instance.SaveObjectsToDevice( );
         }
 
         public override void OnResume()
         {
             base.OnResume();
+
+            UpdateLoginState( );
+        }
+
+        protected void UpdateLoginState( )
+        {
+            // are we logged in?
+            if( RockMobileUser.Instance.LoggedIn )
+            {
+                // get their profile
+                UserNameField.Text = RockMobileUser.Instance.PreferredName( ) + " " + RockMobileUser.Instance.Person.LastName;
+            }
+            else
+            {
+                UserNameField.Text = "Login to enable additional features.";
+            }
+
+            // the image depends on the user's status.
+            if( RockMobileUser.Instance.LoggedIn )
+            {
+                // todo: get their pic, else...
+                LoginButton.SetImageResource( Resource.Drawable.addphoto );
+            }
+            else
+            {
+                // otherwise display the no profile image.
+                LoginButton.SetImageResource( Resource.Drawable.noProfile );
+            }
         }
 
         public bool OnTouch( View v, MotionEvent e )

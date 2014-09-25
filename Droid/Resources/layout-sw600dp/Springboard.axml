@@ -1,34 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/linear_layout"
+    android:id="@+id/springboard_relative_layout"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:minWidth="25px"
     android:minHeight="25px">
-    <ImageView
-        android:src="@drawable/noprofile_sw600dp"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_marginTop="100dp"
+        android:id="@+id/springboard_relative_layout_2"
         android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:layout_marginTop="25dp"
-        android:layout_marginLeft="45dp"
-        android:id="@+id/profile_image" />
-    <TextView
-        android:text="Login to enable additional features"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/springboard_login_text"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="45dp"
-        android:layout_centerVertical="true"
-        android:layout_below="@id/profile_image"
-        android:layout_gravity="center_vertical" />
+        android:layout_width="300dp"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:gravity="center">
+        <ImageButton
+            android:src="@drawable/noprofile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:id="@+id/springboard_profile_image" />
+        <TextView
+            android:layout_marginTop="15dp"
+            android:text="Login to enable additional features"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/springboard_login_text"
+            android:layout_below="@id/springboard_profile_image" />
+    </LinearLayout>
 <!--Definition for a springboard element-->
     <RelativeLayout
-        android:layout_below="@id/profile_image"
+        android:layout_below="@id/springboard_relative_layout_2"
         android:id="@+id/springboard_news_frame"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="25dp"
         android:layout_height="60dp"
         android:layout_width="match_parent">
         <Button

@@ -1,42 +1,28 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhone4s.8.0" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="CCVApp.Shared/Notes/Controls/BaseControl.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/UserManagement/LoginViewController.cs">
     <Files>
-      <File FileName="CCVApp.Shared/Notes/Controls/Note.cs" Line="1" Column="1" />
-      <File FileName="CCVApp.Shared/Notes/Controls/Canvas.cs" Line="41" Column="41" />
-      <File FileName="CCVApp.Shared/Notes/Controls/Header.cs" Line="69" Column="69" />
-      <File FileName="CCVApp.Shared/Notes/Controls/Paragraph.cs" Line="33" Column="33" />
-      <File FileName="CCVApp.Shared/Notes/Controls/UserNote.cs" Line="17" Column="17" />
-      <File FileName="CCVApp.Shared/Notes/Controls/Quote.cs" Line="1" Column="1" />
-      <File FileName="CCVApp.Shared/Notes/Controls/IUIControl.cs" Line="1" Column="1" />
-      <File FileName="CCVApp.Shared/Notes/Controls/BaseControl.cs" Line="18" Column="18" />
-      <File FileName="CCVApp.Shared/Notes/Controls/List.cs" Line="1" Column="1" />
-      <File FileName="CCVApp.Shared/Notes/Controls/ListItem.cs" Line="1" Column="1" />
-      <File FileName="CCVApp.Shared/Notes/Controls/NoteText.cs" Line="1" Column="1" />
-      <File FileName="CCVApp.Shared/Notes/Controls/RevealBox.cs" Line="1" Column="1" />
-      <File FileName="CCVApp.Shared/Notes/Controls/StackPanel.cs" Line="1" Column="1" />
-      <File FileName="CCVApp.Shared/Notes/Controls/TextInput.cs" Line="1" Column="1" />
-      <File FileName="CCVApp.Shared/Config.cs" Line="59" Column="59" />
+      <File FileName="iOS/UserManagement/LoginViewController.cs" Line="19" Column="19" />
+      <File FileName="Droid/Springboard.cs" Line="13" Column="13" />
+      <File FileName="Droid/Tasks/Task.cs" Line="1" Column="1" />
+      <File FileName="iOS/SpringboardViewController.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="Droid" expanded="True">
-            <Node name="Tasks" expanded="True">
-              <Node name="NotesTask" expanded="True" />
-            </Node>
-          </Node>
           <Node name="iOS" expanded="True" selected="True">
-            <Node name="Tasks" expanded="True">
-              <Node name="Notes" expanded="True" />
+            <Node name="UserManagement" expanded="True" />
+          </Node>
+          <Node name="Rock.Mobile" expanded="True">
+            <Node name="PlatformUI" expanded="True">
+              <Node name="Droid" expanded="True" />
+              <Node name="iOS" expanded="True" />
             </Node>
           </Node>
         </State>
       </Pad>
       <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State>
-          <Value>emailObject</Value>
-        </State>
+        <State />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>

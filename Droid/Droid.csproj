@@ -66,45 +66,19 @@
     <Compile Include="Tasks\NewsTask\NewsPrimaryFragment.cs" />
     <Compile Include="Tasks\PlaceholderTask.cs" />
     <Compile Include="NavToolbar.cs" />
+    <Compile Include="UserManagement\LoginFragment.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\Strings.xml" />
-    <AndroidResource Include="..\Assets\info%402x.png">
-      <Link>Resources\drawable-hdpi\info.png</Link>
-    </AndroidResource>
-    <AndroidResource Include="..\Assets\groupfinder%402x.png">
-      <Link>Resources\drawable-hdpi\groupfinder.png</Link>
-    </AndroidResource>
-    <AndroidResource Include="..\Assets\prayer%402x.png">
-      <Link>Resources\drawable-hdpi\prayer.png</Link>
-    </AndroidResource>
-    <AndroidResource Include="..\Assets\notes%402x.png">
-      <Link>Resources\drawable-hdpi\notes.png</Link>
-    </AndroidResource>
     <AndroidResource Include="Resources\layout-sw600dp\Main.axml" />
     <AndroidResource Include="Resources\layout-sw600dp\News_Details.axml" />
     <AndroidResource Include="Resources\layout-sw600dp\Notes.axml" />
     <AndroidResource Include="Resources\layout-sw600dp\PrimaryNews.axml" />
     <AndroidResource Include="Resources\layout-sw600dp\Springboard.axml" />
-    <AndroidResource Include="..\Assets\give%402x.png">
-      <Link>Resources\drawable-hdpi\give.png</Link>
-    </AndroidResource>
-    <AndroidResource Include="..\Assets\watch%402x.png">
-      <Link>Resources\drawable-hdpi\watch.png</Link>
-    </AndroidResource>
     <AndroidResource Include="Resources\drawable-hdpi\Icon.png" />
-    <AndroidResource Include="..\Assets\ccvLogo%402x.png">
-      <Link>Resources\drawable-hdpi\ccvLogo_sw600dp.png</Link>
-    </AndroidResource>
-    <AndroidResource Include="..\Assets\noprofile%402x.png">
-      <Link>Resources\drawable-mdpi\noprofile_sw600dp.png</Link>
-    </AndroidResource>
-    <AndroidResource Include="..\Assets\noprofile.png">
-      <Link>Resources\drawable-hdpi\noprofile.png</Link>
-    </AndroidResource>
     <AndroidResource Include="Resources\drawable-mdpi\Icon.png" />
     <AndroidResource Include="Resources\layout-sw480dp\Main.axml" />
     <AndroidResource Include="Resources\layout-sw480dp\Notes.axml" />
@@ -119,8 +93,35 @@
     <AndroidResource Include="Resources\layout-sw600dp\Navbar.axml" />
     <AndroidResource Include="Resources\layout-sw320dp\Navbar.axml" />
     <AndroidResource Include="Resources\layout-sw480dp\Navbar.axml" />
-    <AndroidResource Include="..\Assets\ccvLogo.png">
-      <Link>Resources\drawable-mdpi\ccvLogo.png</Link>
+    <AndroidResource Include="Resources\layout-sw600dp\Login.axml" />
+    <AndroidResource Include="Resources\layout-sw320dp\Login.axml" />
+    <AndroidResource Include="Resources\layout-sw480dp\Login.axml" />
+    <AndroidResource Include="..\Assets\ccvLogo%402x.png">
+      <Link>Resources\drawable-hdpi\ccvLogo.png</Link>
+    </AndroidResource>
+    <AndroidResource Include="..\Assets\addphoto%402x.png">
+      <Link>Resources\drawable-hdpi\addphoto.png</Link>
+    </AndroidResource>
+    <AndroidResource Include="..\Assets\give%402x.png">
+      <Link>Resources\drawable-hdpi\give.png</Link>
+    </AndroidResource>
+    <AndroidResource Include="..\Assets\groupfinder%402x.png">
+      <Link>Resources\drawable-hdpi\groupfinder.png</Link>
+    </AndroidResource>
+    <AndroidResource Include="..\Assets\info%402x.png">
+      <Link>Resources\drawable-hdpi\info.png</Link>
+    </AndroidResource>
+    <AndroidResource Include="..\Assets\noProfile%402x.png">
+      <Link>Resources\drawable-hdpi\noProfile.png</Link>
+    </AndroidResource>
+    <AndroidResource Include="..\Assets\notes%402x.png">
+      <Link>Resources\drawable-hdpi\notes.png</Link>
+    </AndroidResource>
+    <AndroidResource Include="..\Assets\prayer%402x.png">
+      <Link>Resources\drawable-hdpi\prayer.png</Link>
+    </AndroidResource>
+    <AndroidResource Include="..\Assets\watch%402x.png">
+      <Link>Resources\drawable-hdpi\watch.png</Link>
     </AndroidResource>
   </ItemGroup>
   <Import Project="..\..\Rock.Mobile\Rock.Mobile.projitems" Label="Shared" Condition="Exists('..\..\Rock.Mobile\Rock.Mobile.projitems')" />
@@ -136,6 +137,7 @@
     <Folder Include="Resources\drawable-hdpi\" />
     <Folder Include="Resources\drawable-mdpi\" />
     <Folder Include="Resources\layout-sw320dp\" />
+    <Folder Include="UserManagement\" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="..\Assets\Fonts\Bevan.ttf">

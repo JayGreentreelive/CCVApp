@@ -246,54 +246,12 @@ namespace iOS
                     PresentModelViewController( ProfileViewController );
                 };
 
-
-            // Perform initial setup. Todo: Should we move this to a Network Manager?
-
-            // load our objects and sync with the server any unsaved changes.
-            Console.WriteLine( "Loading objects from device." );
-            RockApi.Instance.LoadObjectsFromDevice( );
-            Console.WriteLine( "Loading objects done." );
-
-            // if we're logged in, sync any changes we've made with the server.
-            if( RockMobileUser.Instance.LoggedIn == true )
-            {
-                Console.WriteLine( "Logged in. Syncing out-of-sync data." );
-
-                //( this includes notes, profile changes, etc.)
-                RockApi.Instance.SyncWithServer( delegate 
-                    {
-                        // failure or not, server syncing is finished, so let's go ahead and 
-                        // get launch data.
-                        RockLaunchData.Instance.GetLaunchData( LaunchDataReceived );
-                    });
-            }
-            else
-            {
-                Console.WriteLine( "Not Logged In. Skipping sync." );
-                RockLaunchData.Instance.GetLaunchData( LaunchDataReceived );
-            }
+            CCVApp.Shared.Network.RockNetworkManager.Instance.Connect( 
+                delegate(System.Net.HttpStatusCode statusCode, string statusDescription)
+                {
+                    // here we know whether the initial handshake with Rock went ok or not
+                });
         }
-
-        void LaunchDataReceived(System.Net.HttpStatusCode statusCode, string statusDescription)
-        {
-            //todo: we can update our various areas of code with all the launch data
-
-            // if there's a newer General Data, grab it.
-            if( RockGeneralData.Instance.Data.Version < RockLaunchData.Instance.Data.GeneralDataVersion )
-            {
-                RockGeneralData.Instance.GetGeneralData( GeneralDataReceived );
-            }
-            else
-            {
-                // May not have anything else to do here
-            }
-        }
-
-        void GeneralDataReceived(System.Net.HttpStatusCode statusCode, string statusDescription)
-        {
-            // New general data received. Save it, update fields, etc.
-        }
-        // - End Initial Setup
 
         void PresentModelViewController( UIViewController modelViewController )
         {
@@ -376,6 +334,11 @@ namespace iOS
                 ActivateElement( Elements[0] );
             }
 
+            UpdateLoginState( );
+        }
+
+        protected void UpdateLoginState( )
+        {
             // are we logged in?
             if( RockMobileUser.Instance.LoggedIn )
             {
@@ -387,11 +350,6 @@ namespace iOS
                 UserNameField.Text = "Login to enable additional features.";
             }
 
-            UpdateLoginState( );
-        }
-
-        protected void UpdateLoginState( )
-        {
             // the image depends on the user's status.
             string imagePath = NSBundle.MainBundle.BundlePath + "/";
 
