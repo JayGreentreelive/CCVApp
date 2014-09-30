@@ -160,7 +160,7 @@ namespace CCVApp
 
                 public NoteState.RevealBoxState GetState( )
                 {
-                    return new NoteState.RevealBoxState( PlatformLabel.Text, Revealed );
+                    return new NoteState.RevealBoxState( Revealed );
                 }
 
                 public override PlatformBaseUI GetPlatformControl()

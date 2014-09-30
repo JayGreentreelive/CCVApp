@@ -603,7 +603,7 @@ namespace CCVApp
 
                 public override void BuildHTMLContent( ref string htmlStream, List<IUIControl> userNotes )
                 {
-                    htmlStream += "<br><br>User Note - " + TextField.Text + "<br><br>";
+                    htmlStream += "<br><p><b>User Note - " + TextField.Text + "</b></p>";
                 }
 
                 public Notes.Model.NoteState.UserNoteContent GetContent( )

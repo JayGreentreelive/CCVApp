@@ -3,6 +3,7 @@ using System.Xml;
 using System.Drawing;
 using Rock.Mobile.PlatformUI;
 using System.Collections.Generic;
+using CCVApp.Shared.Notes.Model;
 
 namespace CCVApp
 {
@@ -193,9 +194,19 @@ namespace CCVApp
                     return TextField;
                 }
 
+                public void SetText( string text )
+                {
+                    TextField.Text = text;
+                }
+
                 public override RectangleF GetFrame( )
                 {
                     return TextField.Frame;
+                }
+
+                public NoteState.TextInputState GetState()
+                {
+                    return new NoteState.TextInputState( TextField.Text );
                 }
             }
         }

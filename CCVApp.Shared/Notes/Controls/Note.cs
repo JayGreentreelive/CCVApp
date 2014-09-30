@@ -520,6 +520,16 @@ namespace CCVApp
                             }
                             //
 
+                            //Text Inputs
+                            List<IUIControl> textInputs = new List<IUIControl>( );
+                            GetControlOfType<TextInput>( textInputs );
+
+                            noteState.TextInputStateList = new List<NoteState.TextInputState>( );
+                            foreach( TextInput textInput in textInputs )
+                            {
+                                noteState.TextInputStateList.Add( textInput.GetState( ) );
+                            }
+
                             // now we can serialize this and save it.
                             string json = JsonConvert.SerializeObject( noteState );
                             writer.WriteLine( json );
@@ -561,18 +571,39 @@ namespace CCVApp
                                 userNote.AddToView( MasterView );
                             }
 
+                            // we can assume that the states are 1:1 in the same order as the controls,
+                            // because the controls are sorted right after being created, so we're guaranteed
+                            // their order is known. There's no risk they were created in a different order.
+
                             // collect all the reveal boxes and restore them
                             List<IUIControl> revealBoxes = new List<IUIControl>( );
                             GetControlOfType<RevealBox>( revealBoxes );
 
-                            foreach(RevealBox revealBox in revealBoxes )
+                            // for the count, take whichever is less, the number of reveal boxes OR the state list,
+                            // because it's possible the note was changed after the last save, and a reveal box
+                            // may have been added / removed.
+                            int revealBoxCount = Math.Min(revealBoxes.Count, noteState.RevealBoxStateList.Count);
+
+                            for(int i = 0; i < revealBoxCount; i++ )
                             {
-                                // for each reveal box, find its appropriate state object by matching the content text.
-                                NoteState.RevealBoxState state = noteState.RevealBoxStateList.Find( rbs => rbs.Text == revealBox.Text );
-                                if( state != null )
-                                {
-                                    revealBox.SetRevealed( state.Revealed );
-                                }
+                                RevealBox revealBox = revealBoxes[ i ] as RevealBox;
+                                revealBox.SetRevealed( noteState.RevealBoxStateList[ i ].Revealed );
+                            }
+
+
+                            // collect all the text inputs and restore them
+                            List<IUIControl> textInputList = new List<IUIControl>( );
+                            GetControlOfType<TextInput>( textInputList );
+
+                            // for the count, take whichever is less, the number of text inputs OR the state list,
+                            // because it's possible the note was changed after the last save, and a text input
+                            // may have been added / removed.
+                            int textInputCount = Math.Min(textInputList.Count, noteState.TextInputStateList.Count);
+
+                            for(int i = 0; i < textInputCount; i++ )
+                            {
+                                TextInput textInput = textInputList[i] as TextInput;
+                                textInput.SetText( noteState.TextInputStateList[ i ].Text );
                             }
                         }
 
@@ -600,6 +631,7 @@ namespace CCVApp
                     foreach( IUIControl control in ChildControls )
                     {
                         control.BuildHTMLContent( ref htmlStream, userNoteListCopy );
+                        htmlStream += "<br><br>";
                     }
 
                     // if there happened to be any user note that wasn't already added, drop it in at the bottom
@@ -607,7 +639,7 @@ namespace CCVApp
                     {
                         foreach( UserNote note in userNoteListCopy )
                         {
-                            htmlStream += "UserNote - " + note.GetContent( ).Text + "\n";
+                            note.BuildHTMLContent( ref htmlStream, null );
                         }
                     }
                 }

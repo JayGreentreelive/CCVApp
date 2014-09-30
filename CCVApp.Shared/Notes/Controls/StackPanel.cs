@@ -318,17 +318,14 @@ namespace CCVApp
 
                 public override void BuildHTMLContent( ref string htmlStream, List<IUIControl> userNotes )
                 {
-                    htmlStream += "<p>STACK PANEL START</p>";
-
                     foreach( IUIControl control in ChildControls )
                     {
                         control.BuildHTMLContent( ref htmlStream, userNotes );
+                        htmlStream += "<br><br>";
                     }
 
                     // handle user notes
                     EmbedIntersectingUserNotes( ref htmlStream, userNotes );
-
-                    htmlStream += "<p>STACK PANEL END</p>";
                 }
 
                 protected override List<IUIControl> GetChildControls( )

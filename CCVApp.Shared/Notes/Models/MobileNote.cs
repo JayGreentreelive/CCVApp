@@ -56,22 +56,33 @@ namespace CCVApp
                     public class RevealBoxState
                     {
                         /// <summary>
-                        /// The text of the reveal box so we can match it
-                        /// to the appropriate reveal box in the Note
-                        /// </summary>
-                        /// <value>The text.</value>
-                        public string Text { get; set; }
-
-                        /// <summary>
                         /// The state of the reveal box. True if it was tapped and revealed, false otherwise.
                         /// </summary>
                         /// <value><c>true</c> if revealed; otherwise, <c>false</c>.</value>
                         public bool Revealed { get; set; }
 
-                        public RevealBoxState( string text, bool revealed )
+                        public RevealBoxState( bool revealed )
+                        {
+                            Revealed = revealed;
+                        }
+                    }
+
+                    /// <summary>
+                    /// Represents the state of a text input within the noters. Tracked
+                    /// so when loading the notes, we can restore the text that was previously in the
+                    /// text input.
+                    /// </summary>
+                    public class TextInputState
+                    {
+                        /// <summary>
+                        /// The text typed in the text input box.
+                        /// </summary>
+                        /// <value>The text.</value>
+                        public string Text { get; set; }
+
+                        public TextInputState( string text )
                         {
                             Text = text;
-                            Revealed = revealed;
                         }
                     }
 
@@ -86,6 +97,12 @@ namespace CCVApp
                     /// </summary>
                     /// <value>The reveal box states.</value>
                     public List<RevealBoxState> RevealBoxStateList { get; set; }
+
+                    /// <summary>
+                    /// List of all the text input's current text
+                    /// </summary>
+                    /// <value>The text input state list.</value>
+                    public List<TextInputState> TextInputStateList { get; set; }
                 }
             }
         }

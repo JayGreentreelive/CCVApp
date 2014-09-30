@@ -67,6 +67,7 @@
     <Compile Include="Tasks\PlaceholderTask.cs" />
     <Compile Include="NavToolbar.cs" />
     <Compile Include="UserManagement\LoginFragment.cs" />
+    <Compile Include="UserManagement\ProfileFragment.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
@@ -123,6 +124,9 @@
     <AndroidResource Include="..\Assets\watch%402x.png">
       <Link>Resources\drawable-hdpi\watch.png</Link>
     </AndroidResource>
+    <AndroidResource Include="Resources\layout-sw600dp\Profile.axml" />
+    <AndroidResource Include="Resources\layout-sw480dp\Profile.axml" />
+    <AndroidResource Include="Resources\layout-sw320dp\Profile.axml" />
   </ItemGroup>
   <Import Project="..\..\Rock.Mobile\Rock.Mobile.projitems" Label="Shared" Condition="Exists('..\..\Rock.Mobile\Rock.Mobile.projitems')" />
   <Import Project="..\..\Rock\Rock.Client\Rock.Client.Models.projitems" Label="Shared" Condition="Exists('..\..\Rock\Rock.Client\Rock.Client.Models.projitems')" />

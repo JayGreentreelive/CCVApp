@@ -20,6 +20,8 @@ namespace CCVApp
                 protected const string ListTypeBullet = "Bullet";
                 protected const string ListTypeNumbered = "Numbered";
 
+                protected string ListType { get; set; }
+
                 /// <summary>
                 /// Children to display
                 /// </summary>
@@ -113,10 +115,10 @@ namespace CCVApp
 
 
                     // parse for the desired list style. Default to Bullet if they didn't put anything.
-                    string listTypeStr = reader.GetAttribute( "Type" );
-                    if( string.IsNullOrEmpty( listTypeStr ) == true)
+                    ListType = reader.GetAttribute( "Type" );
+                    if( string.IsNullOrEmpty( ListType ) == true)
                     {
-                        listTypeStr = ListTypeBullet;
+                        ListType = ListTypeBullet;
                     }
 
                     // Parse Child Controls
@@ -141,7 +143,7 @@ namespace CCVApp
                             {
                                 // Create the prefix for this list item.
                                 string listItemPrefixStr = mStyle.mListBullet + " ";
-                                if( listTypeStr == ListTypeNumbered )
+                                if( ListType == ListTypeNumbered )
                                 {
                                     listItemPrefixStr = numberedCount.ToString() + ". ";
                                 }
@@ -301,8 +303,15 @@ namespace CCVApp
 
                 public override void BuildHTMLContent( ref string htmlStream, List<IUIControl> userNotes )
                 {
-                    // todo: any markup we want here
-                    htmlStream += "<p>LIST START</p>";
+                    /// add the appropriate list tag
+                    if( ListType == ListTypeNumbered )
+                    {
+                        htmlStream += "<ol>";
+                    }
+                    else
+                    {
+                        htmlStream += "<ul>";
+                    }
 
                     foreach( IUIControl control in ChildControls )
                     {
@@ -312,7 +321,14 @@ namespace CCVApp
                     // handle user notes
                     EmbedIntersectingUserNotes( ref htmlStream, userNotes );
 
-                    htmlStream += "<p>LIST END</p>";
+                    if( ListType == ListTypeNumbered )
+                    {
+                        htmlStream += "</ol>";
+                    }
+                    else
+                    {
+                        htmlStream += "</ul>";
+                    }
                     // closing markup
                 }
 

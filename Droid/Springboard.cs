@@ -61,6 +61,7 @@ namespace Droid
         /// <value>The navbar fragment.</value>
         protected NavbarFragment NavbarFragment { get; set; }
         protected LoginFragment LoginFragment { get; set; }
+        protected ProfileFragment ProfileFragment { get; set; }
 
         protected ImageButton LoginButton { get; set; }
         protected TextView UserNameField { get; set; }
@@ -82,6 +83,12 @@ namespace Droid
             if( LoginFragment == null )
             {
                 LoginFragment = new LoginFragment( );
+            }
+
+            ProfileFragment = FragmentManager.FindFragmentByTag( "Droid.ProfileFragment" ) as ProfileFragment;
+            if( ProfileFragment == null )
+            {
+                ProfileFragment = new ProfileFragment( );
             }
 
             // Execute a transaction, replacing any existing
@@ -144,12 +151,23 @@ namespace Droid
             LoginButton = view.FindViewById<ImageButton>( Resource.Id.springboard_profile_image );
             LoginButton.Click += (object sender, EventArgs e) => 
                 {
-                    // Execute a transaction, replacing any existing
-                    // fragment with this one inside the frame.
+                    // replace the entire screen with a user management fragment
                     var ft = FragmentManager.BeginTransaction();
-                    ft.Replace(Resource.Id.fragment_container, LoginFragment);
                     ft.SetTransition(FragmentTransit.FragmentFade);
-                    ft.AddToBackStack( LoginFragment.ToString() );
+
+                    // if we're logged in, it'll be the profile one
+                    if( RockMobileUser.Instance.LoggedIn == true )
+                    {
+                        ft.Replace(Resource.Id.fragment_container, ProfileFragment);
+                        ft.AddToBackStack( ProfileFragment.ToString() );
+                    }
+                    else
+                    {
+                        // else it'll be the login one
+                        ft.Replace(Resource.Id.fragment_container, LoginFragment);
+                        ft.AddToBackStack( LoginFragment.ToString() );
+                    }
+
                     ft.Commit();
                 };
 

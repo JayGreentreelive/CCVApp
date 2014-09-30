@@ -14,13 +14,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/login_usernameText"
-        android:maxLines="1"
-        android:hint="Username" />
+        android:hint="Username"
+        android:inputType="textPersonName"
+        android:maxLength="12"
+        android:maxLines="1" />
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/login_passwordText"
+        android:maxLength="16"
         android:maxLines="1"
+        android:inputType="textPassword"
         android:hint="Password"
         android:password="true" />
     <TextView

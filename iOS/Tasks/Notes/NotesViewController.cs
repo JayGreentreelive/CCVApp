@@ -162,7 +162,19 @@ namespace iOS
         /// <value>The name of the note presentable.</value>
         public string NotePresentableName { get; set; }
 
+        /// <summary>
+        /// The current orientation of the device. We track this
+        /// so we can know when it changes and only rebuild the notes then.
+        /// </summary>
+        /// <value>The orientation.</value>
 		UIDeviceOrientation Orientation { get; set; }
+
+        /// <summary>
+        /// True when a keyboard is present due to UIKeyboardWillShowNotification.
+        /// Important because this will be FALSE if a hardware keyboard is attached.
+        /// </summary>
+        /// <value><c>true</c> if displaying keyboard; otherwise, <c>false</c>.</value>
+        public bool DisplayingKeyboard { get; set; }
 
         public NotesViewController( ) : base( )
         {
@@ -406,18 +418,19 @@ namespace iOS
 
         public void OnKeyboardNotification( NSNotification notification )
         {
-            // Issues: Appears like a bug when it can't scroll "up" anymore and the keyboard
-            // obstructs a note
-
             //Start an animation, using values from the keyboard
             UIView.BeginAnimations ("AnimateForKeyboard");
             UIView.SetAnimationBeginsFromCurrentState (true);
             UIView.SetAnimationDuration (UIKeyboard.AnimationDurationFromNotification (notification));
             UIView.SetAnimationCurve ((UIViewAnimationCurve)UIKeyboard.AnimationCurveFromNotification (notification));
 
-            //Check if the keyboard is becoming visible
-            if( notification.Name == UIKeyboard.WillShowNotification )
+            // Check if the keyboard is becoming visible.
+            // Sometimes iOS is kind enough to send us this notification 3 times in a row, so make sure
+            // we haven't already handled it.
+            if( notification.Name == UIKeyboard.WillShowNotification && DisplayingKeyboard == false )
             {
+                DisplayingKeyboard = true;
+
                 // store the original screen positioning / scroll. No matter what, we will
                 // undo any scrolling the user did while editing.
                 Edit_StartScrollOffset = UIScrollView.ContentOffset;
@@ -433,7 +446,7 @@ namespace iOS
                 // now get the dist between the bottom of the visible area and the text field (text field's pos also changes as we scroll)
                 MaintainEditTextVisibility( );
             }
-            else
+            else if ( DisplayingKeyboard == true )
             {
                 // get the keyboard frame and transform it into our view's space
                 RectangleF keyboardFrame = UIKeyboard.FrameBeginFromNotification (notification);
@@ -442,7 +455,13 @@ namespace iOS
                 // restore the screen to the way it was before editing
                 UIScrollView.ContentOffset = Edit_StartScrollOffset;
                 UIScrollView.Layer.Position = Edit_StartScreenOffset;
+
+                DisplayingKeyboard = false;
             }
+
+            // for some reason toggling the keyboard causes the idle timer to turn on,
+            // so force it to turn back off here.
+            UIApplication.SharedApplication.IdleTimerDisabled = true;
 
             //Commit the animation
             UIView.CommitAnimations (); 
@@ -485,32 +504,36 @@ namespace iOS
 
         protected void MaintainEditTextVisibility( )
         {
-            // PLUS makes it scroll "up"
-            // NEG makes it scroll "down"
-            // TextField position MOVES AS THE PAGE IS SCROLLED.
-            // It is always relative, however, to the screen. So, if it's near the top, it's 0,
-            // whether that's because it was moved down and the screen scrolled up, or it's just at the top naturally.
+            // no need to do anything if a hardware keyboard is attached.
+            if( DisplayingKeyboard == true )
+            {
+                // PLUS makes it scroll "up"
+                // NEG makes it scroll "down"
+                // TextField position MOVES AS THE PAGE IS SCROLLED.
+                // It is always relative, however, to the screen. So, if it's near the top, it's 0,
+                // whether that's because it was moved down and the screen scrolled up, or it's just at the top naturally.
 
-            // Scroll the view so tha the bottom of the text field is as close as possible to
-            // the top of the keyboard without violating scroll constraints
+                // Scroll the view so tha the bottom of the text field is as close as possible to
+                // the top of the keyboard without violating scroll constraints
 
-            // determine if they're typing near the bottom of the screen and it needs to scroll.
-            float scrollAmount = (Edit_VisibleAreaWithKeyboardBot - Edit_TappedTextFieldFrame.Bottom);
+                // determine if they're typing near the bottom of the screen and it needs to scroll.
+                float scrollAmount = (Edit_VisibleAreaWithKeyboardBot - Edit_TappedTextFieldFrame.Bottom);
 
-            // clamp to the legal amount we can scroll "down"
-            scrollAmount = Math.Min( scrollAmount, UIScrollView.ContentOffset.Y );
+                // clamp to the legal amount we can scroll "down"
+                scrollAmount = Math.Min( scrollAmount, UIScrollView.ContentOffset.Y );
 
-            // Now determine the amount of "up" scroll remaining
-            float maxScrollAmount = UIScrollView.ContentSize.Height - UIScrollView.Bounds.Height;
-            float scrollAmountDistRemainingDown = -(maxScrollAmount - UIScrollView.ContentOffset.Y);
+                // Now determine the amount of "up" scroll remaining
+                float maxScrollAmount = UIScrollView.ContentSize.Height - UIScrollView.Bounds.Height;
+                float scrollAmountDistRemainingDown = -(maxScrollAmount - UIScrollView.ContentOffset.Y);
 
-            // and clamp the scroll amount to that, so we don't scroll "up" beyond the contraints
-            float allowedScrollAmount = Math.Max( scrollAmount, scrollAmountDistRemainingDown );
-            UIScrollView.ContentOffset = new PointF( UIScrollView.ContentOffset.X, UIScrollView.ContentOffset.Y - allowedScrollAmount );
+                // and clamp the scroll amount to that, so we don't scroll "up" beyond the contraints
+                float allowedScrollAmount = Math.Max( scrollAmount, scrollAmountDistRemainingDown );
+                UIScrollView.ContentOffset = new PointF( UIScrollView.ContentOffset.X, UIScrollView.ContentOffset.Y - allowedScrollAmount );
 
-            // if we STILL haven't scrolled enough "up" because of scroll contraints, we'll allow the window itself to move up.
-            float scrollDistNeeded = -Math.Min( 0, scrollAmount - scrollAmountDistRemainingDown );
-            UIScrollView.Layer.Position = new PointF( UIScrollView.Layer.Position.X, UIScrollView.Layer.Position.Y - scrollDistNeeded );
+                // if we STILL haven't scrolled enough "up" because of scroll contraints, we'll allow the window itself to move up.
+                float scrollDistNeeded = -Math.Min( 0, scrollAmount - scrollAmountDistRemainingDown );
+                UIScrollView.Layer.Position = new PointF( UIScrollView.Layer.Position.X, UIScrollView.Layer.Position.Y - scrollDistNeeded );
+            }
         }
 
         public void DestroyNotes( )

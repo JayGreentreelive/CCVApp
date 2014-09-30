@@ -281,8 +281,6 @@ namespace CCVApp
 
                     // handle user notes
                     EmbedIntersectingUserNotes( ref htmlStream, userNotes );
-
-                    // closing markup
                 }
 
                 public override RectangleF GetFrame( )

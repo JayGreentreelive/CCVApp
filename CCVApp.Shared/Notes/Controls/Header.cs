@@ -321,14 +321,12 @@ namespace CCVApp
 
                 public override void BuildHTMLContent( ref string htmlStream, List<IUIControl> userNotes )
                 {
-                    // todo: any markup we want here
                     htmlStream += "<h1>" + mTitle.Text + "</h1>" + 
-                                  "<h3>" + mSpeaker.Text + "&nbsp;&nbsp;&nbsp;" + mDate.Text + "</h3><br>";
+                                  "<h3>" + mSpeaker.Text + "&nbsp;&nbsp;&nbsp;" + mDate.Text + "</h3>";
 
 
                     // handle user notes
                     EmbedIntersectingUserNotes( ref htmlStream, userNotes );
-                    // closing markup
                 }
 
                 public override bool ShouldShowBulletPoint( )

@@ -187,6 +187,12 @@ namespace CCVApp
                     // and then removed from the list so other controls don't embed then.
 
                     RectangleF controlFrame = GetFrame( );
+
+                    // expand the rect by half its width on all sides in case the note falls between two controls
+                    float halfWidth = (controlFrame.Width / 2);
+                    RectangleF expandedFrame = new RectangleF( controlFrame.X - halfWidth, controlFrame.Y - halfWidth, 
+                                                               controlFrame.Width + halfWidth, controlFrame.Height + halfWidth );
+
                     RectangleF userNoteFrame;
 
                     for( int i = userNotes.Count - 1; i >= 0; i-- )
@@ -195,7 +201,7 @@ namespace CCVApp
                         userNoteFrame = note.GetFrame( );
 
                         // if the user note is within the bounding vertical box of this control, embed it here
-                        if( userNoteFrame.Y >= controlFrame.Y && userNoteFrame.Y <= controlFrame.Bottom )
+                        if( userNoteFrame.Y >= expandedFrame.Y && userNoteFrame.Y <= expandedFrame.Bottom )
                         {
                             note.BuildHTMLContent( ref htmlStream, null );
 

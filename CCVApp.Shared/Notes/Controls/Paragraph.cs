@@ -466,7 +466,7 @@ namespace CCVApp
                 public override void BuildHTMLContent( ref string htmlStream, List<IUIControl> userNotes )
                 {
                     // todo: any markup we want here
-                    htmlStream += "<p>";
+                    //htmlStream += "<p>";
 
                     foreach( IUIControl control in ChildControls )
                     {
@@ -476,7 +476,7 @@ namespace CCVApp
                     // handle user notes
                     EmbedIntersectingUserNotes( ref htmlStream, userNotes );
 
-                    htmlStream += "</p>";
+                    //htmlStream += "</p>";
                     // closing markup
                 }
 
