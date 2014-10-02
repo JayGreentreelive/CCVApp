@@ -230,6 +230,10 @@ namespace Droid
                         CreateNotes( null, null );
                     };
 
+                    #if !DEBUG
+                    RefreshButton.Visibility = ViewStates.Gone;
+                    #endif
+
                     // get our power management control
                     PowerManager pm = PowerManager.FromContext( Rock.Mobile.PlatformCommon.Droid.Context );
                     WakeLock = pm.NewWakeLock(WakeLockFlags.Full, "Notes");
@@ -510,7 +514,7 @@ namespace Droid
                                     // update the height of the scroll view to fit all content
                                     RectangleF frame = Note.GetFrame( );
 
-                                    int scrollFrameHeight = ( int )frame.Size.Height + ( this.Resources.DisplayMetrics.HeightPixels / 2 );
+                                    int scrollFrameHeight = ( int )frame.Size.Height + ( this.Resources.DisplayMetrics.HeightPixels / 3 );
                                     ScrollViewLayout.LayoutParameters.Height = scrollFrameHeight;
 
                                     // store the downloaded note and style xml

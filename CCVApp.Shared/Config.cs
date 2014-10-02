@@ -23,6 +23,22 @@ namespace CCVApp
                 public const string NoPhotoFile = "addphoto.png";
 
                 /// <summary>
+                /// When we store their profile pic, thisi s what it's called.
+                /// When the HasProfileImage flag is true, we'll load it from this file.
+                /// </summary>
+                public const string ProfilePic = "userPhoto.jpg";
+
+                /// <summary>
+                /// The size of the profile pics width in pixels.
+                /// </summary>
+                public const int ProfilePicWidth = 200;
+
+                /// <summary>
+                /// The size of the profile pic's height in pixels.
+                /// </summary>
+                public const int ProfilePicHeight = 200;
+
+                /// <summary>
                 /// The X offset to place the CENTER of the element's logo.
                 /// </summary>
                 public const int Element_LogoOffsetX = 20;

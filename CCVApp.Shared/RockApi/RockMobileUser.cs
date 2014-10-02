@@ -47,6 +47,14 @@ namespace CCVApp
                 public Person Person;
 
                 /// <summary>
+                /// If true they have a profile image, so we should look for it in our defined spot.
+                /// The way profile images work is, Rock will tell us they have one via a url.
+                /// We'll request it and retrieve it, and then store it locally.
+                /// </summary>
+                /// <value><c>true</c> if this instance has profile image; otherwise, <c>false</c>.</value>
+                public bool HasProfileImage { get; set; }
+
+                /// <summary>
                 /// A json version of the person at the last point it was sync'd with the server.
                 /// This allows us to update Person and save it, and in the case of a server sync failing,
                 /// know that we need to try again.

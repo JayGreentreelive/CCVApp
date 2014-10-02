@@ -12,6 +12,9 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using CCVApp.Shared.Network;
+using Android.Graphics;
+using DroidContext = Rock.Mobile.PlatformCommon.Droid;
+using Java.IO;
 
 namespace Droid
 {
@@ -63,8 +66,8 @@ namespace Droid
         protected LoginFragment LoginFragment { get; set; }
         protected ProfileFragment ProfileFragment { get; set; }
 
-        protected ImageButton LoginButton { get; set; }
-        protected TextView UserNameField { get; set; }
+        protected ImageButton ProfileImageButton { get; set; }
+        protected Button LoginProfileButton { get; set; }
 
         protected int ActiveElementIndex { get; set; }
 
@@ -106,7 +109,7 @@ namespace Droid
             Elements.Add( new SpringboardElement( new Droid.Tasks.Notes.NotesTask( NavbarFragment ), Resource.Id.springboard_notes_frame, Resource.Id.springboard_notes_icon, Resource.Id.springboard_notes_button ) );
             Elements.Add( new SpringboardElement( new Droid.Tasks.Placeholder.PlaceholderTask( NavbarFragment ), Resource.Id.springboard_about_frame, Resource.Id.springboard_about_icon, Resource.Id.springboard_about_button ) );
 
-            ActiveElementIndex = 3;
+            ActiveElementIndex = 0;
             if( savedInstanceState != null )
             {
                 // grab the last active element
@@ -147,9 +150,42 @@ namespace Droid
             // set the task we wish to have active
             ActivateElement( Elements[ ActiveElementIndex ] );
 
+            // setup our profile pic button
+            ProfileImageButton = view.FindViewById<ImageButton>( Resource.Id.springboard_profile_image );
+            ProfileImageButton.Click += (object sender, EventArgs e) => 
+                {
+                    // only allow picture taking if they're logged in
+                    if( RockMobileUser.Instance.LoggedIn )
+                    {
+                        if( Rock.Mobile.Media.PlatformCamera.Instance.IsAvailable( ) )
+                        {
+                            // we'll request the image be stored in AppData/userPhoto.jpg
+                            File imageFile = new File( DroidContext.Context.GetExternalFilesDir( null ), CCVApp.Shared.Config.Springboard.ProfilePic );
+
+                            // start up the camera and get our picture.
+                            Rock.Mobile.Media.PlatformCamera.Instance.CaptureImage( imageFile, null, 
+
+                                delegate(object s, Rock.Mobile.Media.PlatformCamera.CaptureImageEventArgs args) 
+                                {
+                                    //todo: Perform image editing to square it.
+
+                                    //todo: Upload the image to Rock.
+                                    //   on confirmation, set User.HasProfileImage to true.
+
+                                    // for now...
+                                    RockMobileUser.Instance.HasProfileImage = true;
+                                });
+                        }
+                        else
+                        {
+                            // nope
+                        }
+                    }
+                };
+
             // setup our login button
-            LoginButton = view.FindViewById<ImageButton>( Resource.Id.springboard_profile_image );
-            LoginButton.Click += (object sender, EventArgs e) => 
+            LoginProfileButton = view.FindViewById<Button>( Resource.Id.springboard_login_button );
+            LoginProfileButton.Click += (object sender, EventArgs e) => 
                 {
                     // replace the entire screen with a user management fragment
                     var ft = FragmentManager.BeginTransaction();
@@ -170,8 +206,6 @@ namespace Droid
 
                     ft.Commit();
                 };
-
-            UserNameField = view.FindViewById<TextView>( Resource.Id.springboard_login_text );
 
             return view;
         }
@@ -196,23 +230,66 @@ namespace Droid
             if( RockMobileUser.Instance.LoggedIn )
             {
                 // get their profile
-                UserNameField.Text = RockMobileUser.Instance.PreferredName( ) + " " + RockMobileUser.Instance.Person.LastName;
+                LoginProfileButton.Text = RockMobileUser.Instance.PreferredName( ) + " " + RockMobileUser.Instance.Person.LastName;
             }
             else
             {
-                UserNameField.Text = "Login to enable additional features.";
+                LoginProfileButton.Text = "Login to enable additional features.";
             }
 
+            SetProfileImage( );
+        }
+
+        protected void SetProfileImage( )
+        {
             // the image depends on the user's status.
             if( RockMobileUser.Instance.LoggedIn )
             {
-                // todo: get their pic, else...
-                LoginButton.SetImageResource( Resource.Drawable.addphoto );
+                // if they have an profile pic
+                if( RockMobileUser.Instance.HasProfileImage == true )
+                {
+                    //Note: the image is currently rectangular with height dominant.
+                    // This means if we simply load using the profilePicWidth/Height, we'll get an image
+                    // whose width is <= ProfilePicWidth (in this case less) and height is larger,
+                    // because that has to be the case to maintain aspect ratio.
+
+                    //So, when we place the mask over it, its width is cropped because the profile pic has a smaller width,
+                    // and its height doesn't fully cover the image.
+                    // Sort of like this: where the | represents the profile pic's edge. (meaning you don't see the right edge of the mask.
+                    //MMMMM|MM
+                    //MMMMM|MM
+                    //MMMMM|MM
+                    //PPPPP
+
+                    // Soo, we create our rendering canvas with the MASK width. This results in a better result:
+                    //MMMMMMM
+                    //MMMMMMM
+                    //MMMMMMM
+                    // The only downside here is that the profile pic's right edge doesn't hit the edge of the mask. So the right side won't look quite right.
+
+                    //Of course..this will ALL be fixed when we crop the profile image to the same dimensions as the mask.
+
+                    // Load the profile pic
+                    File imageFile = new File( DroidContext.Context.GetExternalFilesDir( null ), CCVApp.Shared.Config.Springboard.ProfilePic );
+                    Bitmap image = Rock.Mobile.PlatformCommon.Droid.LoadImageAtSize( imageFile, CCVApp.Shared.Config.Springboard.ProfilePicWidth, CCVApp.Shared.Config.Springboard.ProfilePicHeight );
+
+                    // load the mask at the image dimensions
+                    Bitmap mask = Rock.Mobile.PlatformCommon.Droid.LoadImageAtSize( Resource.Drawable.androidPhotoMask, image.Width, image.Height );
+
+                    Bitmap maskedImage = Rock.Mobile.PlatformCommon.Droid.ApplyMaskToBitmap( image, mask );
+
+                    // set the final result
+                    ProfileImageButton.SetImageBitmap( maskedImage );
+                }
+                else
+                {
+                    ProfileImageButton.SetImageResource( Resource.Drawable.addphoto );
+                }
             }
             else
             {
                 // otherwise display the no profile image.
-                LoginButton.SetImageResource( Resource.Drawable.noProfile );
+                ProfileImageButton.SetImageResource( Resource.Drawable.noProfile );
             }
         }
 

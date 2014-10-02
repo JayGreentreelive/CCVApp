@@ -14,7 +14,7 @@
     <AndroidApplication>True</AndroidApplication>
     <AndroidUseLatestPlatformSdk>False</AndroidUseLatestPlatformSdk>
     <AssemblyName>Droid</AssemblyName>
-    <TargetFrameworkVersion>v4.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.3</TargetFrameworkVersion>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -127,6 +127,9 @@
     <AndroidResource Include="Resources\layout-sw600dp\Profile.axml" />
     <AndroidResource Include="Resources\layout-sw480dp\Profile.axml" />
     <AndroidResource Include="Resources\layout-sw320dp\Profile.axml" />
+    <AndroidResource Include="..\Assets\androidPhotoMask%402x.png">
+      <Link>Resources\drawable-hdpi\androidPhotoMask.png</Link>
+    </AndroidResource>
   </ItemGroup>
   <Import Project="..\..\Rock.Mobile\Rock.Mobile.projitems" Label="Shared" Condition="Exists('..\..\Rock.Mobile\Rock.Mobile.projitems')" />
   <Import Project="..\..\Rock\Rock.Client\Rock.Client.Models.projitems" Label="Shared" Condition="Exists('..\..\Rock\Rock.Client\Rock.Client.Models.projitems')" />
@@ -278,6 +281,9 @@
     </AndroidAsset>
     <AndroidAsset Include="..\Assets\Fonts\FontAwesome.ttf">
       <Link>Assets\Fonts\FontAwesome.ttf</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\androidPhotoMask%402x.png">
+      <Link>Assets\androidPhotoMask%402x.png</Link>
     </AndroidAsset>
   </ItemGroup>
   <ItemGroup>

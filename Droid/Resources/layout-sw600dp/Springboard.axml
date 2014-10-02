@@ -20,13 +20,13 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:id="@+id/springboard_profile_image" />
-        <TextView
+        <Button
             android:layout_marginTop="15dp"
             android:text="Login to enable additional features"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/springboard_login_text"
+            android:id="@+id/springboard_login_button"
             android:layout_below="@id/springboard_profile_image" />
     </LinearLayout>
 <!--Definition for a springboard element-->

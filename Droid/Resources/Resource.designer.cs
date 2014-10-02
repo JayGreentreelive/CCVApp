@@ -44,31 +44,34 @@ namespace Droid
 			public const int addphoto = 2130837504;
 			
 			// aapt resource value: 0x7f020001
-			public const int ccvLogo = 2130837505;
+			public const int androidPhotoMask = 2130837505;
 			
 			// aapt resource value: 0x7f020002
-			public const int give = 2130837506;
+			public const int ccvLogo = 2130837506;
 			
 			// aapt resource value: 0x7f020003
-			public const int groupfinder = 2130837507;
+			public const int give = 2130837507;
 			
 			// aapt resource value: 0x7f020004
-			public const int Icon = 2130837508;
+			public const int groupfinder = 2130837508;
 			
 			// aapt resource value: 0x7f020005
-			public const int info = 2130837509;
+			public const int Icon = 2130837509;
 			
 			// aapt resource value: 0x7f020006
-			public const int noProfile = 2130837510;
+			public const int info = 2130837510;
 			
 			// aapt resource value: 0x7f020007
-			public const int notes = 2130837511;
+			public const int noProfile = 2130837511;
 			
 			// aapt resource value: 0x7f020008
-			public const int prayer = 2130837512;
+			public const int notes = 2130837512;
 			
 			// aapt resource value: 0x7f020009
-			public const int watch = 2130837513;
+			public const int prayer = 2130837513;
+			
+			// aapt resource value: 0x7f02000a
+			public const int watch = 2130837514;
 			
 			static Drawable()
 			{
@@ -192,7 +195,7 @@ namespace Droid
 			public const int springboard_groupfinder_text = 2131034152;
 			
 			// aapt resource value: 0x7f050020
-			public const int springboard_login_text = 2131034144;
+			public const int springboard_login_button = 2131034144;
 			
 			// aapt resource value: 0x7f050022
 			public const int springboard_news_button = 2131034146;

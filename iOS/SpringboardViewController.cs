@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Collections.Generic;
 using Rock.Mobile.Network;
 using CCVApp.Shared.Network;
+using MonoTouch.AssetsLibrary;
 
 namespace iOS
 {
@@ -233,11 +234,60 @@ namespace iOS
                 {
                     if( RockMobileUser.Instance.LoggedIn == true )
                     {
-                        // todo: start picture taker guy
+                        //Todo: Give them the choice of the image picker or camera.
+
+                        // do we have a camera?
+                        if( Rock.Mobile.Media.PlatformCamera.Instance.IsAvailable( ) )
+                        {
+                            // buld the path to where it should be stored.
+                            string documentsDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                            string jpgFilename = System.IO.Path.Combine (documentsDirectory, CCVApp.Shared.Config.Springboard.ProfilePic );
+
+                            // launch the camera
+                            Rock.Mobile.Media.PlatformCamera.Instance.CaptureImage( jpgFilename, this, delegate(object s, Rock.Mobile.Media.PlatformCamera.CaptureImageEventArgs args) 
+                                {
+                                    // if the camera reports ok
+                                    bool success = false;
+                                    if( args.Result == true )
+                                    {
+                                        // attempt to load the image
+                                        UIImage image = UIImage.FromFile( args.ImagePath );
+                                        if( image != null )
+                                        {
+                                            // it worked, so flag that they now have a profile picture.
+                                            success = true;
+                                            RockMobileUser.Instance.HasProfileImage = true;
+
+                                            // the image will naturally load in UpdateLoginState
+                                        }
+                                    }
+
+                                    if( success == false )
+                                    {
+                                        // for now, notify them there's no camera. In the future, probably go
+                                        // directly to the image picker.
+                                        UIAlertView alert = new UIAlertView( );
+                                        alert.Title = "Profile Picture";
+                                        alert.Message = "Sorry, we couldn't use that picture. Please try again.";
+                                        alert.AddButton( "Ok" );
+                                        alert.Show( );
+                                    }
+                                });
+                        }
+                        else
+                        {
+                            // for now, notify them there's no camera. In the future, probably go
+                            // directly to the image picker.
+                            UIAlertView alert = new UIAlertView( );
+                            alert.Title = "No Camera";
+                            alert.Message = "This device does not have a camera.";
+                            alert.AddButton( "Ok" );
+                            alert.Show( );
+                        }
                     }
                     else
                     {
-                        PresentModelViewController(  LoginViewController );
+                        PresentModelViewController( LoginViewController );
                     }
                 };
 
@@ -356,7 +406,15 @@ namespace iOS
             if( RockMobileUser.Instance.LoggedIn )
             {
                 // todo: get their pic, else...
-                imagePath += CCVApp.Shared.Config.Springboard.NoPhotoFile;
+                if( RockMobileUser.Instance.HasProfileImage == true )
+                {
+                    string documentsDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                    imagePath = System.IO.Path.Combine (documentsDirectory, CCVApp.Shared.Config.Springboard.ProfilePic );
+                }
+                else
+                {
+                    imagePath += CCVApp.Shared.Config.Springboard.NoPhotoFile;
+                }
 
                 // if we're logged in, also display the View Profile button
                 ViewProfileButton.Enabled = true;
