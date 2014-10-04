@@ -1,29 +1,24 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" PreferredExecutionTarget="Android.094c904b" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|iPhone" PreferredExecutionTarget="Android.SelectDevice" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Springboard.cs">
     <Files>
-      <File FileName="Droid/Springboard.cs" Line="41" Column="41" />
-      <File FileName="iOS/SpringboardViewController.cs" Line="13" Column="13" />
-      <File FileName="Droid/NavToolbar.cs" Line="41" Column="41" />
-      <File FileName="../Rock.Mobile/PlatformMedia/DroidCamera.cs" Line="17" Column="17" />
-      <File FileName="../Rock.Mobile/PlatformCommon/DroidCommon.cs" Line="13" Column="13" />
+      <File FileName="Droid/Springboard.cs" Line="38" Column="38" />
+      <File FileName="../Rock.Mobile/PlatformCommon/DroidCommon.cs" Line="23" Column="23" />
+      <File FileName="Droid/UserManagement/ImageCropFragment.cs" Line="25" Column="25" />
+      <File FileName="CCVApp.Shared/Config.cs" Line="1" Column="1" />
+      <File FileName="../Rock.Mobile/PlatformMedia/DroidCamera.cs" Line="1" Column="1" />
+      <File FileName="Droid/NavbarFragment.cs" Line="54" Column="54" />
+      <File FileName="Droid/Tasks/NotesTask/NotesFragment.cs" Line="31" Column="31" />
+      <File FileName="Droid/NavToolbar.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="Droid" expanded="True">
+            <Node name="UserManagement" expanded="True" />
             <Node name="Springboard.cs" selected="True" />
           </Node>
           <Node name="iOS" expanded="True" />
-          <Node name="Rock.Mobile" expanded="True">
-            <Node name="PlatformCommon" expanded="True" />
-          </Node>
-        </State>
-      </Pad>
-      <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State>
-          <Value>mask</Value>
-          <Value>image</Value>
         </State>
       </Pad>
     </Pads>

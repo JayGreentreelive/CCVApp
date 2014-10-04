@@ -44,6 +44,8 @@ namespace Droid
         /// <value>The active task.</value>
         protected Tasks.Task ActiveTask { get; set; }
 
+        public Springboard SpringboardParent { get; set; }
+
         /// <summary>
         /// True when the navbar fragment and task are slid "out" to reveal the springboard
         /// </summary>
@@ -71,10 +73,6 @@ namespace Droid
         /// </summary>
         /// <value><c>true</c> if this instance is fragment active; otherwise, <c>false</c>.</value>
         protected bool IsFragmentActive { get; set; }
-
-        public NavbarFragment( ) : base( )
-        {
-        }
 
         public override void OnCreate( Bundle savedInstanceState )
         {
@@ -200,7 +198,7 @@ namespace Droid
             View.SetX( xPos );
 
             ActiveTaskFrame.SetX( xPos );
-            NavToolbar.RelativeLayout.SetX( xPos );
+            NavToolbar.LinearLayout.SetX( xPos );
         }
 
         public void OnAnimationEnd( Animator animation )
@@ -272,6 +270,8 @@ namespace Droid
             {
                 ActiveTask.Activate( );
             }
+
+            SpringboardParent.NavbarWasResumed( );
         }
 
         public void SetActiveTask( Tasks.Task newTask )

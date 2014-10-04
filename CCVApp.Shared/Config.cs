@@ -31,12 +31,12 @@ namespace CCVApp
                 /// <summary>
                 /// The size of the profile pics width in pixels.
                 /// </summary>
-                public const int ProfilePicWidth = 200;
+                public const int ProfilePicWidth = 400;
 
                 /// <summary>
                 /// The size of the profile pic's height in pixels.
                 /// </summary>
-                public const int ProfilePicHeight = 200;
+                public const int ProfilePicHeight = 400;
 
                 /// <summary>
                 /// The X offset to place the CENTER of the element's logo.
@@ -57,6 +57,39 @@ namespace CCVApp
                 /// The background color of the springboard.
                 /// </summary>
                 public const int BackgroundColor = 0x1C1C1CFF;
+            }
+
+            public class ImageCrop
+            {
+                /// <summary>
+                /// The font to use for displaying the 'ok to crop' button.
+                /// </summary>
+                public const string CropOkButton_Font = "FontAwesome";
+
+                /// <summary>
+                /// The text to display for the 'ok to crop' button.
+                /// </summary>
+                public const string CropOkButton_Text = "";
+
+                /// <summary>
+                /// The size (in font points) of the 'ok to crop' button.
+                /// </summary>
+                public const int CropOkButton_Size = 36;
+
+                /// <summary>
+                /// The font to use for displaying the 'cancel crop' button.
+                /// </summary>
+                public const string CropCancelButton_Font = "FontAwesome";
+
+                /// <summary>
+                /// The text to display for the 'cancel crop' button.
+                /// </summary>
+                public const string CropCancelButton_Text = "";
+
+                /// <summary>
+                /// The size (in font points) of the 'cancel crop' button.
+                /// </summary>
+                public const int CropCancelButton_Size = 36;
             }
 
             public class SubNavToolbar

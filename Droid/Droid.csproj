@@ -68,6 +68,7 @@
     <Compile Include="NavToolbar.cs" />
     <Compile Include="UserManagement\LoginFragment.cs" />
     <Compile Include="UserManagement\ProfileFragment.cs" />
+    <Compile Include="UserManagement\ImageCropFragment.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
@@ -130,6 +131,9 @@
     <AndroidResource Include="..\Assets\androidPhotoMask%402x.png">
       <Link>Resources\drawable-hdpi\androidPhotoMask.png</Link>
     </AndroidResource>
+    <AndroidResource Include="Resources\layout-sw320dp\ImageCrop.axml" />
+    <AndroidResource Include="Resources\layout-sw480dp\ImageCrop.axml" />
+    <AndroidResource Include="Resources\layout-sw600dp\ImageCrop.axml" />
   </ItemGroup>
   <Import Project="..\..\Rock.Mobile\Rock.Mobile.projitems" Label="Shared" Condition="Exists('..\..\Rock.Mobile\Rock.Mobile.projitems')" />
   <Import Project="..\..\Rock\Rock.Client\Rock.Client.Models.projitems" Label="Shared" Condition="Exists('..\..\Rock\Rock.Client\Rock.Client.Models.projitems')" />
@@ -281,9 +285,6 @@
     </AndroidAsset>
     <AndroidAsset Include="..\Assets\Fonts\FontAwesome.ttf">
       <Link>Assets\Fonts\FontAwesome.ttf</Link>
-    </AndroidAsset>
-    <AndroidAsset Include="..\Assets\androidPhotoMask%402x.png">
-      <Link>Assets\androidPhotoMask%402x.png</Link>
     </AndroidAsset>
   </ItemGroup>
   <ItemGroup>

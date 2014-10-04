@@ -27,7 +27,7 @@ namespace Droid
 
     public class NavToolbarFragment : Fragment, Android.Animation.ValueAnimator.IAnimatorUpdateListener
     {
-        public LinearLayout RelativeLayout { get; set; }
+        public LinearLayout LinearLayout { get; set; }
 
         Button BackButton { get; set; }
         bool BackButtonDisplayed { get; set; }
@@ -52,7 +52,7 @@ namespace Droid
         {
             BackButton = new Button( Rock.Mobile.PlatformCommon.Droid.Context );
             ShareButton = new Button( Rock.Mobile.PlatformCommon.Droid.Context );
-            RelativeLayout = new LinearLayout( Rock.Mobile.PlatformCommon.Droid.Context );
+            LinearLayout = new LinearLayout( Rock.Mobile.PlatformCommon.Droid.Context );
         }
 
         public override void OnCreate( Bundle savedInstanceState )
@@ -73,14 +73,14 @@ namespace Droid
                     Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate { Reveal( false ); } );
                 };
 
-            RelativeLayout.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
+            LinearLayout.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
 
             // set the nav subBar color (including opacity)
             Color navColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.BackgroundColor );
             navColor.A = (Byte) ( (float) navColor.A * CCVApp.Shared.Config.SubNavToolbar.Opacity );
-            RelativeLayout.SetBackgroundColor( navColor );
+            LinearLayout.SetBackgroundColor( navColor );
 
-            RelativeLayout.LayoutParameters.Height = 150;
+            LinearLayout.LayoutParameters.Height = 150;
 
 
             // create the back button
@@ -153,14 +153,14 @@ namespace Droid
                 };
             ShareButton.SetTextColor( new Android.Content.Res.ColorStateList( states, colors ) );
 
-            return RelativeLayout;
+            return LinearLayout;
         }
 
         public override void OnResume()
         {
             base.OnResume();
 
-            RelativeLayout.SetY( 150 );
+            LinearLayout.SetY( 150 );
 
             UpdateButtons( );
         }
@@ -195,6 +195,7 @@ namespace Droid
         public void SetBackButtonEnabled( bool enabled )
         {
             BackButton.Enabled = enabled;
+            BackButtonEnabledPreSuspension = BackButton.Enabled;
         }
 
         public void DisplayShareButton( bool display, EventHandler sharePressed )
@@ -218,24 +219,25 @@ namespace Droid
         public void SetShareButtonEnabled( bool enabled )
         {
             ShareButton.Enabled = enabled;
+            ShareButtonEnabledPreSuspension = ShareButton.Enabled;
         }
 
         void UpdateButtons( )
         {
-            if( RelativeLayout != null )
+            if( LinearLayout != null )
             {
                 // start by resetting it
-                RelativeLayout.RemoveAllViews( );
+                LinearLayout.RemoveAllViews( );
 
                 // now add each button
                 if( BackButtonDisplayed == true )
                 {
-                    RelativeLayout.AddView( BackButton );
+                    LinearLayout.AddView( BackButton );
                 }
 
                 if( ShareButtonDisplayed == true )
                 {
-                    RelativeLayout.AddView( ShareButton );
+                    LinearLayout.AddView( ShareButton );
                 }
             }
         }
@@ -260,7 +262,7 @@ namespace Droid
             // update the mask scale
             int yPos = ((Java.Lang.Integer)animation.GetAnimatedValue("")).IntValue();
 
-            RelativeLayout.SetY( yPos );
+            LinearLayout.SetY( yPos );
         }
 
         public void OnAnimationEnd( Animator animation )
@@ -279,10 +281,10 @@ namespace Droid
                 {
                     Animating = true;
 
-                    int yOffset = revealed ? 0 : RelativeLayout.Height;
+                    int yOffset = revealed ? 0 : LinearLayout.Height;
 
                     // setup an animation from our current mask scale to the new one.
-                    ValueAnimator animator = ValueAnimator.OfInt((int)RelativeLayout.GetY( ) , yOffset);
+                    ValueAnimator animator = ValueAnimator.OfInt((int)LinearLayout.GetY( ) , yOffset);
 
                     animator.AddUpdateListener( this );
                     animator.AddListener( new NavToolbarAnimationListener( ) { NavbarToolbar = this } );

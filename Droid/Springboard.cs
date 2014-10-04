@@ -65,34 +65,38 @@ namespace Droid
         protected NavbarFragment NavbarFragment { get; set; }
         protected LoginFragment LoginFragment { get; set; }
         protected ProfileFragment ProfileFragment { get; set; }
+        protected ImageCropFragment ImageCropFragment { get; set; }
 
         protected ImageButton ProfileImageButton { get; set; }
         protected Button LoginProfileButton { get; set; }
 
         protected int ActiveElementIndex { get; set; }
 
+        /// <summary>
+        /// When true, we need to launch the image cropper. We have to wait
+        /// until the NavBar and all sub-fragments have been pushed to the stack.
+        /// </summary>
+        /// <value><c>true</c> if image cropper pending launch; otherwise, <c>false</c>.</value>
+        bool ImageCropperPendingLaunch { get; set; }
+
+        Bitmap ProfileMask { get; set; }
+
+        Bitmap ProfileMaskedImage { get; set; }
+
         public override void OnCreate( Bundle savedInstanceState )
         {
             base.OnCreate( savedInstanceState );
 
-            // get the navbar
-            NavbarFragment = FragmentManager.FindFragmentById(Resource.Id.navbar) as NavbarFragment;
-            if ( NavbarFragment == null )
-            {
-                NavbarFragment = new NavbarFragment( );
-            }
+            // setup our fragments
+            NavbarFragment = new NavbarFragment( );
+            NavbarFragment.SpringboardParent = this;
 
-            LoginFragment = FragmentManager.FindFragmentByTag( "Droid.LoginFragment" ) as LoginFragment;
-            if( LoginFragment == null )
-            {
-                LoginFragment = new LoginFragment( );
-            }
+            LoginFragment = new LoginFragment( );
+            ProfileFragment = new ProfileFragment( );
+            ImageCropFragment = new ImageCropFragment( );
 
-            ProfileFragment = FragmentManager.FindFragmentByTag( "Droid.ProfileFragment" ) as ProfileFragment;
-            if( ProfileFragment == null )
-            {
-                ProfileFragment = new ProfileFragment( );
-            }
+            // get the mask used for the profile pic
+            ProfileMask = BitmapFactory.DecodeResource( DroidContext.Context.Resources, Resource.Drawable.androidPhotoMask );
 
             // Execute a transaction, replacing any existing
             // fragment with this one inside the frame.
@@ -167,13 +171,10 @@ namespace Droid
 
                                 delegate(object s, Rock.Mobile.Media.PlatformCamera.CaptureImageEventArgs args) 
                                 {
-                                    //todo: Perform image editing to square it.
-
-                                    //todo: Upload the image to Rock.
-                                    //   on confirmation, set User.HasProfileImage to true.
-
-                                    // for now...
-                                    RockMobileUser.Instance.HasProfileImage = true;
+                                    // flag that we want the cropper to start up on resume.
+                                    // we cannot launch it now because we need to wait for the camera
+                                    // activity to end and the navBar fragment to resume
+                                    ImageCropperPendingLaunch = true;
                                 });
                         }
                         else
@@ -210,6 +211,61 @@ namespace Droid
             return view;
         }
 
+        void LaunchImageCropper( )
+        {
+            File imageFile = new File( DroidContext.Context.GetExternalFilesDir( null ), CCVApp.Shared.Config.Springboard.ProfilePic );
+
+            // load the image
+            Bitmap image = BitmapFactory.DecodeFile( imageFile.AbsolutePath );
+
+            // create the crop fragment
+            ImageCropFragment.Begin( image, delegate( Bitmap croppedImage )
+                { 
+                    image.Dispose( );
+                    image = null;
+
+                    bool success = false;
+                    try
+                    {
+                        // open the existing full image
+                        var fo = System.IO.File.OpenWrite( imageFile.AbsolutePath );
+
+                        // overwrite it with the cropped image 
+                        if( croppedImage.Compress( Bitmap.CompressFormat.Jpeg, 100, fo ) )
+                        {
+                            success = true;
+                            RockMobileUser.Instance.HasProfileImage = true;
+                            SetProfileImage( );
+
+                            //todo: Upload the image to Rock.
+                            //   on confirmation, set User.HasProfileImage to true.
+                        }
+                    }
+                    catch( Exception)
+                    {
+                    }
+
+                    if( success == false )
+                    {
+                        // warn the user
+                    }
+
+                    //FragmentManager.BeginTransaction().Remove( ImageCropFragment ).Commit( );
+                });
+
+            // replace the entire screen the image cropper
+            var ft = FragmentManager.BeginTransaction();
+
+            //do NOT allow a fade. It makes the presentation of
+            // cropping look weird.
+            //ft.SetTransition(FragmentTransit.FragmentFade); 
+
+            ft.Replace(Resource.Id.fragment_container, ImageCropFragment);
+            ft.AddToBackStack( ImageCropFragment.ToString() );
+
+            ft.Commit( );
+        }
+
         public override void OnPause()
         {
             base.OnPause();
@@ -222,6 +278,17 @@ namespace Droid
             base.OnResume();
 
             UpdateLoginState( );
+        }
+
+        public void NavbarWasResumed()
+        {
+            // once the navbar has resumed, we're safe to launch any pending
+            // fullscreen activities.
+            if( ImageCropperPendingLaunch == true )
+            {
+                LaunchImageCropper( );
+                ImageCropperPendingLaunch = false;
+            }
         }
 
         protected void UpdateLoginState( )
@@ -248,38 +315,29 @@ namespace Droid
                 // if they have an profile pic
                 if( RockMobileUser.Instance.HasProfileImage == true )
                 {
-                    //Note: the image is currently rectangular with height dominant.
-                    // This means if we simply load using the profilePicWidth/Height, we'll get an image
-                    // whose width is <= ProfilePicWidth (in this case less) and height is larger,
-                    // because that has to be the case to maintain aspect ratio.
-
-                    //So, when we place the mask over it, its width is cropped because the profile pic has a smaller width,
-                    // and its height doesn't fully cover the image.
-                    // Sort of like this: where the | represents the profile pic's edge. (meaning you don't see the right edge of the mask.
-                    //MMMMM|MM
-                    //MMMMM|MM
-                    //MMMMM|MM
-                    //PPPPP
-
-                    // Soo, we create our rendering canvas with the MASK width. This results in a better result:
-                    //MMMMMMM
-                    //MMMMMMM
-                    //MMMMMMM
-                    // The only downside here is that the profile pic's right edge doesn't hit the edge of the mask. So the right side won't look quite right.
-
-                    //Of course..this will ALL be fixed when we crop the profile image to the same dimensions as the mask.
-
                     // Load the profile pic
                     File imageFile = new File( DroidContext.Context.GetExternalFilesDir( null ), CCVApp.Shared.Config.Springboard.ProfilePic );
-                    Bitmap image = Rock.Mobile.PlatformCommon.Droid.LoadImageAtSize( imageFile, CCVApp.Shared.Config.Springboard.ProfilePicWidth, CCVApp.Shared.Config.Springboard.ProfilePicHeight );
+                    Bitmap image = BitmapFactory.DecodeFile( imageFile.AbsolutePath );
 
-                    // load the mask at the image dimensions
-                    Bitmap mask = Rock.Mobile.PlatformCommon.Droid.LoadImageAtSize( Resource.Drawable.androidPhotoMask, image.Width, image.Height );
+                    // scale the image to the size of the mask
+                    Bitmap scaledImage = Bitmap.CreateScaledBitmap( image, ProfileMask.Width, ProfileMask.Height, false );
 
-                    Bitmap maskedImage = Rock.Mobile.PlatformCommon.Droid.ApplyMaskToBitmap( image, mask );
+                    // dump the source image
+                    image.Dispose( );
+                    image = null;
+
+                    // if we already have a final image, dispose of it
+                    if( ProfileMaskedImage != null )
+                    {
+                        ProfileMaskedImage.Dispose( );
+                        ProfileMaskedImage = null;
+                    }
+
+                    // generate the masked image
+                    ProfileMaskedImage = Rock.Mobile.PlatformCommon.Droid.ApplyMaskToBitmap( scaledImage, ProfileMask );
 
                     // set the final result
-                    ProfileImageButton.SetImageBitmap( maskedImage );
+                    ProfileImageButton.SetImageBitmap( ProfileMaskedImage );
                 }
                 else
                 {
