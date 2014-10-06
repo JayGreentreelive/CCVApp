@@ -15,6 +15,7 @@ using CCVApp.Shared.Network;
 using Android.Graphics;
 using DroidContext = Rock.Mobile.PlatformCommon.Droid;
 using Java.IO;
+using Droid.Tasks;
 
 namespace Droid
 {
@@ -87,13 +88,36 @@ namespace Droid
         {
             base.OnCreate( savedInstanceState );
 
-            // setup our fragments
-            NavbarFragment = new NavbarFragment( );
-            NavbarFragment.SpringboardParent = this;
+            RetainInstance = true;
 
-            LoginFragment = new LoginFragment( );
-            ProfileFragment = new ProfileFragment( );
-            ImageCropFragment = new ImageCropFragment( );
+            // setup our fragments (checking for these to be created might be unnecessary, since we'll retain this fragment)
+            NavbarFragment = FragmentManager.FindFragmentById(Resource.Id.navbar) as NavbarFragment;
+            if ( NavbarFragment == null )
+            {
+                NavbarFragment = new NavbarFragment( );
+                NavbarFragment.SpringboardParent = this;
+            }
+
+            LoginFragment = FragmentManager.FindFragmentByTag( "Droid.LoginFragment" ) as LoginFragment;
+            if ( LoginFragment == null )
+            {
+                LoginFragment = new LoginFragment( );
+                LoginFragment.SpringboardParent = this;
+            }
+
+            ProfileFragment = FragmentManager.FindFragmentByTag( "Droid.ProfileFragment" ) as ProfileFragment;
+            if( ProfileFragment == null )
+            {
+                ProfileFragment = new ProfileFragment( );
+                ProfileFragment.SpringboardParent = this;
+            }
+
+            ImageCropFragment = FragmentManager.FindFragmentByTag( "Droid.ImageCropFragment" ) as ImageCropFragment;
+            if( ImageCropFragment == null )
+            {
+                ImageCropFragment = new ImageCropFragment( );
+                ImageCropFragment.SpringboardParent = this;
+            }
 
             // get the mask used for the profile pic
             ProfileMask = BitmapFactory.DecodeResource( DroidContext.Context.Resources, Resource.Drawable.androidPhotoMask );
@@ -174,7 +198,14 @@ namespace Droid
                                     // flag that we want the cropper to start up on resume.
                                     // we cannot launch it now because we need to wait for the camera
                                     // activity to end and the navBar fragment to resume
-                                    ImageCropperPendingLaunch = true;
+                                    if( args.Result == true )
+                                    {
+                                        ImageCropperPendingLaunch = true;
+                                    }
+                                    else
+                                    {
+                                        // couldn't get the picture
+                                    }
                                 });
                         }
                         else
@@ -195,13 +226,13 @@ namespace Droid
                     // if we're logged in, it'll be the profile one
                     if( RockMobileUser.Instance.LoggedIn == true )
                     {
-                        ft.Replace(Resource.Id.fragment_container, ProfileFragment);
+                        ft.Replace(Resource.Id.fullscreen, ProfileFragment);
                         ft.AddToBackStack( ProfileFragment.ToString() );
                     }
                     else
                     {
                         // else it'll be the login one
-                        ft.Replace(Resource.Id.fragment_container, LoginFragment);
+                        ft.Replace(Resource.Id.fullscreen, LoginFragment);
                         ft.AddToBackStack( LoginFragment.ToString() );
                     }
 
@@ -209,6 +240,23 @@ namespace Droid
                 };
 
             return view;
+        }
+
+        public void ModalFragmentFinished( Fragment fragment )
+        {
+            // called by modal (full screen) fragments that Springboard launches
+            // when the fragments are done and ok to be closed.
+            // (Login, Profile Editing, Image Cropping, etc.)
+            if( LoginFragment == fragment )
+            {
+                Activity.OnBackPressed( );
+                UpdateLoginState( );
+            }
+            else if ( ProfileFragment == fragment )
+            {
+                Activity.OnBackPressed( );
+                UpdateLoginState( );
+            }
         }
 
         void LaunchImageCropper( )
@@ -225,13 +273,15 @@ namespace Droid
                     image = null;
 
                     bool success = false;
+
+                    System.IO.FileStream fileOpenStream = null;
                     try
                     {
                         // open the existing full image
-                        var fo = System.IO.File.OpenWrite( imageFile.AbsolutePath );
+                        fileOpenStream = System.IO.File.OpenWrite( imageFile.AbsolutePath );
 
                         // overwrite it with the cropped image 
-                        if( croppedImage.Compress( Bitmap.CompressFormat.Jpeg, 100, fo ) )
+                        if( croppedImage.Compress( Bitmap.CompressFormat.Jpeg, 100, fileOpenStream ) )
                         {
                             success = true;
                             RockMobileUser.Instance.HasProfileImage = true;
@@ -241,26 +291,25 @@ namespace Droid
                             //   on confirmation, set User.HasProfileImage to true.
                         }
                     }
-                    catch( Exception)
+                    catch( Exception )
                     {
+                    }
+
+                    if( fileOpenStream != null )
+                    {
+                        fileOpenStream.Close( );
                     }
 
                     if( success == false )
                     {
                         // warn the user
                     }
-
-                    //FragmentManager.BeginTransaction().Remove( ImageCropFragment ).Commit( );
                 });
 
             // replace the entire screen the image cropper
             var ft = FragmentManager.BeginTransaction();
 
-            //do NOT allow a fade. It makes the presentation of
-            // cropping look weird.
-            //ft.SetTransition(FragmentTransit.FragmentFade); 
-
-            ft.Replace(Resource.Id.fragment_container, ImageCropFragment);
+            ft.Replace(Resource.Id.fullscreen, ImageCropFragment);
             ft.AddToBackStack( ImageCropFragment.ToString() );
 
             ft.Commit( );
@@ -270,12 +319,16 @@ namespace Droid
         {
             base.OnPause();
 
+            System.Console.WriteLine( "Springboard OnPause()" );
+
             RockApi.Instance.SaveObjectsToDevice( );
         }
 
         public override void OnResume()
         {
             base.OnResume();
+
+            System.Console.WriteLine( "Springboard OnResume()" );
 
             UpdateLoginState( );
         }
@@ -315,6 +368,8 @@ namespace Droid
                 // if they have an profile pic
                 if( RockMobileUser.Instance.HasProfileImage == true )
                 {
+                    ProfileImageButton.SetImageBitmap( null );
+
                     // Load the profile pic
                     File imageFile = new File( DroidContext.Context.GetExternalFilesDir( null ), CCVApp.Shared.Config.Springboard.ProfilePic );
                     Bitmap image = BitmapFactory.DecodeFile( imageFile.AbsolutePath );
@@ -335,6 +390,9 @@ namespace Droid
 
                     // generate the masked image
                     ProfileMaskedImage = Rock.Mobile.PlatformCommon.Droid.ApplyMaskToBitmap( scaledImage, ProfileMask );
+
+                    scaledImage.Dispose( );
+                    scaledImage = null;
 
                     // set the final result
                     ProfileImageButton.SetImageBitmap( ProfileMaskedImage );
@@ -406,11 +464,25 @@ namespace Droid
         public override void OnStop()
         {
             base.OnStop();
+            System.Console.WriteLine( "Springboard OnStop()" );
         }
 
         public override void OnDestroy()
         {
             base.OnDestroy();
+            System.Console.WriteLine( "Springboard OnDestroy()" );
+        }
+
+        public override void OnAttach(Activity activity)
+        {
+            base.OnAttach(activity);
+            System.Console.WriteLine( "Springboard OnAtach()" );
+        }
+
+        public override void OnDetach()
+        {
+            base.OnDetach();
+            System.Console.WriteLine( "Springboard OnDetach()" );
         }
     }
 }

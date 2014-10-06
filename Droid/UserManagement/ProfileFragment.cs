@@ -19,6 +19,8 @@ namespace Droid
 {
     public class ProfileFragment : Fragment
     {
+        public Springboard SpringboardParent { get; set; }
+
         EditText FirstNameField { get; set; }
         EditText MiddleNameField { get; set; }
         EditText LastNameField { get; set; }
@@ -87,8 +89,8 @@ namespace Droid
                                     {
                                         switch( clickArgs.Which )
                                         {
-                                            case 0: SubmitChanges( ); Activity.OnBackPressed(); break;
-                                            case 1: Activity.OnBackPressed(); break;
+                                            case 0: SubmitChanges( ); SpringboardParent.ModalFragmentFinished( this ); break;
+                                            case 1: SpringboardParent.ModalFragmentFinished( this ); break;
                                             case 2: break;
                                         }
                                     });
@@ -98,7 +100,7 @@ namespace Droid
                     }
                     else
                     {
-                        Activity.OnBackPressed();
+                        SpringboardParent.ModalFragmentFinished( this );
                     }
                 };
 
@@ -121,8 +123,8 @@ namespace Droid
                                 {
                                     switch( clickArgs.Which )
                                     {
-                                        case 0: RockMobileUser.Instance.Logout( ); Activity.OnBackPressed(); break;
-                                        case 1: Activity.OnBackPressed(); break;
+                                        case 0: RockMobileUser.Instance.Logout( ); SpringboardParent.ModalFragmentFinished( this ); break;
+                                        case 1: SpringboardParent.ModalFragmentFinished( this ); break;
                                         case 2: break;
                                     }
                                 });

@@ -15,11 +15,14 @@ using Android.Graphics;
 using Android.Graphics.Drawables;
 using Android.Graphics.Drawables.Shapes;
 using Java.IO;
+using Rock.Mobile.PlatformCommon;
 
 namespace Droid
 {
     public class ImageCropFragment : Fragment, View.IOnTouchListener
     {
+        public Springboard SpringboardParent { get; set; }
+
         /// <summary>
         /// The last touch position received. Used for calculating the delta
         /// movement when moving the CropView
@@ -130,20 +133,6 @@ namespace Droid
                 scaledHeight = (float)SourceImage.Height * (1.0f / ScreenToImageScalar);
             }
 
-            // most important step, create our scalar since the image is going to be scaled down to fit the screen
-            // our scalar should be based on the largest dimension
-            /*if( container.Height < container.Width )
-            {
-                ScreenToImageScalar = (float)SourceImage.Height / (float)container.Height;
-            }
-            else
-            {
-                ScreenToImageScalar = (float)SourceImage.Width / (float)container.Width;
-            }
-
-            // now create a scaled version of the source image so it fits our screen.
-            float scaledWidth = (float)SourceImage.Width * (1.0f / ScreenToImageScalar);
-            float scaledHeight = (float)SourceImage.Height * (1.0f / ScreenToImageScalar);*/
             ScaledSourceImage = Bitmap.CreateScaledBitmap( SourceImage, (int)scaledWidth, (int)scaledHeight, false );
 
 
@@ -216,7 +205,7 @@ namespace Droid
             ((RelativeLayout.LayoutParams)cancelButton.LayoutParameters).AddRule( LayoutRules.AlignParentLeft );
 
             // set the crop button's font
-            Android.Graphics.Typeface fontFace = Android.Graphics.Typeface.CreateFromAsset( Rock.Mobile.PlatformCommon.Droid.Context.Assets, "Fonts/" + CCVApp.Shared.Config.ImageCrop.CropCancelButton_Font + ".ttf" );
+            Android.Graphics.Typeface fontFace = DroidFontManager.Instance.GetFont( CCVApp.Shared.Config.ImageCrop.CropCancelButton_Font );
             cancelButton.SetTypeface( fontFace, Android.Graphics.TypefaceStyle.Normal );
             cancelButton.SetTextSize( Android.Util.ComplexUnitType.Dip, CCVApp.Shared.Config.ImageCrop.CropCancelButton_Size );
             cancelButton.Text = CCVApp.Shared.Config.ImageCrop.CropCancelButton_Text;
@@ -245,7 +234,7 @@ namespace Droid
             ((RelativeLayout.LayoutParams)confirmButton.LayoutParameters).AddRule( LayoutRules.AlignParentRight );
 
             // set the crop button's font
-            fontFace = Android.Graphics.Typeface.CreateFromAsset( Rock.Mobile.PlatformCommon.Droid.Context.Assets, "Fonts/" + CCVApp.Shared.Config.ImageCrop.CropOkButton_Font + ".ttf" );
+            fontFace = DroidFontManager.Instance.GetFont( CCVApp.Shared.Config.ImageCrop.CropCancelButton_Font );
             confirmButton.SetTypeface( fontFace, Android.Graphics.TypefaceStyle.Normal );
             confirmButton.SetTextSize( Android.Util.ComplexUnitType.Dip, CCVApp.Shared.Config.ImageCrop.CropOkButton_Size );
             confirmButton.Text = CCVApp.Shared.Config.ImageCrop.CropOkButton_Text;
@@ -260,20 +249,26 @@ namespace Droid
                     }
                     else
                     {
-                        // they pressed it WHILE previewing, so we're done.
-                        ImageCroppedCallback( CroppedImage );
+                        // force our image view to release its references to our bitmaps
+                        ImageView.SetImageBitmap( null );
 
-                        // free our resources.
-                        CroppedImage.Dispose( );
-                        CroppedImage = null;
+                        // free the resources we're done with
+                        SourceImage = null;
 
                         ScaledCroppedImage.Dispose( );
                         ScaledCroppedImage = null;
 
-                        SourceImage = null;
-
                         ScaledSourceImage.Dispose( );
                         ScaledSourceImage = null;
+
+
+                        // notify the caller
+                        ImageCroppedCallback( CroppedImage );
+
+
+                        // free the cropped image
+                        CroppedImage.Dispose( );
+                        CroppedImage = null;
 
                         ImageCroppedCallback = null;
 
@@ -304,6 +299,8 @@ namespace Droid
             {
                 case CropMode.Editing:
                 {
+                    ImageView.SetImageBitmap( null );
+
                     // release any cropped image we had.
                     if ( CroppedImage != null )
                     {
@@ -328,6 +325,8 @@ namespace Droid
 
                 case CropMode.Previewing:
                 {
+                    ImageView.SetImageBitmap( null );
+
                     // create the cropped image
                     CroppedImage = CropImage( SourceImage, new System.Drawing.RectangleF( CropView.GetX( ) - CropViewMinPos.X, 
                                                                                           CropView.GetY( ) - CropViewMinPos.Y, 

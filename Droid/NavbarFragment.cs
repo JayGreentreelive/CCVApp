@@ -14,6 +14,7 @@ using Android.Widget;
 using Android.Animation;
 using Droid.Tasks;
 using Android.Graphics;
+using Rock.Mobile.PlatformCommon;
 
 namespace Droid
 {
@@ -78,6 +79,8 @@ namespace Droid
         {
             base.OnCreate( savedInstanceState );
 
+            RetainInstance = true;
+
             NavToolbar = FragmentManager.FindFragmentById(Resource.Id.navtoolbar) as NavToolbarFragment;
             if (NavToolbar == null)
             {
@@ -127,7 +130,7 @@ namespace Droid
 
 
             // set the font and text
-            Typeface fontFace = Typeface.CreateFromAsset( Rock.Mobile.PlatformCommon.Droid.Context.Assets, "Fonts/" + CCVApp.Shared.Config.PrimaryNavBar.RevealButton_Font + ".ttf" );
+            Typeface fontFace = DroidFontManager.Instance.GetFont( CCVApp.Shared.Config.PrimaryNavBar.RevealButton_Font );
             SpringboardReveal.SetTypeface( fontFace, TypefaceStyle.Normal );
             SpringboardReveal.SetTextSize( Android.Util.ComplexUnitType.Dip, CCVApp.Shared.Config.PrimaryNavBar.RevealButton_Size );
             SpringboardReveal.Text = CCVApp.Shared.Config.PrimaryNavBar.RevealButton_Text;

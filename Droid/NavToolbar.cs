@@ -6,6 +6,7 @@ using Android.Animation;
 using Android.Graphics;
 using Android.App;
 using Android.OS;
+using Rock.Mobile.PlatformCommon;
 
 namespace Droid
 {
@@ -58,6 +59,8 @@ namespace Droid
         public override void OnCreate( Bundle savedInstanceState )
         {
             base.OnCreate( savedInstanceState );
+
+            RetainInstance = true;
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -88,7 +91,7 @@ namespace Droid
             ((RelativeLayout.LayoutParams)BackButton.LayoutParameters).AddRule( LayoutRules.CenterVertical );
 
             // set the back button's font
-            Typeface fontFace = Typeface.CreateFromAsset( Rock.Mobile.PlatformCommon.Droid.Context.Assets, "Fonts/" + CCVApp.Shared.Config.SubNavToolbar.BackButton_Font + ".ttf" );
+            Typeface fontFace = DroidFontManager.Instance.GetFont( CCVApp.Shared.Config.SubNavToolbar.BackButton_Font );
             BackButton.SetTypeface( fontFace, TypefaceStyle.Normal );
             BackButton.SetTextSize( Android.Util.ComplexUnitType.Dip, CCVApp.Shared.Config.SubNavToolbar.BackButton_Size );
 
@@ -125,7 +128,7 @@ namespace Droid
             ShareButton.SetX( BackButton.LayoutParameters.Width + 10 );
 
             // set the share button's font
-            fontFace = Typeface.CreateFromAsset( Rock.Mobile.PlatformCommon.Droid.Context.Assets, "Fonts/" + CCVApp.Shared.Config.SubNavToolbar.ShareButton_Font + ".ttf" );
+            fontFace = DroidFontManager.Instance.GetFont( CCVApp.Shared.Config.SubNavToolbar.ShareButton_Font );
             ShareButton.SetTypeface( fontFace, TypefaceStyle.Normal );
             ShareButton.SetTextSize( Android.Util.ComplexUnitType.Dip, CCVApp.Shared.Config.SubNavToolbar.ShareButton_Size );
 

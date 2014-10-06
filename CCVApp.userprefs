@@ -1,25 +1,36 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|iPhone" PreferredExecutionTarget="Android.SelectDevice" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Springboard.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.094c904b" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/UserManagement/ImageCropFragment.cs">
     <Files>
-      <File FileName="Droid/Springboard.cs" Line="38" Column="38" />
-      <File FileName="../Rock.Mobile/PlatformCommon/DroidCommon.cs" Line="23" Column="23" />
-      <File FileName="Droid/UserManagement/ImageCropFragment.cs" Line="25" Column="25" />
-      <File FileName="CCVApp.Shared/Config.cs" Line="1" Column="1" />
-      <File FileName="../Rock.Mobile/PlatformMedia/DroidCamera.cs" Line="1" Column="1" />
-      <File FileName="Droid/NavbarFragment.cs" Line="54" Column="54" />
-      <File FileName="Droid/Tasks/NotesTask/NotesFragment.cs" Line="31" Column="31" />
-      <File FileName="Droid/NavToolbar.cs" Line="1" Column="1" />
+      <File FileName="Droid/Springboard.cs" Line="54" Column="54" />
+      <File FileName="Droid/UserManagement/ImageCropFragment.cs" Line="18" Column="18" />
+      <File FileName="Droid/Tasks/NotesTask/NotesTask.cs" Line="21" Column="21" />
+      <File FileName="Droid/Tasks/Task.cs" Line="1" Column="1" />
+      <File FileName="../Rock.Mobile/PlatformUI/Droid/DroidLabel.cs" Line="14" Column="14" />
+      <File FileName="../Rock.Mobile/PlatformCommon/DroidCommon.cs" Line="82" Column="82" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="Droid" expanded="True">
+            <Node name="Tasks" expanded="True">
+              <Node name="NotesTask" expanded="True" />
+            </Node>
             <Node name="UserManagement" expanded="True" />
-            <Node name="Springboard.cs" selected="True" />
           </Node>
-          <Node name="iOS" expanded="True" />
+          <Node name="iOS" selected="True" />
+          <Node name="Rock.Mobile" expanded="True">
+            <Node name="PlatformCommon" expanded="True" />
+            <Node name="PlatformUI" expanded="True">
+              <Node name="Droid" expanded="True">
+                <Node name="DroidNative" expanded="True" />
+              </Node>
+            </Node>
+          </Node>
         </State>
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>

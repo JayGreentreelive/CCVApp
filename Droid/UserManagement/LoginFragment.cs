@@ -30,14 +30,15 @@ namespace Droid
         };
         LoginState State { get; set; }
 
+        public Springboard SpringboardParent { get; set; }
 
-        public ProgressBar LoginActivityIndicator { get; set; }
-        public Button LoginButton { get; set; }
-        public Button CancelButton { get; set; }
-        public Button CreateAccountButton { get; set; }
-        public EditText UsernameField { get; set; }
-        public EditText PasswordField { get; set; }
-        public TextView LoginResultLabel { get; set; }
+        ProgressBar LoginActivityIndicator { get; set; }
+        Button LoginButton { get; set; }
+        Button CancelButton { get; set; }
+        Button CreateAccountButton { get; set; }
+        EditText UsernameField { get; set; }
+        EditText PasswordField { get; set; }
+        TextView LoginResultLabel { get; set; }
 
         public override void OnCreate( Bundle savedInstanceState )
         {
@@ -77,7 +78,7 @@ namespace Droid
 
             CancelButton.Click += (object sender, EventArgs e) => 
                 {
-                    Activity.OnBackPressed();
+                    SpringboardParent.ModalFragmentFinished( this );
                 };
 
             return view;
@@ -157,7 +158,7 @@ namespace Droid
                     LoginSuccessfulTimer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e) => 
                         {
                             // when the timer fires, notify the springboard we're done.
-                            Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate { Activity.OnBackPressed(); } );
+                            Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate { SpringboardParent.ModalFragmentFinished( this ); } );
                         };
 
                     LoginSuccessfulTimer.Start();
