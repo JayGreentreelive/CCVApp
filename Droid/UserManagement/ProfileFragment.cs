@@ -74,13 +74,13 @@ namespace Droid
                     {
                         // Since they made changes, confirm they want to save them.
                         AlertDialog.Builder builder = new AlertDialog.Builder( Activity );
-                        builder.SetTitle( "Submit Changes?" );
+                        builder.SetTitle( CCVApp.Shared.Strings.Profile_SubmitChangesTitle );
 
                         Java.Lang.ICharSequence [] strings = new Java.Lang.ICharSequence[]
                             {
-                                new Java.Lang.String( "Yes" ),
-                                new Java.Lang.String( "No, Thanks" ),
-                                new Java.Lang.String( "Cancel" )
+                                new Java.Lang.String( CCVApp.Shared.Strings.General_Yes ),
+                                new Java.Lang.String( CCVApp.Shared.Strings.General_No ),
+                                new Java.Lang.String( CCVApp.Shared.Strings.General_Cancel )
                             };
 
                         builder.SetItems( strings, delegate(object s, DialogClickEventArgs clickArgs) 
@@ -89,8 +89,8 @@ namespace Droid
                                     {
                                         switch( clickArgs.Which )
                                         {
-                                            case 0: SubmitChanges( ); SpringboardParent.ModalFragmentFinished( this ); break;
-                                            case 1: SpringboardParent.ModalFragmentFinished( this ); break;
+                                            case 0: SubmitChanges( ); SpringboardParent.ModalFragmentFinished( this, null ); break;
+                                            case 1: SpringboardParent.ModalFragmentFinished( this, null ); break;
                                             case 2: break;
                                         }
                                     });
@@ -100,7 +100,7 @@ namespace Droid
                     }
                     else
                     {
-                        SpringboardParent.ModalFragmentFinished( this );
+                        SpringboardParent.ModalFragmentFinished( this, null );
                     }
                 };
 
@@ -108,13 +108,13 @@ namespace Droid
                 {
                     // Since they made changes, confirm they want to save them.
                     AlertDialog.Builder builder = new AlertDialog.Builder( Activity );
-                    builder.SetTitle( "Log Out?" );
+                    builder.SetTitle( CCVApp.Shared.Strings.Profile_LogoutTitle );
 
                     Java.Lang.ICharSequence [] strings = new Java.Lang.ICharSequence[]
                         {
-                            new Java.Lang.String( "Yes" ),
-                            new Java.Lang.String( "No, Thanks" ),
-                            new Java.Lang.String( "Cancel" )
+                            new Java.Lang.String( CCVApp.Shared.Strings.General_Yes ),
+                            new Java.Lang.String( CCVApp.Shared.Strings.General_No ),
+                            new Java.Lang.String( CCVApp.Shared.Strings.General_Cancel )
                         };
 
                     builder.SetItems( strings, delegate(object s, DialogClickEventArgs clickArgs) 
@@ -123,8 +123,8 @@ namespace Droid
                                 {
                                     switch( clickArgs.Which )
                                     {
-                                        case 0: RockMobileUser.Instance.Logout( ); SpringboardParent.ModalFragmentFinished( this ); break;
-                                        case 1: SpringboardParent.ModalFragmentFinished( this ); break;
+                                        case 0: RockMobileUser.Instance.Logout( ); SpringboardParent.ModalFragmentFinished( this, null ); break;
+                                        case 1: SpringboardParent.ModalFragmentFinished( this, null ); break;
                                         case 2: break;
                                     }
                                 });

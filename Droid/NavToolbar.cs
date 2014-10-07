@@ -207,12 +207,16 @@ namespace Droid
             if( ShareButtonDelegate != null )
             {
                 ShareButton.Click -= ShareButtonDelegate;
+                ShareButtonDelegate = null;
             }
 
             // set the new one and store a reference to it
-            ShareButton.Click += sharePressed;
+            if( sharePressed != null )
+            {
+                ShareButton.Click += sharePressed;
 
-            ShareButtonDelegate = sharePressed;
+                ShareButtonDelegate = sharePressed;
+            }
 
             ShareButtonDisplayed = display;
 

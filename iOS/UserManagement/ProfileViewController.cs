@@ -71,7 +71,7 @@ namespace iOS
                     }
                     else
                     {
-                        Springboard.ResignModelViewController( this );
+                        Springboard.ResignModelViewController( this, null );
                     }
                 };
 
@@ -90,7 +90,7 @@ namespace iOS
                                 // then log them out.
                                 RockMobileUser.Instance.Logout( );
 
-                                Springboard.ResignModelViewController( this );
+                                Springboard.ResignModelViewController( this, null );
                             }
                         };
 
@@ -102,10 +102,10 @@ namespace iOS
             switch( e.ButtonIndex )
             {
                 // submit
-                case 0: SubmitChanges( ); Springboard.ResignModelViewController( this ); break;
+                case 0: SubmitChanges( ); Springboard.ResignModelViewController( this, null ); break;
 
                 // No, don't submit
-                case 1: Springboard.ResignModelViewController( this ); break;
+                case 1: Springboard.ResignModelViewController( this, null ); break;
 
                 // cancel
                 case 2: break;

@@ -79,7 +79,7 @@ namespace iOS
             // If cancel is pressed, notify the springboard we're done.
             CancelButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
-                    Springboard.ResignModelViewController( this );
+                    Springboard.ResignModelViewController( this, null );
                 };
         }
 
@@ -252,7 +252,7 @@ namespace iOS
                     LoginSuccessfulTimer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e) => 
                         {
                             // when the timer fires, notify the springboard we're done.
-                            Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate { Springboard.ResignModelViewController( this ); } );
+                            Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate { Springboard.ResignModelViewController( this, null ); } );
                         };
 
                     LoginSuccessfulTimer.Start();

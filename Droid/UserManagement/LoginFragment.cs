@@ -78,7 +78,7 @@ namespace Droid
 
             CancelButton.Click += (object sender, EventArgs e) => 
                 {
-                    SpringboardParent.ModalFragmentFinished( this );
+                    SpringboardParent.ModalFragmentFinished( this, null );
                 };
 
             return view;
@@ -158,7 +158,7 @@ namespace Droid
                     LoginSuccessfulTimer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e) => 
                         {
                             // when the timer fires, notify the springboard we're done.
-                            Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate { SpringboardParent.ModalFragmentFinished( this ); } );
+                            Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate { SpringboardParent.ModalFragmentFinished( this, null ); } );
                         };
 
                     LoginSuccessfulTimer.Start();

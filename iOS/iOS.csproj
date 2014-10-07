@@ -282,6 +282,7 @@
     <BundleResource Include="..\Assets\news_general_3%402x.png">
       <Link>Resources\news_general_3%402x.png</Link>
     </BundleResource>
+    <BundleResource Include="Resources\IMG_0079.JPG" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -331,6 +332,14 @@
     <Compile Include="Tasks\News\NewsDetailsUIViewController.cs" />
     <Compile Include="Tasks\News\NewsDetailsUIViewController.designer.cs">
       <DependentUpon>NewsDetailsUIViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tasks\About\AboutMainPageUIViewController.cs" />
+    <Compile Include="Tasks\About\AboutMainPageUIViewController.designer.cs">
+      <DependentUpon>AboutMainPageUIViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserManagement\ImageCropViewController.cs" />
+    <Compile Include="UserManagement\ImageCropViewController.designer.cs">
+      <DependentUpon>ImageCropViewController.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <Import Project="..\..\Rock\Rock.Client\Rock.Client.Models.projitems" Label="Shared" Condition="Exists('..\..\Rock\Rock.Client\Rock.Client.Models.projitems')" />

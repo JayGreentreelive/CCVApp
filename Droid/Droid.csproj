@@ -69,6 +69,8 @@
     <Compile Include="UserManagement\LoginFragment.cs" />
     <Compile Include="UserManagement\ProfileFragment.cs" />
     <Compile Include="UserManagement\ImageCropFragment.cs" />
+    <Compile Include="Tasks\AboutTask\AboutPrimaryFragment.cs" />
+    <Compile Include="Tasks\AboutTask\AboutTask.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
@@ -134,6 +136,9 @@
     <AndroidResource Include="Resources\layout-sw320dp\ImageCrop.axml" />
     <AndroidResource Include="Resources\layout-sw480dp\ImageCrop.axml" />
     <AndroidResource Include="Resources\layout-sw600dp\ImageCrop.axml" />
+    <AndroidResource Include="Resources\layout-sw600dp\About_PrimaryFragment.axml" />
+    <AndroidResource Include="Resources\layout-sw480dp\About_PrimaryFragment.axml" />
+    <AndroidResource Include="Resources\layout-sw320dp\About_PrimaryFragment.axml" />
   </ItemGroup>
   <Import Project="..\..\Rock.Mobile\Rock.Mobile.projitems" Label="Shared" Condition="Exists('..\..\Rock.Mobile\Rock.Mobile.projitems')" />
   <Import Project="..\..\Rock\Rock.Client\Rock.Client.Models.projitems" Label="Shared" Condition="Exists('..\..\Rock\Rock.Client\Rock.Client.Models.projitems')" />
@@ -149,6 +154,7 @@
     <Folder Include="Resources\drawable-mdpi\" />
     <Folder Include="Resources\layout-sw320dp\" />
     <Folder Include="UserManagement\" />
+    <Folder Include="Tasks\AboutTask\" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="..\Assets\Fonts\Bevan.ttf">

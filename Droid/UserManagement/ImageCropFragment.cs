@@ -76,6 +76,14 @@ namespace Droid
         ImageView ImageView { get; set; }
 
         /// <summary>
+        /// The aspect ratio we should be cropping the picture to.
+        /// Example: 1.0f would mean 1:1 width/height, or a square.
+        /// 9 / 16 would mean 9:16 (or 16:9), which is "wide screen" like a movie.
+        /// </summary>
+        /// <value>The crop aspect ratio.</value>
+        float CropAspectRatio { get; set; }
+
+        /// <summary>
         /// Crop mode.
         /// </summary>
         enum CropMode
@@ -91,21 +99,17 @@ namespace Droid
         /// <value>The mode.</value>
         CropMode Mode { get; set; }
 
-        /// <summary>
-        /// Callback when cropping is complete
-        /// </summary>
-        public delegate void ImageCropped( Android.Graphics.Bitmap croppedImage );
-        ImageCropped ImageCroppedCallback;
+        Button CancelButton { get; set; }
 
         public override void OnCreate( Bundle savedInstanceState )
         {
             base.OnCreate( savedInstanceState );
         }
 
-        public void Begin( Bitmap sourceImage, ImageCropped callback )
+        public void Begin( Bitmap sourceImage, float cropAspectRatio )
         {
             SourceImage = sourceImage;
-            ImageCroppedCallback = callback;
+            CropAspectRatio = cropAspectRatio;
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -152,8 +156,9 @@ namespace Droid
             CropView = new View( Rock.Mobile.PlatformCommon.Droid.Context );
             CropView.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
 
+            // the crop view's dimensions should be based on what the user wanted to crop to. We'll do width, and then height as a scale of width.
             CropView.LayoutParameters.Width = (int) (scaledWidth < scaledHeight ? scaledWidth : scaledHeight);
-            CropView.LayoutParameters.Height = CropView.LayoutParameters.Width; //yes WIDTH, we want to enforce a square
+            CropView.LayoutParameters.Height = (int) ((float) CropView.LayoutParameters.Width * CropAspectRatio);
 
             // the crop view should be a nice outlined rounded rect
             float _Radius = 3.0f;
@@ -184,33 +189,33 @@ namespace Droid
 
 
             // Now setup our bottom area with cancel, crop, and text to explain
-            LinearLayout LinearLayout = new LinearLayout( Rock.Mobile.PlatformCommon.Droid.Context );
-            LinearLayout.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
-            ((RelativeLayout.LayoutParams)LinearLayout.LayoutParameters).AddRule( LayoutRules.AlignParentBottom );
+            RelativeLayout bottomBarLayout = new RelativeLayout( Rock.Mobile.PlatformCommon.Droid.Context );
+            bottomBarLayout.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
+            ((RelativeLayout.LayoutParams)bottomBarLayout.LayoutParameters).AddRule( LayoutRules.AlignParentBottom );
 
             // set the nav subBar color (including opacity)
             Color navColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.BackgroundColor );
             navColor.A = (Byte) ( (float) navColor.A * CCVApp.Shared.Config.SubNavToolbar.Opacity );
-            LinearLayout.SetBackgroundColor( navColor );
+            bottomBarLayout.SetBackgroundColor( navColor );
 
-            LinearLayout.LayoutParameters.Height = 150;
-            view.AddView( LinearLayout );
+            bottomBarLayout.LayoutParameters.Height = 150;
+            view.AddView( bottomBarLayout );
 
 
 
             // setup the cancel button (which will undo cropping or take you back to the picture taker)
-            Button cancelButton = new Button( Rock.Mobile.PlatformCommon.Droid.Context );
-            cancelButton.LayoutParameters = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-            cancelButton.Gravity = GravityFlags.Left;
-            ((RelativeLayout.LayoutParams)cancelButton.LayoutParameters).AddRule( LayoutRules.AlignParentLeft );
+            CancelButton = new Button( Rock.Mobile.PlatformCommon.Droid.Context );
+            CancelButton.LayoutParameters = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+            CancelButton.Gravity = GravityFlags.Left;
+            ((RelativeLayout.LayoutParams)CancelButton.LayoutParameters).AddRule( LayoutRules.AlignParentLeft );
 
             // set the crop button's font
             Android.Graphics.Typeface fontFace = DroidFontManager.Instance.GetFont( CCVApp.Shared.Config.ImageCrop.CropCancelButton_Font );
-            cancelButton.SetTypeface( fontFace, Android.Graphics.TypefaceStyle.Normal );
-            cancelButton.SetTextSize( Android.Util.ComplexUnitType.Dip, CCVApp.Shared.Config.ImageCrop.CropCancelButton_Size );
-            cancelButton.Text = CCVApp.Shared.Config.ImageCrop.CropCancelButton_Text;
+            CancelButton.SetTypeface( fontFace, Android.Graphics.TypefaceStyle.Normal );
+            CancelButton.SetTextSize( Android.Util.ComplexUnitType.Dip, CCVApp.Shared.Config.ImageCrop.CropCancelButton_Size );
+            CancelButton.Text = CCVApp.Shared.Config.ImageCrop.CropCancelButton_Text;
 
-            cancelButton.Click += (object sender, EventArgs e) => 
+            CancelButton.Click += (object sender, EventArgs e) => 
                 {
                     // if they hit cancel while previewing, go back to editing
                     if( Mode == CropMode.Previewing )
@@ -223,7 +228,7 @@ namespace Droid
                     }
                 };
 
-            LinearLayout.AddView( cancelButton );
+            bottomBarLayout.AddView( CancelButton );
 
 
 
@@ -263,21 +268,19 @@ namespace Droid
 
 
                         // notify the caller
-                        ImageCroppedCallback( CroppedImage );
+                        SpringboardParent.ModalFragmentFinished( this, CroppedImage );
 
 
                         // free the cropped image
                         CroppedImage.Dispose( );
                         CroppedImage = null;
 
-                        ImageCroppedCallback = null;
-
                         // now free our resources, cause we're done.
                         Activity.OnBackPressed( );
                     }
                 };
 
-            LinearLayout.AddView( confirmButton );
+            bottomBarLayout.AddView( confirmButton );
 
             // start in editing mode (obviously)
             SetMode( CropMode.Editing );
@@ -299,6 +302,9 @@ namespace Droid
             {
                 case CropMode.Editing:
                 {
+                    // there's nothing to cancel while editing, so disable the button.
+                    CancelButton.Enabled = false;
+
                     ImageView.SetImageBitmap( null );
 
                     // release any cropped image we had.
@@ -325,6 +331,9 @@ namespace Droid
 
                 case CropMode.Previewing:
                 {
+                    // allow them to cancel this crop and try again.
+                    CancelButton.Enabled = true;
+
                     ImageView.SetImageBitmap( null );
 
                     // create the cropped image

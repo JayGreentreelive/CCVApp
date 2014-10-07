@@ -1,38 +1,10 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.094c904b" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/UserManagement/ImageCropFragment.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget.CCV12-I010" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/SpringboardViewController.cs">
     <Files>
-      <File FileName="Droid/Springboard.cs" Line="54" Column="54" />
-      <File FileName="Droid/UserManagement/ImageCropFragment.cs" Line="18" Column="18" />
-      <File FileName="Droid/Tasks/NotesTask/NotesTask.cs" Line="21" Column="21" />
-      <File FileName="Droid/Tasks/Task.cs" Line="1" Column="1" />
-      <File FileName="../Rock.Mobile/PlatformUI/Droid/DroidLabel.cs" Line="14" Column="14" />
-      <File FileName="../Rock.Mobile/PlatformCommon/DroidCommon.cs" Line="82" Column="82" />
+      <File FileName="iOS/SpringboardViewController.cs" Line="40" Column="40" />
+      <File FileName="iOS/Tasks/Notes/NotesViewController.cs" Line="81" Column="81" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="Droid" expanded="True">
-            <Node name="Tasks" expanded="True">
-              <Node name="NotesTask" expanded="True" />
-            </Node>
-            <Node name="UserManagement" expanded="True" />
-          </Node>
-          <Node name="iOS" selected="True" />
-          <Node name="Rock.Mobile" expanded="True">
-            <Node name="PlatformCommon" expanded="True" />
-            <Node name="PlatformUI" expanded="True">
-              <Node name="Droid" expanded="True">
-                <Node name="DroidNative" expanded="True" />
-              </Node>
-            </Node>
-          </Node>
-        </State>
-      </Pad>
-      <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />

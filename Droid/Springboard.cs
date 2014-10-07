@@ -80,6 +80,8 @@ namespace Droid
         /// <value><c>true</c> if image cropper pending launch; otherwise, <c>false</c>.</value>
         bool ImageCropperPendingLaunch { get; set; }
 
+        Bitmap ImageCropperSource { get; set; }
+
         Bitmap ProfileMask { get; set; }
 
         Bitmap ProfileMaskedImage { get; set; }
@@ -135,7 +137,7 @@ namespace Droid
             Elements.Add( new SpringboardElement( new Droid.Tasks.Placeholder.PlaceholderTask( NavbarFragment ), Resource.Id.springboard_groupfinder_frame, Resource.Id.springboard_groupfinder_icon, Resource.Id.springboard_groupfinder_button ) );
             Elements.Add( new SpringboardElement( new Droid.Tasks.Placeholder.PlaceholderTask( NavbarFragment ), Resource.Id.springboard_prayer_frame, Resource.Id.springboard_prayer_icon, Resource.Id.springboard_prayer_button ) );
             Elements.Add( new SpringboardElement( new Droid.Tasks.Notes.NotesTask( NavbarFragment ), Resource.Id.springboard_notes_frame, Resource.Id.springboard_notes_icon, Resource.Id.springboard_notes_button ) );
-            Elements.Add( new SpringboardElement( new Droid.Tasks.Placeholder.PlaceholderTask( NavbarFragment ), Resource.Id.springboard_about_frame, Resource.Id.springboard_about_icon, Resource.Id.springboard_about_button ) );
+            Elements.Add( new SpringboardElement( new Droid.Tasks.About.AboutTask( NavbarFragment ), Resource.Id.springboard_about_frame, Resource.Id.springboard_about_icon, Resource.Id.springboard_about_button ) );
 
             ActiveElementIndex = 0;
             if( savedInstanceState != null )
@@ -205,12 +207,14 @@ namespace Droid
                                     else
                                     {
                                         // couldn't get the picture
+                                        DisplayError( CCVApp.Shared.Strings.Error_ProfilePictureTitle, CCVApp.Shared.Strings.Error_ProfilePictureMessage );
                                     }
                                 });
                         }
                         else
                         {
                             // nope
+                            DisplayError( CCVApp.Shared.Strings.Error_ProfilePictureTitle, CCVApp.Shared.Strings.Error_ProfilePictureMessage );
                         }
                     }
                 };
@@ -242,7 +246,7 @@ namespace Droid
             return view;
         }
 
-        public void ModalFragmentFinished( Fragment fragment )
+        public void ModalFragmentFinished( Fragment fragment, object context )
         {
             // called by modal (full screen) fragments that Springboard launches
             // when the fragments are done and ok to be closed.
@@ -257,61 +261,63 @@ namespace Droid
                 Activity.OnBackPressed( );
                 UpdateLoginState( );
             }
+            else if ( ImageCropFragment == fragment )
+            {
+                // dispose of the source
+                ImageCropperSource.Dispose( );
+                ImageCropperSource = null;
+
+                // take the newly cropped image and write it to disk
+                Bitmap croppedImage = (Bitmap)context;
+
+                bool success = false;
+                System.IO.FileStream fileOpenStream = null;
+                try
+                {
+                    // open the existing full image
+                    File imageFile = new File( DroidContext.Context.GetExternalFilesDir( null ), CCVApp.Shared.Config.Springboard.ProfilePic );
+                    fileOpenStream = System.IO.File.OpenWrite( imageFile.AbsolutePath );
+
+                    // overwrite it with the cropped image 
+                    if( croppedImage.Compress( Bitmap.CompressFormat.Jpeg, 100, fileOpenStream ) )
+                    {
+                        success = true;
+                        RockMobileUser.Instance.HasProfileImage = true;
+                        SetProfileImage( );
+
+                        //todo: Upload the image to Rock.
+                        //   on confirmation, set User.HasProfileImage to true.
+                    }
+                }
+                catch( Exception )
+                {
+                }
+
+                if( fileOpenStream != null )
+                {
+                    fileOpenStream.Close( );
+                }
+
+                if( success == false )
+                {
+                    DisplayError( CCVApp.Shared.Strings.Error_ProfilePictureTitle, CCVApp.Shared.Strings.Error_ProfilePictureMessage );
+                }
+            }
         }
 
         void LaunchImageCropper( )
         {
+            // load the image. We store a reference so that when the image cropper is done we can free it.
             File imageFile = new File( DroidContext.Context.GetExternalFilesDir( null ), CCVApp.Shared.Config.Springboard.ProfilePic );
-
-            // load the image
-            Bitmap image = BitmapFactory.DecodeFile( imageFile.AbsolutePath );
+            ImageCropperSource = BitmapFactory.DecodeFile( imageFile.AbsolutePath );
 
             // create the crop fragment
-            ImageCropFragment.Begin( image, delegate( Bitmap croppedImage )
-                { 
-                    image.Dispose( );
-                    image = null;
+            ImageCropFragment.Begin( ImageCropperSource, 1.00f );
 
-                    bool success = false;
-
-                    System.IO.FileStream fileOpenStream = null;
-                    try
-                    {
-                        // open the existing full image
-                        fileOpenStream = System.IO.File.OpenWrite( imageFile.AbsolutePath );
-
-                        // overwrite it with the cropped image 
-                        if( croppedImage.Compress( Bitmap.CompressFormat.Jpeg, 100, fileOpenStream ) )
-                        {
-                            success = true;
-                            RockMobileUser.Instance.HasProfileImage = true;
-                            SetProfileImage( );
-
-                            //todo: Upload the image to Rock.
-                            //   on confirmation, set User.HasProfileImage to true.
-                        }
-                    }
-                    catch( Exception )
-                    {
-                    }
-
-                    if( fileOpenStream != null )
-                    {
-                        fileOpenStream.Close( );
-                    }
-
-                    if( success == false )
-                    {
-                        // warn the user
-                    }
-                });
-
-            // replace the entire screen the image cropper
+            // launch the image cropper
             var ft = FragmentManager.BeginTransaction();
-
             ft.Replace(Resource.Id.fullscreen, ImageCropFragment);
             ft.AddToBackStack( ImageCropFragment.ToString() );
-
             ft.Commit( );
         }
 
@@ -483,6 +489,17 @@ namespace Droid
         {
             base.OnDetach();
             System.Console.WriteLine( "Springboard OnDetach()" );
+        }
+
+        void DisplayError( string title, string message )
+        {
+            AlertDialog.Builder dlgAlert = new AlertDialog.Builder( Rock.Mobile.PlatformCommon.Droid.Context );                      
+            dlgAlert.SetTitle( title ); 
+            dlgAlert.SetMessage( message ); 
+            dlgAlert.SetPositiveButton( "Ok", delegate(object sender, DialogClickEventArgs ev )
+                {
+                } );
+            dlgAlert.Create( ).Show( );
         }
     }
 }

@@ -32,7 +32,7 @@
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
 	<key>CFBundleDisplayName</key>
-	<string>CCVApp Proto</string>
+	<string>CCV Mobile 2</string>
 	<key>UIMainStoryboardFile</key>
 	<string>MainStoryboard</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>

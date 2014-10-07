@@ -10,7 +10,7 @@ using Android.Util;
 
 namespace Droid
 {
-    [Activity( Label = "CCVApp Proto", MainLauncher = true, Icon = "@drawable/icon", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize )]
+    [Activity( Label = "CCV Mobile 2", MainLauncher = true, Icon = "@drawable/icon", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize )]
     public class MainActivity : Activity
     {
         protected override void OnCreate( Bundle bundle )

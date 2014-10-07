@@ -315,7 +315,12 @@ namespace CCVApp
 
                     foreach( IUIControl control in ChildControls )
                     {
-                        control.BuildHTMLContent( ref htmlStream, userNotes );
+                        // don't render the NoteTexts, those are just numbers, which the
+                        // HTML will insert for us.
+                        if( control as ListItem != null )
+                        {
+                            control.BuildHTMLContent( ref htmlStream, userNotes );
+                        }
                     }
 
                     // handle user notes

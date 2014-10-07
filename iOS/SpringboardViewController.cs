@@ -144,7 +144,11 @@ namespace iOS
         /// <value>The profile view controller.</value>
         protected ProfileViewController ProfileViewController { get; set; }
 
-
+        /// <summary>
+        /// Controller used for copping an image to our requirements (1:1 aspect ratio)
+        /// </summary>
+        /// <value>The image crop view controller.</value>
+        protected ImageCropViewController ImageCropViewController { get; set; }
 
         /// <summary>
         /// When true, we are doing something else, like logging in, editing the profile, etc.
@@ -152,11 +156,18 @@ namespace iOS
         /// <value><c>true</c> if modal controller visible; otherwise, <c>false</c>.</value>
         protected bool ModalControllerVisible { get; set; } 
 
+        /// <summary>
+        /// When true, we need to launch the image cropper. We have to wait
+        /// until the NavBar and all sub-fragments have been pushed to the stack.
+        /// </summary>
+        bool ImageCropperPendingLaunch { get; set; }
+
 		public SpringboardViewController (IntPtr handle) : base (handle)
 		{
             UserManagementStoryboard = UIStoryboard.FromName( "UserManagement", null );
 
             NavViewController = Storyboard.InstantiateViewController( "MainUINavigationController" ) as MainUINavigationController;
+
             Elements = new List<SpringboardElement>( );
 		}
 
@@ -200,12 +211,15 @@ namespace iOS
         {
             base.ViewDidLoad( );
 
-            // create the login controller
+            // create the login controller / profile view controllers
             LoginViewController = UserManagementStoryboard.InstantiateViewController( "LoginViewController" ) as LoginViewController;
             LoginViewController.Springboard = this;
 
             ProfileViewController = UserManagementStoryboard.InstantiateViewController( "ProfileViewController" ) as ProfileViewController;
             ProfileViewController.Springboard = this;
+
+            ImageCropViewController = UserManagementStoryboard.InstantiateViewController( "ImageCropViewController" ) as ImageCropViewController;
+            ImageCropViewController.Springboard = this;
 
             CurrentOrientation = UIDevice.CurrentDevice.Orientation;
 
@@ -239,7 +253,7 @@ namespace iOS
                         // do we have a camera?
                         if( Rock.Mobile.Media.PlatformCamera.Instance.IsAvailable( ) )
                         {
-                            // buld the path to where it should be stored.
+                            // build the path to where it should be stored.
                             string documentsDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
                             string jpgFilename = System.IO.Path.Combine (documentsDirectory, CCVApp.Shared.Config.Springboard.ProfilePic );
 
@@ -250,39 +264,22 @@ namespace iOS
                                     bool success = false;
                                     if( args.Result == true )
                                     {
-                                        // attempt to load the image
-                                        UIImage image = UIImage.FromFile( args.ImagePath );
-                                        if( image != null )
-                                        {
-                                            // it worked, so flag that they now have a profile picture.
-                                            success = true;
-                                            RockMobileUser.Instance.HasProfileImage = true;
+                                        success = true;
 
-                                            // the image will naturally load in UpdateLoginState
-                                        }
+                                        // then it's time to crop the picture.
+                                        ImageCropperPendingLaunch = true;
                                     }
 
                                     if( success == false )
                                     {
-                                        // for now, notify them there's no camera. In the future, probably go
-                                        // directly to the image picker.
-                                        UIAlertView alert = new UIAlertView( );
-                                        alert.Title = "Profile Picture";
-                                        alert.Message = "Sorry, we couldn't use that picture. Please try again.";
-                                        alert.AddButton( "Ok" );
-                                        alert.Show( );
+                                        DisplayError( CCVApp.Shared.Strings.Error_ProfilePictureTitle, CCVApp.Shared.Strings.Error_ProfilePictureMessage );
                                     }
                                 });
                         }
                         else
                         {
-                            // for now, notify them there's no camera. In the future, probably go
-                            // directly to the image picker.
-                            UIAlertView alert = new UIAlertView( );
-                            alert.Title = "No Camera";
-                            alert.Message = "This device does not have a camera.";
-                            alert.AddButton( "Ok" );
-                            alert.Show( );
+                            // notify them they don't have a camera
+                            DisplayError( CCVApp.Shared.Strings.Error_NoCameraTitle, CCVApp.Shared.Strings.Error_NoCameraMessage );
                         }
                     }
                     else
@@ -309,8 +306,30 @@ namespace iOS
             ModalControllerVisible = true;
         }
 
-        public void ResignModelViewController( UIViewController modelViewController )
+        public void ResignModelViewController( UIViewController modelViewController, object context )
         {
+            if( modelViewController == ImageCropViewController )
+            {
+                string documentsDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                string jpgFilename = System.IO.Path.Combine (documentsDirectory, CCVApp.Shared.Config.Springboard.ProfilePic );
+
+                // get and store the picture.
+                UIImage croppedImage = (UIImage)context;
+                NSData croppedImageData = croppedImage.AsJPEG( );
+
+                // if the image converts and saves correctly, we're good.
+                if( croppedImageData != null && croppedImageData.Save( jpgFilename, true ) == true )
+                {
+                    // it worked, so flag that they now have a profile picture.
+                    RockMobileUser.Instance.HasProfileImage = true;
+                }
+                else
+                {
+                    // notify them about a problem saving the profile picture
+                    DisplayError( CCVApp.Shared.Strings.Error_ProfilePictureTitle, CCVApp.Shared.Strings.Error_ProfilePictureMessage );
+                }
+            }
+
             modelViewController.DismissViewController( true, null );
             ModalControllerVisible = false;
         }
@@ -377,14 +396,28 @@ namespace iOS
         {
             base.ViewDidAppear(animated);
 
-            // if we're appearing and no task is active, start one.
-            // (this will only happen when the app is first launched)
-            if( NavViewController.CurrentTask == null )
+            if( ImageCropperPendingLaunch == true )
             {
-                ActivateElement( Elements[0] );
-            }
+                ImageCropperPendingLaunch = false;
 
-            UpdateLoginState( );
+                string documentsDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                string jpgFilename = System.IO.Path.Combine (documentsDirectory, CCVApp.Shared.Config.Springboard.ProfilePic );
+
+                UIImage image = UIImage.FromFile( jpgFilename );
+                ImageCropViewController.Begin( image, 1.0f );
+                PresentModelViewController( ImageCropViewController );
+            }
+            else
+            {
+                // if we're appearing and no task is active, start one.
+                // (this will only happen when the app is first launched)
+                if( NavViewController.CurrentTask == null )
+                {
+                    ActivateElement( Elements[0] );
+                }
+
+                UpdateLoginState( );
+            }
         }
 
         protected void UpdateLoginState( )
@@ -432,6 +465,15 @@ namespace iOS
             
             UIImage image = new UIImage( imagePath );
             LoginButton.SetImage( image, UIControlState.Normal );
+        }
+
+        void DisplayError( string title, string message )
+        {
+            UIAlertView alert = new UIAlertView( );
+            alert.Title = title;
+            alert.Message = message;
+            alert.AddButton( CCVApp.Shared.Strings.General_Ok );
+            alert.Show( );
         }
 
         public void OnActivated( )
