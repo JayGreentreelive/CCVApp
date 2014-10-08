@@ -38,7 +38,7 @@ namespace Droid
 
                     // set the text to the version and build time
                     TextView aboutText = view.FindViewById<TextView>(Resource.Id.about_PrimaryFragmentText);
-                    aboutText.Text = string.Format( "CCV App Version {0}\nBuilt on {1}", CCVApp.Shared.Strings.Version, CCVApp.Shared.Strings.BuildTime );
+                    aboutText.Text = string.Format( "CCV App Version {0}\nBuilt on {1}", CCVApp.Shared.Strings.Build.Version, CCVApp.Shared.Strings.Build.BuildTime );
 
                     return view;
                 }

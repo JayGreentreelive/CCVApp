@@ -15,7 +15,7 @@ namespace iOS
         {
             base.ViewDidLoad();
 
-            AboutVersionText.Text = string.Format( "CCV App Version {0}\nBuilt on {1}", CCVApp.Shared.Strings.Version, CCVApp.Shared.Strings.BuildTime );
+            AboutVersionText.Text = string.Format( "CCV App Version {0}\nBuilt on {1}", CCVApp.Shared.Strings.Build.Version, CCVApp.Shared.Strings.Build.BuildTime );
         }
 	}
 }

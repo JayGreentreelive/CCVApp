@@ -1,10 +1,28 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget.CCV12-I010" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhone4s.8.0" />
   <MonoDevelop.Ide.Workbench ActiveDocument="iOS/SpringboardViewController.cs">
     <Files>
-      <File FileName="iOS/SpringboardViewController.cs" Line="40" Column="40" />
-      <File FileName="iOS/Tasks/Notes/NotesViewController.cs" Line="81" Column="81" />
+      <File FileName="iOS/SpringboardViewController.cs" Line="42" Column="42" />
+      <File FileName="../Rock.Mobile/PlatformMedia/iOSCamera.cs" Line="40" Column="40" />
+      <File FileName="../Rock.Mobile/PlatformMedia/iOSImagePicker.cs" Line="92" Column="92" />
+      <File FileName="iOS/UserManagement/ImageCropViewController.cs" Line="4" Column="4" />
+      <File FileName="../Rock.Mobile/PlatformMedia/DroidImagePicker.cs" Line="14" Column="14" />
     </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="Droid" expanded="True">
+            <Node name="UserManagement" expanded="True" />
+          </Node>
+          <Node name="iOS" expanded="True" selected="True">
+            <Node name="Tasks" expanded="True">
+              <Node name="Notes" expanded="True" />
+            </Node>
+            <Node name="UserManagement" expanded="True" />
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />

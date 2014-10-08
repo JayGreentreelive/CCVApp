@@ -6,6 +6,7 @@ using MonoTouch.CoreAnimation;
 using MonoTouch.CoreGraphics;
 using System.Drawing;
 using MonoTouch.CoreImage;
+using MonoTouch.AssetsLibrary;
 
 namespace iOS
 {
@@ -90,12 +91,12 @@ namespace iOS
 
 		public ImageCropViewController (IntPtr handle) : base (handle)
 		{
-
 		}
 
         public void Begin( UIImage image, float cropAspectRatio )
         {
             SourceImage = image;
+
             CropAspectRatio = cropAspectRatio;
         }
 

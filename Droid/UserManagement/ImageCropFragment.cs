@@ -106,9 +106,10 @@ namespace Droid
             base.OnCreate( savedInstanceState );
         }
 
-        public void Begin( Bitmap sourceImage, float cropAspectRatio )
+        public void Begin( string sourceImagePath, float cropAspectRatio )
         {
-            SourceImage = sourceImage;
+            //SourceImage = sourceImage;
+            SourceImage = BitmapFactory.DecodeFile( sourceImagePath );
             CropAspectRatio = cropAspectRatio;
         }
 
@@ -254,26 +255,8 @@ namespace Droid
                     }
                     else
                     {
-                        // force our image view to release its references to our bitmaps
-                        ImageView.SetImageBitmap( null );
-
-                        // free the resources we're done with
-                        SourceImage = null;
-
-                        ScaledCroppedImage.Dispose( );
-                        ScaledCroppedImage = null;
-
-                        ScaledSourceImage.Dispose( );
-                        ScaledSourceImage = null;
-
-
                         // notify the caller
                         SpringboardParent.ModalFragmentFinished( this, CroppedImage );
-
-
-                        // free the cropped image
-                        CroppedImage.Dispose( );
-                        CroppedImage = null;
 
                         // now free our resources, cause we're done.
                         Activity.OnBackPressed( );
@@ -289,6 +272,42 @@ namespace Droid
             MoveCropView( new PointF( 0, 0 ) );
 
             return view;
+        }
+
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            // force our image view to release its references to our bitmaps
+            ImageView.SetImageBitmap( null );
+
+            // free the resources we're done with
+            if( SourceImage != null )
+            {
+                SourceImage.Dispose( );
+                SourceImage = null;
+            }
+
+            if( ScaledCroppedImage != null )
+            {
+                ScaledCroppedImage.Dispose( );
+                ScaledCroppedImage = null;
+            }
+
+            if( ScaledSourceImage != null )
+            {
+                ScaledSourceImage.Dispose( );
+                ScaledSourceImage = null;
+            }
+
+            // free the cropped image
+            if( CroppedImage != null )
+            {
+                CroppedImage.Dispose( );
+                CroppedImage = null;
+            }
+
+            SetMode( CropMode.None );
         }
 
         void SetMode( CropMode mode )

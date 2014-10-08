@@ -78,9 +78,7 @@ namespace Droid
         /// until the NavBar and all sub-fragments have been pushed to the stack.
         /// </summary>
         /// <value><c>true</c> if image cropper pending launch; otherwise, <c>false</c>.</value>
-        bool ImageCropperPendingLaunch { get; set; }
-
-        Bitmap ImageCropperSource { get; set; }
+        string ImageCropperPendingFilePath { get; set; }
 
         Bitmap ProfileMask { get; set; }
 
@@ -184,39 +182,7 @@ namespace Droid
             ProfileImageButton = view.FindViewById<ImageButton>( Resource.Id.springboard_profile_image );
             ProfileImageButton.Click += (object sender, EventArgs e) => 
                 {
-                    // only allow picture taking if they're logged in
-                    if( RockMobileUser.Instance.LoggedIn )
-                    {
-                        if( Rock.Mobile.Media.PlatformCamera.Instance.IsAvailable( ) )
-                        {
-                            // we'll request the image be stored in AppData/userPhoto.jpg
-                            File imageFile = new File( DroidContext.Context.GetExternalFilesDir( null ), CCVApp.Shared.Config.Springboard.ProfilePic );
-
-                            // start up the camera and get our picture.
-                            Rock.Mobile.Media.PlatformCamera.Instance.CaptureImage( imageFile, null, 
-
-                                delegate(object s, Rock.Mobile.Media.PlatformCamera.CaptureImageEventArgs args) 
-                                {
-                                    // flag that we want the cropper to start up on resume.
-                                    // we cannot launch it now because we need to wait for the camera
-                                    // activity to end and the navBar fragment to resume
-                                    if( args.Result == true )
-                                    {
-                                        ImageCropperPendingLaunch = true;
-                                    }
-                                    else
-                                    {
-                                        // couldn't get the picture
-                                        DisplayError( CCVApp.Shared.Strings.Error_ProfilePictureTitle, CCVApp.Shared.Strings.Error_ProfilePictureMessage );
-                                    }
-                                });
-                        }
-                        else
-                        {
-                            // nope
-                            DisplayError( CCVApp.Shared.Strings.Error_ProfilePictureTitle, CCVApp.Shared.Strings.Error_ProfilePictureMessage );
-                        }
-                    }
+                    ManageProfilePic( );
                 };
 
             // setup our login button
@@ -263,10 +229,6 @@ namespace Droid
             }
             else if ( ImageCropFragment == fragment )
             {
-                // dispose of the source
-                ImageCropperSource.Dispose( );
-                ImageCropperSource = null;
-
                 // take the newly cropped image and write it to disk
                 Bitmap croppedImage = (Bitmap)context;
 
@@ -300,19 +262,99 @@ namespace Droid
 
                 if( success == false )
                 {
-                    DisplayError( CCVApp.Shared.Strings.Error_ProfilePictureTitle, CCVApp.Shared.Strings.Error_ProfilePictureMessage );
+                    DisplayError( CCVApp.Shared.Strings.Springboard.ProfilePicture_Error_Title, CCVApp.Shared.Strings.Springboard.ProfilePicture_Error_Message );
                 }
             }
         }
 
-        void LaunchImageCropper( )
+        void ManageProfilePic( )
         {
-            // load the image. We store a reference so that when the image cropper is done we can free it.
-            File imageFile = new File( DroidContext.Context.GetExternalFilesDir( null ), CCVApp.Shared.Config.Springboard.ProfilePic );
-            ImageCropperSource = BitmapFactory.DecodeFile( imageFile.AbsolutePath );
+            // only allow picture taking if they're logged in
+            if( RockMobileUser.Instance.LoggedIn )
+            {
+                // setup the chooser dialog so they can pick the photo source
+                AlertDialog.Builder builder = new AlertDialog.Builder( Activity );
+                builder.SetTitle( CCVApp.Shared.Strings.Springboard.ProfilePicture_SourceTitle );
 
+                Java.Lang.ICharSequence [] strings = new Java.Lang.ICharSequence[]
+                    {
+                        new Java.Lang.String( CCVApp.Shared.Strings.Springboard.ProfilePicture_SourcePhotoLibrary ),
+                        new Java.Lang.String( CCVApp.Shared.Strings.Springboard.ProfilePicture_SourceCamera ),
+                        new Java.Lang.String( CCVApp.Shared.Strings.General.Cancel )
+                    };
+
+                builder.SetItems( strings, delegate(object sender, DialogClickEventArgs clickArgs) 
+                    {
+                        Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate
+                            {
+                                switch( clickArgs.Which )
+                                {
+                                    // Photo Library
+                                    case 0:
+                                    {
+                                        Rock.Mobile.Media.PlatformImagePicker.Instance.PickImage( DroidContext.Context, delegate(object s, Rock.Mobile.Media.PlatformImagePicker.ImagePickEventArgs args) 
+                                            {
+                                                // android returns a path TO the image
+                                                if( args.Image != null )
+                                                {
+                                                    ImageCropperPendingFilePath = (string) args.Image;
+                                                }
+                                            });
+                                        break;
+                                    }
+
+                                    // Camera
+                                    case 1:
+                                    {
+                                        if( Rock.Mobile.Media.PlatformCamera.Instance.IsAvailable( ) )
+                                        {
+                                            // we'll request the image be stored in AppData/userPhoto.jpg
+                                            File imageFile = new File( DroidContext.Context.GetExternalFilesDir( null ), CCVApp.Shared.Config.Springboard.ProfilePic );
+
+                                            // start up the camera and get our picture.
+                                            Rock.Mobile.Media.PlatformCamera.Instance.CaptureImage( imageFile, null, 
+
+                                                delegate(object s, Rock.Mobile.Media.PlatformCamera.CaptureImageEventArgs args) 
+                                                {
+                                                    // flag that we want the cropper to start up on resume.
+                                                    // we cannot launch it now because we need to wait for the camera
+                                                    // activity to end and the navBar fragment to resume
+                                                    if( args.Result == true )
+                                                    {
+                                                        ImageCropperPendingFilePath = args.ImagePath;
+                                                    }
+                                                    else
+                                                    {
+                                                        // couldn't get the picture
+                                                        DisplayError( CCVApp.Shared.Strings.Springboard.ProfilePicture_Error_Title, CCVApp.Shared.Strings.Springboard.ProfilePicture_Error_Message );
+                                                    }
+                                                });
+                                        }
+                                        else
+                                        {
+                                            // nope
+                                            DisplayError( CCVApp.Shared.Strings.Springboard.Camera_Error_Title, CCVApp.Shared.Strings.Springboard.Camera_Error_Message );
+                                        }
+                                        break;
+                                    }
+
+                                    // Cancel
+                                    case 2:
+                                    {
+                                        break;
+                                    }
+                                }
+                            });
+                    });
+
+                builder.Show( );
+            }
+        }
+
+        void LaunchImageCropper( string filePath )
+        {
             // create the crop fragment
-            ImageCropFragment.Begin( ImageCropperSource, 1.00f );
+            ImageCropFragment.Begin( filePath, 1.00f );
 
             // launch the image cropper
             var ft = FragmentManager.BeginTransaction();
@@ -343,10 +385,10 @@ namespace Droid
         {
             // once the navbar has resumed, we're safe to launch any pending
             // fullscreen activities.
-            if( ImageCropperPendingLaunch == true )
+            if( ImageCropperPendingFilePath != null )
             {
-                LaunchImageCropper( );
-                ImageCropperPendingLaunch = false;
+                LaunchImageCropper( ImageCropperPendingFilePath );
+                ImageCropperPendingFilePath = null;
             }
         }
 
@@ -493,7 +535,7 @@ namespace Droid
 
         void DisplayError( string title, string message )
         {
-            AlertDialog.Builder dlgAlert = new AlertDialog.Builder( Rock.Mobile.PlatformCommon.Droid.Context );                      
+            AlertDialog.Builder dlgAlert = new AlertDialog.Builder( DroidContext.Context );                      
             dlgAlert.SetTitle( title ); 
             dlgAlert.SetMessage( message ); 
             dlgAlert.SetPositiveButton( "Ok", delegate(object sender, DialogClickEventArgs ev )

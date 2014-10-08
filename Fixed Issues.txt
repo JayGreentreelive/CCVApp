@@ -1,0 +1,9 @@
+Android - Fixed an issue causing a crash if back was pressed while cropping an image, and then
+the image cropper was loaded again.
+
+Android - Fixed an issue causing Logout to not work.
+
+Android - Import images from Photo Library
+
+iOS - Import images from Photo Library
+iOS - Crop Images

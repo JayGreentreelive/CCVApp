@@ -4,36 +4,52 @@ using System.Diagnostics;
 
 namespace CCVApp.Shared
 {
-    public class Strings
+    namespace Strings
     {
-        public const string General_Yes = "Yes";
-        public const string General_No = "No";
-        public const string General_Ok = "Ok";
-        public const string General_Cancel = "Cancel";
-
-        public const string Error_ProfilePictureTitle = "Profile Picture";
-        public const string Error_ProfilePictureMessage = "There was a problem saving your profile picture. Please try again.";
-
-        public const string Error_NoCameraTitle = "No Camera";
-        public const string Error_NoCameraMessage = "This device does not have a camera.";
-
-        public const string Profile_SubmitChangesTitle = "Submit Changes?";
-        public const string Profile_LogoutTitle = "Log Out?";
-
-        public static string Version
+        public class Build
         {
-            get
+            public static string Version
             {
-                return "0.0.1";
+                get
+                {
+                    return "0.0.1";
+                }
+            }
+
+            public static string BuildTime
+            {
+                get
+                {
+                    return "10-6-14";
+                }
             }
         }
 
-        public static string BuildTime
+        public class General
         {
-            get
-            {
-                return "10-6-14";
-            }
+            public const string Yes = "Yes";
+            public const string No = "No";
+            public const string Ok = "Ok";
+            public const string Cancel = "Cancel";
+        }
+
+        public class Springboard
+        {
+            public const string ProfilePicture_SourceTitle = "Profile Picture";
+            public const string ProfilePicture_SourcePhotoLibrary = "Photo Library";
+            public const string ProfilePicture_SourceCamera = "Camera";
+
+            public const string ProfilePicture_Error_Title = "Profile Picture";
+            public const string ProfilePicture_Error_Message = "There was a problem saving your profile picture. Please try again.";
+
+            public const string Camera_Error_Title = "No Camera";
+            public const string Camera_Error_Message = "This device does not have a camera.";
+        }
+
+        public class Profile
+        {
+            public const string SubmitChangesTitle = "Submit Changes?";
+            public const string LogoutTitle = "Log Out?";
         }
     }
 }

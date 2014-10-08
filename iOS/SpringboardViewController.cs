@@ -160,7 +160,7 @@ namespace iOS
         /// When true, we need to launch the image cropper. We have to wait
         /// until the NavBar and all sub-fragments have been pushed to the stack.
         /// </summary>
-        bool ImageCropperPendingLaunch { get; set; }
+        UIImage ImageCropperPendingImage { get; set; }
 
 		public SpringboardViewController (IntPtr handle) : base (handle)
 		{
@@ -248,39 +248,8 @@ namespace iOS
                 {
                     if( RockMobileUser.Instance.LoggedIn == true )
                     {
-                        //Todo: Give them the choice of the image picker or camera.
-
-                        // do we have a camera?
-                        if( Rock.Mobile.Media.PlatformCamera.Instance.IsAvailable( ) )
-                        {
-                            // build the path to where it should be stored.
-                            string documentsDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-                            string jpgFilename = System.IO.Path.Combine (documentsDirectory, CCVApp.Shared.Config.Springboard.ProfilePic );
-
-                            // launch the camera
-                            Rock.Mobile.Media.PlatformCamera.Instance.CaptureImage( jpgFilename, this, delegate(object s, Rock.Mobile.Media.PlatformCamera.CaptureImageEventArgs args) 
-                                {
-                                    // if the camera reports ok
-                                    bool success = false;
-                                    if( args.Result == true )
-                                    {
-                                        success = true;
-
-                                        // then it's time to crop the picture.
-                                        ImageCropperPendingLaunch = true;
-                                    }
-
-                                    if( success == false )
-                                    {
-                                        DisplayError( CCVApp.Shared.Strings.Error_ProfilePictureTitle, CCVApp.Shared.Strings.Error_ProfilePictureMessage );
-                                    }
-                                });
-                        }
-                        else
-                        {
-                            // notify them they don't have a camera
-                            DisplayError( CCVApp.Shared.Strings.Error_NoCameraTitle, CCVApp.Shared.Strings.Error_NoCameraMessage );
-                        }
+                        // they're logged in, so let them set their profile pic
+                        ManageProfilePic( );
                     }
                     else
                     {
@@ -300,6 +269,80 @@ namespace iOS
                 });
         }
 
+        void ManageProfilePic( )
+        {
+            // setup an action sheet for them to choose between using the Photo Library and a camera
+            var actionSheet = new UIActionSheet( CCVApp.Shared.Strings.Springboard.ProfilePicture_SourceTitle );
+            actionSheet.AddButton( CCVApp.Shared.Strings.Springboard.ProfilePicture_SourcePhotoLibrary );
+            actionSheet.AddButton( CCVApp.Shared.Strings.Springboard.ProfilePicture_SourceCamera );
+            actionSheet.AddButton( CCVApp.Shared.Strings.General.Cancel );
+            actionSheet.ShowInView( View );
+
+            actionSheet.Clicked += (object sender, UIButtonEventArgs e) => 
+                {
+                    switch( e.ButtonIndex )
+                    {
+                        // photo library
+                        case 0:
+                        {
+                            Rock.Mobile.Media.PlatformImagePicker.Instance.PickImage( this, delegate(object s, Rock.Mobile.Media.PlatformImagePicker.ImagePickEventArgs args) 
+                                {
+                                    if( args.Result == true )
+                                    {
+                                        ImageCropperPendingImage = (UIImage) args.Image;
+                                    }
+                                    else
+                                    {
+                                        DisplayError( CCVApp.Shared.Strings.Springboard.ProfilePicture_Error_Title, CCVApp.Shared.Strings.Springboard.ProfilePicture_Error_Message );
+                                    }
+                                } );
+                            break;
+                        }
+
+                        // camera
+                        case 1:
+                        {
+                            // only allow the camera if they HAVE one
+                            if( Rock.Mobile.Media.PlatformCamera.Instance.IsAvailable( ) )
+                            {
+                                // setup our target file path
+                                string documentsDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                                string jpgFilename = System.IO.Path.Combine (documentsDirectory, CCVApp.Shared.Config.Springboard.ProfilePic );
+
+                                // launch the camera
+                                Rock.Mobile.Media.PlatformCamera.Instance.CaptureImage( jpgFilename, this, delegate(object s, Rock.Mobile.Media.PlatformCamera.CaptureImageEventArgs args) 
+                                    {
+                                        // if the result is true, they either got a picture or pressed cancel
+                                        bool success = false;
+                                        if( args.Result == true )
+                                        {
+                                            // either way, no need for an error
+                                            success = true;
+
+                                            // load the image for cropping
+                                            ImageCropperPendingImage = UIImage.FromFile( args.ImagePath );
+                                        }
+
+                                        if( success == false )
+                                        {
+                                            DisplayError( CCVApp.Shared.Strings.Springboard.ProfilePicture_Error_Title, CCVApp.Shared.Strings.Springboard.ProfilePicture_Error_Message );
+                                        }
+                                    });
+                            }
+                            else
+                            {
+                                // notify them they don't have a camera
+                                DisplayError( CCVApp.Shared.Strings.Springboard.Camera_Error_Title, CCVApp.Shared.Strings.Springboard.Camera_Error_Message );
+                            }
+                            break;
+                        }
+
+                        // cancel
+                        case 2: break;
+                    }
+                };
+        }
+
         void PresentModelViewController( UIViewController modelViewController )
         {
             PresentViewController( modelViewController, true, null );
@@ -308,12 +351,13 @@ namespace iOS
 
         public void ResignModelViewController( UIViewController modelViewController, object context )
         {
+            // if the image cropper is resigning
             if( modelViewController == ImageCropViewController )
             {
+                // // build the destination path, and we'll write the cropped image to it.
                 string documentsDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
                 string jpgFilename = System.IO.Path.Combine (documentsDirectory, CCVApp.Shared.Config.Springboard.ProfilePic );
 
-                // get and store the picture.
                 UIImage croppedImage = (UIImage)context;
                 NSData croppedImageData = croppedImage.AsJPEG( );
 
@@ -326,7 +370,7 @@ namespace iOS
                 else
                 {
                     // notify them about a problem saving the profile picture
-                    DisplayError( CCVApp.Shared.Strings.Error_ProfilePictureTitle, CCVApp.Shared.Strings.Error_ProfilePictureMessage );
+                    DisplayError( CCVApp.Shared.Strings.Springboard.ProfilePicture_Error_Title, CCVApp.Shared.Strings.Springboard.ProfilePicture_Error_Message );
                 }
             }
 
@@ -396,16 +440,13 @@ namespace iOS
         {
             base.ViewDidAppear(animated);
 
-            if( ImageCropperPendingLaunch == true )
+            // if the image cropper is pending, launch it now.
+            if( ImageCropperPendingImage != null )
             {
-                ImageCropperPendingLaunch = false;
-
-                string documentsDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-                string jpgFilename = System.IO.Path.Combine (documentsDirectory, CCVApp.Shared.Config.Springboard.ProfilePic );
-
-                UIImage image = UIImage.FromFile( jpgFilename );
-                ImageCropViewController.Begin( image, 1.0f );
+                ImageCropViewController.Begin( ImageCropperPendingImage, 1.0f );
                 PresentModelViewController( ImageCropViewController );
+
+                ImageCropperPendingImage = null;
             }
             else
             {
@@ -472,7 +513,7 @@ namespace iOS
             UIAlertView alert = new UIAlertView( );
             alert.Title = title;
             alert.Message = message;
-            alert.AddButton( CCVApp.Shared.Strings.General_Ok );
+            alert.AddButton( CCVApp.Shared.Strings.General.Ok );
             alert.Show( );
         }
 

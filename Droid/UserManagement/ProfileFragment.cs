@@ -74,13 +74,13 @@ namespace Droid
                     {
                         // Since they made changes, confirm they want to save them.
                         AlertDialog.Builder builder = new AlertDialog.Builder( Activity );
-                        builder.SetTitle( CCVApp.Shared.Strings.Profile_SubmitChangesTitle );
+                        builder.SetTitle( CCVApp.Shared.Strings.Profile.SubmitChangesTitle );
 
                         Java.Lang.ICharSequence [] strings = new Java.Lang.ICharSequence[]
                             {
-                                new Java.Lang.String( CCVApp.Shared.Strings.General_Yes ),
-                                new Java.Lang.String( CCVApp.Shared.Strings.General_No ),
-                                new Java.Lang.String( CCVApp.Shared.Strings.General_Cancel )
+                                new Java.Lang.String( CCVApp.Shared.Strings.General.Yes ),
+                                new Java.Lang.String( CCVApp.Shared.Strings.General.No ),
+                                new Java.Lang.String( CCVApp.Shared.Strings.General.Cancel )
                             };
 
                         builder.SetItems( strings, delegate(object s, DialogClickEventArgs clickArgs) 
@@ -108,13 +108,13 @@ namespace Droid
                 {
                     // Since they made changes, confirm they want to save them.
                     AlertDialog.Builder builder = new AlertDialog.Builder( Activity );
-                    builder.SetTitle( CCVApp.Shared.Strings.Profile_LogoutTitle );
+                    builder.SetTitle( CCVApp.Shared.Strings.Profile.LogoutTitle );
 
                     Java.Lang.ICharSequence [] strings = new Java.Lang.ICharSequence[]
                         {
-                            new Java.Lang.String( CCVApp.Shared.Strings.General_Yes ),
-                            new Java.Lang.String( CCVApp.Shared.Strings.General_No ),
-                            new Java.Lang.String( CCVApp.Shared.Strings.General_Cancel )
+                            new Java.Lang.String( CCVApp.Shared.Strings.General.Yes ),
+                            new Java.Lang.String( CCVApp.Shared.Strings.General.No ),
+                            new Java.Lang.String( CCVApp.Shared.Strings.General.Cancel )
                         };
 
                     builder.SetItems( strings, delegate(object s, DialogClickEventArgs clickArgs) 
@@ -129,6 +129,8 @@ namespace Droid
                                     }
                                 });
                         });
+
+                    builder.Show( );
                 };
 
             return view;
