@@ -16,6 +16,7 @@ using Android.Graphics;
 using DroidContext = Rock.Mobile.PlatformCommon.Droid;
 using Java.IO;
 using Droid.Tasks;
+using System.IO;
 
 namespace Droid
 {
@@ -233,31 +234,25 @@ namespace Droid
                 Bitmap croppedImage = (Bitmap)context;
 
                 bool success = false;
-                System.IO.FileStream fileOpenStream = null;
+                MemoryStream memStream = new MemoryStream( );
                 try
                 {
-                    // open the existing full image
-                    File imageFile = new File( DroidContext.Context.GetExternalFilesDir( null ), CCVApp.Shared.Config.Springboard.ProfilePic );
-                    fileOpenStream = System.IO.File.OpenWrite( imageFile.AbsolutePath );
-
-                    // overwrite it with the cropped image 
-                    if( croppedImage.Compress( Bitmap.CompressFormat.Jpeg, 100, fileOpenStream ) )
+                    // compress the image into our memory stream
+                    if( croppedImage.Compress( Bitmap.CompressFormat.Jpeg, 100, memStream ) )
                     {
+                        RockMobileUser.Instance.SetProfilePicture( memStream );
                         success = true;
-                        RockMobileUser.Instance.HasProfileImage = true;
-                        SetProfileImage( );
 
-                        //todo: Upload the image to Rock.
-                        //   on confirmation, set User.HasProfileImage to true.
+                        SetProfileImage( );
                     }
                 }
                 catch( Exception )
                 {
                 }
 
-                if( fileOpenStream != null )
+                if( memStream != null )
                 {
-                    fileOpenStream.Close( );
+                    memStream.Dispose( );
                 }
 
                 if( success == false )
@@ -308,11 +303,8 @@ namespace Droid
                                     {
                                         if( Rock.Mobile.Media.PlatformCamera.Instance.IsAvailable( ) )
                                         {
-                                            // we'll request the image be stored in AppData/userPhoto.jpg
-                                            File imageFile = new File( DroidContext.Context.GetExternalFilesDir( null ), CCVApp.Shared.Config.Springboard.ProfilePic );
-
                                             // start up the camera and get our picture.
-                                            Rock.Mobile.Media.PlatformCamera.Instance.CaptureImage( imageFile, null, 
+                                            Rock.Mobile.Media.PlatformCamera.Instance.CaptureImage( new Java.IO.File( RockMobileUser.Instance.ProfilePicturePath ), null, 
 
                                                 delegate(object s, Rock.Mobile.Media.PlatformCamera.CaptureImageEventArgs args) 
                                                 {
@@ -408,7 +400,7 @@ namespace Droid
             SetProfileImage( );
         }
 
-        protected void SetProfileImage( )
+        public void SetProfileImage( )
         {
             // the image depends on the user's status.
             if( RockMobileUser.Instance.LoggedIn )
@@ -419,8 +411,7 @@ namespace Droid
                     ProfileImageButton.SetImageBitmap( null );
 
                     // Load the profile pic
-                    File imageFile = new File( DroidContext.Context.GetExternalFilesDir( null ), CCVApp.Shared.Config.Springboard.ProfilePic );
-                    Bitmap image = BitmapFactory.DecodeFile( imageFile.AbsolutePath );
+                    Bitmap image = BitmapFactory.DecodeFile( RockMobileUser.Instance.ProfilePicturePath );
 
                     // scale the image to the size of the mask
                     Bitmap scaledImage = Bitmap.CreateScaledBitmap( image, ProfileMask.Width, ProfileMask.Height, false );

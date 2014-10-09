@@ -29,16 +29,6 @@ namespace CCVApp
                 public const string ProfilePic = "userPhoto.jpg";
 
                 /// <summary>
-                /// The size of the profile pics width in pixels.
-                /// </summary>
-                public const int ProfilePicWidth = 400;
-
-                /// <summary>
-                /// The size of the profile pic's height in pixels.
-                /// </summary>
-                public const int ProfilePicHeight = 400;
-
-                /// <summary>
                 /// The X offset to place the CENTER of the element's logo.
                 /// </summary>
                 public const int Element_LogoOffsetX = 20;

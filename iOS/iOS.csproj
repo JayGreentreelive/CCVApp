@@ -350,6 +350,10 @@
     <Compile Include="UserManagement\ImageCropViewController.designer.cs">
       <DependentUpon>ImageCropViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="Tasks\Prayer\PrayerMainUIViewController.cs" />
+    <Compile Include="Tasks\Prayer\PrayerMainUIViewController.designer.cs">
+      <DependentUpon>PrayerMainUIViewController.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="..\..\Rock\Rock.Client\Rock.Client.Models.projitems" Label="Shared" Condition="Exists('..\..\Rock\Rock.Client\Rock.Client.Models.projitems')" />
   <Import Project="..\..\Rock.Mobile\Rock.Mobile.projitems" Label="Shared" Condition="Exists('..\..\Rock.Mobile\Rock.Mobile.projitems')" />
@@ -362,6 +366,7 @@
     <InterfaceDefinition Include="Tasks\News\NewsStoryboard_iPhone.storyboard" />
     <InterfaceDefinition Include="Tasks\Give\GiveStoryboard_iPhone.storyboard" />
     <InterfaceDefinition Include="UserManagement\UserManagement.storyboard" />
+    <InterfaceDefinition Include="Tasks\Prayer\PrayerStoryboard_iPhone.storyboard" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\Fonts\" />

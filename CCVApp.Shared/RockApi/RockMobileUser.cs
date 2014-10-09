@@ -162,6 +162,55 @@ namespace CCVApp
                         });
                 }
 
+                public void SetProfilePicture( MemoryStream imageStream )
+                {
+                    // write the file out
+                    using (FileStream writer = new FileStream(ProfilePicturePath, FileMode.Create))
+                    {
+                        imageStream.WriteTo( writer );
+                    }
+
+                    // now we have a picture!
+                    HasProfileImage = true;
+
+                    SaveToDevice( );
+
+                    //todo: send it on up to Rock, too!
+                }
+
+                public string ProfilePicturePath
+                {
+                    get 
+                    {
+                        //todo: make this path platform independant
+                        #if __IOS__
+                        string jpgFilename = System.IO.Path.Combine ( Environment.GetFolderPath(Environment.SpecialFolder.Personal), CCVApp.Shared.Config.Springboard.ProfilePic );
+                        #else
+                        string jpgFilename = Rock.Mobile.PlatformCommon.Droid.Context.GetExternalFilesDir( null ).ToString( ) + CCVApp.Shared.Config.Springboard.ProfilePic;
+                        #endif
+
+                        return jpgFilename;
+                    }
+                }
+
+                public void DownloadProfilePicture( int dimensionSize, RockApi.RequestResult profilePictureResult )
+                {
+                    RockApi.Instance.GetProfilePicture( Person.PhotoId.ToString(), dimensionSize, delegate(System.Net.HttpStatusCode statusCode, string statusDescription, MemoryStream imageStream)
+                        {
+                            if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
+                            {
+                                // if successful, update the file on disk.
+                                SetProfilePicture( imageStream );
+                            }
+
+                            // notify the caller
+                            if( profilePictureResult != null )
+                            {
+                                profilePictureResult( statusCode, statusDescription );
+                            }
+                        });
+                }
+
                 public void SyncDirtyObjects( RockApi.RequestResult resultCallback )
                 {
                     // check to see if our person object changed. If our original json

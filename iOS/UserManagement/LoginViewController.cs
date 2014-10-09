@@ -4,6 +4,7 @@ using MonoTouch.UIKit;
 using System.CodeDom.Compiler;
 using Rock.Mobile.Network;
 using CCVApp.Shared.Network;
+using System.IO;
 
 namespace iOS
 {
@@ -238,6 +239,12 @@ namespace iOS
             {
                 case System.Net.HttpStatusCode.OK:
                 {
+                    // if they have a profile picture, grab it.
+                    if( model.PhotoId != null )
+                    {
+                        RockMobileUser.Instance.DownloadProfilePicture( 200, ProfileImageComplete );
+                    }
+
                     // hide the activity indicator, because we are now logged in,
                     // but leave the buttons all disabled.
                     LoginActivityIndicator.Hidden = true;
@@ -268,6 +275,25 @@ namespace iOS
                     RockMobileUser.Instance.Logout( );
 
                     LoginResultLabel.Text = "Unable to Login. Try Again";
+                    break;
+                }
+            }
+        }
+
+        public void ProfileImageComplete( System.Net.HttpStatusCode code, string desc )
+        {
+            switch( code )
+            {
+                case System.Net.HttpStatusCode.OK:
+                {
+                    // sweet! make the UI update.
+                    Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate { Springboard.UpdateProfilePic( ); } );
+                    break;
+                }
+
+                default:
+                {
+                    // bummer, we couldn't get their profile picture. Doesn't really matter...
                     break;
                 }
             }

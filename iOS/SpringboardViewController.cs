@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using Rock.Mobile.Network;
 using CCVApp.Shared.Network;
 using MonoTouch.AssetsLibrary;
+using System.IO;
 
 namespace iOS
 {
@@ -227,7 +228,7 @@ namespace iOS
             Elements.Add( new SpringboardElement( this, new NewsTask( "NewsStoryboard_iPhone" )  , NewsButton       , "watch.png" ) );
             Elements.Add( new SpringboardElement( this, new NotesTask( "" )                      , EpisodesButton   , "notes.png" ) );
             Elements.Add( new SpringboardElement( this, new GiveTask( "GiveStoryboard_iPhone" )  , GroupFinderButton, "groupfinder.png" ) );
-            Elements.Add( new SpringboardElement( this, new GiveTask( "GiveStoryboard_iPhone" )  , PrayerButton     , "prayer.png" ) );
+            Elements.Add( new SpringboardElement( this, new PrayerTask( "PrayerStoryboard_iPhone" )  , PrayerButton     , "prayer.png" ) );
             Elements.Add( new SpringboardElement( this, new AboutTask( "AboutStoryboard_iPhone" ), AboutButton      , "info.png" ) );
 
             // set the profile image mask so it's circular
@@ -305,12 +306,8 @@ namespace iOS
                             // only allow the camera if they HAVE one
                             if( Rock.Mobile.Media.PlatformCamera.Instance.IsAvailable( ) )
                             {
-                                // setup our target file path
-                                string documentsDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-                                string jpgFilename = System.IO.Path.Combine (documentsDirectory, CCVApp.Shared.Config.Springboard.ProfilePic );
-
                                 // launch the camera
-                                Rock.Mobile.Media.PlatformCamera.Instance.CaptureImage( jpgFilename, this, delegate(object s, Rock.Mobile.Media.PlatformCamera.CaptureImageEventArgs args) 
+                                Rock.Mobile.Media.PlatformCamera.Instance.CaptureImage( RockMobileUser.Instance.ProfilePicturePath, this, delegate(object s, Rock.Mobile.Media.PlatformCamera.CaptureImageEventArgs args) 
                                     {
                                         // if the result is true, they either got a picture or pressed cancel
                                         bool success = false;
@@ -354,18 +351,20 @@ namespace iOS
             // if the image cropper is resigning
             if( modelViewController == ImageCropViewController )
             {
-                // // build the destination path, and we'll write the cropped image to it.
-                string documentsDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-                string jpgFilename = System.IO.Path.Combine (documentsDirectory, CCVApp.Shared.Config.Springboard.ProfilePic );
-
                 UIImage croppedImage = (UIImage)context;
                 NSData croppedImageData = croppedImage.AsJPEG( );
 
-                // if the image converts and saves correctly, we're good.
-                if( croppedImageData != null && croppedImageData.Save( jpgFilename, true ) == true )
+                // if the image converts, we're good.
+                if( croppedImageData != null )
                 {
-                    // it worked, so flag that they now have a profile picture.
-                    RockMobileUser.Instance.HasProfileImage = true;
+                    MemoryStream memStream = new MemoryStream();
+
+                    Stream nsDataStream = croppedImageData.AsStream();
+
+                    nsDataStream.CopyTo( memStream );
+                    RockMobileUser.Instance.SetProfilePicture( memStream );
+
+                    nsDataStream.Dispose( );
                 }
                 else
                 {
@@ -474,20 +473,39 @@ namespace iOS
                 UserNameField.Text = "Login to enable additional features.";
             }
 
+            UpdateProfilePic( );
+        }
+
+        public void UpdateProfilePic( )
+        {
             // the image depends on the user's status.
+            UIImage image = null;
             string imagePath = NSBundle.MainBundle.BundlePath + "/";
 
             if( RockMobileUser.Instance.LoggedIn )
             {
-                // todo: get their pic, else...
+                bool useNoPhotoImage = true;
+
+                // if they have a profile image
                 if( RockMobileUser.Instance.HasProfileImage == true )
                 {
-                    string documentsDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-                    imagePath = System.IO.Path.Combine (documentsDirectory, CCVApp.Shared.Config.Springboard.ProfilePic );
+                    // attempt to load it, but
+                    // because the profile picture is dynamic, make sure it loads correctly.
+                    try
+                    {
+                        image = new UIImage( RockMobileUser.Instance.ProfilePicturePath );
+                        useNoPhotoImage = false;
+                    }
+                    catch(Exception)
+                    {
+                        Console.WriteLine( "Bad Pic! Defaulting to No Photo" );
+                    }
                 }
-                else
+
+                // if we made it here and useNoPhoto is true, well, use no photo
+                if( useNoPhotoImage == true )
                 {
-                    imagePath += CCVApp.Shared.Config.Springboard.NoPhotoFile;
+                    image = new UIImage( imagePath + CCVApp.Shared.Config.Springboard.NoPhotoFile );
                 }
 
                 // if we're logged in, also display the View Profile button
@@ -497,14 +515,14 @@ namespace iOS
             else
             {
                 // otherwise display the no profile image.
-                imagePath += CCVApp.Shared.Config.Springboard.NoProfileFile;
+                image = new UIImage( imagePath + CCVApp.Shared.Config.Springboard.NoProfileFile );
 
                 // if we're logged out, hide the view profile button
                 ViewProfileButton.Enabled = false;
                 ViewProfileButton.Hidden = true;
             }
-            
-            UIImage image = new UIImage( imagePath );
+
+            // set the final image
             LoginButton.SetImage( image, UIControlState.Normal );
         }
 

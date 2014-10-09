@@ -31,22 +31,24 @@ namespace CCVApp
                 const int RequestTimeoutMS = 15000;
 
                 const string COOKIE_FILENAME = "cookies.dat";
-                const string BaseUrl = "http://rock.ccvonline.com/api";
+                const string BaseUrl = "http://rock.ccvonline.com";
 
                 /// <summary>
                 /// End point for logging in
                 /// </summary>
-                const string AuthLoginEndPoint = "Auth/Login";
+                const string AuthLoginEndPoint = "api/Auth/Login";
 
                 /// <summary>
                 /// End point for retrieving a Person object
                 /// </summary>
-                const string GetProfileEndPoint = "People/GetByUserName/";
+                const string GetProfileEndPoint = "api/People/GetByUserName/";
+
+                const string GetProfilePictureEndPoint = "GetImage.ashx?id={0}&width={1}&height={1}";
 
                 /// <summary>
                 /// End point for updating a Person object
                 /// </summary>
-                const string PutProfileEndPoint = "People/";
+                const string PutProfileEndPoint = "api/People/";
 
                 /// <summary>
                 /// Stores the cookies received from Rock
@@ -123,6 +125,35 @@ namespace CCVApp
                     ExecuteAsync( request, resultHandler);
                 }
 
+                public void GetProfilePicture( string photoId, int dimensionSize, RequestResult<MemoryStream> resultHandler )
+                {
+                    // request a profile by the username. If no username is specified, we'll use the logged in user's name.
+                    RestRequest request = new RestRequest( Method.GET );
+                    request.Resource = string.Format( GetProfilePictureEndPoint, photoId, dimensionSize );
+
+                    ExecuteAsync<RestSharp.RestResponse>( request, delegate(HttpStatusCode statusCode, string statusDescription, RestSharp.RestResponse model) 
+                        {
+                            // call the provided handler and drop the dummy object
+                            MemoryStream memoryStream = new MemoryStream( model.RawBytes );
+
+                            resultHandler( statusCode, statusDescription, memoryStream );
+
+                            memoryStream.Dispose( );
+                        });
+                }
+
+                /*public void UpdateProfilePicture( string photoId, int dimensionSize, MemoryStream image, RequestResult resultHandler )
+                {
+                    // request a profile by the username. If no username is specified, we'll use the logged in user's name.
+                    RestRequest request = new RestRequest( Method.PUT );
+                    request.Resource = string.Format( GetProfilePictureEndPoint, photoId, dimensionSize );
+
+                    request.RequestFormat = DataFormat.Json;
+                    request.AddBody( image );
+
+                    ExecuteAsync( request, resultHandler);
+                }*/
+
                 public void GetLaunchData( RequestResult<RockLaunchData.LaunchData> resultHandler )
                 {
                     // todo: add a "get LaunchData" end point.
@@ -158,16 +189,33 @@ namespace CCVApp
                     // don't wait longer than 15 seconds
                     request.Timeout = RequestTimeoutMS;
 
-                    restClient.ExecuteAsync<TModel>( request, response => 
-                        {
-                            // exception or not, notify the caller of the desponse
-                            Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate 
-                                { 
-                                    resultHandler( response != null ? response.StatusCode : HttpStatusCode.RequestTimeout, 
-                                                   response != null ? response.StatusDescription : "Client has no connection.", 
-                                                   response != null ? response.Data : new TModel() );
-                                });
-                        });
+                    // if the TModel is RestResponse, that implies they want the actual response, and no parsing.
+                    if( typeof( TModel ) == typeof( RestResponse ) )
+                    {
+                        restClient.ExecuteAsync( request, response => 
+                            {
+                                // exception or not, notify the caller of the desponse
+                                Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate 
+                                    { 
+                                        resultHandler( response != null ? response.StatusCode : HttpStatusCode.RequestTimeout, 
+                                                       response != null ? response.StatusDescription : "Client has no connection.", 
+                                                       (TModel)response );
+                                    });
+                            });
+                    }
+                    else
+                    {
+                        restClient.ExecuteAsync<TModel>( request, response => 
+                            {
+                                // exception or not, notify the caller of the desponse
+                                Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate 
+                                    { 
+                                        resultHandler( response != null ? response.StatusCode : HttpStatusCode.RequestTimeout, 
+                                                       response != null ? response.StatusDescription : "Client has no connection.", 
+                                                       response != null ? response.Data : new TModel() );
+                                    });
+                            });
+                    }
                 }
 
                 private void SaveCookieToDevice( )
