@@ -1,0 +1,116 @@
+Launch Data (Updated each time the app is run)
+	"General Data" Version Number (will be compared with the client's current "General Data" version number)
+    News
+    Latest Sermon Note
+    Valid Cookie?
+    	Profile
+    Else
+    	Null Profile (tells me the cookie is invalid)
+
+Initial Data (Updated anytime "Launch Data"'s "General Data" Version Number is newer)
+    General Values (Most value tables associated with value IDs)
+        Campuses
+        Titles
+        Suffixes
+        Default News
+        
+Profile Data
+	Name (First, Middle, Last)
+	Nickname
+	Email
+	Address
+	Phone Number
+	Profile Pic URL
+	Campus
+
+-=-=-=-=-=-=-=-=-=-=-
+App Data Flow Chart
+    App ships with most recent "General Data"
+
+    Launch (First Run and Subsequent)
+        Network?
+        	Logged In?
+            	Sync Unsaved Changes [Will fail if cookie is invalid]
+            	Get "Launch Data"
+            		Cookie Expired?
+            			LogOut() [Will lose unsync'd profile changes]
+            		Else
+                		Will contain "Profile"
+                	"General Data" Version Number Newer?
+                		Get "General Data"
+            Else (Not Logged In)
+            	Get "Launch Data"
+            		"General Data" Version Number Newer?
+            			Get "General Data"
+        Else (No Network)
+            Use stored "General Data"
+            Logged in?
+    	        Use last saved "Profile"
+
+    Log In
+        Network?
+            Get "Profile"
+            Save "Profile"
+            
+        Else
+            No Login Error
+            
+    
+    Update Profile
+        Flag "Profile" dirty
+        Save "Profile"
+            Network?
+                Upload "Profile"
+                Flag "Profile" clean
+                
+    
+    Group Finder
+        Network?
+            Retrieve "Group List"
+                Join Group
+                    Network?
+                        Allow
+                    Else
+                        Retry Loop
+        Else
+            No Network Message
+            
+    
+    Prayer Requests
+        Network?
+            Allow
+                "Prayer" Created
+                    Network?
+                        Upload
+                    Else
+                        Retry Loop
+        Else
+            No Network Message
+            
+            
+    Sermon Notes
+        Network?
+            Retrieve "List"
+        Else
+            "Launch Data" retrieved?
+                Allow "Latest Sermon Note"
+            Else
+                No Network Message
+    
+    
+    View Sermon
+        Network?
+            Retrieve "User Notes"
+        Else
+            No Network Message
+            
+        "User Note" Created
+            Save "User Note"
+            Flag "User Note" dirty
+            Network?
+                Upload "User Note"
+                Flag "User Note" clean
+        "Touch" Filled
+            Save "Touch" States
+    
+    

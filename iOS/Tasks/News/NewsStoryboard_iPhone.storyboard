@@ -45,96 +45,37 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" customColorSpace="calibratedWhite" colorSpace="calibratedRGB" red="0.082352941176470587" green="0.082352941176470587" blue="0.082352941176470587" alpha="1"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" lineBreakMode="tailTruncation" minimumFontSize="10" id="20" translatesAutoresizingMaskIntoConstraints="NO">
-                                <rect key="frame" x="106" y="95" width="109" height="21"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="34" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES">
+                                <rect key="frame" x="62" y="397" width="197" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" colorSpace="calibratedRGB" red="1" green="1" blue="1" alpha="1"/>
-                                <nil key="highlightedColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="109" id="85"/>
-                                    <constraint firstAttribute="height" constant="21" id="126"/>
-                                </constraints>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="34" translatesAutoresizingMaskIntoConstraints="NO">
-                                <rect key="frame" x="72" y="321" width="177" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Click for even more info">
+                                <state key="normal" title="Learn more at CCV Online">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="29" kind="custom" id="96" customClass="TaskTransition"/>
                                 </connections>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="177" id="88"/>
-                                    <constraint firstAttribute="height" constant="30" id="134"/>
-                                </constraints>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" lineBreakMode="tailTruncation" minimumFontSize="10" id="114" translatesAutoresizingMaskIntoConstraints="NO" numberOfLines="2">
-                                <rect key="frame" x="82" y="144" width="156" height="41"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Lorem Ipsum Blah Blah Blah Blah Blah Blah" lineBreakMode="tailTruncation" minimumFontSize="10" id="114" translatesAutoresizingMaskIntoConstraints="NO" numberOfLines="99" fixedFrame="YES">
+                                <rect key="frame" x="20" y="194" width="286" height="180"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" colorSpace="calibratedRGB" red="1" green="1" blue="1" alpha="1"/>
                                 <nil key="highlightedColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="156" id="122"/>
-                                    <constraint firstAttribute="height" constant="41" id="123"/>
-                                </constraints>
                             </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="162" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO">
+                                <rect key="frame" x="20" y="72" width="280" height="96"/>
+                            </imageView>
                         </subviews>
-                        <constraints>
-                            <constraint firstItem="17" firstAttribute="trailing" secondItem="114" secondAttribute="trailing" constant="82" id="120"/>
-                            <constraint id="121" firstItem="114" firstAttribute="top" secondItem="17" secondAttribute="top" constant="144"/>
-                            <constraint firstItem="17" firstAttribute="trailing" secondItem="20" secondAttribute="trailing" constant="105" id="124"/>
-                            <constraint id="125" firstItem="20" firstAttribute="top" secondItem="17" secondAttribute="top" constant="95"/>
-                            <constraint id="135" firstItem="17" firstAttribute="trailing" secondItem="34" secondAttribute="trailing" constant="71"/>
-                            <constraint id="136" firstItem="17" firstAttribute="bottom" secondItem="34" secondAttribute="bottom" constant="217"/>
-                        </constraints>
                     </view>
                     <connections>
-                        <outlet property="NewsTitleLabel" destination="20" id="name-outlet-20"/>
                         <outlet property="NewsDescriptionLabel" destination="114" id="name-outlet-114"/>
+                        <outlet property="LearnMoreButton" destination="34" id="name-outlet-34"/>
+                        <outlet property="ImageBanner" destination="162" id="name-outlet-162"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="18" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="188" y="-287"/>
-        </scene>
-        <scene sceneID="28">
-            <objects>
-                <viewController id="29" sceneMemberID="viewController" storyboardIdentifier="MoreDetailsViewController" customClass="TaskUIViewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="26"/>
-                        <viewControllerLayoutGuide type="bottom" id="27"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="30">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" customColorSpace="calibratedWhite" colorSpace="calibratedRGB" red="0.082352941176470587" green="0.082352941176470587" blue="0.082352941176470587" alpha="1"/>
-                        <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="News: Two Pages Deep" lineBreakMode="tailTruncation" minimumFontSize="10" id="33" translatesAutoresizingMaskIntoConstraints="NO">
-                                <rect key="frame" x="66" y="95" width="189" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" colorSpace="calibratedRGB" red="1" green="1" blue="1" alpha="1"/>
-                                <nil key="highlightedColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="189" id="75"/>
-                                </constraints>
-                            </label>
-                        </subviews>
-                        <constraints>
-                            <constraint id="73" firstItem="30" firstAttribute="trailing" secondItem="33" secondAttribute="trailing" constant="65"/>
-                            <constraint id="74" firstItem="33" firstAttribute="top" secondItem="30" secondAttribute="top" constant="95"/>
-                        </constraints>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="31" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="637" y="-282"/>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
@@ -162,5 +103,9 @@
         <image name="news_general_1.png" width="640" height="434"/>
         <image name="news_general_2.png" width="640" height="434"/>
         <image name="news_general_3.png" width="640" height="434"/>
+        <image name="IMG_0079.JPG" width="1280" height="960"/>
+        <image name="news_general_1_header.png" width="560" height="192"/>
+        <image name="news_general_2_header.png" width="560" height="192"/>
+        <image name="news_general_3_header.png" width="560" height="192"/>
     </resources>
 </document>

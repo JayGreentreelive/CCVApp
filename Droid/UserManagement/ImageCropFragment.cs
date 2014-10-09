@@ -108,7 +108,6 @@ namespace Droid
 
         public void Begin( string sourceImagePath, float cropAspectRatio )
         {
-            //SourceImage = sourceImage;
             SourceImage = BitmapFactory.DecodeFile( sourceImagePath );
             CropAspectRatio = cropAspectRatio;
         }

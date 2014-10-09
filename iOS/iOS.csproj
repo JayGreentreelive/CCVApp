@@ -283,6 +283,15 @@
       <Link>Resources\news_general_3%402x.png</Link>
     </BundleResource>
     <BundleResource Include="Resources\IMG_0079.JPG" />
+    <BundleResource Include="..\Assets\news_general_1_header%402x.png">
+      <Link>Resources\news_general_1_header%402x.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\news_general_2_header%402x.png">
+      <Link>Resources\news_general_2_header%402x.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\news_general_3_header%402x.png">
+      <Link>Resources\news_general_3_header%402x.png</Link>
+    </BundleResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />

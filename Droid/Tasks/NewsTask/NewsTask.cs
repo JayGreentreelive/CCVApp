@@ -1,5 +1,6 @@
 ﻿using System;
 using Android.App;
+using Android.Content;
 
 namespace Droid
 {
@@ -30,6 +31,13 @@ namespace Droid
                     DetailsPage.ParentTask = this;
                 }
 
+                public override void Activate( )
+                {
+                    base.Activate( );
+
+                    MainPage.News = CCVApp.Shared.Network.RockGeneralData.Instance.Data.News;
+                }
+
                 public override TaskFragment StartingFragment()
                 {
                     return MainPage;
@@ -40,9 +48,15 @@ namespace Droid
                     // decide what to do.
                     if( source == MainPage )
                     {
-                        if( buttonId == Resource.Id.detailsButton )
+                        DetailsPage.NewsItem = CCVApp.Shared.Network.RockGeneralData.Instance.Data.News[ buttonId ];
+                        PresentFragment( DetailsPage, true );
+                    }
+                    else if ( source == DetailsPage )
+                    {
+                        if( buttonId == Resource.Id.news_details_launch_url )
                         {
-                            PresentFragment( DetailsPage, true );
+                            Intent browserIntent = new Intent( Intent.ActionView, Android.Net.Uri.Parse( DetailsPage.NewsItem.ReferenceURL ) );
+                            Rock.Mobile.PlatformCommon.Droid.Context.StartActivity( browserIntent );
                         }
                     }
                 }

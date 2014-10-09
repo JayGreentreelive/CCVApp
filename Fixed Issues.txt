@@ -3,6 +3,12 @@ the image cropper was loaded again.
 
 Android - Fixed an issue causing Logout to not work.
 
+Android - Fixed an issue causing the Share Button to show up in News and crash if tapped.
+
+Android - Added News list and items.
+
+iOS - Improved News items to show a description, banner and URL link. 
+
 Android - Import images from Photo Library
 
 iOS - Import images from Photo Library

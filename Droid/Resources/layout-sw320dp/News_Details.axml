@@ -4,17 +4,25 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="#FF000000">
+    <ImageView
+        android:src="@android:drawable/ic_menu_gallery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/news_details_banner"
+        android:layout_centerHorizontal="true" />
     <TextView
         android:text="News: Details"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textView1"
+        android:id="@+id/news_details_details"
+        android:layout_below="@id/news_details_banner"
         android:gravity="center" />
     <Button
-        android:layout_below="@id/textView1"
-        android:text="Click for even more info"
-        android:layout_width="match_parent"
+        android:text="Learn More at CCV Online"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/moreDetailsButton" />
+        android:layout_below="@id/news_details_details"
+        android:id="@+id/news_details_launch_url"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

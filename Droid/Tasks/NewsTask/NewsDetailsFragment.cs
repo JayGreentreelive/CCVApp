@@ -11,6 +11,7 @@ using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
+using Android.Graphics;
 
 namespace Droid
 {
@@ -20,6 +21,8 @@ namespace Droid
         {
             public class NewsDetailsFragment : TaskFragment
             {
+                public CCVApp.Shared.Network.RockNews NewsItem { get; set; }
+
                 public override void OnCreate( Bundle savedInstanceState )
                 {
                     base.OnCreate( savedInstanceState );
@@ -36,12 +39,22 @@ namespace Droid
                     View view = inflater.Inflate(Resource.Layout.News_Details, container, false);
                     view.SetOnTouchListener( this );
 
-                    Button modeDetailsButton = view.FindViewById<Button>(Resource.Id.moreDetailsButton);
+                    // set the banner
+                    ImageView banner = view.FindViewById<ImageView>( Resource.Id.news_details_banner );
+                    System.IO.Stream assetStream = Activity.BaseContext.Assets.Open( NewsItem.HeaderImageName );
+                    banner.SetImageBitmap( BitmapFactory.DecodeStream( assetStream ) );
 
-                    modeDetailsButton.Click += (object sender, EventArgs e) => 
+
+                    // set the description
+                    TextView description = view.FindViewById<TextView>( Resource.Id.news_details_details );
+                    description.Text = NewsItem.Description;
+
+
+                    Button launchUrlButton = view.FindViewById<Button>(Resource.Id.news_details_launch_url);
+                    launchUrlButton.Click += (object sender, EventArgs e) => 
                         {
                             // move to the next page..somehow.
-                            ParentTask.OnClick( this, modeDetailsButton.Id );
+                            ParentTask.OnClick( this, launchUrlButton.Id );
                         };
 
                     return view;

@@ -44,9 +44,34 @@ namespace CCVApp
                         Titles.Add(" Dr." );
 
                         News = new List<RockNews>( );
-                        News.Add( new RockNews( "News Item 1", "News Flash! CCV Rocks!", "news_general_1.png" ) );
-                        News.Add( new RockNews( "News Item 2", "News Flash! Jered is a super cool dude!", "news_general_2.png" ) );
-                        News.Add( new RockNews( "News Item 3", "News Flash! I wear sneakers in the pool.", "news_general_3.png" ) );
+                        News.Add( new RockNews( "# WISDOM", "Each day we make decisions and each decision often has many options" + 
+                                                            "that are morally permissible. It’s not so much which is the \"right\""  + 
+                                                            "choice, it’s which is the “wise” choice. Wisdom goes beyond right and wrong," + 
+                                                            "and illuminates which choice is best based on the complex realities of life."  + 
+                                                            "So join us as we seek and gain wisdom that will benefit every area of our lives.",
+                                                            
+                                                            "http://www.ccvonline.com/Arena/default.aspx?page=18604&topic=114",
+
+                                                            "news_general_1.png",
+                        
+                                                            "news_general_1_header.png" ) );
+
+                        News.Add( new RockNews( "FATHER & SON CAMPOUT 2014", "Bring your baseball gloves, sleeping bag, and pillow & be prepared to have a great time!", 
+
+                                                                             "http://www.ccvonline.com/Arena/default.aspx?page=17393&eventId=23819", 
+
+                                                                             "news_general_2.png", 
+
+                                                                              "news_general_2_header.png" ) );
+
+
+                        News.Add( new RockNews( "2015 CAMPS", "Save the date! Camp Registration opens 1/10/2015", 
+
+                                                              "https://www.ccvonline.com/Arena/default.aspx?page=19027", 
+
+                                                              "news_general_3.png",
+                                                              
+                                                              "news_general_3_header.png" ) );
                     }
 
                     [JsonConstructor]

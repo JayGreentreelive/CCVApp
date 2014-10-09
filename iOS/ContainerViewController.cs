@@ -214,6 +214,9 @@ namespace iOS
         }
 	}
 
+    //NOTE: To perform a transition between ViewControllers that are part of a task,
+    // simply create a custom Segue in the Storyboard, and set it to "TaskTransition"
+
     // Define our task transition class that notifies the container
     // about the transition, so it can ensure the next view controller receives
     // a reference to the active task.

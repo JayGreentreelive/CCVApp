@@ -16,21 +16,29 @@ namespace iOS
 	{
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UILabel NewsDescriptionLabel { get; set; }
+		UIImageView ImageBanner { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UILabel NewsTitleLabel { get; set; }
+		UIButton LearnMoreButton { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UILabel NewsDescriptionLabel { get; set; }
 
 		void ReleaseDesignerOutlets ()
 		{
+			if (ImageBanner != null) {
+				ImageBanner.Dispose ();
+				ImageBanner = null;
+			}
+			if (LearnMoreButton != null) {
+				LearnMoreButton.Dispose ();
+				LearnMoreButton = null;
+			}
 			if (NewsDescriptionLabel != null) {
 				NewsDescriptionLabel.Dispose ();
 				NewsDescriptionLabel = null;
-			}
-			if (NewsTitleLabel != null) {
-				NewsTitleLabel.Dispose ();
-				NewsTitleLabel = null;
 			}
 		}
 	}

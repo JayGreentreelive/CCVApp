@@ -12,7 +12,7 @@ namespace CCVApp.Shared
             {
                 get
                 {
-                    return "0.0.1";
+                    return "0.0.2";
                 }
             }
 
@@ -20,7 +20,7 @@ namespace CCVApp.Shared
             {
                 get
                 {
-                    return "10-6-14";
+                    return "10-8-14";
                 }
             }
         }
