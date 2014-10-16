@@ -3,12 +3,29 @@
   <MonoDevelop.Ide.Workbench ActiveDocument="iOS/Tasks/Prayer/PrayerMainUIViewController.cs">
     <Files>
       <File FileName="iOS/Tasks/News/NewsTask.cs" Line="1" Column="1" />
-      <File FileName="iOS/Tasks/Prayer/PrayerTask.cs" Line="53" Column="53" />
-      <File FileName="iOS/Tasks/Prayer/Prayer_CreateUIViewController.cs" Line="67" Column="67" />
-      <File FileName="../Rock.Mobile/PlatformUI/iOS/iOSRevealLabel.cs" Line="1" Column="1" />
       <File FileName="iOS/Tasks/News/NewsMainUIViewController.cs" Line="13" Column="13" />
-      <File FileName="iOS/Tasks/Prayer/PrayerMainUIViewController.cs" Line="31" Column="31" />
+      <File FileName="iOS/Tasks/Prayer/PrayerMainUIViewController.cs" Line="48" Column="48" />
     </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="iOS" expanded="True">
+            <Node name="Tasks" expanded="True">
+              <Node name="News" expanded="True" />
+              <Node name="Prayer" expanded="True">
+                <Node name="PrayerStoryboard_iPhone.storyboard" selected="True" />
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State>
+          <Value>View.Layer.Position.X + 220</Value>
+          <Value>(View.Layer.Bounds.Width / 2)</Value>
+        </State>
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />

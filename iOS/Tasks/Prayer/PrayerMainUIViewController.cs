@@ -8,30 +8,42 @@ using MonoTouch.CoreAnimation;
 
 namespace iOS
 {
-	partial class PrayerMainUIViewController : TaskUIViewController
+    partial class PrayerMainUIViewController : TaskUIViewController
 	{
         class PrayerCard
         {
             public UIView View { get; set; }
             UILabel Name { get; set; }
+            UILabel Date { get; set; }
             UILabel Prayer { get; set; }
+            UIButton Pray { get; set; }
 
             public PrayerCard( RectangleF bounds )
             {
                 View = new UIView( bounds );
                 Name = new UILabel( );
+                Date = new UILabel( );
                 Prayer = new UILabel( );
+                Pray = new UIButton( UIButtonType.System );
 
                 // set anchor points to the left corner for simple positioning
                 Name.Layer.AnchorPoint = new PointF( 0, 0 );
                 Prayer.Layer.AnchorPoint = new PointF( 0, 0 );
+                Pray.Layer.AnchorPoint = new PointF( 0, 0 );
+                Date.Layer.AnchorPoint = new PointF( 0, 0 );
                 View.Layer.AnchorPoint = new PointF( 0, 0 );
+
+                Pray.SetTitle( "Pray", UIControlState.Normal );
+                Pray.SizeToFit( );
+
+                Pray.Layer.Position = new PointF( (View.Layer.Bounds.Width - Pray.Layer.Bounds.Width) / 2, View.Layer.Bounds.Height - Pray.Layer.Bounds.Height );
 
                 // don't consume the interactions
                 View.UserInteractionEnabled = false;
 
                 // set the text color
                 Name.TextColor = UIColor.White;
+                Date.TextColor = UIColor.White;
                 Prayer.TextColor = UIColor.White;
 
                 // set the outline for the card
@@ -41,24 +53,31 @@ namespace iOS
 
                 // add the controls
                 View.AddSubview( Name );
+                View.AddSubview( Date );
                 View.AddSubview( Prayer );
+                View.AddSubview( Pray );
             }
 
             const int ViewPadding = 10;
-
-            public void SetPrayer( string name, string prayer )
+            public void SetPrayer( Rock.Client.PrayerRequest prayer )
             {
                 // set the text for the name, size it so we get the height, then
                 // restrict its bounds to the card itself
-                Name.Text = name;
+                Name.Text = prayer.FirstName;
                 Name.SizeToFit( );
                 Name.Frame = new RectangleF( ViewPadding, ViewPadding, View.Bounds.Width - (ViewPadding * 2), Name.Bounds.Height );
 
+                // set the date text, set the width to be the card itself,
+                // and let SizeToFit measure the height.
+                Date.Text = string.Format( "{0:dddd MMMM d}, {2:yyyy}", prayer.CreatedDateTime, prayer.CreatedDateTime, prayer.CreatedDateTime );
+                Date.Frame = new RectangleF( ViewPadding, Name.Frame.Bottom, View.Bounds.Width - (ViewPadding * 2), 0 );
+                Date.SizeToFit( );
+
                 // set the prayer text, allow multiple lines, set the width to be the card itself,
                 // and let SizeToFit measure the height.
-                Prayer.Text = prayer;
+                Prayer.Text = prayer.Text;
                 Prayer.Lines = 99;
-                Prayer.Frame = new RectangleF( ViewPadding, Name.Frame.Bottom, View.Bounds.Width - (ViewPadding * 2), 0 );
+                Prayer.Frame = new RectangleF( ViewPadding, Date.Frame.Bottom, View.Bounds.Width - (ViewPadding * 2), 0 );
                 Prayer.SizeToFit( );
             }
         }
@@ -183,11 +202,6 @@ namespace iOS
                     Prayer_CreateUIViewController viewController = Storyboard.InstantiateViewController( "Prayer_CreateUIViewController" ) as Prayer_CreateUIViewController;
                     Task.PerformSegue( this, viewController );
                 };
-
-            PrayButton.TouchUpInside += (object sender, EventArgs e) => 
-                {
-                    //todo: update prayer count
-                };
         }
 
         public override void ViewWillAppear(bool animated)
@@ -199,7 +213,6 @@ namespace iOS
             ActivityIndicator.Hidden = false;
 
             CreatePrayerButton.Enabled = false;
-            PrayButton.Enabled = false;
 
             // request the prayers each time this appears
             CCVApp.Shared.Network.RockApi.Instance.GetPrayers( delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.PrayerRequest> prayerRequests) 
@@ -209,7 +222,6 @@ namespace iOS
                     if( prayerRequests.Count > 0 )
                     {
                         CreatePrayerButton.Enabled = true;
-                        PrayButton.Enabled = true;
 
                         PrayerRequests = prayerRequests;
 
@@ -223,7 +235,6 @@ namespace iOS
             base.ViewWillDisappear(animated);
 
             CreatePrayerButton.Enabled = false;
-            PrayButton.Enabled = false;
         }
 
         void OnPanGesture(UIPanGestureRecognizer obj) 
@@ -378,7 +389,6 @@ namespace iOS
         /// <summary>
         /// Animates a card from startPos to endPos over time
         /// </summary>
-        const float AnimDuration = .25f;
         void AnimateCard( UIView cardView, string animName, PointF startPos, PointF endPos, float duration, UIViewController parentDelegate )
         {
             CABasicAnimation cardAnim = CABasicAnimation.FromKeyPath( "position" );
@@ -491,43 +501,36 @@ namespace iOS
         {
             // this will animate each card to its neutral resting point
             Animating = true;
-            AnimateCard( SubLeftCard.View, "SubLeftCard", SubLeftCard.View.Layer.Position, SubLeftPos, AnimDuration, null );
-            AnimateCard( LeftCard.View, "LeftCard", LeftCard.View.Layer.Position, LeftPos, AnimDuration, null );
-            AnimateCard( CenterCard.View, "CenterCard", CenterCard.View.Layer.Position, CenterPos, AnimDuration, this );
-            AnimateCard( RightCard.View, "RightCard", RightCard.View.Layer.Position, RightPos, AnimDuration, null );
-            AnimateCard( PostRightCard.View, "PostRightCard", PostRightCard.View.Layer.Position, PostRightPos, AnimDuration, null );
+            AnimateCard( SubLeftCard.View, "SubLeftCard", SubLeftCard.View.Layer.Position, SubLeftPos, CCVApp.Shared.Config.Prayer.Card_AnimationDuration, null );
+            AnimateCard( LeftCard.View, "LeftCard", LeftCard.View.Layer.Position, LeftPos, CCVApp.Shared.Config.Prayer.Card_AnimationDuration, null );
+            AnimateCard( CenterCard.View, "CenterCard", CenterCard.View.Layer.Position, CenterPos, CCVApp.Shared.Config.Prayer.Card_AnimationDuration, this );
+            AnimateCard( RightCard.View, "RightCard", RightCard.View.Layer.Position, RightPos, CCVApp.Shared.Config.Prayer.Card_AnimationDuration, null );
+            AnimateCard( PostRightCard.View, "PostRightCard", PostRightCard.View.Layer.Position, PostRightPos, CCVApp.Shared.Config.Prayer.Card_AnimationDuration, null );
         }
 
         void UpdatePrayerCards( int prayerIndex )
         {
-            // grab the prayer request
-            Rock.Client.PrayerRequest request = PrayerRequests[ ViewingIndex ];
-
-            CenterCard.SetPrayer( request.FirstName, request.Text );
+            CenterCard.SetPrayer( PrayerRequests[ ViewingIndex ] );
 
             // set the left and right in case they want to swipe thru the prayers
             if( ViewingIndex - 2 >= 0 )
             {
-                request = PrayerRequests[ ViewingIndex - 2 ];
-                SubLeftCard.SetPrayer( request.FirstName, request.Text );
+                SubLeftCard.SetPrayer( PrayerRequests[ ViewingIndex - 2 ] );
             }
 
             if( ViewingIndex - 1 >= 0 )
             {
-                request = PrayerRequests[ ViewingIndex - 1 ];
-                LeftCard.SetPrayer( request.FirstName, request.Text );
+                LeftCard.SetPrayer( PrayerRequests[ ViewingIndex - 1 ] );
             }
 
             if( ViewingIndex + 1 < PrayerRequests.Count )
             {
-                request = PrayerRequests[ ViewingIndex + 1 ];
-                RightCard.SetPrayer( request.FirstName, request.Text );
+                RightCard.SetPrayer( PrayerRequests[ ViewingIndex + 1 ] );
             }
 
             if( ViewingIndex + 2 < PrayerRequests.Count )
             {
-                request = PrayerRequests[ ViewingIndex + 2 ];
-                PostRightCard.SetPrayer( request.FirstName, request.Text );
+                PostRightCard.SetPrayer( PrayerRequests[ ViewingIndex + 2 ] );
             }
         }
 	}

@@ -22,10 +22,6 @@ namespace iOS
 		[GeneratedCode ("iOS Designer", "1.0")]
 		UIButton CreatePrayerButton { get; set; }
 
-		[Outlet]
-		[GeneratedCode ("iOS Designer", "1.0")]
-		UIButton PrayButton { get; set; }
-
 		void ReleaseDesignerOutlets ()
 		{
 			if (ActivityIndicator != null) {
@@ -35,10 +31,6 @@ namespace iOS
 			if (CreatePrayerButton != null) {
 				CreatePrayerButton.Dispose ();
 				CreatePrayerButton = null;
-			}
-			if (PrayButton != null) {
-				PrayButton.Dispose ();
-				PrayButton = null;
 			}
 		}
 	}

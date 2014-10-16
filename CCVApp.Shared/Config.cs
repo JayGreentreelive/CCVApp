@@ -367,6 +367,14 @@ namespace CCVApp
                 /// </summary>
                 public const float ScrollRateForNavBarHide = 50;
             }
+
+            public sealed class Prayer
+            {
+                /// <summary>
+                /// The length of the animation when a prayer card is animating.
+                /// </summary>
+                public const float Card_AnimationDuration = .25f;
+            }
         }
     }
 }

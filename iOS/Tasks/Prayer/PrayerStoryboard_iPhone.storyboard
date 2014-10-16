@@ -24,29 +24,17 @@
                                 <connections>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="169" translatesAutoresizingMaskIntoConstraints="NO">
-                                <rect key="frame" x="137" y="518" width="46" height="30"/>
-                                <state key="normal" title="Pray">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="46" id="203"/>
-                                </constraints>
-                            </button>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="170" animating="YES">
                                 <rect key="frame" x="142" y="230" width="37" height="37"/>
                             </activityIndicatorView>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="6" firstAttribute="bottom" secondItem="169" secondAttribute="bottom" constant="20" id="207"/>
-                            <constraint firstItem="6" firstAttribute="trailing" secondItem="169" secondAttribute="trailing" constant="137" id="208"/>
                             <constraint id="213" firstItem="6" firstAttribute="trailing" secondItem="170" secondAttribute="trailing" constant="141"/>
                             <constraint id="214" firstItem="170" firstAttribute="top" secondItem="6" secondAttribute="top" constant="230"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="CreatePrayerButton" destination="11" id="name-outlet-11"/>
-                        <outlet property="PrayButton" destination="169" id="name-outlet-169"/>
                         <outlet property="ActivityIndicator" destination="170" id="name-outlet-170"/>
                     </connections>
                 </viewController>

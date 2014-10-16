@@ -1,3 +1,5 @@
+Needed End Points & Data
+-=-=-=-=-=-=-=-=-=-=-=-=
 Launch Data (Updated each time the app is run)
 	"General Data" Version Number (will be compared with the client's current "General Data" version number)
     News
@@ -22,6 +24,14 @@ Profile Data
 	Phone Number
 	Profile Pic URL
 	Campus
+
+Prayer
+    "Prayed for" end point
+    Categories on pulldown
+
+Profile
+    Picture Upload (with account association)
+
 
 -=-=-=-=-=-=-=-=-=-=-
 App Data Flow Chart
@@ -77,7 +87,7 @@ App Data Flow Chart
             
     
     Prayer Requests
-        Network?
+        Network?
             Allow
                 "Prayer" Created
                     Network?
