@@ -20,33 +20,17 @@ namespace iOS
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UILabel Author { get; set; }
-
-		[Outlet]
-		[GeneratedCode ("iOS Designer", "1.0")]
 		UIButton CreatePrayerButton { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
 		UIButton PrayButton { get; set; }
 
-		[Outlet]
-		[GeneratedCode ("iOS Designer", "1.0")]
-		UIView PrayerCardView { get; set; }
-
-		[Outlet]
-		[GeneratedCode ("iOS Designer", "1.0")]
-		UILabel Request { get; set; }
-
 		void ReleaseDesignerOutlets ()
 		{
 			if (ActivityIndicator != null) {
 				ActivityIndicator.Dispose ();
 				ActivityIndicator = null;
-			}
-			if (Author != null) {
-				Author.Dispose ();
-				Author = null;
 			}
 			if (CreatePrayerButton != null) {
 				CreatePrayerButton.Dispose ();
@@ -55,14 +39,6 @@ namespace iOS
 			if (PrayButton != null) {
 				PrayButton.Dispose ();
 				PrayButton = null;
-			}
-			if (PrayerCardView != null) {
-				PrayerCardView.Dispose ();
-				PrayerCardView = null;
-			}
-			if (Request != null) {
-				Request.Dispose ();
-				Request = null;
 			}
 		}
 	}

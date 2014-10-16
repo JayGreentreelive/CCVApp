@@ -3,6 +3,7 @@ using RestSharp;
 using System.IO;
 using Newtonsoft.Json;
 using System.Net;
+using System.Collections.Generic;
 
 namespace CCVApp
 {
@@ -43,7 +44,20 @@ namespace CCVApp
                 /// </summary>
                 const string GetProfileEndPoint = "api/People/GetByUserName/";
 
+                /// <summary>
+                /// End point for retrieving a profile picture with a specific SQUARE size.
+                /// </summary>
                 const string GetProfilePictureEndPoint = "GetImage.ashx?id={0}&width={1}&height={1}";
+
+                /// <summary>
+                /// End point for retrieving prayer requests
+                /// </summary>
+                const string GetPrayerRequestsEndPoint = "api/prayerrequests";//?$filter=IsApproved eq true&$expand=Category"; todo: in the end we want this, but not for testing.
+
+                /// <summary>
+                /// End point for posting a prayer request
+                /// </summary>
+                const string PutPrayerRequestEndPoint = "api/prayerrequests";
 
                 /// <summary>
                 /// End point for updating a Person object
@@ -100,6 +114,27 @@ namespace CCVApp
                 {
                     // reset our cookies
                     CookieContainer = new CookieContainer();
+                }
+
+                public void GetPrayers( RequestResult< List<Rock.Client.PrayerRequest> > resultHandler )
+                {
+                    // request a profile by the username. If no username is specified, we'll use the logged in user's name.
+                    RestRequest request = new RestRequest( Method.GET );
+                    request.Resource = GetPrayerRequestsEndPoint;
+
+                    ExecuteAsync< List<Rock.Client.PrayerRequest> >( request, resultHandler);
+                }
+
+                public void PutPrayer( Rock.Client.PrayerRequest prayer, RequestResult resultHandler )
+                {
+                    // request a profile by the username. If no username is specified, we'll use the logged in user's name.
+                    RestRequest request = new RestRequest( Method.POST );
+                    request.Resource = PutPrayerRequestEndPoint;
+
+                    request.RequestFormat = DataFormat.Json;
+                    request.AddBody( prayer );
+
+                    ExecuteAsync( request, resultHandler);
                 }
 
                 public void GetProfile( string userName, RequestResult<Rock.Client.Person> resultHandler )

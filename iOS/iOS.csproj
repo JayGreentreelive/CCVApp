@@ -354,6 +354,10 @@
     <Compile Include="Tasks\Prayer\PrayerMainUIViewController.designer.cs">
       <DependentUpon>PrayerMainUIViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="Tasks\Prayer\Prayer_CreateUIViewController.cs" />
+    <Compile Include="Tasks\Prayer\Prayer_CreateUIViewController.designer.cs">
+      <DependentUpon>Prayer_CreateUIViewController.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="..\..\Rock\Rock.Client\Rock.Client.Models.projitems" Label="Shared" Condition="Exists('..\..\Rock\Rock.Client\Rock.Client.Models.projitems')" />
   <Import Project="..\..\Rock.Mobile\Rock.Mobile.projitems" Label="Shared" Condition="Exists('..\..\Rock.Mobile\Rock.Mobile.projitems')" />

@@ -1,29 +1,14 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhone4s.8.0" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="CCVApp.Shared/RockApi/RockApi.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/Tasks/Prayer/PrayerMainUIViewController.cs">
     <Files>
-      <File FileName="iOS/SpringboardViewController.cs" Line="18" Column="18" />
-      <File FileName="iOS/Tasks/Notes/NotesViewController.cs" Line="10" Column="10" />
-      <File FileName="CCVApp.Shared/RockApi/RockApi.cs" Line="46" Column="46" />
-      <File FileName="CCVApp.Shared/RockApi/RockMobileUser.cs" Line="45" Column="45" />
-      <File FileName="iOS/UserManagement/LoginViewController.cs" Line="68" Column="68" />
-      <File FileName="Droid/UserManagement/LoginFragment.cs" Line="102" Column="102" />
-      <File FileName="Droid/Springboard.cs" Line="50" Column="50" />
+      <File FileName="iOS/Tasks/News/NewsTask.cs" Line="1" Column="1" />
+      <File FileName="iOS/Tasks/Prayer/PrayerTask.cs" Line="53" Column="53" />
+      <File FileName="iOS/Tasks/Prayer/Prayer_CreateUIViewController.cs" Line="67" Column="67" />
+      <File FileName="../Rock.Mobile/PlatformUI/iOS/iOSRevealLabel.cs" Line="1" Column="1" />
+      <File FileName="iOS/Tasks/News/NewsMainUIViewController.cs" Line="13" Column="13" />
+      <File FileName="iOS/Tasks/Prayer/PrayerMainUIViewController.cs" Line="31" Column="31" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="iOS" expanded="True" selected="True">
-            <Node name="UserManagement" expanded="True" />
-          </Node>
-        </State>
-      </Pad>
-      <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State>
-          <Value>response</Value>
-        </State>
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
