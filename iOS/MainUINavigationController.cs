@@ -108,8 +108,6 @@ namespace iOS
         /// </summary>
         int PanDir { get; set; }
 
-        //bool AllowPan { get; set; }
-
         void OnPanGesture(UIPanGestureRecognizer obj) 
         {
             switch( obj.State )
@@ -146,13 +144,42 @@ namespace iOS
 
                 case UIGestureRecognizerState.Ended:
                 {
-                    if( View.Layer.Position.X > (CCVApp.Shared.Config.PrimaryContainer.SlideAmount + View.Layer.Bounds.Width) / 2 )
+                    PointF currVelocity = obj.VelocityInView( View );
+
+                    float restingPoint = (View.Layer.Bounds.Width / 2);
+                    float currX = View.Layer.Position.X - restingPoint;
+
+                    // if they slide at least a third of the way, allow a switch
+                    float toggleThreshold = (CCVApp.Shared.Config.PrimaryContainer.SlideAmount / 3);
+
+                    // check whether the springboard is open, because that changes the
+                    // context of hte user's intention
+                    if( SpringboardRevealed == true )
                     {
-                        RevealSpringboard( true );
+                        // since it's open, close it if it crosses the closeThreshold
+                        // OR velocty is high
+                        float closeThreshold = CCVApp.Shared.Config.PrimaryContainer.SlideAmount - toggleThreshold;
+                        if( currX < closeThreshold || currVelocity.X < -1000 )
+                        {
+                            RevealSpringboard( false );
+                        }
+                        else
+                        {
+                            RevealSpringboard( true );
+                        }
                     }
                     else
                     {
-                        RevealSpringboard( false );
+                        // since it's closed, allow it to open as long as it's beyond toggleThreshold
+                        // OR velocity is high
+                        if( currX > toggleThreshold || currVelocity.X > 1000 )
+                        {
+                            RevealSpringboard( true );
+                        }
+                        else
+                        {
+                            RevealSpringboard( false );
+                        }
                     }
                     break;
                 }
@@ -165,8 +192,6 @@ namespace iOS
             float xPos = View.Layer.Position.X + delta.X;
 
             xPos = Math.Max( (View.Layer.Bounds.Width / 2), Math.Min( xPos, CCVApp.Shared.Config.PrimaryContainer.SlideAmount + (View.Layer.Bounds.Width / 2) ) );
-
-            Console.WriteLine( "Panning {0}", xPos );
 
             View.Layer.Position = new PointF( xPos, View.Layer.Position.Y );
         }
