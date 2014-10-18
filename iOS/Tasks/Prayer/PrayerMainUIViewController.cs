@@ -5,7 +5,7 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Drawing;
 using MonoTouch.CoreAnimation;
-using Rock.Mobile.PlatformCommon;
+using Rock.Mobile.PlatformUI;
 
 namespace iOS
 {
@@ -13,15 +13,17 @@ namespace iOS
 	{
         class PrayerCard
         {
-            UIView View { get; set; }
+            PlatformView View { get; set; }
             UILabel Name { get; set; }
             UILabel Date { get; set; }
             UILabel Prayer { get; set; }
             UIButton Pray { get; set; }
 
-            public PrayerCard( ref UIView cardView, RectangleF bounds )
+            public PrayerCard( ref PlatformView cardView, RectangleF bounds )
             {
-                View = new UIView( bounds );
+                View = PlatformView.Create( );
+                View.Bounds = bounds;
+
                 Name = new UILabel( );
                 Date = new UILabel( );
                 Prayer = new UILabel( );
@@ -32,15 +34,11 @@ namespace iOS
                 Prayer.Layer.AnchorPoint = new PointF( 0, 0 );
                 Pray.Layer.AnchorPoint = new PointF( 0, 0 );
                 Date.Layer.AnchorPoint = new PointF( 0, 0 );
-                View.Layer.AnchorPoint = new PointF( 0, 0 );
 
                 Pray.SetTitle( "Pray", UIControlState.Normal );
                 Pray.SizeToFit( );
 
-                Pray.Layer.Position = new PointF( (View.Layer.Bounds.Width - Pray.Layer.Bounds.Width) / 2, View.Layer.Bounds.Height - Pray.Layer.Bounds.Height );
-
-                // don't consume the interactions
-                View.UserInteractionEnabled = false;
+                Pray.Layer.Position = new PointF( (View.Bounds.Width - Pray.Layer.Bounds.Width) / 2, View.Bounds.Height - Pray.Layer.Bounds.Height );
 
                 // set the text color
                 Name.TextColor = UIColor.White;
@@ -48,15 +46,17 @@ namespace iOS
                 Prayer.TextColor = UIColor.White;
 
                 // set the outline for the card
-                View.Layer.BorderColor = UIColor.Gray.CGColor;
-                View.Layer.CornerRadius = 4;
-                View.Layer.BorderWidth = 1;
+                View.BorderColor = 0x777777FF;//UIColor.Gray.CGColor;
+                View.CornerRadius = 4;
+                View.BorderWidth = 1;
 
                 // add the controls
-                View.AddSubview( Name );
-                View.AddSubview( Date );
-                View.AddSubview( Prayer );
-                View.AddSubview( Pray );
+                UIView nativeView = View.PlatformNativeObject as UIView;
+                nativeView.UserInteractionEnabled = false;
+                nativeView.AddSubview( Name );
+                nativeView.AddSubview( Date );
+                nativeView.AddSubview( Prayer );
+                nativeView.AddSubview( Pray );
 
                 cardView = View;
             }
@@ -91,7 +91,7 @@ namespace iOS
         /// <value>The prayer requests.</value>
         List<Rock.Client.PrayerRequest> PrayerRequests { get; set; }
 
-        iOSCardCarousel Carousel { get; set; }
+        PlatformCardCarousel Carousel { get; set; }
 
         PrayerCard SubLeftPrayer { get; set; }
         PrayerCard LeftPrayer { get; set; }
@@ -116,7 +116,7 @@ namespace iOS
             // setup the card positions to be to the offscreen to the left, centered on screen, and offscreen to the right
             float cardYOffset = ((viewRealHeight - cardHeight) / 2) + NavigationController.NavigationBar.Bounds.Height;
 
-            Carousel = new iOSCardCarousel( cardWidth, cardHeight, View, new RectangleF( 0, cardYOffset, View.Bounds.Width, viewRealHeight ), UpdatePrayerCards );
+            Carousel = PlatformCardCarousel.Create( cardWidth, cardHeight, new RectangleF( 0, cardYOffset, View.Bounds.Width, viewRealHeight ), UpdatePrayerCards );
 
             // create our cards
             SubLeftPrayer = new PrayerCard( ref Carousel.SubLeftCard, new RectangleF( 0, 0, cardWidth, cardHeight ) );
@@ -125,7 +125,7 @@ namespace iOS
             RightPrayer = new PrayerCard( ref Carousel.RightCard, new RectangleF( 0, 0, cardWidth, cardHeight ) );
             PostRightPrayer = new PrayerCard( ref Carousel.PostRightCard, new RectangleF( 0, 0, cardWidth, cardHeight ) );
 
-            Carousel.ViewDidLoad( );
+            Carousel.Init( View );
 
             // hide the actiivty indicator and make sure it is front and center
             ActivityIndicator.Hidden = false;
@@ -176,14 +176,14 @@ namespace iOS
         {
             base.TouchesBegan( touches, evt );
 
-            Carousel.TouchesBegan( touches, evt );
+            Carousel.TouchesBegan( );
         }
 
         public override void TouchesEnded(NSSet touches, UIEvent evt)
         {
             base.TouchesEnded( touches, evt );
 
-            Carousel.TouchesEnded( touches, evt );
+            Carousel.TouchesEnded( );
         }
 
         void UpdatePrayerCards( int prayerIndex )

@@ -281,10 +281,8 @@ namespace iOS
 
                                 SpringboardRevealed = wantReveal;
 
-                                Container.View.UserInteractionEnabled = !SpringboardRevealed;
-
                                 // if the springboard is open, disable input on app stuff
-                                //View.UserInteractionEnabled = !SpringboardRevealed;
+                                Container.View.UserInteractionEnabled = !SpringboardRevealed;
                             })
                     );
                 }

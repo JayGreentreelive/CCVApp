@@ -71,6 +71,8 @@
     <Compile Include="UserManagement\ImageCropFragment.cs" />
     <Compile Include="Tasks\AboutTask\AboutPrimaryFragment.cs" />
     <Compile Include="Tasks\AboutTask\AboutTask.cs" />
+    <Compile Include="Tasks\PrayerTask\PrayerPrimaryFragment.cs" />
+    <Compile Include="Tasks\PrayerTask\PrayerTask.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
@@ -139,6 +141,9 @@
     <AndroidResource Include="Resources\layout-sw600dp\About_PrimaryFragment.axml" />
     <AndroidResource Include="Resources\layout-sw480dp\About_PrimaryFragment.axml" />
     <AndroidResource Include="Resources\layout-sw320dp\About_PrimaryFragment.axml" />
+    <AndroidResource Include="Resources\layout-sw320dp\Prayer_Primary.axml" />
+    <AndroidResource Include="Resources\layout-sw480dp\Prayer_Primary.axml" />
+    <AndroidResource Include="Resources\layout-sw600dp\Prayer_Primary.axml" />
   </ItemGroup>
   <Import Project="..\..\Rock.Mobile\Rock.Mobile.projitems" Label="Shared" Condition="Exists('..\..\Rock.Mobile\Rock.Mobile.projitems')" />
   <Import Project="..\..\Rock\Rock.Client\Rock.Client.Models.projitems" Label="Shared" Condition="Exists('..\..\Rock\Rock.Client\Rock.Client.Models.projitems')" />
@@ -155,6 +160,7 @@
     <Folder Include="Resources\layout-sw320dp\" />
     <Folder Include="UserManagement\" />
     <Folder Include="Tasks\AboutTask\" />
+    <Folder Include="Tasks\PrayerTask\" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="..\Assets\Fonts\Bevan.ttf">

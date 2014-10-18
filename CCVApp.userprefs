@@ -1,15 +1,34 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhone4s.8.0" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/MainUINavigationController.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" PreferredExecutionTarget="Android.094c904b" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Tasks/PrayerTask/PrayerPrimaryFragment.cs">
     <Files>
-      <File FileName="iOS/Tasks/News/NewsTask.cs" Line="55" Column="55" />
-      <File FileName="iOS/Tasks/News/NewsMainUIViewController.cs" Line="31" Column="31" />
-      <File FileName="iOS/Tasks/Prayer/PrayerMainUIViewController.cs" Line="1" Column="1" />
-      <File FileName="../Rock.Mobile/PlatformCommon/iOSCommon.cs" Line="1" Column="1" />
-      <File FileName="iOS/SpringboardViewController.cs" Line="1" Column="1" />
-      <File FileName="iOS/MainUINavigationController.cs" Line="40" Column="40" />
-      <File FileName="iOS/ContainerViewController.cs" Line="1" Column="1" />
+      <File FileName="Droid/Tasks/PrayerTask/PrayerPrimaryFragment.cs" Line="82" Column="82" />
+      <File FileName="../Rock.Mobile/PlatformUI/Droid/DroidCardCarousel.cs" Line="14" Column="14" />
+      <File FileName="../Rock.Mobile/PlatformUI/iOS/iOSCardCarousel.cs" Line="22" Column="22" />
+      <File FileName="../Rock.Mobile/PlatformUI/PlatformCardCarousel.cs" Line="32" Column="32" />
+      <File FileName="../Rock.Mobile/PlatformUI/PlatformBaseUI.cs" Line="47" Column="47" />
     </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="Droid" expanded="True">
+            <Node name="Tasks" expanded="True">
+              <Node name="PrayerTask" expanded="True">
+                <Node name="PrayerPrimaryFragment.cs" selected="True" />
+              </Node>
+            </Node>
+          </Node>
+          <Node name="iOS" expanded="True">
+            <Node name="Tasks" expanded="True">
+              <Node name="Prayer" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />

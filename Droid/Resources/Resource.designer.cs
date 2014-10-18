@@ -293,13 +293,16 @@ namespace Droid
 			public const int Notes = 2130903046;
 			
 			// aapt resource value: 0x7f030007
-			public const int PrimaryNews = 2130903047;
+			public const int Prayer_Primary = 2130903047;
 			
 			// aapt resource value: 0x7f030008
-			public const int Profile = 2130903048;
+			public const int PrimaryNews = 2130903048;
 			
 			// aapt resource value: 0x7f030009
-			public const int Springboard = 2130903049;
+			public const int Profile = 2130903049;
+			
+			// aapt resource value: 0x7f03000a
+			public const int Springboard = 2130903050;
 			
 			static Layout()
 			{

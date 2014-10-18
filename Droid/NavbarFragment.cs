@@ -195,7 +195,7 @@ namespace Droid
 
         public void OnAnimationUpdate(ValueAnimator animation)
         {
-            // update the mask scale
+            // update the container position
             int xPos = ((Java.Lang.Integer)animation.GetAnimatedValue("")).IntValue();
 
             View.SetX( xPos );
