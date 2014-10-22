@@ -358,6 +358,17 @@ namespace iOS
             return false;
         }
 
+        public bool TouchingUserNote( NSSet touches, UIEvent evt )
+        {
+            UITouch touch = touches.AnyObject as UITouch;
+            if (touch != null)
+            {
+                return Note.TouchingUserNote( touch.LocationInView( UIScrollView ) );
+            }
+
+            return false;
+        }
+
         public override void TouchesBegan(NSSet touches, UIEvent evt)
         {
             base.TouchesBegan(touches, evt);

@@ -78,6 +78,16 @@ namespace iOS
         }
 
         /// <summary>
+        /// Called when the container wants to allow panning (typically to allow the springboard to be revealed).
+        /// Return false to disallow.
+        /// </summary>
+        /// <returns><c>true</c>, if wants pan was containered, <c>false</c> otherwise.</returns>
+        public virtual bool CanContainerPan( NSSet touches, UIEvent evt )
+        {
+            return true;
+        }
+
+        /// <summary>
         /// Called by the active view controller when touches ended. Allows the task to perform any
         /// necessary actions, like revealing the nav bar.
         /// </summary>

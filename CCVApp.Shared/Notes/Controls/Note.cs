@@ -365,7 +365,12 @@ namespace CCVApp
                     return false;
                 }
 
-                public bool TouchesBegan( PointF touch )
+                /// <summary>
+                /// Seperated from ToucheBegan so that the parent container can know if it will be allowed to pan or not.
+                /// </summary>
+                /// <returns><c>true</c>, if user note was touchinged, <c>false</c> otherwise.</returns>
+                /// <param name="touch">Touch.</param>
+                public bool TouchingUserNote( PointF touch )
                 {
                     // We receive TouchesBegan if anything except a TextField was tapped.
                     // The only control we have that needs this is the UserNote for its Anchor.
@@ -385,6 +390,11 @@ namespace CCVApp
                     // No UserNote Anchors were touched, so do not
                     // say we consumed this.
                     return false;
+                }
+
+                public bool TouchesBegan( PointF touch )
+                {
+                    return TouchingUserNote( touch );
                 }
 
                 public void TouchesMoved( PointF touch )

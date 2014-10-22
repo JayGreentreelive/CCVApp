@@ -1,34 +1,15 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" PreferredExecutionTarget="Android.094c904b" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Tasks/PrayerTask/PrayerPrimaryFragment.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" PreferredExecutionTarget="Android.SelectDevice" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/Tasks/Prayer/PrayerMainUIViewController.cs">
     <Files>
-      <File FileName="Droid/Tasks/PrayerTask/PrayerPrimaryFragment.cs" Line="82" Column="82" />
-      <File FileName="../Rock.Mobile/PlatformUI/Droid/DroidCardCarousel.cs" Line="14" Column="14" />
-      <File FileName="../Rock.Mobile/PlatformUI/iOS/iOSCardCarousel.cs" Line="22" Column="22" />
-      <File FileName="../Rock.Mobile/PlatformUI/PlatformCardCarousel.cs" Line="32" Column="32" />
-      <File FileName="../Rock.Mobile/PlatformUI/PlatformBaseUI.cs" Line="47" Column="47" />
+      <File FileName="iOS/Tasks/Prayer/PrayerMainUIViewController.cs" Line="3" Column="3" />
+      <File FileName="iOS/MainUINavigationController.cs" Line="1" Column="1" />
+      <File FileName="iOS/Tasks/Notes/NotesViewController.cs" Line="1" Column="1" />
+      <File FileName="iOS/ContainerViewController.cs" Line="1" Column="1" />
+      <File FileName="iOS/Tasks/Task.cs" Line="1" Column="1" />
+      <File FileName="iOS/Tasks/Notes/NotesTask.cs" Line="1" Column="1" />
+      <File FileName="CCVApp.Shared/Notes/Controls/Note.cs" Line="1" Column="1" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="Droid" expanded="True">
-            <Node name="Tasks" expanded="True">
-              <Node name="PrayerTask" expanded="True">
-                <Node name="PrayerPrimaryFragment.cs" selected="True" />
-              </Node>
-            </Node>
-          </Node>
-          <Node name="iOS" expanded="True">
-            <Node name="Tasks" expanded="True">
-              <Node name="Prayer" expanded="True" />
-            </Node>
-          </Node>
-        </State>
-      </Pad>
-      <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />

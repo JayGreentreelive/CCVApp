@@ -1,6 +1,7 @@
 ﻿using System;
 using MonoTouch.UIKit;
 using System.Drawing;
+using MonoTouch.Foundation;
 
 namespace iOS
 {
@@ -80,6 +81,13 @@ namespace iOS
             {
                 NavToolbar.Reveal( true );
             }
+        }
+
+        public override bool CanContainerPan( NSSet touches, UIEvent evt )
+        {
+            //return the inverse of touching a user note's bool.
+            // so false if they ARE touching a note, true if they are not.
+            return !NotesViewController.TouchingUserNote( touches, evt );
         }
 
         public override void AppOnResignActive()

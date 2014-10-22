@@ -31,6 +31,8 @@ namespace iOS
         /// <value>The container.</value>
         protected ContainerViewController Container { get; set; }
 
+        UIPanGestureRecognizer PanGesture { get; set; }
+
         /// <summary>
         /// A wrapper for Container.CurrentTask, since Container is protected.
         /// </summary>
@@ -92,10 +94,10 @@ namespace iOS
             View.Layer.ShadowPath = shadowPath.CGPath;
 
             // setup our pan gesture
-            UIPanGestureRecognizer panGesture = new UIPanGestureRecognizer( OnPanGesture );
-            panGesture.MinimumNumberOfTouches = 1;
-            panGesture.MaximumNumberOfTouches = 1;
-            View.AddGestureRecognizer( panGesture );
+            PanGesture = new UIPanGestureRecognizer( OnPanGesture );
+            PanGesture.MinimumNumberOfTouches = 1;
+            PanGesture.MaximumNumberOfTouches = 1;
+            View.AddGestureRecognizer( PanGesture );
         }
 
         /// <summary>
@@ -183,6 +185,20 @@ namespace iOS
                     }
                     break;
                 }
+            }
+        }
+
+        public override void TouchesBegan(NSSet touches, UIEvent evt)
+        {
+            base.TouchesBegan(touches, evt);
+
+            if (CurrentTask.CanContainerPan( touches, evt ) == true)
+            {
+                PanGesture.Enabled = true;
+            }
+            else
+            {
+                PanGesture.Enabled = false;
             }
         }
 
