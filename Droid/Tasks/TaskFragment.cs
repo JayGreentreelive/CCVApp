@@ -44,20 +44,20 @@ namespace Droid
 
                 public override bool OnFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
                 {
-                    Parent.OnFlingGesture( e1, e2, velocityX, velocityY );
-                    return base.OnFling(e1, e2, velocityX, velocityY);
+                    return Parent.OnFlingGesture( e1, e2, velocityX, velocityY );
+                    //return base.OnFling(e1, e2, velocityX, velocityY);
                 }
 
                 public override bool OnScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
                 {
-                    Parent.OnScrollGesture( e1, e2, distanceX, distanceY );
-                    return base.OnScroll(e1, e2, distanceX, distanceY);
+                    return Parent.OnScrollGesture( e1, e2, distanceX, distanceY );
+                    //return base.OnScroll(e1, e2, distanceX, distanceY);
                 }
 
                 public override bool OnDoubleTap(MotionEvent e)
                 {
-                    Parent.OnDoubleTap( e );
-                    return base.OnDoubleTap( e );
+                    return Parent.OnDoubleTap( e );
+                    //return base.OnDoubleTap( e );
                 }
             }
 

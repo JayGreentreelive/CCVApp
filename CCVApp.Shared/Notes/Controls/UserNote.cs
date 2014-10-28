@@ -163,8 +163,10 @@ namespace CCVApp
 
                     PositionTransform = new PointF( parentParams.Width, parentParams.Height );
 
+                    //JHM 10-28-14 - Moved this to the bottom, and now just using double
+                    // the anchor's width.
                     //magic number ratio that works well!
-                    #if __IOS__
+                    /*#if __IOS__
                     float heightTouchRatio = .048f;
                     #endif
                     #if __ANDROID__
@@ -174,7 +176,7 @@ namespace CCVApp
                     // the touch range differs based on various device sizes. It makes more sense
                     // to give a larger area for a tablet and a smaller area to a phone.
                     AnchorTouchMaxDist = deviceHeight * heightTouchRatio;
-                    AnchorTouchMaxDist *= AnchorTouchMaxDist;
+                    AnchorTouchMaxDist *= AnchorTouchMaxDist;*/
 
                     //setup our timer for allowing movement/
                     DeleteTimer = new System.Timers.Timer();
@@ -248,7 +250,7 @@ namespace CCVApp
 
                     // Dont let the note be any wider than the screen - twice the min width. This allows a little
                     // free play so it doesn't feel like the note is always attached to the right edge.
-                    MaxNoteWidth = ScreenWidth - (MinNoteWidth * 2);
+                    MaxNoteWidth = Math.Min( ScreenWidth - (MinNoteWidth * 2), (MinNoteWidth * 6) );
 
                     // set the allowed X/Y so we don't let the user move the note off-screen.
                     MaxAllowedX = ( ScreenWidth - MinNoteWidth );
@@ -278,6 +280,10 @@ namespace CCVApp
                     // Setup the position
                     Anchor.Position = startPos;
                     AnchorFrame = Anchor.Frame;
+
+                    AnchorTouchMaxDist = AnchorFrame.Width * 2;
+                    AnchorTouchMaxDist *= AnchorTouchMaxDist;
+
 
                     // validate its bounds
                     ValidateBounds( );
@@ -496,6 +502,9 @@ namespace CCVApp
                     // This is important because to exit delete mode, hide a keyboard, etc.,
                     // we only want to do that when no other note is touched.
                     TextField.ResignFirstResponder( );
+
+                    // force an offset so that the size of our box refreshes to not have the whitespace at the bottom.
+                    AddOffset( 0, 0 );
 
                     if( DeleteEnabled == true )
                     {

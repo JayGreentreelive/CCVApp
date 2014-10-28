@@ -22,7 +22,11 @@ namespace iOS
         // before that.
         public override UIView HitTest(PointF point, UIEvent uievent)
         {
-            if ( Frame.Contains( point ) )
+            // transform the point into absolute coords (as if there was no scrolling)
+            PointF absolutePoint = new PointF( ( point.X - ContentOffset.X ) + Frame.Left,
+                                               ( point.Y - ContentOffset.Y ) + Frame.Top );
+
+            if ( Frame.Contains( absolutePoint ) )
             {
                 // Base OS controls need to know whether to process & consume
                 // input or pass it up to the higher level (us.)
@@ -281,6 +285,7 @@ namespace iOS
             UIScrollView.Frame = View.Frame;
             UIScrollView.BackgroundColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( 0x1C1C1CFF );
             UIScrollView.Delegate = new NotesScrollViewDelegate() { Parent = this };
+            UIScrollView.Layer.AnchorPoint = new PointF( 0, 0 );
 
             UITapGestureRecognizer tapGesture = new UITapGestureRecognizer();
             tapGesture.NumberOfTapsRequired = 2;

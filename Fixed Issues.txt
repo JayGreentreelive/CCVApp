@@ -7,9 +7,14 @@ Android - Added News list and items.
 Android - Import images from Photo Library
 Android - User can now slide out the springboard with their finger.
 
+
 iOS - Improved News items to show a description, banner and URL link. 
 iOS - Import images from Photo Library
 iOS - Crop Images
+iOS - Moving User Notes significantly easier
+iOS - Fixed an issue causing user notes near the bottom of the Note to not be movable.
+iOS - Fixed an issue allowing the springboard to slide out when in Landscape mode.
+iOS - Fixed an issue causing the Notes to display incorrectly if rotating to landscape while the keyboard was up.
 
 Both - Prayer viewing and creation
 Both - Support for shorthand elements in NoteScript (<P> for Paragraph, <RB> for RevealBox, etc.)

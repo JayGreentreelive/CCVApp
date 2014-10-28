@@ -192,7 +192,9 @@ namespace iOS
         {
             base.TouchesBegan(touches, evt);
 
-            if (CurrentTask.CanContainerPan( touches, evt ) == true)
+            // only allow panning if the task is ok with it AND we're in portrait mode.
+            if (CurrentTask.CanContainerPan( touches, evt ) == true && 
+                UIDevice.CurrentDevice.Orientation == UIDeviceOrientation.Portrait )
             {
                 PanGesture.Enabled = true;
             }
