@@ -231,7 +231,7 @@ namespace CCVApp
                             case XmlNodeType.EndElement:
                             {
                                 // if we hit the end of our label, we're done.
-                                if( reader.Name == "Paragraph" )
+                                if( reader.Name == "Paragraph" || reader.Name == "P" )
                                 {
                                     finishedReading = true;
                                 }

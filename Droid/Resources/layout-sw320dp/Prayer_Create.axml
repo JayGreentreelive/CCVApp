@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ff000000">
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/prayer_create_activityIndicator"
+        android:indeterminate="true"
+        android:layout_centerHorizontal="true" />
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="25dp" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp">
+        <EditText
+            android:hint="First Name"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/prayer_create_firstNameText"
+            android:inputType="textPersonName"
+            android:maxLength="12"
+            android:maxLines="1"
+            android:gravity="center_horizontal" />
+        <Space
+            android:layout_width="30dp"
+            android:layout_height="match_parent" />
+        <EditText
+            android:hint="Last Name"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/prayer_create_lastNameText"
+            android:inputType="textPersonName"
+            android:maxLength="12"
+            android:maxLines="1"
+            android:gravity="center_horizontal" />
+    </LinearLayout>
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="25dp" />
+    <EditText
+        android:hint="Request"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:inputType="textMultiLine"
+        android:maxLines="10"
+        android:scrollbars="vertical"
+        android:id="@+id/prayer_create_requestText" />
+    <Button
+        android:text="Submit Prayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/prayer_create_submitButton"
+        android:layout_marginLeft="10dp" />
+</LinearLayout>

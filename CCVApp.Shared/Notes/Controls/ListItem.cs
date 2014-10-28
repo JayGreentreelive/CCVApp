@@ -130,7 +130,7 @@ namespace CCVApp
                             case XmlNodeType.EndElement:
                             {
                                 // if we hit the end of our label, we're done.
-                                if( reader.Name == "ListItem" )
+                                    if( reader.Name == "ListItem" || reader.Name == "LI" )
                                 {
                                     finishedParsing = true;
                                 }

@@ -19,26 +19,26 @@ using Rock.Mobile.PlatformCommon;
 namespace Droid
 {
     /// <summary>
-    /// Forwards the finished animation notification to the actual navbar fragment
-    /// </summary>
-    public class NavbarAnimationListener : Android.Animation.AnimatorListenerAdapter
-    {
-        public NavbarFragment NavbarFragment { get; set; }
-
-        public override void OnAnimationEnd(Animator animation)
-        {
-            base.OnAnimationEnd(animation);
-
-            // forward on this message to our parent
-            NavbarFragment.OnAnimationEnd( animation );
-        }
-    }
-
-    /// <summary>
     /// The navbar fragment acts as the container for the active task.
     /// </summary>
     public class NavbarFragment : Fragment, Android.Animation.ValueAnimator.IAnimatorUpdateListener
     {
+        /// <summary>
+        /// Forwards the finished animation notification to the actual navbar fragment
+        /// </summary>
+        public class NavbarAnimationListener : Android.Animation.AnimatorListenerAdapter
+        {
+            public NavbarFragment NavbarFragment { get; set; }
+
+            public override void OnAnimationEnd(Animator animation)
+            {
+                base.OnAnimationEnd(animation);
+
+                // forward on this message to our parent
+                NavbarFragment.OnAnimationEnd( animation );
+            }
+        }
+
         /// <summary>
         /// Reference to the currently active task
         /// </summary>
@@ -51,13 +51,41 @@ namespace Droid
         /// True when the navbar fragment and task are slid "out" to reveal the springboard
         /// </summary>
         /// <value><c>true</c> if springboard revealed; otherwise, <c>false</c>.</value>
-        public bool SpringboardRevealed { get; protected set; }
+        bool SpringboardRevealed { get; set; }
+
+        /// <summary>
+        /// Returns true if the springboard should accept input.
+        /// This will basically be false anytime the springboard is CLOSED or animating
+        /// </summary>
+        /// <returns><c>true</c>, if springboard allow input was shoulded, <c>false</c> otherwise.</returns>
+        public bool ShouldSpringboardAllowInput( )
+        {
+            if ( SpringboardRevealed == true && Animating == false && IsPanning == false )
+            {
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true if the active task should accept input from the user.
+        /// This will basically be false anytime the springboard is open or animating
+        /// </summary>
+        /// <returns><c>true</c>, if task allow input was shoulded, <c>false</c> otherwise.</returns>
+        public bool ShouldTaskAllowInput( )
+        {
+            if ( SpringboardRevealed == false && Animating == false && IsPanning == false )
+            {
+                return true;
+            }
+            return false;
+        }
 
         /// <summary>
         /// True when the navbar fragment and container are in the process of sliding in our out
         /// </summary>
         /// <value><c>true</c> if animating; otherwise, <c>false</c>.</value>
-        protected bool Animating { get; set; }
+        bool Animating { get; set; }
 
         /// <summary>
         /// The frame that stores the active task
@@ -67,7 +95,11 @@ namespace Droid
 
         public NavToolbarFragment NavToolbar { get; set; }
 
-        protected Button SpringboardReveal { get; set; }
+        Button SpringboardRevealButton { get; set; }
+
+        float LastPanX { get; set; }
+
+        bool IsPanning { get; set; }
 
         /// <summary>
         /// True when OnResume has been called. False when it has not.
@@ -118,22 +150,22 @@ namespace Droid
         void CreateSpringboardButton( RelativeLayout relativeLayout )
         {
             // create the button
-            SpringboardReveal = new Button( Activity );
+            SpringboardRevealButton = new Button( Activity );
 
             // clear the background outline
-            SpringboardReveal.Background = null;
+            SpringboardRevealButton.Background = null;
 
             // position it vertically centered and a little right indented
-            SpringboardReveal.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-            ((RelativeLayout.LayoutParams)SpringboardReveal.LayoutParameters).AddRule( LayoutRules.CenterVertical );
-            SpringboardReveal.SetX( 10 );
+            SpringboardRevealButton.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+            ((RelativeLayout.LayoutParams)SpringboardRevealButton.LayoutParameters).AddRule( LayoutRules.CenterVertical );
+            SpringboardRevealButton.SetX( 10 );
 
 
             // set the font and text
             Typeface fontFace = DroidFontManager.Instance.GetFont( CCVApp.Shared.Config.PrimaryNavBar.RevealButton_Font );
-            SpringboardReveal.SetTypeface( fontFace, TypefaceStyle.Normal );
-            SpringboardReveal.SetTextSize( Android.Util.ComplexUnitType.Dip, CCVApp.Shared.Config.PrimaryNavBar.RevealButton_Size );
-            SpringboardReveal.Text = CCVApp.Shared.Config.PrimaryNavBar.RevealButton_Text;
+            SpringboardRevealButton.SetTypeface( fontFace, TypefaceStyle.Normal );
+            SpringboardRevealButton.SetTextSize( Android.Util.ComplexUnitType.Dip, CCVApp.Shared.Config.PrimaryNavBar.RevealButton_Size );
+            SpringboardRevealButton.Text = CCVApp.Shared.Config.PrimaryNavBar.RevealButton_Text;
 
             // use the completely overcomplicated color states to set the normal vs pressed color state.
             int [][] states = new int[][] 
@@ -149,21 +181,21 @@ namespace Droid
                     Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.PrimaryNavBar.RevealButton_DepressedColor ),
                     Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.PrimaryNavBar.RevealButton_DisabledColor ),
                 };
-            SpringboardReveal.SetTextColor( new Android.Content.Res.ColorStateList( states, colors ) );
+            SpringboardRevealButton.SetTextColor( new Android.Content.Res.ColorStateList( states, colors ) );
 
 
             // setup the click callback
-            SpringboardReveal.Click += (object sender, System.EventArgs e) => 
+            SpringboardRevealButton.Click += (object sender, System.EventArgs e) => 
                 {
                     RevealSpringboard( !SpringboardRevealed );
                 };
 
-            relativeLayout.AddView( SpringboardReveal );
+            relativeLayout.AddView( SpringboardRevealButton );
         }
 
         public void EnableSpringboardRevealButton( bool enabled )
         {
-            SpringboardReveal.Enabled = enabled;
+            SpringboardRevealButton.Enabled = enabled;
 
             if ( enabled == false )
             {
@@ -171,26 +203,130 @@ namespace Droid
             }
         }
 
-        public void RevealSpringboard( bool revealed )
+        public void RevealSpringboard( bool wantReveal )
         {
-            if( SpringboardRevealed != revealed )
+            if( !Animating )
             {
-                if( !Animating )
+                Animating = true;
+
+                int xOffset = wantReveal ? (int) (View.Width * CCVApp.Shared.Config.PrimaryNavBar.RevealPercentage) : 0;
+
+                // setup an animation from our current mask scale to the new one.
+                ValueAnimator animator = ValueAnimator.OfInt((int)View.GetX( ) , xOffset);
+
+                animator.AddUpdateListener( this );
+                animator.AddListener( new NavbarAnimationListener( ) { NavbarFragment = this } );
+                animator.SetDuration( 500 );
+
+                animator.Start();
+            }
+        }
+
+        public void OnDown( MotionEvent e )
+        {
+            LastPanX = 0;
+        }
+
+        static float sMinVelocity = 2000.0f;
+        public void OnFlick( MotionEvent e1, MotionEvent e2, float velocityX, float velocityY )
+        {
+            Console.WriteLine( "Flick Velocity: {0}", velocityX );
+
+            // if they flicked it, go ahead and open / close the springboard
+            if ( Animating == false )
+            {
+                if ( velocityX > sMinVelocity )
                 {
-                    Animating = true;
-
-                    int xOffset = revealed ? (int) (View.Width * CCVApp.Shared.Config.PrimaryNavBar.RevealPercentage) : 0;
-
-                    // setup an animation from our current mask scale to the new one.
-                    ValueAnimator animator = ValueAnimator.OfInt((int)View.GetX( ) , xOffset);
-
-                    animator.AddUpdateListener( this );
-                    animator.AddListener( new NavbarAnimationListener( ) { NavbarFragment = this } );
-                    animator.SetDuration( 500 );
-
-                    animator.Start();
+                    RevealSpringboard( true );
+                }
+                else if ( velocityX < -sMinVelocity )
+                {
+                    RevealSpringboard( false );
                 }
             }
+        }
+
+        public void OnScroll( MotionEvent e1, MotionEvent e2, float distanceX, float distanceY )
+        {
+            if ( Animating == false )
+            {
+                IsPanning = true;
+
+                if ( LastPanX == 0 )
+                {
+                    LastPanX = e2.RawX;
+                }
+
+                distanceX = e2.RawX - LastPanX;
+                LastPanX = e2.RawX;
+
+                float xPos = View.GetX( ) + distanceX;
+
+                float revealAmount = ( View.Width * CCVApp.Shared.Config.PrimaryNavBar.RevealPercentage );
+                xPos = Math.Max( 0, Math.Min( xPos, revealAmount ) );
+
+                View.SetX( xPos );
+                ActiveTaskFrame.SetX( xPos );
+                NavToolbar.LinearLayout.SetX( xPos );
+            }
+        }
+
+        public void OnUp( MotionEvent e )
+        {
+            // if we were panning
+            if ( IsPanning )
+            {
+                float revealAmount = ( View.Width * CCVApp.Shared.Config.PrimaryNavBar.RevealPercentage );
+                if ( SpringboardRevealed == false )
+                {
+                    // since the springboard wasn't revealed, require that they moved
+                    // at least 1/3rd the amount before opening it
+                    if ( View.GetX( ) > revealAmount * .33f )
+                    {
+                        Console.WriteLine( "OnUp CALLED: Reveal True" );
+                        RevealSpringboard( true );
+                    }
+                    else
+                    {
+                        Console.WriteLine( "OnUp CALLED: Reveal False" );
+                        RevealSpringboard( false );
+                    }
+                }
+                else
+                {
+                    if ( View.GetX( ) < revealAmount * .66f )
+                    {
+                        Console.WriteLine( "OnUp CALLED: Reveal False" );
+                        RevealSpringboard( false );
+                    }
+                    else
+                    {
+                        Console.WriteLine( "OnUp CALLED: Reveal True" );
+                        RevealSpringboard( true );
+                    }
+                }
+            }
+            else
+            {
+                // if we weren't panning
+                if ( IsPanning == false )
+                {
+                    // if the task should allowe input, reveal the nav bar
+                    if ( ShouldTaskAllowInput( ) == true )
+                    {
+                        Console.WriteLine( "RevealingNavForTime, No RevealSpringboard" );
+                        NavToolbar.RevealForTime( 3.00f );
+                    }
+                    else if ( ShouldSpringboardAllowInput( ) == true )
+                    {
+                        // else close the springboard
+                        Console.WriteLine( "OnUp CALLED: Reveal False" );
+                        RevealSpringboard( false );
+                    }
+                }
+            }
+
+            IsPanning = false;
         }
 
         public void OnAnimationUpdate(ValueAnimator animation)
@@ -199,23 +335,25 @@ namespace Droid
             int xPos = ((Java.Lang.Integer)animation.GetAnimatedValue("")).IntValue();
 
             View.SetX( xPos );
-
             ActiveTaskFrame.SetX( xPos );
             NavToolbar.LinearLayout.SetX( xPos );
         }
 
         public void OnAnimationEnd( Animator animation )
         {
+            Console.WriteLine( "OnAnimationEnd CALLED" );
             Animating = false;
-            SpringboardRevealed = !SpringboardRevealed;
 
-            if( SpringboardRevealed == true )
+            // based on the position, set the springboard flag
+            if ( View.GetX( ) == 0 )
             {
-                EnableControls( false );
+                SpringboardRevealed = false;
+                EnableControls( true );
             }
             else
             {
-                EnableControls( true );
+                SpringboardRevealed = true;
+                EnableControls( false );
             }
 
             // notify the task regarding what happened
@@ -233,7 +371,7 @@ namespace Droid
 
         public void EnableViews( ViewGroup view, bool enabled )
         {
-            view.Enabled = enabled;
+            /*view.Enabled = enabled;
 
             int i;
             for( i = 0; i < view.ChildCount; i++ )
@@ -248,7 +386,7 @@ namespace Droid
                 {
                     childView.Enabled = enabled;
                 }
-            }
+            }*/
         }
 
         public override void OnPause( )

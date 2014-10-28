@@ -160,7 +160,7 @@ namespace CCVApp
 
                             case XmlNodeType.EndElement:
                             {
-                                if( reader.Name == "Header" )
+                                    if( reader.Name == "Header" || reader.Name == "H" )
                                 {
                                     // flag that we're done reading the header
                                     finishedHeader = true;

@@ -1,15 +1,15 @@
+
 Android - Fixed an issue causing a crash if back was pressed while cropping an image, and then
 the image cropper was loaded again.
-
 Android - Fixed an issue causing Logout to not work.
-
 Android - Fixed an issue causing the Share Button to show up in News and crash if tapped.
-
 Android - Added News list and items.
+Android - Import images from Photo Library
+Android - User can now slide out the springboard with their finger.
 
 iOS - Improved News items to show a description, banner and URL link. 
-
-Android - Import images from Photo Library
-
 iOS - Import images from Photo Library
 iOS - Crop Images
+
+Both - Prayer viewing and creation
+Both - Support for shorthand elements in NoteScript (<P> for Paragraph, <RB> for RevealBox, etc.)

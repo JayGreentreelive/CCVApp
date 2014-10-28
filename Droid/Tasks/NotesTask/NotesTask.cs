@@ -61,7 +61,7 @@ namespace Droid
                     // if the springboard is already closed, set ourselves as ready.
                     // This is always called before any fragment methods, so the fragment
                     // will be able to know if it can display or not.
-                    if( NavbarFragment.SpringboardRevealed == false )
+                    if( NavbarFragment.ShouldTaskAllowInput( ) )
                     {
                         TaskReadyForFragmentDisplay = true;
                     }

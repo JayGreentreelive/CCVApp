@@ -33,7 +33,7 @@ namespace Droid
                         return null;
                     }
 
-                    View view = inflater.Inflate(Resource.Layout.About_PrimaryFragment, container, false);
+                    View view = inflater.Inflate(Resource.Layout.About_Primary, container, false);
                     view.SetOnTouchListener( this );
 
                     // set the text to the version and build time
@@ -50,12 +50,6 @@ namespace Droid
                     ParentTask.NavbarFragment.NavToolbar.SetBackButtonEnabled( false );
                     ParentTask.NavbarFragment.NavToolbar.DisplayShareButton( false, null );
                     ParentTask.NavbarFragment.NavToolbar.Reveal( false );
-                }
-
-                protected override void TouchUpInside(View v)
-                {
-                    // reveal the nav bar temporarily
-                    ParentTask.NavbarFragment.NavToolbar.RevealForTime( 3.00f );
                 }
             }
         }

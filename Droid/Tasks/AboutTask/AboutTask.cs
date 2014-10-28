@@ -29,6 +29,10 @@ namespace Droid
 
                 public override void OnClick(Android.App.Fragment source, int buttonId)
                 {
+                    // only handle input if the springboard is open
+                    if ( NavbarFragment.ShouldTaskAllowInput( ) )
+                    {
+                    }
                 }
             }
         }

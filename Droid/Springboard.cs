@@ -455,7 +455,7 @@ namespace Droid
                 case MotionEventActions.Up:
                 {
                     // only allow changing tasks via button press if the springboard is open 
-                    if( NavbarFragment.SpringboardRevealed == true )
+                    if( NavbarFragment.ShouldSpringboardAllowInput( ) == true )
                     {
                         // no matter what, close the springboard
                         NavbarFragment.RevealSpringboard( false );
@@ -471,13 +471,14 @@ namespace Droid
                                 // we did, so activate the element associated with that button
                                 ActiveElementIndex = Elements.IndexOf( element ); 
                                 ActivateElement( element );
+                                return true;
                             }
                         }
                     }
                     break;
                 }
             }
-            return true;
+            return false;
         }
 
         public void SetActiveTaskFrame( FrameLayout layout )
@@ -524,15 +525,18 @@ namespace Droid
             System.Console.WriteLine( "Springboard OnDetach()" );
         }
 
-        void DisplayError( string title, string message )
+        public static void DisplayError( string title, string message )
         {
-            AlertDialog.Builder dlgAlert = new AlertDialog.Builder( DroidContext.Context );                      
-            dlgAlert.SetTitle( title ); 
-            dlgAlert.SetMessage( message ); 
-            dlgAlert.SetPositiveButton( "Ok", delegate(object sender, DialogClickEventArgs ev )
+            Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate
                 {
+                    AlertDialog.Builder dlgAlert = new AlertDialog.Builder( DroidContext.Context );                      
+                    dlgAlert.SetTitle( title ); 
+                    dlgAlert.SetMessage( message ); 
+                    dlgAlert.SetPositiveButton( "Ok", delegate(object sender, DialogClickEventArgs ev )
+                        {
+                        } );
+                    dlgAlert.Create( ).Show( );
                 } );
-            dlgAlert.Create( ).Show( );
         }
     }
 }

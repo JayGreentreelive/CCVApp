@@ -1,15 +1,43 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" PreferredExecutionTarget="Android.SelectDevice" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/Tasks/Prayer/PrayerMainUIViewController.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|iPhone" PreferredExecutionTarget="Android.094c904b" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Tasks/NotesTask/NotesFragment.cs">
     <Files>
-      <File FileName="iOS/Tasks/Prayer/PrayerMainUIViewController.cs" Line="3" Column="3" />
-      <File FileName="iOS/MainUINavigationController.cs" Line="1" Column="1" />
-      <File FileName="iOS/Tasks/Notes/NotesViewController.cs" Line="1" Column="1" />
-      <File FileName="iOS/ContainerViewController.cs" Line="1" Column="1" />
-      <File FileName="iOS/Tasks/Task.cs" Line="1" Column="1" />
-      <File FileName="iOS/Tasks/Notes/NotesTask.cs" Line="1" Column="1" />
-      <File FileName="CCVApp.Shared/Notes/Controls/Note.cs" Line="1" Column="1" />
+      <File FileName="Droid/Tasks/PrayerTask/PrayerTask.cs" Line="55" Column="55" />
+      <File FileName="Droid/Tasks/NotesTask/NotesTask.cs" Line="18" Column="18" />
+      <File FileName="Droid/Tasks/NotesTask/NotesFragment.cs" Line="31" Column="31" />
+      <File FileName="Droid/Tasks/TaskFragment.cs" Line="13" Column="13" />
+      <File FileName="Droid/Tasks/Task.cs" Line="14" Column="14" />
+      <File FileName="Droid/NavbarFragment.cs" Line="44" Column="44" />
     </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="Droid" expanded="True">
+            <Node name="Tasks" expanded="True">
+              <Node name="AboutTask" expanded="True" />
+              <Node name="NewsTask" expanded="True" />
+              <Node name="NotesTask" expanded="True">
+                <Node name="NotesFragment.cs" selected="True" />
+              </Node>
+              <Node name="PrayerTask" expanded="True" />
+            </Node>
+            <Node name="UserManagement" expanded="True" />
+          </Node>
+          <Node name="iOS" expanded="True">
+            <Node name="Tasks" expanded="True">
+              <Node name="Notes" expanded="True" />
+            </Node>
+            <Node name="UserManagement" expanded="True" />
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State>
+          <Value>e2</Value>
+          <Value>NavbarFragment</Value>
+        </State>
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />

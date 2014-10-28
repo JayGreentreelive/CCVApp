@@ -45,18 +45,22 @@ namespace Droid
 
                 public override void OnClick(Android.App.Fragment source, int buttonId)
                 {
-                    // decide what to do.
-                    if( source == MainPage )
+                    // only handle input if the springboard is closed
+                    if ( NavbarFragment.ShouldTaskAllowInput( ) )
                     {
-                        DetailsPage.NewsItem = CCVApp.Shared.Network.RockGeneralData.Instance.Data.News[ buttonId ];
-                        PresentFragment( DetailsPage, true );
-                    }
-                    else if ( source == DetailsPage )
-                    {
-                        if( buttonId == Resource.Id.news_details_launch_url )
+                        // decide what to do.
+                        if ( source == MainPage )
                         {
-                            Intent browserIntent = new Intent( Intent.ActionView, Android.Net.Uri.Parse( DetailsPage.NewsItem.ReferenceURL ) );
-                            Rock.Mobile.PlatformCommon.Droid.Context.StartActivity( browserIntent );
+                            DetailsPage.NewsItem = CCVApp.Shared.Network.RockGeneralData.Instance.Data.News[ buttonId ];
+                            PresentFragment( DetailsPage, true );
+                        }
+                        else if ( source == DetailsPage )
+                        {
+                            if ( buttonId == Resource.Id.news_details_launch_url )
+                            {
+                                Intent browserIntent = new Intent( Intent.ActionView, Android.Net.Uri.Parse( DetailsPage.NewsItem.ReferenceURL ) );
+                                Rock.Mobile.PlatformCommon.Droid.Context.StartActivity( browserIntent );
+                            }
                         }
                     }
                 }

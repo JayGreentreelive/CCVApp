@@ -174,7 +174,7 @@ namespace CCVApp
                             case XmlNodeType.EndElement:
                             {
                                 // if we hit the end of our label, we're done.
-                                if( reader.Name == "StackPanel" )
+                                if( reader.Name == "StackPanel" || reader.Name == "SP" )
                                 {
                                     finishedParsing = true;
                                 }

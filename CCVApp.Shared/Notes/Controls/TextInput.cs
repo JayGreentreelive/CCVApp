@@ -120,7 +120,7 @@ namespace CCVApp
                                 case XmlNodeType.EndElement:
                                 {
                                     // if we hit the end of our label, we're done.
-                                    if( reader.Name == "TextInput" )
+                                    if( reader.Name == "TextInput" || reader.Name == "TI" )
                                     {
                                         finishedLabel = true;
                                     }

@@ -23,7 +23,7 @@ namespace Droid
     {
         namespace Prayer
         {
-            public class PrayerPrimaryFragment : TaskFragment
+            public class PrayerPrimaryFragment : TaskFragment, View.IOnTouchListener
             {
                 class PrayerCard
                 {
@@ -47,8 +47,6 @@ namespace Droid
                         Pray.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                         ((RelativeLayout.LayoutParams)Pray.LayoutParameters).AddRule( LayoutRules.CenterHorizontal );
                         prayButtonLayout.AddView( Pray );
-
-                        Pray.Enabled = false;
                         //
 
                        // set the outline for the card
@@ -68,31 +66,13 @@ namespace Droid
                     {
                         ViewGroup nativeView = View.PlatformNativeObject as ViewGroup;
 
-                        // if a valid prayer is given
-                        if ( prayer != null )
+                        if ( prayer.LinearLayout.Parent != null )
                         {
-                            // if it's a child, remove it from its current parent
-                            if ( prayer.LinearLayout.Parent != null )
-                            {
-                                ( prayer.LinearLayout.Parent as ViewGroup ).RemoveView( prayer.LinearLayout );
-                            }
-
-                            // add it to this view
-                            nativeView.AddView( prayer.LinearLayout );
-
-                            Pray.Enabled = true;
+                            ( prayer.LinearLayout.Parent as ViewGroup ).RemoveView( prayer.LinearLayout );
                         }
-                        else
-                        {
-                            // since null was passed, check check for a current prayer
-                            if ( CurrentPrayer != null && CurrentPrayer.LinearLayout.Parent != null )
-                            {
-                                // remove it from ourselves
-                                nativeView.RemoveView( CurrentPrayer.LinearLayout );
-                            }
+                        nativeView.AddView( prayer.LinearLayout );
 
-                            Pray.Enabled = false;
-                        }
+                        CurrentPrayer = prayer;
                     }
                 }
 
@@ -148,9 +128,6 @@ namespace Droid
                 PrayerCard PostRightPrayer { get; set; }
                 RectangleF PrayerCardBounds { get; set; }
 
-                Button CreatePrayer { get; set; }
-                ProgressBar ActivityIndicator { get; set; }
-
                 public override void OnCreate( Bundle savedInstanceState )
                 {
                     base.OnCreate( savedInstanceState );
@@ -165,10 +142,6 @@ namespace Droid
                     }
 
                     View view = inflater.Inflate(Resource.Layout.Prayer_Primary, container, false);
-                    view.SetOnTouchListener( this );
-
-                    ActivityIndicator = (ProgressBar)view.FindViewById<ProgressBar>( Resource.Id.prayer_primary_activityIndicator );
-                    ActivityIndicator.Visibility = ViewStates.Gone;
 
                     float viewRealHeight = this.Resources.DisplayMetrics.HeightPixels;
 
@@ -192,12 +165,7 @@ namespace Droid
 
                     Carousel.Init( view );
 
-                    // add the create prayer button
-                    CreatePrayer = (Button) view.FindViewById<Button>( Resource.Id.prayer_primary_createPrayerButton );
-                    CreatePrayer.Click += (object sender, EventArgs e ) =>
-                        {
-                            ParentTask.OnClick( this, Resource.Id.prayer_primary_createPrayerButton );
-                        };
+                    view.SetOnTouchListener( this );
 
                     return view;
                 }
@@ -212,80 +180,52 @@ namespace Droid
                     ParentTask.NavbarFragment.NavToolbar.SetShareButtonEnabled( false );
                     ParentTask.NavbarFragment.NavToolbar.DisplayShareButton( false, null );
 
-                    ActivityIndicator.Visibility = ViewStates.Visible;
-                    CreatePrayer.Enabled = false;
-
-                    ActivityIndicator.BringToFront( );
-                    ResetPrayerCards( );
-
                     // request the prayers each time this appears
                     CCVApp.Shared.Network.RockApi.Instance.GetPrayers( delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.PrayerRequest> prayerRequests) 
                         {
-                            ActivityIndicator.Visibility = ViewStates.Gone;
-                            CreatePrayer.Enabled = true;
+                            //ActivityIndicator.Hidden = true;
 
-                            if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
+                            if( prayerRequests.Count > 0 )
                             {
-                                if( prayerRequests.Count > 0 )
+                                //CreatePrayerButton.Enabled = true;
+
+                                PrayerRequests = prayerRequests;
+
+                                // create our prayer request layouts
+                                PrayerLayouts = new List<PrayerLayoutRender>( PrayerRequests.Count );
+                                foreach( Rock.Client.PrayerRequest request in PrayerRequests )
                                 {
-                                    PrayerRequests = prayerRequests;
-
-                                    // create our prayer request layouts
-                                    PrayerLayouts = new List<PrayerLayoutRender>( PrayerRequests.Count );
-                                    foreach( Rock.Client.PrayerRequest request in PrayerRequests )
-                                    {
-                                        PrayerLayoutRender prayerLayout = new PrayerLayoutRender( PrayerCardBounds, request );
-                                        PrayerLayouts.Add( prayerLayout );
-                                    }
-
-                                    Carousel.NumItems = PrayerRequests.Count;
-
-                                    UpdatePrayerCards( 0 );
+                                    PrayerLayoutRender prayerLayout = new PrayerLayoutRender( PrayerCardBounds, request );
+                                    PrayerLayouts.Add( prayerLayout );
                                 }
-                            }
-                            else
-                            {
-                                Springboard.DisplayError( "Prayer Requests", "There was a problem getting prayer requests. Please try again later." );
+
+
+                                Carousel.NumItems = PrayerRequests.Count;
+
+                                UpdatePrayerCards( 0 );
                             }
                         });
                 }
 
-                // forward these to the carousel
-                public override bool OnFlingGesture( MotionEvent e1, MotionEvent e2, float velocityX, float velocityY )
-                {
-                    return ( (DroidCardCarousel)Carousel ).OnFling( e1, e2, velocityX, velocityY );
-                }
-
-                public override bool OnScrollGesture(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
-                {
-                    return ( (DroidCardCarousel)Carousel ).OnScroll( e1, e2, distanceX, distanceY );
-                }
-
-                public override bool OnDownGesture( MotionEvent e )
-                {
-                    Carousel.TouchesBegan( );
-                    return false;
-                }
-
                 public override bool OnTouch( View v, MotionEvent e )
                 {
-                    if ( base.OnTouch( v, e ) == true )
+                    if( ((DroidCardCarousel)Carousel).GestureDetector.OnTouchEvent( e ) )
                     {
                         return true;
                     }
-                    else
-                    {
-                        switch ( e.Action )
-                        {
-                            case MotionEventActions.Up:
-                            {
-                                Carousel.TouchesEnded( );
-                                break;
-                            }
-                        }
 
-                        return false;
+                    switch( e.Action )
+                    {
+                        case MotionEventActions.Up:
+                        {
+                            ParentTask.NavbarFragment.NavToolbar.RevealForTime( 3.00f );
+
+                            Carousel.TouchesEnded( );
+                            break;
+                        }
                     }
+
+                    return false;
                 }
 
                 void UpdatePrayerCards( int prayerIndex )
@@ -315,34 +255,6 @@ namespace Droid
                             PostRightPrayer.SetPrayer( PrayerLayouts[ prayerIndex + 2 ] );
                         }
                     }
-                }
-
-                public void SpringboardClosed( )
-                {
-                    // we need to know when the springboard closed so we can update the state of our
-                    // buttons, which depends on whether we are downloading prayers or not, and
-                    // whether we have prayers or not.
-
-                    // if the activity indicator is visible, don't let any buttons work
-                    if ( ActivityIndicator.Visibility == ViewStates.Visible )
-                    {
-                        CreatePrayer.Enabled = false;
-
-                        ResetPrayerCards( );
-                    }
-                    else if ( PrayerRequests == null || PrayerRequests.Count == 0 )
-                    {
-                        ResetPrayerCards( );
-                    }
-                }
-
-                void ResetPrayerCards( )
-                {
-                    SubLeftPrayer.SetPrayer( null );
-                    LeftPrayer.SetPrayer( null );
-                    CenterPrayer.SetPrayer( null );
-                    RightPrayer.SetPrayer( null );
-                    PostRightPrayer.SetPrayer( null );
                 }
             }
         }

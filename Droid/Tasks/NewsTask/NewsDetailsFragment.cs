@@ -67,12 +67,6 @@ namespace Droid
                     ParentTask.NavbarFragment.NavToolbar.SetBackButtonEnabled( true );
                     ParentTask.NavbarFragment.NavToolbar.RevealForTime( 3.00f );
                 }
-
-                protected override void TouchUpInside(View v)
-                {
-                    // reveal the nav bar temporarily
-                    ParentTask.NavbarFragment.NavToolbar.RevealForTime( 3.00f );
-                }
             }
         }
     }

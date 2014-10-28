@@ -20,6 +20,32 @@ namespace Droid
     {
         namespace News
         {
+            /// <summary>
+            /// Subclass ImageView so we can override OnMeasure and scale up the image 
+            /// maintaining aspect ratio
+            /// </summary>
+            class ScaledImageView : ImageView
+            {
+                public ScaledImageView( Context context ) : base( context )
+                {
+                }
+
+                protected override void OnMeasure(int widthMeasureSpec, int heightMeasureSpec)
+                {
+                    if ( Drawable != null )
+                    {
+                        int width = MeasureSpec.GetSize( widthMeasureSpec );
+                        int height = (int)Math.Ceiling( width * ( (float)Drawable.IntrinsicHeight / (float)Drawable.IntrinsicWidth ) );
+
+                        SetMeasuredDimension( width, height );
+                    }
+                    else
+                    {
+                        base.OnMeasure(widthMeasureSpec, heightMeasureSpec);
+                    }
+                }
+            }
+
             public class NewsArrayAdapter : BaseAdapter
             {
                 List<Bitmap> NewsImage { get; set; }
@@ -52,8 +78,11 @@ namespace Droid
 
                 public override View GetView(int position, View convertView, ViewGroup parent)
                 {
-                    ImageView view = (ImageView) convertView ?? new ImageView( ParentFragment.Activity.BaseContext );
+                    ScaledImageView view = (ScaledImageView) convertView ?? new ScaledImageView( ParentFragment.Activity.BaseContext );
+                    view.LayoutParameters = new AbsListView.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent );
+
                     view.SetImageBitmap( NewsImage[ position ] );
+                    view.SetScaleType( ImageView.ScaleType.CenterCrop );
 
                     return view;
                 }
@@ -77,7 +106,7 @@ namespace Droid
                         return null;
                     }
 
-                    View view = inflater.Inflate(Resource.Layout.PrimaryNews, container, false);
+					View view = inflater.Inflate(Resource.Layout.News_Primary, container, false);
                     view.SetOnTouchListener( this );
 
                     NewsImage = new List<Bitmap>( );
@@ -93,10 +122,8 @@ namespace Droid
                         {
                             ParentTask.OnClick( this, e.Position );
                         };
-
-                    NewsArrayAdapter adapter = new NewsArrayAdapter( this, NewsImage );
-
-                    listView.Adapter = adapter;
+                    listView.SetOnTouchListener( this );
+                    listView.Adapter = new NewsArrayAdapter( this, NewsImage );
 
                     return view;
                 }
@@ -110,12 +137,6 @@ namespace Droid
 
                     ParentTask.NavbarFragment.NavToolbar.SetShareButtonEnabled( false );
                     ParentTask.NavbarFragment.NavToolbar.DisplayShareButton( false, null );
-                }
-
-                protected override void TouchUpInside(View v)
-                {
-                    // reveal the nav bar temporarily
-                    ParentTask.NavbarFragment.NavToolbar.RevealForTime( 3.00f );
                 }
             }
         }

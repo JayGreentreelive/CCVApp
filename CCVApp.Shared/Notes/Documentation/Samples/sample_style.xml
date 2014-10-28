@@ -3,7 +3,7 @@
      <Note Padding="5%" BackgroundColor="#1c1c1cFF"/>
      <Paragraph/>
      <RevealBox FontName="Bevan" FontSize="12" FontColor="#6d1c1cFF"/>
-     <Quote FontName="Merriweather-BoldItalic" FontSize="12" FontColor="#b52e2eFF"/>
+     <Quote MarginBottom="5%" FontName="Merriweather-BoldItalic" FontSize="12" FontColor="#b52e2eFF"/>
 
      <TextInput BorderWidth="2" BorderRadius="5" FontName="Bevan" FontSize="10" FontColor="#AFAFAFFF"/>
      

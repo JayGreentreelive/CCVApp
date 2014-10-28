@@ -22,27 +22,6 @@ namespace Droid
         namespace Notes
         {
             /// <summary>
-            /// Double tap listener
-            /// </summary>
-            public class DoubleTap : GestureDetector.SimpleOnGestureListener
-            {
-                /// <summary>
-                /// The notes activity that needs notification of a double tap.
-                /// </summary>
-                public NotesFragment Notes { get; set; }
-
-                public DoubleTap( NotesFragment notes )
-                {
-                    Notes = notes;
-                }
-
-                public override bool OnDoubleTap(MotionEvent e)
-                {
-                    return Notes.OnDoubleTap( e );
-                }
-            }
-
-            /// <summary>
             /// Subclass of Android's ScrollView to allow us to disable scrolling.
             /// </summary>
             public class LockableScrollView : ScrollView
@@ -98,7 +77,7 @@ namespace Droid
                 }
             }
                        
-            public class NotesFragment : TaskFragment, View.IOnTouchListener
+            public class NotesFragment : TaskFragment
             {
                 /// <summary>
                 /// Tags for storing the NoteScript and Style XML during an orientation change.
@@ -143,11 +122,6 @@ namespace Droid
                 Note Note { get; set; }
 
                 /// <summary>
-                /// Used for notification of a double tap.
-                /// </summary>
-                GestureDetector GestureDetector { get; set; }
-
-                /// <summary>
                 /// Our wake lock that will keep the device from sleeping while notes are up.
                 /// </summary>
                 /// <value>The wake lock.</value>
@@ -178,16 +152,17 @@ namespace Droid
                 public string NotePresentableName { get; set; }
 
                 /// <summary>
+                /// True when a user note is being moved. Used to know whether to allow 
+                /// panning for the springboard or not
+                /// </summary>
+                /// <value><c>true</c> if moving user note; otherwise, <c>false</c>.</value>
+                bool MovingUserNote { get; set; }
+
+                /// <summary>
                 /// True when WE are ready to create notes
                 /// </summary>
                 /// <value><c>true</c> if fragment ready; otherwise, <c>false</c>.</value>
                 bool FragmentReady { get; set; }
-
-                public bool OnDoubleTap(MotionEvent e)
-                {
-                    Note.DidDoubleTap( new PointF( e.GetX( ), e.GetY( ) ) );
-                    return true;
-                }
 
                 public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
                 {
@@ -222,8 +197,6 @@ namespace Droid
                     ScrollViewLayout = new RelativeLayout( Rock.Mobile.PlatformCommon.Droid.Context );
                     ScrollView.AddView( ScrollViewLayout );
                     ScrollViewLayout.SetOnTouchListener( this );
-
-                    GestureDetector = new GestureDetector( Rock.Mobile.PlatformCommon.Droid.Context, new DoubleTap( this ) );
 
                     RefreshButton.Click += (object sender, EventArgs e ) =>
                     {
@@ -365,7 +338,7 @@ namespace Droid
                 {
                     // called by the LockableScrollView. This allows us to shut the
                     // springboard if it's open and the user touches the note.
-                    if( ParentTask.NavbarFragment.SpringboardRevealed == true )
+                    if( ParentTask.NavbarFragment.ShouldSpringboardAllowInput( ) )
                     {
                         ParentTask.NavbarFragment.RevealSpringboard( false );
                         return false;
@@ -373,48 +346,79 @@ namespace Droid
                     return true;
                 }
 
-                public override bool OnTouch( View v, MotionEvent e )
+                public override bool OnDoubleTap(MotionEvent e)
                 {
-                    if( GestureDetector.OnTouchEvent( e ) )
+                    Note.DidDoubleTap( new PointF( e.GetX( ), e.GetY( ) ) );
+                    return true;
+                }
+
+                public override bool OnDownGesture( MotionEvent e )
+                {
+                    if ( Note != null )
+                    {
+                        if ( Note.TouchesBegan( new PointF( e.GetX( ), e.GetY( ) ) ) )
+                        {
+                            ScrollView.ScrollEnabled = false;
+
+                            MovingUserNote = true;
+                        }
+                    }
+                    return false;
+                }
+
+                public override bool OnScrollGesture( MotionEvent e1, MotionEvent e2, float distanceX, float distanceY )
+                {
+                    // if we're moving a user note, consume the input so that the 
+                    // springboard doesn't receive this, and thus doesn't pan.
+                    if ( MovingUserNote == true )
                     {
                         return true;
                     }
-
-                    switch( e.Action )
+                    else
                     {
-                        case MotionEventActions.Down:
+                        return base.OnScrollGesture( e1, e2, distanceX, distanceY );
+                    }
+                }
+
+                public override bool OnTouch( View v, MotionEvent e )
+                {
+                    if ( base.OnTouch( v, e ) == true )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        switch ( e.Action )
                         {
-                            if( Note != null )
+                            case MotionEventActions.Move:
                             {
-                                if( Note.TouchesBegan( new PointF( e.GetX( ), e.GetY( ) ) ) )
+                                // if at any point during a move the task is no longer allowed to receive input,
+                                // STOP SCROLLING. It means the user began panning out the view
+                                if ( ParentTask.NavbarFragment.ShouldTaskAllowInput( ) == false )
                                 {
                                     ScrollView.ScrollEnabled = false;
                                 }
+
+                                if ( Note != null )
+                                {
+                                    Note.TouchesMoved( new PointF( e.GetX( ), e.GetY( ) ) );
+                                }
+
+                                break;
                             }
 
-                            break;
-                        }
-
-                        case MotionEventActions.Move:
-                        {
-                            if( Note != null )
+                            case MotionEventActions.Up:
                             {
-                                Note.TouchesMoved( new PointF( e.GetX( ), e.GetY( ) ) );
+                                if ( Note != null )
+                                {
+                                    Note.TouchesEnded( new PointF( e.GetX( ), e.GetY( ) ) );
+                                }
+
+                                ScrollView.ScrollEnabled = true;
+                                MovingUserNote = false;
+
+                                break;
                             }
-
-                            break;
-                        }
-
-                        case MotionEventActions.Up:
-                        {
-                            if( Note != null )
-                            {
-                                Note.TouchesEnded( new PointF( e.GetX( ), e.GetY( ) ) );
-                            }
-
-                            ScrollView.ScrollEnabled = true;
-
-                            break;
                         }
                     }
                     return true;
@@ -541,16 +545,10 @@ namespace Droid
 
                 protected void ReportException( string errorMsg, Exception e )
                 {
+                    Springboard.DisplayError( "Note Error", errorMsg + "\n" + e.Message );
+
                     Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate
                         {
-                            AlertDialog.Builder dlgAlert = new AlertDialog.Builder( Rock.Mobile.PlatformCommon.Droid.Context );                      
-                            dlgAlert.SetTitle( "Note Error" ); 
-                            dlgAlert.SetMessage( errorMsg + "\n" + e.Message ); 
-                            dlgAlert.SetPositiveButton( "Ok", delegate(object sender, DialogClickEventArgs ev )
-                                {
-                                } );
-                            dlgAlert.Create( ).Show( );
-
                             FinishNotesCreation( );
                         } );
                 }

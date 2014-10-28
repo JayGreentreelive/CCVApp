@@ -73,6 +73,7 @@
     <Compile Include="Tasks\AboutTask\AboutTask.cs" />
     <Compile Include="Tasks\PrayerTask\PrayerPrimaryFragment.cs" />
     <Compile Include="Tasks\PrayerTask\PrayerTask.cs" />
+    <Compile Include="Tasks\PrayerTask\PrayerCreateFragment.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
@@ -82,19 +83,16 @@
     <AndroidResource Include="Resources\layout-sw600dp\Main.axml" />
     <AndroidResource Include="Resources\layout-sw600dp\News_Details.axml" />
     <AndroidResource Include="Resources\layout-sw600dp\Notes.axml" />
-    <AndroidResource Include="Resources\layout-sw600dp\PrimaryNews.axml" />
     <AndroidResource Include="Resources\layout-sw600dp\Springboard.axml" />
     <AndroidResource Include="Resources\drawable-hdpi\Icon.png" />
     <AndroidResource Include="Resources\drawable-mdpi\Icon.png" />
     <AndroidResource Include="Resources\layout-sw480dp\Main.axml" />
     <AndroidResource Include="Resources\layout-sw480dp\Notes.axml" />
     <AndroidResource Include="Resources\layout-sw480dp\Springboard.axml" />
-    <AndroidResource Include="Resources\layout-sw480dp\PrimaryNews.axml" />
     <AndroidResource Include="Resources\layout-sw480dp\News_Details.axml" />
     <AndroidResource Include="Resources\layout-sw320dp\Main.axml" />
     <AndroidResource Include="Resources\layout-sw320dp\News_Details.axml" />
     <AndroidResource Include="Resources\layout-sw320dp\Notes.axml" />
-    <AndroidResource Include="Resources\layout-sw320dp\PrimaryNews.axml" />
     <AndroidResource Include="Resources\layout-sw320dp\Springboard.axml" />
     <AndroidResource Include="Resources\layout-sw600dp\Navbar.axml" />
     <AndroidResource Include="Resources\layout-sw320dp\Navbar.axml" />
@@ -138,12 +136,18 @@
     <AndroidResource Include="Resources\layout-sw320dp\ImageCrop.axml" />
     <AndroidResource Include="Resources\layout-sw480dp\ImageCrop.axml" />
     <AndroidResource Include="Resources\layout-sw600dp\ImageCrop.axml" />
-    <AndroidResource Include="Resources\layout-sw600dp\About_PrimaryFragment.axml" />
-    <AndroidResource Include="Resources\layout-sw480dp\About_PrimaryFragment.axml" />
-    <AndroidResource Include="Resources\layout-sw320dp\About_PrimaryFragment.axml" />
     <AndroidResource Include="Resources\layout-sw320dp\Prayer_Primary.axml" />
     <AndroidResource Include="Resources\layout-sw480dp\Prayer_Primary.axml" />
     <AndroidResource Include="Resources\layout-sw600dp\Prayer_Primary.axml" />
+    <AndroidResource Include="Resources\layout-sw320dp\News_Primary.axml" />
+    <AndroidResource Include="Resources\layout-sw480dp\News_Primary.axml" />
+    <AndroidResource Include="Resources\layout-sw600dp\News_Primary.axml" />
+    <AndroidResource Include="Resources\layout-sw600dp\About_Primary.axml" />
+    <AndroidResource Include="Resources\layout-sw320dp\About_Primary.axml" />
+    <AndroidResource Include="Resources\layout-sw480dp\About_Primary.axml" />
+    <AndroidResource Include="Resources\layout-sw320dp\Prayer_Create.axml" />
+    <AndroidResource Include="Resources\layout-sw600dp\Prayer_Create.axml" />
+    <AndroidResource Include="Resources\layout-sw480dp\Prayer_Create.axml" />
   </ItemGroup>
   <Import Project="..\..\Rock.Mobile\Rock.Mobile.projitems" Label="Shared" Condition="Exists('..\..\Rock.Mobile\Rock.Mobile.projitems')" />
   <Import Project="..\..\Rock\Rock.Client\Rock.Client.Models.projitems" Label="Shared" Condition="Exists('..\..\Rock\Rock.Client\Rock.Client.Models.projitems')" />

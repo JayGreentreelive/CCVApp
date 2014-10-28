@@ -11,6 +11,7 @@ namespace Droid
             public class PrayerTask : Task
             {
                 PrayerPrimaryFragment MainPage { get; set; }
+                PrayerCreateFragment CreatePage { get; set; }
 
                 public PrayerTask( NavbarFragment navFragment ) : base( navFragment )
                 {
@@ -21,6 +22,13 @@ namespace Droid
                         MainPage = new PrayerPrimaryFragment( );
                     }
                     MainPage.ParentTask = this;
+
+                    CreatePage = (PrayerCreateFragment)NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.Prayer.PrayerCreateFragment" );
+                    if ( CreatePage == null )
+                    {
+                        CreatePage = new PrayerCreateFragment();
+                    }
+                    CreatePage.ParentTask = this;
                 }
 
                 public override void Activate( )
@@ -35,7 +43,25 @@ namespace Droid
 
                 public override void OnClick(Android.App.Fragment source, int buttonId)
                 {
-                    // decide what to do.
+                    // only handle input if the springboard is open
+                    if ( NavbarFragment.ShouldTaskAllowInput( ) )
+                    {
+                        if ( buttonId == Resource.Id.prayer_primary_createPrayerButton )
+                        {
+                            PresentFragment( CreatePage, true );
+                        }
+                    }
+                }
+
+                public override void SpringboardDidAnimate(bool springboardRevealed)
+                {
+                    base.SpringboardDidAnimate(springboardRevealed);
+
+                    if ( springboardRevealed == false )
+                    {
+                        // let the main page know the springboard closed.
+                        MainPage.SpringboardClosed( );
+                    }
                 }
             }
         }

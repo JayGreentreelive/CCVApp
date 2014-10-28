@@ -21,14 +21,31 @@ namespace CCVApp
                     // either create/parse a new control, or return null.
                     switch( reader.Name )
                     {
+                        case "P":
                         case "Paragraph": return new Paragraph( parentParams, reader );
+
+                        case "C":
                         case "Canvas": return new Canvas( parentParams, reader );
+
+                        case "SP":
                         case "StackPanel": return new StackPanel( parentParams, reader );
+
+                        case "L":
                         case "List": return new List( parentParams, reader );
+
+                        case "LI":
                         case "ListItem": return new ListItem( parentParams, reader );
+
+                        case "RB":
                         case "RevealBox": return new RevealBox( parentParams, reader );
+
+                        case "Q":
                         case "Quote": return new Quote( parentParams, reader );
+
+                        case "TI":
                         case "TextInput": return new TextInput( parentParams, reader );
+
+                        case "H":
                         case "Header": return new Header(parentParams, reader);
                     }
 
