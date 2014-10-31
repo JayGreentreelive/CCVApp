@@ -156,13 +156,20 @@ namespace Droid
                 /// panning for the springboard or not
                 /// </summary>
                 /// <value><c>true</c> if moving user note; otherwise, <c>false</c>.</value>
-                bool MovingUserNote { get; set; }
+                public bool MovingUserNote { get; protected set; }
 
                 /// <summary>
                 /// True when WE are ready to create notes
                 /// </summary>
                 /// <value><c>true</c> if fragment ready; otherwise, <c>false</c>.</value>
                 bool FragmentReady { get; set; }
+
+                /// <summary>
+                /// True when a gesture causes a user note to be created. We then know not to 
+                /// pass further gesture input to the note until we receive TouchUp
+                /// </summary>
+                /// <value><c>true</c> if did gesture create note; otherwise, <c>false</c>.</value>
+                bool DidGestureCreateNote { get; set; }
 
                 public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
                 {
@@ -348,19 +355,27 @@ namespace Droid
 
                 public override bool OnDoubleTap(MotionEvent e)
                 {
-                    Note.DidDoubleTap( new PointF( e.GetX( ), e.GetY( ) ) );
+                    // a double tap CAN create a user note. If it did,
+                    // we want to know that so we suppress further input until we receive
+                    // TouchUp
+                    DidGestureCreateNote = Note.DidDoubleTap( new PointF( e.GetX( ), e.GetY( ) ) );
+
                     return true;
                 }
 
                 public override bool OnDownGesture( MotionEvent e )
                 {
-                    if ( Note != null )
+                    // only processes TouchesBegan if we didn't create a note with this gesture.
+                    if ( DidGestureCreateNote == false )
                     {
-                        if ( Note.TouchesBegan( new PointF( e.GetX( ), e.GetY( ) ) ) )
+                        if ( Note != null )
                         {
-                            ScrollView.ScrollEnabled = false;
+                            if ( Note.TouchesBegan( new PointF( e.GetX( ), e.GetY( ) ) ) )
+                            {
+                                ScrollView.ScrollEnabled = false;
 
-                            MovingUserNote = true;
+                                MovingUserNote = true;
+                            }
                         }
                     }
                     return false;
@@ -417,11 +432,13 @@ namespace Droid
                                 ScrollView.ScrollEnabled = true;
                                 MovingUserNote = false;
 
+                                DidGestureCreateNote = false;
+
                                 break;
                             }
                         }
                     }
-                    return true;
+                    return false;
                 }
 
                 public void ShutdownNotes( Bundle instanceBundle )

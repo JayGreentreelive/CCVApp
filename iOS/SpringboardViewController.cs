@@ -208,6 +208,16 @@ namespace iOS
             return false;
         }
 
+        public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations()
+        {
+            return UIInterfaceOrientationMask.Portrait;
+        }
+
+        public override UIInterfaceOrientation PreferredInterfaceOrientationForPresentation()
+        {
+            return UIInterfaceOrientation.Portrait;
+        }
+
         public override void ViewDidLoad()
         {
             base.ViewDidLoad( );
@@ -307,7 +317,8 @@ namespace iOS
                             if( Rock.Mobile.Media.PlatformCamera.Instance.IsAvailable( ) )
                             {
                                 // launch the camera
-                                Rock.Mobile.Media.PlatformCamera.Instance.CaptureImage( RockMobileUser.Instance.ProfilePicturePath, this, delegate(object s, Rock.Mobile.Media.PlatformCamera.CaptureImageEventArgs args) 
+                                string jpgFilename = System.IO.Path.Combine ( Environment.GetFolderPath(Environment.SpecialFolder.Personal), "cameraTemp.jpg" );
+                                Rock.Mobile.Media.PlatformCamera.Instance.CaptureImage( jpgFilename, this, delegate(object s, Rock.Mobile.Media.PlatformCamera.CaptureImageEventArgs args) 
                                     {
                                         // if the result is true, they either got a picture or pressed cancel
                                         bool success = false;
@@ -316,8 +327,12 @@ namespace iOS
                                             // either way, no need for an error
                                             success = true;
 
-                                            // load the image for cropping
-                                            ImageCropperPendingImage = UIImage.FromFile( args.ImagePath );
+                                            // if the image path is valid, they didn't cancel
+                                            if ( string.IsNullOrEmpty( args.ImagePath ) == false )
+                                            {
+                                                // load the image for cropping
+                                                ImageCropperPendingImage = UIImage.FromFile( args.ImagePath );
+                                            }
                                         }
 
                                         if( success == false )
@@ -351,25 +366,29 @@ namespace iOS
             // if the image cropper is resigning
             if( modelViewController == ImageCropViewController )
             {
+                // if croppedImage is null, they simply cancelled
                 UIImage croppedImage = (UIImage)context;
-                NSData croppedImageData = croppedImage.AsJPEG( );
-
-                // if the image converts, we're good.
-                if( croppedImageData != null )
+                if ( croppedImage != null )
                 {
-                    MemoryStream memStream = new MemoryStream();
+                    NSData croppedImageData = croppedImage.AsJPEG( );
 
-                    Stream nsDataStream = croppedImageData.AsStream();
+                    // if the image converts, we're good.
+                    if ( croppedImageData != null )
+                    {
+                        MemoryStream memStream = new MemoryStream();
 
-                    nsDataStream.CopyTo( memStream );
-                    RockMobileUser.Instance.SetProfilePicture( memStream );
+                        Stream nsDataStream = croppedImageData.AsStream( );
 
-                    nsDataStream.Dispose( );
-                }
-                else
-                {
-                    // notify them about a problem saving the profile picture
-                    DisplayError( CCVApp.Shared.Strings.Springboard.ProfilePicture_Error_Title, CCVApp.Shared.Strings.Springboard.ProfilePicture_Error_Message );
+                        nsDataStream.CopyTo( memStream );
+                        RockMobileUser.Instance.SetProfilePicture( memStream );
+
+                        nsDataStream.Dispose( );
+                    }
+                    else
+                    {
+                        // notify them about a problem saving the profile picture
+                        DisplayError( CCVApp.Shared.Strings.Springboard.ProfilePicture_Error_Title, CCVApp.Shared.Strings.Springboard.ProfilePicture_Error_Message );
+                    }
                 }
             }
 
@@ -526,13 +545,16 @@ namespace iOS
             LoginButton.SetImage( image, UIControlState.Normal );
         }
 
-        void DisplayError( string title, string message )
+        public static void DisplayError( string title, string message )
         {
-            UIAlertView alert = new UIAlertView( );
-            alert.Title = title;
-            alert.Message = message;
-            alert.AddButton( CCVApp.Shared.Strings.General.Ok );
-            alert.Show( );
+            Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate
+                {
+                    UIAlertView alert = new UIAlertView();
+                    alert.Title = title;
+                    alert.Message = message;
+                    alert.AddButton( CCVApp.Shared.Strings.General.Ok );
+                    alert.Show( ); 
+                } );
         }
 
         public void OnActivated( )

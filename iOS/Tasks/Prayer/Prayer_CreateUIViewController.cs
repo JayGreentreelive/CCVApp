@@ -15,34 +15,51 @@ namespace iOS
         {
             base.ViewDidLoad();
 
-            //todo: clean up all this crappy code.
-
+            // setup the default control styles
             ActivityIndicator.Hidden = true;
-
             FirstNameText.Enabled = true;
             LastNameText.Enabled = true;
             RequestText.Editable = true;
 
+            // the heart of this is the submit button
             SubmitButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
-                    Rock.Client.PrayerRequest prayerRequest = new Rock.Client.PrayerRequest();
+                    // ensure that at least the first name and request are valid
+                    if( string.IsNullOrEmpty( FirstNameText.Text ) == false &&
+                        string.IsNullOrEmpty( RequestText.Text ) == false )
+                    {
+                        Rock.Client.PrayerRequest prayerRequest = new Rock.Client.PrayerRequest();
 
-                    FirstNameText.Enabled = false;
-                    LastNameText.Enabled = false;
-                    RequestText.Editable = false;
+                        FirstNameText.Enabled = false;
+                        LastNameText.Enabled = false;
+                        RequestText.Editable = false;
 
-                    prayerRequest.FirstName = FirstNameText.Text;
-                    prayerRequest.LastName = LastNameText.Text;
-                    prayerRequest.Text = RequestText.Text;
-                    prayerRequest.EnteredDateTime = DateTime.Now;
+                        prayerRequest.FirstName = FirstNameText.Text;
+                        prayerRequest.LastName = LastNameText.Text;
+                        prayerRequest.Text = RequestText.Text;
+                        prayerRequest.EnteredDateTime = DateTime.Now;
 
-                    ActivityIndicator.Hidden = false;
+                        ActivityIndicator.Hidden = false;
 
-                    // submit the request
-                    CCVApp.Shared.Network.RockApi.Instance.PutPrayer( prayerRequest, delegate(System.Net.HttpStatusCode statusCode, string statusDescription) 
-                        {
-                            NavigationController.PopViewControllerAnimated( true );
-                        });
+                        // submit the request
+                        CCVApp.Shared.Network.RockApi.Instance.PutPrayer( prayerRequest, delegate(System.Net.HttpStatusCode statusCode, string statusDescription) 
+                            {
+                                ActivityIndicator.Hidden = true;
+
+                                if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) )
+                                {
+                                    NavigationController.PopViewControllerAnimated( true );
+                                }
+                                else
+                                {
+                                    SpringboardViewController.DisplayError( "Prayer", "There was a problem submitting your prayer request. Check your network settings and try again." );
+
+                                    FirstNameText.Enabled = true;
+                                    LastNameText.Enabled = true;
+                                    RequestText.Editable = true;
+                                }
+                            });
+                    }
                 };
         }
 
@@ -50,6 +67,7 @@ namespace iOS
         {
             base.TouchesEnded(touches, evt);
 
+            // ensure that tapping anywhere outside a text field will hide the keyboard
             FirstNameText.ResignFirstResponder( );
             LastNameText.ResignFirstResponder( );
             RequestText.ResignFirstResponder( );

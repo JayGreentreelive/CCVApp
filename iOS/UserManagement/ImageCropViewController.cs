@@ -95,9 +95,28 @@ namespace iOS
 
         public void Begin( UIImage image, float cropAspectRatio )
         {
-            SourceImage = image;
-
             CropAspectRatio = cropAspectRatio;
+            SourceImage = image;
+        }
+
+        public override bool PrefersStatusBarHidden()
+        {
+            return Springboard.PrefersStatusBarHidden();
+        }
+
+        public override bool ShouldAutorotate()
+        {
+            return Springboard.ShouldAutorotate();
+        }
+
+        public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations( )
+        {
+            return Springboard.GetSupportedInterfaceOrientations( );
+        }
+
+        public override UIInterfaceOrientation PreferredInterfaceOrientationForPresentation( )
+        {
+            return Springboard.PreferredInterfaceOrientationForPresentation( );
         }
 
         public override void ViewDidLoad()
@@ -137,7 +156,16 @@ namespace iOS
             CancelButton.Bounds = new RectangleF( 0, 0, buttonSize.Width, buttonSize.Height );
             CancelButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
-                    SetMode( CropMode.Editing );
+                    // if cancel was pressed while editing, cancel this entire operation
+                    if( CropMode.Editing == Mode )
+                    {
+                        Springboard.ResignModelViewController( this, null );
+                        Mode = CropMode.None;
+                    }
+                    else
+                    {
+                        SetMode( CropMode.Editing );
+                    }
                 };
 
             // create the edit button
@@ -186,24 +214,60 @@ namespace iOS
             base.ViewWillAppear(animated);
 
             // scale the image to match the view's width
-            ScreenToImageScalar = (float) SourceImage.Size.Width / (float) View.Bounds.Width;
+            ScreenToImageScalar = (float)SourceImage.Size.Width / (float)View.Bounds.Width;
 
             // get the scaled dimensions, maintaining aspect ratio
-            float scaledWidth = (float)SourceImage.Size.Width * (1.0f / ScreenToImageScalar);
-            float scaledHeight = (float)SourceImage.Size.Height * (1.0f / ScreenToImageScalar);
+            float scaledImageWidth = (float)SourceImage.Size.Width * (1.0f / ScreenToImageScalar);
+            float scaledImageHeight = (float)SourceImage.Size.Height * (1.0f / ScreenToImageScalar);
 
+            // calculate the image's starting X / Y location
+            float imageStartX = ( ImageView.Frame.Width - scaledImageWidth ) / 2;
+            float imageStartY = ( ImageView.Frame.Height - scaledImageHeight ) / 2;
+
+
+            // now calculate the size of the cropper
+            float cropperWidth = scaledImageWidth;
+            float cropperHeight = scaledImageHeight;
+
+
+            // get the image's aspect ratio so we can shrink down the cropper correctly
+            float aspectRatio = SourceImage.Size.Width / SourceImage.Size.Height;
+
+            // if the cropper should be wider than it is tall (or square)
+            if ( CropAspectRatio <= 1.0f )
+            {
+                // then if the image is wider than it is tall, scale down the cropper's width
+                if ( aspectRatio > 1.0f )
+                {
+                    cropperWidth *= 1 / aspectRatio;
+                }
+
+                // and the height should be scaled down from the width
+                cropperHeight = cropperWidth * CropAspectRatio;
+            }
+            else
+            {
+                // the cropper should be taller than it is wide
+
+                // so if the image is taller than it is wide, scale down the cropper's height
+                if ( aspectRatio < 1.0f )
+                {
+                    cropperWidth *= 1 / aspectRatio;
+                }
+
+                // and the width should be scaled down from the height. (Invert CropAspectRatio since it was Width based)
+                cropperWidth = cropperHeight * (1 / CropAspectRatio);
+            }
 
             // set the crop bounds
-            CropView.Frame = new RectangleF( View.Frame.X, View.Frame.Y, scaledWidth, scaledWidth * CropAspectRatio );
+            CropView.Frame = new RectangleF( View.Frame.X, View.Frame.Y, cropperWidth, cropperHeight );
 
 
-            // set our clamp values
-            CropViewMinPos = new PointF( (View.Bounds.Width - scaledWidth) / 2,
-                                         (View.Bounds.Height - scaledHeight) / 2 );
+            // Now set the min / max movement bounds for the cropper
+            CropViewMinPos = new PointF( imageStartX, imageStartY );
 
-            CropViewMaxPos = new PointF( CropViewMinPos.X + (scaledWidth - CropView.Bounds.Width),
-                                         CropViewMinPos.Y + (scaledHeight - CropView.Bounds.Height) );
-
+            CropViewMaxPos = new PointF( ( imageStartX + scaledImageWidth ) - cropperWidth,
+                                         ( imageStartY + scaledImageHeight ) - cropperHeight );
 
 
 
@@ -270,7 +334,7 @@ namespace iOS
                 case CropMode.Editing:
                 {
                     // there's nothing to cancel while editing, so disable the button.
-                    CancelButton.Enabled = false;
+                    CancelButton.Enabled = true;
 
                     // turn on our cropper
                     CropView.Hidden = false;
@@ -305,6 +369,9 @@ namespace iOS
 
         UIImage CropImage( UIImage sourceImage, RectangleF cropDimension )
         {
+            // step one, transform the crop region into image space.
+            // (So pixelX is a pixel in the actual image, not the scaled screen)
+
             // convert our position on screen to where it should be in the image
             float pixelX = cropDimension.X * ScreenToImageScalar;
             float pixelY = cropDimension.Y * ScreenToImageScalar;
@@ -313,48 +380,76 @@ namespace iOS
             float width = (float) cropDimension.Width * ScreenToImageScalar;
             float height = (float) cropDimension.Height * ScreenToImageScalar;
 
-            // create our transform and apply it to our crop region, so we crop in the image's space
-            CGAffineTransform transform = CGAffineTransform.MakeIdentity( );
 
+            // Now we're going to rotate the image to actually be "up" as the user
+            // sees it. To do that, we simply rotate it according to the apple documentation.
             float rotationDegrees = 0.0f;
-            switch( sourceImage.Orientation )
+
+            switch ( sourceImage.Orientation )
             {
-                case UIImageOrientation.Up: break;
-
-                case UIImageOrientation.RightMirrored:
-                case UIImageOrientation.Right: rotationDegrees = -90; break;
-
-                case UIImageOrientation.LeftMirrored:
-                case UIImageOrientation.Left: rotationDegrees = 90; break;
-
-                case UIImageOrientation.DownMirrored:
-                case UIImageOrientation.Down: rotationDegrees = -180; break;
+                case UIImageOrientation.Up:
+                {
+                    // don't do anything. The image space and the user space are 1:1
+                    break;
+                }
+                case UIImageOrientation.Left:
+                {
+                    // the image space is rotated 90 degrees from user space,
+                    // so do a CCW 90 degree rotation
+                    rotationDegrees = 90.0f;
+                    break;
+                }
+                case UIImageOrientation.Right:
+                {
+                    // the image space is rotated -90 degrees from user space,
+                    // so do a CW 90 degree rotation
+                    rotationDegrees = -90.0f;
+                    break;
+                }
+                case UIImageOrientation.Down:
+                {
+                    rotationDegrees = 180;
+                    break;
+                }
             }
-            transform.Rotate( rotationDegrees * Rock.Mobile.Math.Util.DegToRad );
+            
+            // Now get a transform so we can rotate the image to be oriented the same as when the user previewed it
+            CGAffineTransform fullImageTransform = GetImageTransformAboutCenter( rotationDegrees, sourceImage.Size );
 
-            // pull the crop back by its width / height so we rotate about its center
-            RectangleF scaledCrop = new RectangleF( pixelX - (width / 2), pixelY - (height / 2 ), width, height );
-            RectangleF transformedCrop = transform.TransformRect( scaledCrop );
-
-            // now restore its position so its pivot is in the corner again
-            transformedCrop = new RectangleF( transformedCrop.X + (transformedCrop.Width / 2), 
-                                              transformedCrop.Y + (transformedCrop.Height / 2 ), 
-                                              transformedCrop.Width, 
-                                              transformedCrop.Height );
-
-            // crop the image with the transformed crop region
-            CGImage croppedImage = sourceImage.CGImage.WithImageInRect( transformedCrop );
-
-
-            // get the new image, but re-apply its transform
-            CIImage ciImage = new CIImage( croppedImage );
-            CIImage rotatedImage = ciImage.ImageByApplyingTransform( transform );
+            // apply to the image
+            CIImage ciCorrectedImage = new CIImage( sourceImage.CGImage );
+            CIImage ciCorrectedRotatedImage = ciCorrectedImage.ImageByApplyingTransform( fullImageTransform );
 
             // create a context and render it back out to a CGImage.
             CIContext ciContext = CIContext.FromOptions( null );
-            CGImage rotatedCGImage = ciContext.CreateCGImage( rotatedImage, rotatedImage.Extent );
+            CGImage rotatedCGImage = ciContext.CreateCGImage( ciCorrectedRotatedImage, ciCorrectedRotatedImage.Extent );
 
-            return new UIImage( rotatedCGImage );
+
+            // now the image is properly orientated, so we can crop it.
+            RectangleF cropRegion = new RectangleF( pixelX, pixelY, width, height );
+            CGImage croppedImage = rotatedCGImage.WithImageInRect( cropRegion );
+            return new UIImage( croppedImage );
+        }
+
+        CGAffineTransform GetImageTransformAboutCenter( float angleDegrees, SizeF imageSize )
+        {
+            // Create a tranform that will rotate our image about its center
+            CGAffineTransform transform = CGAffineTransform.MakeIdentity( );
+
+            // setup our transform. Translate it by the image's half width/height so it rotates about its center.
+            transform.Translate( -imageSize.Width / 2, -imageSize.Height / 2 );
+            transform.Rotate( angleDegrees * Rock.Mobile.Math.Util.DegToRad );
+
+            // now we need to concat on a post-transform that will put the image's pivot back at the top left.
+            // get the image's dimensions transformed
+            RectangleF transformedImageRect = transform.TransformRect( new RectangleF( 0, 0, imageSize.Width, imageSize.Height ) );
+
+            // our post transform simply translates the image back
+            CGAffineTransform postTransform = CGAffineTransform.MakeIdentity( );
+            postTransform.Translate( transformedImageRect.Width / 2, transformedImageRect.Height / 2 );
+
+            // now multiply the transform and postTranform and we have our final transform to use
+            return CGAffineTransform.Multiply( transform, postTransform );
         }
 	}
 }

@@ -69,6 +69,11 @@ namespace Droid
                 ft.Commit();
             }
 
+            public virtual bool CanContainerPan()
+            {
+                return true;
+            }
+
             public virtual void SpringboardDidAnimate( bool springboardRevealed )
             {
             }

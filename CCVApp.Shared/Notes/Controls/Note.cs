@@ -477,7 +477,7 @@ namespace CCVApp
                     }
                 }
 
-                public void DidDoubleTap(PointF touch)
+                public bool DidDoubleTap(PointF touch)
                 {
                     // do not allow a new note within range of another's anchor.
                     bool allowNoteCreation = true;
@@ -496,7 +496,10 @@ namespace CCVApp
                         UserNoteControls.Add( userNote );
 
                         userNote.AddToView( MasterView );
+                        return true;
                     }
+
+                    return false;
                 }
 
                 public void SaveState()

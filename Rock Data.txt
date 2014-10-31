@@ -32,6 +32,47 @@ Prayer
 Profile
     Picture Upload (with account association)
 
+Notes
+    List of all available notes
+
+
+Design Needed
+-=-=-=-==-=-=-
+App Icon
+    Send Kyle needed sizes
+Splash Screen
+    Send Kyle the needed splash screen sizes
+Generic "First run with no network connection" News Items
+Login Page
+Profile Page
+News Details Page
+Prayer Main Page
+Prayer Create Page
+Notes Browse Page
+Create Profile
+
+!Tabelet UI Design!
+
+Features Needed
+-=-=-=-=-=-=-=-
+Campus Selection
+Campus Browser
+Group Finder
+Notes 
+    Browse Page (Series and then Individual)
+    Sermon Page
+        Notes
+        Video
+Take Notes DRop down on weekends
+
+Me
+--=-
+Create Profile (Send them to safari and Rock's registration)
+Add Give
+Swtich springboard icons to be font awesome
+Allow scrolling prayers
+Scale note fonts based on accessibility
+About - HTML view with baked in page
 
 -=-=-=-=-=-=-=-=-=-=-
 App Data Flow Chart

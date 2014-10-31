@@ -151,16 +151,22 @@ namespace iOS
             CCVApp.Shared.Network.RockApi.Instance.GetPrayers( delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.PrayerRequest> prayerRequests) 
                 {
                     ActivityIndicator.Hidden = true;
+                    CreatePrayerButton.Enabled = true;
 
-                    if( prayerRequests.Count > 0 )
+                    if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) )
                     {
-                        CreatePrayerButton.Enabled = true;
+                        if( prayerRequests.Count > 0 )
+                        {
+                            PrayerRequests = prayerRequests;
 
-                        PrayerRequests = prayerRequests;
+                            Carousel.NumItems = PrayerRequests.Count;
 
-                        Carousel.NumItems = PrayerRequests.Count;
-
-                        UpdatePrayerCards( 0 );
+                            UpdatePrayerCards( 0 );
+                        }
+                    }
+                    else
+                    {
+                        SpringboardViewController.DisplayError( "Prayer", "There was a problem getting prayer requests. Check your network settings and try again." );
                     }
                 });
         }

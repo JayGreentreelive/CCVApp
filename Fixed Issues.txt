@@ -14,7 +14,9 @@ iOS - Crop Images
 iOS - Moving User Notes significantly easier
 iOS - Fixed an issue causing user notes near the bottom of the Note to not be movable.
 iOS - Fixed an issue allowing the springboard to slide out when in Landscape mode.
-iOS - Fixed an issue causing the Notes to display incorrectly if rotating to landscape while the keyboard was up.
+iOS - Fixed an issue causing the Notes to display incorrectly if rotating to landscape while the keyboard was up
+iOS - Fixed an issue causing the profile picture to be overwritten with a temp image if the camera was cancelled while cropping.
+iOS - Fixed aspect ratio handling when setting a profile picture.
 
 Both - Prayer viewing and creation
 Both - Support for shorthand elements in NoteScript (<P> for Paragraph, <RB> for RevealBox, etc.)

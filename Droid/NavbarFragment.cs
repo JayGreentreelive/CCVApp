@@ -233,7 +233,11 @@ namespace Droid
             Console.WriteLine( "Flick Velocity: {0}", velocityX );
 
             // if they flicked it, go ahead and open / close the springboard
-            if ( Animating == false )
+
+            // only allow it if we're NOT animating, the task is ok with us panning, and we're in portrait mode.
+            if ( Animating == false && 
+                 ActiveTask.CanContainerPan( ) && 
+                 Activity.Resources.Configuration.Orientation == Android.Content.Res.Orientation.Portrait )
             {
                 if ( velocityX > sMinVelocity )
                 {
@@ -248,7 +252,10 @@ namespace Droid
 
         public void OnScroll( MotionEvent e1, MotionEvent e2, float distanceX, float distanceY )
         {
-            if ( Animating == false )
+            // only allow it if we're NOT animating, the task is ok with us panning, and we're in portrait mode.
+            if ( Animating == false && 
+                 ActiveTask.CanContainerPan( ) && 
+                 Activity.Resources.Configuration.Orientation == Android.Content.Res.Orientation.Portrait )
             {
                 IsPanning = true;
 

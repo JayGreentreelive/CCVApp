@@ -210,7 +210,7 @@ namespace CCVApp
                 /// <summary>
                 /// The size of the character representing the reveal button.
                 /// </summary>
-                public const int RevealButton_Size = 36;
+                public const int RevealButton_Size = 24;
 
                 /// <summary>
                 /// The color of the primary nav bar background.

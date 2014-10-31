@@ -78,6 +78,11 @@ namespace Droid
                     TaskReadyForFragmentDisplay = false;
                 }
 
+                public override bool CanContainerPan()
+                {
+                    return MainPage.MovingUserNote ? false : true;
+                }
+
                 public override TaskFragment StartingFragment()
                 {
                     return MainPage;

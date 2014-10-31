@@ -1,37 +1,41 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" PreferredExecutionTarget="Android.094c904b" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Tasks/TaskFragment.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|iPhone" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget.Jered's iPhone" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/SpringboardViewController.cs">
     <Files>
-      <File FileName="iOS/SpringboardViewController.cs" Line="60" Column="60" />
-      <File FileName="iOS/Tasks/Notes/NotesTask.cs" Line="48" Column="48" />
-      <File FileName="CCVApp.Shared/Notes/Controls/Note.cs" Line="72" Column="72" />
-      <File FileName="Droid/Tasks/NotesTask/NotesFragment.cs" Line="43" Column="43" />
-      <File FileName="Droid/Tasks/TaskFragment.cs" Line="17" Column="17" />
+      <File FileName="iOS/SpringboardViewController.cs" Line="9" Column="9" />
+      <File FileName="iOS/MainUINavigationController.cs" Line="9" Column="9" />
+      <File FileName="iOS/ContainerViewController.cs" Line="3" Column="3" />
+      <File FileName="iOS/Tasks/Notes/NotesViewController.cs" Line="10" Column="10" />
+      <File FileName="../Rock.Mobile/PlatformMedia/iOSCamera.cs" Line="79" Column="79" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="Droid" expanded="True">
+          <Node name="iOS" expanded="True">
             <Node name="Tasks" expanded="True">
-              <Node name="NotesTask" expanded="True" />
-              <Node name="TaskFragment.cs" selected="True" />
+              <Node name="Notes" expanded="True" />
+              <Node name="Prayer" expanded="True" />
             </Node>
+            <Node name="UserManagement" expanded="True" />
+            <Node name="SpringboardViewController.cs" selected="True" />
           </Node>
-          <Node name="iOS" expanded="True" />
         </State>
       </Pad>
       <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State>
-          <Value>DisplayingKeyboard</Value>
-        </State>
+        <State />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="/Users/jered/Projects/CCVApp/iOS/Tasks/Notes/NotesViewController.cs" line="450" column="1" />
+      <Breakpoint file="/Users/jered/Projects/CCVApp/iOS/Tasks/Notes/NotesViewController.cs" line="445" column="1" />
+      <Breakpoint file="/Users/jered/Projects/CCVApp/iOS/Tasks/Notes/NotesViewController.cs" line="455" column="1" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches>
     <Watch file="CCVApp.Shared/Notes/Controls/Note.cs" line="533" offsetX="1058" offsetY="7980" expression="state" liveUpdate="False" />
+    <Watch file="iOS/UserManagement/ImageCropViewController.cs" line="498" offsetX="806" offsetY="7455" expression="resultTransform" liveUpdate="False" />
   </MonoDevelop.Ide.DebuggingService.PinnedWatches>
   <MonoDevelop.Ide.ItemProperties.Droid MonoForAntroid.PreferredDevice="4.65&quot; 720p (Galaxy Nexus)" MonoForAntroid.PreferredTheme="Theme.DeviceDefault" />
 </Properties>
