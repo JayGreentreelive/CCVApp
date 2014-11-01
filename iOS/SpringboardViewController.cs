@@ -116,12 +116,6 @@ namespace iOS
         protected List<SpringboardElement> Elements { get; set; }
 
         /// <summary>
-        /// Gets or sets the current device orientation.
-        /// </summary>
-        /// <value>The current orientation.</value>
-        protected UIDeviceOrientation CurrentOrientation { get; set; }
-
-        /// <summary>
         /// The primary navigation for activities.
         /// </summary>
         /// <value>The nav view controller.</value>
@@ -172,50 +166,59 @@ namespace iOS
             Elements = new List<SpringboardElement>( );
 		}
 
-        public override bool ShouldAutorotate()
-        {
-            if( CurrentOrientation != UIDevice.CurrentDevice.Orientation )
-            {
-                // We only want to allow landscape orientation when in the NotesTask.
-                // All other times the app should be in Portrait mode.
-                switch( UIDevice.CurrentDevice.Orientation )
-                {
-                    case UIDeviceOrientation.Portrait:
-                    {
-                        CurrentOrientation = UIDevice.CurrentDevice.Orientation;
-
-                        NavViewController.EnableSpringboardRevealButton( true );
-                        return true;
-                    }
-
-                    case UIDeviceOrientation.LandscapeLeft:
-                    case UIDeviceOrientation.LandscapeRight:
-                    {
-                        // only allow landscape for the notes.
-                        if( (NavViewController.CurrentTask as NotesTask) != null && NavViewController.IsSpringboardClosed( ) )
-                        {
-                            CurrentOrientation = UIDevice.CurrentDevice.Orientation;
-
-                            NavViewController.EnableSpringboardRevealButton( false );
-
-                            return true;
-                        }
-                        return false;
-                    }
-                }
-            }
-
-            return false;
-        }
-
         public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations()
         {
-            return UIInterfaceOrientationMask.Portrait;
+            if ( ( NavViewController.CurrentTask as NotesTask ) != null && NavViewController.IsSpringboardClosed( ) )
+            {
+                return UIInterfaceOrientationMask.All;
+            }
+            else
+            {
+                return UIInterfaceOrientationMask.Portrait;
+            }
         }
 
         public override UIInterfaceOrientation PreferredInterfaceOrientationForPresentation()
         {
             return UIInterfaceOrientation.Portrait;
+        }
+
+        public override bool ShouldAutorotate()
+        {
+            return true;
+        }
+
+        public override void WillRotate(UIInterfaceOrientation toInterfaceOrientation, double duration)
+        {
+            base.WillRotate(toInterfaceOrientation, duration);
+        }
+
+        public override void DidRotate(UIInterfaceOrientation fromInterfaceOrientation)
+        {
+            base.DidRotate(fromInterfaceOrientation);
+        }
+
+        public override bool ShouldAutomaticallyForwardRotationMethods
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        public override void TraitCollectionDidChange(UITraitCollection previousTraitCollection)
+        {
+
+        }
+
+        public override void WillTransitionToTraitCollection(UITraitCollection traitCollection, IUIViewControllerTransitionCoordinator coordinator)
+        {
+            base.WillTransitionToTraitCollection(traitCollection, coordinator);
+        }
+
+        public override void ViewWillTransitionToSize(SizeF toSize, IUIViewControllerTransitionCoordinator coordinator)
+        {
+            base.ViewWillTransitionToSize(toSize, coordinator);
         }
 
         public override void ViewDidLoad()
@@ -231,8 +234,6 @@ namespace iOS
 
             ImageCropViewController = UserManagementStoryboard.InstantiateViewController( "ImageCropViewController" ) as ImageCropViewController;
             ImageCropViewController.Springboard = this;
-
-            CurrentOrientation = UIDevice.CurrentDevice.Orientation;
 
             // Instantiate all activities
             Elements.Add( new SpringboardElement( this, new NewsTask( "NewsStoryboard_iPhone" )  , NewsButton       , "watch.png" ) );
@@ -282,77 +283,71 @@ namespace iOS
 
         void ManageProfilePic( )
         {
-            // setup an action sheet for them to choose between using the Photo Library and a camera
-            var actionSheet = new UIActionSheet( CCVApp.Shared.Strings.Springboard.ProfilePicture_SourceTitle );
-            actionSheet.AddButton( CCVApp.Shared.Strings.Springboard.ProfilePicture_SourcePhotoLibrary );
-            actionSheet.AddButton( CCVApp.Shared.Strings.Springboard.ProfilePicture_SourceCamera );
-            actionSheet.AddButton( CCVApp.Shared.Strings.General.Cancel );
-            actionSheet.ShowInView( View );
+            UIAlertController actionSheet = UIAlertController.Create( CCVApp.Shared.Strings.Springboard.ProfilePicture_SourceTitle, 
+                                                                      CCVApp.Shared.Strings.Springboard.ProfilePicture_SourceDescription, 
+                                                                      UIAlertControllerStyle.ActionSheet );
 
-            actionSheet.Clicked += (object sender, UIButtonEventArgs e) => 
+            // setup the camera
+            UIAlertAction cameraAction = UIAlertAction.Create( CCVApp.Shared.Strings.Springboard.ProfilePicture_SourceCamera, UIAlertActionStyle.Default, delegate(UIAlertAction obj) 
                 {
-                    switch( e.ButtonIndex )
+                    // only allow the camera if they HAVE one
+                    if( Rock.Mobile.Media.PlatformCamera.Instance.IsAvailable( ) )
                     {
-                        // photo library
-                        case 0:
-                        {
-                            Rock.Mobile.Media.PlatformImagePicker.Instance.PickImage( this, delegate(object s, Rock.Mobile.Media.PlatformImagePicker.ImagePickEventArgs args) 
-                                {
-                                    if( args.Result == true )
-                                    {
-                                        ImageCropperPendingImage = (UIImage) args.Image;
-                                    }
-                                    else
-                                    {
-                                        DisplayError( CCVApp.Shared.Strings.Springboard.ProfilePicture_Error_Title, CCVApp.Shared.Strings.Springboard.ProfilePicture_Error_Message );
-                                    }
-                                } );
-                            break;
-                        }
-
-                        // camera
-                        case 1:
-                        {
-                            // only allow the camera if they HAVE one
-                            if( Rock.Mobile.Media.PlatformCamera.Instance.IsAvailable( ) )
+                        // launch the camera
+                        string jpgFilename = System.IO.Path.Combine ( Environment.GetFolderPath(Environment.SpecialFolder.Personal), "cameraTemp.jpg" );
+                        Rock.Mobile.Media.PlatformCamera.Instance.CaptureImage( jpgFilename, this, delegate(object s, Rock.Mobile.Media.PlatformCamera.CaptureImageEventArgs args) 
                             {
-                                // launch the camera
-                                string jpgFilename = System.IO.Path.Combine ( Environment.GetFolderPath(Environment.SpecialFolder.Personal), "cameraTemp.jpg" );
-                                Rock.Mobile.Media.PlatformCamera.Instance.CaptureImage( jpgFilename, this, delegate(object s, Rock.Mobile.Media.PlatformCamera.CaptureImageEventArgs args) 
+                                // if the result is true, they either got a picture or pressed cancel
+                                bool success = false;
+                                if( args.Result == true )
+                                {
+                                    // either way, no need for an error
+                                    success = true;
+
+                                    // if the image path is valid, they didn't cancel
+                                    if ( string.IsNullOrEmpty( args.ImagePath ) == false )
                                     {
-                                        // if the result is true, they either got a picture or pressed cancel
-                                        bool success = false;
-                                        if( args.Result == true )
-                                        {
-                                            // either way, no need for an error
-                                            success = true;
+                                        // load the image for cropping
+                                        ImageCropperPendingImage = UIImage.FromFile( args.ImagePath );
+                                    }
+                                }
 
-                                            // if the image path is valid, they didn't cancel
-                                            if ( string.IsNullOrEmpty( args.ImagePath ) == false )
-                                            {
-                                                // load the image for cropping
-                                                ImageCropperPendingImage = UIImage.FromFile( args.ImagePath );
-                                            }
-                                        }
+                                if( success == false )
+                                {
+                                    DisplayError( CCVApp.Shared.Strings.Springboard.ProfilePicture_Error_Title, CCVApp.Shared.Strings.Springboard.ProfilePicture_Error_Message );
+                                }
+                            });
+                    }
+                    else
+                    {
+                        // notify them they don't have a camera
+                        DisplayError( CCVApp.Shared.Strings.Springboard.Camera_Error_Title, CCVApp.Shared.Strings.Springboard.Camera_Error_Message );
+                    }
+                } );
 
-                                        if( success == false )
-                                        {
-                                            DisplayError( CCVApp.Shared.Strings.Springboard.ProfilePicture_Error_Title, CCVApp.Shared.Strings.Springboard.ProfilePicture_Error_Message );
-                                        }
-                                    });
+            // setup the photo library
+            UIAlertAction photoLibraryAction = UIAlertAction.Create( CCVApp.Shared.Strings.Springboard.ProfilePicture_SourcePhotoLibrary, UIAlertActionStyle.Default, delegate(UIAlertAction obj) 
+                {
+                    Rock.Mobile.Media.PlatformImagePicker.Instance.PickImage( this, delegate(object s, Rock.Mobile.Media.PlatformImagePicker.ImagePickEventArgs args) 
+                        {
+                            if( args.Result == true )
+                            {
+                                ImageCropperPendingImage = (UIImage) args.Image;
                             }
                             else
                             {
-                                // notify them they don't have a camera
-                                DisplayError( CCVApp.Shared.Strings.Springboard.Camera_Error_Title, CCVApp.Shared.Strings.Springboard.Camera_Error_Message );
+                                DisplayError( CCVApp.Shared.Strings.Springboard.ProfilePicture_Error_Title, CCVApp.Shared.Strings.Springboard.ProfilePicture_Error_Message );
                             }
-                            break;
-                        }
+                        } );
+                } );
 
-                        // cancel
-                        case 2: break;
-                    }
-                };
+            //setup cancel
+            UIAlertAction cancelAction = UIAlertAction.Create( CCVApp.Shared.Strings.General.Cancel, UIAlertActionStyle.Default, delegate{ } );
+
+            actionSheet.AddAction( cameraAction );
+            actionSheet.AddAction( photoLibraryAction );
+            actionSheet.AddAction( cancelAction );
+            PresentViewController( actionSheet, true, null );
         }
 
         void PresentModelViewController( UIViewController modelViewController )
@@ -442,16 +437,6 @@ namespace iOS
             {
                 NavViewController.RevealSpringboard( false );
             }
-        }
-
-        public override void ViewWillLayoutSubviews()
-        {
-            base.ViewWillLayoutSubviews();
-        }
-
-        public override void ViewDidLayoutSubviews()
-        {
-            base.ViewDidLayoutSubviews();
         }
 
         public override void ViewDidAppear(bool animated)

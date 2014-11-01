@@ -304,7 +304,8 @@ namespace Droid
                                         if( Rock.Mobile.Media.PlatformCamera.Instance.IsAvailable( ) )
                                         {
                                             // start up the camera and get our picture.
-                                            Rock.Mobile.Media.PlatformCamera.Instance.CaptureImage( new Java.IO.File( RockMobileUser.Instance.ProfilePicturePath ), null, 
+                                            string jpgFilename = Rock.Mobile.PlatformCommon.Droid.Context.GetExternalFilesDir( null ).ToString( ) + "cameratemp.jpg";
+                                            Rock.Mobile.Media.PlatformCamera.Instance.CaptureImage( new Java.IO.File( jpgFilename ), null, 
 
                                                 delegate(object s, Rock.Mobile.Media.PlatformCamera.CaptureImageEventArgs args) 
                                                 {
@@ -313,7 +314,12 @@ namespace Droid
                                                     // activity to end and the navBar fragment to resume
                                                     if( args.Result == true )
                                                     {
-                                                        ImageCropperPendingFilePath = args.ImagePath;
+                                                        // if the image path is valid, we have a picture.
+                                                        // Otherwise, they pressed cancel, so don't do anything.
+                                                        if( args.ImagePath != null )
+                                                        {
+                                                            ImageCropperPendingFilePath = args.ImagePath;
+                                                        }
                                                     }
                                                     else
                                                     {

@@ -440,21 +440,6 @@ namespace iOS
             }
         }
 
-        public override bool ShouldAutorotate()
-        {
-            return true;
-        }
-
-        public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations( )
-        {
-            return UIInterfaceOrientationMask.All;
-        }
-
-        public override UIInterfaceOrientation PreferredInterfaceOrientationForPresentation( )
-        {
-            return UIInterfaceOrientation.Portrait;
-        }
-
         public void OnKeyboardNotification( NSNotification notification )
         {
             //Start an animation, using values from the keyboard

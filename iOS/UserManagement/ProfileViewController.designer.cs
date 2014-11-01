@@ -16,15 +16,11 @@ namespace iOS
 	{
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
+		UITextField CellPhoneField { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
 		UITextField EmailField { get; set; }
-
-		[Outlet]
-		[GeneratedCode ("iOS Designer", "1.0")]
-		UITextField FirstNameField { get; set; }
-
-		[Outlet]
-		[GeneratedCode ("iOS Designer", "1.0")]
-		UILabel HeaderLabel { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
@@ -36,33 +32,25 @@ namespace iOS
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UITextField MiddleNameField { get; set; }
+		UITextField NickNameField { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UITextField NickNameField { get; set; }
+		UIButton ProfilePicButton { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
 		UIButton SubmitButton { get; set; }
 
-		[Outlet]
-		[GeneratedCode ("iOS Designer", "1.0")]
-		UITextField TitleField { get; set; }
-
 		void ReleaseDesignerOutlets ()
 		{
+			if (CellPhoneField != null) {
+				CellPhoneField.Dispose ();
+				CellPhoneField = null;
+			}
 			if (EmailField != null) {
 				EmailField.Dispose ();
 				EmailField = null;
-			}
-			if (FirstNameField != null) {
-				FirstNameField.Dispose ();
-				FirstNameField = null;
-			}
-			if (HeaderLabel != null) {
-				HeaderLabel.Dispose ();
-				HeaderLabel = null;
 			}
 			if (LastNameField != null) {
 				LastNameField.Dispose ();
@@ -72,21 +60,17 @@ namespace iOS
 				LogOutButton.Dispose ();
 				LogOutButton = null;
 			}
-			if (MiddleNameField != null) {
-				MiddleNameField.Dispose ();
-				MiddleNameField = null;
-			}
 			if (NickNameField != null) {
 				NickNameField.Dispose ();
 				NickNameField = null;
 			}
+			if (ProfilePicButton != null) {
+				ProfilePicButton.Dispose ();
+				ProfilePicButton = null;
+			}
 			if (SubmitButton != null) {
 				SubmitButton.Dispose ();
 				SubmitButton = null;
-			}
-			if (TitleField != null) {
-				TitleField.Dispose ();
-				TitleField = null;
 			}
 		}
 	}

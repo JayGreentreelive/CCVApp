@@ -36,13 +36,13 @@ namespace Droid
                 return null;
             }
 
-            public virtual void Activate( )
+            public virtual void Activate( bool forResume )
             {
                 // present our starting fragment, and don't allow back navigation
                 PresentFragment( StartingFragment( ), false );
             }
 
-            public virtual void Deactivate( )
+            public virtual void Deactivate( bool forPause )
             {
                 // nothing we need to do for deactivation
             }

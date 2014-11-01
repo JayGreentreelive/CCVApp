@@ -4,6 +4,8 @@ using MonoTouch.UIKit;
 using System.CodeDom.Compiler;
 using Rock.Mobile.Network;
 using CCVApp.Shared.Network;
+using MonoTouch.CoreAnimation;
+using System.Drawing;
 
 namespace iOS
 {
@@ -31,6 +33,16 @@ namespace iOS
             return Springboard.ShouldAutorotate();
         }
 
+        public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations( )
+        {
+            return Springboard.GetSupportedInterfaceOrientations( );
+        }
+
+        public override UIInterfaceOrientation PreferredInterfaceOrientationForPresentation( )
+        {
+            return Springboard.PreferredInterfaceOrientationForPresentation( );
+        }
+
         public override bool PrefersStatusBarHidden()
         {
             return Springboard.PrefersStatusBarHidden();
@@ -42,13 +54,8 @@ namespace iOS
 
             // Allow the return on username and password to start
             // the login process
-            TitleField.ShouldReturn += TextFieldShouldReturn;
-
-            FirstNameField.ShouldReturn += TextFieldShouldReturn;
-            MiddleNameField.ShouldReturn += TextFieldShouldReturn;
-            LastNameField.ShouldReturn += TextFieldShouldReturn;
-
             NickNameField.ShouldReturn += TextFieldShouldReturn;
+            LastNameField.ShouldReturn += TextFieldShouldReturn;
 
             EmailField.ShouldReturn += TextFieldShouldReturn;
 
@@ -95,6 +102,29 @@ namespace iOS
                         };
 
                 };
+
+            Dirty = false;
+
+            // logged in sanity check.
+            if( RockMobileUser.Instance.LoggedIn == false ) throw new Exception("A user must be logged in before viewing a profile. How did you do this?" );
+
+            NickNameField.Text = RockMobileUser.Instance.Person.NickName;
+            LastNameField.Text = RockMobileUser.Instance.Person.LastName;
+
+            EmailField.Text = RockMobileUser.Instance.Person.Email;
+
+
+            // set the profile image mask so it's circular
+            CALayer maskLayer = new CALayer();
+            maskLayer.AnchorPoint = new PointF( 0, 0 );
+            maskLayer.Bounds = ProfilePicButton.Layer.Bounds;
+            maskLayer.CornerRadius = ProfilePicButton.Layer.Bounds.Width / 2;
+            maskLayer.BackgroundColor = UIColor.Black.CGColor;
+            ProfilePicButton.Layer.Mask = maskLayer;
+            //
+
+            string imagePath = RockMobileUser.Instance.HasProfileImage ? RockMobileUser.Instance.ProfilePicturePath : NSBundle.MainBundle.BundlePath + "/" + CCVApp.Shared.Config.Springboard.NoPhotoFile;
+            ProfilePicButton.SetImage( new UIImage( imagePath ), UIControlState.Normal );;
         }
 
         public void SubmitActionSheetClicked(object sender, UIButtonEventArgs e)
@@ -131,11 +161,7 @@ namespace iOS
             // copy all the edited fields into the person object
             RockMobileUser.Instance.Person.Email = EmailField.Text;
 
-            RockMobileUser.Instance.Person.MiddleName = MiddleNameField.Text;
-
             RockMobileUser.Instance.Person.NickName = NickNameField.Text;
-
-            RockMobileUser.Instance.Person.FirstName = FirstNameField.Text;
             RockMobileUser.Instance.Person.LastName = LastNameField.Text;
 
             // request the person object be sync'd with the server. because we save the object locally,
@@ -149,13 +175,8 @@ namespace iOS
 
             // if they tap somewhere outside of the text fields, 
             // hide the keyboard
-            TextFieldShouldReturn( TitleField );
-
-            TextFieldShouldReturn( FirstNameField );
-            TextFieldShouldReturn( MiddleNameField );
-            TextFieldShouldReturn( LastNameField );
-
             TextFieldShouldReturn( NickNameField );
+            TextFieldShouldReturn( LastNameField );
 
             TextFieldShouldReturn( EmailField );
         }
@@ -163,23 +184,6 @@ namespace iOS
         public override void ViewDidAppear(bool animated)
         {
             base.ViewDidAppear(animated);
-
-            Dirty = false;
-
-            // logged in sanity check.
-            if( RockMobileUser.Instance.LoggedIn == false ) throw new Exception("A user must be logged in before viewing a profile. How did you do this?" );
-
-            HeaderLabel.Text = string.Format( "Hey {0}", RockMobileUser.Instance.PreferredName( ) );
-
-            TitleField.Text = "";
-
-            FirstNameField.Text = RockMobileUser.Instance.Person.FirstName;
-            MiddleNameField.Text = RockMobileUser.Instance.Person.MiddleName;
-            LastNameField.Text = RockMobileUser.Instance.Person.LastName;
-
-            NickNameField.Text = RockMobileUser.Instance.Person.NickName;
-
-            EmailField.Text = RockMobileUser.Instance.Person.Email;
         }
 	}
 }

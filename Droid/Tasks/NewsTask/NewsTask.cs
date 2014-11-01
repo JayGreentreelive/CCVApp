@@ -31,9 +31,9 @@ namespace Droid
                     DetailsPage.ParentTask = this;
                 }
 
-                public override void Activate( )
+                public override void Activate( bool forResume )
                 {
-                    base.Activate( );
+                    base.Activate( forResume );
 
                     MainPage.News = CCVApp.Shared.Network.RockGeneralData.Instance.Data.News;
                 }

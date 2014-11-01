@@ -64,6 +64,14 @@ namespace iOS
             TaskTransition.ContainerViewController = this;
 		}
 
+        public override void WillRotate(UIInterfaceOrientation toInterfaceOrientation, double duration)
+        {
+            base.WillRotate(toInterfaceOrientation, duration);
+
+            // forward this to our parent
+            ( ParentViewController as MainUINavigationController ).WillRotate( toInterfaceOrientation, duration );
+        }
+
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();

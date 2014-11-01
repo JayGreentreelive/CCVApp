@@ -31,9 +31,9 @@ namespace Droid
                     CreatePage.ParentTask = this;
                 }
 
-                public override void Activate( )
+                public override void Activate( bool forResume )
                 {
-                    base.Activate( );
+                    base.Activate( forResume );
                 }
 
                 public override TaskFragment StartingFragment()

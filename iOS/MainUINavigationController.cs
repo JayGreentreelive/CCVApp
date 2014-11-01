@@ -34,6 +34,16 @@ namespace iOS
         UIPanGestureRecognizer PanGesture { get; set; }
 
         /// <summary>
+        /// Tracks the last position of panning so delta can be applied
+        /// </summary>
+        PointF PanLastPos { get; set; }
+
+        /// <summary>
+        /// Direction we're currently panning. Important for syncing the card positions
+        /// </summary>
+        int PanDir { get; set; }
+
+        /// <summary>
         /// A wrapper for Container.CurrentTask, since Container is protected.
         /// </summary>
         /// <value>The current task.</value>
@@ -47,7 +57,7 @@ namespace iOS
         {
             Container.EnableSpringboardRevealButton( enabled );
 
-            if( enabled == false )
+            if ( enabled == false )
             {
                 RevealSpringboard( false );
             }
@@ -99,16 +109,6 @@ namespace iOS
             PanGesture.MaximumNumberOfTouches = 1;
             View.AddGestureRecognizer( PanGesture );
         }
-
-        /// <summary>
-        /// Tracks the last position of panning so delta can be applied
-        /// </summary>
-        PointF PanLastPos { get; set; }
-
-        /// <summary>
-        /// Direction we're currently panning. Important for syncing the card positions
-        /// </summary>
-        int PanDir { get; set; }
 
         void OnPanGesture(UIPanGestureRecognizer obj) 
         {
@@ -201,6 +201,20 @@ namespace iOS
             else
             {
                 PanGesture.Enabled = false;
+            }
+        }
+
+        public override void WillRotate(UIInterfaceOrientation toInterfaceOrientation, double duration)
+        {
+            if ( toInterfaceOrientation == UIInterfaceOrientation.Portrait )
+            {
+                PanGesture.Enabled = true;
+                EnableSpringboardRevealButton( true );
+            }
+            else
+            {
+                PanGesture.Enabled = false;
+                EnableSpringboardRevealButton( false );
             }
         }
 

@@ -250,6 +250,7 @@ namespace Droid
             }
         }
 
+        const float MinPanThreshold = 50;
         public void OnScroll( MotionEvent e1, MotionEvent e2, float distanceX, float distanceY )
         {
             // only allow it if we're NOT animating, the task is ok with us panning, and we're in portrait mode.
@@ -259,22 +260,25 @@ namespace Droid
             {
                 IsPanning = true;
 
-                if ( LastPanX == 0 )
+                if ( e2.RawX - e1.RawX > MinPanThreshold )
                 {
+                    if ( LastPanX == 0 )
+                    {
+                        LastPanX = e2.RawX;
+                    }
+
+                    distanceX = e2.RawX - LastPanX;
                     LastPanX = e2.RawX;
+
+                    float xPos = View.GetX( ) + distanceX;
+
+                    float revealAmount = ( View.Width * CCVApp.Shared.Config.PrimaryNavBar.RevealPercentage );
+                    xPos = Math.Max( 0, Math.Min( xPos, revealAmount ) );
+
+                    View.SetX( xPos );
+                    ActiveTaskFrame.SetX( xPos );
+                    NavToolbar.LinearLayout.SetX( xPos );
                 }
-
-                distanceX = e2.RawX - LastPanX;
-                LastPanX = e2.RawX;
-
-                float xPos = View.GetX( ) + distanceX;
-
-                float revealAmount = ( View.Width * CCVApp.Shared.Config.PrimaryNavBar.RevealPercentage );
-                xPos = Math.Max( 0, Math.Min( xPos, revealAmount ) );
-
-                View.SetX( xPos );
-                ActiveTaskFrame.SetX( xPos );
-                NavToolbar.LinearLayout.SetX( xPos );
             }
         }
 
@@ -369,32 +373,10 @@ namespace Droid
 
         public void EnableControls( bool enabled )
         {
-            // toggle the task frame and all its children
-            EnableViews( ActiveTaskFrame, enabled );
-
             // toggle the sub nav bar
             NavToolbar.Suspend( !enabled );
         }
 
-        public void EnableViews( ViewGroup view, bool enabled )
-        {
-            /*view.Enabled = enabled;
-
-            int i;
-            for( i = 0; i < view.ChildCount; i++ )
-            {
-                // if the child view is itself a view group, recursively toggle them
-                View childView = view.GetChildAt( i );
-                if( (childView as ViewGroup) != null )
-                {
-                    EnableViews( (ViewGroup)childView, enabled );
-                }
-                else
-                {
-                    childView.Enabled = enabled;
-                }
-            }*/
-        }
 
         public override void OnPause( )
         {
@@ -402,7 +384,7 @@ namespace Droid
 
             if( ActiveTask != null )
             {
-                ActiveTask.Deactivate( );
+                ActiveTask.Deactivate( true );
             }
 
             IsFragmentActive = false;
@@ -416,7 +398,7 @@ namespace Droid
 
             if( ActiveTask != null )
             {
-                ActiveTask.Activate( );
+                ActiveTask.Activate( true );
             }
 
             SpringboardParent.NavbarWasResumed( );
@@ -431,11 +413,11 @@ namespace Droid
                 // we are active, so if we have a current task, deactivate it.
                 if( ActiveTask != null )
                 {
-                    ActiveTask.Deactivate( );
+                    ActiveTask.Deactivate( false );
                 }
 
                 // activate the new task
-                newTask.Activate( );
+                newTask.Activate( false );
 
                 // force the springboard to close
                 RevealSpringboard( false );

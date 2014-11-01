@@ -36,8 +36,9 @@ namespace CCVApp.Shared
         public class Springboard
         {
             public const string ProfilePicture_SourceTitle = "Profile Picture";
+            public const string ProfilePicture_SourceDescription = "Select a source for your profile picture.";
             public const string ProfilePicture_SourcePhotoLibrary = "Photo Library";
-            public const string ProfilePicture_SourceCamera = "Camera";
+            public const string ProfilePicture_SourceCamera = "Take Photo";
 
             public const string ProfilePicture_Error_Title = "Profile Picture";
             public const string ProfilePicture_Error_Message = "There was a problem saving your profile picture. Please try again.";

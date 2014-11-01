@@ -2,20 +2,17 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|iPhone" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget.Jered's iPhone" />
   <MonoDevelop.Ide.Workbench ActiveDocument="iOS/SpringboardViewController.cs">
     <Files>
-      <File FileName="iOS/SpringboardViewController.cs" Line="9" Column="9" />
-      <File FileName="iOS/MainUINavigationController.cs" Line="9" Column="9" />
-      <File FileName="iOS/ContainerViewController.cs" Line="3" Column="3" />
-      <File FileName="iOS/Tasks/Notes/NotesViewController.cs" Line="10" Column="10" />
-      <File FileName="../Rock.Mobile/PlatformMedia/iOSCamera.cs" Line="79" Column="79" />
+      <File FileName="iOS/SpringboardViewController.cs" Line="62" Column="62" />
+      <File FileName="Droid/Springboard.cs" Line="41" Column="41" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
+          <Node name="Droid" expanded="True">
+            <Node name="UserManagement" expanded="True" />
+          </Node>
           <Node name="iOS" expanded="True">
-            <Node name="Tasks" expanded="True">
-              <Node name="Notes" expanded="True" />
-              <Node name="Prayer" expanded="True" />
-            </Node>
+            <Node name="Tasks" expanded="True" />
             <Node name="UserManagement" expanded="True" />
             <Node name="SpringboardViewController.cs" selected="True" />
           </Node>
@@ -27,11 +24,7 @@
     </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="/Users/jered/Projects/CCVApp/iOS/Tasks/Notes/NotesViewController.cs" line="450" column="1" />
-      <Breakpoint file="/Users/jered/Projects/CCVApp/iOS/Tasks/Notes/NotesViewController.cs" line="445" column="1" />
-      <Breakpoint file="/Users/jered/Projects/CCVApp/iOS/Tasks/Notes/NotesViewController.cs" line="455" column="1" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches>
     <Watch file="CCVApp.Shared/Notes/Controls/Note.cs" line="533" offsetX="1058" offsetY="7980" expression="state" liveUpdate="False" />

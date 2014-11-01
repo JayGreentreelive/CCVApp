@@ -6,7 +6,10 @@ Android - Fixed an issue causing the Share Button to show up in News and crash i
 Android - Added News list and items.
 Android - Import images from Photo Library
 Android - User can now slide out the springboard with their finger.
-
+Android - Fixed an issue causing the profile picture to show the uncropped camera image if the profile pic 	changing was cancelled during cropping of a camera picture.
+Android - Fixed an issue causing the camera to display twice in a row if the device was rotated while previewing
+an image.
+Android - Fixed an issue causing an error to display when the user cancelled updating their profile picture on the Camera screen.
 
 iOS - Improved News items to show a description, banner and URL link. 
 iOS - Import images from Photo Library
@@ -17,6 +20,7 @@ iOS - Fixed an issue allowing the springboard to slide out when in Landscape mod
 iOS - Fixed an issue causing the Notes to display incorrectly if rotating to landscape while the keyboard was up
 iOS - Fixed an issue causing the profile picture to be overwritten with a temp image if the camera was cancelled while cropping.
 iOS - Fixed aspect ratio handling when setting a profile picture.
+iOS - Fixed rotation issues with the app so that it correctly allows only the Notes to enter Landscape mode.
 
 Both - Prayer viewing and creation
 Both - Support for shorthand elements in NoteScript (<P> for Paragraph, <RB> for RevealBox, etc.)

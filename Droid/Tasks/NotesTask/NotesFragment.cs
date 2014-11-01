@@ -276,7 +276,9 @@ namespace Droid
                     ParentTask.NavbarFragment.NavToolbar.SetBackButtonEnabled( false );
                     ParentTask.NavbarFragment.NavToolbar.Reveal( true );
 
-                    // if the task is ready, go ahead and create the notes.
+                    // if the task is ready, go ahead and create the notes. Alternatively, 
+                    // if we are resuming from a pause, it's safe to create the notes. If we don't,
+                    // the user will see a blank screen.
                     FragmentReady = true;
                     if( ParentTask.TaskReadyForFragmentDisplay == true )
                     {

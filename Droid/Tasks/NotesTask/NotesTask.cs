@@ -54,14 +54,16 @@ namespace Droid
                     }
                 }
 
-                public override void Activate( )
+                public override void Activate( bool forResume )
                 {
-                    base.Activate( );
+                    base.Activate( forResume );
 
                     // if the springboard is already closed, set ourselves as ready.
                     // This is always called before any fragment methods, so the fragment
                     // will be able to know if it can display or not.
-                    if( NavbarFragment.ShouldTaskAllowInput( ) )
+
+                    // alternatively, if we're simply resuming from a pause, it's ok to allow the note to show.
+                    if( NavbarFragment.ShouldTaskAllowInput( ) || forResume == true)
                     {
                         TaskReadyForFragmentDisplay = true;
                     }
@@ -71,9 +73,9 @@ namespace Droid
                     }
                 }
 
-                public override void Deactivate( )
+                public override void Deactivate( bool forPause )
                 {
-                    base.Deactivate( );
+                    base.Deactivate( forPause );
 
                     TaskReadyForFragmentDisplay = false;
                 }
