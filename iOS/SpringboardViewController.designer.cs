@@ -20,7 +20,7 @@ namespace iOS
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UIButton EpisodesButton { get; set; }
+		UIButton GiveButton { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
@@ -29,6 +29,10 @@ namespace iOS
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
 		UIButton LoginButton { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UIButton MessagesButton { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
@@ -52,9 +56,9 @@ namespace iOS
 				AboutButton.Dispose ();
 				AboutButton = null;
 			}
-			if (EpisodesButton != null) {
-				EpisodesButton.Dispose ();
-				EpisodesButton = null;
+			if (GiveButton != null) {
+				GiveButton.Dispose ();
+				GiveButton = null;
 			}
 			if (GroupFinderButton != null) {
 				GroupFinderButton.Dispose ();
@@ -63,6 +67,10 @@ namespace iOS
 			if (LoginButton != null) {
 				LoginButton.Dispose ();
 				LoginButton = null;
+			}
+			if (MessagesButton != null) {
+				MessagesButton.Dispose ();
+				MessagesButton = null;
 			}
 			if (NewsButton != null) {
 				NewsButton.Dispose ();

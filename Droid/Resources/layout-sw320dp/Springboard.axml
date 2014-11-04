@@ -123,6 +123,36 @@
 <!--Definition for a springboard element-->
     <RelativeLayout
         android:layout_below="@id/springboard_prayer_frame"
+        android:id="@+id/springboard_give_frame"
+        android:layout_height="40dp"
+        android:layout_width="match_parent">
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/springboard_give_button" />
+        <TextView
+            android:text=""
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:adjustViewBounds="true"
+            android:id="@+id/springboard_give_icon"
+            android:layout_marginLeft="40dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical" />
+        <TextView
+            android:text="Give"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/springboard_give_text"
+            android:layout_marginLeft="85dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical" />
+    </RelativeLayout>
+<!--End springboard element definition-->
+<!--Definition for a springboard element-->
+    <RelativeLayout
+        android:layout_below="@id/springboard_give_frame"
         android:id="@+id/springboard_notes_frame"
         android:layout_height="40dp"
         android:layout_width="match_parent">

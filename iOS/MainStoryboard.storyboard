@@ -44,7 +44,7 @@
                                 </state>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="custom" lineBreakMode="middleTruncation" id="266" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO">
-                                <rect key="frame" x="0.0" y="360" width="285" height="30"/>
+                                <rect key="frame" x="0.0" y="405" width="285" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <state key="normal" title="Messages">
@@ -59,7 +59,7 @@
                                 </state>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="custom" lineBreakMode="middleTruncation" id="268" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO">
-                                <rect key="frame" x="0.0" y="405" width="275" height="30"/>
+                                <rect key="frame" x="0.0" y="450" width="275" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <state key="normal" title="About CCV">
@@ -89,6 +89,14 @@
                                     <color key="titleColor" colorSpace="calibratedRGB" red="1" green="1" blue="1" alpha="1"/>
                                 </state>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="custom" lineBreakMode="middleTruncation" id="397" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO">
+                                <rect key="frame" x="0.0" y="360" width="291" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <state key="normal" title="Give">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
                         </subviews>
                     </view>
                     <navigationItem key="navigationItem" title="Root View Controller" id="11"/>
@@ -96,11 +104,12 @@
                         <outlet property="NewsButton" destination="72" id="name-outlet-72"/>
                         <outlet property="GroupFinderButton" destination="264" id="name-outlet-264"/>
                         <outlet property="PrayerButton" destination="265" id="name-outlet-265"/>
-                        <outlet property="EpisodesButton" destination="266" id="name-outlet-266"/>
+                        <outlet property="MessagesButton" destination="266" id="name-outlet-266"/>
                         <outlet property="AboutButton" destination="268" id="name-outlet-268"/>
                         <outlet property="LoginButton" destination="283" id="name-outlet-283"/>
                         <outlet property="UserNameField" destination="24" id="name-outlet-24"/>
                         <outlet property="ViewProfileButton" destination="390" id="name-outlet-390"/>
+                        <outlet property="GiveButton" destination="397" id="name-outlet-397"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="13" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -190,5 +199,8 @@
         <image name="news_general_2.png" width="640" height="434"/>
         <image name="news_general_3.png" width="640" height="434"/>
         <image name="IMG_0079.JPG" width="1280" height="960"/>
+        <image name="news_general_1_header.png" width="560" height="192"/>
+        <image name="news_general_2_header.png" width="560" height="192"/>
+        <image name="news_general_3_header.png" width="560" height="192"/>
     </resources>
 </document>

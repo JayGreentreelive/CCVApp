@@ -234,11 +234,12 @@ namespace iOS
             ImageCropViewController.Springboard = this;
 
             // Instantiate all activities
-            Elements.Add( new SpringboardElement( this, new NewsTask( "NewsStoryboard_iPhone" )  , NewsButton       , "" ) );
-            Elements.Add( new SpringboardElement( this, new NotesTask( "" )                      , EpisodesButton   , "" ) );
-            Elements.Add( new SpringboardElement( this, new GiveTask( "GiveStoryboard_iPhone" )  , GroupFinderButton, "" ) );
-            Elements.Add( new SpringboardElement( this, new PrayerTask( "PrayerStoryboard_iPhone" )  , PrayerButton , "" ) );
-            Elements.Add( new SpringboardElement( this, new AboutTask( "AboutStoryboard_iPhone" ), AboutButton      , "" ) );
+            Elements.Add( new SpringboardElement( this, new NewsTask( "NewsStoryboard_iPhone" )              , NewsButton       , "" ) );
+            Elements.Add( new SpringboardElement( this, new GroupFinderTask( "GroupFinderStoryboard_iPhone" ), GroupFinderButton, "" ) );
+            Elements.Add( new SpringboardElement( this, new PrayerTask( "PrayerStoryboard_iPhone" )          , PrayerButton     , "" ) );
+            Elements.Add( new SpringboardElement( this, new GiveTask( "GiveStoryboard_iPhone" )              , GiveButton       , "" ) );
+            Elements.Add( new SpringboardElement( this, new NotesTask( "" )                                  , MessagesButton   , "" ) );
+            Elements.Add( new SpringboardElement( this, new AboutTask( "AboutStoryboard_iPhone" )            , AboutButton      , "" ) );
 
             // set the profile image mask so it's circular
             CALayer maskLayer = new CALayer();
