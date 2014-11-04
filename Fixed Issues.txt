@@ -24,3 +24,4 @@ iOS - Fixed rotation issues with the app so that it correctly allows only the No
 
 Both - Prayer viewing and creation
 Both - Support for shorthand elements in NoteScript (<P> for Paragraph, <RB> for RevealBox, etc.)
+Both - Springboard icons are now rendered as fonts, not images. (They now look better)

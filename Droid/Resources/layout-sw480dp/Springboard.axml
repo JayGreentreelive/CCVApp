@@ -40,8 +40,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/springboard_news_button" />
-        <ImageView
-            android:src="@drawable/info"
+        <TextView
+            android:text=""
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:adjustViewBounds="true"
@@ -70,8 +70,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/springboard_groupfinder_button" />
-        <ImageView
-            android:src="@drawable/groupfinder"
+        <TextView
+            android:text=""
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:adjustViewBounds="true"
@@ -100,8 +100,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/springboard_prayer_button" />
-        <ImageView
-            android:src="@drawable/prayer"
+        <TextView
+            android:text=""
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:adjustViewBounds="true"
@@ -130,8 +130,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/springboard_notes_button" />
-        <ImageView
-            android:src="@drawable/notes"
+        <TextView
+            android:text=""
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:adjustViewBounds="true"
@@ -160,8 +160,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/springboard_about_button" />
-        <ImageView
-            android:src="@drawable/info"
+        <TextView
+            android:text=""
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:adjustViewBounds="true"

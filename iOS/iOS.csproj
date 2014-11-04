@@ -238,24 +238,6 @@
     <BundleResource Include="..\Assets\ccvLogo.png">
       <Link>Resources\ccvLogo.png</Link>
     </BundleResource>
-    <BundleResource Include="..\Assets\notes%402x.png">
-      <Link>Resources\notes%402x.png</Link>
-    </BundleResource>
-    <BundleResource Include="..\Assets\info%402x.png">
-      <Link>Resources\info%402x.png</Link>
-    </BundleResource>
-    <BundleResource Include="..\Assets\watch%402x.png">
-      <Link>Resources\watch%402x.png</Link>
-    </BundleResource>
-    <BundleResource Include="..\Assets\groupfinder%402x.png">
-      <Link>Resources\groupfinder%402x.png</Link>
-    </BundleResource>
-    <BundleResource Include="..\Assets\prayer%402x.png">
-      <Link>Resources\prayer%402x.png</Link>
-    </BundleResource>
-    <BundleResource Include="..\Assets\give%402x.png">
-      <Link>Resources\give%402x.png</Link>
-    </BundleResource>
     <BundleResource Include="..\Assets\noprofile%402x.png">
       <Link>Resources\noprofile%402x.png</Link>
     </BundleResource>
@@ -282,7 +264,6 @@
     <BundleResource Include="..\Assets\news_general_3%402x.png">
       <Link>Resources\news_general_3%402x.png</Link>
     </BundleResource>
-    <BundleResource Include="Resources\IMG_0079.JPG" />
     <BundleResource Include="..\Assets\news_general_1_header%402x.png">
       <Link>Resources\news_general_1_header%402x.png</Link>
     </BundleResource>

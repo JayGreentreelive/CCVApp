@@ -260,7 +260,7 @@ namespace Droid
             {
                 IsPanning = true;
 
-                if ( e2.RawX - e1.RawX > MinPanThreshold )
+                if ( Math.Abs(e2.RawX - e1.RawX) > MinPanThreshold )
                 {
                     if ( LastPanX == 0 )
                     {

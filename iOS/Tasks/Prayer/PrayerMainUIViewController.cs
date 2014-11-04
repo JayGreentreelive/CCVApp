@@ -13,10 +13,41 @@ namespace iOS
 	{
         class PrayerCard
         {
+            /// <summary>
+            /// Overrides the prayer content text so we can detect when the
+            /// user is panning while their finger is within it, and then
+            /// move the cards.
+            /// </summary>
+            class PrayerTextView : UITextView
+            {
+                public UIView Parent { get; set; } 
+
+                public override void TouchesMoved(NSSet touches, UIEvent evt)
+                {
+                    base.TouchesMoved(touches, evt);
+
+                    Parent.TouchesMoved( touches, evt );
+                }
+
+                public override void TouchesBegan(NSSet touches, UIEvent evt)
+                {
+                    base.TouchesBegan(touches, evt);
+
+                    Parent.TouchesBegan( touches, evt );
+                }
+
+                public override void TouchesCancelled(NSSet touches, UIEvent evt)
+                {
+                    base.TouchesCancelled(touches, evt);
+
+                    Parent.TouchesCancelled( touches, evt );
+                }
+            }
+
             PlatformView View { get; set; }
             UILabel Name { get; set; }
             UILabel Date { get; set; }
-            UILabel Prayer { get; set; }
+            PrayerTextView Prayer { get; set; }
             UIButton Pray { get; set; }
 
             public PrayerCard( ref PlatformView cardView, RectangleF bounds )
@@ -26,7 +57,7 @@ namespace iOS
 
                 Name = new UILabel( );
                 Date = new UILabel( );
-                Prayer = new UILabel( );
+                Prayer = new PrayerTextView( );
                 Pray = new UIButton( UIButtonType.System );
 
                 // set anchor points to the left corner for simple positioning
@@ -34,6 +65,13 @@ namespace iOS
                 Prayer.Layer.AnchorPoint = new PointF( 0, 0 );
                 Pray.Layer.AnchorPoint = new PointF( 0, 0 );
                 Date.Layer.AnchorPoint = new PointF( 0, 0 );
+
+                Prayer.Editable = false;
+                Prayer.BackgroundColor = UIColor.Clear;
+                Prayer.Layer.BorderColor = UIColor.Gray.CGColor;
+                Prayer.Layer.BorderWidth = 2;
+                Prayer.DelaysContentTouches = false; // don't allow delaying touch, we need to forward it
+
 
                 Pray.SetTitle( "Pray", UIControlState.Normal );
                 Pray.SizeToFit( );
@@ -46,13 +84,15 @@ namespace iOS
                 Prayer.TextColor = UIColor.White;
 
                 // set the outline for the card
-                View.BorderColor = 0x777777FF;//UIColor.Gray.CGColor;
+                View.BorderColor = 0x777777FF;
                 View.CornerRadius = 4;
                 View.BorderWidth = 1;
 
                 // add the controls
                 UIView nativeView = View.PlatformNativeObject as UIView;
-                nativeView.UserInteractionEnabled = false;
+
+                Prayer.Parent = nativeView;
+
                 nativeView.AddSubview( Name );
                 nativeView.AddSubview( Date );
                 nativeView.AddSubview( Prayer );
@@ -79,9 +119,10 @@ namespace iOS
                 // set the prayer text, allow multiple lines, set the width to be the card itself,
                 // and let SizeToFit measure the height.
                 Prayer.Text = prayer.Text;
-                Prayer.Lines = 99;
-                Prayer.Frame = new RectangleF( ViewPadding, Date.Frame.Bottom, View.Bounds.Width - (ViewPadding * 2), 0 );
+
                 Prayer.SizeToFit( );
+                float prayerHeight = Math.Min( Prayer.Frame.Height, View.Bounds.Height - Prayer.Frame.Top - Pray.Frame.Height - ViewPadding );
+                Prayer.Frame = new RectangleF( ViewPadding, Date.Frame.Bottom, View.Bounds.Width - (ViewPadding * 2), prayerHeight );
             }
         }
 
@@ -182,12 +223,16 @@ namespace iOS
         {
             base.TouchesBegan( touches, evt );
 
+            Console.WriteLine( "Touches Began" );
+
             Carousel.TouchesBegan( );
         }
 
         public override void TouchesEnded(NSSet touches, UIEvent evt)
         {
             base.TouchesEnded( touches, evt );
+
+            Console.WriteLine( "Touches Ended" );
 
             Carousel.TouchesEnded( );
         }

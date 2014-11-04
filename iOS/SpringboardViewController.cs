@@ -51,7 +51,7 @@ namespace iOS
             /// <value>The button.</value>
             public UIButton Button { get; set; }
 
-            public SpringboardElement( SpringboardViewController controller, Task task, UIButton button, string imageName )
+            public SpringboardElement( SpringboardViewController controller, Task task, UIButton button, string imageChar )
             {
                 UIView parentView = button.Superview;
 
@@ -73,10 +73,6 @@ namespace iOS
                 // Finally, we'll make the button clear with no text and place it over the
                 // backing view.
 
-                // start by loading the image
-                string imagePath = NSBundle.MainBundle.BundlePath + "/" + imageName;
-                UIImage image = new UIImage( imagePath );
-
                 // Create the backing view
                 BackingView = new UIView( );
                 BackingView.Frame = Button.Frame;
@@ -84,10 +80,12 @@ namespace iOS
                 parentView.AddSubview( BackingView );
 
                 // Create the logo view containing the image.
-                UIView logoView = new UIView( );
-                logoView.Bounds = new RectangleF( 0, 0, image.Size.Width, image.Size.Height );
+                UILabel logoView = new UILabel( );
+                logoView.Font = Rock.Mobile.PlatformCommon.iOS.LoadFontDynamic( CCVApp.Shared.Config.Springboard.Element_Font, CCVApp.Shared.Config.Springboard.Element_FontSize );
+                logoView.TextColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.Springboard.Element_FontColor );
+                logoView.Text = imageChar;
+                logoView.SizeToFit( );
                 logoView.Layer.Position = new PointF( CCVApp.Shared.Config.Springboard.Element_LogoOffsetX, Button.Layer.Position.Y );
-                logoView.Layer.Contents = image.CGImage;
                 logoView.BackgroundColor = UIColor.Clear;
                 parentView.AddSubview( logoView );
 
@@ -236,11 +234,11 @@ namespace iOS
             ImageCropViewController.Springboard = this;
 
             // Instantiate all activities
-            Elements.Add( new SpringboardElement( this, new NewsTask( "NewsStoryboard_iPhone" )  , NewsButton       , "watch.png" ) );
-            Elements.Add( new SpringboardElement( this, new NotesTask( "" )                      , EpisodesButton   , "notes.png" ) );
-            Elements.Add( new SpringboardElement( this, new GiveTask( "GiveStoryboard_iPhone" )  , GroupFinderButton, "groupfinder.png" ) );
-            Elements.Add( new SpringboardElement( this, new PrayerTask( "PrayerStoryboard_iPhone" )  , PrayerButton     , "prayer.png" ) );
-            Elements.Add( new SpringboardElement( this, new AboutTask( "AboutStoryboard_iPhone" ), AboutButton      , "info.png" ) );
+            Elements.Add( new SpringboardElement( this, new NewsTask( "NewsStoryboard_iPhone" )  , NewsButton       , "" ) );
+            Elements.Add( new SpringboardElement( this, new NotesTask( "" )                      , EpisodesButton   , "" ) );
+            Elements.Add( new SpringboardElement( this, new GiveTask( "GiveStoryboard_iPhone" )  , GroupFinderButton, "" ) );
+            Elements.Add( new SpringboardElement( this, new PrayerTask( "PrayerStoryboard_iPhone" )  , PrayerButton , "" ) );
+            Elements.Add( new SpringboardElement( this, new AboutTask( "AboutStoryboard_iPhone" ), AboutButton      , "" ) );
 
             // set the profile image mask so it's circular
             CALayer maskLayer = new CALayer();

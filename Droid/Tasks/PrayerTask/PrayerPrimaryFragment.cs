@@ -25,6 +25,66 @@ namespace Droid
         {
             public class PrayerPrimaryFragment : TaskFragment
             {
+                class PrayerLayoutRender
+                {
+                    public LinearLayout LinearLayout { get; set; }
+                    TextView Name { get; set; }
+                    TextView Date { get; set; }
+                    TextView Prayer { get; set; }
+
+                    int PrayerMaxScroll { get; set; }
+
+                    public PrayerLayoutRender( RectangleF bounds, Rock.Client.PrayerRequest prayer )
+                    {
+                        Name = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                        Name.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+
+                        Date = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                        Date.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+
+                        Prayer = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                        Prayer.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                        Prayer.SetMinWidth( (int)bounds.Width );
+                        Prayer.SetMaxWidth( (int)bounds.Width );
+
+
+                        // set the text color
+                        Name.SetTextColor( Android.Graphics.Color.White );
+                        Date.SetTextColor( Android.Graphics.Color.White );
+                        Prayer.SetTextColor( Android.Graphics.Color.White );
+
+                        LinearLayout = new LinearLayout( Rock.Mobile.PlatformCommon.Droid.Context );
+                        LinearLayout.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
+                        LinearLayout.Orientation = Orientation.Vertical;
+                        LinearLayout.AddView( Name );
+                        LinearLayout.AddView( Date );
+
+                        LinearLayout.AddView( Prayer );
+
+                        // set the contents
+                        Name.Text = prayer.FirstName;
+                        Date.Text = string.Format( "{0:dddd MMMM d}, {2:yyyy}", prayer.CreatedDateTime, prayer.CreatedDateTime, prayer.CreatedDateTime );
+
+                        Prayer.Text = prayer.Text;
+                    }
+
+                    public void Scroll( float distanceY )
+                    {
+                        // create the specs we want for measurement
+                        int widthMeasureSpec = View.MeasureSpec.MakeMeasureSpec( LinearLayout.Width, MeasureSpecMode.AtMost );
+                        int heightMeasureSpec = View.MeasureSpec.MakeMeasureSpec( 0, MeasureSpecMode.Unspecified );
+
+                        // measure the label given the current width/height/text
+                        Prayer.Measure( widthMeasureSpec, heightMeasureSpec );
+
+                        Prayer.ScrollY += (int)distanceY;
+
+                        // allow scrolling enough to show all the content of the prayer, but no more than that.
+                        int availableHeight = LinearLayout.Height - (int)Prayer.GetY( );
+                        Prayer.ScrollY = Math.Max( 0, Math.Min( Prayer.ScrollY, Prayer.MeasuredHeight - availableHeight ) );
+                    }
+                }
+
                 class PrayerCard
                 {
                     PrayerLayoutRender CurrentPrayer { get; set; }
@@ -81,10 +141,12 @@ namespace Droid
                             nativeView.AddView( prayer.LinearLayout );
 
                             Pray.Enabled = true;
+
+                            CurrentPrayer = prayer;
                         }
                         else
                         {
-                            // since null was passed, check check for a current prayer
+                            // since null was passed, check for a current prayer
                             if ( CurrentPrayer != null && CurrentPrayer.LinearLayout.Parent != null )
                             {
                                 // remove it from ourselves
@@ -94,45 +156,10 @@ namespace Droid
                             Pray.Enabled = false;
                         }
                     }
-                }
 
-                class PrayerLayoutRender
-                {
-                    public LinearLayout LinearLayout { get; set; }
-                    TextView Name { get; set; }
-                    TextView Date { get; set; }
-                    TextView Prayer { get; set; }
-
-                    public PrayerLayoutRender( RectangleF bounds, Rock.Client.PrayerRequest prayer )
+                    public void Scroll( float distanceY )
                     {
-                        Name = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
-                        Name.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-
-                        Date = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
-                        Date.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-
-                        Prayer = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
-                        Prayer.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-
-                        // set the text color
-                        Name.SetTextColor( Android.Graphics.Color.White );
-                        Date.SetTextColor( Android.Graphics.Color.White );
-                        Prayer.SetTextColor( Android.Graphics.Color.White );
-
-                        LinearLayout = new LinearLayout( Rock.Mobile.PlatformCommon.Droid.Context );
-                        LinearLayout.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-                        LinearLayout.LayoutParameters.Width = (int)bounds.Width;
-                        LinearLayout.LayoutParameters.Height = (int)bounds.Height;
-                        LinearLayout.Orientation = Orientation.Vertical;
-                        LinearLayout.AddView( Name );
-                        LinearLayout.AddView( Date );
-
-                        LinearLayout.AddView( Prayer );
-
-                        // set the contents
-                        Name.Text = prayer.FirstName;
-                        Date.Text = string.Format( "{0:dddd MMMM d}, {2:yyyy}", prayer.CreatedDateTime, prayer.CreatedDateTime, prayer.CreatedDateTime );
-                        Prayer.Text = prayer.Text;
+                        CurrentPrayer.Scroll( distanceY );
                     }
                 }
 
@@ -253,22 +280,29 @@ namespace Droid
                 // forward these to the carousel
                 public override bool OnFlingGesture( MotionEvent e1, MotionEvent e2, float velocityX, float velocityY )
                 {
+                    //Console.WriteLine( "OnFlingGesture" );
                     return ( (DroidCardCarousel)Carousel ).OnFling( e1, e2, velocityX, velocityY );
                 }
 
                 public override bool OnScrollGesture(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
                 {
+                    // let the center prayer scroll
+                    CenterPrayer.Scroll( distanceY );
+
+                    //Console.WriteLine( "OnScrollGesture" );
                     return ( (DroidCardCarousel)Carousel ).OnScroll( e1, e2, distanceX, distanceY );
                 }
 
                 public override bool OnDownGesture( MotionEvent e )
                 {
+                    //Console.WriteLine( "OnDownGesture" );
                     Carousel.TouchesBegan( );
                     return false;
                 }
 
                 public override bool OnTouch( View v, MotionEvent e )
                 {
+                    //Console.WriteLine( "OnTouch" );
                     if ( base.OnTouch( v, e ) == true )
                     {
                         return true;

@@ -29,6 +29,21 @@ namespace CCVApp
                 public const string ProfilePic = "userPhoto.jpg";
 
                 /// <summary>
+                /// The font to use for the element's logo.
+                /// </summary>
+                public const string Element_Font = "FontAwesome";
+               
+                /// <summary>
+                /// The size of font to use for the element's logo.
+                /// </summary>
+                public const int Element_FontSize = 23;
+
+                /// <summary>
+                /// The color of the font to use for the element's logo.
+                /// </summary>
+                public const int Element_FontColor = 0x777777FF;
+
+                /// <summary>
                 /// The X offset to place the CENTER of the element's logo.
                 /// </summary>
                 public const int Element_LogoOffsetX = 20;

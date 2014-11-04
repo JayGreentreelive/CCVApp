@@ -17,6 +17,7 @@ using DroidContext = Rock.Mobile.PlatformCommon.Droid;
 using Java.IO;
 using Droid.Tasks;
 using System.IO;
+using Rock.Mobile.PlatformCommon;
 
 namespace Droid
 {
@@ -36,7 +37,7 @@ namespace Droid
             public Button Button { get; set; }
             public int ButtonId { get; set; }
 
-            public ImageView Icon { get; set; }
+            public TextView Icon { get; set; }
             public int IconId { get; set; }
 
             public SpringboardElement( Tasks.Task task, int layoutId, int iconId, int buttonId )
@@ -50,10 +51,13 @@ namespace Droid
             public void OnCreateView( View parentView )
             {
                 Layout = parentView.FindViewById<RelativeLayout>( LayoutId );
-                Icon = parentView.FindViewById<ImageView>( IconId );
+                Icon = parentView.FindViewById<TextView>( IconId );
                 Button = parentView.FindViewById<Button>( ButtonId );
 
-                Icon.SetX( Icon.GetX() - Icon.Drawable.IntrinsicWidth / 2 );
+                Typeface fontFace = DroidFontManager.Instance.GetFont( CCVApp.Shared.Config.Springboard.Element_Font );
+                Icon.SetTypeface( fontFace, TypefaceStyle.Normal );
+                Icon.SetTextSize( Android.Util.ComplexUnitType.Dip, CCVApp.Shared.Config.Springboard.Element_FontSize );
+                Icon.SetX( Icon.GetX() - Icon.Width / 2 );
 
                 Button.Background = null;
             }

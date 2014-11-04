@@ -106,26 +106,8 @@
     <AndroidResource Include="..\Assets\addphoto%402x.png">
       <Link>Resources\drawable-hdpi\addphoto.png</Link>
     </AndroidResource>
-    <AndroidResource Include="..\Assets\give%402x.png">
-      <Link>Resources\drawable-hdpi\give.png</Link>
-    </AndroidResource>
-    <AndroidResource Include="..\Assets\groupfinder%402x.png">
-      <Link>Resources\drawable-hdpi\groupfinder.png</Link>
-    </AndroidResource>
-    <AndroidResource Include="..\Assets\info%402x.png">
-      <Link>Resources\drawable-hdpi\info.png</Link>
-    </AndroidResource>
     <AndroidResource Include="..\Assets\noProfile%402x.png">
       <Link>Resources\drawable-hdpi\noProfile.png</Link>
-    </AndroidResource>
-    <AndroidResource Include="..\Assets\notes%402x.png">
-      <Link>Resources\drawable-hdpi\notes.png</Link>
-    </AndroidResource>
-    <AndroidResource Include="..\Assets\prayer%402x.png">
-      <Link>Resources\drawable-hdpi\prayer.png</Link>
-    </AndroidResource>
-    <AndroidResource Include="..\Assets\watch%402x.png">
-      <Link>Resources\drawable-hdpi\watch.png</Link>
     </AndroidResource>
     <AndroidResource Include="Resources\layout-sw600dp\Profile.axml" />
     <AndroidResource Include="Resources\layout-sw480dp\Profile.axml" />
