@@ -14,6 +14,7 @@ using System.IO;
 
 using Rock.Mobile.Network;
 using CCVApp.Shared.Notes;
+using RestSharp;
 
 namespace Droid
 {
@@ -273,7 +274,7 @@ namespace Droid
 
                     ParentTask.NavbarFragment.NavToolbar.SetShareButtonEnabled( true );
 
-                    ParentTask.NavbarFragment.NavToolbar.SetBackButtonEnabled( false );
+                    ParentTask.NavbarFragment.NavToolbar.SetBackButtonEnabled( true );
                     ParentTask.NavbarFragment.NavToolbar.Reveal( true );
 
                     // if the task is ready, go ahead and create the notes. Alternatively, 
@@ -479,7 +480,26 @@ namespace Droid
                         // if we don't have BOTH xml strings, re-download
                         if( noteXml == null || styleSheetXml == null )
                         {
-                            HttpWebRequest.Instance.MakeAsyncRequest( CCVApp.Shared.Config.Note.BaseURL + NoteName + CCVApp.Shared.Config.Note.Extension, ( Exception ex, Dictionary<string, string> responseHeaders, string body ) =>
+                            //download the notes
+                            Rock.Mobile.Network.HttpRequest request = new HttpRequest();
+                            RestRequest restRequest = new RestRequest( Method.GET );
+                            restRequest.RequestFormat = DataFormat.Xml;
+
+                            request.ExecuteAsync( NoteName, restRequest, 
+                                delegate(System.Net.HttpStatusCode statusCode, string statusDescription, byte[] model )
+                                {
+                                    if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) )
+                                    {
+                                        string body = Encoding.UTF8.GetString( model, 0, model.Length );
+                                        HandleNotePreReqs( body, null );
+                                    }
+                                    else
+                                    {
+                                        ReportException( "NoteScript Download Error", null );
+                                    }
+                                } );
+
+                            /*WebRequest.MakeAsyncRequest( CCVApp.Shared.Config.Note.BaseURL + NoteName + CCVApp.Shared.Config.Note.Extension, ( Exception ex, Dictionary<string, string> responseHeaders, string body ) =>
                                 {
                                     if( ex == null )
                                     {
@@ -489,7 +509,7 @@ namespace Droid
                                     {
                                         ReportException( "NoteScript Download Error", ex );
                                     }
-                                } );
+                                } );*/
                         }
                         else
                         {
@@ -525,11 +545,15 @@ namespace Droid
 
                                 try
                                 {
+                                    // build the filename of the locally stored user data. If there is no "/" because it isn't a URL,
+                                    // we'll end up using the base name, which is what we want.
+                                    int lastSlashIndex = NoteName.LastIndexOf( "/" ) + 1;
+                                    string noteName = NoteName.Substring( lastSlashIndex );
+
                                     // Use the metrics and not ScrollView for dimensions, because depending on when this gets called the ScrollView
                                     // may not have its dimensions set yet.
-                                    Rock.Mobile.Profiler.Instance.Start( "Note.Create" );
-                                    Note.Create( this.Resources.DisplayMetrics.WidthPixels, this.Resources.DisplayMetrics.HeightPixels, ScrollViewLayout, NoteName + CCVApp.Shared.Config.Note.UserNoteSuffix );
-                                    Rock.Mobile.Profiler.Instance.Stop( "Note.Create" );
+                                    Note.Create( this.Resources.DisplayMetrics.WidthPixels, this.Resources.DisplayMetrics.HeightPixels, ScrollViewLayout, noteName + CCVApp.Shared.Config.Note.UserNoteSuffix );
+
 
                                     // set the requested background color
                                     ScrollView.SetBackgroundColor( ( Android.Graphics.Color )Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value ) );
@@ -564,7 +588,12 @@ namespace Droid
 
                 protected void ReportException( string errorMsg, Exception e )
                 {
-                    Springboard.DisplayError( "Note Error", errorMsg + "\n" + e.Message );
+                    if ( e != null )
+                    {
+                        errorMsg += e.Message;
+                    }
+
+                    Springboard.DisplayError( "Note Error", errorMsg );
 
                     Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate
                         {

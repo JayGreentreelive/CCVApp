@@ -238,7 +238,7 @@ namespace iOS
             Elements.Add( new SpringboardElement( this, new GroupFinderTask( "GroupFinderStoryboard_iPhone" ), GroupFinderButton, "" ) );
             Elements.Add( new SpringboardElement( this, new PrayerTask( "PrayerStoryboard_iPhone" )          , PrayerButton     , "" ) );
             Elements.Add( new SpringboardElement( this, new GiveTask( "GiveStoryboard_iPhone" )              , GiveButton       , "" ) );
-            Elements.Add( new SpringboardElement( this, new NotesTask( "" )                                  , MessagesButton   , "" ) );
+            Elements.Add( new SpringboardElement( this, new NotesTask( "NotesStoryboard_iPhone" )            , MessagesButton   , "" ) );
             Elements.Add( new SpringboardElement( this, new AboutTask( "AboutStoryboard_iPhone" )            , AboutButton      , "" ) );
 
             // set the profile image mask so it's circular

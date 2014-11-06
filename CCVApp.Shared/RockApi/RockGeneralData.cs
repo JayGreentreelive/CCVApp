@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.IO;
+using Rock.Mobile.Network;
 
 namespace CCVApp
 {
@@ -114,7 +115,7 @@ namespace CCVApp
                     Data = new GeneralData( );
                 }
 
-                public void GetGeneralData( RockApi.RequestResult generalDataResult )
+                public void GetGeneralData( HttpRequest.RequestResult generalDataResult )
                 {
                     Console.WriteLine( "Get GeneralData" );
                     RockApi.Instance.GetGeneralData(delegate(System.Net.HttpStatusCode statusCode, string statusDescription, GeneralData model)

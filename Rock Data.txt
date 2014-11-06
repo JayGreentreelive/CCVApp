@@ -69,7 +69,24 @@ Me
 --=-
 Create Profile (Send them to safari and Rock's registration)
 Scale note fonts based on accessibility
-About - HTML view with baked in page
+
+Facebook
+GroupFinder becomes Connect, group finder will go under that.
+About becomes "More" and then uses the webview to offer a bunch of stuff.
+    Use baked in html web view
+
+New Listing is
+    News
+    Connect
+    Messages
+    Prayer
+    Give
+    More
+
+Prayer 
+    Add "Create PRayer" to the nav bar (Centered, or the third button in)
+
+Springboard - Make it say Welcome: Jered (nickname)
 
 -=-=-=-=-=-=-=-=-=-=-
 App Data Flow Chart

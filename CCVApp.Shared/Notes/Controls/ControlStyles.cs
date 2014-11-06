@@ -3,6 +3,8 @@ using System.Xml;
 using System.Drawing;
 using System.IO;
 using Rock.Mobile.Network;
+using RestSharp;
+using System.Text;
 
 namespace CCVApp
 {
@@ -652,8 +654,12 @@ namespace CCVApp
                 /// </summary>
                 public static Styles.Style mUserNote;
 
+                static HttpRequest WebRequest { get; set; }
+
                 static void CreateHeaderStyle()
                 {
+                    WebRequest = new HttpRequest();
+
                     // Default the header container to no padding and left alignment.
                     mHeaderContainer = new Styles.Style( );
                     mHeaderContainer.Initialize();
@@ -842,24 +848,23 @@ namespace CCVApp
                     // if an existing XML stream wasn't provided, download via the URL
                     if( styleSheetXml == null )
                     {
-                        HttpWebRequest.Instance.MakeAsyncRequest( mStyleSheetUrl, OnCompletion );
+                        RestRequest request = new RestRequest( Method.GET );
+                        WebRequest.ExecuteAsync( mStyleSheetUrl, request, delegate(System.Net.HttpStatusCode statusCode, string statusDescription, byte[] model )
+                            {
+                                if( Util.StatusInSuccessRange( statusCode ) == true )
+                                {
+                                    ParseStyles( Encoding.UTF8.GetString( model, 0, model.Length ) );
+                                }
+                                else
+                                {
+                                    mStylesCreatedDelegate( new Exception( "Error retrieving style sheet." ) );
+                                }
+                            } );
                     }
                     else
                     {
                         // otherwise we can directly parse the XML
                         ParseStyles( styleSheetXml );
-                    }
-                }
-
-                static void OnCompletion( Exception ex, System.Collections.Generic.Dictionary<string, string> responseHeaders, string body )
-                {
-                    if( ex == null )
-                    {
-                        ParseStyles( body );
-                    }
-                    else
-                    {
-                        mStylesCreatedDelegate( ex );
                     }
                 }
 

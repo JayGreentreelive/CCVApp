@@ -2,6 +2,7 @@
 using Rock.Client;
 using Newtonsoft.Json;
 using System.IO;
+using Rock.Mobile.Network;
 
 namespace CCVApp
 {
@@ -79,7 +80,7 @@ namespace CCVApp
                     }
                 }
 
-                public void Login( string username, string password, RockApi.RequestResult loginResult )
+                public void Login( string username, string password, HttpRequest.RequestResult loginResult )
                 {
                     RockApi.Instance.Login( username, password, delegate(System.Net.HttpStatusCode statusCode, string statusDescription) 
                         {
@@ -120,7 +121,7 @@ namespace CCVApp
                     SaveToDevice( );
                 }
 
-                public void GetProfile( RockApi.RequestResult<Rock.Client.Person> profileResult )
+                public void GetProfile( HttpRequest.RequestResult<Rock.Client.Person> profileResult )
                 {
                     RockApi.Instance.GetProfile( Username, delegate(System.Net.HttpStatusCode statusCode, string statusDescription, Rock.Client.Person model)
                         {
@@ -142,7 +143,7 @@ namespace CCVApp
                         });
                 }
 
-                public void UpdateProfile( RockApi.RequestResult profileResult )
+                public void UpdateProfile( HttpRequest.RequestResult profileResult )
                 {
                     RockApi.Instance.UpdateProfile( Person, delegate(System.Net.HttpStatusCode statusCode, string statusDescription)
                         {
@@ -193,7 +194,7 @@ namespace CCVApp
                     }
                 }
 
-                public void DownloadProfilePicture( int dimensionSize, RockApi.RequestResult profilePictureResult )
+                public void DownloadProfilePicture( int dimensionSize, HttpRequest.RequestResult profilePictureResult )
                 {
                     RockApi.Instance.GetProfilePicture( Person.PhotoId.ToString(), dimensionSize, delegate(System.Net.HttpStatusCode statusCode, string statusDescription, MemoryStream imageStream)
                         {
@@ -211,7 +212,7 @@ namespace CCVApp
                         });
                 }
 
-                public void SyncDirtyObjects( RockApi.RequestResult resultCallback )
+                public void SyncDirtyObjects( HttpRequest.RequestResult resultCallback )
                 {
                     // check to see if our person object changed. If our original json
                     // created at a point when we know we were sync'd with the server

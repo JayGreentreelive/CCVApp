@@ -7,65 +7,74 @@ namespace iOS
 {
     public class NotesTask : Task
     {
-        NotesViewController NotesViewController { get; set; }
+        UIViewController ActiveViewController { get; set; }
+        NotesMainUIViewController MainViewController { get; set; }
 
         public NotesTask( string storyboardName ) : base( storyboardName )
         {
-            NotesViewController = new NotesViewController( );
-            NotesViewController.Task = this;
+            MainViewController = Storyboard.InstantiateViewController( "MainPageViewController" ) as NotesMainUIViewController;
+            MainViewController.Task = this;
         }
 
         public override void MakeActive( UINavigationController parentViewController, NavToolbar navToolbar )
         {
             base.MakeActive( parentViewController, navToolbar );
 
-            // for now, let the note name be the previous saturday
-            DateTime time = DateTime.UtcNow;
-
-            // if it's not saturday, find the date of the past saturday
-            if( time.DayOfWeek != DayOfWeek.Saturday )
-            {
-                time = time.Subtract( new TimeSpan( (int)time.DayOfWeek + 1, 0, 0, 0 ) );
-            }
-
-            NotesViewController.NotePresentableName = string.Format( "Sermon Note - {0}.{1}.{2}", time.Month, time.Day, time.Year );
-            #if DEBUG
-            NotesViewController.NoteName = "sample_note";
-            #else
-            NotesViewController.NoteName = string.Format("{0}_{1}_{2}_{3}", CCVApp.Shared.Config.Note.NamePrefix, time.Month, time.Day, time.Year );
-            #endif
-            //
-
-            // set our current page as root
-            parentViewController.PushViewController(NotesViewController, false);
-
-            NotesViewController.MakeActive( );
+            parentViewController.PushViewController( MainViewController, false );
         }
 
         public override void MakeInActive( )
         {
             base.MakeInActive( );
 
-            NotesViewController.MakeInActive( );
-
-            NotesViewController.View.RemoveFromSuperview( );
-            NotesViewController.RemoveFromParentViewController( );
+            MainViewController.View.RemoveFromSuperview( );
+            MainViewController.RemoveFromParentViewController( );
         }
 
         public override void WillShowViewController(UIViewController viewController)
         {
-            // if it's the main page, disable the back button on the toolbar
-            if ( viewController == NotesViewController )
+            ActiveViewController = viewController;
+
+            NotesViewController notesVC = viewController as NotesViewController;
+
+            // if the notes are active, make sure the share button gets turned on
+            if ( notesVC != null )
             {
                 NavToolbar.DisplayShareButton( true, delegate
                     { 
-                        NotesViewController.ShareNotes( );
+                        notesVC.ShareNotes( );
                     } );
-                NavToolbar.SetBackButtonEnabled( false );
+                NavToolbar.SetBackButtonEnabled( true );
 
                 // go ahead and show the bar, because we're at the top of the page.
                 NavToolbar.Reveal( true );
             }
+            else
+            {
+                // outside of the notes, NO sharing
+                NavToolbar.DisplayShareButton( false, null );
+                NavToolbar.SetShareButtonEnabled( false );
+
+                // if it's the main page, disable the back button on the toolbar
+                if ( viewController == MainViewController )
+                {
+                    NavToolbar.SetBackButtonEnabled( false );
+                    NavToolbar.Reveal( false );
+                }
+                else
+                {
+                    NavToolbar.SetBackButtonEnabled( true );
+                    NavToolbar.RevealForTime( 3.0f );
+                }
+            }
+        }
+
+        public override void TouchesEnded(TaskUIViewController taskUIViewController, NSSet touches, UIEvent evt)
+        {
+            base.TouchesEnded(taskUIViewController, touches, evt);
+
+            // if they touched a dead area, reveal the nav toolbar again.
+            NavToolbar.RevealForTime( 3.0f );
         }
 
         public override void ViewDidScroll( float scrollDelta )
@@ -85,19 +94,36 @@ namespace iOS
 
         public override bool CanContainerPan( NSSet touches, UIEvent evt )
         {
-            //return the inverse of touching a user note's bool.
-            // so false if they ARE touching a note, true if they are not.
-            return !NotesViewController.TouchingUserNote( touches, evt );
+            NotesViewController notesVC = ActiveViewController as NotesViewController;
+            if ( notesVC != null )
+            {
+                //return the inverse of touching a user note's bool.
+                // so false if they ARE touching a note, true if they are not.
+                return !notesVC.TouchingUserNote( touches, evt );
+            }
+
+            // if the notes aren't active, then of course they can pan
+            return true;
         }
 
         public override void AppOnResignActive()
         {
-            NotesViewController.OnResignActive( );
+            // if the notes are active and the app is being backgrounded, let the notes know so they can save.
+            NotesViewController notesVC = ActiveViewController as NotesViewController;
+            if ( notesVC != null )
+            {
+                notesVC.ViewResigning( );
+            }
         }
 
         public override void AppWillTerminate()
         {
-            NotesViewController.WillTerminate( );
+            // if the notes are active and the app is being killed, let the notes know so they can save.
+            NotesViewController notesVC = ActiveViewController as NotesViewController;
+            if ( notesVC != null )
+            {
+                notesVC.ViewResigning( );
+            }
         }
     }
 }

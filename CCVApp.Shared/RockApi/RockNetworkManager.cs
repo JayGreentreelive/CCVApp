@@ -1,5 +1,6 @@
 ﻿using System;
 using CCVApp.Shared.Network;
+using Rock.Mobile.Network;
 
 namespace CCVApp
 {
@@ -12,13 +13,13 @@ namespace CCVApp
                 private static RockNetworkManager _Instance = new RockNetworkManager( );
                 public static RockNetworkManager Instance { get { return _Instance; } }
 
-                RockApi.RequestResult ResultCallback;
+                HttpRequest.RequestResult ResultCallback;
 
                 public RockNetworkManager( )
                 {
                 }
 
-                public void Connect( RockApi.RequestResult resultCallback )
+                public void Connect( HttpRequest.RequestResult resultCallback )
                 {
                     ResultCallback = resultCallback;
 

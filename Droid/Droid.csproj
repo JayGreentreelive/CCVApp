@@ -76,6 +76,8 @@
     <Compile Include="Tasks\PrayerTask\PrayerCreateFragment.cs" />
     <Compile Include="Tasks\GiveTask\GivePrimaryFragment.cs" />
     <Compile Include="Tasks\GiveTask\GiveTask.cs" />
+    <Compile Include="Tasks\NotesTask\NotesPrimaryFragment.cs" />
+    <Compile Include="Tasks\NotesTask\NotesDetailsFragment.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
@@ -135,6 +137,12 @@
     <AndroidResource Include="Resources\layout-sw320dp\Give_Primary.axml" />
     <AndroidResource Include="Resources\layout-sw480dp\Give_Primary.axml" />
     <AndroidResource Include="Resources\layout-sw600dp\Give_Primary.axml" />
+    <AndroidResource Include="Resources\layout-sw320dp\Notes_Primary.axml" />
+    <AndroidResource Include="Resources\layout-sw480dp\Notes_Primary.axml" />
+    <AndroidResource Include="Resources\layout-sw600dp\Notes_Primary.axml" />
+    <AndroidResource Include="Resources\layout-sw600dp\Notes_Details.axml" />
+    <AndroidResource Include="Resources\layout-sw480dp\Notes_Details.axml" />
+    <AndroidResource Include="Resources\layout-sw320dp\Notes_Details.axml" />
   </ItemGroup>
   <Import Project="..\..\Rock.Mobile\Rock.Mobile.projitems" Label="Shared" Condition="Exists('..\..\Rock.Mobile\Rock.Mobile.projitems')" />
   <Import Project="..\..\Rock\Rock.Client\Rock.Client.Models.projitems" Label="Shared" Condition="Exists('..\..\Rock\Rock.Client\Rock.Client.Models.projitems')" />

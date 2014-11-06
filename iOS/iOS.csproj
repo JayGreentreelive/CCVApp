@@ -347,6 +347,14 @@
     <Compile Include="Tasks\Give\GIveMainPageUIViewController.designer.cs">
       <DependentUpon>GIveMainPageUIViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="Tasks\Notes\NotesDetailsUIViewController.cs" />
+    <Compile Include="Tasks\Notes\NotesDetailsUIViewController.designer.cs">
+      <DependentUpon>NotesDetailsUIViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tasks\Notes\NotesMainUIViewController.cs" />
+    <Compile Include="Tasks\Notes\NotesMainUIViewController.designer.cs">
+      <DependentUpon>NotesMainUIViewController.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="..\..\Rock\Rock.Client\Rock.Client.Models.projitems" Label="Shared" Condition="Exists('..\..\Rock\Rock.Client\Rock.Client.Models.projitems')" />
   <Import Project="..\..\Rock.Mobile\Rock.Mobile.projitems" Label="Shared" Condition="Exists('..\..\Rock.Mobile\Rock.Mobile.projitems')" />
@@ -361,6 +369,7 @@
     <InterfaceDefinition Include="UserManagement\UserManagement.storyboard" />
     <InterfaceDefinition Include="Tasks\Prayer\PrayerStoryboard_iPhone.storyboard" />
     <InterfaceDefinition Include="Tasks\GroupFinder\GroupFinderStoryboard_iPhone.storyboard" />
+    <InterfaceDefinition Include="Tasks\Notes\NotesStoryboard_iPhone.storyboard" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\Fonts\" />

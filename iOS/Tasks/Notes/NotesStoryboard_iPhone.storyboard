@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4443" systemVersion="13A451" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="5">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+    </dependencies>
+    <scenes>
+        <scene sceneID="4">
+            <objects>
+                <viewController id="5" sceneMemberID="viewController" storyboardIdentifier="MainPageViewController" customClass="NotesMainUIViewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="2"/>
+                        <viewControllerLayoutGuide type="bottom" id="3"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="6">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="top" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="102" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" autoresizesSubviews="YES">
+                                <rect key="frame" x="0.0" y="45" width="320" height="523"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" colorSpace="calibratedRGB" red="1" green="1" blue="1" alpha="1"/>
+                            </tableView>
+                        </subviews>
+                        <constraints>
+                        </constraints>
+                        <color key="tintColor" colorSpace="calibratedRGB" red="1" green="1" blue="1" alpha="1"/>
+                    </view>
+                    <connections>
+                        <outlet property="NotesTableView" destination="102" id="name-outlet-102"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-234" y="-289"/>
+        </scene>
+        <scene sceneID="15">
+            <objects>
+                <viewController id="16" sceneMemberID="viewController" storyboardIdentifier="NotesDetailsUIViewController" customClass="NotesDetailsUIViewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="13"/>
+                        <viewControllerLayoutGuide type="bottom" id="14"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="17">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" customColorSpace="calibratedWhite" colorSpace="calibratedRGB" red="0.082352941176470587" green="0.082352941176470587" blue="0.082352941176470587" alpha="1"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="top" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="168" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" autoresizesSubviews="YES">
+                                <rect key="frame" x="0.0" y="45" width="320" height="523"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" colorSpace="calibratedRGB" red="1" green="1" blue="1" alpha="1"/>
+                            </tableView>
+                        </subviews>
+                    </view>
+                    <connections>
+                        <outlet property="SeriesTable" destination="168" id="name-outlet-168"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="18" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="188" y="-287"/>
+        </scene>
+    </scenes>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+    <resources>
+        <image name="Default-568h.png" width="640" height="1136"/>
+        <image name="spot_mask.png" width="128" height="128"/>
+        <image name="me.jpg" width="471" height="480"/>
+        <image name="ccvLogo.png" width="57" height="28"/>
+        <image name="cheeseburger.png" width="22" height="19"/>
+        <image name="notes.png" width="31" height="38"/>
+        <image name="info.png" width="38" height="38"/>
+        <image name="watch.png" width="38" height="39"/>
+        <image name="groupfinder.png" width="33" height="42"/>
+        <image name="prayer.png" width="47" height="35"/>
+        <image name="give.png" width="44" height="35"/>
+        <image name="noprofile.png" width="223" height="223"/>
+        <image name="addphoto.png" width="223" height="223"/>
+        <image name="Default.png" width="320" height="480"/>
+        <image name="Icon-60.png" width="120" height="120"/>
+        <image name="Icon.png" width="57" height="57"/>
+        <image name="news_general_1.png" width="640" height="434"/>
+        <image name="news_general_2.png" width="640" height="434"/>
+        <image name="news_general_3.png" width="640" height="434"/>
+        <image name="IMG_0079.JPG" width="1280" height="960"/>
+        <image name="news_general_1_header.png" width="560" height="192"/>
+        <image name="news_general_2_header.png" width="560" height="192"/>
+        <image name="news_general_3_header.png" width="560" height="192"/>
+    </resources>
+</document>

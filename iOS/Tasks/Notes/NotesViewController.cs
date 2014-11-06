@@ -9,6 +9,9 @@ using MonoTouch.CoreGraphics;
 
 using Rock.Mobile.Network;
 using CCVApp.Shared.Notes;
+using RestSharp;
+using System.Net;
+using System.Text;
 
 namespace iOS
 {
@@ -192,35 +195,6 @@ namespace iOS
             // Release any cached data, images, etc that aren't in use.
         }
 
-        public void MakeActive( )
-        {
-            UIApplication.SharedApplication.IdleTimerDisabled = true;
-        }
-
-        public void MakeInActive( )
-        {
-            SaveNoteState( );
-
-            UIApplication.SharedApplication.IdleTimerDisabled = false;
-        }
-
-        public void OnResignActive( )
-        {
-            SaveNoteState( );
-        }
-
-        public void DidEnterBackground( )
-        {
-            SaveNoteState( );
-        }
-
-        public void WillTerminate( )
-        {
-            SaveNoteState( );
-
-            DestroyNotes( );
-        }
-
         protected void SaveNoteState( )
         {
             // request quick backgrounding so we can save our user notes
@@ -315,6 +289,28 @@ namespace iOS
             #endif
         }
 
+        public override void ViewDidAppear(bool animated)
+        {
+            base.ViewDidAppear(animated);
+            UIApplication.SharedApplication.IdleTimerDisabled = true;
+        }
+
+        public override void ViewWillDisappear(bool animated)
+        {
+            base.ViewWillDisappear(animated);
+
+            ViewResigning( );
+        }
+
+        /// <summary>
+        /// Called when the view will dissapear, or when the task sees that the app is going into the background.
+        /// </summary>
+        public void ViewResigning()
+        {
+            SaveNoteState( );
+            UIApplication.SharedApplication.IdleTimerDisabled = false;
+        }
+
         public void ShareNotes()
         {
             string emailNote;
@@ -366,7 +362,7 @@ namespace iOS
         public bool TouchingUserNote( NSSet touches, UIEvent evt )
         {
             UITouch touch = touches.AnyObject as UITouch;
-            if (touch != null)
+            if (touch != null && Note != null)
             {
                 return Note.TouchingUserNote( touch.LocationInView( UIScrollView ) );
             }
@@ -585,15 +581,23 @@ namespace iOS
                 // if we don't have BOTH xml strings, re-download
                 if( noteXml == null || styleSheetXml == null )
                 {
-                    HttpWebRequest.Instance.MakeAsyncRequest( CCVApp.Shared.Config.Note.BaseURL + NoteName + CCVApp.Shared.Config.Note.Extension, (Exception ex, Dictionary<string, string> responseHeaders, string body ) =>
+                    //download the notes
+                    Rock.Mobile.Network.HttpRequest request = new HttpRequest();
+
+                    RestRequest restRequest = new RestRequest( Method.GET );
+                    restRequest.RequestFormat = DataFormat.Xml;
+
+                    request.ExecuteAsync( NoteName, restRequest, 
+                        delegate(System.Net.HttpStatusCode statusCode, string statusDescription, byte[] model )
                         {
-                            if( ex == null )
+                            if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) )
                             {
+                                string body = Encoding.UTF8.GetString(model, 0, model.Length);
                                 HandleNotePreReqs( body, null );
                             }
                             else
                             {
-                                ReportException( "NoteScript Download Error", ex );
+                                ReportException( "NoteScript Download Error", null );
                             }
                         } );
                 }
@@ -631,7 +635,12 @@ namespace iOS
 
                         try
                         {
-                            Note.Create( UIScrollView.Bounds.Width, UIScrollView.Bounds.Height, this.UIScrollView, NoteName + CCVApp.Shared.Config.Note.UserNoteSuffix );
+                            // build the filename of the locally stored user data. If there is no "/" because it isn't a URL,
+                            // we'll end up using the base name, which is what we want.
+                            int lastSlashIndex = NoteName.LastIndexOf( "/" ) + 1;
+                            string noteName = NoteName.Substring( lastSlashIndex );
+
+                            Note.Create( UIScrollView.Bounds.Width, UIScrollView.Bounds.Height, this.UIScrollView, noteName + CCVApp.Shared.Config.Note.UserNoteSuffix );
 
                             // enable scrolling
                             UIScrollView.ScrollEnabled = true;
@@ -669,7 +678,7 @@ namespace iOS
                     // explain that we couldn't generate notes
                     UIAlertView alert = new UIAlertView( );
                     alert.Title = "Note Error";
-                    alert.Message = errorMsg + "\n" + e.Message;
+                    alert.Message = errorMsg + "\n" + e != null ? e.Message : "";
                     alert.AddButton( "Ok" );
                     alert.Show( );
 

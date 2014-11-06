@@ -8,19 +8,35 @@ namespace Droid
         {
             public class NotesTask : Task
             {
-                NotesFragment MainPage { get; set; }
+                TaskFragment ActiveFragment { get; set; }
+
+                NotesFragment NotesPage { get; set; }
+                NotesPrimaryFragment MainPage { get; set; }
+                NotesDetailsFragment DetailsPage { get; set; }
 
                 public NotesTask( NavbarFragment navFragment ) : base( navFragment )
                 {
                     // create our fragments (which are basically equivalent to iOS ViewControllers)
-                    MainPage = (NotesFragment) NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.Notes.NotesFragment" );
+                    MainPage = (NotesPrimaryFragment) NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.Notes.NotesPrimaryFragment" );
                     if( MainPage == null )
                     {
-                        MainPage = new NotesFragment( );
+                        MainPage = new NotesPrimaryFragment( );
+                    }
+
+                    DetailsPage = (NotesDetailsFragment)NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.Notes.NotesDetailsFragment" );
+                    if ( DetailsPage == null )
+                    {
+                        DetailsPage = new NotesDetailsFragment( );
+                    }
+
+                    NotesPage = (NotesFragment) NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.Notes.NotesFragment" );
+                    if( NotesPage == null )
+                    {
+                        NotesPage = new NotesFragment( );
                     }
 
                     // for now, let the note name be the previous saturday
-                    DateTime time = DateTime.UtcNow;
+                    /*DateTime time = DateTime.UtcNow;
 
                     // if it's not saturday, find the date of the past saturday
                     if( time.DayOfWeek != DayOfWeek.Saturday )
@@ -33,10 +49,12 @@ namespace Droid
                     MainPage.NoteName = "sample_note";
                     #else
                     MainPage.NoteName = string.Format("{0}_{1}_{2}_{3}", CCVApp.Shared.Config.Note.NamePrefix, time.Month, time.Day, time.Year );
-                    #endif
+                    #endif*/
                     //
 
                     MainPage.ParentTask = this;
+                    DetailsPage.ParentTask = this;
+                    NotesPage.ParentTask = this;
                 }
 
                 public override void SpringboardDidAnimate( bool springboardRevealed )
@@ -49,7 +67,7 @@ namespace Droid
                         {
                             TaskReadyForFragmentDisplay = true;
 
-                            MainPage.TaskReadyForFragmentDisplay( );
+                            NotesPage.TaskReadyForFragmentDisplay( );
                         }
                     }
                 }
@@ -57,6 +75,9 @@ namespace Droid
                 public override void Activate( bool forResume )
                 {
                     base.Activate( forResume );
+
+                    // we'll always start at the main page
+                    ActiveFragment = MainPage;
 
                     // if the springboard is already closed, set ourselves as ready.
                     // This is always called before any fragment methods, so the fragment
@@ -82,12 +103,44 @@ namespace Droid
 
                 public override bool CanContainerPan()
                 {
-                    return MainPage.MovingUserNote ? false : true;
+                    NotesFragment notesFragment = ActiveFragment as NotesFragment;
+                    if ( notesFragment != null )
+                    {
+                        return notesFragment.MovingUserNote ? false : true;
+                    }
+                    else
+                    {
+                        return true;
+                    }
                 }
 
                 public override TaskFragment StartingFragment()
                 {
                     return MainPage;
+                }
+
+                public override void OnClick(Android.App.Fragment source, int buttonId)
+                {
+                    // only handle input if the springboard is closed
+                    if ( NavbarFragment.ShouldTaskAllowInput( ) )
+                    {
+                        // decide what to do.
+                        if ( source == MainPage )
+                        {
+                            DetailsPage.Messages = MainPage.Series[ buttonId ].Messages;
+                            PresentFragment( DetailsPage, true );
+
+                            ActiveFragment = DetailsPage;
+                        }
+                        else if ( source == DetailsPage )
+                        {
+                            NotesPage.NoteName = DetailsPage.Messages[ buttonId ].NoteUrl;
+                            NotesPage.NotePresentableName = DetailsPage.Messages[ buttonId ].Name;
+
+                            PresentFragment( NotesPage, true );
+                            ActiveFragment = NotesPage;
+                        }
+                    }
                 }
             }
         }

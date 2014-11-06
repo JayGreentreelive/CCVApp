@@ -138,50 +138,59 @@ namespace Droid
 			// aapt resource value: 0x7f050016
 			public const int news_primary_list = 2131034134;
 			
+			// aapt resource value: 0x7f05001a
+			public const int notes_details_list = 2131034138;
+			
+			// aapt resource value: 0x7f05001b
+			public const int notes_primary_activityIndicator = 2131034139;
+			
+			// aapt resource value: 0x7f05001c
+			public const int notes_primary_list = 2131034140;
+			
 			// aapt resource value: 0x7f050017
 			public const int notes_relative_layout = 2131034135;
 			
-			// aapt resource value: 0x7f05001a
-			public const int prayer_create_activityIndicator = 2131034138;
-			
-			// aapt resource value: 0x7f05001b
-			public const int prayer_create_firstNameText = 2131034139;
-			
-			// aapt resource value: 0x7f05001c
-			public const int prayer_create_lastNameText = 2131034140;
-			
 			// aapt resource value: 0x7f05001d
-			public const int prayer_create_requestText = 2131034141;
+			public const int prayer_create_activityIndicator = 2131034141;
 			
 			// aapt resource value: 0x7f05001e
-			public const int prayer_create_submitButton = 2131034142;
+			public const int prayer_create_firstNameText = 2131034142;
 			
 			// aapt resource value: 0x7f05001f
-			public const int prayer_primary_activityIndicator = 2131034143;
+			public const int prayer_create_lastNameText = 2131034143;
 			
 			// aapt resource value: 0x7f050020
-			public const int prayer_primary_createPrayerButton = 2131034144;
-			
-			// aapt resource value: 0x7f050026
-			public const int profile_doneButton = 2131034150;
-			
-			// aapt resource value: 0x7f050025
-			public const int profile_email = 2131034149;
+			public const int prayer_create_requestText = 2131034144;
 			
 			// aapt resource value: 0x7f050021
-			public const int profile_first_name = 2131034145;
-			
-			// aapt resource value: 0x7f050023
-			public const int profile_last_name = 2131034147;
-			
-			// aapt resource value: 0x7f050027
-			public const int profile_logoutButton = 2131034151;
+			public const int prayer_create_submitButton = 2131034145;
 			
 			// aapt resource value: 0x7f050022
-			public const int profile_middle_name = 2131034146;
+			public const int prayer_primary_activityIndicator = 2131034146;
+			
+			// aapt resource value: 0x7f050023
+			public const int prayer_primary_createPrayerButton = 2131034147;
+			
+			// aapt resource value: 0x7f050029
+			public const int profile_doneButton = 2131034153;
+			
+			// aapt resource value: 0x7f050028
+			public const int profile_email = 2131034152;
 			
 			// aapt resource value: 0x7f050024
-			public const int profile_nickname = 2131034148;
+			public const int profile_first_name = 2131034148;
+			
+			// aapt resource value: 0x7f050026
+			public const int profile_last_name = 2131034150;
+			
+			// aapt resource value: 0x7f05002a
+			public const int profile_logoutButton = 2131034154;
+			
+			// aapt resource value: 0x7f050025
+			public const int profile_middle_name = 2131034149;
+			
+			// aapt resource value: 0x7f050027
+			public const int profile_nickname = 2131034151;
 			
 			// aapt resource value: 0x7f050019
 			public const int progressBar = 2131034137;
@@ -192,89 +201,89 @@ namespace Droid
 			// aapt resource value: 0x7f05000c
 			public const int springboard = 2131034124;
 			
-			// aapt resource value: 0x7f050041
-			public const int springboard_about_button = 2131034177;
-			
-			// aapt resource value: 0x7f050040
-			public const int springboard_about_frame = 2131034176;
-			
-			// aapt resource value: 0x7f050042
-			public const int springboard_about_icon = 2131034178;
+			// aapt resource value: 0x7f050044
+			public const int springboard_about_button = 2131034180;
 			
 			// aapt resource value: 0x7f050043
-			public const int springboard_about_text = 2131034179;
+			public const int springboard_about_frame = 2131034179;
 			
-			// aapt resource value: 0x7f050039
-			public const int springboard_give_button = 2131034169;
+			// aapt resource value: 0x7f050045
+			public const int springboard_about_icon = 2131034181;
 			
-			// aapt resource value: 0x7f050038
-			public const int springboard_give_frame = 2131034168;
-			
-			// aapt resource value: 0x7f05003a
-			public const int springboard_give_icon = 2131034170;
-			
-			// aapt resource value: 0x7f05003b
-			public const int springboard_give_text = 2131034171;
-			
-			// aapt resource value: 0x7f050031
-			public const int springboard_groupfinder_button = 2131034161;
-			
-			// aapt resource value: 0x7f050030
-			public const int springboard_groupfinder_frame = 2131034160;
-			
-			// aapt resource value: 0x7f050032
-			public const int springboard_groupfinder_icon = 2131034162;
-			
-			// aapt resource value: 0x7f050033
-			public const int springboard_groupfinder_text = 2131034163;
-			
-			// aapt resource value: 0x7f05002b
-			public const int springboard_login_button = 2131034155;
-			
-			// aapt resource value: 0x7f05002d
-			public const int springboard_news_button = 2131034157;
-			
-			// aapt resource value: 0x7f05002c
-			public const int springboard_news_frame = 2131034156;
-			
-			// aapt resource value: 0x7f05002e
-			public const int springboard_news_icon = 2131034158;
-			
-			// aapt resource value: 0x7f05002f
-			public const int springboard_news_text = 2131034159;
-			
-			// aapt resource value: 0x7f05003d
-			public const int springboard_notes_button = 2131034173;
+			// aapt resource value: 0x7f050046
+			public const int springboard_about_text = 2131034182;
 			
 			// aapt resource value: 0x7f05003c
-			public const int springboard_notes_frame = 2131034172;
+			public const int springboard_give_button = 2131034172;
+			
+			// aapt resource value: 0x7f05003b
+			public const int springboard_give_frame = 2131034171;
+			
+			// aapt resource value: 0x7f05003d
+			public const int springboard_give_icon = 2131034173;
 			
 			// aapt resource value: 0x7f05003e
-			public const int springboard_notes_icon = 2131034174;
-			
-			// aapt resource value: 0x7f05003f
-			public const int springboard_notes_text = 2131034175;
-			
-			// aapt resource value: 0x7f050035
-			public const int springboard_prayer_button = 2131034165;
+			public const int springboard_give_text = 2131034174;
 			
 			// aapt resource value: 0x7f050034
-			public const int springboard_prayer_frame = 2131034164;
+			public const int springboard_groupfinder_button = 2131034164;
+			
+			// aapt resource value: 0x7f050033
+			public const int springboard_groupfinder_frame = 2131034163;
+			
+			// aapt resource value: 0x7f050035
+			public const int springboard_groupfinder_icon = 2131034165;
 			
 			// aapt resource value: 0x7f050036
-			public const int springboard_prayer_icon = 2131034166;
+			public const int springboard_groupfinder_text = 2131034166;
+			
+			// aapt resource value: 0x7f05002e
+			public const int springboard_login_button = 2131034158;
+			
+			// aapt resource value: 0x7f050030
+			public const int springboard_news_button = 2131034160;
+			
+			// aapt resource value: 0x7f05002f
+			public const int springboard_news_frame = 2131034159;
+			
+			// aapt resource value: 0x7f050031
+			public const int springboard_news_icon = 2131034161;
+			
+			// aapt resource value: 0x7f050032
+			public const int springboard_news_text = 2131034162;
+			
+			// aapt resource value: 0x7f050040
+			public const int springboard_notes_button = 2131034176;
+			
+			// aapt resource value: 0x7f05003f
+			public const int springboard_notes_frame = 2131034175;
+			
+			// aapt resource value: 0x7f050041
+			public const int springboard_notes_icon = 2131034177;
+			
+			// aapt resource value: 0x7f050042
+			public const int springboard_notes_text = 2131034178;
+			
+			// aapt resource value: 0x7f050038
+			public const int springboard_prayer_button = 2131034168;
 			
 			// aapt resource value: 0x7f050037
-			public const int springboard_prayer_text = 2131034167;
+			public const int springboard_prayer_frame = 2131034167;
 			
-			// aapt resource value: 0x7f05002a
-			public const int springboard_profile_image = 2131034154;
+			// aapt resource value: 0x7f050039
+			public const int springboard_prayer_icon = 2131034169;
 			
-			// aapt resource value: 0x7f050028
-			public const int springboard_relative_layout = 2131034152;
+			// aapt resource value: 0x7f05003a
+			public const int springboard_prayer_text = 2131034170;
 			
-			// aapt resource value: 0x7f050029
-			public const int springboard_relative_layout_2 = 2131034153;
+			// aapt resource value: 0x7f05002d
+			public const int springboard_profile_image = 2131034157;
+			
+			// aapt resource value: 0x7f05002b
+			public const int springboard_relative_layout = 2131034155;
+			
+			// aapt resource value: 0x7f05002c
+			public const int springboard_relative_layout_2 = 2131034156;
 			
 			static Id()
 			{
@@ -317,16 +326,22 @@ namespace Droid
 			public const int Notes = 2130903048;
 			
 			// aapt resource value: 0x7f030009
-			public const int Prayer_Create = 2130903049;
+			public const int Notes_Details = 2130903049;
 			
 			// aapt resource value: 0x7f03000a
-			public const int Prayer_Primary = 2130903050;
+			public const int Notes_Primary = 2130903050;
 			
 			// aapt resource value: 0x7f03000b
-			public const int Profile = 2130903051;
+			public const int Prayer_Create = 2130903051;
 			
 			// aapt resource value: 0x7f03000c
-			public const int Springboard = 2130903052;
+			public const int Prayer_Primary = 2130903052;
+			
+			// aapt resource value: 0x7f03000d
+			public const int Profile = 2130903053;
+			
+			// aapt resource value: 0x7f03000e
+			public const int Springboard = 2130903054;
 			
 			static Layout()
 			{

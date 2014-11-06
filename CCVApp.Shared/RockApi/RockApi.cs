@@ -4,6 +4,7 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Net;
 using System.Collections.Generic;
+using Rock.Mobile.Network;
 
 namespace CCVApp
 {
@@ -26,13 +27,8 @@ namespace CCVApp
                 static RockApi _Instance = new RockApi();
                 public static RockApi  Instance { get { return _Instance; } }
 
-                /// <summary>
-                /// The timeout after which the REST call attempt is given up.
-                /// </summary>
-                const int RequestTimeoutMS = 15000;
-
                 const string COOKIE_FILENAME = "cookies.dat";
-                const string BaseUrl = "http://rock.ccvonline.com";
+                const string BaseUrl = "http://rock.ccvonline.com/";
 
                 /// <summary>
                 /// End point for logging in
@@ -71,30 +67,30 @@ namespace CCVApp
                 CookieContainer CookieContainer { get; set; }
 
                 /// <summary>
-                /// Request Response delegate that does not require a returned object
+                /// Our object for making REST calls.
                 /// </summary>
-                public delegate void RequestResult(System.Net.HttpStatusCode statusCode, string statusDescription);
-
-                /// <summary>
-                /// Request response delegate that does require a returned object
-                /// </summary>
-                public delegate void RequestResult<TModel>(System.Net.HttpStatusCode statusCode, string statusDescription, TModel model);
+                /// <value>The request.</value>
+                HttpRequest Request { get; set; }
 
                 RockApi( )
                 {
                     CookieContainer = new System.Net.CookieContainer();
+
+                    Request = new HttpRequest();
+                    //Request.Format = DataFormat.Json;
+                    Request.CookieContainer = CookieContainer;
                 }
 
-                public void Login( string username, string password, RequestResult resultHandler )
+                public void Login( string username, string password, HttpRequest.RequestResult resultHandler )
                 {
                     RestRequest request = new RestRequest( Method.POST );
-                    request.Resource = AuthLoginEndPoint;
+                    //request.Resource = AuthLoginEndPoint;
 
                     request.AddParameter( "Username", username );
                     request.AddParameter( "Password", password );
                     request.AddParameter( "Persisted", true );
 
-                    ExecuteAsync( request, delegate(HttpStatusCode statusCode, string statusDescription, object model) 
+                    Request.ExecuteAsync( BaseUrl + AuthLoginEndPoint, request, delegate(HttpStatusCode statusCode, string statusDescription, object model) 
                         {
                             // if login was a success, save our cookie
                             if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
@@ -116,60 +112,62 @@ namespace CCVApp
                     CookieContainer = new CookieContainer();
                 }
 
-                public void GetPrayers( RequestResult< List<Rock.Client.PrayerRequest> > resultHandler )
+                public void GetPrayers( HttpRequest.RequestResult< List<Rock.Client.PrayerRequest> > resultHandler )
                 {
                     // request a profile by the username. If no username is specified, we'll use the logged in user's name.
                     RestRequest request = new RestRequest( Method.GET );
-                    request.Resource = GetPrayerRequestsEndPoint;
+                    //request.Resource = GetPrayerRequestsEndPoint;
 
-                    ExecuteAsync< List<Rock.Client.PrayerRequest> >( request, resultHandler);
+                    Request.ExecuteAsync< List<Rock.Client.PrayerRequest> >( BaseUrl + GetPrayerRequestsEndPoint, request, resultHandler);
                 }
 
-                public void PutPrayer( Rock.Client.PrayerRequest prayer, RequestResult resultHandler )
+                public void PutPrayer( Rock.Client.PrayerRequest prayer, HttpRequest.RequestResult resultHandler )
                 {
                     // request a profile by the username. If no username is specified, we'll use the logged in user's name.
                     RestRequest request = new RestRequest( Method.POST );
-                    request.Resource = PutPrayerRequestEndPoint;
+                    //request.Resource = PutPrayerRequestEndPoint;
 
                     request.RequestFormat = DataFormat.Json;
                     request.AddBody( prayer );
 
-                    ExecuteAsync( request, resultHandler);
+                    Request.ExecuteAsync( BaseUrl + PutPrayerRequestEndPoint, request, resultHandler);
                 }
 
-                public void GetProfile( string userName, RequestResult<Rock.Client.Person> resultHandler )
+                public void GetProfile( string userName, HttpRequest.RequestResult<Rock.Client.Person> resultHandler )
                 {
                     // request a profile by the username. If no username is specified, we'll use the logged in user's name.
                     RestRequest request = new RestRequest( Method.GET );
-                    request.Resource = GetProfileEndPoint;
-                    request.Resource += string.IsNullOrEmpty( userName ) == true ? RockMobileUser.Instance.Username : userName;
+                    //request.Resource = GetProfileEndPoint;
+                    //request.Resource += string.IsNullOrEmpty( userName ) == true ? RockMobileUser.Instance.Username : userName;
+                    string requestUrl = BaseUrl + GetProfileEndPoint;
+                    requestUrl += string.IsNullOrEmpty( userName ) == true ? RockMobileUser.Instance.Username : userName;
 
-                    ExecuteAsync<Rock.Client.Person>( request, resultHandler);
+                    Request.ExecuteAsync<Rock.Client.Person>( requestUrl, request, resultHandler);
                 }
 
-                public void UpdateProfile( Rock.Client.Person person, RequestResult resultHandler )
+                public void UpdateProfile( Rock.Client.Person person, HttpRequest.RequestResult resultHandler )
                 {
                     // request a profile by the username. If no username is specified, we'll use the logged in user's name.
                     RestRequest request = new RestRequest( Method.PUT );
-                    request.Resource = PutProfileEndPoint;
-                    request.Resource += person.Id;
-
+                    //request.Resource = PutProfileEndPoint;
+                    //request.Resource += person.Id;
                     request.RequestFormat = DataFormat.Json;
                     request.AddBody( person );
 
-                    ExecuteAsync( request, resultHandler);
+                    Request.ExecuteAsync( BaseUrl + PutProfileEndPoint + person.Id, request, resultHandler);
                 }
 
-                public void GetProfilePicture( string photoId, int dimensionSize, RequestResult<MemoryStream> resultHandler )
+                public void GetProfilePicture( string photoId, int dimensionSize, HttpRequest.RequestResult<MemoryStream> resultHandler )
                 {
                     // request a profile by the username. If no username is specified, we'll use the logged in user's name.
                     RestRequest request = new RestRequest( Method.GET );
-                    request.Resource = string.Format( GetProfilePictureEndPoint, photoId, dimensionSize );
+                    //request.Resource = string.Format( GetProfilePictureEndPoint, photoId, dimensionSize );
+                    string requestUrl = BaseUrl + string.Format( GetProfilePictureEndPoint, photoId, dimensionSize );
 
-                    ExecuteAsync<RestSharp.RestResponse>( request, delegate(HttpStatusCode statusCode, string statusDescription, RestSharp.RestResponse model) 
+                    // get the raw response
+                    Request.ExecuteAsync( requestUrl, request, delegate(HttpStatusCode statusCode, string statusDescription, byte[] model) 
                         {
-                            // call the provided handler and drop the dummy object
-                            MemoryStream memoryStream = new MemoryStream( model.RawBytes );
+                            MemoryStream memoryStream = new MemoryStream( model );
 
                             resultHandler( statusCode, statusDescription, memoryStream );
 
@@ -189,68 +187,16 @@ namespace CCVApp
                     ExecuteAsync( request, resultHandler);
                 }*/
 
-                public void GetLaunchData( RequestResult<RockLaunchData.LaunchData> resultHandler )
+                public void GetLaunchData( HttpRequest.RequestResult<RockLaunchData.LaunchData> resultHandler )
                 {
                     // todo: add a "get LaunchData" end point.
                     resultHandler( HttpStatusCode.OK, "Success", RockLaunchData.Instance.Data );
                 }
 
-                public void GetGeneralData( RequestResult<RockGeneralData.GeneralData> resultHandler )
+                public void GetGeneralData( HttpRequest.RequestResult<RockGeneralData.GeneralData> resultHandler )
                 {
                     // todo: add a "get GeneralData" end point.
                     resultHandler( HttpStatusCode.OK, "Success", RockGeneralData.Instance.Data );
-                }
-
-                /// <summary>
-                /// Wrapper for ExecuteAsync<> that requires no generic Type.
-                /// </summary>
-                /// <param name="request">Request.</param>
-                /// <param name="resultHandler">Result handler.</param>
-                private void ExecuteAsync( RestRequest request, RequestResult resultHandler )
-                {
-                    ExecuteAsync<object>( request, delegate(HttpStatusCode statusCode, string statusDescription, object model) 
-                        {
-                            // call the provided handler and drop the dummy object
-                            resultHandler( statusCode, statusDescription );
-                        });
-                }
-
-                private void ExecuteAsync<TModel>( RestRequest request, RequestResult<TModel> resultHandler ) where TModel : new( )
-                {
-                    RestClient restClient = new RestClient( );
-                    restClient.BaseUrl = BaseUrl;
-                    restClient.CookieContainer = CookieContainer;
-
-                    // don't wait longer than 15 seconds
-                    request.Timeout = RequestTimeoutMS;
-
-                    // if the TModel is RestResponse, that implies they want the actual response, and no parsing.
-                    if( typeof( TModel ) == typeof( RestResponse ) )
-                    {
-                        restClient.ExecuteAsync( request, response => 
-                            {
-                                // exception or not, notify the caller of the desponse
-                                Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate 
-                                    { 
-                                        resultHandler( response != null ? response.StatusCode : HttpStatusCode.RequestTimeout, 
-                                                       response != null ? response.StatusDescription : "Client has no connection.", 
-                                                       (TModel)response );
-                                    });
-                            });
-                    }
-                    else
-                    {
-                        restClient.ExecuteAsync<TModel>( request, response => 
-                            {
-                                // exception or not, notify the caller of the desponse
-                                Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate 
-                                    { 
-                                        resultHandler( response != null ? response.StatusCode : HttpStatusCode.RequestTimeout, 
-                                                       response != null ? response.StatusDescription : "Client has no connection.", 
-                                                       response != null ? response.Data : new TModel() );
-                                    });
-                            });
-                    }
                 }
 
                 private void SaveCookieToDevice( )
@@ -309,7 +255,7 @@ namespace CCVApp
                     LoadCookieFromDevice( );
                 }
 
-                public void SyncWithServer( RequestResult result )
+                public void SyncWithServer( HttpRequest.RequestResult result )
                 {
                     Console.WriteLine( "Sync with server" );
 

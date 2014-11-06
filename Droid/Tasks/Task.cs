@@ -38,6 +38,19 @@ namespace Droid
 
             public virtual void Activate( bool forResume )
             {
+                /*FragmentManager fm = NavbarFragment.FragmentManager;
+                int count = fm.BackStackEntryCount;
+                for( int i = 0; i < count; i++ ) 
+                {
+                    fm.PopBackStackImmediate( );
+                }*/
+
+                //FragmentManager.popBackStack(String name,
+                  //  FragmentManager.POP_BACK_STACK_INCLUSIVE)
+
+
+                NavbarFragment.FragmentManager.PopBackStack( null, PopBackStackFlags.Inclusive );
+
                 // present our starting fragment, and don't allow back navigation
                 PresentFragment( StartingFragment( ), false );
             }

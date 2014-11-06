@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.IO;
+using Rock.Mobile.Network;
 
 namespace CCVApp
 {
@@ -48,7 +49,7 @@ namespace CCVApp
                     Data = new LaunchData( );
                 }
 
-                public void GetLaunchData( RockApi.RequestResult launchDataResult )
+                public void GetLaunchData( HttpRequest.RequestResult launchDataResult )
                 {
                     Console.WriteLine( "Get LaunchData" );
                     RockApi.Instance.GetLaunchData(delegate(System.Net.HttpStatusCode statusCode, string statusDescription, LaunchData model)
