@@ -138,9 +138,9 @@ namespace Droid
             Elements = new List<SpringboardElement>();
             Elements.Add( new SpringboardElement( new Droid.Tasks.News.NewsTask( NavbarFragment ), Resource.Id.springboard_news_frame, Resource.Id.springboard_news_icon, Resource.Id.springboard_news_button ) );
             Elements.Add( new SpringboardElement( new Droid.Tasks.Placeholder.PlaceholderTask( NavbarFragment ), Resource.Id.springboard_groupfinder_frame, Resource.Id.springboard_groupfinder_icon, Resource.Id.springboard_groupfinder_button ) );
-            Elements.Add( new SpringboardElement( new Droid.Tasks.Give.GiveTask( NavbarFragment ), Resource.Id.springboard_give_frame, Resource.Id.springboard_give_icon, Resource.Id.springboard_give_button ) );
-            Elements.Add( new SpringboardElement( new Droid.Tasks.Prayer.PrayerTask( NavbarFragment ), Resource.Id.springboard_prayer_frame, Resource.Id.springboard_prayer_icon, Resource.Id.springboard_prayer_button ) );
             Elements.Add( new SpringboardElement( new Droid.Tasks.Notes.NotesTask( NavbarFragment ), Resource.Id.springboard_notes_frame, Resource.Id.springboard_notes_icon, Resource.Id.springboard_notes_button ) );
+            Elements.Add( new SpringboardElement( new Droid.Tasks.Prayer.PrayerTask( NavbarFragment ), Resource.Id.springboard_prayer_frame, Resource.Id.springboard_prayer_icon, Resource.Id.springboard_prayer_button ) );
+            Elements.Add( new SpringboardElement( new Droid.Tasks.Give.GiveTask( NavbarFragment ), Resource.Id.springboard_give_frame, Resource.Id.springboard_give_icon, Resource.Id.springboard_give_button ) );
             Elements.Add( new SpringboardElement( new Droid.Tasks.About.AboutTask( NavbarFragment ), Resource.Id.springboard_about_frame, Resource.Id.springboard_about_icon, Resource.Id.springboard_about_button ) );
 
             ActiveElementIndex = 0;
@@ -401,11 +401,11 @@ namespace Droid
             if( RockMobileUser.Instance.LoggedIn )
             {
                 // get their profile
-                LoginProfileButton.Text = RockMobileUser.Instance.PreferredName( ) + " " + RockMobileUser.Instance.Person.LastName;
+                LoginProfileButton.Text = CCVApp.Shared.Config.Springboard.LoggedIn_Prefix + " " + RockMobileUser.Instance.PreferredName( );
             }
             else
             {
-                LoginProfileButton.Text = "Login to enable additional features.";
+                LoginProfileButton.Text = CCVApp.Shared.Config.Springboard.LoggedOut_Promo;
             }
 
             SetProfileImage( );

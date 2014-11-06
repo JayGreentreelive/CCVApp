@@ -16,14 +16,6 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" customColorSpace="calibratedWhite" colorSpace="calibratedRGB" red="0" green="0" blue="0" alpha="1"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="11" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO">
-                                <rect key="frame" x="102" y="41" width="117" height="30"/>
-                                <state key="normal" title="Create Prayer">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                </connections>
-                            </button>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="170" animating="YES">
                                 <rect key="frame" x="142" y="230" width="37" height="37"/>
                             </activityIndicatorView>
@@ -34,7 +26,6 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="CreatePrayerButton" destination="11" id="name-outlet-11"/>
                         <outlet property="ActivityIndicator" destination="170" id="name-outlet-170"/>
                     </connections>
                 </viewController>

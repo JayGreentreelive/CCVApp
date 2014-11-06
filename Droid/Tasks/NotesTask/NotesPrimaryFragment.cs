@@ -131,10 +131,9 @@ namespace Droid
                     ProgressBar.Visibility = ViewStates.Visible;
 
                     ParentTask.NavbarFragment.NavToolbar.SetBackButtonEnabled( false );
+                    ParentTask.NavbarFragment.NavToolbar.SetShareButtonEnabled( false, null );
+                    ParentTask.NavbarFragment.NavToolbar.SetCreateButtonEnabled( false, null );
                     ParentTask.NavbarFragment.NavToolbar.Reveal( false );
-
-                    ParentTask.NavbarFragment.NavToolbar.SetShareButtonEnabled( false );
-                    ParentTask.NavbarFragment.NavToolbar.DisplayShareButton( false, null );
 
                     // grab the series info
                     Rock.Mobile.Network.HttpRequest request = new HttpRequest();

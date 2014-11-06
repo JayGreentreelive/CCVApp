@@ -25,17 +25,21 @@ namespace iOS
 
         public override void WillShowViewController(UIViewController viewController)
         {
-            NavToolbar.DisplayShareButton( false, null );
-
             // if it's the main page, disable the back button on the toolbar
             if ( viewController == MainPage )
             {
                 NavToolbar.SetBackButtonEnabled( false );
+                NavToolbar.SetShareButtonEnabled( false, null );
+                NavToolbar.SetCreateButtonEnabled( false, null );
+
                 NavToolbar.Reveal( false );
             }
             else
             {
                 NavToolbar.SetBackButtonEnabled( true );
+                NavToolbar.SetShareButtonEnabled( false, null );
+                NavToolbar.SetCreateButtonEnabled( false, null );
+
                 NavToolbar.RevealForTime( 3.0f );
             }
         }

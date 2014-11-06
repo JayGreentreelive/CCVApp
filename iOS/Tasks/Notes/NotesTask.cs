@@ -40,20 +40,23 @@ namespace iOS
             // if the notes are active, make sure the share button gets turned on
             if ( notesVC != null )
             {
-                NavToolbar.DisplayShareButton( true, delegate
+                NavToolbar.SetBackButtonEnabled( true );
+                NavToolbar.SetCreateButtonEnabled( false, null );
+                NavToolbar.SetShareButtonEnabled( true, delegate
                     { 
                         notesVC.ShareNotes( );
                     } );
-                NavToolbar.SetBackButtonEnabled( true );
+
 
                 // go ahead and show the bar, because we're at the top of the page.
                 NavToolbar.Reveal( true );
             }
             else
             {
-                // outside of the notes, NO sharing
-                NavToolbar.DisplayShareButton( false, null );
-                NavToolbar.SetShareButtonEnabled( false );
+                // outside of the notes...
+                // turn off the share & create buttons
+                NavToolbar.SetShareButtonEnabled( false, null );
+                NavToolbar.SetCreateButtonEnabled( false, null );
 
                 // if it's the main page, disable the back button on the toolbar
                 if ( viewController == MainViewController )

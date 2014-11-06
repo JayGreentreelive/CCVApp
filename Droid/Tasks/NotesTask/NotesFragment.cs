@@ -256,7 +256,11 @@ namespace Droid
 
                     WakeLock.Acquire( );
 
-                    ParentTask.NavbarFragment.NavToolbar.DisplayShareButton( true, delegate 
+
+                    ParentTask.NavbarFragment.NavToolbar.SetBackButtonEnabled( true );
+                    ParentTask.NavbarFragment.NavToolbar.SetCreateButtonEnabled( false, null );
+                    ParentTask.NavbarFragment.NavToolbar.SetShareButtonEnabled( true, 
+                        delegate 
                         {
                             Intent sendIntent = new Intent();
                             sendIntent.SetAction( Intent.ActionSend );
@@ -272,10 +276,7 @@ namespace Droid
                             StartActivity( sendIntent );
                         } );
 
-                    ParentTask.NavbarFragment.NavToolbar.SetShareButtonEnabled( true );
-
-                    ParentTask.NavbarFragment.NavToolbar.SetBackButtonEnabled( true );
-                    ParentTask.NavbarFragment.NavToolbar.Reveal( true );
+                    ParentTask.NavbarFragment.NavToolbar.Reveal( false );
 
                     // if the task is ready, go ahead and create the notes. Alternatively, 
                     // if we are resuming from a pause, it's safe to create the notes. If we don't,

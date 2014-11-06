@@ -8,7 +8,7 @@ namespace iOS
     public class Task
     {
         protected UINavigationController ParentViewController { get; set; }
-        protected NavToolbar NavToolbar { get; set; }
+        public NavToolbar NavToolbar { get; set; }
         protected UIStoryboard Storyboard { get; set; }
 
         public Task( string storyboardName )

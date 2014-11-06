@@ -43,12 +43,17 @@ namespace Droid
 
                 public override void OnClick(Android.App.Fragment source, int buttonId)
                 {
-                    // only handle input if the springboard is open
+                    // only handle input if the springboard is closed
                     if ( NavbarFragment.ShouldTaskAllowInput( ) )
                     {
-                        if ( buttonId == Resource.Id.prayer_primary_createPrayerButton )
+                        // if the main page is the source
+                        if ( source == MainPage )
                         {
-                            PresentFragment( CreatePage, true );
+                            // and it's button id 0, goto the create page
+                            if ( buttonId == 0 )
+                            {
+                                PresentFragment( CreatePage, true );
+                            }
                         }
                     }
                 }

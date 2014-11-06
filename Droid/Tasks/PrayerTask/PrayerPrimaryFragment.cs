@@ -159,7 +159,11 @@ namespace Droid
 
                     public void Scroll( float distanceY )
                     {
-                        CurrentPrayer.Scroll( distanceY );
+                        // only process scrolling if we have an active prayer. (We won't if the prayers are still downloading)
+                        if ( CurrentPrayer != null )
+                        {
+                            CurrentPrayer.Scroll( distanceY );
+                        }
                     }
                 }
 
@@ -174,8 +178,6 @@ namespace Droid
                 PrayerCard RightPrayer { get; set; }
                 PrayerCard PostRightPrayer { get; set; }
                 RectangleF PrayerCardBounds { get; set; }
-
-                Button CreatePrayer { get; set; }
                 ProgressBar ActivityIndicator { get; set; }
 
                 public override void OnCreate( Bundle savedInstanceState )
@@ -204,7 +206,7 @@ namespace Droid
                     float cardHeight = viewRealHeight * cardSizePerc;
 
                     // setup the card positions to be to the offscreen to the left, centered on screen, and offscreen to the right
-                    float cardYOffset = ((viewRealHeight - cardHeight) / 2);
+                    float cardYOffset = viewRealHeight * .03f;
 
                     PrayerCardBounds = new RectangleF( 0, cardYOffset, this.Resources.DisplayMetrics.WidthPixels, viewRealHeight );
 
@@ -219,13 +221,6 @@ namespace Droid
 
                     Carousel.Init( view );
 
-                    // add the create prayer button
-                    CreatePrayer = (Button) view.FindViewById<Button>( Resource.Id.prayer_primary_createPrayerButton );
-                    CreatePrayer.Click += (object sender, EventArgs e ) =>
-                        {
-                            ParentTask.OnClick( this, Resource.Id.prayer_primary_createPrayerButton );
-                        };
-
                     return view;
                 }
 
@@ -234,13 +229,10 @@ namespace Droid
                     base.OnResume();
 
                     ParentTask.NavbarFragment.NavToolbar.SetBackButtonEnabled( false );
-                    ParentTask.NavbarFragment.NavToolbar.Reveal( false );
-
-                    ParentTask.NavbarFragment.NavToolbar.SetShareButtonEnabled( false );
-                    ParentTask.NavbarFragment.NavToolbar.DisplayShareButton( false, null );
+                    ParentTask.NavbarFragment.NavToolbar.SetShareButtonEnabled( false, null );
+                    ParentTask.NavbarFragment.NavToolbar.SetCreateButtonEnabled( false, null );
 
                     ActivityIndicator.Visibility = ViewStates.Visible;
-                    CreatePrayer.Enabled = false;
 
                     ActivityIndicator.BringToFront( );
                     ResetPrayerCards( );
@@ -249,7 +241,7 @@ namespace Droid
                     CCVApp.Shared.Network.RockApi.Instance.GetPrayers( delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.PrayerRequest> prayerRequests) 
                         {
                             ActivityIndicator.Visibility = ViewStates.Gone;
-                            CreatePrayer.Enabled = true;
+                            ParentTask.NavbarFragment.NavToolbar.SetCreateButtonEnabled( true, delegate{ ParentTask.OnClick( this, 0 ); } );
 
                             if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
                             {
@@ -360,8 +352,6 @@ namespace Droid
                     // if the activity indicator is visible, don't let any buttons work
                     if ( ActivityIndicator.Visibility == ViewStates.Visible )
                     {
-                        CreatePrayer.Enabled = false;
-
                         ResetPrayerCards( );
                     }
                     else if ( PrayerRequests == null || PrayerRequests.Count == 0 )

@@ -125,8 +125,6 @@ namespace Droid
             ft.Replace(Resource.Id.navtoolbar, NavToolbar);
             ft.SetTransition(FragmentTransit.FragmentFade);
             ft.Commit();
-
-            NavToolbar.DisplayBackButton( true );
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)

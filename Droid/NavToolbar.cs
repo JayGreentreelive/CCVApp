@@ -31,13 +31,15 @@ namespace Droid
         public LinearLayout LinearLayout { get; set; }
 
         Button BackButton { get; set; }
-        bool BackButtonDisplayed { get; set; }
         bool BackButtonEnabledPreSuspension { get; set; }
 
         Button ShareButton { get; set; }
-        bool ShareButtonDisplayed { get; set; }
         bool ShareButtonEnabledPreSuspension { get; set; }
         EventHandler ShareButtonDelegate { get; set; }
+
+        Button CreateButton { get; set; }
+        bool CreateButtonEnabledPreSuspension { get; set; }
+        EventHandler CreateButtonDelegate { get; set; }
 
         bool Revealed { get; set; }
 
@@ -53,6 +55,7 @@ namespace Droid
         {
             BackButton = new Button( Rock.Mobile.PlatformCommon.Droid.Context );
             ShareButton = new Button( Rock.Mobile.PlatformCommon.Droid.Context );
+            CreateButton = new Button( Rock.Mobile.PlatformCommon.Droid.Context );
             LinearLayout = new LinearLayout( Rock.Mobile.PlatformCommon.Droid.Context );
         }
 
@@ -123,7 +126,7 @@ namespace Droid
 
             // create the share button
             ShareButton.LayoutParameters = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-            ((RelativeLayout.LayoutParams)BackButton.LayoutParameters).AddRule( LayoutRules.CenterVertical );
+            ((RelativeLayout.LayoutParams)ShareButton.LayoutParameters).AddRule( LayoutRules.CenterVertical );
 
             ShareButton.SetX( BackButton.LayoutParameters.Width + 10 );
 
@@ -134,8 +137,6 @@ namespace Droid
 
             ShareButton.Text = CCVApp.Shared.Config.SubNavToolbar.ShareButton_Text;
             ShareButton.SetBackgroundColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( 0x00000000 ) );
-
-            //ShareButton.Click += delegate{ Activity.OnSharePressed(); };
 
             // default to NOT enabled
             ShareButton.Enabled = false;
@@ -150,11 +151,46 @@ namespace Droid
 
             colors = new int[]
                 {
-                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.BackButton_PressedColor ),
-                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.BackButton_EnabledColor ),
-                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.BackButton_DisabledColor ),
+                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.ShareButton_PressedColor ),
+                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.ShareButton_EnabledColor ),
+                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.ShareButton_DisabledColor ),
                 };
             ShareButton.SetTextColor( new Android.Content.Res.ColorStateList( states, colors ) );
+
+
+
+            // create the "create" button
+            CreateButton.LayoutParameters = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+            ((RelativeLayout.LayoutParams)CreateButton.LayoutParameters).AddRule( LayoutRules.CenterVertical );
+
+            CreateButton.SetX( ShareButton.LayoutParameters.Width + 10 );
+
+            // set the create button's font
+            fontFace = DroidFontManager.Instance.GetFont( CCVApp.Shared.Config.SubNavToolbar.CreateButton_Font );
+            CreateButton.SetTypeface( fontFace, TypefaceStyle.Normal );
+            CreateButton.SetTextSize( Android.Util.ComplexUnitType.Dip, CCVApp.Shared.Config.SubNavToolbar.CreateButton_Size );
+
+            CreateButton.Text = CCVApp.Shared.Config.SubNavToolbar.CreateButton_Text;
+            CreateButton.SetBackgroundColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( 0x00000000 ) );
+
+            // default to NOT enabled
+            CreateButton.Enabled = false;
+
+            // use the completely overcomplicated color states to set the normal vs pressed color state.
+            states = new int[][] 
+                {
+                    new int[] { Android.Resource.Attribute.StatePressed },
+                    new int[] { Android.Resource.Attribute.StateEnabled },
+                    new int[] { -Android.Resource.Attribute.StateEnabled },
+                };
+
+            colors = new int[]
+                {
+                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.CreateButton_PressedColor ),
+                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.CreateButton_EnabledColor ),
+                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.CreateButton_DisabledColor ),
+                };
+            CreateButton.SetTextColor( new Android.Content.Res.ColorStateList( states, colors ) );
 
             return LinearLayout;
         }
@@ -176,23 +212,19 @@ namespace Droid
             {
                 BackButtonEnabledPreSuspension = BackButton.Enabled;
                 ShareButtonEnabledPreSuspension = ShareButton.Enabled;
+                CreateButtonEnabledPreSuspension = CreateButton.Enabled;
 
                 BackButton.Enabled = false;
                 ShareButton.Enabled = false;
+                CreateButton.Enabled = false;
             }
             else
             {
                 // restore them to their pre-suspension state
                 BackButton.Enabled = BackButtonEnabledPreSuspension;
                 ShareButton.Enabled = ShareButtonEnabledPreSuspension;
+                CreateButton.Enabled = CreateButtonEnabledPreSuspension;
             }
-        }
-
-        public void DisplayBackButton( bool display )
-        {
-            BackButtonDisplayed = display;
-
-            UpdateButtons( );
         }
 
         public void SetBackButtonEnabled( bool enabled )
@@ -201,8 +233,11 @@ namespace Droid
             BackButtonEnabledPreSuspension = BackButton.Enabled;
         }
 
-        public void DisplayShareButton( bool display, EventHandler sharePressed )
+        public void SetShareButtonEnabled( bool enabled, EventHandler sharePressed )
         {
+            ShareButton.Enabled = enabled;
+            ShareButtonEnabledPreSuspension = ShareButton.Enabled;
+
             // if there's a current delegate listening, remove it
             if( ShareButtonDelegate != null )
             {
@@ -217,16 +252,27 @@ namespace Droid
 
                 ShareButtonDelegate = sharePressed;
             }
-
-            ShareButtonDisplayed = display;
-
-            UpdateButtons( );
         }
 
-        public void SetShareButtonEnabled( bool enabled )
+        public void SetCreateButtonEnabled( bool enabled, EventHandler createPressed )
         {
-            ShareButton.Enabled = enabled;
-            ShareButtonEnabledPreSuspension = ShareButton.Enabled;
+            CreateButton.Enabled = enabled;
+            CreateButtonEnabledPreSuspension = CreateButton.Enabled;
+
+            // if there's a current delegate listening, remove it
+            if( CreateButtonDelegate != null )
+            {
+                CreateButton.Click -= CreateButtonDelegate;
+                CreateButtonDelegate = null;
+            }
+
+            // set the new one and store a reference to it
+            if( createPressed != null )
+            {
+                CreateButton.Click += createPressed;
+
+                CreateButtonDelegate = createPressed;
+            }
         }
 
         void UpdateButtons( )
@@ -237,15 +283,11 @@ namespace Droid
                 LinearLayout.RemoveAllViews( );
 
                 // now add each button
-                if( BackButtonDisplayed == true )
-                {
-                    LinearLayout.AddView( BackButton );
-                }
+                LinearLayout.AddView( BackButton );
 
-                if( ShareButtonDisplayed == true )
-                {
-                    LinearLayout.AddView( ShareButton );
-                }
+                LinearLayout.AddView( ShareButton );
+
+                LinearLayout.AddView( CreateButton );
             }
         }
 

@@ -139,7 +139,7 @@ namespace iOS
             SubNavigationController.View.AddSubview( SubNavToolbar );
 
             // add the back button
-            SubNavToolbar.DisplayBackButton( true, delegate
+            SubNavToolbar.SetBackButtonAction( delegate
                 {
                     // don't allow multiple back presses at once
                     if( TaskControllerAnimating == false )

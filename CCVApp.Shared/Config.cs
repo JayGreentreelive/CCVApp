@@ -62,6 +62,16 @@ namespace CCVApp
                 /// The background color of the springboard.
                 /// </summary>
                 public const int BackgroundColor = 0x1C1C1CFF;
+
+                /// <summary>
+                /// The text to use as the prefix when logged in. 
+                /// </summary>
+                public const string LoggedIn_Prefix = "Welcome";
+
+                /// <summary>
+                /// The text to use when logged out.
+                /// </summary>
+                public const string LoggedOut_Promo = "Login to enable additional features.";
             }
 
             public class ImageCrop
@@ -180,6 +190,36 @@ namespace CCVApp
                 /// The size (in font points) of the sub nav toolbar share button. (the one at the bottom)
                 /// </summary>
                 public const int ShareButton_Size = 36;
+
+                /// <summary>
+                /// The font to use for displaying the subNavigation toolbar's create button. (the one at the bottom)
+                /// </summary>
+                public const string CreateButton_Font = "FontAwesome";
+
+                /// <summary>
+                /// The color to use for displaying the subNavigation toolbar's create button when enabled. (the one at the bottom)
+                /// </summary>
+                public const uint CreateButton_EnabledColor = 0xFFFFFFFF;
+
+                /// <summary>
+                /// The color to use for displaying the subNavigation toolbar's create button when pressed. (Android Only) (the one at the bottom)
+                /// </summary>
+                public const uint CreateButton_PressedColor = 0x444444FF;
+
+                /// <summary>
+                /// The color to use for displaying the subNavigation toolbar's create button when disabled. (the one at the bottom)
+                /// </summary>
+                public const uint CreateButton_DisabledColor = 0x444444FF;
+
+                /// <summary>
+                /// The text to display for the subNavigation toolbar's create button. (the one at the bottom)
+                /// </summary>
+                public const string CreateButton_Text = "";
+
+                /// <summary>
+                /// The size (in font points) of the sub nav toolbar create button. (the one at the bottom)
+                /// </summary>
+                public const int CreateButton_Size = 36;
             }
 
             /// <summary>

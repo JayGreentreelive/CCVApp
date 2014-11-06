@@ -155,7 +155,7 @@ namespace iOS
             float cardHeight = viewRealHeight * cardSizePerc;
 
             // setup the card positions to be to the offscreen to the left, centered on screen, and offscreen to the right
-            float cardYOffset = ((viewRealHeight - cardHeight) / 2) + NavigationController.NavigationBar.Bounds.Height;
+            float cardYOffset = ( viewRealHeight * .03f ) + NavigationController.NavigationBar.Bounds.Height;
 
             Carousel = PlatformCardCarousel.Create( cardWidth, cardHeight, new RectangleF( 0, cardYOffset, View.Bounds.Width, viewRealHeight ), UpdatePrayerCards );
 
@@ -171,12 +171,6 @@ namespace iOS
             // hide the actiivty indicator and make sure it is front and center
             ActivityIndicator.Hidden = false;
             View.BringSubviewToFront( ActivityIndicator );
-
-            CreatePrayerButton.TouchUpInside += delegate(object sender, EventArgs e) 
-                {
-                    Prayer_CreateUIViewController viewController = Storyboard.InstantiateViewController( "Prayer_CreateUIViewController" ) as Prayer_CreateUIViewController;
-                    Task.PerformSegue( this, viewController );
-                };
         }
 
         public override void ViewWillAppear(bool animated)
@@ -186,13 +180,18 @@ namespace iOS
 
             ActivityIndicator.Hidden = false;
 
-            CreatePrayerButton.Enabled = false;
+            Task.NavToolbar.SetCreateButtonEnabled( false );
 
             // request the prayers each time this appears
             CCVApp.Shared.Network.RockApi.Instance.GetPrayers( delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.PrayerRequest> prayerRequests) 
                 {
                     ActivityIndicator.Hidden = true;
-                    CreatePrayerButton.Enabled = true;
+                    Task.NavToolbar.SetCreateButtonEnabled( true, delegate
+                        {
+                            Prayer_CreateUIViewController viewController = Storyboard.InstantiateViewController( "Prayer_CreateUIViewController" ) as Prayer_CreateUIViewController;
+                            Task.PerformSegue( this, viewController );
+                        }
+                    );
 
                     if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) )
                     {
@@ -216,7 +215,7 @@ namespace iOS
         {
             base.ViewWillDisappear(animated);
 
-            CreatePrayerButton.Enabled = false;
+            //CreatePrayerButton.Enabled = false;
         }
 
         public override void TouchesBegan(NSSet touches, UIEvent evt)

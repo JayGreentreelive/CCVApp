@@ -1,28 +1,14 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhone4s.8.1" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/Tasks/Notes/NotesMainUIViewController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Springboard.cs">
     <Files>
-      <File FileName="CCVApp.Shared/Notes/Models/MobileNote.cs" Line="2" Column="2" />
-      <File FileName="Droid/Tasks/NotesTask/NotesTask.cs" Line="17" Column="17" />
-      <File FileName="Droid/NavToolbar.cs" Line="61" Column="61" />
-      <File FileName="iOS/Tasks/Notes/NotesMainUIViewController.cs" Line="50" Column="50" />
+      <File FileName="iOS/NavToolbar.cs" Line="1" Column="1" />
+      <File FileName="iOS/Tasks/Prayer/PrayerMainUIViewController.cs" Line="1" Column="1" />
+      <File FileName="iOS/Tasks/Prayer/PrayerTask.cs" Line="1" Column="1" />
+      <File FileName="iOS/Tasks/Task.cs" Line="1" Column="1" />
+      <File FileName="iOS/SpringboardViewController.cs" Line="1" Column="1" />
+      <File FileName="Droid/Springboard.cs" Line="10" Column="10" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="iOS" expanded="True">
-            <Node name="Tasks" expanded="True">
-              <Node name="Notes" expanded="True">
-                <Node name="NotesMainUIViewController.cs" selected="True" />
-              </Node>
-            </Node>
-          </Node>
-          <Node name="Rock.Mobile" expanded="True">
-            <Node name="Threading" expanded="True" />
-          </Node>
-        </State>
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />

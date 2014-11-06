@@ -17,24 +17,21 @@ namespace iOS
         /// </summary>
         /// <value>The back button.</value>
         UIButton BackButton { get; set; }
-
-        /// <summary>
-        /// True if the back button should exist on the toolbar. False if not.
-        /// </summary>
-        /// <value><c>true</c> if back button displayed; otherwise, <c>false</c>.</value>
-        bool BackButtonDisplayed { get; set; }
-
-        /// <summary>
-        /// True if the share button should exist on the toolbar. False if not.
-        /// </summary>
-        /// <value><c>true</c> if share button displayed; otherwise, <c>false</c>.</value>
-        bool ShareButtonDisplayed { get; set; }
+        EventHandler BackButtonHandler { get; set; }
 
         /// <summary>
         /// Button used when an task wishes to let the user share something
         /// </summary>
         /// <value>The share button.</value>
         UIButton ShareButton { get; set; }
+        EventHandler ShareButtonHandler { get; set; }
+
+        /// <summary>
+        /// Button used when a task wishes to let the user create content (like a new prayer)
+        /// </summary>
+        /// <value>The create button.</value>
+        UIButton CreateButton { get; set; }
+        EventHandler CreateButtonHandler { get; set; }
 
         /// <summary>
         /// True when this toolbar is showing. False when it is hidden.
@@ -92,15 +89,34 @@ namespace iOS
             // determine its dimensions
             buttonSize = shareLabel.StringSize( ShareButton.Font );
             ShareButton.Bounds = new RectangleF( 0, 0, buttonSize.Width, buttonSize.Height );
+
+
+            // create the create button
+            NSString createLabel = new NSString(CCVApp.Shared.Config.SubNavToolbar.CreateButton_Text);
+
+            CreateButton = new UIButton(UIButtonType.System);
+            CreateButton.Font = Rock.Mobile.PlatformCommon.iOS.LoadFontDynamic( CCVApp.Shared.Config.SubNavToolbar.CreateButton_Font, CCVApp.Shared.Config.SubNavToolbar.CreateButton_Size );
+            CreateButton.SetTitle( createLabel.ToString( ), UIControlState.Normal );
+            CreateButton.SetTitleColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.CreateButton_EnabledColor ), UIControlState.Normal );
+            CreateButton.SetTitleColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.CreateButton_DisabledColor ), UIControlState.Disabled );
+
+            // determine its dimensions
+            buttonSize = createLabel.StringSize( CreateButton.Font );
+            CreateButton.Bounds = new RectangleF( 0, 0, buttonSize.Width, buttonSize.Height );
+
+            UpdateButtons( );
         }
 
-        public void DisplayBackButton( bool display, EventHandler handler )
+        public void SetBackButtonAction( EventHandler handler )
         {
-            BackButtonDisplayed = display;
+            if ( BackButtonHandler != null )
+            {
+                BackButton.TouchUpInside -= BackButtonHandler;
+            }
 
             BackButton.TouchUpInside += handler;
 
-            UpdateButtons( );
+            BackButtonHandler = handler;
         }
 
         public void SetBackButtonEnabled( bool enabled )
@@ -108,21 +124,38 @@ namespace iOS
             BackButton.Enabled = enabled;
         }
 
-        public void DisplayShareButton( bool display, EventHandler handler = null )
+        public void SetShareButtonEnabled( bool enabled, EventHandler handler = null )
         {
-            ShareButtonDisplayed = display;
+            ShareButton.Enabled = enabled;
+
+            if ( ShareButtonHandler != null )
+            {
+                ShareButton.TouchUpInside -= ShareButtonHandler; 
+            }
 
             if( handler != null )
             {
                 ShareButton.TouchUpInside += handler;
             }
 
-            UpdateButtons( );
+            ShareButtonHandler = handler;
         }
 
-        public void SetShareButtonEnabled( bool enabled )
+        public void SetCreateButtonEnabled( bool enabled, EventHandler handler = null )
         {
-            ShareButton.Enabled = enabled;
+            CreateButton.Enabled = enabled;
+
+            if ( CreateButtonHandler != null )
+            {
+                CreateButton.TouchUpInside -= CreateButtonHandler; 
+            }
+
+            if( handler != null )
+            {
+                CreateButton.TouchUpInside += handler;
+            }
+
+            CreateButtonHandler = handler;
         }
 
         void UpdateButtons( )
@@ -132,20 +165,13 @@ namespace iOS
             // we build a list and then add that list to the toolbar.
             List<UIBarButtonItem> itemList = new List<UIBarButtonItem>( );
 
-            if( BackButtonDisplayed == true )
-            {
-                itemList.Add( new UIBarButtonItem( BackButton ) );
-            }
-
-            if( ShareButtonDisplayed == true )
-            {
-                itemList.Add( new UIBarButtonItem( ShareButton ) );
-            }
+            itemList.Add( new UIBarButtonItem( BackButton ) );
+            itemList.Add( new UIBarButtonItem( ShareButton ) );
+            itemList.Add( new UIBarButtonItem( CreateButton ) );
 
             // for some reason, it will not accept a new array of items
             // until we clear the existing.
             SetItems( new UIBarButtonItem[0], false );
-
 
             SetItems( itemList.ToArray( ), false );
         }

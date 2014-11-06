@@ -236,9 +236,9 @@ namespace iOS
             // Instantiate all activities
             Elements.Add( new SpringboardElement( this, new NewsTask( "NewsStoryboard_iPhone" )              , NewsButton       , "" ) );
             Elements.Add( new SpringboardElement( this, new GroupFinderTask( "GroupFinderStoryboard_iPhone" ), GroupFinderButton, "" ) );
+            Elements.Add( new SpringboardElement( this, new NotesTask( "NotesStoryboard_iPhone" )            , MessagesButton   , "" ) );
             Elements.Add( new SpringboardElement( this, new PrayerTask( "PrayerStoryboard_iPhone" )          , PrayerButton     , "" ) );
             Elements.Add( new SpringboardElement( this, new GiveTask( "GiveStoryboard_iPhone" )              , GiveButton       , "" ) );
-            Elements.Add( new SpringboardElement( this, new NotesTask( "NotesStoryboard_iPhone" )            , MessagesButton   , "" ) );
             Elements.Add( new SpringboardElement( this, new AboutTask( "AboutStoryboard_iPhone" )            , AboutButton      , "" ) );
 
             // set the profile image mask so it's circular
@@ -469,11 +469,11 @@ namespace iOS
             if( RockMobileUser.Instance.LoggedIn )
             {
                 // get their profile
-                UserNameField.Text = RockMobileUser.Instance.PreferredName( ) + " " + RockMobileUser.Instance.Person.LastName;
+                UserNameField.Text = CCVApp.Shared.Config.Springboard.LoggedIn_Prefix + " " + RockMobileUser.Instance.PreferredName( );
             }
             else
             {
-                UserNameField.Text = "Login to enable additional features.";
+                UserNameField.Text = CCVApp.Shared.Config.Springboard.LoggedOut_Promo;
             }
 
             UpdateProfilePic( );

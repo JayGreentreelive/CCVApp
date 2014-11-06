@@ -96,10 +96,9 @@ namespace Droid
                     base.OnResume();
 
                     ParentTask.NavbarFragment.NavToolbar.SetBackButtonEnabled( true );
-                    ParentTask.NavbarFragment.NavToolbar.Reveal( true );
-
-                    ParentTask.NavbarFragment.NavToolbar.SetShareButtonEnabled( false );
-                    ParentTask.NavbarFragment.NavToolbar.DisplayShareButton( false, null );
+                    ParentTask.NavbarFragment.NavToolbar.SetShareButtonEnabled( false, null );
+                    ParentTask.NavbarFragment.NavToolbar.SetCreateButtonEnabled( false, null );
+                    ParentTask.NavbarFragment.NavToolbar.RevealForTime( 3.0f );
                 }
             }
         }

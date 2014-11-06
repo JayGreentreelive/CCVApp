@@ -133,10 +133,9 @@ namespace Droid
                     base.OnResume();
 
                     ParentTask.NavbarFragment.NavToolbar.SetBackButtonEnabled( false );
+                    ParentTask.NavbarFragment.NavToolbar.SetCreateButtonEnabled( false, null );
+                    ParentTask.NavbarFragment.NavToolbar.SetShareButtonEnabled( false, null );
                     ParentTask.NavbarFragment.NavToolbar.Reveal( false );
-
-                    ParentTask.NavbarFragment.NavToolbar.SetShareButtonEnabled( false );
-                    ParentTask.NavbarFragment.NavToolbar.DisplayShareButton( false, null );
                 }
             }
         }
