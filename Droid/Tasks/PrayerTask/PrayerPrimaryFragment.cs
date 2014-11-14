@@ -264,7 +264,7 @@ namespace Droid
                             }
                             else
                             {
-                                Springboard.DisplayError( "Prayer Requests", "There was a problem getting prayer requests. Please try again later." );
+                                Springboard.DisplayError( CCVApp.Shared.Strings.Prayer.Error_Title, CCVApp.Shared.Strings.Prayer.Error_Retrieve_Message );
                             }
                         });
                 }

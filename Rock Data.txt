@@ -36,45 +36,6 @@ Notes
     List of all available notes
 
 
-Design Needed
--=-=-=-==-=-=-
-App Icon
-    Send Kyle needed sizes
-Splash Screen
-    Send Kyle the needed splash screen sizes
-Generic "First run with no network connection" News Items
-Login Page
-Profile Page
-News Details Page
-Prayer Main Page
-Prayer Create Page
-Notes Browse Page
-Create Profile
-
-!Tabelet UI Design!
-
-Features Needed
--=-=-=-=-=-=-=-
-Campus Selection
-Campus Browser
-Group Finder
-Notes 
-    Browse Page (Series and then Individual)
-    Sermon Page
-        Notes
-        Video
-Take Notes DRop down on weekends
-
-Me
---=-
-Create Profile (Send them to safari and Rock's registration)
-Scale note fonts based on accessibility
-
-Facebook
-GroupFinder becomes Connect, group finder will go under that.
-About becomes "More" and then uses the webview to offer a bunch of stuff.
-    Use baked in html web view
-
 -=-=-=-=-=-=-=-=-=-=-
 App Data Flow Chart
     App ships with most recent "General Data"
@@ -165,4 +126,5 @@ App Data Flow Chart
         "Touch" Filled
             Save "Touch" States
     
-    
+   
+   

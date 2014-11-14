@@ -38,5 +38,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)RockApi\RockLaunchData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RockApi\RockNetworkManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Strings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)VimeoManager.cs" />
   </ItemGroup>
 </Project>

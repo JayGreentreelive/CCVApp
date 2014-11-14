@@ -275,7 +275,7 @@ namespace Droid
 
                     View.SetX( xPos );
                     ActiveTaskFrame.SetX( xPos );
-                    NavToolbar.LinearLayout.SetX( xPos );
+                    NavToolbar.ButtonLayout.SetX( xPos );
                 }
             }
         }
@@ -345,7 +345,7 @@ namespace Droid
 
             View.SetX( xPos );
             ActiveTaskFrame.SetX( xPos );
-            NavToolbar.LinearLayout.SetX( xPos );
+            NavToolbar.ButtonLayout.SetX( xPos );
         }
 
         public void OnAnimationEnd( Animator animation )

@@ -56,6 +56,8 @@ namespace iOS
         {
             base.MakeInActive( );
 
+            MainPage.MakeInActive( );
+
             // clean up main
             if( MainPage.View != null )
             {

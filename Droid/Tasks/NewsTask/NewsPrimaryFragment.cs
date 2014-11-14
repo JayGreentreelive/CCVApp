@@ -13,6 +13,7 @@ using Android.Views;
 using Android.Widget;
 using CCVApp.Shared.Network;
 using Android.Graphics;
+using Rock.Mobile.PlatformCommon;
 
 namespace Droid
 {
@@ -20,31 +21,7 @@ namespace Droid
     {
         namespace News
         {
-            /// <summary>
-            /// Subclass ImageView so we can override OnMeasure and scale up the image 
-            /// maintaining aspect ratio
-            /// </summary>
-            class ScaledImageView : ImageView
-            {
-                public ScaledImageView( Context context ) : base( context )
-                {
-                }
 
-                protected override void OnMeasure(int widthMeasureSpec, int heightMeasureSpec)
-                {
-                    if ( Drawable != null )
-                    {
-                        int width = MeasureSpec.GetSize( widthMeasureSpec );
-                        int height = (int)Math.Ceiling( width * ( (float)Drawable.IntrinsicHeight / (float)Drawable.IntrinsicWidth ) );
-
-                        SetMeasuredDimension( width, height );
-                    }
-                    else
-                    {
-                        base.OnMeasure(widthMeasureSpec, heightMeasureSpec);
-                    }
-                }
-            }
 
             public class NewsArrayAdapter : BaseAdapter
             {
@@ -78,7 +55,7 @@ namespace Droid
 
                 public override View GetView(int position, View convertView, ViewGroup parent)
                 {
-                    ScaledImageView view = (ScaledImageView) convertView ?? new ScaledImageView( ParentFragment.Activity.BaseContext );
+                    DroidScaledImageView view = (DroidScaledImageView) convertView ?? new DroidScaledImageView( ParentFragment.Activity.BaseContext );
                     view.LayoutParameters = new AbsListView.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent );
 
                     view.SetImageBitmap( NewsImage[ position ] );

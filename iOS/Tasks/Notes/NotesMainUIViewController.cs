@@ -147,19 +147,26 @@ namespace iOS
 
                     if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) )
                     {
-                        Series = model;
+                        if( model != null )
+                        {
+                            Series = model;
 
-                        // on the main thread, update the list
-                        InvokeOnMainThread( delegate
-                            {
-                                TableSource source = new TableSource( this, Series, null );
-                                NotesTableView.Source = source;
-                                NotesTableView.ReloadData( );
-                            });
+                            // on the main thread, update the list
+                            InvokeOnMainThread( delegate
+                                {
+                                    TableSource source = new TableSource( this, Series, null );
+                                    NotesTableView.Source = source;
+                                    NotesTableView.ReloadData( );
+                                });
+                        }
+                        else
+                        {
+                            SpringboardViewController.DisplayError( CCVApp.Shared.Strings.Messages.Error_Title, CCVApp.Shared.Strings.Messages.Error_Message );
+                        }
                     }
                     else
                     {
-                        // error
+                        SpringboardViewController.DisplayError( CCVApp.Shared.Strings.Messages.Error_Title, CCVApp.Shared.Strings.Messages.Error_Message );
                     }
                 } );
         }

@@ -79,7 +79,7 @@ namespace Droid
                                         else
                                         {
                                             // if it failed to post, let them try again.
-                                            Springboard.DisplayError( "Prayer Requests", "There was a problem posting your prayer request. Make sure you have a network connection and try again." );
+                                            Springboard.DisplayError( CCVApp.Shared.Strings.Prayer.Error_Title, CCVApp.Shared.Strings.Prayer.Error_Submit_Message );
                                             FirstNameText.Enabled = true;
                                             LastNameText.Enabled = true;
                                             RequestText.Enabled = true;

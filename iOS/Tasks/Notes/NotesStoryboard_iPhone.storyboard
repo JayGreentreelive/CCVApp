@@ -58,7 +58,28 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="18" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="188" y="-287"/>
+            <point key="canvasLocation" x="186" y="-287"/>
+        </scene>
+        <scene sceneID="173">
+            <objects>
+                <viewController id="174" sceneMemberID="viewController" storyboardIdentifier="NotesWatchUIViewController" customClass="NotesWatchUIViewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="178"/>
+                        <viewControllerLayoutGuide type="bottom" id="179"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="177">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" customColorSpace="calibratedWhite" colorSpace="calibratedRGB" red="0.082352941176470587" green="0.082352941176470587" blue="0.082352941176470587" alpha="1"/>
+                        <subviews>
+                        </subviews>
+                    </view>
+                    <connections>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="180" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="567" y="-287"/>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
@@ -83,12 +104,13 @@
         <image name="Default.png" width="320" height="480"/>
         <image name="Icon-60.png" width="120" height="120"/>
         <image name="Icon.png" width="57" height="57"/>
-        <image name="news_general_1.png" width="640" height="434"/>
-        <image name="news_general_2.png" width="640" height="434"/>
-        <image name="news_general_3.png" width="640" height="434"/>
+        <image name="news_general_1.png" width="640" height="413"/>
+        <image name="news_general_2.png" width="640" height="413"/>
+        <image name="news_general_3.png" width="640" height="413"/>
         <image name="IMG_0079.JPG" width="1280" height="960"/>
-        <image name="news_general_1_header.png" width="560" height="192"/>
-        <image name="news_general_2_header.png" width="560" height="192"/>
-        <image name="news_general_3_header.png" width="560" height="192"/>
+        <image name="news_general_1_header.png" width="640" height="360"/>
+        <image name="news_general_2_header.png" width="640" height="360"/>
+        <image name="news_general_3_header.png" width="640" height="360"/>
+        <image name="podcastThumbnailPlaceholder.png" width="400" height="300"/>
     </resources>
 </document>

@@ -273,6 +273,15 @@
     <BundleResource Include="..\Assets\news_general_3_header%402x.png">
       <Link>Resources\news_general_3_header%402x.png</Link>
     </BundleResource>
+    <BundleResource Include="..\Assets\Fonts\Pe-icon-7-stroke.ttf">
+      <Link>Resources\Fonts\Pe-icon-7-stroke.ttf</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\Fonts\Bh.ttf">
+      <Link>Resources\Fonts\Bh.ttf</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\podcastThumbnailPlaceholder%402x.png">
+      <Link>Resources\podcastThumbnailPlaceholder%402x.png</Link>
+    </BundleResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -354,6 +363,10 @@
     <Compile Include="Tasks\Notes\NotesMainUIViewController.cs" />
     <Compile Include="Tasks\Notes\NotesMainUIViewController.designer.cs">
       <DependentUpon>NotesMainUIViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tasks\Notes\NotesWatchUIViewController.cs" />
+    <Compile Include="Tasks\Notes\NotesWatchUIViewController.designer.cs">
+      <DependentUpon>NotesWatchUIViewController.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <Import Project="..\..\Rock\Rock.Client\Rock.Client.Models.projitems" Label="Shared" Condition="Exists('..\..\Rock\Rock.Client\Rock.Client.Models.projitems')" />

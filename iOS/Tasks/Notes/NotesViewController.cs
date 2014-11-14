@@ -597,7 +597,7 @@ namespace iOS
                             }
                             else
                             {
-                                ReportException( "NoteScript Download Error", null );
+                                ReportException( "There was a problem trying to download the note. Please try again.", null );
                             }
                         } );
                 }
@@ -675,10 +675,15 @@ namespace iOS
         {
             new NSObject( ).InvokeOnMainThread( delegate
                 {
+                    if( e != null )
+                    {
+                        errorMsg += "\n" + e.Message;
+                    }
+
                     // explain that we couldn't generate notes
                     UIAlertView alert = new UIAlertView( );
                     alert.Title = "Note Error";
-                    alert.Message = errorMsg + "\n" + e != null ? e.Message : "";
+                    alert.Message = errorMsg;
                     alert.AddButton( "Ok" );
                     alert.Show( );
 

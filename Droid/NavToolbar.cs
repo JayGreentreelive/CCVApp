@@ -28,7 +28,7 @@ namespace Droid
 
     public class NavToolbarFragment : Fragment, Android.Animation.ValueAnimator.IAnimatorUpdateListener
     {
-        public LinearLayout LinearLayout { get; set; }
+        public LinearLayout ButtonLayout { get; set; }
 
         Button BackButton { get; set; }
         bool BackButtonEnabledPreSuspension { get; set; }
@@ -56,7 +56,7 @@ namespace Droid
             BackButton = new Button( Rock.Mobile.PlatformCommon.Droid.Context );
             ShareButton = new Button( Rock.Mobile.PlatformCommon.Droid.Context );
             CreateButton = new Button( Rock.Mobile.PlatformCommon.Droid.Context );
-            LinearLayout = new LinearLayout( Rock.Mobile.PlatformCommon.Droid.Context );
+            ButtonLayout = new LinearLayout( Rock.Mobile.PlatformCommon.Droid.Context );
         }
 
         public override void OnCreate( Bundle savedInstanceState )
@@ -79,19 +79,20 @@ namespace Droid
                     Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate { Reveal( false ); } );
                 };
 
-            LinearLayout.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
+            ButtonLayout.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
+            ButtonLayout.BaselineAligned = false;
 
             // set the nav subBar color (including opacity)
             Color navColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.BackgroundColor );
             navColor.A = (Byte) ( (float) navColor.A * CCVApp.Shared.Config.SubNavToolbar.Opacity );
-            LinearLayout.SetBackgroundColor( navColor );
+            ButtonLayout.SetBackgroundColor( navColor );
 
-            LinearLayout.LayoutParameters.Height = 150;
+            ButtonLayout.LayoutParameters.Height = 150;
 
 
             // create the back button
-            BackButton.LayoutParameters = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-            ((RelativeLayout.LayoutParams)BackButton.LayoutParameters).AddRule( LayoutRules.CenterVertical );
+            BackButton.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+            ( (LinearLayout.LayoutParams)BackButton.LayoutParameters ).Gravity = GravityFlags.Top;
 
             // set the back button's font
             Typeface fontFace = DroidFontManager.Instance.GetFont( CCVApp.Shared.Config.SubNavToolbar.BackButton_Font );
@@ -99,7 +100,8 @@ namespace Droid
             BackButton.SetTextSize( Android.Util.ComplexUnitType.Dip, CCVApp.Shared.Config.SubNavToolbar.BackButton_Size );
 
             BackButton.Text = CCVApp.Shared.Config.SubNavToolbar.BackButton_Text;
-            BackButton.SetBackgroundColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( 0x00000000 ) );
+            BackButton.SetBackgroundColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( 0 ) );
+            BackButton.SetPadding( 0, 0, 0, 0 );
 
             BackButton.Click += delegate{ Activity.OnBackPressed(); };
 
@@ -125,18 +127,17 @@ namespace Droid
 
 
             // create the share button
-            ShareButton.LayoutParameters = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-            ((RelativeLayout.LayoutParams)ShareButton.LayoutParameters).AddRule( LayoutRules.CenterVertical );
-
-            ShareButton.SetX( BackButton.LayoutParameters.Width + 10 );
+            ShareButton.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+            ( (LinearLayout.LayoutParams)ShareButton.LayoutParameters ).Gravity = GravityFlags.Top;
 
             // set the share button's font
             fontFace = DroidFontManager.Instance.GetFont( CCVApp.Shared.Config.SubNavToolbar.ShareButton_Font );
             ShareButton.SetTypeface( fontFace, TypefaceStyle.Normal );
             ShareButton.SetTextSize( Android.Util.ComplexUnitType.Dip, CCVApp.Shared.Config.SubNavToolbar.ShareButton_Size );
+            ShareButton.SetPadding( 0, 0, 0, 0 );
 
             ShareButton.Text = CCVApp.Shared.Config.SubNavToolbar.ShareButton_Text;
-            ShareButton.SetBackgroundColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( 0x00000000 ) );
+            ShareButton.SetBackgroundColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( 0 ) );
 
             // default to NOT enabled
             ShareButton.Enabled = false;
@@ -160,18 +161,17 @@ namespace Droid
 
 
             // create the "create" button
-            CreateButton.LayoutParameters = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-            ((RelativeLayout.LayoutParams)CreateButton.LayoutParameters).AddRule( LayoutRules.CenterVertical );
-
-            CreateButton.SetX( ShareButton.LayoutParameters.Width + 10 );
+            CreateButton.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+            ( (LinearLayout.LayoutParams)CreateButton.LayoutParameters ).Gravity = GravityFlags.Top;
 
             // set the create button's font
             fontFace = DroidFontManager.Instance.GetFont( CCVApp.Shared.Config.SubNavToolbar.CreateButton_Font );
             CreateButton.SetTypeface( fontFace, TypefaceStyle.Normal );
             CreateButton.SetTextSize( Android.Util.ComplexUnitType.Dip, CCVApp.Shared.Config.SubNavToolbar.CreateButton_Size );
+            CreateButton.SetPadding( 0, 0, 0, 0 );
 
             CreateButton.Text = CCVApp.Shared.Config.SubNavToolbar.CreateButton_Text;
-            CreateButton.SetBackgroundColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( 0x00000000 ) );
+            CreateButton.SetBackgroundColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( 0 ) );
 
             // default to NOT enabled
             CreateButton.Enabled = false;
@@ -192,14 +192,14 @@ namespace Droid
                 };
             CreateButton.SetTextColor( new Android.Content.Res.ColorStateList( states, colors ) );
 
-            return LinearLayout;
+            return ButtonLayout;
         }
 
         public override void OnResume()
         {
             base.OnResume();
 
-            LinearLayout.SetY( 150 );
+            ButtonLayout.SetY( 150 );
 
             UpdateButtons( );
         }
@@ -277,17 +277,17 @@ namespace Droid
 
         void UpdateButtons( )
         {
-            if( LinearLayout != null )
+            if( ButtonLayout != null )
             {
                 // start by resetting it
-                LinearLayout.RemoveAllViews( );
+                ButtonLayout.RemoveAllViews( );
 
                 // now add each button
-                LinearLayout.AddView( BackButton );
+                ButtonLayout.AddView( BackButton );
 
-                LinearLayout.AddView( ShareButton );
+                ButtonLayout.AddView( ShareButton );
 
-                LinearLayout.AddView( CreateButton );
+                ButtonLayout.AddView( CreateButton );
             }
         }
 
@@ -311,7 +311,7 @@ namespace Droid
             // update the mask scale
             int yPos = ((Java.Lang.Integer)animation.GetAnimatedValue("")).IntValue();
 
-            LinearLayout.SetY( yPos );
+            ButtonLayout.SetY( yPos );
         }
 
         public void OnAnimationEnd( Animator animation )
@@ -330,10 +330,10 @@ namespace Droid
                 {
                     Animating = true;
 
-                    int yOffset = revealed ? 0 : LinearLayout.Height;
+                    int yOffset = revealed ? 0 : ButtonLayout.Height;
 
                     // setup an animation from our current mask scale to the new one.
-                    ValueAnimator animator = ValueAnimator.OfInt((int)LinearLayout.GetY( ) , yOffset);
+                    ValueAnimator animator = ValueAnimator.OfInt((int)ButtonLayout.GetY( ) , yOffset);
 
                     animator.AddUpdateListener( this );
                     animator.AddListener( new NavToolbarAnimationListener( ) { NavbarToolbar = this } );

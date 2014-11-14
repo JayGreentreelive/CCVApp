@@ -87,6 +87,11 @@ namespace iOS
             return true;
         }
 
+        public virtual UIInterfaceOrientationMask GetSupportedInterfaceOrientations()
+        {
+            return UIInterfaceOrientationMask.Portrait;
+        }
+
         /// <summary>
         /// Called by the active view controller when touches ended. Allows the task to perform any
         /// necessary actions, like revealing the nav bar.

@@ -12,7 +12,7 @@ namespace CCVApp.Shared
             {
                 get
                 {
-                    return "0.0.2";
+                    return "0.0.3";
                 }
             }
 
@@ -20,7 +20,7 @@ namespace CCVApp.Shared
             {
                 get
                 {
-                    return "11-4-14";
+                    return "11-6-14";
                 }
             }
         }
@@ -45,12 +45,31 @@ namespace CCVApp.Shared
 
             public const string Camera_Error_Title = "No Camera";
             public const string Camera_Error_Message = "This device does not have a camera.";
+
+            public const string LoggedIn_Prefix = "Welcome";
+            public const string LoggedOut_Promo = "Login to enable additional features.";
         }
 
         public class Profile
         {
             public const string SubmitChangesTitle = "Submit Changes?";
             public const string LogoutTitle = "Log Out?";
+        }
+
+        public class Messages
+        {
+            public const string Error_Title = "Messages";
+            public const string Error_Message = "There was a problem downloading the messages. Please try again.";
+
+            public const string Error_Watch_Playback = "There was a problem playing this video. Check your network settings and try again.";
+        }
+
+        public class Prayer
+        {
+            public const string Error_Title = "Prayer";
+
+            public const string Error_Retrieve_Message = "There was a problem getting prayer requests. Check your network settings and try again.";
+            public const string Error_Submit_Message = "There was a problem submitting your prayer request. Check your network settings and try again.";
         }
     }
 }

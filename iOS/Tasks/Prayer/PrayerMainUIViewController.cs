@@ -68,12 +68,11 @@ namespace iOS
 
                 Prayer.Editable = false;
                 Prayer.BackgroundColor = UIColor.Clear;
-                Prayer.Layer.BorderColor = UIColor.Gray.CGColor;
-                Prayer.Layer.BorderWidth = 2;
                 Prayer.DelaysContentTouches = false; // don't allow delaying touch, we need to forward it
 
 
                 Pray.SetTitle( "Pray", UIControlState.Normal );
+                Pray.TintColor = UIColor.White;
                 Pray.SizeToFit( );
 
                 Pray.Layer.Position = new PointF( (View.Bounds.Width - Pray.Layer.Bounds.Width) / 2, View.Bounds.Height - Pray.Layer.Bounds.Height );
@@ -84,7 +83,8 @@ namespace iOS
                 Prayer.TextColor = UIColor.White;
 
                 // set the outline for the card
-                View.BorderColor = 0x777777FF;
+                View.BackgroundColor = 0x111111FF;
+                View.BorderColor = 0xFFFFFFFF;
                 View.CornerRadius = 4;
                 View.BorderWidth = 1;
 
@@ -140,6 +140,9 @@ namespace iOS
         PrayerCard RightPrayer { get; set; }
         PrayerCard PostRightPrayer { get; set; }
 
+        bool RequestingPrayers { get; set; }
+        bool ViewActive { get; set; }
+
 		public PrayerMainUIViewController (IntPtr handle) : base (handle)
 		{
 		}
@@ -147,6 +150,8 @@ namespace iOS
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
+
+            View.BackgroundColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( 0x111111FF );
 
             float viewRealHeight = ( View.Bounds.Height - NavigationController.NavigationBar.Bounds.Height );
 
@@ -176,46 +181,65 @@ namespace iOS
         public override void ViewWillAppear(bool animated)
         {
             base.ViewWillAppear(animated);
+
+            ViewActive = true;
+
             Carousel.ViewWillAppear( animated );
 
             ActivityIndicator.Hidden = false;
 
             Task.NavToolbar.SetCreateButtonEnabled( false );
 
-            // request the prayers each time this appears
-            CCVApp.Shared.Network.RockApi.Instance.GetPrayers( delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.PrayerRequest> prayerRequests) 
-                {
-                    ActivityIndicator.Hidden = true;
-                    Task.NavToolbar.SetCreateButtonEnabled( true, delegate
-                        {
-                            Prayer_CreateUIViewController viewController = Storyboard.InstantiateViewController( "Prayer_CreateUIViewController" ) as Prayer_CreateUIViewController;
-                            Task.PerformSegue( this, viewController );
-                        }
-                    );
+            // this will prevent double requests in the case that we leave and return to the prayer
+            // page before the initial request completes
+            if ( RequestingPrayers == false )
+            {
+                RequestingPrayers = true;
 
-                    if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) )
+                // request the prayers each time this appears
+                CCVApp.Shared.Network.RockApi.Instance.GetPrayers( delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.PrayerRequest> prayerRequests )
                     {
-                        if( prayerRequests.Count > 0 )
-                        {
-                            PrayerRequests = prayerRequests;
+                        // force this onto the main thread so that if there's a race condition in requesting prayers we won't hit it.
+                        InvokeOnMainThread( delegate
+                            {
+                                // only process this if the view is still active. It's possible this request came in after we left the view.
+                                if( ViewActive == true )
+                                {
+                                    RequestingPrayers = false;
 
-                            Carousel.NumItems = PrayerRequests.Count;
+                                    ActivityIndicator.Hidden = true;
 
-                            UpdatePrayerCards( 0 );
-                        }
-                    }
-                    else
-                    {
-                        SpringboardViewController.DisplayError( "Prayer", "There was a problem getting prayer requests. Check your network settings and try again." );
-                    }
-                });
+                                    if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) )
+                                    {
+                                        if ( prayerRequests.Count > 0 )
+                                        {
+                                            Task.NavToolbar.SetCreateButtonEnabled( true, delegate
+                                                {
+                                                    Prayer_CreateUIViewController viewController = Storyboard.InstantiateViewController( "Prayer_CreateUIViewController" ) as Prayer_CreateUIViewController;
+                                                    Task.PerformSegue( this, viewController );
+                                                }
+                                            );
+
+                                            PrayerRequests = prayerRequests;
+
+                                            Carousel.NumItems = PrayerRequests.Count;
+
+                                            UpdatePrayerCards( 0 );
+                                        }
+                                    }
+                                    else
+                                    {
+                                        SpringboardViewController.DisplayError( CCVApp.Shared.Strings.Prayer.Error_Title, CCVApp.Shared.Strings.Prayer.Error_Retrieve_Message );
+                                    }
+                                }
+                            });
+                    } );
+            }
         }
 
-        public override void ViewWillDisappear(bool animated)
+        public void MakeInActive()
         {
-            base.ViewWillDisappear(animated);
-
-            //CreatePrayerButton.Enabled = false;
+            ViewActive = false;
         }
 
         public override void TouchesBegan(NSSet touches, UIEvent evt)

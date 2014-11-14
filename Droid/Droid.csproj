@@ -316,6 +316,12 @@
     <AndroidAsset Include="..\Assets\news_general_3%402x.png">
       <Link>Assets\news_general_3.png</Link>
     </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Fonts\Pe-icon-7-stroke.ttf">
+      <Link>Assets\Fonts\Pe-icon-7-stroke.ttf</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Fonts\Bh.ttf">
+      <Link>Assets\Fonts\Bh.ttf</Link>
+    </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
     <XamarinComponentReference Include="json.net">

@@ -194,7 +194,7 @@ namespace iOS
 
             // only allow panning if the task is ok with it AND we're in portrait mode.
             if (CurrentTask.CanContainerPan( touches, evt ) == true && 
-                UIDevice.CurrentDevice.Orientation == UIDeviceOrientation.Portrait )
+                UIApplication.SharedApplication.StatusBarOrientation == UIInterfaceOrientation.Portrait )
             {
                 PanGesture.Enabled = true;
             }
@@ -206,6 +206,13 @@ namespace iOS
 
         public override void WillRotate(UIInterfaceOrientation toInterfaceOrientation, double duration)
         {
+            UpdateSpringboardAllowedState( toInterfaceOrientation );
+        }
+
+        public void UpdateSpringboardAllowedState( UIInterfaceOrientation toInterfaceOrientation )
+        {
+            // this catch-all will ensure we don't allow the springboard button or panning
+            // when not in portrait mode.
             if ( toInterfaceOrientation == UIInterfaceOrientation.Portrait )
             {
                 PanGesture.Enabled = true;
@@ -251,6 +258,17 @@ namespace iOS
             }
 
             return false;
+        }
+
+        public override void ViewWillAppear(bool animated)
+        {
+            base.ViewWillAppear(animated);
+
+            // certain iOS controllers (here's looking at you MovieController) cause the device
+            // orientation to change without notifying us when they finish being fullscreen.
+            // We WILL receive a WillAppear callback tho, so let's make sure the springboard state is sync'd
+            // with the given orientation.
+            UpdateSpringboardAllowedState( UIApplication.SharedApplication.StatusBarOrientation );
         }
 
         public void OnActivated( )

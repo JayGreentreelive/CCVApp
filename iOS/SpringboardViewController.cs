@@ -166,12 +166,14 @@ namespace iOS
 
         public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations()
         {
-            if ( ( NavViewController.CurrentTask as NotesTask ) != null && NavViewController.IsSpringboardClosed( ) )
+            // let the task decide what orientations we support if the springboard is closed.
+            if ( NavViewController.CurrentTask != null && NavViewController.IsSpringboardClosed( ) )
             {
-                return UIInterfaceOrientationMask.All;
+                return NavViewController.CurrentTask.GetSupportedInterfaceOrientations( );
             }
             else
             {
+                // otherwise demand portrait
                 return UIInterfaceOrientationMask.Portrait;
             }
         }
@@ -204,21 +206,6 @@ namespace iOS
             }
         }
 
-        public override void TraitCollectionDidChange(UITraitCollection previousTraitCollection)
-        {
-
-        }
-
-        public override void WillTransitionToTraitCollection(UITraitCollection traitCollection, IUIViewControllerTransitionCoordinator coordinator)
-        {
-            base.WillTransitionToTraitCollection(traitCollection, coordinator);
-        }
-
-        public override void ViewWillTransitionToSize(SizeF toSize, IUIViewControllerTransitionCoordinator coordinator)
-        {
-            base.ViewWillTransitionToSize(toSize, coordinator);
-        }
-
         public override void ViewDidLoad()
         {
             base.ViewDidLoad( );
@@ -234,12 +221,12 @@ namespace iOS
             ImageCropViewController.Springboard = this;
 
             // Instantiate all activities
-            Elements.Add( new SpringboardElement( this, new NewsTask( "NewsStoryboard_iPhone" )              , NewsButton       , "" ) );
-            Elements.Add( new SpringboardElement( this, new GroupFinderTask( "GroupFinderStoryboard_iPhone" ), GroupFinderButton, "" ) );
-            Elements.Add( new SpringboardElement( this, new NotesTask( "NotesStoryboard_iPhone" )            , MessagesButton   , "" ) );
-            Elements.Add( new SpringboardElement( this, new PrayerTask( "PrayerStoryboard_iPhone" )          , PrayerButton     , "" ) );
-            Elements.Add( new SpringboardElement( this, new GiveTask( "GiveStoryboard_iPhone" )              , GiveButton       , "" ) );
-            Elements.Add( new SpringboardElement( this, new AboutTask( "AboutStoryboard_iPhone" )            , AboutButton      , "" ) );
+            Elements.Add( new SpringboardElement( this, new NewsTask( "NewsStoryboard_iPhone" )              , NewsButton       , CCVApp.Shared.Config.Springboard.Element_News_Icon ) );
+            Elements.Add( new SpringboardElement( this, new GroupFinderTask( "GroupFinderStoryboard_iPhone" ), GroupFinderButton, CCVApp.Shared.Config.Springboard.Element_Connect_Icon ) );
+            Elements.Add( new SpringboardElement( this, new NotesTask( "NotesStoryboard_iPhone" )            , MessagesButton   , CCVApp.Shared.Config.Springboard.Element_Messages_Icon ) );
+            Elements.Add( new SpringboardElement( this, new PrayerTask( "PrayerStoryboard_iPhone" )          , PrayerButton     , CCVApp.Shared.Config.Springboard.Element_Prayer_Icon ) );
+            Elements.Add( new SpringboardElement( this, new GiveTask( "GiveStoryboard_iPhone" )              , GiveButton       , CCVApp.Shared.Config.Springboard.Element_Give_Icon ) );
+            Elements.Add( new SpringboardElement( this, new AboutTask( "AboutStoryboard_iPhone" )            , AboutButton      , CCVApp.Shared.Config.Springboard.Element_More_Icon ) );
 
             // set the profile image mask so it's circular
             CALayer maskLayer = new CALayer();
@@ -249,6 +236,8 @@ namespace iOS
             maskLayer.BackgroundColor = UIColor.Black.CGColor;
             LoginButton.Layer.Mask = maskLayer;
             //
+
+            View.BackgroundColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.Springboard.BackgroundColor );
 
             AddChildViewController( NavViewController );
             View.AddSubview( NavViewController.View );
@@ -469,11 +458,11 @@ namespace iOS
             if( RockMobileUser.Instance.LoggedIn )
             {
                 // get their profile
-                UserNameField.Text = CCVApp.Shared.Config.Springboard.LoggedIn_Prefix + " " + RockMobileUser.Instance.PreferredName( );
+                UserNameField.Text = CCVApp.Shared.Strings.Springboard.LoggedIn_Prefix + " " + RockMobileUser.Instance.PreferredName( );
             }
             else
             {
-                UserNameField.Text = CCVApp.Shared.Config.Springboard.LoggedOut_Promo;
+                UserNameField.Text = CCVApp.Shared.Strings.Springboard.LoggedOut_Promo;
             }
 
             UpdateProfilePic( );

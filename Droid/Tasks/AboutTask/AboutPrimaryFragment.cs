@@ -11,6 +11,7 @@ using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
+using Android.Webkit;
 
 namespace Droid
 {
@@ -40,6 +41,13 @@ namespace Droid
                     TextView aboutText = view.FindViewById<TextView>(Resource.Id.about_PrimaryFragmentText);
                     aboutText.Text = string.Format( "CCV App Version {0}\nBuilt on {1}", CCVApp.Shared.Strings.Build.Version, CCVApp.Shared.Strings.Build.BuildTime );
 
+                    WebView webView = view.FindViewById<WebView>( Resource.Id.about_PrimaryFragmentWebView );
+
+                    Activity.RunOnUiThread( delegate
+                        {
+                            webView.LoadUrl( CCVApp.Shared.Config.About.Url );
+                        } );
+                       
                     return view;
                 }
 

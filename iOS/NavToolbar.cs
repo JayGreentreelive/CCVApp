@@ -76,6 +76,7 @@ namespace iOS
 
             SizeF buttonSize = backLabel.StringSize( BackButton.Font );
             BackButton.Bounds = new RectangleF( 0, 0, buttonSize.Width, buttonSize.Height );
+            //BackButton.BackgroundColor = UIColor.White;
 
             // create the share button
             NSString shareLabel = new NSString(CCVApp.Shared.Config.SubNavToolbar.ShareButton_Text);
@@ -89,6 +90,7 @@ namespace iOS
             // determine its dimensions
             buttonSize = shareLabel.StringSize( ShareButton.Font );
             ShareButton.Bounds = new RectangleF( 0, 0, buttonSize.Width, buttonSize.Height );
+            //ShareButton.BackgroundColor = UIColor.White;
 
 
             // create the create button
@@ -103,6 +105,7 @@ namespace iOS
             // determine its dimensions
             buttonSize = createLabel.StringSize( CreateButton.Font );
             CreateButton.Bounds = new RectangleF( 0, 0, buttonSize.Width, buttonSize.Height );
+            //CreateButton.BackgroundColor = UIColor.White;
 
             UpdateButtons( );
         }
@@ -165,8 +168,13 @@ namespace iOS
             // we build a list and then add that list to the toolbar.
             List<UIBarButtonItem> itemList = new List<UIBarButtonItem>( );
 
+            UIBarButtonItem spacer = new UIBarButtonItem( UIBarButtonSystemItem.FixedSpace );
+            spacer.Width = CCVApp.Shared.Config.SubNavToolbar.iOS_ButtonSpacing;
+
             itemList.Add( new UIBarButtonItem( BackButton ) );
+            itemList.Add( spacer );
             itemList.Add( new UIBarButtonItem( ShareButton ) );
+            itemList.Add( spacer );
             itemList.Add( new UIBarButtonItem( CreateButton ) );
 
             // for some reason, it will not accept a new array of items

@@ -41,7 +41,7 @@ namespace CCVApp
                 /// <summary>
                 /// The color of the font to use for the element's logo.
                 /// </summary>
-                public const int Element_FontColor = 0x777777FF;
+                public const uint Element_FontColor = 0xEEEEEEFF;
 
                 /// <summary>
                 /// The X offset to place the CENTER of the element's logo.
@@ -59,19 +59,39 @@ namespace CCVApp
                 public const int Element_SelectedColor = 0x7a1315FF;
 
                 /// <summary>
+                /// The icon to use representing the News element
+                /// </summary>
+                public const string Element_News_Icon = "";
+
+                /// <summary>
+                /// The icon to use representing the Connect element
+                /// </summary>
+                public const string Element_Connect_Icon = "";
+
+                /// <summary>
+                /// The icon to use representing the Messages element
+                /// </summary>
+                public const string Element_Messages_Icon = "";
+
+                /// <summary>
+                /// The icon to use representing the Prayer element
+                /// </summary>
+                public const string Element_Prayer_Icon = "";
+
+                /// <summary>
+                /// The icon to use representing the Give element
+                /// </summary>
+                public const string Element_Give_Icon = "";
+
+                /// <summary>
+                /// The icon to use representing the More element
+                /// </summary>
+                public const string Element_More_Icon = "";
+
+                /// <summary>
                 /// The background color of the springboard.
                 /// </summary>
-                public const int BackgroundColor = 0x1C1C1CFF;
-
-                /// <summary>
-                /// The text to use as the prefix when logged in. 
-                /// </summary>
-                public const string LoggedIn_Prefix = "Welcome";
-
-                /// <summary>
-                /// The text to use when logged out.
-                /// </summary>
-                public const string LoggedOut_Promo = "Login to enable additional features.";
+                public const int BackgroundColor = 0x3d3d3dFF;
             }
 
             public class ImageCrop
@@ -132,9 +152,14 @@ namespace CCVApp
                 public const float SlideRate = .50f;
 
                 /// <summary>
+                /// On iOS only, the amount of space between buttons on the subNavigation toolbar (the one at the bottom)
+                /// </summary>
+                public const float iOS_ButtonSpacing = 5.0f;
+
+                /// <summary>
                 /// The font to use for displaying the subNavigation toolbar's back button. (the one at the bottom)
                 /// </summary>
-                public const string BackButton_Font = "FontAwesome";
+                public const string BackButton_Font = "Bh";
 
                 /// <summary>
                 /// The color to use for displaying the subNavigation toolbar's back button when enabled. (the one at the bottom)
@@ -154,7 +179,7 @@ namespace CCVApp
                 /// <summary>
                 /// The text to display for the subNavigation toolbar's back button. (the one at the bottom)
                 /// </summary>
-                public const string BackButton_Text = "";
+                public const string BackButton_Text = "";
 
                 /// <summary>
                 /// The size (in font points) of the sub nav toolbar back button. (the one at the bottom)
@@ -164,7 +189,7 @@ namespace CCVApp
                 /// <summary>
                 /// The font to use for displaying the subNavigation toolbar's share button. (the one at the bottom)
                 /// </summary>
-                public const string ShareButton_Font = "FontAwesome";
+                public const string ShareButton_Font = "Pe-icon-7-stroke";
 
                 /// <summary>
                 /// The color to use for displaying the subNavigation toolbar's share button when enabled. (the one at the bottom)
@@ -184,7 +209,7 @@ namespace CCVApp
                 /// <summary>
                 /// The text to display for the subNavigation toolbar's share button. (the one at the bottom)
                 /// </summary>
-                public const string ShareButton_Text = "";
+                public const string ShareButton_Text = "";
 
                 /// <summary>
                 /// The size (in font points) of the sub nav toolbar share button. (the one at the bottom)
@@ -194,7 +219,7 @@ namespace CCVApp
                 /// <summary>
                 /// The font to use for displaying the subNavigation toolbar's create button. (the one at the bottom)
                 /// </summary>
-                public const string CreateButton_Font = "FontAwesome";
+                public const string CreateButton_Font = "Bh";
 
                 /// <summary>
                 /// The color to use for displaying the subNavigation toolbar's create button when enabled. (the one at the bottom)
@@ -214,7 +239,7 @@ namespace CCVApp
                 /// <summary>
                 /// The text to display for the subNavigation toolbar's create button. (the one at the bottom)
                 /// </summary>
-                public const string CreateButton_Text = "";
+                public const string CreateButton_Text = "";
 
                 /// <summary>
                 /// The size (in font points) of the sub nav toolbar create button. (the one at the bottom)
@@ -235,12 +260,12 @@ namespace CCVApp
                 /// <summary>
                 /// The character to be displayed representing the reveal button.
                 /// </summary>
-                public const string RevealButton_Text = "";
+                public const string RevealButton_Text = "";
 
                 /// <summary>
                 /// The font to use for displaying the reveal button.
                 /// </summary>
-                public const string RevealButton_Font = "FontAwesome";
+                public const string RevealButton_Font = "Bh";
 
                 /// <summary>
                 /// The color of the reveal button when not pressed.
@@ -265,7 +290,7 @@ namespace CCVApp
                 /// <summary>
                 /// The size of the character representing the reveal button.
                 /// </summary>
-                public const int RevealButton_Size = 24;
+                public const int RevealButton_Size = 36;
 
                 /// <summary>
                 /// The color of the primary nav bar background.
@@ -421,6 +446,36 @@ namespace CCVApp
                 /// The rate of scrolling "down" required to hide the nav bar.
                 /// </summary>
                 public const float ScrollRateForNavBarHide = 50;
+
+                /// <summary>
+                /// The color of the series details table background. (You most likely want this to match Table_CellBackgroundColor)
+                /// </summary>
+                public const uint Series_Details_Table_BackgroundColor = 0x1C1C1CFF;
+
+                /// <summary>
+                /// The color of the series details table cell seperators.
+                /// </summary>
+                public const uint Series_Details_Table_SeperatorBackgroundColor = 0x000000FF;
+
+                /// <summary>
+                /// The color of an in-use table cell. (You most likely want this to match Series_Details_Table_BackgroundColor)
+                /// </summary>
+                public const uint Series_Details_Table_CellBackgroundColor = 0x1C1C1CFF;
+
+                /// <summary>
+                /// The color of an in-use table cell. (You most likely want this to match Series_Details_Table_BackgroundColor)
+                /// </summary>
+                public const uint Series_Details_Table_CellTextColor = 0xFFFFFFFF;
+
+                /// <summary>
+                /// The height that an image should be within the cell
+                /// </summary>
+                public const float Series_Details_CellImageHeight = 150;
+
+                /// <summary>
+                /// The width that an image should be within the cell
+                /// </summary>
+                public const float Series_Details_CellImageWidth = 200;
             }
 
             public sealed class Prayer
@@ -429,6 +484,14 @@ namespace CCVApp
                 /// The length of the animation when a prayer card is animating.
                 /// </summary>
                 public const float Card_AnimationDuration = .25f;
+            }
+
+            public sealed class About
+            {
+                /// <summary>
+                /// The page to navigate to in the About's embedded webview.
+                /// </summary>
+                public const string Url = "http://www.ccvonline.com/Arena/default.aspx?page=17623";
             }
         }
     }

@@ -80,7 +80,7 @@
             android:layout_centerVertical="true"
             android:layout_gravity="center_vertical" />
         <TextView
-            android:text="Group Finder"
+            android:text="Connect"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -200,7 +200,7 @@
             android:layout_centerVertical="true"
             android:layout_gravity="center_vertical" />
         <TextView
-            android:text="About CCV"
+            android:text="More"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

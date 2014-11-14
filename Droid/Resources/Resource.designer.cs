@@ -75,59 +75,59 @@ namespace Droid
 			// aapt resource value: 0x7f050000
 			public const int about_PrimaryFragmentText = 2131034112;
 			
-			// aapt resource value: 0x7f05000e
-			public const int activetask = 2131034126;
-			
-			// aapt resource value: 0x7f050012
-			public const int ccv_logo = 2131034130;
-			
-			// aapt resource value: 0x7f05000b
-			public const int fragment_container = 2131034123;
-			
-			// aapt resource value: 0x7f050010
-			public const int fullscreen = 2131034128;
-			
 			// aapt resource value: 0x7f050001
-			public const int give_PrimaryFragmentText = 2131034113;
-			
-			// aapt resource value: 0x7f050008
-			public const int login_cancelButton = 2131034120;
-			
-			// aapt resource value: 0x7f050002
-			public const int login_imageView1 = 2131034114;
-			
-			// aapt resource value: 0x7f050006
-			public const int login_linearLayout2 = 2131034118;
-			
-			// aapt resource value: 0x7f050007
-			public const int login_loginButton = 2131034119;
-			
-			// aapt resource value: 0x7f050005
-			public const int login_loginResultLabel = 2131034117;
-			
-			// aapt resource value: 0x7f050009
-			public const int login_needAccountButton = 2131034121;
-			
-			// aapt resource value: 0x7f050004
-			public const int login_passwordText = 2131034116;
-			
-			// aapt resource value: 0x7f05000a
-			public const int login_progressBar = 2131034122;
-			
-			// aapt resource value: 0x7f050003
-			public const int login_usernameText = 2131034115;
-			
-			// aapt resource value: 0x7f05000d
-			public const int navbar = 2131034125;
-			
-			// aapt resource value: 0x7f050011
-			public const int navbar_relative_layout = 2131034129;
+			public const int about_PrimaryFragmentWebView = 2131034113;
 			
 			// aapt resource value: 0x7f05000f
-			public const int navtoolbar = 2131034127;
+			public const int activetask = 2131034127;
 			
 			// aapt resource value: 0x7f050013
-			public const int news_details_banner = 2131034131;
+			public const int ccv_logo = 2131034131;
+			
+			// aapt resource value: 0x7f05000c
+			public const int fragment_container = 2131034124;
+			
+			// aapt resource value: 0x7f050011
+			public const int fullscreen = 2131034129;
+			
+			// aapt resource value: 0x7f050002
+			public const int give_PrimaryFragmentText = 2131034114;
+			
+			// aapt resource value: 0x7f050009
+			public const int login_cancelButton = 2131034121;
+			
+			// aapt resource value: 0x7f050003
+			public const int login_imageView1 = 2131034115;
+			
+			// aapt resource value: 0x7f050007
+			public const int login_linearLayout2 = 2131034119;
+			
+			// aapt resource value: 0x7f050008
+			public const int login_loginButton = 2131034120;
+			
+			// aapt resource value: 0x7f050006
+			public const int login_loginResultLabel = 2131034118;
+			
+			// aapt resource value: 0x7f05000a
+			public const int login_needAccountButton = 2131034122;
+			
+			// aapt resource value: 0x7f050005
+			public const int login_passwordText = 2131034117;
+			
+			// aapt resource value: 0x7f05000b
+			public const int login_progressBar = 2131034123;
+			
+			// aapt resource value: 0x7f050004
+			public const int login_usernameText = 2131034116;
+			
+			// aapt resource value: 0x7f05000e
+			public const int navbar = 2131034126;
+			
+			// aapt resource value: 0x7f050012
+			public const int navbar_relative_layout = 2131034130;
+			
+			// aapt resource value: 0x7f050010
+			public const int navtoolbar = 2131034128;
 			
 			// aapt resource value: 0x7f050014
 			public const int news_details_details = 2131034132;
@@ -195,8 +195,8 @@ namespace Droid
 			// aapt resource value: 0x7f050018
 			public const int refreshButton = 2131034136;
 			
-			// aapt resource value: 0x7f05000c
-			public const int springboard = 2131034124;
+			// aapt resource value: 0x7f05000d
+			public const int springboard = 2131034125;
 			
 			// aapt resource value: 0x7f050043
 			public const int springboard_about_button = 2131034179;

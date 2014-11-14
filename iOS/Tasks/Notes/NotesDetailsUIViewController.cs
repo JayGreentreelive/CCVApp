@@ -5,6 +5,7 @@ using System.CodeDom.Compiler;
 using CCVApp.Shared.Notes.Model;
 using System.Collections.Generic;
 using System.Drawing;
+using CCVApp.Shared;
 
 namespace iOS
 {
@@ -14,21 +15,17 @@ namespace iOS
         {
             NotesDetailsUIViewController Parent { get; set; }
 
-            List<Series.Message> Messages { get; set; }
-            List<UIImageView> MessageImage { get; set; }
+            List<MessageEntry> Messages { get; set; }
 
             string cellIdentifier = "TableCell";
 
             float PendingCellHeight { get; set; }
 
-            public TableSource (NotesDetailsUIViewController parent, List<Series.Message> messagesList, List<UIImageView> messageImage )
+            public TableSource (NotesDetailsUIViewController parent, List<MessageEntry> messages )
             {
                 Parent = parent;
 
-                Messages = messagesList;
-
-                MessageImage = messageImage;
-            }
+                Messages = messages;            }
 
             public override int RowsInSection (UITableView tableview, int section)
             {
@@ -40,7 +37,7 @@ namespace iOS
                 tableView.DeselectRow( indexPath, true );
 
                 // notify our parent
-                Parent.RowClicked( indexPath.Row );
+                Parent.RowClicked( indexPath.Row, -1 );
             }
 
             public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
@@ -56,85 +53,221 @@ namespace iOS
                 }
             }
 
+            public void ButtonClicked( int rowIndex, int buttonIndex )
+            {
+                Parent.RowClicked( rowIndex, buttonIndex );
+            }
+
+            class MessageCell : UITableViewCell
+            {
+                public MessageCell( UITableViewCellStyle style, string cellIdentifier ) : base( style, cellIdentifier )
+                {
+                    Image = new UIImageView( );
+                    Label = new UILabel( );
+
+                    Watch = UIButton.FromType( UIButtonType.System );
+                    Read = UIButton.FromType( UIButtonType.System );
+
+                    Watch.TouchUpInside += (object sender, EventArgs e) => 
+                        {
+                            ParentTableSource.ButtonClicked( RowIndex, 0 );
+                        };
+
+                    Read.TouchUpInside += (object sender, EventArgs e) => 
+                        {
+                            ParentTableSource.ButtonClicked( RowIndex, 1 );
+                        };
+
+
+                    Watch.SetTitle( "Watch", UIControlState.Normal );
+                    Watch.SizeToFit( );
+
+
+                    Read.SetTitle( "Take Notes", UIControlState.Normal );
+                    Read.SizeToFit( );
+
+                    AddSubview( Image );
+                    AddSubview( Label );
+
+                    AddSubview( Watch );
+                    AddSubview( Read );
+                }
+
+                public TableSource ParentTableSource { get; set; }
+
+                public int RowIndex { get; set; }
+
+                public UIImageView Image { get; set; }
+                public UILabel Label { get; set; }
+
+                public UIButton Watch { get; set; }
+                public UIButton Read { get; set; }
+            }
+
+            const int CellVerticalPadding = 10;
+            const int CellHorizontalPadding = 10;
+
             public override UITableViewCell GetCell (UITableView tableView, MonoTouch.Foundation.NSIndexPath indexPath)
             {
-                UITableViewCell cell = tableView.DequeueReusableCell (cellIdentifier);
+                MessageCell cell = tableView.DequeueReusableCell (cellIdentifier) as MessageCell;
+
                 // if there are no cells to reuse, create a new one
                 if (cell == null)
                 {
-                    cell = new UITableViewCell (UITableViewCellStyle.Default, cellIdentifier);
+                    cell = new MessageCell (UITableViewCellStyle.Default, cellIdentifier);
+                    cell.ParentTableSource = this;
 
                     // configure the cell colors
-                    cell.BackgroundColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.News.Table_CellBackgroundColor );
-                    cell.TextLabel.TextColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.News.Table_CellTextColor );
-                    cell.SelectionStyle = UITableViewCellSelectionStyle.Default;
+                    cell.BackgroundColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.Note.Series_Details_Table_CellBackgroundColor );
+                    cell.Label.TextColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.Note.Series_Details_Table_CellTextColor );
+                    cell.SelectionStyle = UITableViewCellSelectionStyle.None;
                 }
 
-                // set the image for the cell
-                //UIImageView imageView = SeriesImage[ indexPath.Row ];
-                //cell.ContentView.AddSubview( imageView );
-                //cell.Bounds = imageView.Bounds;
+                cell.RowIndex = indexPath.Row;
 
-                cell.TextLabel.Text = Messages[ indexPath.Row ].Name + "\n" + Messages[ indexPath.Row ].Description;
-                cell.TextLabel.Lines = 0;
-                cell.TextLabel.LineBreakMode = UILineBreakMode.WordWrap;
-                cell.TextLabel.SizeToFit( );
+                // setup the image
+                UIImageView image = cell.Image;
+                image.Image = Messages[ indexPath.Row ].Thumbnail;
+                image.ContentMode = UIViewContentMode.ScaleAspectFit;
+                image.Layer.AnchorPoint = new System.Drawing.PointF( 0, 0 );
+                image.SizeToFit( );
 
-                PendingCellHeight = cell.Frame.Height;
+                // foce the image to be sized according to the height of the cell
+                image.Frame = new RectangleF( (cell.Frame.Width - CCVApp.Shared.Config.Note.Series_Details_CellImageWidth) / 2, 
+                                               0, 
+                                               CCVApp.Shared.Config.Note.Series_Details_CellImageWidth, 
+                                               CCVApp.Shared.Config.Note.Series_Details_CellImageHeight );
+
+                // create a text label next to the image that allows word wrapping
+                UILabel textLabel = cell.Label;
+                textLabel.Text = Messages[ indexPath.Row ].Message.Name;
+                textLabel.LineBreakMode = UILineBreakMode.TailTruncation;
+
+                // set the allowed width for the text, then adjust the size, and then expand the height in case it's too small.
+                textLabel.TextAlignment = UITextAlignment.Center;
+                textLabel.Frame = new System.Drawing.RectangleF( 0, 0, cell.Frame.Width, 0 );
+                textLabel.SizeToFit( );
+                textLabel.Frame = new System.Drawing.RectangleF( 0, image.Frame.Bottom + CellVerticalPadding, cell.Frame.Width, textLabel.Frame.Height );
+
+                cell.Watch.Frame = new RectangleF( CellHorizontalPadding, textLabel.Frame.Bottom, cell.Watch.Frame.Width, cell.Watch.Frame.Height );
+                cell.Read.Frame = new RectangleF( cell.Frame.Width - cell.Read.Frame.Width - CellHorizontalPadding, textLabel.Frame.Bottom, cell.Read.Frame.Width, cell.Read.Frame.Height );
+
+                // the watch button should only be enabled if the message has a podcast
+                cell.Watch.Enabled = Messages[ indexPath.Row ].HasPodcast;
+
+                PendingCellHeight = cell.Read.Frame.Bottom;
 
                 return cell;
             }
         }
 
+        /// <summary>
+        /// A wrapper class that consolidates the message, it's thumbnail and podcast status
+        /// </summary>
+        public class MessageEntry
+        {
+            public Series.Message Message { get; set; }
+            public UIImage Thumbnail { get; set; }
+            public bool HasPodcast { get; set; }
+        }
+
         public Series Series { get; set; }
+        public List<MessageEntry> Messages { get; set; }
+        public UIImage ThumbnailPlaceholder{ get; set; }
 
 		public NotesDetailsUIViewController (IntPtr handle) : base (handle)
 		{
+            string imagePath = NSBundle.MainBundle.BundlePath + "/" + "podcastThumbnailPlaceholder.png";
+            ThumbnailPlaceholder = new UIImage( imagePath );
 		}
 
         public override void ViewDidLoad()
         {
             base.ViewDidLoad( );
 
-            TableSource source = new TableSource( this, Series.Messages, null );
+            // setup the table view and general background view colors
+            View.BackgroundColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.Note.Series_Details_Table_BackgroundColor );
+            SeriesTable.BackgroundColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.Note.Series_Details_Table_BackgroundColor );
+            SeriesTable.SeparatorColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.Note.Series_Details_Table_SeperatorBackgroundColor );
+
+            // setup the messages list
+            Messages = new List<MessageEntry>();
+
+            for ( int i = 0; i < Series.Messages.Count; i++ )
+            {
+                MessageEntry messageEntry = new MessageEntry();
+                Messages.Add( messageEntry );
+
+                // give each message entry its message and the default thumbnail
+                messageEntry.Message = Series.Messages[ i ];
+                messageEntry.Thumbnail = ThumbnailPlaceholder; //todo: we should just default to the series' image banner
+
+                // grab the thumbnail IF it has a podcast
+                if ( string.IsNullOrEmpty( Series.Messages[ i ].PodcastUrl ) == false )
+                {
+                    messageEntry.HasPodcast = true;
+
+                    int requestedIndex = i;
+                    VimeoManager.Instance.GetVideoThumbnail( Series.Messages[ requestedIndex ].PodcastUrl, delegate(System.Net.HttpStatusCode statusCode, string statusDescription, System.IO.MemoryStream imageBuffer )
+                        {
+                            // show the image
+                            NSData imageData = NSData.FromStream( imageBuffer );
+                            UIImage uiImage = new UIImage( imageData );
+
+                            // update the image on the UI Thread ONLY!
+                            InvokeOnMainThread( delegate
+                                { 
+                                    messageEntry.Thumbnail = uiImage;
+                                    SeriesTable.ReloadData( );
+                                } );
+                        } );
+                }
+            }
+
+            // update the table
+            TableSource source = new TableSource( this, Messages );
             SeriesTable.Source = source;
             SeriesTable.ReloadData( );
         }
 
-        public void RowClicked( int row )
+        public override void ViewDidLayoutSubviews()
         {
-            // for now, let the note name be the previous saturday
-            /*DateTime time = DateTime.UtcNow;
+            base.ViewDidLayoutSubviews();
 
-            // if it's not saturday, find the date of the past saturday
-            if( time.DayOfWeek != DayOfWeek.Saturday )
+            // adjust the table height for our navbar.
+            // We MUST do it here, and we also have to set ContentType to Top, as opposed to ScaleToFill, on the view itself,
+            // or our changes will be overwritten
+            if ( NavigationController != null )
             {
-                time = time.Subtract( new TimeSpan( (int)time.DayOfWeek + 1, 0, 0, 0 ) );
+                SeriesTable.Frame = new RectangleF( 0, NavigationController.NavigationBar.Frame.Height, View.Bounds.Width, View.Bounds.Height - NavigationController.NavigationBar.Frame.Height );
             }
+        }
 
-            NotesViewController.NotePresentableName = string.Format( "Sermon Note - {0}.{1}.{2}", time.Month, time.Day, time.Year );
-            #if DEBUG
-            NotesViewController.NoteName = "sample_note";
-            #else
-            NotesViewController.NoteName = string.Format("{0}_{1}_{2}_{3}", CCVApp.Shared.Config.Note.NamePrefix, time.Month, time.Day, time.Year );
-            #endif
-            //
+        public void RowClicked( int row, int buttonIndex )
+        {
+            // passing in -1 means they tapped an empty area of a cell. Use 
+            // that to reveal the navbar
+            if ( buttonIndex == -1 )
+            {
+                Task.NavToolbar.RevealForTime( 3.0f );
+            }
+            // 0 would be the first button, which is Watch
+            else if ( buttonIndex == 0 )
+            {
+                NotesWatchUIViewController viewController = Storyboard.InstantiateViewController( "NotesWatchUIViewController" ) as NotesWatchUIViewController;
+                viewController.WatchUrl = Series.Messages[ row ].PodcastUrl;
 
-            // set our current page as root
-            parentViewController.PushViewController(NotesViewController, false);
+                Task.PerformSegue( this, viewController );
+            }
+            // and 1 would be the second button, which is Notes
+            else if ( buttonIndex == 1 )
+            {
+                NotesViewController viewController = new NotesViewController();
+                viewController.NotePresentableName = string.Format( "Message - {0}", Series.Messages[ row ].Name );
+                viewController.NoteName = Series.Messages[ row ].NoteUrl;
 
-            NotesViewController.MakeActive( );*/
-
-
-            /*NotesDetailsUIViewController viewController = Storyboard.InstantiateViewController( "NotesDetailsUIViewController" ) as NotesDetailsUIViewController;
-            viewController.Series = Series[ row ];
-            Task.PerformSegue( this, viewController );*/
-
-            NotesViewController viewController = new NotesViewController( );
-            viewController.NotePresentableName = string.Format( "Message - {0}", Series.Messages[ row ].Name );
-            viewController.NoteName = Series.Messages[ row ].NoteUrl;
-
-            Task.PerformSegue( this, viewController );
+                Task.PerformSegue( this, viewController );
+            }
         }
 	}
 }

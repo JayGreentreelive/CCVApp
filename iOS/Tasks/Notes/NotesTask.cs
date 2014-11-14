@@ -119,6 +119,19 @@ namespace iOS
             }
         }
 
+        public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations()
+        {
+            // if we're using the watch or notes controller, allow landscape
+            if ( ( ActiveViewController as NotesViewController ) != null || ( ActiveViewController as NotesWatchUIViewController ) != null )
+            {
+                return UIInterfaceOrientationMask.All;
+            }
+            else
+            {
+                return base.GetSupportedInterfaceOrientations( );
+            }
+        }
+
         public override void AppWillTerminate()
         {
             // if the notes are active and the app is being killed, let the notes know so they can save.

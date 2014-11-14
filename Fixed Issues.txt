@@ -1,27 +1,17 @@
+Both 
+	Updated the ordering of items in the Springboard
+	Updated the user name display when logged in
+	Updated the bottom nav toolbar to consistently show all icons
+	Added a "Create" button to the nav toolbar.
+	Removed the Prayer Creation button and put the logic in the Create toolbar button
+	Added Note Series and Message pages.
+	Added a Giving section
+	Updated the nav toolbar to show new button icons.
+	Added video playback for Messages!
 
-Android - Fixed an issue causing a crash if back was pressed while cropping an image, and then
-the image cropper was loaded again.
-Android - Fixed an issue causing Logout to not work.
-Android - Fixed an issue causing the Share Button to show up in News and crash if tapped.
-Android - Added News list and items.
-Android - Import images from Photo Library
-Android - User can now slide out the springboard with their finger.
-Android - Fixed an issue causing the profile picture to show the uncropped camera image if the profile pic 	changing was cancelled during cropping of a camera picture.
-Android - Fixed an issue causing the camera to display twice in a row if the device was rotated while previewing
-an image.
-Android - Fixed an issue causing an error to display when the user cancelled updating their profile picture on the Camera screen.
+Android
+	Fixed a crash on Android when pressing back after going several menus deep and then using the springboard.
 
-iOS - Improved News items to show a description, banner and URL link. 
-iOS - Import images from Photo Library
-iOS - Crop Images
-iOS - Moving User Notes significantly easier
-iOS - Fixed an issue causing user notes near the bottom of the Note to not be movable.
-iOS - Fixed an issue allowing the springboard to slide out when in Landscape mode.
-iOS - Fixed an issue causing the Notes to display incorrectly if rotating to landscape while the keyboard was up
-iOS - Fixed an issue causing the profile picture to be overwritten with a temp image if the camera was cancelled while cropping.
-iOS - Fixed aspect ratio handling when setting a profile picture.
-iOS - Fixed rotation issues with the app so that it correctly allows only the Notes to enter Landscape mode.
-
-Both - Prayer viewing and creation
-Both - Support for shorthand elements in NoteScript (<P> for Paragraph, <RB> for RevealBox, etc.)
-Both - Springboard icons are now rendered as fonts, not images. (They now look better)
+iOS
+	Fixed a double request if leaving the Prayer page and returning before the initial request came back.
+	Fixed an issue causing the "Reveal Springboard" pan gesture to sometimes not work.

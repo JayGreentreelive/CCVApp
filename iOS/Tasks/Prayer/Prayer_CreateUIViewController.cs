@@ -52,7 +52,7 @@ namespace iOS
                                 }
                                 else
                                 {
-                                    SpringboardViewController.DisplayError( "Prayer", "There was a problem submitting your prayer request. Check your network settings and try again." );
+                                    SpringboardViewController.DisplayError( CCVApp.Shared.Strings.Prayer.Error_Title, CCVApp.Shared.Strings.Prayer.Error_Submit_Message );
 
                                     FirstNameText.Enabled = true;
                                     LastNameText.Enabled = true;

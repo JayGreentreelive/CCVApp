@@ -12,6 +12,7 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using Android.Graphics;
+using Rock.Mobile.PlatformCommon;
 
 namespace Droid
 {
@@ -40,7 +41,10 @@ namespace Droid
                     view.SetOnTouchListener( this );
 
                     // set the banner
-                    ImageView banner = view.FindViewById<ImageView>( Resource.Id.news_details_banner );
+                    DroidScaledImageView banner = new DroidScaledImageView( Activity );
+                    banner.Id = 777;
+                    ( (RelativeLayout)view ).AddView( banner );
+
                     System.IO.Stream assetStream = Activity.BaseContext.Assets.Open( NewsItem.HeaderImageName );
                     banner.SetImageBitmap( BitmapFactory.DecodeStream( assetStream ) );
 
@@ -48,6 +52,7 @@ namespace Droid
                     // set the description
                     TextView description = view.FindViewById<TextView>( Resource.Id.news_details_details );
                     description.Text = NewsItem.Description;
+                    ( (RelativeLayout.LayoutParams)description.LayoutParameters ).AddRule( LayoutRules.Below, banner.Id );
 
 
                     Button launchUrlButton = view.FindViewById<Button>(Resource.Id.news_details_launch_url);
