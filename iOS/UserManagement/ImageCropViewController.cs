@@ -7,6 +7,8 @@ using MonoTouch.CoreGraphics;
 using System.Drawing;
 using MonoTouch.CoreImage;
 using MonoTouch.AssetsLibrary;
+using Rock.Mobile.PlatformCommon;
+using CCVApp.Shared.Config;
 
 namespace iOS
 {
@@ -146,10 +148,10 @@ namespace iOS
             UIToolbar toolbar = new UIToolbar( new RectangleF( 0, View.Bounds.Height - 40, View.Bounds.Width, 40 ) );
 
             // create the cancel button
-            NSString cancelLabel = new NSString( CCVApp.Shared.Config.ImageCrop.CropCancelButton_Text );
+            NSString cancelLabel = new NSString( ImageCropConfig.CropCancelButton_Text );
 
             CancelButton = new UIButton(UIButtonType.System);
-            CancelButton.Font = Rock.Mobile.PlatformCommon.iOS.LoadFontDynamic( CCVApp.Shared.Config.ImageCrop.CropCancelButton_Font, CCVApp.Shared.Config.ImageCrop.CropCancelButton_Size );
+            CancelButton.Font = iOSCommon.LoadFontDynamic( ImageCropConfig.CropCancelButton_Font, ImageCropConfig.CropCancelButton_Size );
             CancelButton.SetTitle( cancelLabel.ToString( ), UIControlState.Normal );
 
             SizeF buttonSize = cancelLabel.StringSize( CancelButton.Font );
@@ -169,10 +171,10 @@ namespace iOS
                 };
 
             // create the edit button
-            NSString editLabel = new NSString( CCVApp.Shared.Config.ImageCrop.CropOkButton_Text );
+            NSString editLabel = new NSString( ImageCropConfig.CropOkButton_Text );
 
             EditButton = new UIButton(UIButtonType.System);
-            EditButton.Font = Rock.Mobile.PlatformCommon.iOS.LoadFontDynamic( CCVApp.Shared.Config.ImageCrop.CropOkButton_Font, CCVApp.Shared.Config.ImageCrop.CropOkButton_Size );
+            EditButton.Font = iOSCommon.LoadFontDynamic( ImageCropConfig.CropOkButton_Font, ImageCropConfig.CropOkButton_Size );
             EditButton.SetTitle( editLabel.ToString( ), UIControlState.Normal );
             EditButton.HorizontalAlignment = UIControlContentHorizontalAlignment.Right;
 

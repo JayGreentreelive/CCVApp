@@ -13,6 +13,7 @@ namespace Droid
                 NotesFragment NotesPage { get; set; }
                 NotesPrimaryFragment MainPage { get; set; }
                 NotesDetailsFragment DetailsPage { get; set; }
+                NotesWatchFragment WatchPage { get; set; }
 
                 public NotesTask( NavbarFragment navFragment ) : base( navFragment )
                 {
@@ -35,26 +36,16 @@ namespace Droid
                         NotesPage = new NotesFragment( );
                     }
 
-                    // for now, let the note name be the previous saturday
-                    /*DateTime time = DateTime.UtcNow;
-
-                    // if it's not saturday, find the date of the past saturday
-                    if( time.DayOfWeek != DayOfWeek.Saturday )
+                    WatchPage = (NotesWatchFragment)NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.Notes.NotesWatchFragment" );
+                    if ( WatchPage == null )
                     {
-                        time = time.Subtract( new TimeSpan( (int)time.DayOfWeek + 1, 0, 0, 0 ) );
+                        WatchPage = new NotesWatchFragment( );
                     }
-                    MainPage.NotePresentableName = string.Format( "Sermon Note - {0}.{1}.{2}", time.Month, time.Day, time.Year );
-
-                    #if DEBUG
-                    MainPage.NoteName = "sample_note";
-                    #else
-                    MainPage.NoteName = string.Format("{0}_{1}_{2}_{3}", CCVApp.Shared.Config.Note.NamePrefix, time.Month, time.Day, time.Year );
-                    #endif*/
-                    //
 
                     MainPage.ParentTask = this;
                     DetailsPage.ParentTask = this;
                     NotesPage.ParentTask = this;
+                    WatchPage.ParentTask = this;
                 }
 
                 public override void SpringboardDidAnimate( bool springboardRevealed )
@@ -119,7 +110,7 @@ namespace Droid
                     return MainPage;
                 }
 
-                public override void OnClick(Android.App.Fragment source, int buttonId)
+                public override void OnClick(Android.App.Fragment source, int buttonId, object context = null)
                 {
                     // only handle input if the springboard is closed
                     if ( NavbarFragment.ShouldTaskAllowInput( ) )
@@ -127,18 +118,32 @@ namespace Droid
                         // decide what to do.
                         if ( source == MainPage )
                         {
-                            DetailsPage.Messages = MainPage.Series[ buttonId ].Messages;
+                            DetailsPage.Series = MainPage.SeriesEntries[ buttonId ].Series;
+                            DetailsPage.ThumbnailPlaceholder = MainPage.SeriesEntries[ buttonId ].Thumbnail;
                             PresentFragment( DetailsPage, true );
 
                             ActiveFragment = DetailsPage;
                         }
                         else if ( source == DetailsPage )
                         {
-                            NotesPage.NoteName = DetailsPage.Messages[ buttonId ].NoteUrl;
-                            NotesPage.NotePresentableName = DetailsPage.Messages[ buttonId ].Name;
+                            // the context is the button they clicked (watch or take notes)
+                            int buttonChoice = (int)context;
 
-                            PresentFragment( NotesPage, true );
-                            ActiveFragment = NotesPage;
+                            if ( buttonChoice == 0 )
+                            {
+                                WatchPage.VideoUrl = DetailsPage.Messages[ buttonId ].Message.PodcastUrl;
+
+                                PresentFragment( WatchPage, true );
+                                ActiveFragment = WatchPage;
+                            }
+                            else if ( buttonChoice == 1 )
+                            {
+                                NotesPage.NoteName = DetailsPage.Messages[ buttonId ].Message.NoteUrl;
+                                NotesPage.NotePresentableName = DetailsPage.Messages[ buttonId ].Message.Name;
+
+                                PresentFragment( NotesPage, true );
+                                ActiveFragment = NotesPage;
+                            }
                         }
                     }
                 }

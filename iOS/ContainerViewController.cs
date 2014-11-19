@@ -5,6 +5,9 @@ using System.CodeDom.Compiler;
 using System.Drawing;
 using System.Collections.Generic;
 using System.Threading;
+using Rock.Mobile.PlatformCommon;
+using CCVApp.Shared.Config;
+using Rock.Mobile.PlatformUI;
 
 namespace iOS
 {
@@ -83,10 +86,10 @@ namespace iOS
             // First setup the SpringboardReveal button, which rests in the upper left
             // of the MainNavigationUI. (We must do it here because the ContainerViewController's
             // NavBar is the active one.)
-            NSString buttonLabel = new NSString(CCVApp.Shared.Config.PrimaryNavBar.RevealButton_Text);
+            NSString buttonLabel = new NSString(PrimaryNavBarConfig.RevealButton_Text);
 
             SpringboardRevealButton = new UIButton(UIButtonType.System);
-            SpringboardRevealButton.Font = Rock.Mobile.PlatformCommon.iOS.LoadFontDynamic( CCVApp.Shared.Config.PrimaryNavBar.RevealButton_Font, CCVApp.Shared.Config.PrimaryNavBar.RevealButton_Size );
+            SpringboardRevealButton.Font = iOSCommon.LoadFontDynamic( PrimaryNavBarConfig.RevealButton_Font, PrimaryNavBarConfig.RevealButton_Size );
             SpringboardRevealButton.SetTitle( buttonLabel.ToString( ), UIControlState.Normal );
 
             // determine its dimensions
@@ -102,13 +105,13 @@ namespace iOS
             //
 
             // set the title image for the bar
-            string imagePath = NSBundle.MainBundle.BundlePath + "/" + CCVApp.Shared.Config.PrimaryNavBar.LogoFile;
+            string imagePath = NSBundle.MainBundle.BundlePath + "/" + PrimaryNavBarConfig.LogoFile;
             this.NavigationItem.TitleView = new UIImageView( new UIImage( imagePath ) );
 
             //todo: add a 2x2 tile color background if desired/needed
-            //if( string.IsNullOrEmpty( CCVApp.Shared.Config.PrimaryNavBar.BackgroundTileImage ) == false )
+            //if( string.IsNullOrEmpty( PrimaryNavBar.BackgroundTileImage ) == false )
             {
-                //imagePath = NSBundle.MainBundle.BundlePath + "/" + CCVApp.Shared.Config.PrimaryNavBar.BackgroundTileImage;
+                //imagePath = NSBundle.MainBundle.BundlePath + "/" + PrimaryNavBar.BackgroundTileImage;
                 //NavigationController.NavigationBar.SetBackgroundImage( new UIImage( imagePath ), UIBarMetrics.Default );
             }
 
@@ -133,9 +136,9 @@ namespace iOS
 
             // setup the toolbar that will manage task navigation and any other tasks the task needs
             SubNavToolbar = new NavToolbar();
-            SubNavToolbar.Frame = new RectangleF( 0, SubNavigationController.View.Frame.Height, View.Frame.Width, CCVApp.Shared.Config.SubNavToolbar.Height);
-            SubNavToolbar.BarTintColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.BackgroundColor );
-            SubNavToolbar.Layer.Opacity = CCVApp.Shared.Config.SubNavToolbar.Opacity;
+            SubNavToolbar.Frame = new RectangleF( 0, SubNavigationController.View.Frame.Height, View.Frame.Width, SubNavToolbarConfig.Height);
+            SubNavToolbar.BarTintColor = PlatformBaseUI.GetUIColor( SubNavToolbarConfig.BackgroundColor );
+            SubNavToolbar.Layer.Opacity = SubNavToolbarConfig.Opacity;
             SubNavigationController.View.AddSubview( SubNavToolbar );
 
             // add the back button

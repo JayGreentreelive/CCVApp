@@ -18,54 +18,59 @@ using Java.IO;
 using Droid.Tasks;
 using System.IO;
 using Rock.Mobile.PlatformCommon;
+using CCVApp.Shared;
+using CCVApp.Shared.Config;
+using CCVApp.Shared.Strings;
+using Rock.Mobile.PlatformUI;
 
 namespace Droid
 {
+    class SpringboardElement
+    {
+        public Tasks.Task Task { get; set; }
+
+        public RelativeLayout Layout { get; set; }
+        public int LayoutId { get; set; }
+
+        public Button Button { get; set; }
+        public int ButtonId { get; set; }
+
+        public TextView Icon { get; set; }
+        public int IconId { get; set; }
+        public string IconStr { get; set; }
+
+        public SpringboardElement( Tasks.Task task, int layoutId, int buttonId, int iconId, string iconStr )
+        {
+            Task = task;
+            LayoutId = layoutId;
+            ButtonId = buttonId;
+            IconId = iconId;
+            IconStr = iconStr;
+        }
+
+        public void OnCreateView( View parentView )
+        {
+            Layout = parentView.FindViewById<RelativeLayout>( LayoutId );
+            Icon = parentView.FindViewById<TextView>( IconId );
+            Button = parentView.FindViewById<Button>( ButtonId );
+
+            Typeface fontFace = DroidFontManager.Instance.GetFont( SpringboardConfig.Element_Font );
+            Icon.SetTypeface( fontFace, TypefaceStyle.Normal );
+            Icon.SetTextSize( Android.Util.ComplexUnitType.Dip, SpringboardConfig.Element_FontSize );
+            Icon.SetX( Icon.GetX() - Icon.Width / 2 );
+            Icon.Text = IconStr;
+
+            Button.Background = null;
+        }
+    }
+
     /// <summary>
     /// The springboard acts as the core navigation for the user. From here
     /// they may launch any of the app's activities.
     /// </summary>
     public class Springboard : Fragment, View.IOnTouchListener
     {
-        protected class SpringboardElement
-        {
-            public Tasks.Task Task { get; set; }
-
-            public RelativeLayout Layout { get; set; }
-            public int LayoutId { get; set; }
-
-            public Button Button { get; set; }
-            public int ButtonId { get; set; }
-
-            public TextView Icon { get; set; }
-            public int IconId { get; set; }
-            public string IconStr { get; set; }
-
-            public SpringboardElement( Tasks.Task task, int layoutId, int buttonId, int iconId, string iconStr )
-            {
-                Task = task;
-                LayoutId = layoutId;
-                ButtonId = buttonId;
-                IconId = iconId;
-                IconStr = iconStr;
-            }
-
-            public void OnCreateView( View parentView )
-            {
-                Layout = parentView.FindViewById<RelativeLayout>( LayoutId );
-                Icon = parentView.FindViewById<TextView>( IconId );
-                Button = parentView.FindViewById<Button>( ButtonId );
-
-                Typeface fontFace = DroidFontManager.Instance.GetFont( CCVApp.Shared.Config.Springboard.Element_Font );
-                Icon.SetTypeface( fontFace, TypefaceStyle.Normal );
-                Icon.SetTextSize( Android.Util.ComplexUnitType.Dip, CCVApp.Shared.Config.Springboard.Element_FontSize );
-                Icon.SetX( Icon.GetX() - Icon.Width / 2 );
-                Icon.Text = IconStr;
-
-                Button.Background = null;
-            }
-        }
-        protected List<SpringboardElement> Elements { get; set; }
+        List<SpringboardElement> Elements { get; set; }
 
         /// <summary>
         /// The top navigation bar that acts as the container for Tasks
@@ -139,12 +144,12 @@ namespace Droid
 
             // create our tasks
             Elements = new List<SpringboardElement>();
-            Elements.Add( new SpringboardElement( new Droid.Tasks.News.NewsTask( NavbarFragment ), Resource.Id.springboard_news_frame, Resource.Id.springboard_news_button, Resource.Id.springboard_news_icon, CCVApp.Shared.Config.Springboard.Element_News_Icon ) );
-            Elements.Add( new SpringboardElement( new Droid.Tasks.Placeholder.PlaceholderTask( NavbarFragment ), Resource.Id.springboard_groupfinder_frame, Resource.Id.springboard_groupfinder_button, Resource.Id.springboard_groupfinder_icon, CCVApp.Shared.Config.Springboard.Element_Connect_Icon ) );
-            Elements.Add( new SpringboardElement( new Droid.Tasks.Notes.NotesTask( NavbarFragment ), Resource.Id.springboard_notes_frame, Resource.Id.springboard_notes_button, Resource.Id.springboard_notes_icon, CCVApp.Shared.Config.Springboard.Element_Messages_Icon ) );
-            Elements.Add( new SpringboardElement( new Droid.Tasks.Prayer.PrayerTask( NavbarFragment ), Resource.Id.springboard_prayer_frame, Resource.Id.springboard_prayer_button, Resource.Id.springboard_prayer_icon, CCVApp.Shared.Config.Springboard.Element_Prayer_Icon ) );
-            Elements.Add( new SpringboardElement( new Droid.Tasks.Give.GiveTask( NavbarFragment ), Resource.Id.springboard_give_frame, Resource.Id.springboard_give_button, Resource.Id.springboard_give_icon, CCVApp.Shared.Config.Springboard.Element_Give_Icon ) );
-            Elements.Add( new SpringboardElement( new Droid.Tasks.About.AboutTask( NavbarFragment ), Resource.Id.springboard_about_frame, Resource.Id.springboard_about_button, Resource.Id.springboard_about_icon, CCVApp.Shared.Config.Springboard.Element_More_Icon ) );
+            Elements.Add( new SpringboardElement( new Droid.Tasks.News.NewsTask( NavbarFragment ), Resource.Id.springboard_news_frame, Resource.Id.springboard_news_button, Resource.Id.springboard_news_icon, SpringboardConfig.Element_News_Icon ) );
+            Elements.Add( new SpringboardElement( new Droid.Tasks.Placeholder.PlaceholderTask( NavbarFragment ), Resource.Id.springboard_groupfinder_frame, Resource.Id.springboard_groupfinder_button, Resource.Id.springboard_groupfinder_icon, SpringboardConfig.Element_Connect_Icon ) );
+            Elements.Add( new SpringboardElement( new Droid.Tasks.Notes.NotesTask( NavbarFragment ), Resource.Id.springboard_notes_frame, Resource.Id.springboard_notes_button, Resource.Id.springboard_notes_icon, SpringboardConfig.Element_Messages_Icon ) );
+            Elements.Add( new SpringboardElement( new Droid.Tasks.Prayer.PrayerTask( NavbarFragment ), Resource.Id.springboard_prayer_frame, Resource.Id.springboard_prayer_button, Resource.Id.springboard_prayer_icon, SpringboardConfig.Element_Prayer_Icon ) );
+            Elements.Add( new SpringboardElement( new Droid.Tasks.Give.GiveTask( NavbarFragment ), Resource.Id.springboard_give_frame, Resource.Id.springboard_give_button, Resource.Id.springboard_give_icon, SpringboardConfig.Element_Give_Icon ) );
+            Elements.Add( new SpringboardElement( new Droid.Tasks.About.AboutTask( NavbarFragment ), Resource.Id.springboard_about_frame, Resource.Id.springboard_about_button, Resource.Id.springboard_about_icon, SpringboardConfig.Element_More_Icon ) );
 
             ActiveElementIndex = 0;
             if( savedInstanceState != null )
@@ -182,7 +187,7 @@ namespace Droid
             }
 
             view.SetOnTouchListener( this );
-            view.SetBackgroundColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.Springboard.BackgroundColor ) );
+            view.SetBackgroundColor( PlatformBaseUI.GetUIColor( SpringboardConfig.BackgroundColor ) );
 
             // set the task we wish to have active
             ActivateElement( Elements[ ActiveElementIndex ] );
@@ -265,7 +270,7 @@ namespace Droid
 
                 if( success == false )
                 {
-                    DisplayError( CCVApp.Shared.Strings.Springboard.ProfilePicture_Error_Title, CCVApp.Shared.Strings.Springboard.ProfilePicture_Error_Message );
+                    DisplayError( SpringboardStrings.ProfilePicture_Error_Title, SpringboardStrings.ProfilePicture_Error_Message );
                 }
             }
         }
@@ -277,13 +282,13 @@ namespace Droid
             {
                 // setup the chooser dialog so they can pick the photo source
                 AlertDialog.Builder builder = new AlertDialog.Builder( Activity );
-                builder.SetTitle( CCVApp.Shared.Strings.Springboard.ProfilePicture_SourceTitle );
+                builder.SetTitle( SpringboardStrings.ProfilePicture_SourceTitle );
 
                 Java.Lang.ICharSequence [] strings = new Java.Lang.ICharSequence[]
                     {
-                        new Java.Lang.String( CCVApp.Shared.Strings.Springboard.ProfilePicture_SourcePhotoLibrary ),
-                        new Java.Lang.String( CCVApp.Shared.Strings.Springboard.ProfilePicture_SourceCamera ),
-                        new Java.Lang.String( CCVApp.Shared.Strings.General.Cancel )
+                        new Java.Lang.String( SpringboardStrings.ProfilePicture_SourcePhotoLibrary ),
+                        new Java.Lang.String( SpringboardStrings.ProfilePicture_SourceCamera ),
+                        new Java.Lang.String( GeneralStrings.Cancel )
                     };
 
                 builder.SetItems( strings, delegate(object sender, DialogClickEventArgs clickArgs) 
@@ -332,14 +337,14 @@ namespace Droid
                                                     else
                                                     {
                                                         // couldn't get the picture
-                                                        DisplayError( CCVApp.Shared.Strings.Springboard.ProfilePicture_Error_Title, CCVApp.Shared.Strings.Springboard.ProfilePicture_Error_Message );
+                                                        DisplayError( SpringboardStrings.ProfilePicture_Error_Title, SpringboardStrings.ProfilePicture_Error_Message );
                                                     }
                                                 });
                                         }
                                         else
                                         {
                                             // nope
-                                            DisplayError( CCVApp.Shared.Strings.Springboard.Camera_Error_Title, CCVApp.Shared.Strings.Springboard.Camera_Error_Message );
+                                            DisplayError( SpringboardStrings.Camera_Error_Title, SpringboardStrings.Camera_Error_Message );
                                         }
                                         break;
                                     }
@@ -404,11 +409,11 @@ namespace Droid
             if( RockMobileUser.Instance.LoggedIn )
             {
                 // get their profile
-                LoginProfileButton.Text = CCVApp.Shared.Strings.Springboard.LoggedIn_Prefix + " " + RockMobileUser.Instance.PreferredName( );
+                LoginProfileButton.Text = SpringboardStrings.LoggedIn_Prefix + " " + RockMobileUser.Instance.PreferredName( );
             }
             else
             {
-                LoginProfileButton.Text = CCVApp.Shared.Strings.Springboard.LoggedOut_Promo;
+                LoginProfileButton.Text = SpringboardStrings.LoggedOut_Promo;
             }
 
             SetProfileImage( );
@@ -479,7 +484,7 @@ namespace Droid
                         if( element != null )
                         {
                             // did we tap within the revealed springboard area?
-                            float visibleButtonWidth = NavbarFragment.View.Width * CCVApp.Shared.Config.PrimaryNavBar.RevealPercentage;
+                            float visibleButtonWidth = NavbarFragment.View.Width * PrimaryNavBarConfig.RevealPercentage;
                             if( e.GetX() < visibleButtonWidth )
                             {
                                 // we did, so activate the element associated with that button
@@ -501,17 +506,17 @@ namespace Droid
             NavbarFragment.ActiveTaskFrame = layout;
         }
 
-        protected void ActivateElement( SpringboardElement activeElement )
+        void ActivateElement( SpringboardElement activeElement )
         {
             foreach( SpringboardElement element in Elements )
             {
                 if( activeElement != element )
                 {
-                    element.Layout.SetBackgroundColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( 0x00000000 ) );
+                    element.Layout.SetBackgroundColor( PlatformBaseUI.GetUIColor( 0x00000000 ) );
                 }
             }
 
-            activeElement.Layout.SetBackgroundColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.Springboard.Element_SelectedColor ) );
+            activeElement.Layout.SetBackgroundColor( PlatformBaseUI.GetUIColor( SpringboardConfig.Element_SelectedColor ) );
             NavbarFragment.SetActiveTask( activeElement.Task );
         }
 

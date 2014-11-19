@@ -171,29 +171,36 @@ namespace CCVApp
                     UserNoteControls = new List<UserNote>( ); //store these seperately so we can back them up and test touch input.
 
                     // now use a reader to get each element
-                    XmlReader reader = XmlReader.Create( new StringReader( NoteXml ) );
+                    XmlTextReader reader = XmlReader.Create( new StringReader( NoteXml ) ) as XmlTextReader;
 
-                    // begin reading the xml stream
-                    bool finishedReading = false;
-                    while( finishedReading == false && reader.Read( ) )
+                    try
                     {
-                        switch( reader.NodeType )
+                        // begin reading the xml stream
+                        bool finishedReading = false;
+                        while( finishedReading == false && reader.Read( ) )
                         {
-                            case XmlNodeType.Element:
+                            switch( reader.NodeType )
                             {
-                                if( reader.Name == "Note" )
+                                case XmlNodeType.Element:
                                 {
-                                    ParseNote( reader, parentWidth, parentHeight );
-                                }
-                                else
-                                {
-                                    throw new Exception( String.Format( "Expected <Note> element. Found <{0}> instead.", reader.Name ) );
-                                }
+                                    if( reader.Name == "Note" )
+                                    {
+                                        ParseNote( reader, parentWidth, parentHeight );
+                                    }
+                                    else
+                                    {
+                                        throw new Exception( String.Format( "Expected <Note> element. Found <{0}> instead.", reader.Name ) );
+                                    }
 
-                                finishedReading = true;
-                                break;
+                                    finishedReading = true;
+                                    break;
+                                }
                             }
                         }
+                    }
+                    catch( Exception e )
+                    {
+                        throw new Exception( e.Message + string.Format( "\nLine Number: {0}", reader.LineNumber ) );
                     }
                 }
 

@@ -4,6 +4,7 @@ using System.Drawing;
 using Rock.Mobile.PlatformUI;
 using System.Threading;
 using System.Collections.Generic;
+using CCVApp.Shared.Config;
 
 namespace CCVApp
 {
@@ -190,13 +191,13 @@ namespace CCVApp
 
                     // flag that we want this text field to grow as more text is added
                     TextField.ScaleHeightForText = true;
-                    TextField.DynamicTextMaxHeight = CCVApp.Shared.Config.Note.UserNote_MaxHeight;
+                    TextField.DynamicTextMaxHeight = NoteConfig.UserNote_MaxHeight;
 
                     // Setup the font
                     TextField.SetFont( mStyle.mFont.mName, mStyle.mFont.mSize.Value );
                     TextField.TextColor = mStyle.mFont.mColor.Value;
                     TextField.Placeholder = "Enter note";
-                    TextField.PlaceholderTextColor = CCVApp.Shared.Config.Note.UserNote_PlaceholderTextColor;
+                    TextField.PlaceholderTextColor = NoteConfig.UserNote_PlaceholderTextColor;
                      
                     // check for border styling
                     if ( mStyle.mBorderColor.HasValue )
@@ -227,9 +228,9 @@ namespace CCVApp
                     }
 
                     // Setup the anchor color
-                    Anchor.Text = CCVApp.Shared.Config.Note.UserNote_Icon;
-                    Anchor.TextColor = CCVApp.Shared.Config.Note.UserNote_IconColor;
-                    Anchor.SetFont( CCVApp.Shared.Config.Note.UserNote_IconFont, CCVApp.Shared.Config.Note.UserNote_IconSize );
+                    Anchor.Text = NoteConfig.UserNote_Icon;
+                    Anchor.TextColor = NoteConfig.UserNote_IconColor;
+                    Anchor.SetFont( NoteConfig.UserNote_IconFont, NoteConfig.UserNote_IconSize );
                     Anchor.SizeToFit();
                     if( mStyle.mBackgroundColor.HasValue )
                     {
@@ -261,9 +262,9 @@ namespace CCVApp
 
 
                     // setup the delete button
-                    DeleteButton.Text = CCVApp.Shared.Config.Note.UserNote_DeleteIcon;
-                    DeleteButton.TextColor = CCVApp.Shared.Config.Note.UserNote_DeleteIconColor;
-                    DeleteButton.SetFont( CCVApp.Shared.Config.Note.UserNote_DeleteIconFont, CCVApp.Shared.Config.Note.UserNote_DeleteIconSize );
+                    DeleteButton.Text = NoteConfig.UserNote_DeleteIcon;
+                    DeleteButton.TextColor = NoteConfig.UserNote_DeleteIconColor;
+                    DeleteButton.SetFont( NoteConfig.UserNote_DeleteIconFont, NoteConfig.UserNote_DeleteIconSize );
                     DeleteButton.Hidden = true;
                     DeleteButton.SizeToFit( );
                     if( mStyle.mBackgroundColor.HasValue )

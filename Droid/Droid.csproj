@@ -78,6 +78,7 @@
     <Compile Include="Tasks\GiveTask\GiveTask.cs" />
     <Compile Include="Tasks\NotesTask\NotesPrimaryFragment.cs" />
     <Compile Include="Tasks\NotesTask\NotesDetailsFragment.cs" />
+    <Compile Include="Tasks\NotesTask\NotesWatchFragment.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
@@ -143,6 +144,9 @@
     <AndroidResource Include="Resources\layout-sw600dp\Notes_Details.axml" />
     <AndroidResource Include="Resources\layout-sw480dp\Notes_Details.axml" />
     <AndroidResource Include="Resources\layout-sw320dp\Notes_Details.axml" />
+    <AndroidResource Include="..\Assets\podcastThumbnailPlaceholder%402x.png">
+      <Link>Resources\drawable-hdpi\thumbnailPlaceholder.png</Link>
+    </AndroidResource>
   </ItemGroup>
   <Import Project="..\..\Rock.Mobile\Rock.Mobile.projitems" Label="Shared" Condition="Exists('..\..\Rock.Mobile\Rock.Mobile.projitems')" />
   <Import Project="..\..\Rock\Rock.Client\Rock.Client.Models.projitems" Label="Shared" Condition="Exists('..\..\Rock\Rock.Client\Rock.Client.Models.projitems')" />

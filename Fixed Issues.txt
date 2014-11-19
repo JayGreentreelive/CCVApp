@@ -8,10 +8,18 @@ Both
 	Added a Giving section
 	Updated the nav toolbar to show new button icons.
 	Added video playback for Messages!
+	Fixed a double request if leaving the Prayer page and returning before the initial request came back.
+	Fixed an issue causing the "Unable to download prayers" error to appear even if you leave the prayer requests page.
+	Added image caching for Message series and thumbnails
 
 Android
 	Fixed a crash on Android when pressing back after going several menus deep and then using the springboard.
+	Fixed an issue causing the Springboard Reveal button to remain disabled if pressing the Android "Back" button while in Landscape Notes
 
 iOS
-	Fixed a double request if leaving the Prayer page and returning before the initial request came back.
+	
 	Fixed an issue causing the "Reveal Springboard" pan gesture to sometimes not work.
+	Fixed an Observer handle leak when entering / exiting the notes page. (This is bad, and could cause very
+		weird / sporratic issues when viewing notes)
+	Fixed a crash if "Share" was pressed on the Note page after a failed Note download.
+	Removed the "not supported anyway" ability to export notes to Facebook, Twitter and AirDrop

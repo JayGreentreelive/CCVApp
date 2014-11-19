@@ -6,6 +6,9 @@ using CCVApp.Shared.Notes.Model;
 using System.Collections.Generic;
 using System.Drawing;
 using CCVApp.Shared;
+using CCVApp.Shared.Config;
+using Rock.Mobile.PlatformUI;
+using System.IO;
 
 namespace iOS
 {
@@ -118,8 +121,8 @@ namespace iOS
                     cell.ParentTableSource = this;
 
                     // configure the cell colors
-                    cell.BackgroundColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.Note.Series_Details_Table_CellBackgroundColor );
-                    cell.Label.TextColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.Note.Series_Details_Table_CellTextColor );
+                    cell.BackgroundColor = PlatformBaseUI.GetUIColor( NoteConfig.Series_Details_Table_CellBackgroundColor );
+                    cell.Label.TextColor = PlatformBaseUI.GetUIColor( NoteConfig.Series_Details_Table_CellTextColor );
                     cell.SelectionStyle = UITableViewCellSelectionStyle.None;
                 }
 
@@ -133,10 +136,10 @@ namespace iOS
                 image.SizeToFit( );
 
                 // foce the image to be sized according to the height of the cell
-                image.Frame = new RectangleF( (cell.Frame.Width - CCVApp.Shared.Config.Note.Series_Details_CellImageWidth) / 2, 
+                image.Frame = new RectangleF( (cell.Frame.Width - NoteConfig.Series_Details_CellImageWidth) / 2, 
                                                0, 
-                                               CCVApp.Shared.Config.Note.Series_Details_CellImageWidth, 
-                                               CCVApp.Shared.Config.Note.Series_Details_CellImageHeight );
+                                               NoteConfig.Series_Details_CellImageWidth, 
+                                               NoteConfig.Series_Details_CellImageHeight );
 
                 // create a text label next to the image that allows word wrapping
                 UILabel textLabel = cell.Label;
@@ -147,7 +150,7 @@ namespace iOS
                 textLabel.TextAlignment = UITextAlignment.Center;
                 textLabel.Frame = new System.Drawing.RectangleF( 0, 0, cell.Frame.Width, 0 );
                 textLabel.SizeToFit( );
-                textLabel.Frame = new System.Drawing.RectangleF( 0, image.Frame.Bottom + CellVerticalPadding, cell.Frame.Width, textLabel.Frame.Height );
+                textLabel.Frame = new System.Drawing.RectangleF( 0, image.Frame.Bottom, cell.Frame.Width, textLabel.Frame.Height );
 
                 cell.Watch.Frame = new RectangleF( CellHorizontalPadding, textLabel.Frame.Bottom, cell.Watch.Frame.Width, cell.Watch.Frame.Height );
                 cell.Read.Frame = new RectangleF( cell.Frame.Width - cell.Read.Frame.Width - CellHorizontalPadding, textLabel.Frame.Bottom, cell.Read.Frame.Width, cell.Read.Frame.Height );
@@ -155,7 +158,7 @@ namespace iOS
                 // the watch button should only be enabled if the message has a podcast
                 cell.Watch.Enabled = Messages[ indexPath.Row ].HasPodcast;
 
-                PendingCellHeight = cell.Read.Frame.Bottom;
+                PendingCellHeight = cell.Read.Frame.Bottom + CellVerticalPadding * 2;
 
                 return cell;
             }
@@ -174,11 +177,10 @@ namespace iOS
         public Series Series { get; set; }
         public List<MessageEntry> Messages { get; set; }
         public UIImage ThumbnailPlaceholder{ get; set; }
+        bool IsVisible { get; set; }
 
 		public NotesDetailsUIViewController (IntPtr handle) : base (handle)
 		{
-            string imagePath = NSBundle.MainBundle.BundlePath + "/" + "podcastThumbnailPlaceholder.png";
-            ThumbnailPlaceholder = new UIImage( imagePath );
 		}
 
         public override void ViewDidLoad()
@@ -186,21 +188,24 @@ namespace iOS
             base.ViewDidLoad( );
 
             // setup the table view and general background view colors
-            View.BackgroundColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.Note.Series_Details_Table_BackgroundColor );
-            SeriesTable.BackgroundColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.Note.Series_Details_Table_BackgroundColor );
-            SeriesTable.SeparatorColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.Note.Series_Details_Table_SeperatorBackgroundColor );
+            View.BackgroundColor = PlatformBaseUI.GetUIColor( NoteConfig.Series_Details_Table_BackgroundColor );
+            SeriesTable.BackgroundColor = PlatformBaseUI.GetUIColor( NoteConfig.Series_Details_Table_BackgroundColor );
+            SeriesTable.SeparatorColor = PlatformBaseUI.GetUIColor( NoteConfig.Series_Details_Table_SeperatorBackgroundColor );
 
             // setup the messages list
             Messages = new List<MessageEntry>();
+            SeriesTable.Source = new TableSource( this, Messages );
+
+            IsVisible = true;
 
             for ( int i = 0; i < Series.Messages.Count; i++ )
             {
                 MessageEntry messageEntry = new MessageEntry();
                 Messages.Add( messageEntry );
 
-                // give each message entry its message and the default thumbnail
+                // give each message entry its message and the default thumbnail, which is the series billboard
                 messageEntry.Message = Series.Messages[ i ];
-                messageEntry.Thumbnail = ThumbnailPlaceholder; //todo: we should just default to the series' image banner
+                messageEntry.Thumbnail = ThumbnailPlaceholder;
 
                 // grab the thumbnail IF it has a podcast
                 if ( string.IsNullOrEmpty( Series.Messages[ i ].PodcastUrl ) == false )
@@ -208,26 +213,57 @@ namespace iOS
                     messageEntry.HasPodcast = true;
 
                     int requestedIndex = i;
-                    VimeoManager.Instance.GetVideoThumbnail( Series.Messages[ requestedIndex ].PodcastUrl, delegate(System.Net.HttpStatusCode statusCode, string statusDescription, System.IO.MemoryStream imageBuffer )
-                        {
-                            // show the image
-                            NSData imageData = NSData.FromStream( imageBuffer );
-                            UIImage uiImage = new UIImage( imageData );
 
-                            // update the image on the UI Thread ONLY!
-                            InvokeOnMainThread( delegate
-                                { 
-                                    messageEntry.Thumbnail = uiImage;
-                                    SeriesTable.ReloadData( );
-                                } );
-                        } );
+                    // first see if the image is cached
+                    MemoryStream image = ImageCache.Instance.ReadImage( messageEntry.Message.Name );
+                    if ( image != null )
+                    {
+                        ApplyBillboardImage( messageEntry, image );
+
+                        image.Dispose( );
+                    }
+                    else
+                    {
+                        // it isn't, so we'll need to download it
+                        VimeoManager.Instance.GetVideoThumbnail( Series.Messages[ requestedIndex ].PodcastUrl, 
+                            delegate(System.Net.HttpStatusCode statusCode, string statusDescription, System.IO.MemoryStream imageBuffer )
+                            {
+                                if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
+                                {
+                                    // update the image on the UI Thread ONLY!
+                                    InvokeOnMainThread( delegate
+                                        {
+                                            ImageCache.Instance.WriteImage( imageBuffer, messageEntry.Message.Name );
+
+                                            if( IsVisible == true )
+                                            {
+                                                ApplyBillboardImage( messageEntry, imageBuffer );
+                                            }
+
+                                            imageBuffer.Dispose( );
+                                        });
+                                }
+                            } );
+                    }
                 }
             }
+        }
 
-            // update the table
-            TableSource source = new TableSource( this, Messages );
-            SeriesTable.Source = source;
+        void ApplyBillboardImage( MessageEntry messageEntry, MemoryStream imageBuffer )
+        {
+            // show the image
+            NSData imageData = NSData.FromStream( imageBuffer );
+            UIImage uiImage = new UIImage( imageData );
+
+            messageEntry.Thumbnail = uiImage;
             SeriesTable.ReloadData( );
+        }
+
+        public override void ViewWillDisappear(bool animated)
+        {
+            base.ViewWillDisappear(animated);
+
+            IsVisible = false;
         }
 
         public override void ViewDidLayoutSubviews()

@@ -2,6 +2,7 @@ using System;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using System.CodeDom.Compiler;
+using CCVApp.Shared.Strings;
 
 namespace iOS
 {
@@ -52,7 +53,7 @@ namespace iOS
                                 }
                                 else
                                 {
-                                    SpringboardViewController.DisplayError( CCVApp.Shared.Strings.Prayer.Error_Title, CCVApp.Shared.Strings.Prayer.Error_Submit_Message );
+                                    SpringboardViewController.DisplayError( PrayerStrings.Error_Title, PrayerStrings.Error_Submit_Message );
 
                                     FirstNameText.Enabled = true;
                                     LastNameText.Enabled = true;

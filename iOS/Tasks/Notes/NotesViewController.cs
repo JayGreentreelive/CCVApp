@@ -12,6 +12,8 @@ using CCVApp.Shared.Notes;
 using RestSharp;
 using System.Net;
 using System.Text;
+using CCVApp.Shared.Config;
+using Rock.Mobile.PlatformUI;
 
 namespace iOS
 {
@@ -183,8 +185,15 @@ namespace iOS
         /// <value><c>true</c> if displaying keyboard; otherwise, <c>false</c>.</value>
         public bool DisplayingKeyboard { get; set; }
 
+        /// <summary>
+        /// A list of the handles returned when adding observers to OS events
+        /// </summary>
+        /// <value>The observer handles.</value>
+        List<NSObject> ObserverHandles { get; set; }
+
         public NotesViewController( ) : base( )
         {
+            ObserverHandles = new List<NSObject>();
         }
 
         public override void DidReceiveMemoryWarning( )
@@ -248,16 +257,10 @@ namespace iOS
 
             Orientation = UIDeviceOrientation.Unknown;
 
-            // monitor for text field being edited, and keyboard show/hide notitications
-            NSNotificationCenter.DefaultCenter.AddObserver ("TextFieldDidBeginEditing", OnTextFieldDidBeginEditing);
-            NSNotificationCenter.DefaultCenter.AddObserver ("TextFieldChanged", OnTextFieldChanged);
-            NSNotificationCenter.DefaultCenter.AddObserver (UIKeyboard.WillHideNotification, OnKeyboardNotification);
-            NSNotificationCenter.DefaultCenter.AddObserver (UIKeyboard.WillShowNotification, OnKeyboardNotification);
-
             UIScrollView = new CustomScrollView( );
             UIScrollView.Interceptor = this;
             UIScrollView.Frame = View.Frame;
-            UIScrollView.BackgroundColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( 0x1C1C1CFF );
+            UIScrollView.BackgroundColor = PlatformBaseUI.GetUIColor( 0x1C1C1CFF );
             UIScrollView.Delegate = new NotesScrollViewDelegate() { Parent = this };
             UIScrollView.Layer.AnchorPoint = new PointF( 0, 0 );
 
@@ -293,6 +296,31 @@ namespace iOS
         {
             base.ViewDidAppear(animated);
             UIApplication.SharedApplication.IdleTimerDisabled = true;
+
+            // monitor for text field being edited, and keyboard show/hide notitications
+            NSObject handle = NSNotificationCenter.DefaultCenter.AddObserver ("TextFieldDidBeginEditing", OnTextFieldDidBeginEditing);
+            ObserverHandles.Add( handle );
+
+            handle = NSNotificationCenter.DefaultCenter.AddObserver ("TextFieldChanged", OnTextFieldChanged);
+            ObserverHandles.Add( handle );
+
+            handle = NSNotificationCenter.DefaultCenter.AddObserver (UIKeyboard.WillHideNotification, OnKeyboardNotification);
+            ObserverHandles.Add( handle );
+
+            handle = NSNotificationCenter.DefaultCenter.AddObserver (UIKeyboard.WillShowNotification, OnKeyboardNotification);
+            ObserverHandles.Add( handle );
+        }
+
+        public override void ViewDidDisappear(bool animated)
+        {
+            base.ViewDidDisappear(animated);
+
+            foreach ( NSObject handle in ObserverHandles )
+            {
+                NSNotificationCenter.DefaultCenter.RemoveObserver( handle );
+            }
+
+            ObserverHandles.Clear( );
         }
 
         public override void ViewWillDisappear(bool animated)
@@ -313,17 +341,24 @@ namespace iOS
 
         public void ShareNotes()
         {
-            string emailNote;
-            Note.GetNotesForEmail( out emailNote );
+            if ( Note != null )
+            {
+                string emailNote;
+                Note.GetNotesForEmail( out emailNote );
 
-            var items = new NSObject[] { new NSString( emailNote ) };
+                var items = new NSObject[] { new NSString( emailNote ) };
 
-            UIActivityViewController shareController = new UIActivityViewController( items, null );
-            shareController.SetValueForKey( new NSString( NotePresentableName ), new NSString( "subject" ) );
+                UIActivityViewController shareController = new UIActivityViewController( items, null );
+                shareController.SetValueForKey( new NSString( NotePresentableName ), new NSString( "subject" ) );
 
-            shareController.ExcludedActivityTypes = new NSString[] { UIActivityType.CopyToPasteboard, UIActivityType.Message };
+                shareController.ExcludedActivityTypes = new NSString[] { UIActivityType.PostToFacebook, 
+                                                                         UIActivityType.AirDrop, 
+                                                                         UIActivityType.PostToTwitter, 
+                                                                         UIActivityType.CopyToPasteboard, 
+                                                                         UIActivityType.Message };
 
-            PresentViewController( shareController, true, null );
+                PresentViewController( shareController, true, null );
+            }
         }
 
         public bool HitTest( PointF point )
@@ -640,13 +675,13 @@ namespace iOS
                             int lastSlashIndex = NoteName.LastIndexOf( "/" ) + 1;
                             string noteName = NoteName.Substring( lastSlashIndex );
 
-                            Note.Create( UIScrollView.Bounds.Width, UIScrollView.Bounds.Height, this.UIScrollView, noteName + CCVApp.Shared.Config.Note.UserNoteSuffix );
+                            Note.Create( UIScrollView.Bounds.Width, UIScrollView.Bounds.Height, this.UIScrollView, noteName + NoteConfig.UserNoteSuffix );
 
                             // enable scrolling
                             UIScrollView.ScrollEnabled = true;
 
                             // take the requested background color
-                            UIScrollView.BackgroundColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value );
+                            UIScrollView.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value );
                             View.BackgroundColor = UIScrollView.BackgroundColor; //Make the view itself match too
 
                             // update the height of the scroll view to fit all content
@@ -657,7 +692,7 @@ namespace iOS
                         }
                         catch( Exception ex )
                         {
-                            ReportException( "NoteScript Error", ex );
+                            ReportException( "", ex );
                         }
                     } );
             }

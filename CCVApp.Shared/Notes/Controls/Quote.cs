@@ -4,6 +4,7 @@ using System.Xml;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using CCVApp.Shared.Config;
 
 namespace CCVApp
 {
@@ -100,7 +101,7 @@ namespace CCVApp
                     if( mStyle.mBorderWidth.HasValue )
                     {
                         BorderView.BorderWidth = mStyle.mBorderWidth.Value;
-                        borderPaddingPx = (int)Rock.Mobile.PlatformUI.PlatformBaseUI.UnitToPx( mStyle.mBorderWidth.Value + CCVApp.Shared.Config.Note.BorderPadding );
+                        borderPaddingPx = (int)PlatformBaseUI.UnitToPx( mStyle.mBorderWidth.Value + NoteConfig.BorderPadding );
                     }
 
                     if( mStyle.mTextInputBackgroundColor.HasValue )

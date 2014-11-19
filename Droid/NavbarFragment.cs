@@ -15,6 +15,8 @@ using Android.Animation;
 using Droid.Tasks;
 using Android.Graphics;
 using Rock.Mobile.PlatformCommon;
+using CCVApp.Shared.Config;
+using Rock.Mobile.PlatformUI;
 
 namespace Droid
 {
@@ -127,6 +129,8 @@ namespace Droid
             ft.Commit();
         }
 
+        RelativeLayout Navbar { get; set; }
+
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             if (container == null)
@@ -136,13 +140,13 @@ namespace Droid
             }
 
             //The navbar should basically be a background with logo and a springboard reveal button in the upper left.
-            var relativeLayout = inflater.Inflate(Resource.Layout.Navbar, container, false) as RelativeLayout;
-            relativeLayout.SetBackgroundColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.PrimaryNavBar.BackgroundColor ) );
+            Navbar = inflater.Inflate(Resource.Layout.Navbar, container, false) as RelativeLayout;
+            Navbar.SetBackgroundColor( PlatformBaseUI.GetUIColor( PrimaryNavBarConfig.BackgroundColor ) );
 
             // create the springboard reveal button
-            CreateSpringboardButton( relativeLayout );
+            CreateSpringboardButton( Navbar );
 
-            return relativeLayout;
+            return Navbar;
         }
 
         void CreateSpringboardButton( RelativeLayout relativeLayout )
@@ -160,10 +164,10 @@ namespace Droid
 
 
             // set the font and text
-            Typeface fontFace = DroidFontManager.Instance.GetFont( CCVApp.Shared.Config.PrimaryNavBar.RevealButton_Font );
+            Typeface fontFace = DroidFontManager.Instance.GetFont( PrimaryNavBarConfig.RevealButton_Font );
             SpringboardRevealButton.SetTypeface( fontFace, TypefaceStyle.Normal );
-            SpringboardRevealButton.SetTextSize( Android.Util.ComplexUnitType.Dip, CCVApp.Shared.Config.PrimaryNavBar.RevealButton_Size );
-            SpringboardRevealButton.Text = CCVApp.Shared.Config.PrimaryNavBar.RevealButton_Text;
+            SpringboardRevealButton.SetTextSize( Android.Util.ComplexUnitType.Dip, PrimaryNavBarConfig.RevealButton_Size );
+            SpringboardRevealButton.Text = PrimaryNavBarConfig.RevealButton_Text;
 
             // use the completely overcomplicated color states to set the normal vs pressed color state.
             int [][] states = new int[][] 
@@ -175,9 +179,9 @@ namespace Droid
 
             int [] colors = new int[]
                 {
-                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.PrimaryNavBar.RevealButton_PressedColor ),
-                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.PrimaryNavBar.RevealButton_DepressedColor ),
-                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.PrimaryNavBar.RevealButton_DisabledColor ),
+                    PlatformBaseUI.GetUIColor( PrimaryNavBarConfig.RevealButton_PressedColor ),
+                    PlatformBaseUI.GetUIColor( PrimaryNavBarConfig.RevealButton_DepressedColor ),
+                    PlatformBaseUI.GetUIColor( PrimaryNavBarConfig.RevealButton_DisabledColor ),
                 };
             SpringboardRevealButton.SetTextColor( new Android.Content.Res.ColorStateList( states, colors ) );
 
@@ -189,6 +193,21 @@ namespace Droid
                 };
 
             relativeLayout.AddView( SpringboardRevealButton );
+        }
+
+        public void ToggleFullscreen( bool fullscreenEnabled )
+        {
+            // useful for when a video wants to be fullscreen
+            if ( fullscreenEnabled == true )
+            {
+                Navbar.Visibility = ViewStates.Gone;
+                NavToolbar.ButtonLayout.Visibility = ViewStates.Gone;
+            }
+            else
+            {
+                Navbar.Visibility = ViewStates.Visible;
+                NavToolbar.ButtonLayout.Visibility = ViewStates.Visible;
+            }
         }
 
         public void EnableSpringboardRevealButton( bool enabled )
@@ -207,7 +226,7 @@ namespace Droid
             {
                 Animating = true;
 
-                int xOffset = wantReveal ? (int) (View.Width * CCVApp.Shared.Config.PrimaryNavBar.RevealPercentage) : 0;
+                int xOffset = wantReveal ? (int) (View.Width * PrimaryNavBarConfig.RevealPercentage) : 0;
 
                 // setup an animation from our current mask scale to the new one.
                 ValueAnimator animator = ValueAnimator.OfInt((int)View.GetX( ) , xOffset);
@@ -228,54 +247,62 @@ namespace Droid
         static float sMinVelocity = 2000.0f;
         public void OnFlick( MotionEvent e1, MotionEvent e2, float velocityX, float velocityY )
         {
-            Console.WriteLine( "Flick Velocity: {0}", velocityX );
-
-            // if they flicked it, go ahead and open / close the springboard
-
-            // only allow it if we're NOT animating, the task is ok with us panning, and we're in portrait mode.
-            if ( Animating == false && 
-                 ActiveTask.CanContainerPan( ) && 
-                 Activity.Resources.Configuration.Orientation == Android.Content.Res.Orientation.Portrait )
+            // sanity check, as the events could be null.
+            if ( e1 != null && e2 != null )
             {
-                if ( velocityX > sMinVelocity )
+                Console.WriteLine( "Flick Velocity: {0}", velocityX );
+
+                // if they flicked it, go ahead and open / close the springboard
+
+                // only allow it if we're NOT animating, the task is ok with us panning, and we're in portrait mode.
+                if ( Animating == false &&
+                     ActiveTask.CanContainerPan( ) &&
+                     Activity.Resources.Configuration.Orientation == Android.Content.Res.Orientation.Portrait )
                 {
-                    RevealSpringboard( true );
-                }
-                else if ( velocityX < -sMinVelocity )
-                {
-                    RevealSpringboard( false );
+                    if ( velocityX > sMinVelocity )
+                    {
+                        RevealSpringboard( true );
+                    }
+                    else if ( velocityX < -sMinVelocity )
+                    {
+                        RevealSpringboard( false );
+                    }
                 }
             }
         }
 
-        const float MinPanThreshold = 50;
+        const float MinPanThreshold = 150;
         public void OnScroll( MotionEvent e1, MotionEvent e2, float distanceX, float distanceY )
         {
-            // only allow it if we're NOT animating, the task is ok with us panning, and we're in portrait mode.
-            if ( Animating == false && 
-                 ActiveTask.CanContainerPan( ) && 
-                 Activity.Resources.Configuration.Orientation == Android.Content.Res.Orientation.Portrait )
+            // sanity check, as the events could be null.
+            if ( e1 != null && e2 != null )
             {
-                IsPanning = true;
-
-                if ( Math.Abs(e2.RawX - e1.RawX) > MinPanThreshold )
+                // only allow it if we're NOT animating, the task is ok with us panning, and we're in portrait mode.
+                if ( Animating == false &&
+                     ActiveTask.CanContainerPan( ) &&
+                     Activity.Resources.Configuration.Orientation == Android.Content.Res.Orientation.Portrait )
                 {
-                    if ( LastPanX == 0 )
+                    IsPanning = true;
+
+                    if ( Math.Abs( e2.RawX - e1.RawX ) > MinPanThreshold )
                     {
+                        if ( LastPanX == 0 )
+                        {
+                            LastPanX = e2.RawX;
+                        }
+
+                        distanceX = e2.RawX - LastPanX;
                         LastPanX = e2.RawX;
+
+                        float xPos = View.GetX( ) + distanceX;
+
+                        float revealAmount = ( View.Width * PrimaryNavBarConfig.RevealPercentage );
+                        xPos = Math.Max( 0, Math.Min( xPos, revealAmount ) );
+
+                        View.SetX( xPos );
+                        ActiveTaskFrame.SetX( xPos );
+                        NavToolbar.ButtonLayout.SetX( xPos );
                     }
-
-                    distanceX = e2.RawX - LastPanX;
-                    LastPanX = e2.RawX;
-
-                    float xPos = View.GetX( ) + distanceX;
-
-                    float revealAmount = ( View.Width * CCVApp.Shared.Config.PrimaryNavBar.RevealPercentage );
-                    xPos = Math.Max( 0, Math.Min( xPos, revealAmount ) );
-
-                    View.SetX( xPos );
-                    ActiveTaskFrame.SetX( xPos );
-                    NavToolbar.ButtonLayout.SetX( xPos );
                 }
             }
         }
@@ -285,7 +312,7 @@ namespace Droid
             // if we were panning
             if ( IsPanning )
             {
-                float revealAmount = ( View.Width * CCVApp.Shared.Config.PrimaryNavBar.RevealPercentage );
+                float revealAmount = ( View.Width * PrimaryNavBarConfig.RevealPercentage );
                 if ( SpringboardRevealed == false )
                 {
                     // since the springboard wasn't revealed, require that they moved
@@ -357,24 +384,17 @@ namespace Droid
             if ( View.GetX( ) == 0 )
             {
                 SpringboardRevealed = false;
-                EnableControls( true );
+                NavToolbar.Suspend( false );
             }
             else
             {
                 SpringboardRevealed = true;
-                EnableControls( false );
+                NavToolbar.Suspend( true );
             }
 
             // notify the task regarding what happened
             ActiveTask.SpringboardDidAnimate( SpringboardRevealed );
         }
-
-        public void EnableControls( bool enabled )
-        {
-            // toggle the sub nav bar
-            NavToolbar.Suspend( !enabled );
-        }
-
 
         public override void OnPause( )
         {

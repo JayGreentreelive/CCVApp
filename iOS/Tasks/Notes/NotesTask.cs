@@ -2,6 +2,7 @@
 using MonoTouch.UIKit;
 using System.Drawing;
 using MonoTouch.Foundation;
+using CCVApp.Shared.Config;
 
 namespace iOS
 {
@@ -83,13 +84,13 @@ namespace iOS
         public override void ViewDidScroll( float scrollDelta )
         {
             // did the user's finger go "up"?
-            if( scrollDelta >= CCVApp.Shared.Config.Note.ScrollRateForNavBarHide )
+            if( scrollDelta >= NoteConfig.ScrollRateForNavBarHide )
             {
                 // hide the nav bar
                 NavToolbar.Reveal( false );
             }
             // did the user scroll "down"?
-            else if ( scrollDelta <= CCVApp.Shared.Config.Note.ScrollRateForNavBarReveal )
+            else if ( scrollDelta <= NoteConfig.ScrollRateForNavBarReveal )
             {
                 NavToolbar.Reveal( true );
             }

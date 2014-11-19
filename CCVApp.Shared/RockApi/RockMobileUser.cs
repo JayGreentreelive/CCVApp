@@ -3,6 +3,7 @@ using Rock.Client;
 using Newtonsoft.Json;
 using System.IO;
 using Rock.Mobile.Network;
+using CCVApp.Shared.Config;
 
 namespace CCVApp
 {
@@ -183,11 +184,11 @@ namespace CCVApp
                 {
                     get 
                     {
-                        //todo: make this path platform independant
+                        // get the path based on the platform
                         #if __IOS__
-                        string jpgFilename = System.IO.Path.Combine ( Environment.GetFolderPath(Environment.SpecialFolder.Personal), CCVApp.Shared.Config.Springboard.ProfilePic );
+                        string jpgFilename = System.IO.Path.Combine ( Environment.GetFolderPath(Environment.SpecialFolder.Personal), SpringboardConfig.ProfilePic );
                         #else
-                        string jpgFilename = Rock.Mobile.PlatformCommon.Droid.Context.GetExternalFilesDir( null ).ToString( ) + CCVApp.Shared.Config.Springboard.ProfilePic;
+                        string jpgFilename = Rock.Mobile.PlatformCommon.Droid.Context.GetExternalFilesDir( null ).ToString( ) + SpringboardConfig.ProfilePic;
                         #endif
 
                         return jpgFilename;

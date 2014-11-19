@@ -13,6 +13,9 @@ using Android.Views;
 using Android.Widget;
 using Android.Webkit;
 
+using CCVApp.Shared.Config;
+using CCVApp.Shared.Strings;
+
 namespace Droid
 {
     namespace Tasks
@@ -39,13 +42,13 @@ namespace Droid
 
                     // set the text to the version and build time
                     TextView aboutText = view.FindViewById<TextView>(Resource.Id.about_PrimaryFragmentText);
-                    aboutText.Text = string.Format( "CCV App Version {0}\nBuilt on {1}", CCVApp.Shared.Strings.Build.Version, CCVApp.Shared.Strings.Build.BuildTime );
+                    aboutText.Text = string.Format( "Version: {0}", BuildStrings.Version );
 
                     WebView webView = view.FindViewById<WebView>( Resource.Id.about_PrimaryFragmentWebView );
 
                     Activity.RunOnUiThread( delegate
                         {
-                            webView.LoadUrl( CCVApp.Shared.Config.About.Url );
+                            webView.LoadUrl( AboutConfig.Url );
                         } );
                        
                     return view;

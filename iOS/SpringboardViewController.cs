@@ -5,10 +5,14 @@ using System.CodeDom.Compiler;
 using MonoTouch.CoreAnimation;
 using System.Drawing;
 using System.Collections.Generic;
+using Rock.Mobile.PlatformCommon;
 using Rock.Mobile.Network;
 using CCVApp.Shared.Network;
 using MonoTouch.AssetsLibrary;
 using System.IO;
+using CCVApp.Shared.Config;
+using CCVApp.Shared.Strings;
+using Rock.Mobile.PlatformUI;
 
 namespace iOS
 {
@@ -81,11 +85,11 @@ namespace iOS
 
                 // Create the logo view containing the image.
                 UILabel logoView = new UILabel( );
-                logoView.Font = Rock.Mobile.PlatformCommon.iOS.LoadFontDynamic( CCVApp.Shared.Config.Springboard.Element_Font, CCVApp.Shared.Config.Springboard.Element_FontSize );
-                logoView.TextColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.Springboard.Element_FontColor );
+                logoView.Font = iOSCommon.LoadFontDynamic( SpringboardConfig.Element_Font, SpringboardConfig.Element_FontSize );
+                logoView.TextColor = PlatformBaseUI.GetUIColor( SpringboardConfig.Element_FontColor );
                 logoView.Text = imageChar;
                 logoView.SizeToFit( );
-                logoView.Layer.Position = new PointF( CCVApp.Shared.Config.Springboard.Element_LogoOffsetX, Button.Layer.Position.Y );
+                logoView.Layer.Position = new PointF( SpringboardConfig.Element_LogoOffsetX, Button.Layer.Position.Y );
                 logoView.BackgroundColor = UIColor.Clear;
                 parentView.AddSubview( logoView );
 
@@ -96,7 +100,7 @@ namespace iOS
                 TextLabel.Font = Button.Font;
                 TextLabel.BackgroundColor = UIColor.Clear;
                 TextLabel.SizeToFit( );
-                TextLabel.Layer.Position = new PointF( CCVApp.Shared.Config.Springboard.Element_LabelOffsetX + (TextLabel.Frame.Width / 2), Button.Layer.Position.Y );
+                TextLabel.Layer.Position = new PointF( SpringboardConfig.Element_LabelOffsetX + (TextLabel.Frame.Width / 2), Button.Layer.Position.Y );
                 parentView.AddSubview( TextLabel );
 
                 // now clear out the button so it just lays on top of the contents
@@ -221,12 +225,12 @@ namespace iOS
             ImageCropViewController.Springboard = this;
 
             // Instantiate all activities
-            Elements.Add( new SpringboardElement( this, new NewsTask( "NewsStoryboard_iPhone" )              , NewsButton       , CCVApp.Shared.Config.Springboard.Element_News_Icon ) );
-            Elements.Add( new SpringboardElement( this, new GroupFinderTask( "GroupFinderStoryboard_iPhone" ), GroupFinderButton, CCVApp.Shared.Config.Springboard.Element_Connect_Icon ) );
-            Elements.Add( new SpringboardElement( this, new NotesTask( "NotesStoryboard_iPhone" )            , MessagesButton   , CCVApp.Shared.Config.Springboard.Element_Messages_Icon ) );
-            Elements.Add( new SpringboardElement( this, new PrayerTask( "PrayerStoryboard_iPhone" )          , PrayerButton     , CCVApp.Shared.Config.Springboard.Element_Prayer_Icon ) );
-            Elements.Add( new SpringboardElement( this, new GiveTask( "GiveStoryboard_iPhone" )              , GiveButton       , CCVApp.Shared.Config.Springboard.Element_Give_Icon ) );
-            Elements.Add( new SpringboardElement( this, new AboutTask( "AboutStoryboard_iPhone" )            , AboutButton      , CCVApp.Shared.Config.Springboard.Element_More_Icon ) );
+            Elements.Add( new SpringboardElement( this, new NewsTask( "NewsStoryboard_iPhone" )              , NewsButton       , SpringboardConfig.Element_News_Icon ) );
+            Elements.Add( new SpringboardElement( this, new GroupFinderTask( "GroupFinderStoryboard_iPhone" ), GroupFinderButton, SpringboardConfig.Element_Connect_Icon ) );
+            Elements.Add( new SpringboardElement( this, new NotesTask( "NotesStoryboard_iPhone" )            , MessagesButton   , SpringboardConfig.Element_Messages_Icon ) );
+            Elements.Add( new SpringboardElement( this, new PrayerTask( "PrayerStoryboard_iPhone" )          , PrayerButton     , SpringboardConfig.Element_Prayer_Icon ) );
+            Elements.Add( new SpringboardElement( this, new GiveTask( "GiveStoryboard_iPhone" )              , GiveButton       , SpringboardConfig.Element_Give_Icon ) );
+            Elements.Add( new SpringboardElement( this, new AboutTask( "AboutStoryboard_iPhone" )            , AboutButton      , SpringboardConfig.Element_More_Icon ) );
 
             // set the profile image mask so it's circular
             CALayer maskLayer = new CALayer();
@@ -237,7 +241,7 @@ namespace iOS
             LoginButton.Layer.Mask = maskLayer;
             //
 
-            View.BackgroundColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.Springboard.BackgroundColor );
+            View.BackgroundColor = PlatformBaseUI.GetUIColor( SpringboardConfig.BackgroundColor );
 
             AddChildViewController( NavViewController );
             View.AddSubview( NavViewController.View );
@@ -271,12 +275,12 @@ namespace iOS
 
         void ManageProfilePic( )
         {
-            UIAlertController actionSheet = UIAlertController.Create( CCVApp.Shared.Strings.Springboard.ProfilePicture_SourceTitle, 
-                                                                      CCVApp.Shared.Strings.Springboard.ProfilePicture_SourceDescription, 
+            UIAlertController actionSheet = UIAlertController.Create( SpringboardStrings.ProfilePicture_SourceTitle, 
+                                                                      SpringboardStrings.ProfilePicture_SourceDescription, 
                                                                       UIAlertControllerStyle.ActionSheet );
 
             // setup the camera
-            UIAlertAction cameraAction = UIAlertAction.Create( CCVApp.Shared.Strings.Springboard.ProfilePicture_SourceCamera, UIAlertActionStyle.Default, delegate(UIAlertAction obj) 
+            UIAlertAction cameraAction = UIAlertAction.Create( SpringboardStrings.ProfilePicture_SourceCamera, UIAlertActionStyle.Default, delegate(UIAlertAction obj) 
                 {
                     // only allow the camera if they HAVE one
                     if( Rock.Mobile.Media.PlatformCamera.Instance.IsAvailable( ) )
@@ -302,19 +306,19 @@ namespace iOS
 
                                 if( success == false )
                                 {
-                                    DisplayError( CCVApp.Shared.Strings.Springboard.ProfilePicture_Error_Title, CCVApp.Shared.Strings.Springboard.ProfilePicture_Error_Message );
+                                    DisplayError( SpringboardStrings.ProfilePicture_Error_Title, SpringboardStrings.ProfilePicture_Error_Message );
                                 }
                             });
                     }
                     else
                     {
                         // notify them they don't have a camera
-                        DisplayError( CCVApp.Shared.Strings.Springboard.Camera_Error_Title, CCVApp.Shared.Strings.Springboard.Camera_Error_Message );
+                        DisplayError( SpringboardStrings.Camera_Error_Title, SpringboardStrings.Camera_Error_Message );
                     }
                 } );
 
             // setup the photo library
-            UIAlertAction photoLibraryAction = UIAlertAction.Create( CCVApp.Shared.Strings.Springboard.ProfilePicture_SourcePhotoLibrary, UIAlertActionStyle.Default, delegate(UIAlertAction obj) 
+            UIAlertAction photoLibraryAction = UIAlertAction.Create( SpringboardStrings.ProfilePicture_SourcePhotoLibrary, UIAlertActionStyle.Default, delegate(UIAlertAction obj) 
                 {
                     Rock.Mobile.Media.PlatformImagePicker.Instance.PickImage( this, delegate(object s, Rock.Mobile.Media.PlatformImagePicker.ImagePickEventArgs args) 
                         {
@@ -324,13 +328,13 @@ namespace iOS
                             }
                             else
                             {
-                                DisplayError( CCVApp.Shared.Strings.Springboard.ProfilePicture_Error_Title, CCVApp.Shared.Strings.Springboard.ProfilePicture_Error_Message );
+                                DisplayError( SpringboardStrings.ProfilePicture_Error_Title, SpringboardStrings.ProfilePicture_Error_Message );
                             }
                         } );
                 } );
 
             //setup cancel
-            UIAlertAction cancelAction = UIAlertAction.Create( CCVApp.Shared.Strings.General.Cancel, UIAlertActionStyle.Default, delegate{ } );
+            UIAlertAction cancelAction = UIAlertAction.Create( GeneralStrings.Cancel, UIAlertActionStyle.Default, delegate{ } );
 
             actionSheet.AddAction( cameraAction );
             actionSheet.AddAction( photoLibraryAction );
@@ -370,7 +374,7 @@ namespace iOS
                     else
                     {
                         // notify them about a problem saving the profile picture
-                        DisplayError( CCVApp.Shared.Strings.Springboard.ProfilePicture_Error_Title, CCVApp.Shared.Strings.Springboard.ProfilePicture_Error_Message );
+                        DisplayError( SpringboardStrings.ProfilePicture_Error_Title, SpringboardStrings.ProfilePicture_Error_Message );
                     }
                 }
             }
@@ -411,7 +415,7 @@ namespace iOS
                     }
 
                     // activate the element and its associated task
-                    activeElement.BackingView.BackgroundColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.Springboard.Element_SelectedColor );
+                    activeElement.BackingView.BackgroundColor = PlatformBaseUI.GetUIColor( SpringboardConfig.Element_SelectedColor );
                 }
             }
         }
@@ -458,11 +462,11 @@ namespace iOS
             if( RockMobileUser.Instance.LoggedIn )
             {
                 // get their profile
-                UserNameField.Text = CCVApp.Shared.Strings.Springboard.LoggedIn_Prefix + " " + RockMobileUser.Instance.PreferredName( );
+                UserNameField.Text = SpringboardStrings.LoggedIn_Prefix + " " + RockMobileUser.Instance.PreferredName( );
             }
             else
             {
-                UserNameField.Text = CCVApp.Shared.Strings.Springboard.LoggedOut_Promo;
+                UserNameField.Text = SpringboardStrings.LoggedOut_Promo;
             }
 
             UpdateProfilePic( );
@@ -497,7 +501,7 @@ namespace iOS
                 // if we made it here and useNoPhoto is true, well, use no photo
                 if( useNoPhotoImage == true )
                 {
-                    image = new UIImage( imagePath + CCVApp.Shared.Config.Springboard.NoPhotoFile );
+                    image = new UIImage( imagePath + SpringboardConfig.NoPhotoFile );
                 }
 
                 // if we're logged in, also display the View Profile button
@@ -507,7 +511,7 @@ namespace iOS
             else
             {
                 // otherwise display the no profile image.
-                image = new UIImage( imagePath + CCVApp.Shared.Config.Springboard.NoProfileFile );
+                image = new UIImage( imagePath + SpringboardConfig.NoProfileFile );
 
                 // if we're logged out, hide the view profile button
                 ViewProfileButton.Enabled = false;
@@ -525,7 +529,7 @@ namespace iOS
                     UIAlertView alert = new UIAlertView();
                     alert.Title = title;
                     alert.Message = message;
-                    alert.AddButton( CCVApp.Shared.Strings.General.Ok );
+                    alert.AddButton( GeneralStrings.Ok );
                     alert.Show( ); 
                 } );
         }

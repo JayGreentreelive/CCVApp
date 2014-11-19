@@ -16,6 +16,8 @@ using Android.Graphics.Drawables;
 using Android.Graphics.Drawables.Shapes;
 using Java.IO;
 using Rock.Mobile.PlatformCommon;
+using CCVApp.Shared.Config;
+using Rock.Mobile.PlatformUI;
 
 namespace Droid
 {
@@ -194,8 +196,8 @@ namespace Droid
             ((RelativeLayout.LayoutParams)bottomBarLayout.LayoutParameters).AddRule( LayoutRules.AlignParentBottom );
 
             // set the nav subBar color (including opacity)
-            Color navColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.BackgroundColor );
-            navColor.A = (Byte) ( (float) navColor.A * CCVApp.Shared.Config.SubNavToolbar.Opacity );
+            Color navColor = PlatformBaseUI.GetUIColor( SubNavToolbarConfig.BackgroundColor );
+            navColor.A = (Byte) ( (float) navColor.A * SubNavToolbarConfig.Opacity );
             bottomBarLayout.SetBackgroundColor( navColor );
 
             bottomBarLayout.LayoutParameters.Height = 150;
@@ -210,10 +212,10 @@ namespace Droid
             ((RelativeLayout.LayoutParams)CancelButton.LayoutParameters).AddRule( LayoutRules.AlignParentLeft );
 
             // set the crop button's font
-            Android.Graphics.Typeface fontFace = DroidFontManager.Instance.GetFont( CCVApp.Shared.Config.ImageCrop.CropCancelButton_Font );
+            Android.Graphics.Typeface fontFace = DroidFontManager.Instance.GetFont( ImageCropConfig.CropCancelButton_Font );
             CancelButton.SetTypeface( fontFace, Android.Graphics.TypefaceStyle.Normal );
-            CancelButton.SetTextSize( Android.Util.ComplexUnitType.Dip, CCVApp.Shared.Config.ImageCrop.CropCancelButton_Size );
-            CancelButton.Text = CCVApp.Shared.Config.ImageCrop.CropCancelButton_Text;
+            CancelButton.SetTextSize( Android.Util.ComplexUnitType.Dip, ImageCropConfig.CropCancelButton_Size );
+            CancelButton.Text = ImageCropConfig.CropCancelButton_Text;
 
             CancelButton.Click += (object sender, EventArgs e) => 
                 {
@@ -239,10 +241,10 @@ namespace Droid
             ((RelativeLayout.LayoutParams)confirmButton.LayoutParameters).AddRule( LayoutRules.AlignParentRight );
 
             // set the crop button's font
-            fontFace = DroidFontManager.Instance.GetFont( CCVApp.Shared.Config.ImageCrop.CropCancelButton_Font );
+            fontFace = DroidFontManager.Instance.GetFont( ImageCropConfig.CropCancelButton_Font );
             confirmButton.SetTypeface( fontFace, Android.Graphics.TypefaceStyle.Normal );
-            confirmButton.SetTextSize( Android.Util.ComplexUnitType.Dip, CCVApp.Shared.Config.ImageCrop.CropOkButton_Size );
-            confirmButton.Text = CCVApp.Shared.Config.ImageCrop.CropOkButton_Text;
+            confirmButton.SetTextSize( Android.Util.ComplexUnitType.Dip, ImageCropConfig.CropOkButton_Size );
+            confirmButton.Text = ImageCropConfig.CropOkButton_Text;
 
             // when clicked, we should crop the image.
             confirmButton.Click += (object sender, EventArgs e) => 

@@ -3,6 +3,8 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using System.CodeDom.Compiler;
 using System.Drawing;
+using CCVApp.Shared.Config;
+using Rock.Mobile.PlatformUI;
 
 namespace iOS
 {
@@ -87,8 +89,8 @@ namespace iOS
             View.BackgroundColor = UIColor.Black;
 
             // setup the style of the nav bar
-            NavigationBar.TintColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.PrimaryNavBar.RevealButton_DepressedColor );
-            NavigationBar.BarTintColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.PrimaryNavBar.BackgroundColor );
+            NavigationBar.TintColor = PlatformBaseUI.GetUIColor( PrimaryNavBarConfig.RevealButton_DepressedColor );
+            NavigationBar.BarTintColor = PlatformBaseUI.GetUIColor( PrimaryNavBarConfig.BackgroundColor );
 
 
             // our first (and only) child IS a ContainerViewController.
@@ -98,9 +100,9 @@ namespace iOS
             // setup a shadow that provides depth when this panel is slid "out" from the springboard.
             UIBezierPath shadowPath = UIBezierPath.FromRect( View.Bounds );
             View.Layer.MasksToBounds = false;
-            View.Layer.ShadowColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.PrimaryContainer.ShadowColor ).CGColor;
-            View.Layer.ShadowOffset = CCVApp.Shared.Config.PrimaryContainer.ShadowOffset;
-            View.Layer.ShadowOpacity = CCVApp.Shared.Config.PrimaryContainer.ShadowOpacity;
+            View.Layer.ShadowColor = PlatformBaseUI.GetUIColor( PrimaryContainerConfig.ShadowColor ).CGColor;
+            View.Layer.ShadowOffset = PrimaryContainerConfig.ShadowOffset;
+            View.Layer.ShadowOpacity = PrimaryContainerConfig.ShadowOpacity;
             View.Layer.ShadowPath = shadowPath.CGPath;
 
             // setup our pan gesture
@@ -152,7 +154,7 @@ namespace iOS
                     float currX = View.Layer.Position.X - restingPoint;
 
                     // if they slide at least a third of the way, allow a switch
-                    float toggleThreshold = (CCVApp.Shared.Config.PrimaryContainer.SlideAmount / 3);
+                    float toggleThreshold = (PrimaryContainerConfig.SlideAmount / 3);
 
                     // check whether the springboard is open, because that changes the
                     // context of hte user's intention
@@ -160,7 +162,7 @@ namespace iOS
                     {
                         // since it's open, close it if it crosses the closeThreshold
                         // OR velocty is high
-                        float closeThreshold = CCVApp.Shared.Config.PrimaryContainer.SlideAmount - toggleThreshold;
+                        float closeThreshold = PrimaryContainerConfig.SlideAmount - toggleThreshold;
                         if( currX < closeThreshold || currVelocity.X < -1000 )
                         {
                             RevealSpringboard( false );
@@ -230,7 +232,7 @@ namespace iOS
             // make sure the springboard is clamped
             float xPos = View.Layer.Position.X + delta.X;
 
-            xPos = Math.Max( (View.Layer.Bounds.Width / 2), Math.Min( xPos, CCVApp.Shared.Config.PrimaryContainer.SlideAmount + (View.Layer.Bounds.Width / 2) ) );
+            xPos = Math.Max( (View.Layer.Bounds.Width / 2), Math.Min( xPos, PrimaryContainerConfig.SlideAmount + (View.Layer.Bounds.Width / 2) ) );
 
             View.Layer.Position = new PointF( xPos, View.Layer.Position.Y );
         }
@@ -306,14 +308,14 @@ namespace iOS
                     Animating = true;
 
                     // Animate the front panel out
-                    UIView.Animate( CCVApp.Shared.Config.PrimaryContainer.SlideRate, 0, UIViewAnimationOptions.CurveEaseInOut, 
+                    UIView.Animate( PrimaryContainerConfig.SlideRate, 0, UIViewAnimationOptions.CurveEaseInOut, 
                         new NSAction( 
                             delegate 
                             { 
                                 float endPos = 0.0f;
                                 if( wantReveal == true )
                                 {
-                                    endPos = CCVApp.Shared.Config.PrimaryContainer.SlideAmount + (View.Layer.Bounds.Width / 2);
+                                    endPos = PrimaryContainerConfig.SlideAmount + (View.Layer.Bounds.Width / 2);
                                 }
                                 else
                                 {

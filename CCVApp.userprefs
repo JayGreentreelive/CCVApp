@@ -1,18 +1,11 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhone4s.8.1" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/MainUINavigationController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Tasks/NotesTask/NotesTask.cs">
     <Files>
-      <File FileName="CCVApp.Shared/VimeoManager.cs" Line="1" Column="1" />
-      <File FileName="Droid/Tasks/GiveTask/GivePrimaryFragment.cs" Line="1" Column="1" />
-      <File FileName="iOS/Tasks/Notes/NotesTask.cs" Line="1" Column="1" />
-      <File FileName="iOS/Tasks/Notes/NotesWatchUIViewController.cs" Line="1" Column="1" />
-      <File FileName="iOS/MainUINavigationController.cs" Line="4" Column="4" />
-      <File FileName="iOS/ContainerViewController.cs" Line="1" Column="1" />
-      <File FileName="iOS/SpringboardViewController.cs" Line="1" Column="1" />
-      <File FileName="iOS/Tasks/Task.cs" Line="1" Column="1" />
-      <File FileName="iOS/Tasks/Prayer/PrayerTask.cs" Line="1" Column="1" />
-      <File FileName="iOS/Tasks/Notes/NotesViewController.cs" Line="1" Column="1" />
-      <File FileName="../Rock.Mobile/PlatformMedia/iOSCamera.cs" Line="1" Column="1" />
+      <File FileName="Droid/Tasks/NotesTask/NotesTask.cs" Line="29" Column="29" />
+      <File FileName="Droid/Tasks/AboutTask/AboutPrimaryFragment.cs" Line="66" Column="66" />
+      <File FileName="iOS/Tasks/About/AboutMainPageUIViewController.cs" Line="1" Column="1" />
+      <File FileName="CCVApp.Shared/Notes/Controls/Header.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
@@ -21,6 +14,7 @@
   <MonoDevelop.Ide.DebuggingService.PinnedWatches>
     <Watch file="CCVApp.Shared/Notes/Controls/Note.cs" line="533" offsetX="1058" offsetY="7980" expression="state" liveUpdate="False" />
     <Watch file="iOS/UserManagement/ImageCropViewController.cs" line="498" offsetX="806" offsetY="7455" expression="resultTransform" liveUpdate="False" />
+    <Watch file="Droid/Tasks/NotesTask/NotesDetailsFragment.cs" line="215" offsetX="1268" offsetY="3210" expression="ThumbnailPlaceholder" liveUpdate="False" />
   </MonoDevelop.Ide.DebuggingService.PinnedWatches>
   <MonoDevelop.Ide.ItemProperties.Droid MonoForAntroid.PreferredDevice="4.65&quot; 720p (Galaxy Nexus)" MonoForAntroid.PreferredTheme="Theme.DeviceDefault" />
 </Properties>

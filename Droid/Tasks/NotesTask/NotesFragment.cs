@@ -14,7 +14,9 @@ using System.IO;
 
 using Rock.Mobile.Network;
 using CCVApp.Shared.Notes;
+using CCVApp.Shared.Config;
 using RestSharp;
+using Rock.Mobile.PlatformUI;
 
 namespace Droid
 {
@@ -198,7 +200,7 @@ namespace Droid
 
                     Indicator = layout.FindViewById<ProgressBar>( Resource.Id.progressBar );
                     Indicator.Visibility = ViewStates.Gone;
-                    Indicator.SetBackgroundColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( 0 ) );
+                    Indicator.SetBackgroundColor( PlatformBaseUI.GetUIColor( 0 ) );
                     Indicator.BringToFront();
 
                     // create the layout that will contain the notes
@@ -311,6 +313,7 @@ namespace Droid
 
                     WakeLock.Release( );
 
+                    ParentTask.NavbarFragment.EnableSpringboardRevealButton( true );
                     Activity.RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
 
                     ShutdownNotes( null );
@@ -333,13 +336,13 @@ namespace Droid
                 public void OnScrollChanged( float scrollDelta )
                 {
                     // did the user's finger go "up"?
-                    if( scrollDelta >= CCVApp.Shared.Config.Note.ScrollRateForNavBarHide )
+                    if( scrollDelta >= NoteConfig.ScrollRateForNavBarHide )
                     {
                         // hide the nav bar
                         ParentTask.NavbarFragment.NavToolbar.Reveal( false );
                     }
                     // did the user scroll "down"? Android is a little less sensitive, so use 75% of it.
-                    else if ( scrollDelta <= (CCVApp.Shared.Config.Note.ScrollRateForNavBarReveal * CCVApp.Shared.Config.Note.ScrollRateForNavBarReveal_AndroidScalar) )
+                    else if ( scrollDelta <= (NoteConfig.ScrollRateForNavBarReveal * NoteConfig.ScrollRateForNavBarReveal_AndroidScalar) )
                     {
                         ParentTask.NavbarFragment.NavToolbar.Reveal( true );
                     }
@@ -553,11 +556,11 @@ namespace Droid
 
                                     // Use the metrics and not ScrollView for dimensions, because depending on when this gets called the ScrollView
                                     // may not have its dimensions set yet.
-                                    Note.Create( this.Resources.DisplayMetrics.WidthPixels, this.Resources.DisplayMetrics.HeightPixels, ScrollViewLayout, noteName + CCVApp.Shared.Config.Note.UserNoteSuffix );
+                                    Note.Create( this.Resources.DisplayMetrics.WidthPixels, this.Resources.DisplayMetrics.HeightPixels, ScrollViewLayout, noteName + NoteConfig.UserNoteSuffix );
 
 
                                     // set the requested background color
-                                    ScrollView.SetBackgroundColor( ( Android.Graphics.Color )Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value ) );
+                                    ScrollView.SetBackgroundColor( ( Android.Graphics.Color )PlatformBaseUI.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value ) );
 
                                     // update the height of the scroll view to fit all content
                                     RectangleF frame = Note.GetFrame( );

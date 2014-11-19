@@ -3,6 +3,9 @@ using MonoTouch.UIKit;
 using System.Collections.Generic;
 using MonoTouch.Foundation;
 using System.Drawing;
+using CCVApp.Shared.Config;
+using Rock.Mobile.PlatformCommon;
+using Rock.Mobile.PlatformUI;
 
 namespace iOS
 {
@@ -66,26 +69,26 @@ namespace iOS
 
 
             // create the back button
-            NSString backLabel = new NSString(CCVApp.Shared.Config.SubNavToolbar.BackButton_Text);
+            NSString backLabel = new NSString(SubNavToolbarConfig.BackButton_Text);
 
             BackButton = new UIButton(UIButtonType.System);
-            BackButton.Font = Rock.Mobile.PlatformCommon.iOS.LoadFontDynamic( CCVApp.Shared.Config.SubNavToolbar.BackButton_Font, CCVApp.Shared.Config.SubNavToolbar.BackButton_Size );
+            BackButton.Font = iOSCommon.LoadFontDynamic( SubNavToolbarConfig.BackButton_Font, SubNavToolbarConfig.BackButton_Size );
             BackButton.SetTitle( backLabel.ToString( ), UIControlState.Normal );
-            BackButton.SetTitleColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.BackButton_EnabledColor ), UIControlState.Normal );
-            BackButton.SetTitleColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.BackButton_DisabledColor ), UIControlState.Disabled );
+            BackButton.SetTitleColor( PlatformBaseUI.GetUIColor( SubNavToolbarConfig.BackButton_EnabledColor ), UIControlState.Normal );
+            BackButton.SetTitleColor( PlatformBaseUI.GetUIColor( SubNavToolbarConfig.BackButton_DisabledColor ), UIControlState.Disabled );
 
             SizeF buttonSize = backLabel.StringSize( BackButton.Font );
             BackButton.Bounds = new RectangleF( 0, 0, buttonSize.Width, buttonSize.Height );
             //BackButton.BackgroundColor = UIColor.White;
 
             // create the share button
-            NSString shareLabel = new NSString(CCVApp.Shared.Config.SubNavToolbar.ShareButton_Text);
+            NSString shareLabel = new NSString(SubNavToolbarConfig.ShareButton_Text);
 
             ShareButton = new UIButton(UIButtonType.System);
-            ShareButton.Font = Rock.Mobile.PlatformCommon.iOS.LoadFontDynamic( CCVApp.Shared.Config.SubNavToolbar.ShareButton_Font, CCVApp.Shared.Config.SubNavToolbar.ShareButton_Size );
+            ShareButton.Font = iOSCommon.LoadFontDynamic( SubNavToolbarConfig.ShareButton_Font, SubNavToolbarConfig.ShareButton_Size );
             ShareButton.SetTitle( shareLabel.ToString( ), UIControlState.Normal );
-            ShareButton.SetTitleColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.ShareButton_EnabledColor ), UIControlState.Normal );
-            ShareButton.SetTitleColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.ShareButton_DisabledColor ), UIControlState.Disabled );
+            ShareButton.SetTitleColor( PlatformBaseUI.GetUIColor( SubNavToolbarConfig.ShareButton_EnabledColor ), UIControlState.Normal );
+            ShareButton.SetTitleColor( PlatformBaseUI.GetUIColor( SubNavToolbarConfig.ShareButton_DisabledColor ), UIControlState.Disabled );
 
             // determine its dimensions
             buttonSize = shareLabel.StringSize( ShareButton.Font );
@@ -94,13 +97,13 @@ namespace iOS
 
 
             // create the create button
-            NSString createLabel = new NSString(CCVApp.Shared.Config.SubNavToolbar.CreateButton_Text);
+            NSString createLabel = new NSString(SubNavToolbarConfig.CreateButton_Text);
 
             CreateButton = new UIButton(UIButtonType.System);
-            CreateButton.Font = Rock.Mobile.PlatformCommon.iOS.LoadFontDynamic( CCVApp.Shared.Config.SubNavToolbar.CreateButton_Font, CCVApp.Shared.Config.SubNavToolbar.CreateButton_Size );
+            CreateButton.Font = iOSCommon.LoadFontDynamic( SubNavToolbarConfig.CreateButton_Font, SubNavToolbarConfig.CreateButton_Size );
             CreateButton.SetTitle( createLabel.ToString( ), UIControlState.Normal );
-            CreateButton.SetTitleColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.CreateButton_EnabledColor ), UIControlState.Normal );
-            CreateButton.SetTitleColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.CreateButton_DisabledColor ), UIControlState.Disabled );
+            CreateButton.SetTitleColor( PlatformBaseUI.GetUIColor( SubNavToolbarConfig.CreateButton_EnabledColor ), UIControlState.Normal );
+            CreateButton.SetTitleColor( PlatformBaseUI.GetUIColor( SubNavToolbarConfig.CreateButton_DisabledColor ), UIControlState.Disabled );
 
             // determine its dimensions
             buttonSize = createLabel.StringSize( CreateButton.Font );
@@ -169,7 +172,7 @@ namespace iOS
             List<UIBarButtonItem> itemList = new List<UIBarButtonItem>( );
 
             UIBarButtonItem spacer = new UIBarButtonItem( UIBarButtonSystemItem.FixedSpace );
-            spacer.Width = CCVApp.Shared.Config.SubNavToolbar.iOS_ButtonSpacing;
+            spacer.Width = SubNavToolbarConfig.iOS_ButtonSpacing;
 
             itemList.Add( new UIBarButtonItem( BackButton ) );
             itemList.Add( spacer );
@@ -209,7 +212,7 @@ namespace iOS
                     Animating = true;
 
                     // Animate the front panel out
-                    UIView.Animate( CCVApp.Shared.Config.SubNavToolbar.SlideRate, 0, UIViewAnimationOptions.CurveEaseInOut, 
+                    UIView.Animate( SubNavToolbarConfig.SlideRate, 0, UIViewAnimationOptions.CurveEaseInOut, 
                         new NSAction( 
                             delegate 
                             { 

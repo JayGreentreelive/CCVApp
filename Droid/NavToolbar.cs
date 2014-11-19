@@ -7,6 +7,8 @@ using Android.Graphics;
 using Android.App;
 using Android.OS;
 using Rock.Mobile.PlatformCommon;
+using CCVApp.Shared.Config;
+using Rock.Mobile.PlatformUI;
 
 namespace Droid
 {
@@ -83,8 +85,8 @@ namespace Droid
             ButtonLayout.BaselineAligned = false;
 
             // set the nav subBar color (including opacity)
-            Color navColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.BackgroundColor );
-            navColor.A = (Byte) ( (float) navColor.A * CCVApp.Shared.Config.SubNavToolbar.Opacity );
+            Color navColor = PlatformBaseUI.GetUIColor( SubNavToolbarConfig.BackgroundColor );
+            navColor.A = (Byte) ( (float) navColor.A * SubNavToolbarConfig.Opacity );
             ButtonLayout.SetBackgroundColor( navColor );
 
             ButtonLayout.LayoutParameters.Height = 150;
@@ -95,12 +97,12 @@ namespace Droid
             ( (LinearLayout.LayoutParams)BackButton.LayoutParameters ).Gravity = GravityFlags.Top;
 
             // set the back button's font
-            Typeface fontFace = DroidFontManager.Instance.GetFont( CCVApp.Shared.Config.SubNavToolbar.BackButton_Font );
+            Typeface fontFace = DroidFontManager.Instance.GetFont( SubNavToolbarConfig.BackButton_Font );
             BackButton.SetTypeface( fontFace, TypefaceStyle.Normal );
-            BackButton.SetTextSize( Android.Util.ComplexUnitType.Dip, CCVApp.Shared.Config.SubNavToolbar.BackButton_Size );
+            BackButton.SetTextSize( Android.Util.ComplexUnitType.Dip, SubNavToolbarConfig.BackButton_Size );
 
-            BackButton.Text = CCVApp.Shared.Config.SubNavToolbar.BackButton_Text;
-            BackButton.SetBackgroundColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( 0 ) );
+            BackButton.Text = SubNavToolbarConfig.BackButton_Text;
+            BackButton.SetBackgroundColor( PlatformBaseUI.GetUIColor( 0 ) );
             BackButton.SetPadding( 0, 0, 0, 0 );
 
             BackButton.Click += delegate{ Activity.OnBackPressed(); };
@@ -118,9 +120,9 @@ namespace Droid
 
             int [] colors = new int[]
                 {
-                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.BackButton_PressedColor ),
-                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.BackButton_EnabledColor ),
-                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.BackButton_DisabledColor ),
+                    PlatformBaseUI.GetUIColor( SubNavToolbarConfig.BackButton_PressedColor ),
+                    PlatformBaseUI.GetUIColor( SubNavToolbarConfig.BackButton_EnabledColor ),
+                    PlatformBaseUI.GetUIColor( SubNavToolbarConfig.BackButton_DisabledColor ),
                 };
             BackButton.SetTextColor( new Android.Content.Res.ColorStateList( states, colors ) );
 
@@ -131,13 +133,13 @@ namespace Droid
             ( (LinearLayout.LayoutParams)ShareButton.LayoutParameters ).Gravity = GravityFlags.Top;
 
             // set the share button's font
-            fontFace = DroidFontManager.Instance.GetFont( CCVApp.Shared.Config.SubNavToolbar.ShareButton_Font );
+            fontFace = DroidFontManager.Instance.GetFont( SubNavToolbarConfig.ShareButton_Font );
             ShareButton.SetTypeface( fontFace, TypefaceStyle.Normal );
-            ShareButton.SetTextSize( Android.Util.ComplexUnitType.Dip, CCVApp.Shared.Config.SubNavToolbar.ShareButton_Size );
+            ShareButton.SetTextSize( Android.Util.ComplexUnitType.Dip, SubNavToolbarConfig.ShareButton_Size );
             ShareButton.SetPadding( 0, 0, 0, 0 );
 
-            ShareButton.Text = CCVApp.Shared.Config.SubNavToolbar.ShareButton_Text;
-            ShareButton.SetBackgroundColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( 0 ) );
+            ShareButton.Text = SubNavToolbarConfig.ShareButton_Text;
+            ShareButton.SetBackgroundColor( PlatformBaseUI.GetUIColor( 0 ) );
 
             // default to NOT enabled
             ShareButton.Enabled = false;
@@ -152,9 +154,9 @@ namespace Droid
 
             colors = new int[]
                 {
-                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.ShareButton_PressedColor ),
-                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.ShareButton_EnabledColor ),
-                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.ShareButton_DisabledColor ),
+                    PlatformBaseUI.GetUIColor( SubNavToolbarConfig.ShareButton_PressedColor ),
+                    PlatformBaseUI.GetUIColor( SubNavToolbarConfig.ShareButton_EnabledColor ),
+                    PlatformBaseUI.GetUIColor( SubNavToolbarConfig.ShareButton_DisabledColor ),
                 };
             ShareButton.SetTextColor( new Android.Content.Res.ColorStateList( states, colors ) );
 
@@ -165,13 +167,13 @@ namespace Droid
             ( (LinearLayout.LayoutParams)CreateButton.LayoutParameters ).Gravity = GravityFlags.Top;
 
             // set the create button's font
-            fontFace = DroidFontManager.Instance.GetFont( CCVApp.Shared.Config.SubNavToolbar.CreateButton_Font );
+            fontFace = DroidFontManager.Instance.GetFont( SubNavToolbarConfig.CreateButton_Font );
             CreateButton.SetTypeface( fontFace, TypefaceStyle.Normal );
-            CreateButton.SetTextSize( Android.Util.ComplexUnitType.Dip, CCVApp.Shared.Config.SubNavToolbar.CreateButton_Size );
+            CreateButton.SetTextSize( Android.Util.ComplexUnitType.Dip, SubNavToolbarConfig.CreateButton_Size );
             CreateButton.SetPadding( 0, 0, 0, 0 );
 
-            CreateButton.Text = CCVApp.Shared.Config.SubNavToolbar.CreateButton_Text;
-            CreateButton.SetBackgroundColor( Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( 0 ) );
+            CreateButton.Text = SubNavToolbarConfig.CreateButton_Text;
+            CreateButton.SetBackgroundColor( PlatformBaseUI.GetUIColor( 0 ) );
 
             // default to NOT enabled
             CreateButton.Enabled = false;
@@ -186,9 +188,9 @@ namespace Droid
 
             colors = new int[]
                 {
-                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.CreateButton_PressedColor ),
-                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.CreateButton_EnabledColor ),
-                    Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.SubNavToolbar.CreateButton_DisabledColor ),
+                    PlatformBaseUI.GetUIColor( SubNavToolbarConfig.CreateButton_PressedColor ),
+                    PlatformBaseUI.GetUIColor( SubNavToolbarConfig.CreateButton_EnabledColor ),
+                    PlatformBaseUI.GetUIColor( SubNavToolbarConfig.CreateButton_DisabledColor ),
                 };
             CreateButton.SetTextColor( new Android.Content.Res.ColorStateList( states, colors ) );
 
@@ -337,7 +339,7 @@ namespace Droid
 
                     animator.AddUpdateListener( this );
                     animator.AddListener( new NavToolbarAnimationListener( ) { NavbarToolbar = this } );
-                    animator.SetDuration( (long) (CCVApp.Shared.Config.SubNavToolbar.SlideRate * 1000.0f) );
+                    animator.SetDuration( (long) (SubNavToolbarConfig.SlideRate * 1000.0f) );
 
                     animator.Start();
                 }

@@ -16,6 +16,8 @@ using Android.Graphics;
 using Rock.Mobile.PlatformUI;
 using Rock.Mobile.PlatformCommon;
 using System.Drawing;
+using CCVApp.Shared.Config;
+using CCVApp.Shared.Strings;
 
 namespace Droid
 {
@@ -180,6 +182,9 @@ namespace Droid
                 RectangleF PrayerCardBounds { get; set; }
                 ProgressBar ActivityIndicator { get; set; }
 
+                bool IsActive { get; set; }
+                bool IsRequesting { get; set; }
+
                 public override void OnCreate( Bundle savedInstanceState )
                 {
                     base.OnCreate( savedInstanceState );
@@ -210,7 +215,7 @@ namespace Droid
 
                     PrayerCardBounds = new RectangleF( 0, cardYOffset, this.Resources.DisplayMetrics.WidthPixels, viewRealHeight );
 
-                    Carousel = PlatformCardCarousel.Create( cardWidth, cardHeight, PrayerCardBounds, UpdatePrayerCards );
+                    Carousel = PlatformCardCarousel.Create( cardWidth, cardHeight, PrayerCardBounds, PrayerConfig.Card_AnimationDuration, UpdatePrayerCards );
 
                     // create our cards
                     SubLeftPrayer = new PrayerCard( ref Carousel.SubLeftCard, new RectangleF( 0, 0, cardWidth, cardHeight ) );
@@ -224,9 +229,18 @@ namespace Droid
                     return view;
                 }
 
+                public override void OnPause()
+                {
+                    base.OnPause();
+
+                    IsActive = false;
+                }
+
                 public override void OnResume()
                 {
                     base.OnResume();
+
+                    IsActive = true;
 
                     ParentTask.NavbarFragment.NavToolbar.SetBackButtonEnabled( false );
                     ParentTask.NavbarFragment.NavToolbar.SetShareButtonEnabled( false, null );
@@ -237,36 +251,52 @@ namespace Droid
                     ActivityIndicator.BringToFront( );
                     ResetPrayerCards( );
 
-                    // request the prayers each time this appears
-                    CCVApp.Shared.Network.RockApi.Instance.GetPrayers( delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.PrayerRequest> prayerRequests) 
-                        {
-                            ActivityIndicator.Visibility = ViewStates.Gone;
-                            ParentTask.NavbarFragment.NavToolbar.SetCreateButtonEnabled( true, delegate{ ParentTask.OnClick( this, 0 ); } );
+                    // protect against double requests
+                    if ( IsRequesting == false )
+                    {
+                        IsRequesting = true;
 
-                            if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
+                        // request the prayers each time this appears
+                        CCVApp.Shared.Network.RockApi.Instance.GetPrayers( delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.PrayerRequest> prayerRequests )
                             {
-                                if( prayerRequests.Count > 0 )
+                                IsRequesting = false;
+
+                                // only process this if the view is still active. It's possible this request came in after we left the view.
+                                if( IsActive == true )
                                 {
-                                    PrayerRequests = prayerRequests;
+                                    ActivityIndicator.Visibility = ViewStates.Gone;
 
-                                    // create our prayer request layouts
-                                    PrayerLayouts = new List<PrayerLayoutRender>( PrayerRequests.Count );
-                                    foreach( Rock.Client.PrayerRequest request in PrayerRequests )
+                                    if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
                                     {
-                                        PrayerLayoutRender prayerLayout = new PrayerLayoutRender( PrayerCardBounds, request );
-                                        PrayerLayouts.Add( prayerLayout );
+                                        ParentTask.NavbarFragment.NavToolbar.SetCreateButtonEnabled( true, delegate
+                                            {
+                                                ParentTask.OnClick( this, 0 );
+                                            } );
+
+                                        if ( prayerRequests.Count > 0 )
+                                        {
+                                            PrayerRequests = prayerRequests;
+
+                                            // create our prayer request layouts
+                                            PrayerLayouts = new List<PrayerLayoutRender>( PrayerRequests.Count );
+                                            foreach ( Rock.Client.PrayerRequest request in PrayerRequests )
+                                            {
+                                                PrayerLayoutRender prayerLayout = new PrayerLayoutRender( PrayerCardBounds, request );
+                                                PrayerLayouts.Add( prayerLayout );
+                                            }
+
+                                            Carousel.NumItems = PrayerRequests.Count;
+
+                                            UpdatePrayerCards( 0 );
+                                        }
                                     }
-
-                                    Carousel.NumItems = PrayerRequests.Count;
-
-                                    UpdatePrayerCards( 0 );
+                                    else
+                                    {
+                                        Springboard.DisplayError( PrayerStrings.Error_Title, PrayerStrings.Error_Retrieve_Message );
+                                    }
                                 }
-                            }
-                            else
-                            {
-                                Springboard.DisplayError( CCVApp.Shared.Strings.Prayer.Error_Title, CCVApp.Shared.Strings.Prayer.Error_Retrieve_Message );
-                            }
-                        });
+                            } );
+                    }
                 }
 
                 // forward these to the carousel

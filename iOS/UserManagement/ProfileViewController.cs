@@ -6,6 +6,7 @@ using Rock.Mobile.Network;
 using CCVApp.Shared.Network;
 using MonoTouch.CoreAnimation;
 using System.Drawing;
+using CCVApp.Shared.Config;
 
 namespace iOS
 {
@@ -123,7 +124,7 @@ namespace iOS
             ProfilePicButton.Layer.Mask = maskLayer;
             //
 
-            string imagePath = RockMobileUser.Instance.HasProfileImage ? RockMobileUser.Instance.ProfilePicturePath : NSBundle.MainBundle.BundlePath + "/" + CCVApp.Shared.Config.Springboard.NoPhotoFile;
+            string imagePath = RockMobileUser.Instance.HasProfileImage ? RockMobileUser.Instance.ProfilePicturePath : NSBundle.MainBundle.BundlePath + "/" + SpringboardConfig.NoPhotoFile;
             ProfilePicButton.SetImage( new UIImage( imagePath ), UIControlState.Normal );;
         }
 

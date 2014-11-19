@@ -10,6 +10,11 @@ using CCVApp.Shared.Notes.Model;
 using System.Xml;
 using System.IO;
 using RestSharp;
+using CCVApp.Shared.Config;
+using CCVApp.Shared.Strings;
+using Rock.Mobile.PlatformUI;
+using System.Net;
+using CCVApp.Shared;
 
 namespace iOS
 {
@@ -17,27 +22,44 @@ namespace iOS
     {
         public class TableSource : UITableViewSource 
         {
+            /// <summary>
+            /// Definition for each cell in this table
+            /// </summary>
+            class SeriesCell : UITableViewCell
+            {
+                public SeriesCell( UITableViewCellStyle style, string cellIdentifier ) : base( style, cellIdentifier )
+                {
+                    Image = new UIImageView( );
+                    Label = new UILabel( );
+
+                    AddSubview( Image );
+                    AddSubview( Label );
+                }
+
+                public TableSource ParentTableSource { get; set; }
+
+                public UIImageView Image { get; set; }
+                public UILabel Label { get; set; }
+            }
+
             NotesMainUIViewController Parent { get; set; }
 
-            List<Series> Series { get; set; }
-            List<UIImageView> SeriesImage { get; set; }
+            List<SeriesEntry> SeriesEntries { get; set; }
 
             string cellIdentifier = "TableCell";
 
             float PendingCellHeight { get; set; }
 
-            public TableSource (NotesMainUIViewController parent, List<Series> seriesList, List<UIImageView> seriesImage )
+            public TableSource (NotesMainUIViewController parent, List<SeriesEntry> series )
             {
                 Parent = parent;
 
-                Series = seriesList;
-
-                SeriesImage = seriesImage;
+                SeriesEntries = series;
             }
 
             public override int RowsInSection (UITableView tableview, int section)
             {
-                return Series.Count;
+                return SeriesEntries.Count;
             }
 
             public override void RowSelected (UITableView tableView, NSIndexPath indexPath)
@@ -61,44 +83,81 @@ namespace iOS
                 }
             }
 
+            const int CellVerticalPadding = 25;
+
             public override UITableViewCell GetCell (UITableView tableView, MonoTouch.Foundation.NSIndexPath indexPath)
             {
-                UITableViewCell cell = tableView.DequeueReusableCell (cellIdentifier);
+                SeriesCell cell = tableView.DequeueReusableCell (cellIdentifier) as SeriesCell;
                 // if there are no cells to reuse, create a new one
                 if (cell == null)
                 {
-                    cell = new UITableViewCell (UITableViewCellStyle.Default, cellIdentifier);
+                    cell = new SeriesCell (UITableViewCellStyle.Default, cellIdentifier);
 
                     // configure the cell colors
-                    cell.BackgroundColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.News.Table_CellBackgroundColor );
-                    cell.TextLabel.TextColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.News.Table_CellTextColor );
-                    cell.SelectionStyle = UITableViewCellSelectionStyle.Default;
+                    cell.BackgroundColor = PlatformBaseUI.GetUIColor( NoteConfig.Series_Main_Table_CellBackgroundColor );
+                    cell.TextLabel.TextColor = PlatformBaseUI.GetUIColor( NoteConfig.Series_Main_Table_CellTextColor );
+                    cell.SelectionStyle = UITableViewCellSelectionStyle.None;
                 }
 
-                // set the image for the cell
-                //UIImageView imageView = SeriesImage[ indexPath.Row ];
-                //cell.ContentView.AddSubview( imageView );
-                //cell.Bounds = imageView.Bounds;
+                // setup the image
+                UIImageView image = cell.Image;
+                image.Image = SeriesEntries[ indexPath.Row ].Thumbnail;
+                image.ContentMode = UIViewContentMode.ScaleAspectFit;
+                image.Layer.AnchorPoint = new System.Drawing.PointF( 0, 0 );
+                image.SizeToFit( );
 
-                cell.TextLabel.Text = Series[ indexPath.Row ].Name + "\n" + Series[ indexPath.Row ].DateRanges + "\n" + Series[ indexPath.Row ].Description;
-                cell.TextLabel.Lines = 0;
-                cell.TextLabel.LineBreakMode = UILineBreakMode.WordWrap;
-                cell.TextLabel.SizeToFit( );
+                // foce the image to be sized according to the height of the cell
+                image.Frame = new RectangleF( (cell.Frame.Width - NoteConfig.Series_Main_CellImageWidth) / 2, 
+                                               0, 
+                                               NoteConfig.Series_Main_CellImageWidth, 
+                                               NoteConfig.Series_Main_CellImageHeight );
 
-                PendingCellHeight = cell.Frame.Height;
+
+
+                // create a text label next to the image that allows word wrapping
+                UILabel textLabel = cell.Label;
+                textLabel.Text = SeriesEntries[ indexPath.Row ].Series.Name;
+                textLabel.LineBreakMode = UILineBreakMode.TailTruncation;
+                textLabel.TextColor = PlatformBaseUI.GetUIColor( NoteConfig.Series_Main_Table_CellTextColor );
+
+                // set the allowed width for the text, then adjust the size, and then expand the height in case it's too small.
+                textLabel.TextAlignment = UITextAlignment.Center;
+                textLabel.Frame = new System.Drawing.RectangleF( 0, 0, cell.Frame.Width, 0 );
+                textLabel.SizeToFit( );
+                textLabel.Frame = new System.Drawing.RectangleF( 0, image.Frame.Bottom, cell.Frame.Width, textLabel.Frame.Height );
+
+                PendingCellHeight = textLabel.Frame.Bottom + CellVerticalPadding;
 
                 return cell;
             }
+
         }
 
-        public List<Series> Series { get; set; }
-        List<UIImageView> SeriesImage { get; set; }
+        /// <summary>
+        /// A wrapper class that consolidates the series and its image
+        /// </summary>
+        public class SeriesEntry
+        {
+            public Series Series { get; set; }
+            public UIImage Thumbnail { get; set; }
+        }
+        List<SeriesEntry> SeriesEntries { get; set; }
+        UIImage ThumbnailPlaceholder{ get; set; }
+
         UIActivityIndicatorView ActivityIndicator { get; set; }
+
+        NotesDetailsUIViewController DetailsViewController { get; set; }
+
+        bool RequestSeries { get; set; }
+
+        bool IsVisible { get; set; }
 
         public NotesMainUIViewController (IntPtr handle) : base (handle)
         {
-            Series = new List<Series>( );
-            SeriesImage = new List<UIImageView>( );
+            SeriesEntries = new List<SeriesEntry>();
+
+            string imagePath = NSBundle.MainBundle.BundlePath + "/" + "podcastThumbnailPlaceholder.png";
+            ThumbnailPlaceholder = new UIImage( imagePath );
         }
 
         public override void ViewDidLoad()
@@ -106,19 +165,13 @@ namespace iOS
             base.ViewDidLoad();
 
             // setup our table
-            NotesTableView.BackgroundColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.News.Table_BackgroundColor );
-            NotesTableView.SeparatorColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( 0x444444FF );
-            //NotesTableView.SeparatorStyle = UITableViewCellSeparatorStyle.None;
+            NotesTableView.BackgroundColor = PlatformBaseUI.GetUIColor( NoteConfig.Series_Main_Table_BackgroundColor );
+            NotesTableView.SeparatorStyle = UITableViewCellSeparatorStyle.None;
 
-            ActivityIndicator = new UIActivityIndicatorView( new RectangleF( View.Frame.Width / 2, NavigationController.NavigationBar.Frame.Height, 0, 0 ) );
+            ActivityIndicator = new UIActivityIndicatorView( new RectangleF( View.Frame.Width / 2, View.Frame.Height / 2, 0, 0 ) );
             ActivityIndicator.StartAnimating( );
             ActivityIndicator.ActivityIndicatorViewStyle = UIActivityIndicatorViewStyle.White;
             ActivityIndicator.SizeToFit( );
-
-            View.AddSubview( ActivityIndicator );
-            View.BringSubviewToFront( ActivityIndicator );
-
-            ActivityIndicator.Hidden = false;
         }
 
         public override void ViewDidLayoutSubviews()
@@ -131,51 +184,170 @@ namespace iOS
             NotesTableView.Frame = new RectangleF( 0, NavigationController.NavigationBar.Frame.Height, View.Bounds.Width, View.Bounds.Height - NavigationController.NavigationBar.Frame.Height );
         }
 
+        public override void ViewWillDisappear(bool animated)
+        {
+            base.ViewWillDisappear(animated);
+
+            IsVisible = false;
+        }
+
         public override void ViewWillAppear(bool animated)
         {
             base.ViewWillAppear(animated);
 
-            // grab the series info
-            Rock.Mobile.Network.HttpRequest request = new HttpRequest();
-            RestRequest restRequest = new RestRequest( Method.GET );
-            restRequest.RequestFormat = DataFormat.Xml;
+            DetailsViewController = null;
 
-            request.ExecuteAsync<List<Series>>( CCVApp.Shared.Config.Note.BaseURL + "series.xml", restRequest, 
-                delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Series> model )
-                {
-                    ActivityIndicator.Hidden = true;
+            IsVisible = true;
 
-                    if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) )
+            // if we haven't already kicked off a request, do so now
+            if ( SeriesEntries.Count == 0 && RequestSeries == false )
+            {
+                View.AddSubview( ActivityIndicator );
+                View.BringSubviewToFront( ActivityIndicator );
+                ActivityIndicator.Hidden = false;
+
+                RequestSeries = true;
+
+                // grab the series info
+                Rock.Mobile.Network.HttpRequest request = new HttpRequest();
+                RestRequest restRequest = new RestRequest( Method.GET );
+                restRequest.RequestFormat = DataFormat.Xml;
+
+                request.ExecuteAsync<List<Series>>( NoteConfig.BaseURL + "series.xml", restRequest, 
+                    delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Series> model )
                     {
-                        if( model != null )
-                        {
-                            Series = model;
+                        // only do image work on the main thread
+                        InvokeOnMainThread( delegate
+                            {
+                                ActivityIndicator.Hidden = true;
+                                ActivityIndicator.RemoveFromSuperview( );
 
-                            // on the main thread, update the list
-                            InvokeOnMainThread( delegate
+                                RequestSeries = false;
+
+                                if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) )
                                 {
-                                    TableSource source = new TableSource( this, Series, null );
-                                    NotesTableView.Source = source;
-                                    NotesTableView.ReloadData( );
-                                });
-                        }
-                        else
-                        {
-                            SpringboardViewController.DisplayError( CCVApp.Shared.Strings.Messages.Error_Title, CCVApp.Shared.Strings.Messages.Error_Message );
-                        }
-                    }
-                    else
+                                    if ( model != null )
+                                    {
+                                        // setup each series entry in our table
+                                        SetupSeriesEntries( model );
+
+                                        // only update the table if we're still visible
+                                        if ( IsVisible == true )
+                                        {
+                                            TableSource source = new TableSource( this, SeriesEntries );
+                                            NotesTableView.Source = source;
+                                            NotesTableView.ReloadData( );
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if ( IsVisible == true )
+                                        {
+                                            SpringboardViewController.DisplayError( MessagesStrings.Error_Title, MessagesStrings.Error_Message );
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    if ( IsVisible == true )
+                                    {
+                                        SpringboardViewController.DisplayError( MessagesStrings.Error_Title, MessagesStrings.Error_Message );
+                                    }
+                                }
+                            });
+                    } );
+            }
+            else
+            {
+                TableSource source = new TableSource( this, SeriesEntries );
+                NotesTableView.Source = source;
+                NotesTableView.ReloadData( );
+            }
+        }
+
+        void SetupSeriesEntries( List<Series> seriesList )
+        {
+            foreach ( Series series in seriesList )
+            {
+                // add the entry to our list
+                SeriesEntry entry = new SeriesEntry();
+                SeriesEntries.Add( entry );
+
+                // copy over the series and give it a placeholder image
+                entry.Series = series;
+                entry.Thumbnail = ThumbnailPlaceholder;
+
+                // first see if the image is cached
+                MemoryStream image = ImageCache.Instance.ReadImage( entry.Series.Name );
+                if ( image != null )
+                {
+                    ApplyBillboardImage( entry, image );
+
+                    image.Dispose( );
+
+                    if ( IsVisible == true )
                     {
-                        SpringboardViewController.DisplayError( CCVApp.Shared.Strings.Messages.Error_Title, CCVApp.Shared.Strings.Messages.Error_Message );
+                        NotesTableView.ReloadData( );
                     }
-                } );
+                }
+                else
+                {
+                    // darn, it isn't here, so we'll need to download it.
+
+                    // request the thumbnail image for the series
+                    HttpRequest webRequest = new HttpRequest();
+                    RestRequest restRequest = new RestRequest( Method.GET );
+
+                    webRequest.ExecuteAsync( series.BillboardUrl, restRequest, 
+                        delegate(HttpStatusCode statusCode, string statusDescription, byte[] model )
+                        {
+                            if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
+                            {
+                                // update the image on the UI Thread ONLY!
+                                InvokeOnMainThread( delegate
+                                    {
+                                        MemoryStream imageBuffer = new MemoryStream( model );
+
+                                        // write it to cache
+                                        ImageCache.Instance.WriteImage( imageBuffer, entry.Series.Name );
+
+                                        ApplyBillboardImage( entry, imageBuffer );
+
+                                        if ( IsVisible == true )
+                                        {
+                                            NotesTableView.ReloadData( );
+                                        }
+
+                                        // dump the memory stream
+                                        imageBuffer.Dispose( );
+                                    });
+                            }
+                        } );
+                }
+            }
+        }
+
+        void ApplyBillboardImage( SeriesEntry entry, MemoryStream imageBuffer )
+        {
+            // create a UIImage out of the stream
+            NSData imageData = NSData.FromStream( imageBuffer );
+            UIImage uiImage = new UIImage( imageData );
+
+            entry.Thumbnail = uiImage;
         }
 
         public void RowClicked( int row )
         {
-            NotesDetailsUIViewController viewController = Storyboard.InstantiateViewController( "NotesDetailsUIViewController" ) as NotesDetailsUIViewController;
-            viewController.Series = Series[ row ];
-            Task.PerformSegue( this, viewController );
+            DetailsViewController = Storyboard.InstantiateViewController( "NotesDetailsUIViewController" ) as NotesDetailsUIViewController;
+            DetailsViewController.Series = SeriesEntries[ row ].Series;
+
+            // Note - if they are fast enough, they will end up going to the details of a series before
+            // the series banner comes down, resulting in them seeing the generic thumbnail.
+            // This isn't really a bug, more just a design issue. Ultimately it'll go away when we
+            // start caching images
+            DetailsViewController.ThumbnailPlaceholder = SeriesEntries[ row ].Thumbnail;
+
+            Task.PerformSegue( this, DetailsViewController );
         }
     }
 }

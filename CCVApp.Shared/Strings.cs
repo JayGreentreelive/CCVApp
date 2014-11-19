@@ -6,26 +6,18 @@ namespace CCVApp.Shared
 {
     namespace Strings
     {
-        public class Build
+        public class BuildStrings
         {
             public static string Version
             {
                 get
                 {
-                    return "0.0.3";
-                }
-            }
-
-            public static string BuildTime
-            {
-                get
-                {
-                    return "11-6-14";
+                    return "Alpha (Build 3)";
                 }
             }
         }
 
-        public class General
+        public class GeneralStrings
         {
             public const string Yes = "Yes";
             public const string No = "No";
@@ -33,7 +25,7 @@ namespace CCVApp.Shared
             public const string Cancel = "Cancel";
         }
 
-        public class Springboard
+        public class SpringboardStrings
         {
             public const string ProfilePicture_SourceTitle = "Profile Picture";
             public const string ProfilePicture_SourceDescription = "Select a source for your profile picture.";
@@ -50,13 +42,13 @@ namespace CCVApp.Shared
             public const string LoggedOut_Promo = "Login to enable additional features.";
         }
 
-        public class Profile
+        public class ProfileStrings
         {
             public const string SubmitChangesTitle = "Submit Changes?";
             public const string LogoutTitle = "Log Out?";
         }
 
-        public class Messages
+        public class MessagesStrings
         {
             public const string Error_Title = "Messages";
             public const string Error_Message = "There was a problem downloading the messages. Please try again.";
@@ -64,12 +56,14 @@ namespace CCVApp.Shared
             public const string Error_Watch_Playback = "There was a problem playing this video. Check your network settings and try again.";
         }
 
-        public class Prayer
+        public class PrayerStrings
         {
             public const string Error_Title = "Prayer";
 
             public const string Error_Retrieve_Message = "There was a problem getting prayer requests. Check your network settings and try again.";
             public const string Error_Submit_Message = "There was a problem submitting your prayer request. Check your network settings and try again.";
+
+            public const string Prayer_Confirm = "I Prayed";
         }
     }
 }

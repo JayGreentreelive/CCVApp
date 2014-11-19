@@ -3,6 +3,8 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using System.CodeDom.Compiler;
 using System.Drawing;
+using CCVApp.Shared.Config;
+using CCVApp.Shared.Strings;
 
 namespace iOS
 {
@@ -17,7 +19,7 @@ namespace iOS
             base.ViewDidLoad();
 
             RectangleF webViewFrame;
-            AboutVersionText.Text = string.Format( "CCV App Version {0}\nBuilt on {1}", CCVApp.Shared.Strings.Build.Version, CCVApp.Shared.Strings.Build.BuildTime );
+            AboutVersionText.Text = string.Format( "Version: {0}", BuildStrings.Version );
 
             webViewFrame = new RectangleF( View.Frame.X, 
                                            View.Frame.Y + NavigationController.NavigationBar.Frame.Height + AboutVersionText.Frame.Height, 
@@ -26,7 +28,7 @@ namespace iOS
 
             UIWebView webView = new UIWebView( webViewFrame );
             View.AddSubview( webView );
-            webView.LoadRequest( new NSUrlRequest( new NSUrl( CCVApp.Shared.Config.About.Url ) ) );
+            webView.LoadRequest( new NSUrlRequest( new NSUrl( AboutConfig.Url ) ) );
         }
 	}
 }

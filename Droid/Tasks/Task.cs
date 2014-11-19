@@ -91,7 +91,7 @@ namespace Droid
             {
             }
 
-            public virtual void OnClick( Fragment source, int buttonId )
+            public virtual void OnClick( Fragment source, int buttonId, object context = null )
             {
             }
         }

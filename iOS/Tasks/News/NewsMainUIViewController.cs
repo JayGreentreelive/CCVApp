@@ -5,6 +5,8 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using CCVApp.Shared.Network;
 using System.Drawing;
+using CCVApp.Shared.Config;
+using Rock.Mobile.PlatformUI;
 
 namespace iOS
 {
@@ -56,8 +58,8 @@ namespace iOS
                     cell = new UITableViewCell (UITableViewCellStyle.Default, cellIdentifier);
 
                     // configure the cell colors
-                    cell.BackgroundColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.News.Table_CellBackgroundColor );
-                    cell.TextLabel.TextColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.News.Table_CellTextColor );
+                    cell.BackgroundColor = PlatformBaseUI.GetUIColor( NewsConfig.Table_CellBackgroundColor );
+                    cell.TextLabel.TextColor = PlatformBaseUI.GetUIColor( NewsConfig.Table_CellTextColor );
                     cell.SelectionStyle = UITableViewCellSelectionStyle.Default;
                 }
 
@@ -95,8 +97,8 @@ namespace iOS
             TableSource source = new TableSource( this, News, NewsImage );
             NewsTableView.Source = source;
 
-            NewsTableView.BackgroundColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.News.Table_BackgroundColor );
-            NewsTableView.SeparatorColor = Rock.Mobile.PlatformUI.PlatformBaseUI.GetUIColor( CCVApp.Shared.Config.News.Table_SeperatorBackgroundColor );
+            NewsTableView.BackgroundColor = PlatformBaseUI.GetUIColor( NewsConfig.Table_BackgroundColor );
+            NewsTableView.SeparatorColor = PlatformBaseUI.GetUIColor( NewsConfig.Table_SeperatorBackgroundColor );
             NewsTableView.SeparatorStyle = UITableViewCellSeparatorStyle.None;
         }
 

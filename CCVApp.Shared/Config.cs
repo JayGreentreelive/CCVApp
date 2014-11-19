@@ -10,7 +10,12 @@ namespace CCVApp
         /// </summary>
         namespace Config
         {
-            public class Springboard
+            public class GeneralConfig
+            {
+                public const string ImageCacheDirectory = "cache";
+            }
+
+            public class SpringboardConfig
             {
                 /// <summary>
                 /// Image to display when a user does not have a profile.
@@ -94,7 +99,7 @@ namespace CCVApp
                 public const int BackgroundColor = 0x3d3d3dFF;
             }
 
-            public class ImageCrop
+            public class ImageCropConfig
             {
                 /// <summary>
                 /// The font to use for displaying the 'ok to crop' button.
@@ -127,7 +132,7 @@ namespace CCVApp
                 public const int CropCancelButton_Size = 36;
             }
 
-            public class SubNavToolbar
+            public class SubNavToolbarConfig
             {
                 /// <summary>
                 /// The height of the subNavigation toolbar (the one at the bottom)
@@ -250,7 +255,7 @@ namespace CCVApp
             /// <summary>
             /// Settings for the primary nav bar (the one at the top)
             /// </summary>
-            public class PrimaryNavBar
+            public class PrimaryNavBarConfig
             {
                 /// <summary>
                 /// The logo to be displayed on the primary nav bar.
@@ -301,7 +306,7 @@ namespace CCVApp
             /// <summary>
             /// Settings for the primary container that all activities lie within.
             /// </summary>
-            public class PrimaryContainer
+            public class PrimaryContainerConfig
             {
                 /// <summary>
                 /// Time (in seconds) it takes for the primary container to slide in/out to reveal the springboard.
@@ -330,7 +335,7 @@ namespace CCVApp
                 public const uint ShadowColor = 0x000000FF;
             }
 
-            public sealed class News
+            public class NewsConfig
             {
                 /// <summary>
                 /// The color of the news table background. (You most likely want this to match Table_CellBackgroundColor)
@@ -353,7 +358,7 @@ namespace CCVApp
                 public const uint Table_CellTextColor = 0xFFFFFFFF;
             }
 
-            public sealed class Note
+            public class NoteConfig
             {
                 /// <summary>
                 /// The suffix to use for the user note filename.
@@ -447,6 +452,33 @@ namespace CCVApp
                 /// </summary>
                 public const float ScrollRateForNavBarHide = 50;
 
+
+                /// <summary>
+                /// The color of the series main (first) table background.
+                /// </summary>
+                public const uint Series_Main_Table_BackgroundColor = 0x1C1C1CFF;
+
+                /// <summary>
+                /// The color of an in-use table cell. (You most likely want this to match Series_Main_Table_BackgroundColor)
+                /// </summary>
+                public const uint Series_Main_Table_CellBackgroundColor = 0x1C1C1CFF;
+
+                /// <summary>
+                /// The color of an in-use table cell. (You most likely want this to match Series_Main_Table_BackgroundColor)
+                /// </summary>
+                public const uint Series_Main_Table_CellTextColor = 0xFFFFFFFF;
+
+                /// <summary>
+                /// The height that an image should be within the cell
+                /// </summary>
+                public const float Series_Main_CellImageHeight = 180;
+
+                /// <summary>
+                /// The width that an image should be within the cell
+                /// </summary>
+                public const float Series_Main_CellImageWidth = 320;
+
+
                 /// <summary>
                 /// The color of the series details table background. (You most likely want this to match Table_CellBackgroundColor)
                 /// </summary>
@@ -470,23 +502,61 @@ namespace CCVApp
                 /// <summary>
                 /// The height that an image should be within the cell
                 /// </summary>
-                public const float Series_Details_CellImageHeight = 150;
+                public const float Series_Details_CellImageHeight = 180;
 
                 /// <summary>
                 /// The width that an image should be within the cell
                 /// </summary>
-                public const float Series_Details_CellImageWidth = 200;
+                public const float Series_Details_CellImageWidth = 320;
             }
 
-            public sealed class Prayer
+            public class PrayerConfig
             {
                 /// <summary>
                 /// The length of the animation when a prayer card is animating.
                 /// </summary>
                 public const float Card_AnimationDuration = .25f;
+
+                public const uint Card_BackgroundColor = 0x3E3E3EFF;
+                public const uint Card_BorderColor = 0x9D9D9DFF;
+                public const uint Card_CornerRadius = 3;
+                public const float Card_BorderWidth = .5f;
+
+                public const string Card_DateFont = "OpenSans-Regular";
+                public const uint Card_DateSize = 10;
+                public const uint Card_DateColor = 0x898989FF;
+
+                public const string Card_CategoryFont = "OpenSans-Regular";
+                public const uint Card_CategorySize = 10;
+                public const uint Card_CategoryColor = 0x898989FF;
+
+                public const string  Card_NameFont = "ChangaOne-Regular";
+                public const uint Card_NameSize = 16;
+                public const uint Card_NameColor = 0xFFFFFFFF;
+
+                public const string Card_PrayerFont = "OpenSans-Regular";
+                public const uint Card_PrayerSize = 12;
+                public const uint Card_PrayerColor = 0x989898FF;
+
+                public const string Card_ButtonFont = "OpenSans-Regular";
+                public const uint Card_ButtonSize = 12;
+                public const uint Card_ButtonColor_Normal = 0x989898FF;
+                public const uint Card_ButtonColor_Highlighted = 0x545454FF;
+
+                public const string AddPrayer_Font = "FontAwesome";
+                public const string AddPrayer_Text = "";
+                public const uint AddPrayer_Size = 16;
+                public const uint AddPrayer_ButtonColor_Normal = 0xFFFFFFFF;
+                public const uint AddPrayer_ButtonColor_Highlighted = 0x545454FF;
+                public const uint AddPrayer_BackgroundColor = 0x3E3E3EFF;
+                public const uint AddPrayer_BorderColor = 0x9D9D9DFF;
+                public const uint AddPrayer_CornerRadius = 3;
+                public const float AddPrayer_BorderWidth = .5f;
+
+                public const uint BackgroundColor = 0x2D2D2DFF;
             }
 
-            public sealed class About
+            public class AboutConfig
             {
                 /// <summary>
                 /// The page to navigate to in the About's embedded webview.

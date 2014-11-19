@@ -119,7 +119,7 @@ namespace CCVApp.Shared
                 } );
         }
 
-        public void RequestThumbnail( string thumbnailUrl, RequestComplete resultHandler )
+        void RequestThumbnail( string thumbnailUrl, RequestComplete resultHandler )
         {
             // grab the actual image
             RestRequest request = new RestRequest( Method.GET );
