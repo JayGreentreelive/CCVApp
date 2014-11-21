@@ -323,7 +323,6 @@
     <Compile Include="Tasks\News\NewsTask.cs" />
     <Compile Include="Tasks\Notes\NotesTask.cs" />
     <Compile Include="Tasks\Prayer\PrayerTask.cs" />
-    <Compile Include="Tasks\Watch\WatchTask.cs" />
     <Compile Include="UserManagement\LoginViewController.cs" />
     <Compile Include="UserManagement\LoginViewController.designer.cs">
       <DependentUpon>LoginViewController.cs</DependentUpon>
@@ -352,10 +351,6 @@
     <Compile Include="Tasks\Prayer\PrayerMainUIViewController.designer.cs">
       <DependentUpon>PrayerMainUIViewController.cs</DependentUpon>
     </Compile>
-    <Compile Include="Tasks\Prayer\Prayer_CreateUIViewController.cs" />
-    <Compile Include="Tasks\Prayer\Prayer_CreateUIViewController.designer.cs">
-      <DependentUpon>Prayer_CreateUIViewController.cs</DependentUpon>
-    </Compile>
     <Compile Include="Tasks\GroupFinder\GroupFinderMainPageUIViewController.cs" />
     <Compile Include="Tasks\GroupFinder\GroupFinderMainPageUIViewController.designer.cs">
       <DependentUpon>GroupFinderMainPageUIViewController.cs</DependentUpon>
@@ -375,6 +370,18 @@
     <Compile Include="Tasks\Notes\NotesWatchUIViewController.cs" />
     <Compile Include="Tasks\Notes\NotesWatchUIViewController.designer.cs">
       <DependentUpon>NotesWatchUIViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tasks\Prayer\Prayer_CreateUIViewController.cs" />
+    <Compile Include="Tasks\Prayer\Prayer_CreateUIViewController.designer.cs">
+      <DependentUpon>Prayer_CreateUIViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UIScrollViewWrapper.cs" />
+    <Compile Include="UIScrollViewWrapper.designer.cs">
+      <DependentUpon>UIScrollViewWrapper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tasks\Prayer\Prayer_PostUIViewController.cs" />
+    <Compile Include="Tasks\Prayer\Prayer_PostUIViewController.designer.cs">
+      <DependentUpon>Prayer_PostUIViewController.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <Import Project="..\..\Rock\Rock.Client\Rock.Client.Models.projitems" Label="Shared" Condition="Exists('..\..\Rock\Rock.Client\Rock.Client.Models.projitems')" />

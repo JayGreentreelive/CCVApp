@@ -11,8 +11,8 @@
      
      <Header.Container MarginBottom="5%" BorderWidth="2" BorderRadius="3" BorderColor="#777777FF" Alignment="Left"/>
      <Header.Title Alignment="Center" FontName="Bevan" FontSize="18" FontColor="#AFAFAFFF"/>
-     <Header.Speaker FontName="Bevan" FontSize="16" FontColor="#AFAFAFFF"/>
-     <Header.Date FontName="Bevan" FontSize="16" FontColor="#AFAFAFFF"/>
+     <Header.Speaker FontName="Bevan" FontSize="12" FontColor="#AFAFAFFF"/>
+     <Header.Date FontName="Bevan" FontSize="12" FontColor="#AFAFAFFF"/>
      
      <Text FontName="Bevan" FontSize="16" FontColor="#AFAFAFFF"/>
      

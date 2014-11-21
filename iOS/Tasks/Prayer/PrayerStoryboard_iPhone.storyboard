@@ -16,73 +16,235 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" customColorSpace="calibratedWhite" colorSpace="calibratedRGB" red="0" green="0" blue="0" alpha="1"/>
                         <subviews>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="170" animating="YES">
-                                <rect key="frame" x="142" y="230" width="37" height="37"/>
-                            </activityIndicatorView>
+                            <view contentMode="scaleToFill" id="645" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <color key="backgroundColor" customColorSpace="calibratedWhite" colorSpace="calibratedRGB" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" id="647" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO">
+                                        <rect key="frame" x="-10" y="57" width="340" height="33"/>
+                                        <color key="backgroundColor" customColorSpace="calibratedWhite" colorSpace="calibratedRGB" red="0" green="1" blue="0" alpha="1"/>
+                                        <subviews>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="wordWrap" minimumFontSize="10" id="649" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" numberOfLines="0" textAlignment="center">
+                                                <rect key="frame" x="15" y="2" width="310" height="30"/>
+                                                <color key="backgroundColor" colorSpace="calibratedRGB" red="1" green="0" blue="0" alpha="1"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </view>
+                                    <view contentMode="scaleToFill" id="653" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO">
+                                        <rect key="frame" x="-14" y="195" width="349" height="155"/>
+                                        <color key="backgroundColor" customColorSpace="calibratedWhite" colorSpace="calibratedRGB" red="0" green="1" blue="0" alpha="1"/>
+                                        <subviews>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="wordWrap" minimumFontSize="10" id="654" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" numberOfLines="0" textAlignment="center">
+                                                <rect key="frame" x="19" y="44" width="310" height="66"/>
+                                                <color key="backgroundColor" colorSpace="calibratedRGB" red="1" green="0" blue="0" alpha="1"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </view>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="667" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO">
+                                        <rect key="frame" x="137" y="373" width="46" height="30"/>
+                                        <state key="normal" title="Retry">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
+                                </subviews>
+                            </view>
                         </subviews>
-                        <constraints>
-                            <constraint id="213" firstItem="6" firstAttribute="trailing" secondItem="170" secondAttribute="trailing" constant="141"/>
-                            <constraint id="214" firstItem="170" firstAttribute="top" secondItem="6" secondAttribute="top" constant="230"/>
-                        </constraints>
                     </view>
                     <connections>
-                        <outlet property="ActivityIndicator" destination="170" id="name-outlet-170"/>
+                        <outlet property="RetrievingPrayersView" destination="645" id="name-outlet-645"/>
+                        <outlet property="StatusBackground" destination="647" id="name-outlet-647"/>
+                        <outlet property="StatusLabel" destination="649" id="name-outlet-649"/>
+                        <outlet property="ResultLabel" destination="654" id="name-outlet-654"/>
+                        <outlet property="ResultBackground" destination="653" id="name-outlet-653"/>
+                        <outlet property="RetryButton" destination="667" id="name-outlet-667"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="162" y="120"/>
         </scene>
-        <scene sceneID="32">
+        <scene sceneID="262">
             <objects>
-                <viewController id="33" sceneMemberID="viewController" customClass="Prayer_CreateUIViewController" storyboardIdentifier="Prayer_CreateUIViewController">
+                <viewController id="263" sceneMemberID="viewController" storyboardIdentifier="Prayer_CreateUIViewController" customClass="Prayer_CreateUIViewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="30"/>
-                        <viewControllerLayoutGuide type="bottom" id="31"/>
+                        <viewControllerLayoutGuide type="top" id="260"/>
+                        <viewControllerLayoutGuide type="bottom" id="261"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="34">
+                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="267" translatesAutoresizingMaskIntoConstraints="NO" key="view" userInteractionEnabled="YES" customClass="UIScrollViewWrapper">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <subviews>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" style="gray" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="62" animating="YES">
+                                <rect key="frame" x="142" y="229" width="37" height="37"/>
+                            </activityIndicatorView>
+                            <view contentMode="scaleToFill" id="272" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" userInteractionEnabled="YES">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="649"/>
+                                <color key="backgroundColor" customColorSpace="calibratedWhite" colorSpace="calibratedRGB" red="0.13333333333333333" green="0.13333333333333333" blue="0.13333333333333333" alpha="1"/>
+                                <subviews>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="54" translatesAutoresizingMaskIntoConstraints="NO" textAlignment="left" text="" indicatorStyle="0" fixedFrame="YES">
+                                        <rect key="frame" x="5" y="297" width="310" height="164"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences" keyboardAppearance="default"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                    </textView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="55" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO">
+                                        <rect key="frame" x="126" y="469" width="74" height="30"/>
+                                        <state key="normal" title="Submit">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Prayer Request" lineBreakMode="tailTruncation" minimumFontSize="10" id="281" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO">
+                                        <rect key="frame" x="5" y="273" width="154" height="21"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <view contentMode="scaleToFill" id="537" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO">
+                                        <rect key="frame" x="-11" y="149" width="349" height="91"/>
+                                        <color key="backgroundColor" customColorSpace="calibratedWhite" cocoaTouchSystemColor="darkTextColor"/>
+                                        <subviews>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Post Anonymously" lineBreakMode="tailTruncation" minimumFontSize="10" id="222" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO">
+                                                <rect key="frame" x="20" y="13" width="198" height="21"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" colorSpace="calibratedRGB" red="1" green="1" blue="1" alpha="1"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Make Public" lineBreakMode="tailTruncation" minimumFontSize="10" id="223" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO">
+                                                <rect key="frame" x="20" y="57" width="198" height="21"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" colorSpace="calibratedRGB" red="1" green="1" blue="1" alpha="1"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <switch opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="NO" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="221">
+                                                <rect key="frame" x="264" y="8" width="51" height="31"/>
+                                            </switch>
+                                            <switch opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="224">
+                                                <rect key="frame" x="264" y="52" width="51" height="31"/>
+                                            </switch>
+                                        </subviews>
+                                    </view>
+                                    <view contentMode="scaleToFill" id="542" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO">
+                                        <rect key="frame" x="-10" y="57" width="340" height="33"/>
+                                        <color key="backgroundColor" customColorSpace="calibratedWhite" colorSpace="calibratedRGB" red="0" green="1" blue="0" alpha="1"/>
+                                        <subviews>
+                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="" minimumFontSize="17" id="551" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO">
+                                                <rect key="frame" x="15" y="2" width="310" height="30"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no" autocapitalizationType="words" spellCheckingType="no"/>
+                                                <color key="textColor" colorSpace="calibratedRGB" red="1" green="1" blue="1" alpha="1"/>
+                                                <color key="backgroundColor" colorSpace="calibratedRGB" red="1" green="0" blue="0" alpha="1"/>
+                                            </textField>
+                                        </subviews>
+                                    </view>
+                                    <view contentMode="scaleToFill" id="556" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO">
+                                        <rect key="frame" x="-10" y="103" width="340" height="33"/>
+                                        <color key="backgroundColor" customColorSpace="calibratedWhite" colorSpace="calibratedRGB" red="0" green="1" blue="0" alpha="1"/>
+                                        <subviews>
+                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="" minimumFontSize="17" id="557" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO">
+                                                <rect key="frame" x="15" y="2" width="310" height="30"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" spellCheckingType="no"/>
+                                                <color key="backgroundColor" colorSpace="calibratedRGB" red="1" green="0" blue="0" alpha="1"/>
+                                            </textField>
+                                        </subviews>
+                                    </view>
+                                </subviews>
+                            </view>
+                        </subviews>
+                    </scrollView>
+                    <connections>
+                        <outlet property="ActivityIndicator" destination="62" id="name-outlet-62"/>
+                        <outlet property="ScrollView" destination="267" id="name-outlet-267"/>
+                        <outlet property="SubmitButton" destination="55" id="name-outlet-55"/>
+                        <outlet property="RequestText" destination="54" id="name-outlet-54"/>
+                        <outlet property="BackingControlView" destination="272" id="name-outlet-272"/>
+                        <outlet property="SwitchBackground" destination="537" id="name-outlet-537"/>
+                        <outlet property="UISwitchAnonymous" destination="221" id="name-outlet-221"/>
+                        <outlet property="FirstNameBackground" destination="542" id="name-outlet-542"/>
+                        <outlet property="FirstNameText" destination="551" id="name-outlet-551"/>
+                        <outlet property="LastNameText" destination="557" id="name-outlet-557"/>
+                        <outlet property="LastNameBackground" destination="556" id="name-outlet-556"/>
+                        <outlet property="UIPublicSwitch" destination="224" id="name-outlet-224"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="265" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="533" y="121"/>
+        </scene>
+        <scene sceneID="564">
+            <objects>
+                <viewController id="565" sceneMemberID="viewController" customClass="Prayer_PostUIViewController" storyboardIdentifier="Prayer_PostUIViewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="562"/>
+                        <viewControllerLayoutGuide type="bottom" id="563"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="566">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" customColorSpace="calibratedWhite" colorSpace="calibratedRGB" red="0" green="0" blue="0" alpha="1"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="" borderStyle="roundedRect" minimumFontSize="17" id="43" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" placeholder="First Name">
-                                <rect key="frame" x="30" y="78" width="97" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="" borderStyle="roundedRect" minimumFontSize="17" id="48" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" placeholder="Last Name">
-                                <rect key="frame" x="178" y="78" width="97" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="54" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" text="Request" textAlignment="left">
-                                <rect key="frame" x="30" y="145" width="245" height="205"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="55" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO">
-                                <rect key="frame" x="116" y="372" width="74" height="30"/>
-                                <state key="normal" title="Submit">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="571" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO">
+                                <rect key="frame" x="137" y="418" width="46" height="30"/>
+                                <state key="normal" title="Done">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" style="gray" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="62" animating="YES">
-                                <rect key="frame" x="134" y="106" width="37" height="37"/>
-                            </activityIndicatorView>
+                            <view contentMode="scaleToFill" id="634" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO">
+                                <rect key="frame" x="-10" y="57" width="340" height="33"/>
+                                <color key="backgroundColor" customColorSpace="calibratedWhite" colorSpace="calibratedRGB" red="0" green="1" blue="0" alpha="1"/>
+                                <subviews>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="wordWrap" minimumFontSize="10" id="572" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" numberOfLines="0" textAlignment="center">
+                                        <rect key="frame" x="15" y="2" width="310" height="30"/>
+                                        <color key="backgroundColor" colorSpace="calibratedRGB" red="1" green="0" blue="0" alpha="1"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </view>
+                            <view contentMode="scaleToFill" id="635" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES">
+                                <rect key="frame" x="-14" y="195" width="349" height="155"/>
+                                <color key="backgroundColor" customColorSpace="calibratedWhite" colorSpace="calibratedRGB" red="0" green="1" blue="0" alpha="1"/>
+                                <subviews>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="wordWrap" minimumFontSize="10" id="636" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" numberOfLines="0" textAlignment="center">
+                                        <rect key="frame" x="20" y="87" width="310" height="66"/>
+                                        <color key="backgroundColor" colorSpace="calibratedRGB" red="1" green="0" blue="0" alpha="1"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="tailTruncation" minimumFontSize="10" id="639" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" textAlignment="center">
+                                        <rect key="frame" x="128" y="5" width="92" height="79"/>
+                                        <color key="backgroundColor" colorSpace="calibratedRGB" red="1" green="0" blue="0" alpha="1"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </view>
                         </subviews>
                     </view>
                     <connections>
-                        <outlet property="FirstNameText" destination="43" id="name-outlet-43"/>
-                        <outlet property="LastNameText" destination="48" id="name-outlet-48"/>
-                        <outlet property="RequestText" destination="54" id="name-outlet-54"/>
-                        <outlet property="SubmitButton" destination="55" id="name-outlet-55"/>
-                        <outlet property="ActivityIndicator" destination="62" id="name-outlet-62"/>
+                        <outlet property="DoneButton" destination="571" id="name-outlet-571"/>
+                        <outlet property="StatusLabel" destination="572" id="name-outlet-572"/>
+                        <outlet property="StatusBackground" destination="634" id="name-outlet-634"/>
+                        <outlet property="ResultBackground" destination="635" id="name-outlet-635"/>
+                        <outlet property="ResultLabel" destination="636" id="name-outlet-636"/>
+                        <outlet property="ResultSymbolLabel" destination="639" id="name-outlet-639"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="35" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="567" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="625" y="122"/>
+            <point key="canvasLocation" x="923" y="125"/>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
@@ -105,12 +267,13 @@
         <image name="Default.png" width="320" height="480"/>
         <image name="Icon-60.png" width="120" height="120"/>
         <image name="Icon.png" width="57" height="57"/>
-        <image name="news_general_1.png" width="640" height="434"/>
-        <image name="news_general_2.png" width="640" height="434"/>
-        <image name="news_general_3.png" width="640" height="434"/>
+        <image name="news_general_1.png" width="640" height="413"/>
+        <image name="news_general_2.png" width="640" height="413"/>
+        <image name="news_general_3.png" width="640" height="413"/>
         <image name="IMG_0079.JPG" width="1280" height="960"/>
-        <image name="news_general_1_header.png" width="560" height="192"/>
-        <image name="news_general_2_header.png" width="560" height="192"/>
-        <image name="news_general_3_header.png" width="560" height="192"/>
+        <image name="news_general_1_header.png" width="640" height="360"/>
+        <image name="news_general_2_header.png" width="640" height="360"/>
+        <image name="news_general_3_header.png" width="640" height="360"/>
+        <image name="podcastThumbnailPlaceholder.png" width="590" height="332"/>
     </resources>
 </document>

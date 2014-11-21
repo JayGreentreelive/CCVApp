@@ -48,7 +48,9 @@ namespace CCVApp
                 /// <summary>
                 /// End point for retrieving prayer requests
                 /// </summary>
-                const string GetPrayerRequestsEndPoint = "api/prayerrequests";//?$filter=IsApproved eq true&$expand=Category"; todo: in the end we want this, but not for testing.
+                /// 
+                //const string GetPrayerRequestsEndPoint = "api/prayerrequests";
+                const string GetPrayerRequestsEndPoint = "api/prayerrequests?$filter=(IsApproved eq true) and (IsPublic eq true) and (IsActive eq true) and ( (ExpirationDate ge datetime'{0:yyyy-MM-dd}') or (ExpirationDate eq null) )&$expand=Category";
 
                 /// <summary>
                 /// End point for posting a prayer request
@@ -77,7 +79,6 @@ namespace CCVApp
                     CookieContainer = new System.Net.CookieContainer();
 
                     Request = new HttpRequest();
-                    //Request.Format = DataFormat.Json;
                     Request.CookieContainer = CookieContainer;
                 }
 
@@ -116,16 +117,17 @@ namespace CCVApp
                 {
                     // request a profile by the username. If no username is specified, we'll use the logged in user's name.
                     RestRequest request = new RestRequest( Method.GET );
-                    //request.Resource = GetPrayerRequestsEndPoint;
 
-                    Request.ExecuteAsync< List<Rock.Client.PrayerRequest> >( BaseUrl + GetPrayerRequestsEndPoint, request, resultHandler);
+                    // insert today's date as the expiration limit
+                    string requestString = BaseUrl + string.Format( GetPrayerRequestsEndPoint, DateTime.Now );
+
+                    Request.ExecuteAsync< List<Rock.Client.PrayerRequest> >( requestString, request, resultHandler);
                 }
 
                 public void PutPrayer( Rock.Client.PrayerRequest prayer, HttpRequest.RequestResult resultHandler )
                 {
                     // request a profile by the username. If no username is specified, we'll use the logged in user's name.
                     RestRequest request = new RestRequest( Method.POST );
-                    //request.Resource = PutPrayerRequestEndPoint;
 
                     request.RequestFormat = DataFormat.Json;
                     request.AddBody( prayer );
@@ -137,8 +139,7 @@ namespace CCVApp
                 {
                     // request a profile by the username. If no username is specified, we'll use the logged in user's name.
                     RestRequest request = new RestRequest( Method.GET );
-                    //request.Resource = GetProfileEndPoint;
-                    //request.Resource += string.IsNullOrEmpty( userName ) == true ? RockMobileUser.Instance.Username : userName;
+
                     string requestUrl = BaseUrl + GetProfileEndPoint;
                     requestUrl += string.IsNullOrEmpty( userName ) == true ? RockMobileUser.Instance.Username : userName;
 
@@ -149,8 +150,7 @@ namespace CCVApp
                 {
                     // request a profile by the username. If no username is specified, we'll use the logged in user's name.
                     RestRequest request = new RestRequest( Method.PUT );
-                    //request.Resource = PutProfileEndPoint;
-                    //request.Resource += person.Id;
+
                     request.RequestFormat = DataFormat.Json;
                     request.AddBody( person );
 
@@ -161,7 +161,6 @@ namespace CCVApp
                 {
                     // request a profile by the username. If no username is specified, we'll use the logged in user's name.
                     RestRequest request = new RestRequest( Method.GET );
-                    //request.Resource = string.Format( GetProfilePictureEndPoint, photoId, dimensionSize );
                     string requestUrl = BaseUrl + string.Format( GetProfilePictureEndPoint, photoId, dimensionSize );
 
                     // get the raw response

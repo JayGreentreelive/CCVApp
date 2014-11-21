@@ -2,8 +2,8 @@
 <Note StyleSheet="http://www.jeredmcferron.com/sample_style.xml">    
     <Header MarginBottom="5%">
         <Title>THERE IS HOPE: FOR YOUR MARRIAGE</Title>
-        <Speaker FontSize="8">Dr. Shaunti Feldhahn</Speaker>
-        <Date FontSize="8">November 8th &amp; 9th, 2014</Date>
+        <Speaker>Dr. Shaunti Feldhahn</Speaker>
+        <Date>Nov 8th &amp; 9th, 2014</Date>
     </Header>
 
 	<Canvas BorderColor="#777777FF" BorderWidth="2" BorderRadius="4" PaddingBottom="90%">

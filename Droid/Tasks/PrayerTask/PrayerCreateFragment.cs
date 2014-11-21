@@ -65,6 +65,10 @@ namespace Droid
                                 prayerRequest.LastName = LastNameText.Text;
                                 prayerRequest.Text = RequestText.Text;
                                 prayerRequest.EnteredDateTime = DateTime.Now;
+                                prayerRequest.CategoryId = 0;
+                                prayerRequest.IsActive = false;
+                                prayerRequest.IsPublic = false;
+                                prayerRequest.IsApproved = false;
 
                                 ActivityIndicator.Visibility = ViewStates.Visible;
 

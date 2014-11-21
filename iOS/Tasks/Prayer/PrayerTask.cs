@@ -8,6 +8,7 @@ namespace iOS
     public class PrayerTask : Task
     {
         PrayerMainUIViewController MainPage { get; set; }
+        UIViewController CurrentPage { get; set; }
 
         public PrayerTask( string storyboardName ) : base( storyboardName )
         {
@@ -25,6 +26,8 @@ namespace iOS
 
         public override void WillShowViewController(UIViewController viewController)
         {
+            CurrentPage = viewController;
+
             // if it's the main page, disable the back button on the toolbar
             if ( viewController == MainPage )
             {
@@ -40,7 +43,12 @@ namespace iOS
                 NavToolbar.SetShareButtonEnabled( false, null );
                 NavToolbar.SetCreateButtonEnabled( false, null );
 
-                NavToolbar.RevealForTime( 3.0f );
+                // if we're showing the post controller, don't reveal the nav bar,
+                // as nothing should be allowed while posting.
+                if ( viewController as Prayer_PostUIViewController == null )
+                {
+                    NavToolbar.RevealForTime( 3.0f );
+                }
             }
         }
 

@@ -576,7 +576,7 @@ namespace Droid
                                 } 
                                 catch( Exception ex )
                                 {
-                                    ReportException( "NoteScript Error", ex );
+                                    ReportException( "", ex );
                                 }
                             } );
                     }

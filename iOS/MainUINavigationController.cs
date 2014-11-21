@@ -211,7 +211,7 @@ namespace iOS
             UpdateSpringboardAllowedState( toInterfaceOrientation );
         }
 
-        public void UpdateSpringboardAllowedState( UIInterfaceOrientation toInterfaceOrientation )
+        void UpdateSpringboardAllowedState( UIInterfaceOrientation toInterfaceOrientation )
         {
             // this catch-all will ensure we don't allow the springboard button or panning
             // when not in portrait mode.

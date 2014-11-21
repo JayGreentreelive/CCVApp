@@ -158,7 +158,7 @@ namespace iOS
             Name.SizeToFit( );
             Name.Frame = new RectangleF( ViewPadding, ViewPadding, View.Bounds.Width - (ViewPadding * 2), Name.Bounds.Height );
 
-            Category.Text = "Category";
+            Category.Text = "Category";//prayer.Category.Name; //todo: waiting on a decision from the guys about this.  
             Category.SizeToFit( );
             Category.Layer.Position = new PointF( ViewPadding, Name.Frame.Bottom );
 
@@ -215,6 +215,7 @@ namespace iOS
         bool ViewActive { get; set; }
 
         UIButton AddPrayer { get; set; }
+        BlockerView BlockerView { get; set; }
 
 		public PrayerMainUIViewController (IntPtr handle) : base (handle)
 		{
@@ -224,17 +225,21 @@ namespace iOS
         {
             base.ViewDidLoad();
 
+            BlockerView = new BlockerView( View.Frame );
+            BlockerView.BackgroundColor = UIColor.Black;
+
+
             // Setup the "AddPrayer" button for creating a new prayer request
             AddPrayer = UIButton.FromType( UIButtonType.Custom );
             AddPrayer.Layer.AnchorPoint = new PointF( 0, 0 );
-            AddPrayer.SetTitle( PrayerConfig.AddPrayer_Text, UIControlState.Normal );
+            AddPrayer.SetTitle( PrayerConfig.AddPrayer_ButtonText, UIControlState.Normal );
             AddPrayer.SetTitleColor( PlatformBaseUI.GetUIColor( PrayerConfig.AddPrayer_ButtonColor_Normal ), UIControlState.Normal );
             AddPrayer.SetTitleColor( PlatformBaseUI.GetUIColor( PrayerConfig.AddPrayer_ButtonColor_Highlighted ), UIControlState.Highlighted );
-            AddPrayer.Font = iOSCommon.LoadFontDynamic( PrayerConfig.AddPrayer_Font, PrayerConfig.AddPrayer_Size );
+            AddPrayer.Font = iOSCommon.LoadFontDynamic( PrayerConfig.AddPrayer_ButtonFont, PrayerConfig.AddPrayer_ButtonSize );
             AddPrayer.Layer.BorderColor = PlatformBaseUI.GetUIColor( PrayerConfig.AddPrayer_BorderColor ).CGColor;
             AddPrayer.BackgroundColor = PlatformBaseUI.GetUIColor( PrayerConfig.AddPrayer_BackgroundColor );
-            AddPrayer.Layer.CornerRadius = PrayerConfig.AddPrayer_CornerRadius;
-            AddPrayer.Layer.BorderWidth = PrayerConfig.AddPrayer_BorderWidth;
+            AddPrayer.Layer.CornerRadius = PrayerConfig.AddPrayer_ButtonCornerRadius;
+            AddPrayer.Layer.BorderWidth = PrayerConfig.AddPrayer_ButtonBorderWidth;
             AddPrayer.SizeToFit( );
             AddPrayer.Bounds = new RectangleF( 0, 0, AddPrayer.Bounds.Width * 2, AddPrayer.Bounds.Height );
             AddPrayer.Layer.Position = new PointF( ( View.Frame.Width - AddPrayer.Frame.Width ) / 2, View.Frame.Height - AddPrayer.Frame.Height + 4 );
@@ -268,9 +273,32 @@ namespace iOS
 
             Carousel.Init( View );
 
-            // hide the actiivty indicator and make sure it is front and center
-            ActivityIndicator.Hidden = false;
-            View.BringSubviewToFront( ActivityIndicator );
+
+            // Setup the request prayers layer
+            //setup our appearance
+            RetrievingPrayersView.BackgroundColor = PlatformBaseUI.GetUIColor( PrayerConfig.ViewPrayer_RetrieveLayer_BGColor );
+
+            StatusLabel.Text = PrayerStrings.ViewPrayer_StatusText_Retrieving;
+            StatusLabel.TextColor = PlatformBaseUI.GetUIColor( PrayerConfig.ViewPrayer_StatusTextColor );
+            StatusLabel.BackgroundColor = PlatformBaseUI.GetUIColor( PrayerConfig.ViewPrayer_StatusBGColor );
+
+            ResultLabel.TextColor = PlatformBaseUI.GetUIColor( PrayerConfig.ViewPrayer_ResultTextColor );
+            ResultLabel.BackgroundColor = PlatformBaseUI.GetUIColor( PrayerConfig.ViewPrayer_ResultBGColor );
+
+            StatusBackground.Layer.BackgroundColor = PlatformBaseUI.GetUIColor( PrayerConfig.ViewPrayer_StatusBackingLayer_BGColor ).CGColor;
+            StatusBackground.Layer.BorderColor = PlatformBaseUI.GetUIColor( PrayerConfig.ViewPrayer_StatusBackingLayer_BorderColor ).CGColor;
+            StatusBackground.Layer.BorderWidth = PrayerConfig.ViewPrayer_StatusBackingLayer_BorderWidth;
+
+            ResultBackground.Layer.BackgroundColor = PlatformBaseUI.GetUIColor( PrayerConfig.ViewPrayer_ResultBackingLayer_BGColor ).CGColor;
+            ResultBackground.Layer.BorderColor = PlatformBaseUI.GetUIColor( PrayerConfig.ViewPrayer_ResultBackingLayer_BorderColor ).CGColor;
+            ResultBackground.Layer.BorderWidth = PrayerConfig.ViewPrayer_ResultBackingLayer_BorderWidth;
+
+            View.AddSubview( BlockerView );
+
+            RetryButton.TouchUpInside += (object sender, EventArgs e ) =>
+            {
+                RetrievePrayerRequests( );
+            };
         }
 
         public override void ViewWillAppear(bool animated)
@@ -281,58 +309,69 @@ namespace iOS
 
             Carousel.ViewWillAppear( animated );
 
-            ActivityIndicator.Hidden = false;
-
             Task.NavToolbar.SetCreateButtonEnabled( false );
-            AddPrayer.Enabled = false;
+
+            View.BringSubviewToFront( RetrievingPrayersView );
+            View.BringSubviewToFront( BlockerView );
 
             // this will prevent double requests in the case that we leave and return to the prayer
             // page before the initial request completes
             if ( RequestingPrayers == false )
             {
-                RequestingPrayers = true;
+                RetrievePrayerRequests( );
+            }
+        }
 
-                // request the prayers each time this appears
-                CCVApp.Shared.Network.RockApi.Instance.GetPrayers( delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.PrayerRequest> prayerRequests )
-                    {
-                        // force this onto the main thread so that if there's a race condition in requesting prayers we won't hit it.
-                        InvokeOnMainThread( delegate
-                            {
-                                // only process this if the view is still active. It's possible this request came in after we left the view.
-                                if( ViewActive == true )
+        void RetrievePrayerRequests( )
+        {
+            // show the retrieve layer
+            RetrievingPrayersView.Layer.Opacity = 1.00f;
+            StatusLabel.Text = PrayerStrings.ViewPrayer_StatusText_Retrieving;
+            ResultLabel.Hidden = true;
+            RetryButton.Hidden = true;
+
+            BlockerView.FadeIn( delegate
+                {
+                    RequestingPrayers = true;
+
+                    // request the prayers each time this appears
+                    CCVApp.Shared.Network.RockApi.Instance.GetPrayers( delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.PrayerRequest> prayerRequests )
+                        {
+                            // force this onto the main thread so that if there's a race condition in requesting prayers we won't hit it.
+                            InvokeOnMainThread( delegate
                                 {
-                                    RequestingPrayers = false;
-
-                                    ActivityIndicator.Hidden = true;
-
-                                    if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) )
+                                    // only process this if the view is still active. It's possible this request came in after we left the view.
+                                    if ( ViewActive == true )
                                     {
-                                        if ( prayerRequests.Count > 0 )
+                                        RequestingPrayers = false;
+
+                                        BlockerView.FadeOut( null );
+
+                                        // somestimes our prayers can be received with errors in the xml, so ensure we have a valid model.
+                                        if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) && prayerRequests != null )
                                         {
-                                            /*Task.NavToolbar.SetCreateButtonEnabled( true, delegate
-                                                {
-                                                    Prayer_CreateUIViewController viewController = Storyboard.InstantiateViewController( "Prayer_CreateUIViewController" ) as Prayer_CreateUIViewController;
-                                                    Task.PerformSegue( this, viewController );
-                                                }
-                                            );*/
+                                            if ( prayerRequests.Count > 0 )
+                                            {
+                                                RetrievingPrayersView.Layer.Opacity = 0.00f;
 
-                                            AddPrayer.Enabled = true;
+                                                PrayerRequests = prayerRequests;
 
-                                            PrayerRequests = prayerRequests;
+                                                Carousel.NumItems = PrayerRequests.Count;
 
-                                            Carousel.NumItems = PrayerRequests.Count;
-
-                                            UpdatePrayerCards( 0 );
+                                                UpdatePrayerCards( 0 );
+                                            }
+                                        }
+                                        else
+                                        {
+                                            StatusLabel.Text = PrayerStrings.ViewPrayer_StatusText_Failed;
+                                            RetryButton.Hidden = false;
+                                            ResultLabel.Hidden = false;
+                                            ResultLabel.Text = PrayerStrings.Error_Retrieve_Message;
                                         }
                                     }
-                                    else
-                                    {
-                                        SpringboardViewController.DisplayError( PrayerStrings.Error_Title, PrayerStrings.Error_Retrieve_Message );
-                                    }
-                                }
-                            });
-                    } );
-            }
+                                } );
+                        } );
+                } );
         }
 
         public void MakeInActive()
@@ -344,16 +383,12 @@ namespace iOS
         {
             base.TouchesBegan( touches, evt );
 
-            Console.WriteLine( "Touches Began" );
-
             Carousel.TouchesBegan( );
         }
 
         public override void TouchesEnded(NSSet touches, UIEvent evt)
         {
-            base.TouchesEnded( touches, evt );
-
-            Console.WriteLine( "Touches Ended" );
+            // don't call the base because we don't want to support the nav toolbar on this page
 
             Carousel.TouchesEnded( );
         }

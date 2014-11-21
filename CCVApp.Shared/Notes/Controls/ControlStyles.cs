@@ -871,13 +871,13 @@ namespace CCVApp
                 protected static void ParseStyles( string styleSheetXml )
                 {
                     Exception exception = null;
+
+                    StyleSheetXml = styleSheetXml;
+
+                    // now use a reader to get each element
+                    XmlTextReader reader = XmlReader.Create( new StringReader( styleSheetXml ) ) as XmlTextReader;
                     try
                     {
-                        StyleSheetXml = styleSheetXml;
-
-                        // now use a reader to get each element
-                        XmlReader reader = XmlReader.Create( new StringReader( styleSheetXml ) );
-
                         bool finishedParsing = false;
 
                         // look at each element, as they all define styles for our controls
@@ -923,7 +923,7 @@ namespace CCVApp
                     } 
                     catch( Exception ex )
                     {
-                        exception = ex;
+                        exception = new Exception( ex.Message + string.Format( "\nLine Number: {0}", reader.LineNumber ) );
                     }
 
                     mStylesCreatedDelegate( exception );

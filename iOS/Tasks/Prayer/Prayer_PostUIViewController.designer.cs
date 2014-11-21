@@ -11,9 +11,13 @@ using System.CodeDom.Compiler;
 
 namespace iOS
 {
-	[Register ("PrayerMainUIViewController")]
-	partial class PrayerMainUIViewController
+	[Register ("Prayer_PostUIViewController")]
+	partial class Prayer_PostUIViewController
 	{
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UIButton DoneButton { get; set; }
+
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
 		UIView ResultBackground { get; set; }
@@ -24,11 +28,7 @@ namespace iOS
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UIView RetrievingPrayersView { get; set; }
-
-		[Outlet]
-		[GeneratedCode ("iOS Designer", "1.0")]
-		UIButton RetryButton { get; set; }
+		UILabel ResultSymbolLabel { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
@@ -40,6 +40,10 @@ namespace iOS
 
 		void ReleaseDesignerOutlets ()
 		{
+			if (DoneButton != null) {
+				DoneButton.Dispose ();
+				DoneButton = null;
+			}
 			if (ResultBackground != null) {
 				ResultBackground.Dispose ();
 				ResultBackground = null;
@@ -48,13 +52,9 @@ namespace iOS
 				ResultLabel.Dispose ();
 				ResultLabel = null;
 			}
-			if (RetrievingPrayersView != null) {
-				RetrievingPrayersView.Dispose ();
-				RetrievingPrayersView = null;
-			}
-			if (RetryButton != null) {
-				RetryButton.Dispose ();
-				RetryButton = null;
+			if (ResultSymbolLabel != null) {
+				ResultSymbolLabel.Dispose ();
+				ResultSymbolLabel = null;
 			}
 			if (StatusBackground != null) {
 				StatusBackground.Dispose ();

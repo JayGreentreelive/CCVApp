@@ -12,7 +12,7 @@ namespace CCVApp.Shared
             {
                 get
                 {
-                    return "Alpha (Build 3)";
+                    return "Alpha (Build 4)";
                 }
             }
         }
@@ -63,7 +63,18 @@ namespace CCVApp.Shared
             public const string Error_Retrieve_Message = "There was a problem getting prayer requests. Check your network settings and try again.";
             public const string Error_Submit_Message = "There was a problem submitting your prayer request. Check your network settings and try again.";
 
+            public const string ViewPrayer_StatusText_Retrieving = "Getting Prayer Requests";
+            public const string ViewPrayer_StatusText_Failed = "Darn :(";
             public const string Prayer_Confirm = "I Prayed";
+
+            public const string CreatePrayer_FirstNamePlaceholderText = "First Name";
+            public const string CreatePrayer_LastNamePlaceholderText = "Last Name";
+
+            public const string PostPrayer_Status_Submitting = "Submitting";
+            public const string PostPrayer_Status_SuccessText = "Submitted";
+            public const string PostPrayer_Status_FailedText = "Darn :(";
+            public const string PostPrayer_Result_SuccessText = "Prayer posted successfully. As soon as it is approved you'll see it in the Prayer Requests.";
+            public const string PostPrayer_Result_FailedText = "Looks like there was a problem submitting your request. Tap below to try again, or go back to make changes.";
         }
     }
 }

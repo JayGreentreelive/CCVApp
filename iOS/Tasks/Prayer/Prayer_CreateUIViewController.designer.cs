@@ -20,7 +20,19 @@ namespace iOS
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
+		UIView BackingControlView { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UIView FirstNameBackground { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
 		UITextField FirstNameText { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UIView LastNameBackground { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
@@ -32,7 +44,23 @@ namespace iOS
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
+		UIScrollViewWrapper ScrollView { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
 		UIButton SubmitButton { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UIView SwitchBackground { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UISwitch UIPublicSwitch { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UISwitch UISwitchAnonymous { get; set; }
 
 		void ReleaseDesignerOutlets ()
 		{
@@ -40,9 +68,21 @@ namespace iOS
 				ActivityIndicator.Dispose ();
 				ActivityIndicator = null;
 			}
+			if (BackingControlView != null) {
+				BackingControlView.Dispose ();
+				BackingControlView = null;
+			}
+			if (FirstNameBackground != null) {
+				FirstNameBackground.Dispose ();
+				FirstNameBackground = null;
+			}
 			if (FirstNameText != null) {
 				FirstNameText.Dispose ();
 				FirstNameText = null;
+			}
+			if (LastNameBackground != null) {
+				LastNameBackground.Dispose ();
+				LastNameBackground = null;
 			}
 			if (LastNameText != null) {
 				LastNameText.Dispose ();
@@ -52,9 +92,25 @@ namespace iOS
 				RequestText.Dispose ();
 				RequestText = null;
 			}
+			if (ScrollView != null) {
+				ScrollView.Dispose ();
+				ScrollView = null;
+			}
 			if (SubmitButton != null) {
 				SubmitButton.Dispose ();
 				SubmitButton = null;
+			}
+			if (SwitchBackground != null) {
+				SwitchBackground.Dispose ();
+				SwitchBackground = null;
+			}
+			if (UIPublicSwitch != null) {
+				UIPublicSwitch.Dispose ();
+				UIPublicSwitch = null;
+			}
+			if (UISwitchAnonymous != null) {
+				UISwitchAnonymous.Dispose ();
+				UISwitchAnonymous = null;
 			}
 		}
 	}

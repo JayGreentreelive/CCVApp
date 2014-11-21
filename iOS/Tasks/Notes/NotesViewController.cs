@@ -14,6 +14,7 @@ using System.Net;
 using System.Text;
 using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
+using Rock.Mobile.PlatformCommon;
 
 namespace iOS
 {
@@ -135,31 +136,6 @@ namespace iOS
         Note Note { get; set; }
 
         /// <summary>
-        /// The frame of the text field that was tapped when the keyboard was shown.
-        /// Used so we know whether to scroll up the text field or not.
-        /// </summary>
-        RectangleF Edit_TappedTextFieldFrame { get; set; }
-
-        /// <summary>
-        /// The amount the scrollView was scrolled when editing began.
-        /// Used so we can restore the scrollView position when editing is finished.
-        /// </summary>
-        /// <value>The edit start scroll offset.</value>
-        PointF Edit_StartScrollOffset { get; set; }
-
-        /// <summary>
-        /// The position of the UIScrollView when text editing began.
-        /// </summary>
-        /// <value>The edit start screen offset.</value>
-        PointF Edit_StartScreenOffset { get; set; }
-
-        /// <summary>
-        /// The bottom position of the visible area when the keyboard is up.
-        /// </summary>
-        /// <value>The edit visible area with keyboard bot.</value>
-        float Edit_VisibleAreaWithKeyboardBot { get; set; }
-
-        /// <summary>
         /// The URL for this note
         /// </summary>
         /// <value>The note URL.</value>
@@ -179,17 +155,16 @@ namespace iOS
 		UIDeviceOrientation Orientation { get; set; }
 
         /// <summary>
-        /// True when a keyboard is present due to UIKeyboardWillShowNotification.
-        /// Important because this will be FALSE if a hardware keyboard is attached.
-        /// </summary>
-        /// <value><c>true</c> if displaying keyboard; otherwise, <c>false</c>.</value>
-        public bool DisplayingKeyboard { get; set; }
-
-        /// <summary>
         /// A list of the handles returned when adding observers to OS events
         /// </summary>
         /// <value>The observer handles.</value>
         List<NSObject> ObserverHandles { get; set; }
+
+        /// <summary>
+        /// The manager that ensures views being edited are visible when the keyboard comes up.
+        /// </summary>
+        /// <value>The keyboard adjust manager.</value>
+        KeyboardAdjustManager KeyboardAdjustManager { get; set; }
 
         public NotesViewController( ) : base( )
         {
@@ -287,6 +262,8 @@ namespace iOS
                     CreateNotes( null, null );
                 };
 
+            KeyboardAdjustManager = new KeyboardAdjustManager( View, UIScrollView );
+
             #if DEBUG
             View.AddSubview( RefreshButton );
             #endif
@@ -298,16 +275,16 @@ namespace iOS
             UIApplication.SharedApplication.IdleTimerDisabled = true;
 
             // monitor for text field being edited, and keyboard show/hide notitications
-            NSObject handle = NSNotificationCenter.DefaultCenter.AddObserver ("TextFieldDidBeginEditing", OnTextFieldDidBeginEditing);
+            NSObject handle = NSNotificationCenter.DefaultCenter.AddObserver (KeyboardAdjustManager.TextFieldDidBeginEditingNotification, KeyboardAdjustManager.OnTextFieldDidBeginEditing);
             ObserverHandles.Add( handle );
 
-            handle = NSNotificationCenter.DefaultCenter.AddObserver ("TextFieldChanged", OnTextFieldChanged);
+            handle = NSNotificationCenter.DefaultCenter.AddObserver (KeyboardAdjustManager.TextFieldChangedNotification, KeyboardAdjustManager.OnTextFieldChanged);
             ObserverHandles.Add( handle );
 
-            handle = NSNotificationCenter.DefaultCenter.AddObserver (UIKeyboard.WillHideNotification, OnKeyboardNotification);
+            handle = NSNotificationCenter.DefaultCenter.AddObserver (UIKeyboard.WillHideNotification, KeyboardAdjustManager.OnKeyboardNotification);
             ObserverHandles.Add( handle );
 
-            handle = NSNotificationCenter.DefaultCenter.AddObserver (UIKeyboard.WillShowNotification, OnKeyboardNotification);
+            handle = NSNotificationCenter.DefaultCenter.AddObserver (UIKeyboard.WillShowNotification, KeyboardAdjustManager.OnKeyboardNotification);
             ObserverHandles.Add( handle );
         }
 
@@ -468,126 +445,6 @@ namespace iOS
                 {
                     Note.DidDoubleTap( tap.LocationInView( UIScrollView ) );
                 }
-            }
-        }
-
-        public void OnKeyboardNotification( NSNotification notification )
-        {
-            //Start an animation, using values from the keyboard
-            UIView.BeginAnimations ("AnimateForKeyboard");
-            UIView.SetAnimationBeginsFromCurrentState (true);
-            UIView.SetAnimationDuration (UIKeyboard.AnimationDurationFromNotification (notification));
-            UIView.SetAnimationCurve ((UIViewAnimationCurve)UIKeyboard.AnimationCurveFromNotification (notification));
-
-            // Check if the keyboard is becoming visible.
-            // Sometimes iOS is kind enough to send us this notification 3 times in a row, so make sure
-            // we haven't already handled it.
-            if( notification.Name == UIKeyboard.WillShowNotification && DisplayingKeyboard == false )
-            {
-                DisplayingKeyboard = true;
-
-                // store the original screen positioning / scroll. No matter what, we will
-                // undo any scrolling the user did while editing.
-                Edit_StartScrollOffset = UIScrollView.ContentOffset;
-                Edit_StartScreenOffset = UIScrollView.Layer.Position;
-
-                // get the keyboard frame and transform it into our view's space
-                RectangleF keyboardFrame = UIKeyboard.FrameEndFromNotification (notification);
-                keyboardFrame = View.ConvertRectToView( keyboardFrame, null );
-
-                // first, get the bottom point of the visible area.
-                Edit_VisibleAreaWithKeyboardBot = View.Bounds.Height - keyboardFrame.Height;
-
-                // now get the dist between the bottom of the visible area and the text field (text field's pos also changes as we scroll)
-                MaintainEditTextVisibility( );
-            }
-            else if ( DisplayingKeyboard == true )
-            {
-                // get the keyboard frame and transform it into our view's space
-                RectangleF keyboardFrame = UIKeyboard.FrameBeginFromNotification (notification);
-                keyboardFrame = View.ConvertRectToView( keyboardFrame, null );
-
-                // restore the screen to the way it was before editing
-                UIScrollView.ContentOffset = Edit_StartScrollOffset;
-                UIScrollView.Layer.Position = Edit_StartScreenOffset;
-
-                DisplayingKeyboard = false;
-            }
-
-            // for some reason toggling the keyboard causes the idle timer to turn on,
-            // so force it to turn back off here.
-            UIApplication.SharedApplication.IdleTimerDisabled = true;
-
-            //Commit the animation
-            UIView.CommitAnimations (); 
-        }
-
-        public void OnTextFieldDidBeginEditing( NSNotification notification )
-        {
-            // put the text frame in absolute screen coordinates
-            RectangleF textFrame = ((NSValue)notification.Object).RectangleFValue;
-
-            // first subtract the amount scrolled by the view.
-            float yPos = textFrame.Y - UIScrollView.ContentOffset.Y;
-            float xPos = textFrame.X - UIScrollView.ContentOffset.X;
-
-            // now subtract however far down the scroll view is from the top.
-            yPos -= View.Frame.Y - UIScrollView.Frame.Y;
-            xPos -= View.Frame.X - UIScrollView.Frame.X;
-
-            Edit_TappedTextFieldFrame = new RectangleF( xPos, yPos, textFrame.Width, textFrame.Height );
-        }
-
-        public void OnTextFieldChanged( NSNotification notification )
-        {
-            // put the text frame in absolute screen coordinates
-            RectangleF textFrame = ((NSValue)notification.Object).RectangleFValue;
-
-            // first subtract the amount scrolled by the view.
-            float yPos = textFrame.Y - UIScrollView.ContentOffset.Y;
-            float xPos = textFrame.X - UIScrollView.ContentOffset.X;
-
-            // now subtract however far down the scroll view is from the top.
-            yPos -= View.Frame.Y - UIScrollView.Frame.Y;
-            xPos -= View.Frame.X - UIScrollView.Frame.X;
-
-            // update it
-            Edit_TappedTextFieldFrame = new RectangleF( xPos, yPos, textFrame.Width, textFrame.Height );
-
-            MaintainEditTextVisibility( );
-        }
-
-        protected void MaintainEditTextVisibility( )
-        {
-            // no need to do anything if a hardware keyboard is attached.
-            if( DisplayingKeyboard == true )
-            {
-                // PLUS makes it scroll "up"
-                // NEG makes it scroll "down"
-                // TextField position MOVES AS THE PAGE IS SCROLLED.
-                // It is always relative, however, to the screen. So, if it's near the top, it's 0,
-                // whether that's because it was moved down and the screen scrolled up, or it's just at the top naturally.
-
-                // Scroll the view so tha the bottom of the text field is as close as possible to
-                // the top of the keyboard without violating scroll constraints
-
-                // determine if they're typing near the bottom of the screen and it needs to scroll.
-                float scrollAmount = (Edit_VisibleAreaWithKeyboardBot - Edit_TappedTextFieldFrame.Bottom);
-
-                // clamp to the legal amount we can scroll "down"
-                scrollAmount = Math.Min( scrollAmount, UIScrollView.ContentOffset.Y );
-
-                // Now determine the amount of "up" scroll remaining
-                float maxScrollAmount = UIScrollView.ContentSize.Height - UIScrollView.Bounds.Height;
-                float scrollAmountDistRemainingDown = -(maxScrollAmount - UIScrollView.ContentOffset.Y);
-
-                // and clamp the scroll amount to that, so we don't scroll "up" beyond the contraints
-                float allowedScrollAmount = Math.Max( scrollAmount, scrollAmountDistRemainingDown );
-                UIScrollView.ContentOffset = new PointF( UIScrollView.ContentOffset.X, UIScrollView.ContentOffset.Y - allowedScrollAmount );
-
-                // if we STILL haven't scrolled enough "up" because of scroll contraints, we'll allow the window itself to move up.
-                float scrollDistNeeded = -Math.Min( 0, scrollAmount - scrollAmountDistRemainingDown );
-                UIScrollView.Layer.Position = new PointF( UIScrollView.Layer.Position.X, UIScrollView.Layer.Position.Y - scrollDistNeeded );
             }
         }
 
