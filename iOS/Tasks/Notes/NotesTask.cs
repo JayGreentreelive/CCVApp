@@ -36,40 +36,39 @@ namespace iOS
         {
             ActiveViewController = viewController;
 
-            NotesViewController notesVC = viewController as NotesViewController;
-
             // if the notes are active, make sure the share button gets turned on
-            if ( notesVC != null )
+            if ( (viewController as NotesViewController) != null )
             {
                 NavToolbar.SetBackButtonEnabled( true );
                 NavToolbar.SetCreateButtonEnabled( false, null );
                 NavToolbar.SetShareButtonEnabled( true, delegate
                     { 
-                        notesVC.ShareNotes( );
+                        (viewController as NotesViewController).ShareNotes( );
                     } );
 
 
                 // go ahead and show the bar, because we're at the top of the page.
                 NavToolbar.Reveal( true );
             }
+            else if ( (viewController as NotesWatchUIViewController) != null )
+            {
+                NavToolbar.SetBackButtonEnabled( true );
+                NavToolbar.SetCreateButtonEnabled( false, null );
+                NavToolbar.SetShareButtonEnabled( true, delegate
+                    { 
+                        (viewController as NotesWatchUIViewController).ShareVideo( );
+                    } );
+
+
+                // go ahead and show the bar, because we're at the top of the page.
+                NavToolbar.RevealForTime( 3.0f );
+            }
             else
             {
-                // outside of the notes...
-                // turn off the share & create buttons
-                NavToolbar.SetShareButtonEnabled( false, null );
                 NavToolbar.SetCreateButtonEnabled( false, null );
-
-                // if it's the main page, disable the back button on the toolbar
-                if ( viewController == MainViewController )
-                {
-                    NavToolbar.SetBackButtonEnabled( false );
-                    NavToolbar.Reveal( false );
-                }
-                else
-                {
-                    NavToolbar.SetBackButtonEnabled( true );
-                    NavToolbar.RevealForTime( 3.0f );
-                }
+                NavToolbar.SetShareButtonEnabled( false, null );
+                NavToolbar.SetBackButtonEnabled( true );
+                NavToolbar.RevealForTime( 3.0f );
             }
         }
 

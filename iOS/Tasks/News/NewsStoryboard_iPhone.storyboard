@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4443" systemVersion="13A451" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="5">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="5">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
     </dependencies>
     <scenes>
+        <!--News MainUI View Controller-->
         <scene sceneID="4">
             <objects>
-                <viewController id="5" sceneMemberID="viewController" storyboardIdentifier="MainPageViewController" customClass="NewsMainUIViewController">
+                <viewController storyboardIdentifier="MainPageViewController" id="5" customClass="NewsMainUIViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="2"/>
                         <viewControllerLayoutGuide type="bottom" id="3"/>
@@ -15,15 +16,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="top" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="102" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" autoresizesSubviews="YES">
+                            <tableView clipsSubviews="YES" contentMode="top" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="102">
                                 <rect key="frame" x="0.0" y="45" width="320" height="523"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" colorSpace="calibratedRGB" red="1" green="1" blue="1" alpha="1"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             </tableView>
                         </subviews>
+                        <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
+                            <constraint firstItem="102" firstAttribute="bottom" secondItem="3" secondAttribute="top" id="RjD-xD-IqZ"/>
+                            <constraint firstItem="102" firstAttribute="top" secondItem="2" secondAttribute="bottom" constant="25" id="bNA-wZ-1ob"/>
+                            <constraint firstAttribute="trailing" secondItem="102" secondAttribute="trailing" id="k0B-K1-K4M"/>
+                            <constraint firstItem="102" firstAttribute="leading" secondItem="6" secondAttribute="leading" id="qXb-RN-fIy"/>
                         </constraints>
-                        <color key="tintColor" colorSpace="calibratedRGB" red="1" green="1" blue="1" alpha="1"/>
                     </view>
                     <connections>
                         <outlet property="NewsTableView" destination="102" id="name-outlet-102"/>
@@ -33,9 +37,10 @@
             </objects>
             <point key="canvasLocation" x="-234" y="-289"/>
         </scene>
+        <!--News DetailsUI View Controller-->
         <scene sceneID="15">
             <objects>
-                <viewController id="16" sceneMemberID="viewController" storyboardIdentifier="NewsDetailsUIViewController" customClass="NewsDetailsUIViewController">
+                <viewController storyboardIdentifier="NewsDetailsUIViewController" id="16" customClass="NewsDetailsUIViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="13"/>
                         <viewControllerLayoutGuide type="bottom" id="14"/>
@@ -43,51 +48,42 @@
                     <view key="view" contentMode="scaleToFill" id="17">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" customColorSpace="calibratedWhite" colorSpace="calibratedRGB" red="0.082352941176470587" green="0.082352941176470587" blue="0.082352941176470587" alpha="1"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="34" translatesAutoresizingMaskIntoConstraints="NO">
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="34">
                                 <rect key="frame" x="62" y="482" width="197" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Learn more">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
-                                <connections>
-                                </connections>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="197" id="199"/>
-                                </constraints>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Lorem Ipsum Blah Blah Blah Blah Blah Blah" lineBreakMode="tailTruncation" minimumFontSize="10" id="114" translatesAutoresizingMaskIntoConstraints="NO" numberOfLines="99" fixedFrame="YES">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" misplaced="YES" text="Lorem Ipsum Blah Blah Blah Blah Blah Blah" lineBreakMode="tailTruncation" numberOfLines="99" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="114">
                                 <rect key="frame" x="0.0" y="242" width="320" height="145"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" colorSpace="calibratedRGB" red="1" green="1" blue="1" alpha="1"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
-                                 <constraints>
-                                    <constraint firstAttribute="width" constant="320" id="290"/>
-                                    <constraint firstAttribute="height" constant="180" id="291"/>
-                                </constraints>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" id="162" translatesAutoresizingMaskIntoConstraints="NO">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="162">
                                 <rect key="frame" x="0.0" y="44" width="320" height="180"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="320" id="178"/>
-                                    <constraint firstAttribute="height" constant="180" id="179"/>
+                                    <constraint firstAttribute="height" constant="180" id="OGn-7R-Z1g"/>
                                 </constraints>
                             </imageView>
                         </subviews>
+                        <color key="backgroundColor" red="0.082352941176470587" green="0.082352941176470587" blue="0.082352941176470587" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint id="176" firstItem="17" firstAttribute="trailing" secondItem="162" secondAttribute="trailing" constant="0.0"/>
-                            <constraint id="177" firstItem="162" firstAttribute="top" secondItem="17" secondAttribute="top" constant="44"/>
-                            <constraint id="197" firstItem="17" firstAttribute="trailing" secondItem="34" secondAttribute="trailing" constant="61"/>
-                            <constraint id="198" firstItem="17" firstAttribute="bottom" secondItem="34" secondAttribute="bottom" constant="56"/>
+                            <constraint firstItem="114" firstAttribute="top" secondItem="162" secondAttribute="bottom" constant="18" id="4nk-Ql-12h"/>
+                            <constraint firstItem="162" firstAttribute="centerX" secondItem="34" secondAttribute="centerX" id="6rM-UI-Juv"/>
+                            <constraint firstAttribute="trailing" secondItem="162" secondAttribute="trailing" id="9H8-2o-zPm"/>
+                            <constraint firstItem="162" firstAttribute="top" secondItem="13" secondAttribute="bottom" constant="24" id="Rkp-a1-fBD"/>
+                            <constraint firstItem="162" firstAttribute="trailing" secondItem="114" secondAttribute="trailing" id="YZu-Ts-P6m"/>
+                            <constraint firstItem="162" firstAttribute="leading" secondItem="114" secondAttribute="leading" id="oqV-0a-FiE"/>
+                            <constraint firstItem="162" firstAttribute="leading" secondItem="17" secondAttribute="leading" id="qCc-vn-JQw"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="NewsDescriptionLabel" destination="114" id="name-outlet-114"/>
-                        <outlet property="LearnMoreButton" destination="34" id="name-outlet-34"/>
                         <outlet property="ImageBanner" destination="162" id="name-outlet-162"/>
+                        <outlet property="LearnMoreButton" destination="34" id="name-outlet-34"/>
+                        <outlet property="NewsDescriptionLabel" destination="114" id="name-outlet-114"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="18" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -100,29 +96,4 @@
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
-    <resources>
-        <image name="Default-568h.png" width="640" height="1136"/>
-        <image name="spot_mask.png" width="128" height="128"/>
-        <image name="me.jpg" width="471" height="480"/>
-        <image name="ccvLogo.png" width="57" height="28"/>
-        <image name="cheeseburger.png" width="22" height="19"/>
-        <image name="notes.png" width="31" height="38"/>
-        <image name="info.png" width="38" height="38"/>
-        <image name="watch.png" width="38" height="39"/>
-        <image name="groupfinder.png" width="33" height="42"/>
-        <image name="prayer.png" width="47" height="35"/>
-        <image name="give.png" width="44" height="35"/>
-        <image name="noprofile.png" width="223" height="223"/>
-        <image name="addphoto.png" width="223" height="223"/>
-        <image name="Default.png" width="320" height="480"/>
-        <image name="Icon-60.png" width="120" height="120"/>
-        <image name="Icon.png" width="57" height="57"/>
-        <image name="news_general_1.png" width="640" height="413"/>
-        <image name="news_general_2.png" width="640" height="413"/>
-        <image name="news_general_3.png" width="640" height="413"/>
-        <image name="IMG_0079.JPG" width="1280" height="960"/>
-        <image name="news_general_1_header.png" width="640" height="360"/>
-        <image name="news_general_2_header.png" width="560" height="315"/>
-        <image name="news_general_3_header.png" width="560" height="315"/>
-    </resources>
 </document>

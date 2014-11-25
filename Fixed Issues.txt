@@ -2,6 +2,14 @@ Both
 	NoteScript parsing errors now always give the line number of the error.
 	Prayer categories are now display on each prayer.
 	Only public, active approved prayers are now received.
+	Added actual standard starting news items
+	Added ability to share Sermon Videos
+
+Android
+	Fixed an issue causing the nav toolbar to be too large on some device
+	Fixed some issues causing the Nav Toolbar to appear when it shouldn't.
+	Cleaned up Android support to officially correctly support Android 4.1 and newer.
 
 iOS
 	Fixed an issue causing text in the TakeAway and user notes to draw incorrectly on top of other controls
+	Added native support for iPhone 6 and 6 Plus

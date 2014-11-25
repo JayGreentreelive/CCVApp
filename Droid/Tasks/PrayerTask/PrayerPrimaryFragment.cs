@@ -244,7 +244,11 @@ namespace Droid
 
                     ParentTask.NavbarFragment.NavToolbar.SetBackButtonEnabled( false );
                     ParentTask.NavbarFragment.NavToolbar.SetShareButtonEnabled( false, null );
-                    ParentTask.NavbarFragment.NavToolbar.SetCreateButtonEnabled( false, null );
+                    ParentTask.NavbarFragment.NavToolbar.SetCreateButtonEnabled( true, delegate
+                        {
+                            ParentTask.OnClick( this, 0 );
+                        } );
+                    ParentTask.NavbarFragment.NavToolbar.Reveal( true );
 
                     ActivityIndicator.Visibility = ViewStates.Visible;
 
@@ -268,11 +272,6 @@ namespace Droid
 
                                     if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
                                     {
-                                        ParentTask.NavbarFragment.NavToolbar.SetCreateButtonEnabled( true, delegate
-                                            {
-                                                ParentTask.OnClick( this, 0 );
-                                            } );
-
                                         if ( prayerRequests.Count > 0 )
                                         {
                                             PrayerRequests = prayerRequests;

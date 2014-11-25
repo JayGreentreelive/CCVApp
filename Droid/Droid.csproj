@@ -14,7 +14,7 @@
     <AndroidApplication>True</AndroidApplication>
     <AndroidUseLatestPlatformSdk>False</AndroidUseLatestPlatformSdk>
     <AssemblyName>Droid</AssemblyName>
-    <TargetFrameworkVersion>v4.3</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.1</TargetFrameworkVersion>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -302,29 +302,29 @@
     <AndroidAsset Include="..\Assets\Fonts\FontAwesome.ttf">
       <Link>Assets\Fonts\FontAwesome.ttf</Link>
     </AndroidAsset>
-    <AndroidAsset Include="..\Assets\news_general_1_header%402x.png">
-      <Link>Assets\news_general_1_header.png</Link>
-    </AndroidAsset>
-    <AndroidAsset Include="..\Assets\news_general_1%402x.png">
-      <Link>Assets\news_general_1.png</Link>
-    </AndroidAsset>
-    <AndroidAsset Include="..\Assets\news_general_2_header%402x.png">
-      <Link>Assets\news_general_2_header.png</Link>
-    </AndroidAsset>
-    <AndroidAsset Include="..\Assets\news_general_2%402x.png">
-      <Link>Assets\news_general_2.png</Link>
-    </AndroidAsset>
-    <AndroidAsset Include="..\Assets\news_general_3_header%402x.png">
-      <Link>Assets\news_general_3_header.png</Link>
-    </AndroidAsset>
-    <AndroidAsset Include="..\Assets\news_general_3%402x.png">
-      <Link>Assets\news_general_3.png</Link>
-    </AndroidAsset>
     <AndroidAsset Include="..\Assets\Fonts\Pe-icon-7-stroke.ttf">
       <Link>Assets\Fonts\Pe-icon-7-stroke.ttf</Link>
     </AndroidAsset>
     <AndroidAsset Include="..\Assets\Fonts\Bh.ttf">
       <Link>Assets\Fonts\Bh.ttf</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\news_baptism_header%402x.png">
+      <Link>Assets\news_baptism_header.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\news_baptism_main%402x.png">
+      <Link>Assets\news_baptism_main.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\news_learnmore_header%402x.png">
+      <Link>Assets\news_learnmore_header.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\news_learnmore_main%402x.png">
+      <Link>Assets\news_learnmore_main.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\news_startingpoint_header%402x.png">
+      <Link>Assets\news_startingpoint_header.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\news_startingpoint_main%402x.png">
+      <Link>Assets\news_startingpoint_main.png</Link>
     </AndroidAsset>
   </ItemGroup>
   <ItemGroup>

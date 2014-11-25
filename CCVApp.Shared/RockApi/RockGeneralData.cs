@@ -45,34 +45,34 @@ namespace CCVApp
                         Titles.Add(" Dr." );
 
                         News = new List<RockNews>( );
-                        News.Add( new RockNews( "# WISDOM", "Each day we make decisions and each decision often has many options" + 
-                                                            "that are morally permissible. It’s not so much which is the \"right\""  + 
-                                                            "choice, it’s which is the “wise” choice. Wisdom goes beyond right and wrong," + 
-                                                            "and illuminates which choice is best based on the complex realities of life."  + 
-                                                            "So join us as we seek and gain wisdom that will benefit every area of our lives.",
+                        News.Add( new RockNews( "Baptisms", "Baptism is one of the most important events in the life of a Christian. If you've made a commitment to Christ, " + 
+                                                            "it's time to take the next step and make your decision known. Baptism is the best way to express your faith and " + 
+                                                            "reflect your life change. Find out more about baptism through Starting Point, register online or contact your neighborhood pastor.",
                                                             
-                                                            "http://www.ccvonline.com/Arena/default.aspx?page=18604&topic=114",
+                                                            "http://www.ccvonline.com/Arena/default.aspx?page=17655",
 
-                                                            "news_general_1.png",
+                                                            "news_baptism_main.png",
                         
-                                                            "news_general_1_header.png" ) );
+                                                            "news_baptism_header.png" ) );
 
-                        News.Add( new RockNews( "FATHER & SON CAMPOUT 2014", "Bring your baseball gloves, sleeping bag, and pillow & be prepared to have a great time!", 
+                        News.Add( new RockNews( "Starting Point", "If you’re asking yourself, “Where do I begin at CCV?” — the answer is Starting Point. " +
+                                                                  "In Starting Point you’ll find out what CCV is all about, take a deep look at the Christian " + 
+                                                                  "faith, and learn how you can get involved. Childcare is available for attending parents.",
 
-                                                                             "http://www.ccvonline.com/Arena/default.aspx?page=17393&eventId=23819", 
+                                                                  "http://www.ccvonline.com/Arena/default.aspx?page=17400",
 
-                                                                             "news_general_2.png", 
+                                                                  "news_startingpoint_main.png", 
 
-                                                                              "news_general_2_header.png" ) );
+                                                                  "news_startingpoint_header.png" ) );
 
 
-                        News.Add( new RockNews( "2015 CAMPS", "Save the date! Camp Registration opens 1/10/2015", 
+                        News.Add( new RockNews( "Learn More", "Wondering what else CCV is about? Check out our website.", 
 
-                                                              "https://www.ccvonline.com/Arena/default.aspx?page=19027", 
+                                                              "https://www.ccvonline.com", 
 
-                                                              "news_general_3.png",
+                                                              "news_learnmore_main.png",
                                                               
-                                                              "news_general_3_header.png" ) );
+                                                              "news_learnmore_header.png" ) );
                     }
 
                     [JsonConstructor]

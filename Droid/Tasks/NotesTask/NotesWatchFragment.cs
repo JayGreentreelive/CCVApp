@@ -92,9 +92,29 @@ namespace Droid
                     Activity.RequestedOrientation = Android.Content.PM.ScreenOrientation.FullSensor;
 
                     ParentTask.NavbarFragment.NavToolbar.SetBackButtonEnabled( true );
-                    ParentTask.NavbarFragment.NavToolbar.SetShareButtonEnabled( false, null );
                     ParentTask.NavbarFragment.NavToolbar.SetCreateButtonEnabled( false, null );
                     ParentTask.NavbarFragment.NavToolbar.Reveal( true );
+
+                    ParentTask.NavbarFragment.NavToolbar.SetShareButtonEnabled( true, delegate 
+                        {
+                            // Generate an email advertising this video.
+                            Intent sendIntent = new Intent();
+                            sendIntent.SetAction( Intent.ActionSend );
+
+                            sendIntent.PutExtra( Intent.ExtraSubject, MessagesStrings.Watch_Share_Subject );
+
+                            string noteString = MessagesStrings.Watch_Share_Header_Html + string.Format( MessagesStrings.Watch_Share_Body_Html, VideoUrl );
+
+                            // if they set a mobile app url, add that.
+                            if( string.IsNullOrEmpty( MessagesStrings.Watch_Mobile_App_Url ) == false )
+                            {
+                                noteString += string.Format( MessagesStrings.Watch_Share_DownloadApp_Html, MessagesStrings.Watch_Mobile_App_Url );
+                            }
+
+                            sendIntent.PutExtra( Intent.ExtraText, Android.Text.Html.FromHtml( noteString ) );
+                            sendIntent.SetType( "text/html" );
+                            StartActivity( sendIntent );
+                        });
 
                     if ( string.IsNullOrEmpty( VideoUrl ) )
                     {

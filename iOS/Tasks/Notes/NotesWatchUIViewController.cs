@@ -144,6 +144,30 @@ namespace iOS
             }
         }
 
+        public void ShareVideo( )
+        {
+            string noteString = MessagesStrings.Watch_Share_Header_Html + string.Format( MessagesStrings.Watch_Share_Body_Html, WatchUrl );
+
+            // if they set a mobile app url, add that.
+            if( string.IsNullOrEmpty( MessagesStrings.Watch_Mobile_App_Url ) == false )
+            {
+                noteString += string.Format( MessagesStrings.Watch_Share_DownloadApp_Html, MessagesStrings.Watch_Mobile_App_Url );
+            }
+
+            var items = new NSObject[] { new NSString( noteString ) };
+
+            UIActivityViewController shareController = new UIActivityViewController( items, null );
+            shareController.SetValueForKey( new NSString( MessagesStrings.Watch_Share_Subject ), new NSString( "subject" ) );
+
+            shareController.ExcludedActivityTypes = new NSString[] { UIActivityType.PostToFacebook, 
+                UIActivityType.AirDrop, 
+                UIActivityType.PostToTwitter, 
+                UIActivityType.CopyToPasteboard, 
+                UIActivityType.Message };
+
+            PresentViewController( shareController, true, null );
+        }
+
         void ContentPreloadDidFinish( NSNotification obj )
         {
             // once the movie is ready, hide the spinner

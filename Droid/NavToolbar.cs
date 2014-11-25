@@ -78,7 +78,7 @@ namespace Droid
                     // when the timer fires, hide the toolbar.
                     // Although the timer fires on a seperate thread, because we queue the reveal
                     // on the main (UI) thread, we don't have to worry about race conditions.
-                    Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate { Reveal( false ); } );
+                    Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate { InternalReveal( false ); } );
                 };
 
             ButtonLayout.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
@@ -89,7 +89,7 @@ namespace Droid
             navColor.A = (Byte) ( (float) navColor.A * SubNavToolbarConfig.Opacity );
             ButtonLayout.SetBackgroundColor( navColor );
 
-            ButtonLayout.LayoutParameters.Height = 150;
+            ButtonLayout.LayoutParameters.Height = (int)Rock.Mobile.PlatformUI.PlatformBaseUI.UnitToPx( 50.0f );
 
 
             // create the back button
@@ -201,7 +201,7 @@ namespace Droid
         {
             base.OnResume();
 
-            ButtonLayout.SetY( 150 );
+            ButtonLayout.SetY( (int)Rock.Mobile.PlatformUI.PlatformBaseUI.UnitToPx( 50.0f ) );
 
             UpdateButtons( );
         }
@@ -305,7 +305,14 @@ namespace Droid
             NavBarTimer.Start( );
 
             // reveal the toolbar, and when the timer ticks, it will be hidden again.
-            Reveal( true );
+            InternalReveal( true );
+        }
+
+        public void Reveal( bool revealed )
+        {
+            NavBarTimer.Stop( );
+
+            InternalReveal( revealed );
         }
 
         public void OnAnimationUpdate(ValueAnimator animation)
@@ -323,7 +330,7 @@ namespace Droid
             Revealed = !Revealed;
         }
 
-        public void Reveal( bool revealed )
+        void InternalReveal( bool revealed )
         {
             if( Revealed != revealed )
             {

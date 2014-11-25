@@ -120,6 +120,9 @@ namespace iOS
                     cell = new MessageCell (UITableViewCellStyle.Default, cellIdentifier);
                     cell.ParentTableSource = this;
 
+                    // take the parent table's width so we inherit its width constraint
+                    cell.Bounds = new RectangleF( cell.Bounds.X, cell.Bounds.Y, tableView.Bounds.Width, cell.Bounds.Height );
+
                     // configure the cell colors
                     cell.BackgroundColor = PlatformBaseUI.GetUIColor( NoteConfig.Series_Details_Table_CellBackgroundColor );
                     cell.Label.TextColor = PlatformBaseUI.GetUIColor( NoteConfig.Series_Details_Table_CellTextColor );
@@ -208,7 +211,7 @@ namespace iOS
                 messageEntry.Thumbnail = ThumbnailPlaceholder;
 
                 // grab the thumbnail IF it has a podcast
-                if ( string.IsNullOrEmpty( Series.Messages[ i ].PodcastUrl ) == false )
+                if ( string.IsNullOrEmpty( Series.Messages[ i ].WatchUrl ) == false )
                 {
                     messageEntry.HasPodcast = true;
 
@@ -225,7 +228,7 @@ namespace iOS
                     else
                     {
                         // it isn't, so we'll need to download it
-                        VimeoManager.Instance.GetVideoThumbnail( Series.Messages[ requestedIndex ].PodcastUrl, 
+                        VimeoManager.Instance.GetVideoThumbnail( Series.Messages[ requestedIndex ].WatchUrl, 
                             delegate(System.Net.HttpStatusCode statusCode, string statusDescription, System.IO.MemoryStream imageBuffer )
                             {
                                 if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
@@ -291,7 +294,7 @@ namespace iOS
             else if ( buttonIndex == 0 )
             {
                 NotesWatchUIViewController viewController = Storyboard.InstantiateViewController( "NotesWatchUIViewController" ) as NotesWatchUIViewController;
-                viewController.WatchUrl = Series.Messages[ row ].PodcastUrl;
+                viewController.WatchUrl = Series.Messages[ row ].WatchUrl;
 
                 Task.PerformSegue( this, viewController );
             }

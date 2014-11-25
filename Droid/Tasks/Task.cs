@@ -1,6 +1,7 @@
 ﻿using System;
 using Android.App;
 using Android.Widget;
+using Android.Views;
 
 namespace Droid
 {
@@ -38,17 +39,6 @@ namespace Droid
 
             public virtual void Activate( bool forResume )
             {
-                /*FragmentManager fm = NavbarFragment.FragmentManager;
-                int count = fm.BackStackEntryCount;
-                for( int i = 0; i < count; i++ ) 
-                {
-                    fm.PopBackStackImmediate( );
-                }*/
-
-                //FragmentManager.popBackStack(String name,
-                  //  FragmentManager.POP_BACK_STACK_INCLUSIVE)
-
-
                 NavbarFragment.FragmentManager.PopBackStack( null, PopBackStackFlags.Inclusive );
 
                 // present our starting fragment, and don't allow back navigation
@@ -92,6 +82,10 @@ namespace Droid
             }
 
             public virtual void OnClick( Fragment source, int buttonId, object context = null )
+            {
+            }
+
+            public virtual void OnUp( MotionEvent e )
             {
             }
         }

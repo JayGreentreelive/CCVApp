@@ -199,10 +199,18 @@ namespace iOS
             NavBarTimer.Start( );
 
             // reveal the toolbar, and when the timer ticks, it will be hidden again.
-            Reveal( true );
+            InternalReveal( true );
         }
 
         public void Reveal( bool revealed )
+        {
+            // since they're calling reveal with no time, stop any pending timer.
+            NavBarTimer.Stop( );
+
+            InternalReveal( revealed );
+        }
+
+        void InternalReveal( bool revealed )
         {
             if( Revealed != revealed )
             {

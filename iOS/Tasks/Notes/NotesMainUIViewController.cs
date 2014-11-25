@@ -93,6 +93,9 @@ namespace iOS
                 {
                     cell = new SeriesCell (UITableViewCellStyle.Default, cellIdentifier);
 
+                    // take the parent table's width so we inherit its width constraint
+                    cell.Bounds = new RectangleF( cell.Bounds.X, cell.Bounds.Y, tableView.Bounds.Width, cell.Bounds.Height );
+
                     // configure the cell colors
                     cell.BackgroundColor = PlatformBaseUI.GetUIColor( NoteConfig.Series_Main_Table_CellBackgroundColor );
                     cell.TextLabel.TextColor = PlatformBaseUI.GetUIColor( NoteConfig.Series_Main_Table_CellTextColor );

@@ -60,6 +60,7 @@ namespace Droid
             Icon.SetX( Icon.GetX() - Icon.Width / 2 );
             Icon.Text = IconStr;
 
+            //Button.SetBackgroundDrawable( null );
             Button.Background = null;
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using Android.App;
 using Android.Content;
+using Android.Views;
 
 namespace Droid
 {
@@ -63,6 +64,13 @@ namespace Droid
                             }
                         }
                     }
+                }
+
+                public override void OnUp( MotionEvent e )
+                {
+                    base.OnUp( e );
+
+                    NavbarFragment.NavToolbar.RevealForTime( 3.00f );
                 }
             }
         }

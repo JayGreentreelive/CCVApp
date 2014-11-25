@@ -17,22 +17,7 @@ namespace Droid
         {
             base.OnCreate( bundle );
 
-            // If the Android version is lower than Jellybean, use this call to hide
-            // the status bar.
-            if (Build.VERSION.SdkInt < Android.OS.BuildVersionCodes.JellyBean) 
-            {
-                Window.SetFlags( WindowManagerFlags.Fullscreen, WindowManagerFlags.Fullscreen );
-            }
-            else
-            {
-                Window.AddFlags(WindowManagerFlags.Fullscreen);
-            }
-
-            /*if(Build.VERSION.SdkInt >= BuildVersionCodes.Kitkat) 
-            {
-                //KitKat only code here
-                //Window.AddFlags( WindowManagerFlags.TranslucentNavigation );
-            }*/
+            Window.AddFlags(WindowManagerFlags.Fullscreen);
 
             // default our app to protrait mode, and let the notes change it.
             RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;

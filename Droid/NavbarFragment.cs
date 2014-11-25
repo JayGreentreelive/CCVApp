@@ -155,7 +155,7 @@ namespace Droid
             SpringboardRevealButton = new Button( Activity );
 
             // clear the background outline
-            SpringboardRevealButton.Background = null;
+            SpringboardRevealButton.SetBackgroundDrawable( null );
 
             // position it vertically centered and a little right indented
             SpringboardRevealButton.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
@@ -350,13 +350,12 @@ namespace Droid
                     // if the task should allowe input, reveal the nav bar
                     if ( ShouldTaskAllowInput( ) == true )
                     {
-                        Console.WriteLine( "RevealingNavForTime, No RevealSpringboard" );
-                        NavToolbar.RevealForTime( 3.00f );
+                        // let the active task know that the user released input
+                        ActiveTask.OnUp( e );
                     }
                     else if ( ShouldSpringboardAllowInput( ) == true )
                     {
                         // else close the springboard
-                        Console.WriteLine( "OnUp CALLED: Reveal False" );
                         RevealSpringboard( false );
                     }
                 }

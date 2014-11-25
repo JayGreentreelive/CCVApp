@@ -262,7 +262,7 @@ namespace Droid
                     ParentTask.NavbarFragment.NavToolbar.SetBackButtonEnabled( true );
                     ParentTask.NavbarFragment.NavToolbar.SetCreateButtonEnabled( false, null );
                     ParentTask.NavbarFragment.NavToolbar.SetShareButtonEnabled( true, 
-                        delegate 
+                        delegate
                         {
                             Intent sendIntent = new Intent();
                             sendIntent.SetAction( Intent.ActionSend );

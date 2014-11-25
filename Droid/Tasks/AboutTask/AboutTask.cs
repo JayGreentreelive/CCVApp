@@ -1,5 +1,6 @@
 ﻿using System;
 using Android.App;
+using Android.Views;
 
 namespace Droid
 {
@@ -27,12 +28,11 @@ namespace Droid
                     return MainPage;
                 }
 
-                public override void OnClick(Android.App.Fragment source, int buttonId, object context = null)
+                public override void OnUp( MotionEvent e )
                 {
-                    // only handle input if the springboard is open
-                    if ( NavbarFragment.ShouldTaskAllowInput( ) )
-                    {
-                    }
+                    base.OnUp( e );
+
+                    NavbarFragment.NavToolbar.RevealForTime( 3.00f );
                 }
             }
         }

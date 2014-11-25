@@ -154,7 +154,7 @@ namespace CCVApp
                 /// The amount of time (in seconds) it takes for the subNavigation toolbar (the one at the bottom)
                 /// to slide up or down.
                 /// </summary>
-                public const float SlideRate = .50f;
+                public const float SlideRate = .30f;
 
                 /// <summary>
                 /// On iOS only, the amount of space between buttons on the subNavigation toolbar (the one at the bottom)

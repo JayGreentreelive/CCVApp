@@ -211,7 +211,7 @@ namespace Droid
                         messageEntry.Thumbnail = ThumbnailPlaceholder;
 
                         // grab the thumbnail IF it has a podcast
-                        if ( string.IsNullOrEmpty( Series.Messages[ i ].PodcastUrl ) == false )
+                        if ( string.IsNullOrEmpty( Series.Messages[ i ].WatchUrl ) == false )
                         {
                             messageEntry.HasPodcast = true;
 
@@ -228,7 +228,7 @@ namespace Droid
                             else
                             {
                                 // sucky, it isn't. Download it.
-                                VimeoManager.Instance.GetVideoThumbnail( Series.Messages[ requestedIndex ].PodcastUrl, 
+                                VimeoManager.Instance.GetVideoThumbnail( Series.Messages[ requestedIndex ].WatchUrl, 
                                     delegate(System.Net.HttpStatusCode statusCode, string statusDescription, System.IO.MemoryStream imageBuffer )
                                     {
                                         if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )

@@ -17,11 +17,13 @@ namespace iOS
             NewsMainUIViewController Parent { get; set; }
 
             List<RockNews> News { get; set; }
-            List<UIImageView> NewsImage { get; set; }
+            List<UIImage> NewsImage { get; set; }
 
             string cellIdentifier = "TableCell";
 
-            public TableSource (NewsMainUIViewController parent, List<RockNews> newsList, List<UIImageView> newsImage )
+            float PendingCellHeight { get; set; }
+
+            public TableSource (NewsMainUIViewController parent, List<RockNews> newsList, List<UIImage> newsImage )
             {
                 Parent = parent;
 
@@ -46,7 +48,14 @@ namespace iOS
             public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
             {
                 // check the height of the image and let that be the height for this row
-                return NewsImage[ indexPath.Row ].Bounds.Height;
+                if ( PendingCellHeight > 0 )
+                {
+                    return PendingCellHeight;
+                }
+                else
+                {
+                    return tableView.Bounds.Height;
+                }
             }
 
             public override UITableViewCell GetCell (UITableView tableView, MonoTouch.Foundation.NSIndexPath indexPath)
@@ -64,21 +73,24 @@ namespace iOS
                 }
 
                 // set the image for the cell
-                UIImageView imageView = NewsImage[ indexPath.Row ];
-                cell.ContentView.AddSubview( imageView );
-                cell.Bounds = imageView.Bounds;
+                cell.ContentView.Layer.Contents = NewsImage[ indexPath.Row ].CGImage;
 
+                // scale down the image to the width of the device
+                float aspectRatio = NewsImage[ indexPath.Row ].Size.Height / NewsImage[ indexPath.Row ].Size.Width;
+                cell.Bounds = new RectangleF( 0, 0, tableView.Bounds.Width, tableView.Bounds.Width * aspectRatio );
+
+                PendingCellHeight = cell.Bounds.Height;
                 return cell;
             }
         }
 
         public List<RockNews> News { get; set; }
-        List<UIImageView> NewsImage { get; set; }
+        List<UIImage> NewsImage { get; set; }
 
 		public NewsMainUIViewController (IntPtr handle) : base (handle)
 		{
             News = new List<RockNews>( );
-            NewsImage = new List<UIImageView>( );
+            NewsImage = new List<UIImage>( );
 		}
 
         public override void ViewDidLoad()
@@ -88,9 +100,8 @@ namespace iOS
             // load the news images for each item
             foreach( RockNews news in News )
             {
-                UIImageView imageView = new UIImageView( new UIImage( NSBundle.MainBundle.BundlePath + "/" + news.ImageName ) );
-
-                NewsImage.Add( imageView );
+                UIImage image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + news.ImageName );
+                NewsImage.Add( image );
             }
 
             // populate our table

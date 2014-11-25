@@ -214,7 +214,7 @@ namespace iOS
         bool RequestingPrayers { get; set; }
         bool ViewActive { get; set; }
 
-        UIButton AddPrayer { get; set; }
+        //UIButton AddPrayer { get; set; }
         BlockerView BlockerView { get; set; }
 
 		public PrayerMainUIViewController (IntPtr handle) : base (handle)
@@ -228,9 +228,8 @@ namespace iOS
             BlockerView = new BlockerView( View.Frame );
             BlockerView.BackgroundColor = UIColor.Black;
 
-
             // Setup the "AddPrayer" button for creating a new prayer request
-            AddPrayer = UIButton.FromType( UIButtonType.Custom );
+            /*AddPrayer = UIButton.FromType( UIButtonType.Custom );
             AddPrayer.Layer.AnchorPoint = new PointF( 0, 0 );
             AddPrayer.SetTitle( PrayerConfig.AddPrayer_ButtonText, UIControlState.Normal );
             AddPrayer.SetTitleColor( PlatformBaseUI.GetUIColor( PrayerConfig.AddPrayer_ButtonColor_Normal ), UIControlState.Normal );
@@ -248,7 +247,7 @@ namespace iOS
                     Prayer_CreateUIViewController viewController = Storyboard.InstantiateViewController( "Prayer_CreateUIViewController" ) as Prayer_CreateUIViewController;
                     Task.PerformSegue( this, viewController );
                 };
-            View.AddSubview( AddPrayer );
+            View.AddSubview( AddPrayer );*/
 
 
             View.BackgroundColor = PlatformBaseUI.GetUIColor( PrayerConfig.BackgroundColor );
@@ -352,6 +351,13 @@ namespace iOS
                                         {
                                             if ( prayerRequests.Count > 0 )
                                             {
+                                                Task.NavToolbar.SetCreateButtonEnabled( true, delegate
+                                                    {
+                                                        Prayer_CreateUIViewController viewController = Storyboard.InstantiateViewController( "Prayer_CreateUIViewController" ) as Prayer_CreateUIViewController;
+                                                        Task.PerformSegue( this, viewController );
+                                                    }
+                                                );
+
                                                 RetrievingPrayersView.Layer.Opacity = 0.00f;
 
                                                 PrayerRequests = prayerRequests;

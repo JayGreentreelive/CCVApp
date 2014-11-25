@@ -1,4 +1,5 @@
 ﻿using System;
+using Android.Views;
 
 namespace Droid
 {
@@ -8,8 +9,6 @@ namespace Droid
         {
             public class NotesTask : Task
             {
-                TaskFragment ActiveFragment { get; set; }
-
                 NotesFragment NotesPage { get; set; }
                 NotesPrimaryFragment MainPage { get; set; }
                 NotesDetailsFragment DetailsPage { get; set; }
@@ -42,6 +41,8 @@ namespace Droid
                         WatchPage = new NotesWatchFragment( );
                     }
 
+
+
                     MainPage.ParentTask = this;
                     DetailsPage.ParentTask = this;
                     NotesPage.ParentTask = this;
@@ -67,9 +68,6 @@ namespace Droid
                 {
                     base.Activate( forResume );
 
-                    // we'll always start at the main page
-                    ActiveFragment = MainPage;
-
                     // if the springboard is already closed, set ourselves as ready.
                     // This is always called before any fragment methods, so the fragment
                     // will be able to know if it can display or not.
@@ -94,10 +92,9 @@ namespace Droid
 
                 public override bool CanContainerPan()
                 {
-                    NotesFragment notesFragment = ActiveFragment as NotesFragment;
-                    if ( notesFragment != null )
+                    if ( NotesPage.IsVisible == true )
                     {
-                        return notesFragment.MovingUserNote ? false : true;
+                        return NotesPage.MovingUserNote ? false : true;
                     }
                     else
                     {
@@ -121,8 +118,6 @@ namespace Droid
                             DetailsPage.Series = MainPage.SeriesEntries[ buttonId ].Series;
                             DetailsPage.ThumbnailPlaceholder = MainPage.SeriesEntries[ buttonId ].Thumbnail;
                             PresentFragment( DetailsPage, true );
-
-                            ActiveFragment = DetailsPage;
                         }
                         else if ( source == DetailsPage )
                         {
@@ -131,10 +126,9 @@ namespace Droid
 
                             if ( buttonChoice == 0 )
                             {
-                                WatchPage.VideoUrl = DetailsPage.Messages[ buttonId ].Message.PodcastUrl;
+                                WatchPage.VideoUrl = DetailsPage.Messages[ buttonId ].Message.WatchUrl;
 
                                 PresentFragment( WatchPage, true );
-                                ActiveFragment = WatchPage;
                             }
                             else if ( buttonChoice == 1 )
                             {
@@ -142,9 +136,19 @@ namespace Droid
                                 NotesPage.NotePresentableName = DetailsPage.Messages[ buttonId ].Message.Name;
 
                                 PresentFragment( NotesPage, true );
-                                ActiveFragment = NotesPage;
                             }
                         }
+                    }
+                }
+
+                public override void OnUp( MotionEvent e )
+                {
+                    base.OnUp( e );
+
+                    // for the notes page, the navbar should show up when we scroll
+                    if ( NotesPage.IsVisible == false )
+                    {
+                        NavbarFragment.NavToolbar.RevealForTime( 3.00f );
                     }
                 }
             }

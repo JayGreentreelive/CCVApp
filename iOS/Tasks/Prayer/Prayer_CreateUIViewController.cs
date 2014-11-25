@@ -50,7 +50,6 @@ namespace iOS
 
             BackingControlView.BackgroundColor = PlatformBaseUI.GetUIColor( PrayerConfig.CreatePrayer_BGColor );
             ScrollView.BackgroundColor = PlatformBaseUI.GetUIColor( PrayerConfig.CreatePrayer_BGColor );
-            ScrollView.ContentSize = new System.Drawing.SizeF( ScrollView.Bounds.Width, ScrollView.Bounds.Height + ( ScrollView.Bounds.Height * .25f ) );
 
             ScrollView.Parent = this;
 
@@ -174,6 +173,14 @@ namespace iOS
 
             UISwitchAnonymous.SetState( false, false );
             UIPublicSwitch.SetState( true, false );
+        }
+
+        public override void ViewDidLayoutSubviews()
+        {
+            base.ViewDidLayoutSubviews();
+
+            // once all the controls are laid out, update the content size to provide a little "bounce"
+            ScrollView.ContentSize = new System.Drawing.SizeF( ScrollView.Bounds.Width, ScrollView.Bounds.Height + ( ScrollView.Bounds.Height * .25f ) );
         }
 
         void EnableControls( bool enabled )

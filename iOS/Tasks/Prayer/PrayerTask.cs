@@ -33,9 +33,9 @@ namespace iOS
             {
                 NavToolbar.SetBackButtonEnabled( false );
                 NavToolbar.SetShareButtonEnabled( false, null );
-                NavToolbar.SetCreateButtonEnabled( false, null );
+                NavToolbar.SetCreateButtonEnabled( true, null );
 
-                NavToolbar.Reveal( false );
+                NavToolbar.Reveal( true );
             }
             else
             {
@@ -56,8 +56,11 @@ namespace iOS
         {
             base.TouchesEnded(taskUIViewController, touches, evt);
 
-            // if they touched a dead area, reveal the nav toolbar again.
-            NavToolbar.RevealForTime( 3.0f );
+            if ( CurrentPage != MainPage )
+            {
+                // if they touched a dead area, reveal the nav toolbar again.
+                NavToolbar.RevealForTime( 3.0f );
+            }
         }
 
         public override void MakeInActive( )

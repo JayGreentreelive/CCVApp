@@ -40,5 +40,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Strings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)VimeoManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ImageCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Notes\Models\Series.cs" />
   </ItemGroup>
 </Project>
