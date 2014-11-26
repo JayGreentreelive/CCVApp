@@ -104,6 +104,18 @@ namespace Droid
         bool IsPanning { get; set; }
 
         /// <summary>
+        /// The backing view that provides a drop shadow.
+        /// </summary>
+        /// <value>The shadow container.</value>
+        FrameLayout DropShadowView { get; set; }
+
+        /// <summary>
+        /// The X offset for the shadow
+        /// </summary>
+        /// <value>The shadow view offset.</value>
+        float DropShadowXOffset { get; set; }
+
+        /// <summary>
         /// True when OnResume has been called. False when it has not.
         /// </summary>
         /// <value><c>true</c> if this instance is fragment active; otherwise, <c>false</c>.</value>
@@ -145,6 +157,9 @@ namespace Droid
 
             // create the springboard reveal button
             CreateSpringboardButton( Navbar );
+
+            DropShadowXOffset = 15;
+            DropShadowView = Activity.FindViewById<FrameLayout>(Resource.Id.dropShadowView) as FrameLayout;
 
             return Navbar;
         }
@@ -299,6 +314,7 @@ namespace Droid
                         float revealAmount = ( View.Width * PrimaryNavBarConfig.RevealPercentage );
                         xPos = Math.Max( 0, Math.Min( xPos, revealAmount ) );
 
+                        DropShadowView.SetX( xPos - DropShadowXOffset );
                         View.SetX( xPos );
                         ActiveTaskFrame.SetX( xPos );
                         NavToolbar.ButtonLayout.SetX( xPos );
@@ -372,6 +388,7 @@ namespace Droid
             View.SetX( xPos );
             ActiveTaskFrame.SetX( xPos );
             NavToolbar.ButtonLayout.SetX( xPos );
+            DropShadowView.SetX( xPos - DropShadowXOffset );
         }
 
         public void OnAnimationEnd( Animator animation )

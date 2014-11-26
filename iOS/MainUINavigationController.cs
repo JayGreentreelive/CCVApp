@@ -5,6 +5,7 @@ using System.CodeDom.Compiler;
 using System.Drawing;
 using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
+using MonoTouch.CoreGraphics;
 
 namespace iOS
 {
@@ -90,8 +91,22 @@ namespace iOS
 
             // setup the style of the nav bar
             NavigationBar.TintColor = PlatformBaseUI.GetUIColor( PrimaryNavBarConfig.RevealButton_DepressedColor );
-            NavigationBar.BarTintColor = PlatformBaseUI.GetUIColor( PrimaryNavBarConfig.BackgroundColor );
 
+
+            UIImage solidColor = new UIImage();
+            UIGraphics.BeginImageContext( new SizeF( 1, 1 ) );
+            CGContext context = UIGraphics.GetCurrentContext( );
+
+            context.SetFillColorWithColor( PlatformBaseUI.GetUIColor( PrimaryNavBarConfig.BackgroundColor ).CGColor );
+            context.FillRect( new RectangleF( 0, 0, 1, 1 ) );
+
+            solidColor = UIGraphics.GetImageFromCurrentImageContext( );
+
+            UIGraphics.EndImageContext( );
+
+            NavigationBar.BarTintColor = UIColor.Clear;
+            NavigationBar.SetBackgroundImage( solidColor, UIBarMetrics.Default );
+            NavigationBar.Translucent = false;
 
             // our first (and only) child IS a ContainerViewController.
             Container = ChildViewControllers[0] as ContainerViewController;

@@ -95,16 +95,7 @@ namespace iOS
             }
             else
             {
-                // for landscape we don't care, just use the height sans the navbar
-                if ( NavigationController != null )
-                {
-                    float navHeight = NavigationController.NavigationBar.Frame.Height;
-                    MoviePlayer.View.Frame = new System.Drawing.RectangleF( 0, navHeight, View.Frame.Width, View.Frame.Height - navHeight );
-                }
-                else
-                {
-                    MoviePlayer.View.Frame = View.Frame;
-                }
+                MoviePlayer.View.Frame = View.Frame;
             }
 
             ActivityIndicator.Layer.Position = new System.Drawing.PointF( ( View.Frame.Width - ActivityIndicator.Frame.Width ) / 2, ( View.Frame.Height - ActivityIndicator.Frame.Height ) / 2 );

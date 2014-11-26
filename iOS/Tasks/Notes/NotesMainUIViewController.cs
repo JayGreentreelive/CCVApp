@@ -184,7 +184,7 @@ namespace iOS
             // adjust the table height for our navbar.
             // We MUST do it here, and we also have to set ContentType to Top, as opposed to ScaleToFill, on the view itself,
             // or our changes will be overwritten
-            NotesTableView.Frame = new RectangleF( 0, NavigationController.NavigationBar.Frame.Height, View.Bounds.Width, View.Bounds.Height - NavigationController.NavigationBar.Frame.Height );
+            NotesTableView.Frame = new RectangleF( 0, 0, View.Bounds.Width, View.Bounds.Height );
         }
 
         public override void ViewWillDisappear(bool animated)

@@ -1,44 +1,35 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" PreferredExecutionTarget="Android.192.168.56.101:5555" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Tasks/PrayerTask/PrayerCreateFragment.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.094c904b" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Springboard.cs">
     <Files>
-      <File FileName="Droid/Tasks/PrayerTask/PrayerCreateFragment.cs" Line="76" Column="76" />
-      <File FileName="Droid/Tasks/PrayerTask/PrayerPrimaryFragment.cs" Line="18" Column="18" />
-      <File FileName="Droid/Tasks/PrayerTask/PrayerTask.cs" Line="26" Column="26" />
+      <File FileName="Droid/Springboard.cs" Line="131" Column="131" />
+      <File FileName="iOS/SpringboardViewController.cs" Line="36" Column="36" />
+      <File FileName="CCVApp.Shared/Config.cs" Line="17" Column="17" />
+      <File FileName="iOS/MainUINavigationController.cs" Line="65" Column="65" />
+      <File FileName="iOS/Tasks/Prayer/PrayerMainUIViewController.cs" Line="55" Column="55" />
+      <File FileName="iOS/Tasks/Prayer/Prayer_CreateUIViewController.cs" Line="14" Column="14" />
+      <File FileName="Droid/Properties/AndroidManifest.xml" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="Droid" expanded="True">
+            <Node name="Properties" expanded="True" />
             <Node name="Resources" expanded="True">
-              <Node name="layout-sw480dp" expanded="True" />
-            </Node>
-            <Node name="Tasks" expanded="True">
-              <Node name="AboutTask" expanded="True" />
-              <Node name="GiveTask" expanded="True" />
-              <Node name="NewsTask" expanded="True" />
-              <Node name="NotesTask" expanded="True" />
-              <Node name="PrayerTask" expanded="True">
-                <Node name="PrayerCreateFragment.cs" selected="True" />
+              <Node name="layout-sw320dp" expanded="True">
+                <Node name="Springboard.axml" selected="True" />
               </Node>
             </Node>
           </Node>
           <Node name="iOS" expanded="True">
-            <Node name="Tasks" expanded="True">
-              <Node name="About" expanded="True" />
-              <Node name="News" expanded="True" />
-              <Node name="Notes" expanded="True" />
-              <Node name="Prayer" expanded="True" />
+            <Node name="Resources" expanded="True">
+              <Node name="Images.xcassets" expanded="True">
+                <Node name="AppIcons.appiconset" expanded="True" />
+              </Node>
             </Node>
-          </Node>
-          <Node name="Rock.Mobile" expanded="True">
-            <Node name="PlatformCommon" expanded="True" />
-            <Node name="PlatformUI" expanded="True" />
+            <Node name="UserManagement" expanded="True" />
           </Node>
         </State>
-      </Pad>
-      <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>

@@ -108,13 +108,6 @@ namespace iOS
             string imagePath = NSBundle.MainBundle.BundlePath + "/" + PrimaryNavBarConfig.LogoFile;
             this.NavigationItem.TitleView = new UIImageView( new UIImage( imagePath ) );
 
-            //todo: add a 2x2 tile color background if desired/needed
-            //if( string.IsNullOrEmpty( PrimaryNavBar.BackgroundTileImage ) == false )
-            {
-                //imagePath = NSBundle.MainBundle.BundlePath + "/" + PrimaryNavBar.BackgroundTileImage;
-                //NavigationController.NavigationBar.SetBackgroundImage( new UIImage( imagePath ), UIBarMetrics.Default );
-            }
-
             // Now create the sub-navigation, which includes
             // the NavToolbar used to let the user navigate
             CreateSubNavigationController( );
@@ -136,7 +129,7 @@ namespace iOS
 
             // setup the toolbar that will manage task navigation and any other tasks the task needs
             SubNavToolbar = new NavToolbar();
-            SubNavToolbar.Frame = new RectangleF( 0, SubNavigationController.View.Frame.Height, View.Frame.Width, SubNavToolbarConfig.Height);
+            SubNavToolbar.Frame = new RectangleF( 0, View.Frame.Height - SubNavToolbarConfig.Height, View.Frame.Width, SubNavToolbarConfig.Height);
             SubNavToolbar.BarTintColor = PlatformBaseUI.GetUIColor( SubNavToolbarConfig.BackgroundColor );
             SubNavToolbar.Layer.Opacity = SubNavToolbarConfig.Opacity;
             SubNavigationController.View.AddSubview( SubNavToolbar );
@@ -157,6 +150,8 @@ namespace iOS
             // of the primary navigation controller.
             AddChildViewController( SubNavigationController );
             View.AddSubview( SubNavigationController.View );
+
+            SubNavigationController.View.BackgroundColor = UIColor.Black;
         }
 
         public void NavWillShowViewController( UIViewController viewController )

@@ -89,8 +89,6 @@
     <AndroidResource Include="Resources\layout-sw600dp\News_Details.axml" />
     <AndroidResource Include="Resources\layout-sw600dp\Notes.axml" />
     <AndroidResource Include="Resources\layout-sw600dp\Springboard.axml" />
-    <AndroidResource Include="Resources\drawable-hdpi\Icon.png" />
-    <AndroidResource Include="Resources\drawable-mdpi\Icon.png" />
     <AndroidResource Include="Resources\layout-sw480dp\Main.axml" />
     <AndroidResource Include="Resources\layout-sw480dp\Notes.axml" />
     <AndroidResource Include="Resources\layout-sw480dp\Springboard.axml" />
@@ -107,12 +105,6 @@
     <AndroidResource Include="Resources\layout-sw480dp\Login.axml" />
     <AndroidResource Include="..\Assets\ccvLogo%402x.png">
       <Link>Resources\drawable-hdpi\ccvLogo.png</Link>
-    </AndroidResource>
-    <AndroidResource Include="..\Assets\addphoto%402x.png">
-      <Link>Resources\drawable-hdpi\addphoto.png</Link>
-    </AndroidResource>
-    <AndroidResource Include="..\Assets\noProfile%402x.png">
-      <Link>Resources\drawable-hdpi\noProfile.png</Link>
     </AndroidResource>
     <AndroidResource Include="Resources\layout-sw600dp\Profile.axml" />
     <AndroidResource Include="Resources\layout-sw480dp\Profile.axml" />
@@ -146,6 +138,14 @@
     <AndroidResource Include="Resources\layout-sw320dp\Notes_Details.axml" />
     <AndroidResource Include="..\Assets\podcastThumbnailPlaceholder%402x.png">
       <Link>Resources\drawable-hdpi\thumbnailPlaceholder.png</Link>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable-hdpi\shadow.9.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\shadow.9.png" />
+    <AndroidResource Include="..\Assets\Icons\Icon%402x.png">
+      <Link>Resources\drawable-hdpi\Icon.png</Link>
+    </AndroidResource>
+    <AndroidResource Include="..\Assets\Icons\Icon.png">
+      <Link>Resources\drawable-mdpi\Icon.png</Link>
     </AndroidResource>
   </ItemGroup>
   <Import Project="..\..\Rock.Mobile\Rock.Mobile.projitems" Label="Shared" Condition="Exists('..\..\Rock.Mobile\Rock.Mobile.projitems')" />
@@ -301,9 +301,6 @@
     </AndroidAsset>
     <AndroidAsset Include="..\Assets\Fonts\FontAwesome.ttf">
       <Link>Assets\Fonts\FontAwesome.ttf</Link>
-    </AndroidAsset>
-    <AndroidAsset Include="..\Assets\Fonts\Pe-icon-7-stroke.ttf">
-      <Link>Assets\Fonts\Pe-icon-7-stroke.ttf</Link>
     </AndroidAsset>
     <AndroidAsset Include="..\Assets\Fonts\Bh.ttf">
       <Link>Assets\Fonts\Bh.ttf</Link>

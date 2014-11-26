@@ -252,14 +252,14 @@ namespace iOS
 
             View.BackgroundColor = PlatformBaseUI.GetUIColor( PrayerConfig.BackgroundColor );
 
-            float viewRealHeight = ( View.Bounds.Height - NavigationController.NavigationBar.Bounds.Height );
+            float viewRealHeight = ( View.Bounds.Height - Task.NavToolbar.Frame.Height);
 
             float cardSizePerc = .83f;
             float cardWidth = View.Bounds.Width * cardSizePerc;
             float cardHeight = viewRealHeight * cardSizePerc;
 
             // setup the card positions to be to the offscreen to the left, centered on screen, and offscreen to the right
-            float cardYOffset = ( viewRealHeight * .05f ) + NavigationController.NavigationBar.Bounds.Height;
+            float cardYOffset = ( viewRealHeight * .03f );
 
             Carousel = PlatformCardCarousel.Create( cardWidth, cardHeight, new RectangleF( 0, cardYOffset, View.Bounds.Width, viewRealHeight ), PrayerConfig.Card_AnimationDuration, UpdatePrayerCards );
 

@@ -142,13 +142,6 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="275" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES">
-                                <rect key="frame" x="0.0" y="0.0" width="46" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                            </button>
                         </subviews>
                     </view>
                     <navigationItem title="" id="80" key="navigationItem"/>
@@ -202,5 +195,12 @@
         <image name="news_general_1_header.png" width="640" height="360"/>
         <image name="news_general_2_header.png" width="640" height="360"/>
         <image name="news_general_3_header.png" width="640" height="360"/>
+        <image name="news_baptism_main.png" width="375" height="242"/>
+        <image name="news_learnmore_header.png" width="375" height="211"/>
+        <image name="news_learnmore_main.png" width="375" height="242"/>
+        <image name="news_startingpoint_header.png" width="1242" height="699"/>
+        <image name="news_startingpoint_main.png" width="375" height="242"/>
+        <image name="podcastThumbnailPlaceholder.png" width="590" height="332"/>
+        <image name="news_baptism_header.png" width="320" height="180"/>
     </resources>
 </document>

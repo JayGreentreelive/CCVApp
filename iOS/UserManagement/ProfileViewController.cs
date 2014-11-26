@@ -113,19 +113,6 @@ namespace iOS
             LastNameField.Text = RockMobileUser.Instance.Person.LastName;
 
             EmailField.Text = RockMobileUser.Instance.Person.Email;
-
-
-            // set the profile image mask so it's circular
-            CALayer maskLayer = new CALayer();
-            maskLayer.AnchorPoint = new PointF( 0, 0 );
-            maskLayer.Bounds = ProfilePicButton.Layer.Bounds;
-            maskLayer.CornerRadius = ProfilePicButton.Layer.Bounds.Width / 2;
-            maskLayer.BackgroundColor = UIColor.Black.CGColor;
-            ProfilePicButton.Layer.Mask = maskLayer;
-            //
-
-            string imagePath = RockMobileUser.Instance.HasProfileImage ? RockMobileUser.Instance.ProfilePicturePath : NSBundle.MainBundle.BundlePath + "/" + SpringboardConfig.NoPhotoFile;
-            ProfilePicButton.SetImage( new UIImage( imagePath ), UIControlState.Normal );;
         }
 
         public void SubmitActionSheetClicked(object sender, UIButtonEventArgs e)

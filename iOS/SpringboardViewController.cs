@@ -55,6 +55,10 @@ namespace iOS
             /// <value>The button.</value>
             public UIButton Button { get; set; }
 
+            UILabel TextLabel { get; set; }
+
+            UILabel LogoView { get; set; }
+
             public SpringboardElement( SpringboardViewController controller, Task task, UIButton button, string imageChar )
             {
                 UIView parentView = button.Superview;
@@ -84,17 +88,17 @@ namespace iOS
                 parentView.AddSubview( BackingView );
 
                 // Create the logo view containing the image.
-                UILabel logoView = new UILabel( );
-                logoView.Font = iOSCommon.LoadFontDynamic( SpringboardConfig.Element_Font, SpringboardConfig.Element_FontSize );
-                logoView.TextColor = PlatformBaseUI.GetUIColor( SpringboardConfig.Element_FontColor );
-                logoView.Text = imageChar;
-                logoView.SizeToFit( );
-                logoView.Layer.Position = new PointF( SpringboardConfig.Element_LogoOffsetX, Button.Layer.Position.Y );
-                logoView.BackgroundColor = UIColor.Clear;
-                parentView.AddSubview( logoView );
+                LogoView = new UILabel( );
+                LogoView.Font = iOSCommon.LoadFontDynamic( SpringboardConfig.Element_Font, SpringboardConfig.Element_FontSize );
+                LogoView.TextColor = PlatformBaseUI.GetUIColor( SpringboardConfig.Element_FontColor );
+                LogoView.Text = imageChar;
+                LogoView.SizeToFit( );
+                LogoView.Layer.Position = new PointF( SpringboardConfig.Element_LogoOffsetX, Button.Layer.Position.Y );
+                LogoView.BackgroundColor = UIColor.Clear;
+                parentView.AddSubview( LogoView );
 
                 // Create the text, and populate it with the button's requested text, color and font.
-                UILabel TextLabel = new UILabel( );
+                TextLabel = new UILabel( );
                 TextLabel.Text = Button.Title( UIControlState.Normal );
                 TextLabel.TextColor = Button.TitleColor( UIControlState.Normal );
                 TextLabel.Font = Button.Font;
@@ -108,6 +112,20 @@ namespace iOS
                 Button.BackgroundColor = UIColor.Clear;
 
                 parentView.BringSubviewToFront( Button );
+            }
+
+            public void Activate( )
+            {
+                LogoView.TextColor = PlatformBaseUI.GetUIColor( SpringboardConfig.Element_SelectedFontColor );
+                TextLabel.TextColor = PlatformBaseUI.GetUIColor( SpringboardConfig.Element_SelectedFontColor );
+                BackingView.BackgroundColor = PlatformBaseUI.GetUIColor( SpringboardConfig.Element_SelectedColor );
+            }
+
+            public void Deactivate( )
+            {
+                LogoView.TextColor = PlatformBaseUI.GetUIColor( SpringboardConfig.Element_FontColor );
+                TextLabel.TextColor = PlatformBaseUI.GetUIColor( SpringboardConfig.Element_FontColor );
+                BackingView.BackgroundColor = UIColor.Clear;
             }
         };
 
@@ -236,10 +254,16 @@ namespace iOS
             CALayer maskLayer = new CALayer();
             maskLayer.AnchorPoint = new PointF( 0, 0 );
             maskLayer.Bounds = LoginButton.Layer.Bounds;
-            maskLayer.CornerRadius = LoginButton.Layer.Bounds.Width / 2;
+            maskLayer.CornerRadius = LoginButton.Bounds.Width / 2;
             maskLayer.BackgroundColor = UIColor.Black.CGColor;
             LoginButton.Layer.Mask = maskLayer;
             //
+
+            LoginButton.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( SpringboardConfig.ProfileSymbolFont, SpringboardConfig.ProfileSymbolFontSize );
+            LoginButton.SetTitleColor( PlatformBaseUI.GetUIColor( SpringboardConfig.ProfileSymbolColor ), UIControlState.Normal );
+            LoginButton.Layer.BorderColor = PlatformBaseUI.GetUIColor( SpringboardConfig.ProfileOutlineCircleColor ).CGColor;
+            LoginButton.Layer.CornerRadius = LoginButton.Bounds.Width / 2;
+            LoginButton.Layer.BorderWidth = 4;
 
             View.BackgroundColor = PlatformBaseUI.GetUIColor( SpringboardConfig.BackgroundColor );
 
@@ -410,12 +434,12 @@ namespace iOS
                     {
                         if( element != activeElement )
                         {
-                            element.BackingView.BackgroundColor = UIColor.Clear;
+                            element.Deactivate( );
                         }
                     }
 
                     // activate the element and its associated task
-                    activeElement.BackingView.BackgroundColor = PlatformBaseUI.GetUIColor( SpringboardConfig.Element_SelectedColor );
+                    activeElement.Activate( );
                 }
             }
         }
@@ -475,9 +499,6 @@ namespace iOS
         public void UpdateProfilePic( )
         {
             // the image depends on the user's status.
-            UIImage image = null;
-            string imagePath = NSBundle.MainBundle.BundlePath + "/";
-
             if( RockMobileUser.Instance.LoggedIn )
             {
                 bool useNoPhotoImage = true;
@@ -489,7 +510,8 @@ namespace iOS
                     // because the profile picture is dynamic, make sure it loads correctly.
                     try
                     {
-                        image = new UIImage( RockMobileUser.Instance.ProfilePicturePath );
+                        UIImage image = new UIImage( RockMobileUser.Instance.ProfilePicturePath );
+                        LoginButton.SetImage( image, UIControlState.Normal );
                         useNoPhotoImage = false;
                     }
                     catch(Exception)
@@ -501,7 +523,8 @@ namespace iOS
                 // if we made it here and useNoPhoto is true, well, use no photo
                 if( useNoPhotoImage == true )
                 {
-                    image = new UIImage( imagePath + SpringboardConfig.NoPhotoFile );
+                    LoginButton.SetImage( null, UIControlState.Normal );
+                    LoginButton.SetTitle( SpringboardConfig.NoPhotoSymbol, UIControlState.Normal );
                 }
 
                 // if we're logged in, also display the View Profile button
@@ -511,15 +534,13 @@ namespace iOS
             else
             {
                 // otherwise display the no profile image.
-                image = new UIImage( imagePath + SpringboardConfig.NoProfileFile );
+                LoginButton.SetImage( null, UIControlState.Normal );
+                LoginButton.SetTitle( SpringboardConfig.NoProfileSymbol, UIControlState.Normal );
 
                 // if we're logged out, hide the view profile button
                 ViewProfileButton.Enabled = false;
                 ViewProfileButton.Hidden = true;
             }
-
-            // set the final image
-            LoginButton.SetImage( image, UIControlState.Normal );
         }
 
         public static void DisplayError( string title, string message )

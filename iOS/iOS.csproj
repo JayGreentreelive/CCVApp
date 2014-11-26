@@ -239,14 +239,8 @@
     <BundleResource Include="..\Assets\Fonts\FontAwesome.ttf">
       <Link>Resources\Fonts\FontAwesome.ttf</Link>
     </BundleResource>
-    <BundleResource Include="..\Assets\Fonts\Pe-icon-7-stroke.ttf">
-      <Link>Resources\Fonts\Pe-icon-7-stroke.ttf</Link>
-    </BundleResource>
     <BundleResource Include="..\Assets\Fonts\Bh.ttf">
       <Link>Resources\Fonts\Bh.ttf</Link>
-    </BundleResource>
-    <BundleResource Include="..\Assets\addphoto%402x.png">
-      <Link>Resources\addphoto%402x.png</Link>
     </BundleResource>
     <BundleResource Include="..\Assets\ccvLogo%402x.png">
       <Link>Resources\ccvLogo%402x.png</Link>
@@ -281,17 +275,11 @@
     <BundleResource Include="..\Assets\news_startingpoint_main%403x.png">
       <Link>Resources\news_startingpoint_main%403x.png</Link>
     </BundleResource>
-    <BundleResource Include="..\Assets\noProfile%402x.png">
-      <Link>Resources\noProfile%402x.png</Link>
-    </BundleResource>
     <BundleResource Include="..\Assets\podcastThumbnailPlaceholder%402x.png">
       <Link>Resources\podcastThumbnailPlaceholder%402x.png</Link>
     </BundleResource>
     <BundleResource Include="..\Assets\spot_mask.png">
       <Link>Resources\spot_mask.png</Link>
-    </BundleResource>
-    <BundleResource Include="..\Assets\addphoto.png">
-      <Link>Resources\addphoto.png</Link>
     </BundleResource>
     <BundleResource Include="..\Assets\ccvLogo.png">
       <Link>Resources\ccvLogo.png</Link>
@@ -308,12 +296,6 @@
     <BundleResource Include="..\Assets\news_startingpoint_main.png">
       <Link>Resources\news_startingpoint_main.png</Link>
     </BundleResource>
-    <BundleResource Include="..\Assets\noprofile.png">
-      <Link>Resources\noprofile.png</Link>
-    </BundleResource>
-    <BundleResource Include="Resources\Icon.png" />
-    <BundleResource Include="Resources\Icon%402x.png" />
-    <BundleResource Include="Resources\Icon-60%402x.png" />
     <BundleResource Include="..\Assets\news_baptism_header.png">
       <Link>Resources\news_baptism_header.png</Link>
     </BundleResource>
@@ -451,5 +433,14 @@
     <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\Contents.json" />
     <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splashLarge.png" />
     <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splash35Retina.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Contents.json" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-Small.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-Small%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-Small%403x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-Small-40%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-Small-40%403x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-60%403x.png" />
   </ItemGroup>
 </Project>

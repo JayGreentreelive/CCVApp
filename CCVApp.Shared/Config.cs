@@ -18,14 +18,34 @@ namespace CCVApp
             public class SpringboardConfig
             {
                 /// <summary>
-                /// Image to display when a user does not have a profile.
+                /// Font to use for rendering a symbol when a user does not have a profile or profile photo.
                 /// </summary>
-                public const string NoProfileFile = "noprofile.png";
+                public const string ProfileSymbolFont = "FontAwesome";
 
                 /// <summary>
-                /// Image to display when a user is logged in without a profile picture.
+                /// The text glyph to use as a symbol when the user does not have a profile.
                 /// </summary>
-                public const string NoPhotoFile = "addphoto.png";
+                public const string NoProfileSymbol = "";
+
+                /// <summary>
+                /// The text glyph to use as a symbol when the user doesn't have a photo.
+                /// </summary>
+                public const string NoPhotoSymbol = "";
+
+                /// <summary>
+                /// The size of font to use for the no photo symbol
+                /// </summary>
+                public const float ProfileSymbolFontSize = 48;
+
+                /// <summary>
+                /// The color of the outline circle around the profile image.
+                /// </summary>
+                public const uint ProfileOutlineCircleColor = 0x959595FF;
+
+                /// <summary>
+                /// The color of the profile symbols when there is no profile picture.
+                /// </summary>
+                public const uint ProfileSymbolColor = 0x959595FF;
 
                 /// <summary>
                 /// When we store their profile pic, thisi s what it's called.
@@ -44,9 +64,14 @@ namespace CCVApp
                 public const int Element_FontSize = 23;
 
                 /// <summary>
-                /// The color of the font to use for the element's logo.
+                /// The color of the font to use for the SELECTED element's logo and text.
                 /// </summary>
-                public const uint Element_FontColor = 0xEEEEEEFF;
+                public const uint Element_SelectedFontColor = 0xE4E4E4FF;
+
+                /// <summary>
+                /// The color of the font to use for the element's logo and text.
+                /// </summary>
+                public const uint Element_FontColor = 0x959595FF;
 
                 /// <summary>
                 /// The X offset to place the CENTER of the element's logo.
@@ -96,7 +121,7 @@ namespace CCVApp
                 /// <summary>
                 /// The background color of the springboard.
                 /// </summary>
-                public const int BackgroundColor = 0x3d3d3dFF;
+                public const int BackgroundColor = 0x303030FF;
             }
 
             public class ImageCropConfig
@@ -194,7 +219,7 @@ namespace CCVApp
                 /// <summary>
                 /// The font to use for displaying the subNavigation toolbar's share button. (the one at the bottom)
                 /// </summary>
-                public const string ShareButton_Font = "Pe-icon-7-stroke";
+                public const string ShareButton_Font = "Bh";
 
                 /// <summary>
                 /// The color to use for displaying the subNavigation toolbar's share button when enabled. (the one at the bottom)
@@ -214,7 +239,7 @@ namespace CCVApp
                 /// <summary>
                 /// The text to display for the subNavigation toolbar's share button. (the one at the bottom)
                 /// </summary>
-                public const string ShareButton_Text = "";
+                public const string ShareButton_Text = "";
 
                 /// <summary>
                 /// The size (in font points) of the sub nav toolbar share button. (the one at the bottom)
@@ -300,7 +325,7 @@ namespace CCVApp
                 /// <summary>
                 /// The color of the primary nav bar background.
                 /// </summary>
-                public const uint BackgroundColor = 0x1C1C1CFF;
+                public const uint BackgroundColor = 0x303030FF;
             }
 
             /// <summary>
