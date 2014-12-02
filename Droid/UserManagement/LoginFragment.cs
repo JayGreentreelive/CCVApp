@@ -12,6 +12,7 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using CCVApp.Shared.Network;
+using CCVApp.Shared.Config;
 
 namespace Droid
 {
@@ -147,7 +148,7 @@ namespace Droid
                     // if they have a profile picture, grab it.
                     if( model.PhotoId != null )
                     {
-                        RockMobileUser.Instance.DownloadProfilePicture( 200, ProfileImageComplete );
+                        RockMobileUser.Instance.DownloadProfilePicture( GeneralConfig.ProfileImageSize, ProfileImageComplete );
                     }
 
                     // hide the activity indicator, because we are now logged in,

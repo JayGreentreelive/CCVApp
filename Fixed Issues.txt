@@ -4,6 +4,9 @@ Both
 	Only public, active approved prayers are now received.
 	Added actual standard starting news items
 	Added ability to share Sermon Videos
+	The selected springboard element now lights up white.
+	New app icon.
+	Lots of color tuning to match final design.
 
 Android
 	Fixed an issue causing the nav toolbar to be too large on some device

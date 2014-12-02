@@ -29,12 +29,6 @@ namespace iOS
         protected class SpringboardElement
         {
             /// <summary>
-            /// Reference to our parent view controller
-            /// </summary>
-            /// <value>The springboard view controller.</value>
-            public SpringboardViewController SpringboardViewController { get; set; }
-
-            /// <summary>
             /// The task that is launched by this element.
             /// </summary>
             /// <value>The task.</value>
@@ -42,10 +36,10 @@ namespace iOS
 
             /// <summary>
             /// The view that rests behind the button, graphic and text, and is colored when 
-            /// the task is active.
+            /// the task is active. It is the parent for the button, text logo and seperator
             /// </summary>
             /// <value>The backing view.</value>
-            public UIView BackingView { get; set; }
+            UIView BackingView { get; set; }
 
             /// <summary>
             /// The button itself. Because we have special display needs, we
@@ -53,25 +47,21 @@ namespace iOS
             /// on top of the BackingView, LogoView and TextView.
             /// </summary>
             /// <value>The button.</value>
-            public UIButton Button { get; set; }
+            UIButton Button { get; set; }
 
             UILabel TextLabel { get; set; }
 
             UILabel LogoView { get; set; }
 
-            public SpringboardElement( SpringboardViewController controller, Task task, UIButton button, string imageChar )
+            UIView Seperator { get; set; }
+
+            public SpringboardElement( SpringboardViewController controller, Task task, UIView backingView, string imageChar, string labelStr )
             {
-                UIView parentView = button.Superview;
-
-                SpringboardViewController = controller;
                 Task = task;
-                Button = button;
 
-                Button.TouchUpInside += (object sender, EventArgs e) => 
-                    {
-                        SpringboardViewController.ActivateElement( this );
-                    };
-
+                // setup the backing view
+                BackingView = backingView;
+                BackingView.BackgroundColor = UIColor.Clear;
 
                 //The button should look as follows:
                 // [ X Text ]
@@ -81,37 +71,47 @@ namespace iOS
                 // Finally, we'll make the button clear with no text and place it over the
                 // backing view.
 
-                // Create the backing view
-                BackingView = new UIView( );
-                BackingView.Frame = Button.Frame;
-                BackingView.BackgroundColor = UIColor.Clear;
-                parentView.AddSubview( BackingView );
-
                 // Create the logo view containing the image.
-                LogoView = new UILabel( );
-                LogoView.Font = iOSCommon.LoadFontDynamic( SpringboardConfig.Element_Font, SpringboardConfig.Element_FontSize );
-                LogoView.TextColor = PlatformBaseUI.GetUIColor( SpringboardConfig.Element_FontColor );
+                LogoView = new UILabel();
                 LogoView.Text = imageChar;
+                LogoView.Font = iOSCommon.LoadFontDynamic( SpringboardConfig.Font, SpringboardConfig.Element_FontSize );
+                LogoView.TextColor = PlatformBaseUI.GetUIColor( SpringboardConfig.Element_FontColor );
                 LogoView.SizeToFit( );
-                LogoView.Layer.Position = new PointF( SpringboardConfig.Element_LogoOffsetX, Button.Layer.Position.Y );
                 LogoView.BackgroundColor = UIColor.Clear;
-                parentView.AddSubview( LogoView );
+                BackingView.AddSubview( LogoView );
 
                 // Create the text, and populate it with the button's requested text, color and font.
-                TextLabel = new UILabel( );
-                TextLabel.Text = Button.Title( UIControlState.Normal );
-                TextLabel.TextColor = Button.TitleColor( UIControlState.Normal );
-                TextLabel.Font = Button.Font;
+                TextLabel = new UILabel();
+                TextLabel.Text = labelStr;
+                TextLabel.Font = TextLabel.Font.WithSize( 15.0f );
                 TextLabel.BackgroundColor = UIColor.Clear;
                 TextLabel.SizeToFit( );
-                TextLabel.Layer.Position = new PointF( SpringboardConfig.Element_LabelOffsetX + (TextLabel.Frame.Width / 2), Button.Layer.Position.Y );
-                parentView.AddSubview( TextLabel );
+                BackingView.AddSubview( TextLabel );
 
-                // now clear out the button so it just lays on top of the contents
-                Button.SetTitle( "", UIControlState.Normal );
+                // Create the seperator
+                Seperator = new UIView( );
+                Seperator.BackgroundColor = PlatformBaseUI.GetUIColor( SpringboardConfig.Element_SeperatorColor );
+                BackingView.AddSubview( Seperator );
+
+                // Create the button
+                Button = new UIButton( UIButtonType.Custom );
+                Button.Layer.AnchorPoint = PointF.Empty;
                 Button.BackgroundColor = UIColor.Clear;
+                Button.TouchUpInside += (object sender, EventArgs e) => 
+                    {
+                        controller.ActivateElement( this );
+                    };
+                BackingView.AddSubview( Button );
 
-                parentView.BringSubviewToFront( Button );
+
+                // position the controls
+                Button.Bounds = BackingView.Bounds;
+
+                LogoView.Layer.Position = new PointF( SpringboardConfig.Element_LogoOffsetX, BackingView.Frame.Height / 2 );
+
+                TextLabel.Layer.Position = new PointF( SpringboardConfig.Element_LabelOffsetX + ( TextLabel.Frame.Width / 2 ), BackingView.Frame.Height / 2 );
+
+                Seperator.Frame = new RectangleF( 0, 0, Button.Frame.Width, 1.0f );
             }
 
             public void Activate( )
@@ -176,6 +176,20 @@ namespace iOS
         /// until the NavBar and all sub-fragments have been pushed to the stack.
         /// </summary>
         UIImage ImageCropperPendingImage { get; set; }
+
+        /// <summary>
+        /// Stores the profile picture that is placed on the "Login Button" when the user is logged in.
+        /// We use this because setting an image on a button via SetImage causes the button to size to the image,
+        /// even with ContentMode set.
+        /// </summary>
+        /// <value>The profile image view.</value>
+        UIImageView ProfileImageView { get; set; }
+
+        /// <summary>
+        /// A seperator that goes at the bottom of the Springboard Element List
+        /// </summary>
+        /// <value>The bottom seperator.</value>
+        UIView BottomSeperator { get; set; }
 
 		public SpringboardViewController (IntPtr handle) : base (handle)
 		{
@@ -243,12 +257,19 @@ namespace iOS
             ImageCropViewController.Springboard = this;
 
             // Instantiate all activities
-            Elements.Add( new SpringboardElement( this, new NewsTask( "NewsStoryboard_iPhone" )              , NewsButton       , SpringboardConfig.Element_News_Icon ) );
-            Elements.Add( new SpringboardElement( this, new GroupFinderTask( "GroupFinderStoryboard_iPhone" ), GroupFinderButton, SpringboardConfig.Element_Connect_Icon ) );
-            Elements.Add( new SpringboardElement( this, new NotesTask( "NotesStoryboard_iPhone" )            , MessagesButton   , SpringboardConfig.Element_Messages_Icon ) );
-            Elements.Add( new SpringboardElement( this, new PrayerTask( "PrayerStoryboard_iPhone" )          , PrayerButton     , SpringboardConfig.Element_Prayer_Icon ) );
-            Elements.Add( new SpringboardElement( this, new GiveTask( "GiveStoryboard_iPhone" )              , GiveButton       , SpringboardConfig.Element_Give_Icon ) );
-            Elements.Add( new SpringboardElement( this, new AboutTask( "AboutStoryboard_iPhone" )            , AboutButton      , SpringboardConfig.Element_More_Icon ) );
+            Elements.Add( new SpringboardElement( this, new NewsTask( "NewsStoryboard_iPhone" )              , NewsElement    , SpringboardConfig.Element_News_Icon    , SpringboardStrings.Element_News_Title ) );
+            Elements.Add( new SpringboardElement( this, new GroupFinderTask( "GroupFinderStoryboard_iPhone" ), ConnectElement , SpringboardConfig.Element_Connect_Icon , SpringboardStrings.Element_Connect_Title ) );
+            Elements.Add( new SpringboardElement( this, new NotesTask( "NotesStoryboard_iPhone" )            , MessagesElement, SpringboardConfig.Element_Messages_Icon, SpringboardStrings.Element_Messages_Title ) );
+            Elements.Add( new SpringboardElement( this, new PrayerTask( "PrayerStoryboard_iPhone" )          , PrayerElement  , SpringboardConfig.Element_Prayer_Icon  , SpringboardStrings.Element_Prayer_Title ) );
+            Elements.Add( new SpringboardElement( this, new GiveTask( "GiveStoryboard_iPhone" )              , GiveElement    , SpringboardConfig.Element_Give_Icon    , SpringboardStrings.Element_Give_Title ) );
+            Elements.Add( new SpringboardElement( this, new AboutTask( "AboutStoryboard_iPhone" )            , MoreElement    , SpringboardConfig.Element_More_Icon    , SpringboardStrings.Element_More_Title ) );
+
+            // add a bottom seperator for the final element
+            BottomSeperator = new UIView();
+            BottomSeperator.BackgroundColor = PlatformBaseUI.GetUIColor( SpringboardConfig.Element_SeperatorColor );
+            View.AddSubview( BottomSeperator );
+            BottomSeperator.Frame = new RectangleF( 0, 0, View.Frame.Width, 1.0f );
+
 
             // set the profile image mask so it's circular
             CALayer maskLayer = new CALayer();
@@ -259,7 +280,24 @@ namespace iOS
             LoginButton.Layer.Mask = maskLayer;
             //
 
-            LoginButton.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( SpringboardConfig.ProfileSymbolFont, SpringboardConfig.ProfileSymbolFontSize );
+            // setup the campus selector and settings button
+            CampusButton.SetTitleColor( PlatformBaseUI.GetUIColor( SpringboardConfig.Element_FontColor ), UIControlState.Normal );
+
+            SettingsButton.SetTitleColor( PlatformBaseUI.GetUIColor( SpringboardConfig.Element_FontColor ), UIControlState.Normal );
+            SettingsButton.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( SpringboardConfig.Font, SpringboardConfig.SettingsSymbolSize );
+            SettingsButton.SetTitle( SpringboardConfig.SettingsSymbol, UIControlState.Normal );
+            SettingsButton.SizeToFit( );
+
+            // setup the image that will display when the user is logged in
+            ProfileImageView = new UIImageView( );
+            ProfileImageView.ContentMode = UIViewContentMode.ScaleAspectFit;
+
+            ProfileImageView.Layer.AnchorPoint = PointF.Empty;
+            ProfileImageView.Bounds = LoginButton.Bounds;
+            ProfileImageView.Layer.Position = PointF.Empty;
+            LoginButton.AddSubview( ProfileImageView );
+
+            LoginButton.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( SpringboardConfig.Font, SpringboardConfig.ProfileSymbolFontSize );
             LoginButton.SetTitleColor( PlatformBaseUI.GetUIColor( SpringboardConfig.ProfileSymbolColor ), UIControlState.Normal );
             LoginButton.Layer.BorderColor = PlatformBaseUI.GetUIColor( SpringboardConfig.ProfileOutlineCircleColor ).CGColor;
             LoginButton.Layer.CornerRadius = LoginButton.Bounds.Width / 2;
@@ -475,9 +513,54 @@ namespace iOS
                 {
                     ActivateElement( Elements[0] );
                 }
-
-                UpdateLoginState( );
             }
+        }
+
+        public override void ViewDidLayoutSubviews()
+        {
+            base.ViewDidLayoutSubviews();
+
+            AdjustSpringboardLayout( );
+
+            UpdateLoginState( );
+        }
+
+        /// <summary>
+        /// Adjusts the positioning of the springboard elements to be spaced out consistently
+        /// across ios devices
+        /// </summary>
+        void AdjustSpringboardLayout( )
+        {
+            // position the login button
+            LoginButton.Layer.AnchorPoint = PointF.Empty;
+            LoginButton.Layer.Position = new PointF( ( PrimaryContainerConfig.SlideAmount - LoginButton.Bounds.Width ) / 2, View.Frame.Height * .05f );
+
+            NewsElement.Layer.AnchorPoint = PointF.Empty;
+            NewsElement.Layer.Position = new PointF( 0, View.Frame.Height * .40f );
+
+            ConnectElement.Layer.AnchorPoint = PointF.Empty;
+            ConnectElement.Layer.Position = new PointF( 0, NewsElement.Frame.Bottom );
+
+            MessagesElement.Layer.AnchorPoint = PointF.Empty;
+            MessagesElement.Layer.Position = new PointF( 0, ConnectElement.Frame.Bottom );
+
+            PrayerElement.Layer.AnchorPoint = PointF.Empty;
+            PrayerElement.Layer.Position = new PointF( 0, MessagesElement.Frame.Bottom );
+
+            GiveElement.Layer.AnchorPoint = PointF.Empty;
+            GiveElement.Layer.Position = new PointF( 0, PrayerElement.Frame.Bottom );
+
+            MoreElement.Layer.AnchorPoint = PointF.Empty;
+            MoreElement.Layer.Position = new PointF( 0, GiveElement.Frame.Bottom );
+
+            BottomSeperator.Layer.AnchorPoint = PointF.Empty;
+            BottomSeperator.Layer.Position = new PointF( 0, MoreElement.Frame.Bottom );
+
+            CampusButton.Layer.AnchorPoint = PointF.Empty;
+            CampusButton.Layer.Position = new PointF( 5, View.Frame.Height - CampusButton.Frame.Height - 2 );
+
+            SettingsButton.Layer.AnchorPoint = PointF.Empty;
+            SettingsButton.Layer.Position = new PointF( PrimaryContainerConfig.SlideAmount - SettingsButton.Bounds.Width, View.Frame.Height - SettingsButton.Frame.Height - 2 );
         }
 
         protected void UpdateLoginState( )
@@ -486,12 +569,36 @@ namespace iOS
             if( RockMobileUser.Instance.LoggedIn )
             {
                 // get their profile
-                UserNameField.Text = SpringboardStrings.LoggedIn_Prefix + " " + RockMobileUser.Instance.PreferredName( );
+                WelcomeField.Text = SpringboardStrings.LoggedIn_Prefix;
+                UserNameField.Text = RockMobileUser.Instance.PreferredName( );
             }
             else
             {
-                UserNameField.Text = SpringboardStrings.LoggedOut_Promo;
+                WelcomeField.Text = SpringboardStrings.LoggedOut_Promo;
+                UserNameField.Text = "";
             }
+
+            // update the positioning of the "Welcome: Name"
+            WelcomeField.SizeToFit( );
+            UserNameField.SizeToFit( );
+
+            // center the welcome and name labels within the available Springboard width
+            float totalWidth = WelcomeField.Bounds.Width + UserNameField.Bounds.Width;
+            float totalHeight = Math.Max( WelcomeField.Bounds.Height, UserNameField.Bounds.Height );
+
+            WelcomeField.Layer.AnchorPoint = PointF.Empty;
+            WelcomeField.Layer.Position = new PointF( ( PrimaryContainerConfig.SlideAmount - totalWidth ) / 2, LoginButton.Frame.Bottom + 10 );
+            WelcomeField.Bounds = new RectangleF( 0, 0, WelcomeField.Bounds.Width, totalHeight );
+
+            UserNameField.Layer.AnchorPoint = PointF.Empty;
+            UserNameField.Layer.Position = new PointF( WelcomeField.Frame.Right, WelcomeField.Frame.Y );
+            UserNameField.Bounds = new RectangleF( 0, 0, UserNameField.Bounds.Width, totalHeight );
+
+            // wrap the view profile button around the entire "Welcome: Name" phrase
+            ViewProfileButton.SetTitle( "", UIControlState.Normal );
+            ViewProfileButton.Layer.AnchorPoint = PointF.Empty;
+            ViewProfileButton.Layer.Position = new PointF( WelcomeField.Frame.Left, WelcomeField.Frame.Y );
+            ViewProfileButton.Bounds = new RectangleF( 0, 0, totalWidth, totalHeight );
 
             UpdateProfilePic( );
         }
@@ -511,7 +618,8 @@ namespace iOS
                     try
                     {
                         UIImage image = new UIImage( RockMobileUser.Instance.ProfilePicturePath );
-                        LoginButton.SetImage( image, UIControlState.Normal );
+                        ProfileImageView.Image = image;
+
                         useNoPhotoImage = false;
                     }
                     catch(Exception)
@@ -523,7 +631,7 @@ namespace iOS
                 // if we made it here and useNoPhoto is true, well, use no photo
                 if( useNoPhotoImage == true )
                 {
-                    LoginButton.SetImage( null, UIControlState.Normal );
+                    ProfileImageView.Image = null;
                     LoginButton.SetTitle( SpringboardConfig.NoPhotoSymbol, UIControlState.Normal );
                 }
 
@@ -534,7 +642,7 @@ namespace iOS
             else
             {
                 // otherwise display the no profile image.
-                LoginButton.SetImage( null, UIControlState.Normal );
+                ProfileImageView.Image = null;
                 LoginButton.SetTitle( SpringboardConfig.NoProfileSymbol, UIControlState.Normal );
 
                 // if we're logged out, hide the view profile button

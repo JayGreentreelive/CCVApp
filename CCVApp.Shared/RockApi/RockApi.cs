@@ -157,7 +157,7 @@ namespace CCVApp
                     Request.ExecuteAsync( BaseUrl + PutProfileEndPoint + person.Id, request, resultHandler);
                 }
 
-                public void GetProfilePicture( string photoId, int dimensionSize, HttpRequest.RequestResult<MemoryStream> resultHandler )
+                public void GetProfilePicture( string photoId, uint dimensionSize, HttpRequest.RequestResult<MemoryStream> resultHandler )
                 {
                     // request a profile by the username. If no username is specified, we'll use the logged in user's name.
                     RestRequest request = new RestRequest( Method.GET );

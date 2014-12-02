@@ -46,6 +46,7 @@ namespace Droid
 
                     RelativeLayout view = new RelativeLayout( Rock.Mobile.PlatformCommon.Droid.Context );
                     view.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent );
+                    view.SetBackgroundColor( Android.Graphics.Color.Black );
                     view.SetOnTouchListener( this );
 
                     VideoPlayer = new VideoView( Activity );

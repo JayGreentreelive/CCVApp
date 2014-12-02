@@ -195,7 +195,7 @@ namespace CCVApp
                     }
                 }
 
-                public void DownloadProfilePicture( int dimensionSize, HttpRequest.RequestResult profilePictureResult )
+                public void DownloadProfilePicture( uint dimensionSize, HttpRequest.RequestResult profilePictureResult )
                 {
                     RockApi.Instance.GetProfilePicture( Person.PhotoId.ToString(), dimensionSize, delegate(System.Net.HttpStatusCode statusCode, string statusDescription, MemoryStream imageStream)
                         {

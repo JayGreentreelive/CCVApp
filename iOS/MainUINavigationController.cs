@@ -52,6 +52,8 @@ namespace iOS
         /// <value>The current task.</value>
         public Task CurrentTask { get { return Container != null ? Container.CurrentTask : null; } }
 
+        UIView DarkPanel { get; set; }
+
 		public MainUINavigationController (IntPtr handle) : base (handle)
 		{
         }
@@ -88,6 +90,11 @@ namespace iOS
             // MainNavigationController must have a black background so that the ticks
             // before the task displays don't cause a flash
             View.BackgroundColor = UIColor.Black;
+
+            DarkPanel = new UIView(View.Frame);
+            DarkPanel.Layer.Opacity = 0.0f;
+            DarkPanel.BackgroundColor = UIColor.Black;
+            View.AddSubview( DarkPanel );
 
             // setup the style of the nav bar
             NavigationBar.TintColor = PlatformBaseUI.GetUIColor( PrimaryNavBarConfig.RevealButton_DepressedColor );
@@ -247,9 +254,14 @@ namespace iOS
             // make sure the springboard is clamped
             float xPos = View.Layer.Position.X + delta.X;
 
-            xPos = Math.Max( (View.Layer.Bounds.Width / 2), Math.Min( xPos, PrimaryContainerConfig.SlideAmount + (View.Layer.Bounds.Width / 2) ) );
+            float viewHalfWidth = ( View.Layer.Bounds.Width / 2 );
+
+            xPos = Math.Max( viewHalfWidth, Math.Min( xPos, PrimaryContainerConfig.SlideAmount + viewHalfWidth ) );
 
             View.Layer.Position = new PointF( xPos, View.Layer.Position.Y );
+
+            float percentDark = Math.Max( 0, Math.Min( (xPos - viewHalfWidth) / PrimaryContainerConfig.SlideAmount, PrimaryContainerConfig.SlideDarkenAmount ) );
+            DarkPanel.Layer.Opacity = percentDark;
         }
 
         public void SpringboardRevealButtonTouchUp( )
@@ -331,10 +343,12 @@ namespace iOS
                                 if( wantReveal == true )
                                 {
                                     endPos = PrimaryContainerConfig.SlideAmount + (View.Layer.Bounds.Width / 2);
+                                    DarkPanel.Layer.Opacity = PrimaryContainerConfig.SlideDarkenAmount;
                                 }
                                 else
                                 {
                                     endPos = (View.Layer.Bounds.Width / 2);
+                                    DarkPanel.Layer.Opacity = 0.0f;
                                 }
 
                                 float moveAmount = endPos - View.Layer.Position.X;

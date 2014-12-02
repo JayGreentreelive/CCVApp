@@ -16,15 +16,15 @@ namespace iOS
 	{
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UIButton AboutButton { get; set; }
+		UIButton CampusButton { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UIButton GiveButton { get; set; }
+		UIView ConnectElement { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UIButton GroupFinderButton { get; set; }
+		UIView GiveElement { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
@@ -32,53 +32,73 @@ namespace iOS
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UIButton MessagesButton { get; set; }
+		UIView MessagesElement { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UIButton NewsButton { get; set; }
+		UIView MoreElement { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UIButton PrayerButton { get; set; }
+		UIView NewsElement { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UITextField UserNameField { get; set; }
+		UIView PrayerElement { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UIButton SettingsButton { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UILabel UserNameField { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
 		UIButton ViewProfileButton { get; set; }
 
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UILabel WelcomeField { get; set; }
+
 		void ReleaseDesignerOutlets ()
 		{
-			if (AboutButton != null) {
-				AboutButton.Dispose ();
-				AboutButton = null;
+			if (CampusButton != null) {
+				CampusButton.Dispose ();
+				CampusButton = null;
 			}
-			if (GiveButton != null) {
-				GiveButton.Dispose ();
-				GiveButton = null;
+			if (ConnectElement != null) {
+				ConnectElement.Dispose ();
+				ConnectElement = null;
 			}
-			if (GroupFinderButton != null) {
-				GroupFinderButton.Dispose ();
-				GroupFinderButton = null;
+			if (GiveElement != null) {
+				GiveElement.Dispose ();
+				GiveElement = null;
 			}
 			if (LoginButton != null) {
 				LoginButton.Dispose ();
 				LoginButton = null;
 			}
-			if (MessagesButton != null) {
-				MessagesButton.Dispose ();
-				MessagesButton = null;
+			if (MessagesElement != null) {
+				MessagesElement.Dispose ();
+				MessagesElement = null;
 			}
-			if (NewsButton != null) {
-				NewsButton.Dispose ();
-				NewsButton = null;
+			if (MoreElement != null) {
+				MoreElement.Dispose ();
+				MoreElement = null;
 			}
-			if (PrayerButton != null) {
-				PrayerButton.Dispose ();
-				PrayerButton = null;
+			if (NewsElement != null) {
+				NewsElement.Dispose ();
+				NewsElement = null;
+			}
+			if (PrayerElement != null) {
+				PrayerElement.Dispose ();
+				PrayerElement = null;
+			}
+			if (SettingsButton != null) {
+				SettingsButton.Dispose ();
+				SettingsButton = null;
 			}
 			if (UserNameField != null) {
 				UserNameField.Dispose ();
@@ -87,6 +107,10 @@ namespace iOS
 			if (ViewProfileButton != null) {
 				ViewProfileButton.Dispose ();
 				ViewProfileButton = null;
+			}
+			if (WelcomeField != null) {
+				WelcomeField.Dispose ();
+				WelcomeField = null;
 			}
 		}
 	}

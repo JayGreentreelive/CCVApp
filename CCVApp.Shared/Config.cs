@@ -13,15 +13,15 @@ namespace CCVApp
             public class GeneralConfig
             {
                 public const string ImageCacheDirectory = "cache";
+
+                /// <summary>
+                /// The size (in pixels) of the profile image to download from Rock
+                /// </summary>
+                public const uint ProfileImageSize = 200;
             }
 
             public class SpringboardConfig
             {
-                /// <summary>
-                /// Font to use for rendering a symbol when a user does not have a profile or profile photo.
-                /// </summary>
-                public const string ProfileSymbolFont = "FontAwesome";
-
                 /// <summary>
                 /// The text glyph to use as a symbol when the user does not have a profile.
                 /// </summary>
@@ -54,9 +54,19 @@ namespace CCVApp
                 public const string ProfilePic = "userPhoto.jpg";
 
                 /// <summary>
-                /// The font to use for the element's logo.
+                /// The symbol to use representing the settings button.
                 /// </summary>
-                public const string Element_Font = "FontAwesome";
+                public const string SettingsSymbol = "";
+
+                /// <summary>
+                /// The size of the symbol representing the settings button.
+                /// </summary>
+                public const float SettingsSymbolSize = 14;
+
+                /// <summary>
+                /// The font to use for all non-text on the sprinboard.
+                /// </summary>
+                public const string Font = "FontAwesome";
                
                 /// <summary>
                 /// The size of font to use for the element's logo.
@@ -72,6 +82,11 @@ namespace CCVApp
                 /// The color of the font to use for the element's logo and text.
                 /// </summary>
                 public const uint Element_FontColor = 0x959595FF;
+
+                /// <summary>
+                /// The color of the seperating line between elements
+                /// </summary>
+                public const uint Element_SeperatorColor = 0x3E3E3EFF;
 
                 /// <summary>
                 /// The X offset to place the CENTER of the element's logo.
@@ -342,6 +357,11 @@ namespace CCVApp
                 /// The amount to slide when revelaing the springboard.
                 /// </summary>
                 public const float SlideAmount = 230;
+
+                /// <summary>
+                /// The max amount to darken the panel when revealing the springboard. ( 0 - 1 )
+                /// </summary>
+                public const float SlideDarkenAmount = .75f;
 
                 /// <summary>
                 /// The darkness of the shadow cast by the primary container on top of the springboard.

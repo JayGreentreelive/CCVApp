@@ -22,6 +22,7 @@ using CCVApp.Shared;
 using CCVApp.Shared.Config;
 using CCVApp.Shared.Strings;
 using Rock.Mobile.PlatformUI;
+using Android.Graphics.Drawables;
 
 namespace Droid
 {
@@ -29,54 +30,62 @@ namespace Droid
     {
         public Tasks.Task Task { get; set; }
 
-        public RelativeLayout Layout { get; set; }
-        public int LayoutId { get; set; }
+        RelativeLayout Layout { get; set; }
+        int LayoutId { get; set; }
 
         public Button Button { get; set; }
-        public int ButtonId { get; set; }
 
-        public TextView Icon { get; set; }
-        public int IconId { get; set; }
-        public string IconStr { get; set; }
+        TextView Icon { get; set; }
+        string IconStr { get; set; }
 
-        public int TextId { get; set; }
-        public TextView Text { get; set; }
+        string ElementLabel { get; set; }
+        TextView Text { get; set; }
 
-        public SpringboardElement( Tasks.Task task, int textId, int layoutId, int buttonId, int iconId, string iconStr )
+        public SpringboardElement( Tasks.Task task, int layoutId, string iconStr, string elementLabel )
         {
             Task = task;
             LayoutId = layoutId;
-            ButtonId = buttonId;
-            IconId = iconId;
             IconStr = iconStr;
-            TextId = textId;
+            ElementLabel = elementLabel;
         }
 
         public void OnCreateView( View parentView )
         {
             Layout = parentView.FindViewById<RelativeLayout>( LayoutId );
-            Icon = parentView.FindViewById<TextView>( IconId );
-            Button = parentView.FindViewById<Button>( ButtonId );
-            Text = parentView.FindViewById<TextView>( TextId );
+            Icon = Layout.FindViewById<TextView>( Resource.Id.icon );
+            Button = Layout.FindViewById<Button>( Resource.Id.button );
+            Text = Layout.FindViewById<TextView>( Resource.Id.text );
 
-            Typeface fontFace = DroidFontManager.Instance.GetFont( SpringboardConfig.Element_Font );
+            Typeface fontFace = DroidFontManager.Instance.GetFont( SpringboardConfig.Font );
             Icon.SetTypeface( fontFace, TypefaceStyle.Normal );
             Icon.SetTextSize( Android.Util.ComplexUnitType.Dip, SpringboardConfig.Element_FontSize );
             Icon.SetX( Icon.GetX() - Icon.Width / 2 );
             Icon.Text = IconStr;
 
+            Text.Text = ElementLabel;
+
             Button.Background = null;
+
+            // setup the seperator color
+            View seperator = Layout.FindViewById<View>( Resource.Id.seperator );
+            seperator.SetBackgroundColor( PlatformBaseUI.GetUIColor( SpringboardConfig.Element_SeperatorColor ) );
         }
 
         public void Deactivate( )
         {
+            Icon.SetTextColor( PlatformBaseUI.GetUIColor( SpringboardConfig.Element_FontColor ) );
+
             Text.SetTextColor( PlatformBaseUI.GetUIColor( SpringboardConfig.Element_FontColor ) );
+
             Layout.SetBackgroundColor( PlatformBaseUI.GetUIColor( 0x00000000 ) );
         }
 
         public void Activate( )
         {
+            Icon.SetTextColor( PlatformBaseUI.GetUIColor( SpringboardConfig.Element_SelectedFontColor ) );
+
             Text.SetTextColor( PlatformBaseUI.GetUIColor( SpringboardConfig.Element_SelectedFontColor ) );
+
             Layout.SetBackgroundColor( PlatformBaseUI.GetUIColor( SpringboardConfig.Element_SelectedColor ) );
         }
     }
@@ -98,9 +107,11 @@ namespace Droid
         protected ProfileFragment ProfileFragment { get; set; }
         protected ImageCropFragment ImageCropFragment { get; set; }
 
-        protected ImageButton ProfileImageButton { get; set; }
-        protected TextView ProfileImageText { get; set; }
+
+        protected Button ProfileImageButton { get; set; }
+
         protected Button LoginProfileButton { get; set; }
+        protected TextView ProfileName { get; set; }
 
         protected int ActiveElementIndex { get; set; }
 
@@ -114,6 +125,8 @@ namespace Droid
         Bitmap ProfileMask { get; set; }
 
         Bitmap ProfileMaskedImage { get; set; }
+
+        TextView ProfilePrefix { get; set; }
 
         public override void OnCreate( Bundle savedInstanceState )
         {
@@ -162,12 +175,12 @@ namespace Droid
 
             // create our tasks
             Elements = new List<SpringboardElement>();
-            Elements.Add( new SpringboardElement( new Droid.Tasks.News.NewsTask( NavbarFragment ), Resource.Id.springboard_news_text, Resource.Id.springboard_news_frame, Resource.Id.springboard_news_button, Resource.Id.springboard_news_icon, SpringboardConfig.Element_News_Icon ) );
-            Elements.Add( new SpringboardElement( new Droid.Tasks.Placeholder.PlaceholderTask( NavbarFragment ), Resource.Id.springboard_groupfinder_text, Resource.Id.springboard_groupfinder_frame, Resource.Id.springboard_groupfinder_button, Resource.Id.springboard_groupfinder_icon, SpringboardConfig.Element_Connect_Icon ) );
-            Elements.Add( new SpringboardElement( new Droid.Tasks.Notes.NotesTask( NavbarFragment ), Resource.Id.springboard_notes_text, Resource.Id.springboard_notes_frame, Resource.Id.springboard_notes_button, Resource.Id.springboard_notes_icon, SpringboardConfig.Element_Messages_Icon ) );
-            Elements.Add( new SpringboardElement( new Droid.Tasks.Prayer.PrayerTask( NavbarFragment ), Resource.Id.springboard_prayer_text, Resource.Id.springboard_prayer_frame, Resource.Id.springboard_prayer_button, Resource.Id.springboard_prayer_icon, SpringboardConfig.Element_Prayer_Icon ) );
-            Elements.Add( new SpringboardElement( new Droid.Tasks.Give.GiveTask( NavbarFragment ), Resource.Id.springboard_give_text, Resource.Id.springboard_give_frame, Resource.Id.springboard_give_button, Resource.Id.springboard_give_icon, SpringboardConfig.Element_Give_Icon ) );
-            Elements.Add( new SpringboardElement( new Droid.Tasks.About.AboutTask( NavbarFragment ), Resource.Id.springboard_about_text, Resource.Id.springboard_about_frame, Resource.Id.springboard_about_button, Resource.Id.springboard_about_icon, SpringboardConfig.Element_More_Icon ) );
+            Elements.Add( new SpringboardElement( new Droid.Tasks.News.NewsTask( NavbarFragment ), Resource.Id.springboard_news_frame, SpringboardConfig.Element_News_Icon, SpringboardStrings.Element_News_Title ) );
+            Elements.Add( new SpringboardElement( new Droid.Tasks.Placeholder.PlaceholderTask( NavbarFragment ), Resource.Id.springboard_groupfinder_frame, SpringboardConfig.Element_Connect_Icon, SpringboardStrings.Element_Connect_Title ) );
+            Elements.Add( new SpringboardElement( new Droid.Tasks.Notes.NotesTask( NavbarFragment ), Resource.Id.springboard_notes_frame, SpringboardConfig.Element_Messages_Icon, SpringboardStrings.Element_Messages_Title ) );
+            Elements.Add( new SpringboardElement( new Droid.Tasks.Prayer.PrayerTask( NavbarFragment ), Resource.Id.springboard_prayer_frame, SpringboardConfig.Element_Prayer_Icon, SpringboardStrings.Element_Prayer_Title ) );
+            Elements.Add( new SpringboardElement( new Droid.Tasks.Give.GiveTask( NavbarFragment ), Resource.Id.springboard_give_frame, SpringboardConfig.Element_Give_Icon, SpringboardStrings.Element_Give_Title ) );
+            Elements.Add( new SpringboardElement( new Droid.Tasks.About.AboutTask( NavbarFragment ), Resource.Id.springboard_about_frame, SpringboardConfig.Element_More_Icon, SpringboardStrings.Element_More_Title ) );
 
             ActiveElementIndex = 0;
             if( savedInstanceState != null )
@@ -191,30 +204,6 @@ namespace Droid
             outState.PutInt( "LastActiveElement", ActiveElementIndex );
         }
 
-        public class CircleView : View
-        {
-            public PointF Position { get; set; }
-            public float Radius { get; set; }
-            public float StrokeWidth { get; set; }
-            public Color Color { get; set; }
-
-            public CircleView( Android.Content.Context c ) : base( c )
-            {
-            }
-
-            protected override void OnDraw(Canvas canvas)
-            {
-                base.OnDraw( canvas );
-
-                Paint circlePaint = new Paint();
-                circlePaint.SetStyle( Android.Graphics.Paint.Style.Stroke );
-                circlePaint.Color = Color;
-                circlePaint.StrokeWidth = PlatformBaseUI.UnitToPx( StrokeWidth );
-
-                canvas.DrawCircle( PlatformBaseUI.UnitToPx( Position.X ), PlatformBaseUI.UnitToPx( Position.Y ), PlatformBaseUI.UnitToPx( Radius ), circlePaint );
-            }
-        }
-
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             // grab our resource file
@@ -235,29 +224,36 @@ namespace Droid
             ActivateElement( Elements[ ActiveElementIndex ] );
 
 
-            // setup our profile pic button
-            ProfileImageButton = view.FindViewById<ImageButton>( Resource.Id.springboard_profile_image );
+            // setup our profile pic button, which displays either their profile picture or an icon if they're not logged in / don't have a pic
+            ProfileImageButton = view.FindViewById<Button>( Resource.Id.springboard_profile_image );
             ProfileImageButton.Click += (object sender, EventArgs e) => 
                 {
                     ManageProfilePic( );
                 };
+            Typeface fontFace = DroidFontManager.Instance.GetFont( SpringboardConfig.Font );
+            ProfileImageButton.SetTypeface( fontFace, TypefaceStyle.Normal );
+            ProfileImageButton.SetTextSize( Android.Util.ComplexUnitType.Dip, SpringboardConfig.ProfileSymbolFontSize );
+            ProfileImageButton.SetTextColor( PlatformBaseUI.GetUIColor( SpringboardConfig.ProfileSymbolColor ) );
+            ProfileImageButton.LayoutParameters.Width = (int)PlatformBaseUI.UnitToPx( 140 );
+            ProfileImageButton.LayoutParameters.Height = (int)PlatformBaseUI.UnitToPx( 140 );
+            ProfileImageButton.SetBackgroundColor( Color.Transparent );
 
-            // setup the textView for rendering the no profile picture symbols
-            ProfileImageText = view.FindViewById<TextView>( Resource.Id.springboard_profile_image_text );
-            Typeface fontFace = DroidFontManager.Instance.GetFont( SpringboardConfig.ProfileSymbolFont );
-            ProfileImageText.SetTypeface( fontFace, TypefaceStyle.Normal );
-            ProfileImageText.SetTextSize( Android.Util.ComplexUnitType.Dip, SpringboardConfig.ProfileSymbolFontSize );
-            ProfileImageText.SetTextColor( PlatformBaseUI.GetUIColor( SpringboardConfig.ProfileSymbolColor ) );
 
             // create and add a simple circle to border the image
-            RelativeLayout layout = view.FindViewById<RelativeLayout>( Resource.Id.profileImageLayout );
+            RelativeLayout layout = view.FindViewById<RelativeLayout>( Resource.Id.springboard_profile_image_layout );
+            layout.SetBackgroundColor( Color.Transparent );
+
             CircleView circle = new CircleView( Activity.BaseContext );
-            circle.Position = new PointF( 75, 75 );
+
+            //note: these are converted from dp to pixels, so don't do it here.
+            circle.Position = new PointF( 75, 75 ); 
             circle.Radius = 70;
             circle.StrokeWidth = 7;
+
             circle.Color = PlatformBaseUI.GetUIColor( SpringboardConfig.ProfileOutlineCircleColor );
             circle.SetBackgroundColor( Color.Transparent );
-            circle.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+            circle.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+            ( (RelativeLayout.LayoutParams)circle.LayoutParameters ).AddRule( LayoutRules.CenterInParent );
             circle.LayoutParameters.Width = (int)PlatformBaseUI.UnitToPx( 150 );
             circle.LayoutParameters.Height = (int)PlatformBaseUI.UnitToPx( 150 );
             layout.AddView( circle );
@@ -286,6 +282,36 @@ namespace Droid
 
                     ft.Commit();
                 };
+
+
+            // setup the textView for rendering the user's name when they're logged in "Welcome: Jered"
+            ProfilePrefix = view.FindViewById<TextView>( Resource.Id.profile_prefix );
+            ProfilePrefix.SetTextSize( Android.Util.ComplexUnitType.Dip, 20 );
+
+            ProfileName = view.FindViewById<TextView>( Resource.Id.profile_name );
+            ProfileName.SetTextSize( Android.Util.ComplexUnitType.Dip, 20 );
+            ProfileName.SetTextColor( PlatformBaseUI.GetUIColor( 0xFFFFFFFF ) );
+
+            // setup the width of the springboard area and campus selector
+            LinearLayout profileContainer = view.FindViewById<LinearLayout>( Resource.Id.springboard_profile_image_container );
+            profileContainer.LayoutParameters.Width = (int) ( Resources.DisplayMetrics.WidthPixels * PrimaryNavBarConfig.RevealPercentage );
+
+            RelativeLayout campusContainer = view.FindViewById<RelativeLayout>( Resource.Id.campus_container );
+            campusContainer.LayoutParameters.Width = (int) ( Resources.DisplayMetrics.WidthPixels * PrimaryNavBarConfig.RevealPercentage );
+
+            // setup the final bottom element seperator
+            View seperator = view.FindViewById<View>( Resource.Id.end_seperator );
+            seperator.SetBackgroundColor( PlatformBaseUI.GetUIColor( SpringboardConfig.Element_SeperatorColor ) );
+
+
+            Button campusButton = campusContainer.FindViewById<Button>( Resource.Id.campus_selection );
+            campusButton.SetTextColor( PlatformBaseUI.GetUIColor( SpringboardConfig.Element_FontColor ) );
+
+            Button settingsButton = campusContainer.FindViewById<Button>( Resource.Id.settings_button );
+            settingsButton.SetTypeface( fontFace, TypefaceStyle.Normal );
+            settingsButton.SetTextColor( PlatformBaseUI.GetUIColor( SpringboardConfig.Element_FontColor ) );
+            settingsButton.SetTextSize( Android.Util.ComplexUnitType.Dip, SpringboardConfig.SettingsSymbolSize );
+            settingsButton.Text = SpringboardConfig.SettingsSymbol;
 
             return view;
         }
@@ -473,11 +499,13 @@ namespace Droid
             if( RockMobileUser.Instance.LoggedIn )
             {
                 // get their profile
-                LoginProfileButton.Text = SpringboardStrings.LoggedIn_Prefix + " " + RockMobileUser.Instance.PreferredName( );
+                ProfilePrefix.Text = SpringboardStrings.LoggedIn_Prefix;
+                ProfileName.Text = RockMobileUser.Instance.PreferredName( );
             }
             else
             {
-                LoginProfileButton.Text = SpringboardStrings.LoggedOut_Promo;
+                ProfilePrefix.Text = SpringboardStrings.LoggedOut_Promo;
+                ProfileName.Text = "";
             }
 
             SetProfileImage( );
@@ -485,7 +513,7 @@ namespace Droid
 
         public void SetProfileImage( )
         {
-            ProfileImageButton.SetImageBitmap( null );
+            ProfileImageButton.SetBackgroundDrawable( null );
 
             // the image depends on the user's status.
             if( RockMobileUser.Instance.LoggedIn )
@@ -517,19 +545,19 @@ namespace Droid
                     scaledImage = null;
 
                     // set the final result
-                    ProfileImageButton.SetImageBitmap( ProfileMaskedImage );
-                    ProfileImageText.Text = "";
+                    ProfileImageButton.Text = "";
+                    ProfileImageButton.SetBackgroundDrawable( new BitmapDrawable( ProfileMaskedImage ) );
                 }
                 else
                 {
                     // display the "No Photo" icon
-                    ProfileImageText.Text = SpringboardConfig.NoPhotoSymbol;
+                    ProfileImageButton.Text = SpringboardConfig.NoPhotoSymbol;
                 }
             }
             else
             {
                 // display the "Not Logged In" icon
-                ProfileImageText.Text = SpringboardConfig.NoProfileSymbol;
+                ProfileImageButton.Text = SpringboardConfig.NoProfileSymbol;
             }
         }
 

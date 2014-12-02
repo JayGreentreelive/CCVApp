@@ -121,6 +121,12 @@ namespace Droid
         /// <value><c>true</c> if this instance is fragment active; otherwise, <c>false</c>.</value>
         protected bool IsFragmentActive { get; set; }
 
+        /// <summary>
+        /// The frame that is used to darken the container when the springboard is revealed
+        /// </summary>
+        /// <value>The fade out frame.</value>
+        FrameLayout FadeOutFrame { get; set; }
+
         public override void OnCreate( Bundle savedInstanceState )
         {
             base.OnCreate( savedInstanceState );
@@ -132,6 +138,9 @@ namespace Droid
             {
                 NavToolbar = new NavToolbarFragment();
             }
+
+            FadeOutFrame = Activity.FindViewById<FrameLayout>(Resource.Id.fadeOutView) as FrameLayout;
+            FadeOutFrame.Alpha = 0.0f;
 
             // Execute a transaction, replacing any existing
             // fragment with this one inside the frame.
@@ -244,14 +253,31 @@ namespace Droid
                 int xOffset = wantReveal ? (int) (View.Width * PrimaryNavBarConfig.RevealPercentage) : 0;
 
                 // setup an animation from our current mask scale to the new one.
-                ValueAnimator animator = ValueAnimator.OfInt((int)View.GetX( ) , xOffset);
+                ValueAnimator xPosAnimator = ValueAnimator.OfInt((int)View.GetX( ) , xOffset);
 
-                animator.AddUpdateListener( this );
-                animator.AddListener( new NavbarAnimationListener( ) { NavbarFragment = this } );
-                animator.SetDuration( 500 );
-
-                animator.Start();
+                xPosAnimator.AddUpdateListener( this );
+                xPosAnimator.AddListener( new NavbarAnimationListener( ) { NavbarFragment = this } );
+                xPosAnimator.SetDuration( (int) (PrimaryContainerConfig.SlideRate * 1000.0f) );
+                xPosAnimator.Start();
             }
+        }
+
+        /// <summary>
+        /// Adjusts the container views based on how far along X they should move.
+        /// Also updates the fade out view so it darkens or lightens as needed.
+        /// </summary>
+        /// <param name="xPos">X position.</param>
+        void PanContainerViews( float xPos )
+        {
+            DropShadowView.SetX( xPos - DropShadowXOffset );
+            View.SetX( xPos );
+            ActiveTaskFrame.SetX( xPos );
+            NavToolbar.ButtonLayout.SetX( xPos );
+            FadeOutFrame.SetX( xPos );
+
+            // now determine the alpha
+            float maxSlide = ( View.Width * PrimaryNavBarConfig.RevealPercentage );
+            FadeOutFrame.Alpha = Math.Min( xPos / maxSlide, 1.0f - PrimaryContainerConfig.ShadowOpacity );
         }
 
         public void OnDown( MotionEvent e )
@@ -314,10 +340,7 @@ namespace Droid
                         float revealAmount = ( View.Width * PrimaryNavBarConfig.RevealPercentage );
                         xPos = Math.Max( 0, Math.Min( xPos, revealAmount ) );
 
-                        DropShadowView.SetX( xPos - DropShadowXOffset );
-                        View.SetX( xPos );
-                        ActiveTaskFrame.SetX( xPos );
-                        NavToolbar.ButtonLayout.SetX( xPos );
+                        PanContainerViews( xPos );
                     }
                 }
             }
@@ -382,13 +405,11 @@ namespace Droid
 
         public void OnAnimationUpdate(ValueAnimator animation)
         {
+
             // update the container position
             int xPos = ((Java.Lang.Integer)animation.GetAnimatedValue("")).IntValue();
 
-            View.SetX( xPos );
-            ActiveTaskFrame.SetX( xPos );
-            NavToolbar.ButtonLayout.SetX( xPos );
-            DropShadowView.SetX( xPos - DropShadowXOffset );
+            PanContainerViews( xPos );
         }
 
         public void OnAnimationEnd( Animator animation )

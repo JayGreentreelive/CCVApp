@@ -38,8 +38,15 @@ namespace CCVApp.Shared
             public const string Camera_Error_Title = "No Camera";
             public const string Camera_Error_Message = "This device does not have a camera.";
 
-            public const string LoggedIn_Prefix = "Welcome";
-            public const string LoggedOut_Promo = "Login to enable additional features.";
+            public const string LoggedIn_Prefix = "Welcome: ";
+            public const string LoggedOut_Promo = "You're Not Logged In";
+
+            public const string Element_News_Title = "News";
+            public const string Element_Connect_Title = "Connect";
+            public const string Element_Messages_Title = "Messages";
+            public const string Element_Prayer_Title = "Prayer";
+            public const string Element_Give_Title = "Give";
+            public const string Element_More_Title = "More";
         }
 
         public class ProfileStrings

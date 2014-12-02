@@ -5,6 +5,7 @@ using System.CodeDom.Compiler;
 using Rock.Mobile.Network;
 using CCVApp.Shared.Network;
 using System.IO;
+using CCVApp.Shared.Config;
 
 namespace iOS
 {
@@ -252,7 +253,7 @@ namespace iOS
                     // if they have a profile picture, grab it.
                     if( model.PhotoId != null )
                     {
-                        RockMobileUser.Instance.DownloadProfilePicture( 200, ProfileImageComplete );
+                        RockMobileUser.Instance.DownloadProfilePicture( GeneralConfig.ProfileImageSize, ProfileImageComplete );
                     }
 
                     // hide the activity indicator, because we are now logged in,
