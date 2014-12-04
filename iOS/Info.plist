@@ -30,11 +30,11 @@
 	<string>com.jered.ccvmobile2</string>
 	<key>CFBundleShortVersionString</key>
 	<string>2.0</string>
-	<key>CFBundleVersion</key>
-	<string>4</string>
 	<key>XSLaunchImageAssets</key>
 	<string>Resources/Images.xcassets/LaunchImage.launchimage</string>
 	<key>XSAppIconAssets</key>
 	<string>Resources/Images.xcassets/AppIcons.appiconset</string>
+	<key>CFBundleVersion</key>
+	<string>5</string>
 </dict>
 </plist>

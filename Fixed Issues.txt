@@ -7,9 +7,12 @@ Both
 	The selected springboard element now lights up white.
 	New app icon.
 	Lots of color tuning to match final design.
+	Updated Springboard layout to match final design and work across multiple
+		device sizes.
+	Added a dimming effect when revealing the springboard.
 
 Android
-	Fixed an issue causing the nav toolbar to be too large on some device
+	Fixed an issue causing the nav toolbar to be too large on some devices
 	Fixed some issues causing the Nav Toolbar to appear when it shouldn't.
 	Cleaned up Android support to officially correctly support Android 4.1 and newer.
 

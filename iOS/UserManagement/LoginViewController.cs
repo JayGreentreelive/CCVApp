@@ -6,6 +6,9 @@ using Rock.Mobile.Network;
 using CCVApp.Shared.Network;
 using System.IO;
 using CCVApp.Shared.Config;
+using Rock.Mobile.PlatformCommon;
+using Rock.Mobile.PlatformUI;
+using CCVApp.Shared.Strings;
 
 namespace iOS
 {
@@ -23,31 +26,42 @@ namespace iOS
         /// <value>The login successful timer.</value>
         System.Timers.Timer LoginSuccessfulTimer { get; set; }
 
+        BlockerView BlockerView { get; set; }
+
 		public LoginViewController (IntPtr handle) : base (handle)
 		{
             // setup our timer
             LoginSuccessfulTimer = new System.Timers.Timer();
             LoginSuccessfulTimer.AutoReset = false;
-            LoginSuccessfulTimer.Interval = 1000;
+            LoginSuccessfulTimer.Interval = 2000;
 		}
 
         protected enum LoginState
         {
             Out,
             Trying,
+
+            // Deprecated state
             In
         };
         LoginState State { get; set; }
+
+        UIImageView LogoView { get; set; }
 
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
 
-            LoginActivityIndicator.Hidden = true;
+            BlockerView = new BlockerView( View.Frame );
+            View.AddSubview( BlockerView );
+
+            View.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             // Allow the return on username and password to start
             // the login process
-            UsernameField.ShouldReturn += (textField) => 
+            ControlStyling.StyleTextField( UsernameText, LoginStrings.UsernamePlaceholder );
+            ControlStyling.StyleBGLayer( UsernameLayer );
+            UsernameText.ShouldReturn += (textField) => 
                 {
                     textField.ResignFirstResponder();
 
@@ -55,7 +69,9 @@ namespace iOS
                     return true;
                 };
 
-            PasswordField.ShouldReturn += (textField) => 
+            ControlStyling.StyleTextField( PasswordText, LoginStrings.PasswordPlaceholder );
+            ControlStyling.StyleBGLayer( PasswordLayer );
+            PasswordText.ShouldReturn += (textField) => 
                 {
                     textField.ResignFirstResponder();
 
@@ -64,6 +80,7 @@ namespace iOS
                 };
 
             // obviously attempt a login if login is pressed
+            ControlStyling.StyleButton( LoginButton, LoginStrings.LoginButton );
             LoginButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
                     if( RockMobileUser.Instance.LoggedIn == true )
@@ -78,11 +95,41 @@ namespace iOS
                     }
                 };
 
+            ControlStyling.StyleButton( RegisterButton, LoginStrings.RegisterButton );
+
             // If cancel is pressed, notify the springboard we're done.
+            CancelButton.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
             CancelButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
                     Springboard.ResignModelViewController( this, null );
                 };
+
+            // setup the result
+            ControlStyling.StyleUILabel( LoginResultLabel );
+            ControlStyling.StyleBGLayer( LoginResultLayer );
+            LoginResultLayer.Layer.Opacity = 0.00f;
+
+            // setup the fake header
+            HeaderView.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor );
+
+            string imagePath = NSBundle.MainBundle.BundlePath + "/" + PrimaryNavBarConfig.LogoFile;
+            LogoView = new UIImageView( new UIImage( imagePath ) );
+            HeaderView.AddSubview( LogoView );
+        }
+
+        public override void ViewDidLayoutSubviews()
+        {
+            base.ViewDidLayoutSubviews();
+
+            // setup the header shadow
+            UIBezierPath shadowPath = UIBezierPath.FromRect( HeaderView.Bounds );
+            HeaderView.Layer.MasksToBounds = false;
+            HeaderView.Layer.ShadowColor = PlatformBaseUI.GetUIColor( PrimaryContainerConfig.ShadowColor ).CGColor;
+            HeaderView.Layer.ShadowOffset = new System.Drawing.SizeF( 0.0f, .0f );
+            HeaderView.Layer.ShadowOpacity = .23f;
+            HeaderView.Layer.ShadowPath = shadowPath.CGPath;
+
+            LogoView.Layer.Position = new System.Drawing.PointF( HeaderView.Bounds.Width / 2, HeaderView.Bounds.Height / 2 );
         }
 
         public override void ViewDidAppear(bool animated)
@@ -92,14 +139,14 @@ namespace iOS
             // restore the buttons
             CancelButton.Hidden = false;
             LoginButton.Hidden = false;
-            CreateAccountButton.Hidden = false;
+            RegisterButton.Hidden = false;
 
             // if we're logged in, the UI should be slightly different
             if( RockMobileUser.Instance.LoggedIn )
             {
                 // populate them with the user's info
-                UsernameField.Text = RockMobileUser.Instance.Username;
-                PasswordField.Text = RockMobileUser.Instance.Password;
+                UsernameText.Text = RockMobileUser.Instance.Username;
+                PasswordText.Text = RockMobileUser.Instance.Password;
 
                 SetUIState( LoginState.In );
             }
@@ -115,8 +162,8 @@ namespace iOS
 
             // if they tap somewhere outside of the text fields, 
             // hide the keyboard
-            UsernameField.ResignFirstResponder( );
-            PasswordField.ResignFirstResponder( );
+            UsernameText.ResignFirstResponder( );
+            PasswordText.ResignFirstResponder( );
         }
 
         public override bool ShouldAutorotate()
@@ -142,12 +189,12 @@ namespace iOS
         public void TryLogin()
         {
             // if both fields are valid, attempt a login!
-            if( string.IsNullOrEmpty( UsernameField.Text ) == false &&
-                string.IsNullOrEmpty( PasswordField.Text ) == false )
+            if( string.IsNullOrEmpty( UsernameText.Text ) == false &&
+                string.IsNullOrEmpty( PasswordText.Text ) == false )
             {
                 SetUIState( LoginState.Trying );
 
-                RockMobileUser.Instance.Login( UsernameField.Text, PasswordField.Text, LoginComplete );
+                RockMobileUser.Instance.Login( UsernameText.Text, PasswordText.Text, LoginComplete );
             }
         }
 
@@ -160,45 +207,46 @@ namespace iOS
             {
                 case LoginState.Out:
                 {
-                    UsernameField.Text = "";
-                    PasswordField.Text = "";
+                    UsernameText.Text = "";
+                    PasswordText.Text = "";
 
-                    LoginActivityIndicator.Hidden = true;
-                    UsernameField.Enabled = true;
-                    PasswordField.Enabled = true;
+                    UsernameText.Enabled = true;
+                    PasswordText.Enabled = true;
                     LoginButton.Enabled = true;
                     CancelButton.Enabled = true;
-                    CreateAccountButton.Hidden = false;
-                    CreateAccountButton.Enabled = true;
+                    RegisterButton.Hidden = false;
+                    RegisterButton.Enabled = true;
 
-                    LoginButton.SetTitle( "Login", UIControlState.Normal );
+                    LoginButton.SetTitle( LoginStrings.LoginButton, UIControlState.Normal );
 
                     break;
                 }
 
                 case LoginState.Trying:
                 {
-                    LoginActivityIndicator.Hidden = false;
-                    UsernameField.Enabled = false;
-                    PasswordField.Enabled = false;
+                    FadeLoginResult( false );
+                    BlockerView.FadeIn( null );
+
+                    UsernameText.Enabled = false;
+                    PasswordText.Enabled = false;
                     LoginButton.Enabled = false;
                     CancelButton.Enabled = false;
-                    CreateAccountButton.Enabled = false;
+                    RegisterButton.Enabled = false;
 
-                    LoginButton.SetTitle( "Login", UIControlState.Normal );
+                    LoginButton.SetTitle( LoginStrings.LoginButton, UIControlState.Normal );
 
                     break;
                 }
 
+                // Deprecated state
                 case LoginState.In:
                 {
-                    LoginActivityIndicator.Hidden = true;
-                    UsernameField.Enabled = false;
-                    PasswordField.Enabled = false;
+                    UsernameText.Enabled = false;
+                    PasswordText.Enabled = false;
                     LoginButton.Enabled = true;
                     CancelButton.Enabled = true;
-                    CreateAccountButton.Hidden = true;
-                    CreateAccountButton.Enabled = false;
+                    RegisterButton.Hidden = true;
+                    RegisterButton.Enabled = false;
 
                     LoginButton.SetTitle( "Logout", UIControlState.Normal );
 
@@ -211,7 +259,7 @@ namespace iOS
 
         public void LoginComplete( System.Net.HttpStatusCode statusCode, string statusDescription )
         {
-            switch( statusCode )
+            switch ( statusCode )
             {
                 // if we received No Content, we're logged in
                 case System.Net.HttpStatusCode.NoContent:
@@ -222,23 +270,31 @@ namespace iOS
 
                 case System.Net.HttpStatusCode.Unauthorized:
                 {
-                    // wrong user name / password
+                    BlockerView.FadeOut( delegate
+                        {
+                            // wrong user name / password
+                            FadeLoginResult( true );
 
-                    // allow them to attempt logging in again
-                    SetUIState( LoginState.Out );
+                            // allow them to attempt logging in again
+                            SetUIState( LoginState.Out );
 
-                    LoginResultLabel.Text = "Invalid Username or Password";
+                            LoginResultLabel.Text = LoginStrings.Error_Credentials;
+                        } );
                     break;
                 }
 
                 default:
                 {
-                    // failed to login for some reason
+                    BlockerView.FadeOut( delegate
+                        {
+                            // failed to login for some reason
+                            FadeLoginResult( true );
 
-                    // allow them to attempt logging in again
-                    SetUIState( LoginState.Out );
+                            // allow them to attempt logging in again
+                            SetUIState( LoginState.Out );
 
-                    LoginResultLabel.Text = "Unable to Login. Try Again";
+                            LoginResultLabel.Text = LoginStrings.Error_Unknown;
+                        } );
                     break;
                 }
             }
@@ -246,49 +302,52 @@ namespace iOS
 
         public void ProfileComplete(System.Net.HttpStatusCode code, string desc, Rock.Client.Person model) 
         {
-            switch( code )
-            {
-                case System.Net.HttpStatusCode.OK:
+            BlockerView.FadeOut( delegate
                 {
-                    // if they have a profile picture, grab it.
-                    if( model.PhotoId != null )
+                    switch ( code )
                     {
-                        RockMobileUser.Instance.DownloadProfilePicture( GeneralConfig.ProfileImageSize, ProfileImageComplete );
-                    }
-
-                    // hide the activity indicator, because we are now logged in,
-                    // but leave the buttons all disabled.
-                    LoginActivityIndicator.Hidden = true;
-                    CancelButton.Hidden = true;
-                    LoginButton.Hidden = true;
-                    CreateAccountButton.Hidden = true;
-
-                    // update the UI
-                    LoginResultLabel.Text = string.Format( "Welcome back, {0}!", model.FirstName );
-
-                    // start the timer, which will notify the springboard we're logged in when it ticks.
-                    LoginSuccessfulTimer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e) => 
+                        case System.Net.HttpStatusCode.OK:
                         {
-                            // when the timer fires, notify the springboard we're done.
-                            Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate { Springboard.ResignModelViewController( this, null ); } );
-                        };
+                            // if they have a profile picture, grab it.
+                            if ( model.PhotoId != null )
+                            {
+                                RockMobileUser.Instance.DownloadProfilePicture( GeneralConfig.ProfileImageSize, ProfileImageComplete );
+                            }
 
-                    LoginSuccessfulTimer.Start();
+                            // update the UI
+                            FadeLoginResult( true );
+                            LoginResultLabel.Text = string.Format( LoginStrings.Success, model.FirstName );
 
-                    break;
-                }
+                            // start the timer, which will notify the springboard we're logged in when it ticks.
+                            LoginSuccessfulTimer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>
+                            {
+                                // when the timer fires, notify the springboard we're done.
+                                Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate
+                                    {
+                                        Springboard.ResignModelViewController( this, null );
+                                    } );
+                            };
 
-                default:
-                {
-                    // if we couldn't get their profile, that should still count as a failed login.
-                    SetUIState( LoginState.Out );
+                            LoginSuccessfulTimer.Start( );
 
-                    RockMobileUser.Instance.Logout( );
+                            break;
+                        }
 
-                    LoginResultLabel.Text = "Unable to Login. Try Again";
-                    break;
-                }
-            }
+                        default:
+                        {
+                            // failed to login for some reason
+                            FadeLoginResult( true );
+
+                            // if we couldn't get their profile, that should still count as a failed login.
+                            SetUIState( LoginState.Out );
+
+                            RockMobileUser.Instance.Logout( );
+
+                            LoginResultLabel.Text = LoginStrings.Error_Unknown;
+                            break;
+                        }
+                    }
+                } );
         }
 
         public void ProfileImageComplete( System.Net.HttpStatusCode code, string desc )
@@ -308,6 +367,22 @@ namespace iOS
                     break;
                 }
             }
+        }
+
+        void FadeLoginResult( bool fadeIn )
+        {
+            UIView.Animate( .33f, 0, UIViewAnimationOptions.CurveEaseInOut, 
+                new NSAction( 
+                    delegate 
+                    { 
+                        LoginResultLayer.Layer.Opacity = fadeIn == true ? 1.00f : 0.00f;
+                    })
+
+                , new NSAction(
+                    delegate
+                    {
+                    })
+            );
         }
 	}
 }

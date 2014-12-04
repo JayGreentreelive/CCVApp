@@ -73,6 +73,14 @@ namespace CCVApp
                                                               "news_learnmore_main.png",
                                                               
                                                               "news_learnmore_header.png" ) );
+
+                        PrayerCategories = new List<string>( );
+                        PrayerCategories.Add( "Legendary Gems" );
+                        PrayerCategories.Add( "Trophies" );
+                        PrayerCategories.Add( "Treasure Goblins" );
+                        PrayerCategories.Add( "Treasure Vault" );
+                        PrayerCategories.Add( "Ponies" );
+                        PrayerCategories.Add( "Whimseydale" );
                     }
 
                     [JsonConstructor]
@@ -81,6 +89,7 @@ namespace CCVApp
                         Campuses = new List<string>( );
                         Titles = new List<string>( );
                         News = new List<RockNews>( );
+                        PrayerCategories = new List<string>( );
                     }
 
                     /// <summary>
@@ -107,6 +116,12 @@ namespace CCVApp
                     /// </summary>
                     /// <value>The news.</value>
                     public List<RockNews> News { get; set; }
+
+                    /// <summary>
+                    /// Default list of prayer categories supported
+                    /// </summary>
+                    /// <value>The prayer categories.</value>
+                    public List<string> PrayerCategories { get; set; }
                 }
                 public GeneralData Data { get; set; }
 

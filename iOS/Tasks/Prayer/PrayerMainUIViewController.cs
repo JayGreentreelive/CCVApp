@@ -214,7 +214,6 @@ namespace iOS
         bool RequestingPrayers { get; set; }
         bool ViewActive { get; set; }
 
-        //UIButton AddPrayer { get; set; }
         BlockerView BlockerView { get; set; }
 
 		public PrayerMainUIViewController (IntPtr handle) : base (handle)
@@ -226,31 +225,8 @@ namespace iOS
             base.ViewDidLoad();
 
             BlockerView = new BlockerView( View.Frame );
-            BlockerView.BackgroundColor = UIColor.Black;
 
-            // Setup the "AddPrayer" button for creating a new prayer request
-            /*AddPrayer = UIButton.FromType( UIButtonType.Custom );
-            AddPrayer.Layer.AnchorPoint = new PointF( 0, 0 );
-            AddPrayer.SetTitle( PrayerConfig.AddPrayer_ButtonText, UIControlState.Normal );
-            AddPrayer.SetTitleColor( PlatformBaseUI.GetUIColor( PrayerConfig.AddPrayer_ButtonColor_Normal ), UIControlState.Normal );
-            AddPrayer.SetTitleColor( PlatformBaseUI.GetUIColor( PrayerConfig.AddPrayer_ButtonColor_Highlighted ), UIControlState.Highlighted );
-            AddPrayer.Font = iOSCommon.LoadFontDynamic( PrayerConfig.AddPrayer_ButtonFont, PrayerConfig.AddPrayer_ButtonSize );
-            AddPrayer.Layer.BorderColor = PlatformBaseUI.GetUIColor( PrayerConfig.AddPrayer_BorderColor ).CGColor;
-            AddPrayer.BackgroundColor = PlatformBaseUI.GetUIColor( PrayerConfig.AddPrayer_BackgroundColor );
-            AddPrayer.Layer.CornerRadius = PrayerConfig.AddPrayer_ButtonCornerRadius;
-            AddPrayer.Layer.BorderWidth = PrayerConfig.AddPrayer_ButtonBorderWidth;
-            AddPrayer.SizeToFit( );
-            AddPrayer.Bounds = new RectangleF( 0, 0, AddPrayer.Bounds.Width * 2, AddPrayer.Bounds.Height );
-            AddPrayer.Layer.Position = new PointF( ( View.Frame.Width - AddPrayer.Frame.Width ) / 2, View.Frame.Height - AddPrayer.Frame.Height + 4 );
-            AddPrayer.TouchUpInside += (object sender, EventArgs e ) =>
-                {
-                    Prayer_CreateUIViewController viewController = Storyboard.InstantiateViewController( "Prayer_CreateUIViewController" ) as Prayer_CreateUIViewController;
-                    Task.PerformSegue( this, viewController );
-                };
-            View.AddSubview( AddPrayer );*/
-
-
-            View.BackgroundColor = PlatformBaseUI.GetUIColor( PrayerConfig.BackgroundColor );
+            View.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             float viewRealHeight = ( View.Bounds.Height - Task.NavToolbar.Frame.Height);
 
@@ -275,25 +251,18 @@ namespace iOS
 
             // Setup the request prayers layer
             //setup our appearance
-            RetrievingPrayersView.BackgroundColor = PlatformBaseUI.GetUIColor( PrayerConfig.ViewPrayer_RetrieveLayer_BGColor );
+            RetrievingPrayersView.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             StatusLabel.Text = PrayerStrings.ViewPrayer_StatusText_Retrieving;
-            StatusLabel.TextColor = PlatformBaseUI.GetUIColor( PrayerConfig.ViewPrayer_StatusTextColor );
-            StatusLabel.BackgroundColor = PlatformBaseUI.GetUIColor( PrayerConfig.ViewPrayer_StatusBGColor );
+            ControlStyling.StyleUILabel( StatusLabel );
+            ControlStyling.StyleBGLayer( StatusBackground );
 
-            ResultLabel.TextColor = PlatformBaseUI.GetUIColor( PrayerConfig.ViewPrayer_ResultTextColor );
-            ResultLabel.BackgroundColor = PlatformBaseUI.GetUIColor( PrayerConfig.ViewPrayer_ResultBGColor );
-
-            StatusBackground.Layer.BackgroundColor = PlatformBaseUI.GetUIColor( PrayerConfig.ViewPrayer_StatusBackingLayer_BGColor ).CGColor;
-            StatusBackground.Layer.BorderColor = PlatformBaseUI.GetUIColor( PrayerConfig.ViewPrayer_StatusBackingLayer_BorderColor ).CGColor;
-            StatusBackground.Layer.BorderWidth = PrayerConfig.ViewPrayer_StatusBackingLayer_BorderWidth;
-
-            ResultBackground.Layer.BackgroundColor = PlatformBaseUI.GetUIColor( PrayerConfig.ViewPrayer_ResultBackingLayer_BGColor ).CGColor;
-            ResultBackground.Layer.BorderColor = PlatformBaseUI.GetUIColor( PrayerConfig.ViewPrayer_ResultBackingLayer_BorderColor ).CGColor;
-            ResultBackground.Layer.BorderWidth = PrayerConfig.ViewPrayer_ResultBackingLayer_BorderWidth;
+            ControlStyling.StyleUILabel( ResultLabel );
+            ControlStyling.StyleBGLayer( ResultBackground );
 
             View.AddSubview( BlockerView );
 
+            ControlStyling.StyleButton( RetryButton, GeneralStrings.Retry );
             RetryButton.TouchUpInside += (object sender, EventArgs e ) =>
             {
                 RetrievePrayerRequests( );
@@ -307,6 +276,7 @@ namespace iOS
             ViewActive = true;
 
             Carousel.ViewWillAppear( animated );
+            Carousel.Hidden = false;
 
             Task.NavToolbar.SetCreateButtonEnabled( false );
 
@@ -321,6 +291,13 @@ namespace iOS
             }
         }
 
+        public override void ViewWillDisappear(bool animated)
+        {
+            base.ViewWillDisappear(animated);
+
+            Carousel.Hidden = true;
+        }
+
         void RetrievePrayerRequests( )
         {
             // show the retrieve layer
@@ -332,6 +309,13 @@ namespace iOS
             BlockerView.FadeIn( delegate
                 {
                     RequestingPrayers = true;
+
+                    Task.NavToolbar.SetCreateButtonEnabled( true, delegate
+                        {
+                            Prayer_CreateUIViewController viewController = Storyboard.InstantiateViewController( "Prayer_CreateUIViewController" ) as Prayer_CreateUIViewController;
+                            Task.PerformSegue( this, viewController );
+                        }
+                    );
 
                     // request the prayers each time this appears
                     CCVApp.Shared.Network.RockApi.Instance.GetPrayers( delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.PrayerRequest> prayerRequests )
@@ -351,13 +335,6 @@ namespace iOS
                                         {
                                             if ( prayerRequests.Count > 0 )
                                             {
-                                                Task.NavToolbar.SetCreateButtonEnabled( true, delegate
-                                                    {
-                                                        Prayer_CreateUIViewController viewController = Storyboard.InstantiateViewController( "Prayer_CreateUIViewController" ) as Prayer_CreateUIViewController;
-                                                        Task.PerformSegue( this, viewController );
-                                                    }
-                                                );
-
                                                 RetrievingPrayersView.Layer.Opacity = 0.00f;
 
                                                 PrayerRequests = prayerRequests;

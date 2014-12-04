@@ -557,6 +557,8 @@ namespace CCVApp
 
             public class PrayerConfig
             {
+
+
                 /// <summary>
                 /// The length of the animation when a prayer card is animating.
                 /// </summary>
@@ -588,60 +590,6 @@ namespace CCVApp
                 public const uint Card_ButtonColor_Normal = 0x989898FF;
                 public const uint Card_ButtonColor_Highlighted = 0x545454FF;
 
-                public const string AddPrayer_ButtonFont = "FontAwesome";
-                public const string AddPrayer_ButtonText = "";
-                public const uint AddPrayer_ButtonSize = 16;
-                public const uint AddPrayer_ButtonColor_Normal = 0xFFFFFFFF;
-                public const uint AddPrayer_ButtonColor_Highlighted = 0x545454FF;
-                public const uint AddPrayer_BackgroundColor = 0x3E3E3EFF;
-                public const uint AddPrayer_BorderColor = 0x9D9D9DFF;
-                public const uint AddPrayer_ButtonCornerRadius = 3;
-                public const float AddPrayer_ButtonBorderWidth = .5f;
-
-                public const uint BackgroundColor = 0x2D2D2DFF;
-
-                public const uint ViewPrayer_RetrieveLayer_BGColor = 0x2D2D2DFF;
-
-                public const uint ViewPrayer_StatusTextColor = 0xA7A7A7FF;
-                public const uint ViewPrayer_StatusBGColor = 0;
-
-                public const uint ViewPrayer_ResultTextColor = 0xA7A7A7FF;
-                public const uint ViewPrayer_ResultBGColor = 0;
-
-                public const uint ViewPrayer_StatusBackingLayer_BGColor = 0x3E3E3EFF;
-                public const uint ViewPrayer_StatusBackingLayer_BorderColor = 0x767676FF;
-                public const float ViewPrayer_StatusBackingLayer_BorderWidth = .5f;
-
-                public const uint ViewPrayer_ResultBackingLayer_BGColor = 0x3E3E3EFF;
-                public const uint ViewPrayer_ResultBackingLayer_BorderColor = 0x767676FF;
-                public const float ViewPrayer_ResultBackingLayer_BorderWidth = .5f;
-
-
-                public const uint CreatePrayer_BGColor = 0x2D2D2DFF;
-                public const uint CreatePrayer_FirstNameTextColor = 0xFFFFFFFF;
-                public const uint CreatePrayer_FirstNamePlaceholderTextColor = 0xA7A7A7FF;
-                public const uint CreatePrayer_FirstNameBackgroundColor = 0;
-
-                public const uint CreatePrayer_FirstNameBackingLayer_BGColor = 0x3E3E3EFF;
-                public const uint CreatePrayer_FirstNameBackingLayer_BorderColor = 0x767676FF;
-                public const float CreatePrayer_FirstNameBackingLayer_BorderWidth = .5f;
-
-                public const uint CreatePrayer_LastNameTextColor = 0xFFFFFFFF;
-                public const uint CreatePrayer_LastNamePlaceholderTextColor = 0xA7A7A7FF;
-                public const uint CreatePrayer_LastNameBackgroundColor = 0;
-
-                public const uint CreatePrayer_LastNameBackingLayer_BGColor = 0x3E3E3EFF;
-                public const uint CreatePrayer_LastNameBackingLayer_BorderColor = 0x767676FF;
-                public const float CreatePrayer_LastNameBackingLayer_BorderWidth = .5f;
-
-                public const uint CreatePrayer_SwitchBGColor = 0x3E3E3EFF;
-                public const uint CreatePrayer_SwitchBorderColor = 0x767676FF;
-                public const float CreatePrayer_SwitchBorderWidth = .5f;
-
-                public const uint CreatePrayer_RequestBorderColor = 0xABABABFF;
-                public const float CreatePrayer_RequestBorderWidth = .5f;
-                public const uint CreatePrayer_RequestCornerRadius = 3;
-
 
 
 
@@ -666,6 +614,64 @@ namespace CCVApp
                 public const uint PostPrayer_ResultBackingLayer_BGColor = 0x3E3E3EFF;
                 public const uint PostPrayer_ResultBackingLayer_BorderColor = 0x767676FF;
                 public const float PostPrayer_ResultBackingLayer_BorderWidth = .5f;
+            }
+
+            public class ControlStylingConfig
+            {
+                /// <summary>
+                /// The background color for the pages
+                /// </summary>
+                public const uint BackgroundColor = 0x2D2D2DFF;
+
+                /// <summary>
+                /// The color of text for buttons
+                /// </summary>
+                public const uint Button_TextColor = 0xFFFFFFFF;
+
+                /// <summary>
+                /// The background color for buttons
+                /// </summary>
+                public const uint Button_BGColor = 0x7E7E7EFF;
+
+                /// <summary>
+                /// The corner roundedness for buttons (0 is no curvature)
+                /// </summary>
+                public const uint Button_CornerRadius = 3;
+
+                /// <summary>
+                /// The background color for the layer that backs elements (like the strip behind First Name)
+                /// </summary>
+                public const uint BG_Layer_Color = 0x3E3E3EFF;
+
+                /// <summary>
+                /// The border color for the layer that backs elements (like the strip behind First Name)
+                /// </summary>
+                public const uint BG_Layer_BorderColor = 0x767676FF;
+
+                /// <summary>
+                /// The border thickness for the layer that backs elements (like the strip behind First Name)
+                /// </summary>
+                public const float BG_Layer_BorderWidth = .5f;
+
+                /// <summary>
+                /// The color for text that is not placeholder (what the user types in, control labels, etc.)
+                /// </summary>
+                public const uint TextField_ActiveTextColor = 0xFFFFFFFF;
+
+                /// <summary>
+                /// The color for placeholder text in fields the user can type into.
+                /// </summary>
+                public const uint TextField_PlaceholderTextColor = 0xA7A7A7FF;
+
+                /// <summary>
+                /// The color of text in standard labels
+                /// </summary>
+                public const uint Label_TextColor = 0xFFFFFFFF;
+
+                /// <summary>
+                /// The color of a UI Switch when turned 'on'
+                /// </summary>
+                public const uint Switch_OnColor = 0x7E7E7EFF;
             }
 
             public class AboutConfig

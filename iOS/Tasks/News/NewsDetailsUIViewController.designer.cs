@@ -24,7 +24,7 @@ namespace iOS
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UILabel NewsDescriptionLabel { get; set; }
+		UITextView NewsDescription { get; set; }
 
 		void ReleaseDesignerOutlets ()
 		{
@@ -36,9 +36,9 @@ namespace iOS
 				LearnMoreButton.Dispose ();
 				LearnMoreButton = null;
 			}
-			if (NewsDescriptionLabel != null) {
-				NewsDescriptionLabel.Dispose ();
-				NewsDescriptionLabel = null;
+			if (NewsDescription != null) {
+				NewsDescription.Dispose ();
+				NewsDescription = null;
 			}
 		}
 	}

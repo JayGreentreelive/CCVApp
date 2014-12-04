@@ -20,11 +20,11 @@ namespace iOS
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UIButton CreateAccountButton { get; set; }
+		UIButton FacebookLogin { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UIActivityIndicatorView LoginActivityIndicator { get; set; }
+		UIView HeaderView { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
@@ -36,11 +36,27 @@ namespace iOS
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UITextField PasswordField { get; set; }
+		UIView LoginResultLayer { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UITextField UsernameField { get; set; }
+		UIView PasswordLayer { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UITextField PasswordText { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UIButton RegisterButton { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UIView UsernameLayer { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UITextField UsernameText { get; set; }
 
 		void ReleaseDesignerOutlets ()
 		{
@@ -48,13 +64,13 @@ namespace iOS
 				CancelButton.Dispose ();
 				CancelButton = null;
 			}
-			if (CreateAccountButton != null) {
-				CreateAccountButton.Dispose ();
-				CreateAccountButton = null;
+			if (FacebookLogin != null) {
+				FacebookLogin.Dispose ();
+				FacebookLogin = null;
 			}
-			if (LoginActivityIndicator != null) {
-				LoginActivityIndicator.Dispose ();
-				LoginActivityIndicator = null;
+			if (HeaderView != null) {
+				HeaderView.Dispose ();
+				HeaderView = null;
 			}
 			if (LoginButton != null) {
 				LoginButton.Dispose ();
@@ -64,13 +80,29 @@ namespace iOS
 				LoginResultLabel.Dispose ();
 				LoginResultLabel = null;
 			}
-			if (PasswordField != null) {
-				PasswordField.Dispose ();
-				PasswordField = null;
+			if (LoginResultLayer != null) {
+				LoginResultLayer.Dispose ();
+				LoginResultLayer = null;
 			}
-			if (UsernameField != null) {
-				UsernameField.Dispose ();
-				UsernameField = null;
+			if (PasswordLayer != null) {
+				PasswordLayer.Dispose ();
+				PasswordLayer = null;
+			}
+			if (PasswordText != null) {
+				PasswordText.Dispose ();
+				PasswordText = null;
+			}
+			if (RegisterButton != null) {
+				RegisterButton.Dispose ();
+				RegisterButton = null;
+			}
+			if (UsernameLayer != null) {
+				UsernameLayer.Dispose ();
+				UsernameLayer = null;
+			}
+			if (UsernameText != null) {
+				UsernameText.Dispose ();
+				UsernameText = null;
 			}
 		}
 	}

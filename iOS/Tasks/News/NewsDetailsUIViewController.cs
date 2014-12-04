@@ -4,6 +4,8 @@ using MonoTouch.UIKit;
 using System.CodeDom.Compiler;
 using CCVApp.Shared.Network;
 using System.Drawing;
+using CCVApp.Shared.Config;
+using Rock.Mobile.PlatformUI;
 
 namespace iOS
 {
@@ -19,28 +21,40 @@ namespace iOS
         {
             base.ViewDidLoad();
 
+            View.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor );
+
             // populate the details view with this news item.
-            //NewsTitleLabel.Text = NewsItem.Title;
-            NewsDescriptionLabel.Text = NewsItem.Description;
+            NewsDescription.Text = NewsItem.Description;
+            NewsDescription.BackgroundColor = UIColor.Clear;
+            NewsDescription.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
 
             if( string.IsNullOrEmpty( NewsItem.HeaderImageName ) == false )
             {
                 ImageBanner.Image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + NewsItem.HeaderImageName );
+                ImageBanner.ContentMode = UIViewContentMode.Center;
             }
             else
             {
                 ImageBanner.Image = null;
             }
+            ImageBanner.BackgroundColor = UIColor.Green;
 
             LearnMoreButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
                     UIApplication.SharedApplication.OpenUrl( new NSUrl( NewsItem.ReferenceURL ) );
                 };
+
+            ControlStyling.StyleButton( LearnMoreButton, "Learn More" );
         }
 
         public override void TouchesEnded(NSSet touches, UIEvent evt)
         {
             base.TouchesEnded(touches, evt);
+        }
+
+        public override void ViewDidLayoutSubviews()
+        {
+            base.ViewDidLayoutSubviews();
         }
 	}
 }

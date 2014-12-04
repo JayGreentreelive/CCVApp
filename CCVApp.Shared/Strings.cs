@@ -12,7 +12,7 @@ namespace CCVApp.Shared
             {
                 get
                 {
-                    return "Alpha (Build 4)";
+                    return "Alpha (Build 5)";
                 }
             }
         }
@@ -23,6 +23,8 @@ namespace CCVApp.Shared
             public const string No = "No";
             public const string Ok = "Ok";
             public const string Cancel = "Cancel";
+            public const string Retry = "Retry";
+            public const string Done = "Done";
         }
 
         public class SpringboardStrings
@@ -49,10 +51,42 @@ namespace CCVApp.Shared
             public const string Element_More_Title = "More";
         }
 
+        public class LoginStrings
+        {
+            public const string UsernamePlaceholder = "Username";
+            public const string PasswordPlaceholder = "Password";
+
+            public const string LoginButton = "Login";
+            public const string RegisterButton = "Register";
+
+            public const string LoginWithFacebook = "LoginWithFacebook";
+
+            public const string Error_Credentials = "Invalid Username or Password";
+            public const string Error_Unknown = "Unable to Login. Try Again";
+            public const string Success = "Welcome back, {0}.";
+        }
+
         public class ProfileStrings
         {
             public const string SubmitChangesTitle = "Submit Changes?";
             public const string LogoutTitle = "Log Out?";
+
+            public const string NickNamePlaceholder = "First Name";
+            public const string LastNamePlaceholder = "Last Name";
+
+            public const string CellPhonePlaceholder = "Cell Phone";
+            public const string EmailPlaceholder = "Email";
+
+            public const string StreetPlaceholder = "Street";
+            public const string CityPlaceholder = "City";
+            public const string StatePlaceholder = "State";
+            public const string ZipPlaceholder = "Zip";
+
+            public const string GenderPlaceholder = "Gender";
+            public const string BirthdatePlaceholder = "Birthdate";
+
+            public const string DoneButtonTitle = "Done";
+            public const string LogoutButtonTitle = "Logout";
         }
 
         public class MessagesStrings
@@ -102,6 +136,12 @@ namespace CCVApp.Shared
 
             public const string CreatePrayer_FirstNamePlaceholderText = "First Name";
             public const string CreatePrayer_LastNamePlaceholderText = "Last Name";
+            public const string CreatePrayer_SubmitButtonText = "Submit";
+            public const string CreatePrayer_CategoryButtonText = "Category";
+            public const string CreatePrayer_AnonymousSwitchLabel = "";
+            public const string CreatePrayer_SelectCategoryLabel = "Select a Category";
+            public const string CreatePrayer_PostAnonymously = "Post Anonymously";
+            public const string CreatePrayer_MakePublic = "Make Public";
 
             public const string PostPrayer_Status_Submitting = "Submitting";
             public const string PostPrayer_Status_SuccessText = "Submitted";

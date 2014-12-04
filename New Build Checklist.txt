@@ -11,9 +11,12 @@ iOS
 		Validate Archive
 		Submit Archive
 	iTunes Connect
+		Add What To Test text asap, because it will auto push an update when
+			the build is done being processed.
 		Send invites
 
 Android
-	Choose Release
+	Choose Release | iPhoneSimulator
 	Build
-	Upload /CCVApp/Droid/Bin/ SIGNED apk
+	Run Without Debugging (this will generate the package)
+	Upload /CCVApp/Droid/Bin/Release/ SIGNED apk

@@ -16,11 +16,11 @@ namespace iOS
 	{
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UIActivityIndicatorView ActivityIndicator { get; set; }
+		UIButton CategoryButton { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UIView BackingControlView { get; set; }
+		UIView CategoryLayer { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
@@ -40,7 +40,23 @@ namespace iOS
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UITextView RequestText { get; set; }
+		UILabel MakePublicLabel { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UILabel PostAnonymouslyLabel { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UITextView PrayerRequest { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UIView PrayerRequestLayer { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UILabel PrayerRequestPlaceholder { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
@@ -64,13 +80,13 @@ namespace iOS
 
 		void ReleaseDesignerOutlets ()
 		{
-			if (ActivityIndicator != null) {
-				ActivityIndicator.Dispose ();
-				ActivityIndicator = null;
+			if (CategoryButton != null) {
+				CategoryButton.Dispose ();
+				CategoryButton = null;
 			}
-			if (BackingControlView != null) {
-				BackingControlView.Dispose ();
-				BackingControlView = null;
+			if (CategoryLayer != null) {
+				CategoryLayer.Dispose ();
+				CategoryLayer = null;
 			}
 			if (FirstNameBackground != null) {
 				FirstNameBackground.Dispose ();
@@ -88,9 +104,25 @@ namespace iOS
 				LastNameText.Dispose ();
 				LastNameText = null;
 			}
-			if (RequestText != null) {
-				RequestText.Dispose ();
-				RequestText = null;
+			if (MakePublicLabel != null) {
+				MakePublicLabel.Dispose ();
+				MakePublicLabel = null;
+			}
+			if (PostAnonymouslyLabel != null) {
+				PostAnonymouslyLabel.Dispose ();
+				PostAnonymouslyLabel = null;
+			}
+			if (PrayerRequest != null) {
+				PrayerRequest.Dispose ();
+				PrayerRequest = null;
+			}
+			if (PrayerRequestLayer != null) {
+				PrayerRequestLayer.Dispose ();
+				PrayerRequestLayer = null;
+			}
+			if (PrayerRequestPlaceholder != null) {
+				PrayerRequestPlaceholder.Dispose ();
+				PrayerRequestPlaceholder = null;
 			}
 			if (ScrollView != null) {
 				ScrollView.Dispose ();

@@ -28,33 +28,24 @@ namespace iOS
             base.ViewDidLoad();
 
             BlockerView = new BlockerView( View.Frame );
-            BlockerView.BackgroundColor = UIColor.Black;
             View.AddSubview( BlockerView );
 
             StatusLabel.Text = PrayerStrings.PostPrayer_Status_Submitting;
 
             //setup our appearance
-            View.BackgroundColor = PlatformBaseUI.GetUIColor( PrayerConfig.PostPrayer_BGColor );
+            View.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor );
 
-            StatusLabel.TextColor = PlatformBaseUI.GetUIColor( PrayerConfig.PostPrayer_StatusTextColor );
-            StatusLabel.BackgroundColor = PlatformBaseUI.GetUIColor( PrayerConfig.PostPrayer_StatusBGColor );
+            ControlStyling.StyleUILabel( StatusLabel );
+            ControlStyling.StyleBGLayer( StatusBackground );
 
-            ResultLabel.TextColor = PlatformBaseUI.GetUIColor( PrayerConfig.PostPrayer_ResultTextColor );
-            ResultLabel.BackgroundColor = PlatformBaseUI.GetUIColor( PrayerConfig.PostPrayer_ResultBGColor );
+            ControlStyling.StyleUILabel( ResultLabel );
+            ControlStyling.StyleBGLayer( ResultBackground );
 
             ResultSymbolLabel.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( PrayerConfig.PostPrayer_ResultSymbolFont, PrayerConfig.PostPrayer_ResultSymbolSize );
-            ResultSymbolLabel.TextColor = PlatformBaseUI.GetUIColor( PrayerConfig.PostPrayer_ResultSymbolColor );
-            ResultSymbolLabel.BackgroundColor = PlatformBaseUI.GetUIColor( PrayerConfig.PostPrayer_ResultSymbolBGColor );
+            ResultSymbolLabel.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
+            ResultSymbolLabel.BackgroundColor = UIColor.Clear;
 
-
-            StatusBackground.Layer.BackgroundColor = PlatformBaseUI.GetUIColor( PrayerConfig.PostPrayer_StatusBackingLayer_BGColor ).CGColor;
-            StatusBackground.Layer.BorderColor = PlatformBaseUI.GetUIColor( PrayerConfig.PostPrayer_StatusBackingLayer_BorderColor ).CGColor;
-            StatusBackground.Layer.BorderWidth = PrayerConfig.PostPrayer_StatusBackingLayer_BorderWidth;
-
-
-            ResultBackground.Layer.BackgroundColor = PlatformBaseUI.GetUIColor( PrayerConfig.PostPrayer_ResultBackingLayer_BGColor ).CGColor;
-            ResultBackground.Layer.BorderColor = PlatformBaseUI.GetUIColor( PrayerConfig.PostPrayer_ResultBackingLayer_BorderColor ).CGColor;
-            ResultBackground.Layer.BorderWidth = PrayerConfig.PostPrayer_ResultBackingLayer_BorderWidth;
+            ControlStyling.StyleButton( DoneButton, GeneralStrings.Done );
         }
 
         public override void ViewWillAppear(bool animated)
