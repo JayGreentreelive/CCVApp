@@ -37,38 +37,44 @@ namespace iOS
             ActiveViewController = viewController;
 
             // if the notes are active, make sure the share button gets turned on
-            if ( (viewController as NotesViewController) != null )
+            if ( ( viewController as NotesViewController ) != null )
             {
                 NavToolbar.SetBackButtonEnabled( true );
                 NavToolbar.SetCreateButtonEnabled( false, null );
                 NavToolbar.SetShareButtonEnabled( true, delegate
                     { 
-                        (viewController as NotesViewController).ShareNotes( );
+                        ( viewController as NotesViewController ).ShareNotes( );
                     } );
 
 
                 // go ahead and show the bar, because we're at the top of the page.
                 NavToolbar.Reveal( true );
             }
-            else if ( (viewController as NotesWatchUIViewController) != null )
+            else if ( ( viewController as NotesWatchUIViewController ) != null )
             {
                 NavToolbar.SetBackButtonEnabled( true );
                 NavToolbar.SetCreateButtonEnabled( false, null );
                 NavToolbar.SetShareButtonEnabled( true, delegate
                     { 
-                        (viewController as NotesWatchUIViewController).ShareVideo( );
+                        ( viewController as NotesWatchUIViewController ).ShareVideo( );
                     } );
 
 
                 // go ahead and show the bar, because we're at the top of the page.
                 NavToolbar.RevealForTime( 3.0f );
             }
-            else
+            else if ( ( viewController as NotesDetailsUIViewController ) != null )
             {
                 NavToolbar.SetCreateButtonEnabled( false, null );
                 NavToolbar.SetShareButtonEnabled( false, null );
                 NavToolbar.SetBackButtonEnabled( true );
                 NavToolbar.RevealForTime( 3.0f );
+            }
+            else
+            {
+                NavToolbar.SetCreateButtonEnabled( false, null );
+                NavToolbar.SetShareButtonEnabled( false, null );
+                NavToolbar.SetBackButtonEnabled( false );
             }
         }
 

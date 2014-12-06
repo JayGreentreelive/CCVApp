@@ -45,7 +45,7 @@ namespace Droid
 
                 public override int Count 
                 {
-                    get { return SeriesEntries.Count; }
+                    get { return SeriesEntries.Count + 1; }
                 }
 
                 public override Java.Lang.Object GetItem (int position) 
@@ -62,34 +62,182 @@ namespace Droid
 
                 public override View GetView(int position, View convertView, ViewGroup parent)
                 {
+                    if ( position == 0 )
+                    {
+                        return GetPrimaryView( convertView, parent );
+                    }
+                    else
+                    {
+                        return GetStandardView( position - 1, convertView, parent );
+                    }
+                }
+
+                View GetPrimaryView( View convertView, ViewGroup parent )
+                {
+                    SeriesPrimaryListItem primaryItem = (SeriesPrimaryListItem)convertView ?? new SeriesPrimaryListItem( ParentFragment.Activity.BaseContext );
+
+                    primaryItem.Thumbnail.SetImageBitmap( SeriesEntries[ 0 ].Thumbnail );
+                    primaryItem.Thumbnail.SetScaleType( ImageView.ScaleType.CenterCrop );
+
+                    primaryItem.Title.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Name;
+                    primaryItem.Speaker.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Speaker;
+                    primaryItem.Date.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Date;
+
+                    return primaryItem;
+                }
+
+                View GetStandardView( int position, View convertView, ViewGroup parent )
+                {
                     SeriesListItem seriesItem = (SeriesListItem)convertView ?? new SeriesListItem( ParentFragment.Activity.BaseContext );
                     seriesItem.Thumbnail.SetImageBitmap( SeriesEntries[ position ].Thumbnail );
                     seriesItem.Thumbnail.SetScaleType( ImageView.ScaleType.CenterCrop );
 
-                    seriesItem.Label.Text = SeriesEntries[ position ].Series.Name;
+                    seriesItem.Title.Text = SeriesEntries[ position ].Series.Name;
+                    seriesItem.DateRange.Text = SeriesEntries[ position ].Series.DateRanges;
 
                     return seriesItem;
+                }
+            }
+
+            public class SeriesPrimaryListItem : LinearLayout
+            {
+                public TextView Header { get; set; }
+                public DroidScaledImageView Thumbnail { get; set; }
+
+                public LinearLayout DetailsLayout { get; set; }
+                public TextView Title { get; set; }
+                public TextView Date { get; set; }
+                public TextView Speaker { get; set; }
+
+                public TextView Footer { get; set; }
+
+                public SeriesPrimaryListItem( Context context ) : base( context )
+                {
+                    SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
+
+                    Orientation = Orientation.Vertical;
+
+                    Header = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    Header.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                    Header.Text = MessagesStrings.Series_TopBanner;
+                    Header.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Series_Table_Medium_FontSize );
+                    Header.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    ( (LinearLayout.LayoutParams)Header.LayoutParameters ).Gravity = GravityFlags.Center;
+                    AddView( Header );
+
+                    Thumbnail = new DroidScaledImageView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    Thumbnail.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
+                    Thumbnail.SetScaleType( ImageView.ScaleType.CenterCrop );
+                    Thumbnail.Id = 999;
+                    AddView( Thumbnail );
+
+                    Title = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    Title.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                    Title.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Series_Table_Medium_FontSize );
+                    Title.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    ( (LinearLayout.LayoutParams)Title.LayoutParameters ).TopMargin = 25;
+                    ( (LinearLayout.LayoutParams)Title.LayoutParameters ).LeftMargin = 25;
+                    AddView( Title );
+
+
+                    DetailsLayout = new LinearLayout( Rock.Mobile.PlatformCommon.Droid.Context );
+                    DetailsLayout.Orientation = Orientation.Horizontal;
+                    DetailsLayout.LayoutParameters = new LinearLayout.LayoutParams( LayoutParams.WrapContent, LayoutParams.WrapContent );
+                    ( (LinearLayout.LayoutParams)DetailsLayout.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
+                    ( (LinearLayout.LayoutParams)DetailsLayout.LayoutParameters ).LeftMargin = 25;
+                    ( (LinearLayout.LayoutParams)DetailsLayout.LayoutParameters ).RightMargin = 25;
+                    ( (LinearLayout.LayoutParams)DetailsLayout.LayoutParameters ).BottomMargin = 25;
+                    AddView( DetailsLayout );
+
+
+                    Date = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    Date.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                    Date.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Series_Table_Small_FontSize );
+                    Date.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    DetailsLayout.AddView( Date );
+
+                    // fill the remaining space with a dummy view, and that will align our speaker to the right
+                    View dummyView = new View( Rock.Mobile.PlatformCommon.Droid.Context );
+                    dummyView.LayoutParameters = new LinearLayout.LayoutParams( 0, 0 );
+                    ( (LinearLayout.LayoutParams)dummyView.LayoutParameters ).Weight = 1;
+                    DetailsLayout.AddView( dummyView );
+
+                    Speaker = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    Speaker.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                    Speaker.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Series_Table_Small_FontSize );
+                    Speaker.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    DetailsLayout.AddView( Speaker );
+
+
+                    Footer = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    Footer.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
+                    Footer.Text = MessagesStrings.Series_Table_PreviousMessages;
+                    Footer.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Series_Table_Medium_FontSize );
+                    Footer.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    Footer.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.Table_Footer_Color ) );
+                    Footer.Gravity = GravityFlags.Center;
+                    AddView( Footer );
                 }
             }
 
             public class SeriesListItem : LinearLayout
             {
                 public DroidScaledImageView Thumbnail { get; set; }
-                public TextView Label { get; set; }
+
+                public LinearLayout TitleLayout { get; set; }
+                public TextView Title { get; set; }
+                public TextView DateRange { get; set; }
+                public TextView Chevron { get; set; }
 
                 public SeriesListItem( Context context ) : base( context )
                 {
-                    Orientation = Orientation.Vertical;
+                    Orientation = Orientation.Horizontal;
+
+                    SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor ) );
 
                     Thumbnail = new DroidScaledImageView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    Thumbnail.LayoutParameters = new LinearLayout.LayoutParams( 280, 280 );
+                    ( (LinearLayout.LayoutParams)Thumbnail.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
                     Thumbnail.SetScaleType( ImageView.ScaleType.CenterCrop );
+                    Thumbnail.Id = 777;
                     AddView( Thumbnail );
 
-                    Label = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
-                    Label.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-                    ( (LinearLayout.LayoutParams)Label.LayoutParameters ).Gravity = GravityFlags.Center;
-                    ( (LinearLayout.LayoutParams)Label.LayoutParameters ).BottomMargin = (int)PlatformBaseUI.UnitToPx( 25 );
-                    AddView( Label );
+                    TitleLayout = new LinearLayout( Rock.Mobile.PlatformCommon.Droid.Context );
+                    TitleLayout.Orientation = Orientation.Vertical;
+                    TitleLayout.LayoutParameters = new LinearLayout.LayoutParams( LayoutParams.WrapContent, LayoutParams.WrapContent );
+                    ( (LinearLayout.LayoutParams)TitleLayout.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
+                    ( (LinearLayout.LayoutParams)TitleLayout.LayoutParameters ).LeftMargin = 25;
+                    ( (LinearLayout.LayoutParams)TitleLayout.LayoutParameters ).TopMargin = 50;
+                    ( (LinearLayout.LayoutParams)TitleLayout.LayoutParameters ).BottomMargin = 50;
+                    AddView( TitleLayout );
+
+                    Title = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    Title.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                    Title.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Series_Table_Medium_FontSize );
+                    Title.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    TitleLayout.AddView( Title );
+
+                    DateRange = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    DateRange.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                    DateRange.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Series_Table_Small_FontSize );
+                    DateRange.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    TitleLayout.AddView( DateRange );
+
+                    // fill the remaining space with a dummy view, and that will align our chevron to the right
+                    View dummyView = new View( Rock.Mobile.PlatformCommon.Droid.Context );
+                    dummyView.LayoutParameters = new LinearLayout.LayoutParams( 0, 0 );
+                    ( (LinearLayout.LayoutParams)dummyView.LayoutParameters ).Weight = 1;
+                    AddView( dummyView );
+
+                    Chevron = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    Chevron.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                    ( (LinearLayout.LayoutParams)Chevron.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
+                    Typeface fontFace = DroidFontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary );
+                    Chevron.SetTypeface(  fontFace, TypefaceStyle.Normal );
+                    Chevron.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Series_Table_IconSize );
+                    Chevron.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    Chevron.Text = NoteConfig.Series_Table_Navigate_Icon;
+                    AddView( Chevron );
                 }
             }
 

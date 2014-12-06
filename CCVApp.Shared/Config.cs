@@ -498,6 +498,22 @@ namespace CCVApp
                 public const float ScrollRateForNavBarHide = 50;
 
 
+                public const string Series_Table_Large_Font = "Helvetica";
+                public const uint Series_Table_Large_FontSize = 23;
+
+                public const string Series_Table_Medium_Font = "Helvetica";
+                public const uint Series_Table_Medium_FontSize = 21;
+
+                public const string Series_Table_Small_Font = "Helvetica";
+                public const uint Series_Table_Small_FontSize = 16;
+
+                public const string Series_Table_Watch_Icon = "";
+                public const string Series_Table_TakeNotes_Icon = "";
+                public const string Series_Table_Navigate_Icon = "";
+                public const uint Series_Table_IconSize = 48;
+
+
+
                 /// <summary>
                 /// The color of the series main (first) table background.
                 /// </summary>
@@ -516,23 +532,18 @@ namespace CCVApp
                 /// <summary>
                 /// The height that an image should be within the cell
                 /// </summary>
-                public const float Series_Main_CellImageHeight = 180;
+                public const float Series_Main_CellImageHeight = 70;
 
                 /// <summary>
                 /// The width that an image should be within the cell
                 /// </summary>
-                public const float Series_Main_CellImageWidth = 320;
+                public const float Series_Main_CellImageWidth = 70;
 
 
                 /// <summary>
                 /// The color of the series details table background. (You most likely want this to match Table_CellBackgroundColor)
                 /// </summary>
                 public const uint Series_Details_Table_BackgroundColor = 0x1C1C1CFF;
-
-                /// <summary>
-                /// The color of the series details table cell seperators.
-                /// </summary>
-                public const uint Series_Details_Table_SeperatorBackgroundColor = 0x000000FF;
 
                 /// <summary>
                 /// The color of an in-use table cell. (You most likely want this to match Series_Details_Table_BackgroundColor)
@@ -590,30 +601,10 @@ namespace CCVApp
                 public const uint Card_ButtonColor_Normal = 0x989898FF;
                 public const uint Card_ButtonColor_Highlighted = 0x545454FF;
 
-
-
-
-                public const uint PostPrayer_BGColor = 0x2D2D2DFF;
-                public const uint PostPrayer_StatusTextColor = 0xA7A7A7FF;
-                public const uint PostPrayer_StatusBGColor = 0;
-
-                public const uint PostPrayer_ResultTextColor = 0xA7A7A7FF;
-                public const uint PostPrayer_ResultBGColor = 0;
-
-                public const uint PostPrayer_ResultSymbolColor = 0xA7A7A7FF;
-                public const uint PostPrayer_ResultSymbolBGColor = 0;
                 public const string PostPrayer_ResultSymbolFont = "FontAwesome";
                 public const string PostPrayer_ResultSymbol_SuccessText = "";
                 public const string PostPrayer_ResultSymbol_FailedText = "";
                 public const uint PostPrayer_ResultSymbolSize = 32;
-
-                public const uint PostPrayer_StatusBackingLayer_BGColor = 0x3E3E3EFF;
-                public const uint PostPrayer_StatusBackingLayer_BorderColor = 0x767676FF;
-                public const float PostPrayer_StatusBackingLayer_BorderWidth = .5f;
-
-                public const uint PostPrayer_ResultBackingLayer_BGColor = 0x3E3E3EFF;
-                public const uint PostPrayer_ResultBackingLayer_BorderColor = 0x767676FF;
-                public const float PostPrayer_ResultBackingLayer_BorderWidth = .5f;
             }
 
             public class ControlStylingConfig
@@ -672,6 +663,11 @@ namespace CCVApp
                 /// The color of a UI Switch when turned 'on'
                 /// </summary>
                 public const uint Switch_OnColor = 0x7E7E7EFF;
+
+                public const string Icon_Font_Primary = "Bh";
+                public const string Icon_Font_Secondary = "FontAwesome";
+
+                public const uint Table_Footer_Color = 0x262626FF;
             }
 
             public class AboutConfig

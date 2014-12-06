@@ -16,154 +16,381 @@ namespace iOS
 	{
         public class TableSource : UITableViewSource 
         {
+            /// <summary>
+            /// Definition for the primary (top) cell, which advertises the current series
+            /// more prominently
+            /// </summary>
+            class SeriesPrimaryCell : UITableViewCell
+            {
+                public static string Identifier = "SeriesPrimaryCell";
+
+                public TableSource Parent { get; set; }
+
+                public UIImageView Image { get; set; }
+
+                public UILabel Title { get; set; }
+                public UITextView Desc { get; set; }
+                public UILabel Date { get; set; }
+
+                public UILabel Footer { get; set; }
+
+                public SeriesPrimaryCell( UITableViewCellStyle style, string cellIdentifier ) : base( style, cellIdentifier )
+                {
+                    BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_Color );
+
+                    // anything that's constant can be set here once in the constructor
+                    Image = new UIImageView( );
+                    Image.ContentMode = UIViewContentMode.ScaleAspectFit;
+                    Image.Layer.AnchorPoint = PointF.Empty;
+                    AddSubview( Image );
+
+                    Title = new UILabel( );
+                    Title.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( NoteConfig.Series_Table_Large_Font, NoteConfig.Series_Table_Large_FontSize );
+                    Title.Layer.AnchorPoint = PointF.Empty;
+                    Title.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
+                    Title.BackgroundColor = UIColor.Clear;
+                    Title.LineBreakMode = UILineBreakMode.TailTruncation;
+                    AddSubview( Title );
+
+                    Date = new UILabel( );
+                    Date.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( NoteConfig.Series_Table_Small_Font, NoteConfig.Series_Table_Small_FontSize );
+                    Date.Layer.AnchorPoint = PointF.Empty;
+                    Date.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+                    Date.BackgroundColor = UIColor.Clear;
+                    Date.LineBreakMode = UILineBreakMode.TailTruncation;
+                    AddSubview( Date );
+
+                    Desc = new UITextView( );
+                    Desc.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( NoteConfig.Series_Table_Small_Font, NoteConfig.Series_Table_Small_FontSize );
+                    Desc.Layer.AnchorPoint = PointF.Empty;
+                    Desc.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+                    Desc.BackgroundColor = UIColor.Clear;
+                    Desc.TextContainerInset = UIEdgeInsets.Zero;
+                    Desc.TextContainer.LineFragmentPadding = 0;
+                    Desc.Editable = false;
+                    Desc.UserInteractionEnabled = false;
+                    AddSubview( Desc );
+
+                    Footer = new UILabel( );
+                    Footer.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.Table_Footer_Color );
+                    AddSubview( Footer );
+                }
+            }
+
+            /// <summary>
+            /// Definition for each cell in this table
+            /// </summary>
+            class SeriesCell : UITableViewCell
+            {
+                public static string Identifier = "SeriesCell";
+
+                public TableSource Parent { get; set; }
+
+                public UILabel Title { get; set; }
+                public UILabel Date { get; set; }
+                public UILabel Speaker { get; set; }
+                public UIButton WatchButton { get; set; }
+                public UIButton TakeNotesButton { get; set; }
+
+                public UIView Seperator { get; set; }
+
+                public int RowIndex { get; set; }
+
+                public SeriesCell( UITableViewCellStyle style, string cellIdentifier ) : base( style, cellIdentifier )
+                {
+                    Title = new UILabel( );
+                    Title.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( NoteConfig.Series_Table_Medium_Font, NoteConfig.Series_Table_Medium_FontSize );
+                    Title.Layer.AnchorPoint = PointF.Empty;
+                    Title.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
+                    Title.BackgroundColor = UIColor.Clear;
+                    Title.LineBreakMode = UILineBreakMode.TailTruncation;
+                    AddSubview( Title );
+
+                    Date = new UILabel( );
+                    Date.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( NoteConfig.Series_Table_Small_Font, NoteConfig.Series_Table_Small_FontSize );
+                    Date.Layer.AnchorPoint = PointF.Empty;
+                    Date.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+                    Date.BackgroundColor = UIColor.Clear;
+                    Date.LineBreakMode = UILineBreakMode.TailTruncation;
+                    AddSubview( Date );
+
+                    Speaker = new UILabel( );
+                    Speaker.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( NoteConfig.Series_Table_Small_Font, NoteConfig.Series_Table_Small_FontSize );
+                    Speaker.Layer.AnchorPoint = PointF.Empty;
+                    Speaker.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+                    Speaker.BackgroundColor = UIColor.Clear;
+                    Speaker.LineBreakMode = UILineBreakMode.TailTruncation;
+                    AddSubview( Speaker );
+
+                    WatchButton = new UIButton( UIButtonType.Custom );
+                    WatchButton.TouchUpInside += (object sender, EventArgs e) => { Parent.RowButtonClicked( RowIndex, 0 ); };
+                    WatchButton.Layer.AnchorPoint = PointF.Empty;
+                    WatchButton.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Primary, NoteConfig.Series_Table_IconSize );
+                    WatchButton.SetTitle( NoteConfig.Series_Table_Watch_Icon, UIControlState.Normal );
+                    WatchButton.BackgroundColor = UIColor.Clear;
+                    WatchButton.SizeToFit( );
+                    AddSubview( WatchButton );
+
+                    TakeNotesButton = new UIButton( UIButtonType.Custom );
+                    TakeNotesButton.TouchUpInside += (object sender, EventArgs e) => { Parent.RowButtonClicked( RowIndex, 1 ); };
+                    TakeNotesButton.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Primary, NoteConfig.Series_Table_IconSize );
+                    TakeNotesButton.SetTitle( NoteConfig.Series_Table_TakeNotes_Icon, UIControlState.Normal );
+                    TakeNotesButton.Layer.AnchorPoint = PointF.Empty;
+                    TakeNotesButton.BackgroundColor = UIColor.Clear;
+                    TakeNotesButton.SizeToFit( );
+                    AddSubview( TakeNotesButton );
+
+                    Seperator = new UIView( );
+                    AddSubview( Seperator );
+                    Seperator.Layer.BorderWidth = 1;
+                    Seperator.Layer.BorderColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_Color ).CGColor;
+                }
+
+                public void ToggleWatchButton( bool enabled )
+                {
+                    if ( enabled == true )
+                    {
+                        WatchButton.Enabled = true;
+                        WatchButton.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ), UIControlState.Normal );
+                    }
+                    else
+                    {
+                        WatchButton.Enabled = false;
+                        WatchButton.SetTitleColor( UIColor.DarkGray, UIControlState.Normal );
+                    }
+                }
+
+                public void ToggleTakeNotesButton( bool enabled )
+                {
+                    if ( enabled == true )
+                    {
+                        TakeNotesButton.Enabled = true;
+                        TakeNotesButton.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ), UIControlState.Normal );
+                    }
+                    else
+                    {
+                        TakeNotesButton.Enabled = false;
+                        TakeNotesButton.SetTitleColor( UIColor.DarkGray, UIControlState.Normal );
+                    }
+                }
+            }
+
             NotesDetailsUIViewController Parent { get; set; }
+            List<MessageEntry> MessageEntries { get; set; }
+            Series Series { get; set; }
+            UIImage Banner { get; set; }
 
-            List<MessageEntry> Messages { get; set; }
-
-            string cellIdentifier = "TableCell";
-
+            float PendingPrimaryCellHeight { get; set; }
             float PendingCellHeight { get; set; }
 
-            public TableSource (NotesDetailsUIViewController parent, List<MessageEntry> messages )
+            public TableSource (NotesDetailsUIViewController parent, List<MessageEntry> messages, Series series, UIImage banner )
             {
                 Parent = parent;
-
-                Messages = messages;            }
+                MessageEntries = messages;
+                Series = series;
+                Banner = banner;
+            }
 
             public override int RowsInSection (UITableView tableview, int section)
             {
-                return Messages.Count;
+                return MessageEntries.Count + 1;
             }
 
             public override void RowSelected (UITableView tableView, NSIndexPath indexPath)
             {
                 tableView.DeselectRow( indexPath, true );
 
-                // notify our parent
-                Parent.RowClicked( indexPath.Row, -1 );
+                // let the parent know it should reveal the nav bar
+                Parent.RowClicked( 0, -1 );
             }
 
             public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
             {
-                if ( PendingCellHeight > 0 )
-                {
-                    return PendingCellHeight;
-                }
-                else
-                {
-                    // check the height of the image and let that be the height for this row
-                    return tableView.Frame.Height;
-                }
+                return GetCachedRowHeight( tableView, indexPath );
             }
 
-            public void ButtonClicked( int rowIndex, int buttonIndex )
+            public override float EstimatedHeight(UITableView tableView, NSIndexPath indexPath)
             {
-                Parent.RowClicked( rowIndex, buttonIndex );
+                return GetCachedRowHeight( tableView, indexPath );
             }
 
-            class MessageCell : UITableViewCell
+            float GetCachedRowHeight( UITableView tableView, NSIndexPath indexPath )
             {
-                public MessageCell( UITableViewCellStyle style, string cellIdentifier ) : base( style, cellIdentifier )
+                // Depending on the row, we either want the primary cell's height,
+                // or a standard row's height.
+                switch ( indexPath.Row )
                 {
-                    Image = new UIImageView( );
-                    Label = new UILabel( );
-
-                    Watch = UIButton.FromType( UIButtonType.System );
-                    Read = UIButton.FromType( UIButtonType.System );
-
-                    Watch.TouchUpInside += (object sender, EventArgs e) => 
+                    case 0:
+                    {
+                        if ( PendingPrimaryCellHeight > 0 )
                         {
-                            ParentTableSource.ButtonClicked( RowIndex, 0 );
-                        };
+                            return PendingPrimaryCellHeight;
+                        }
+                        break;
+                    }
 
-                    Read.TouchUpInside += (object sender, EventArgs e) => 
+                    default:
+                    {
+
+                        if ( PendingCellHeight > 0 )
                         {
-                            ParentTableSource.ButtonClicked( RowIndex, 1 );
-                        };
-
-
-                    Watch.SetTitle( "Watch", UIControlState.Normal );
-                    Watch.SizeToFit( );
-
-
-                    Read.SetTitle( "Take Notes", UIControlState.Normal );
-                    Read.SizeToFit( );
-
-                    AddSubview( Image );
-                    AddSubview( Label );
-
-                    AddSubview( Watch );
-                    AddSubview( Read );
+                            return PendingCellHeight;
+                        }
+                        break;
+                    }
                 }
 
-                public TableSource ParentTableSource { get; set; }
-
-                public int RowIndex { get; set; }
-
-                public UIImageView Image { get; set; }
-                public UILabel Label { get; set; }
-
-                public UIButton Watch { get; set; }
-                public UIButton Read { get; set; }
+                // If we don't have the cell's height yet (first render), return the table's height
+                return tableView.Frame.Height;
             }
-
-            const int CellVerticalPadding = 10;
-            const int CellHorizontalPadding = 10;
 
             public override UITableViewCell GetCell (UITableView tableView, MonoTouch.Foundation.NSIndexPath indexPath)
             {
-                MessageCell cell = tableView.DequeueReusableCell (cellIdentifier) as MessageCell;
+                if ( indexPath.Row == 0 )
+                {
+                    return GetPrimaryCell( tableView );
+                }
+                else
+                {
+                    return GetStandardCell( tableView, indexPath.Row - 1 );
+                }
+            }
+
+            UITableViewCell GetPrimaryCell( UITableView tableView )
+            {
+                SeriesPrimaryCell cell = tableView.DequeueReusableCell( SeriesPrimaryCell.Identifier ) as SeriesPrimaryCell;
 
                 // if there are no cells to reuse, create a new one
                 if (cell == null)
                 {
-                    cell = new MessageCell (UITableViewCellStyle.Default, cellIdentifier);
-                    cell.ParentTableSource = this;
+                    cell = new SeriesPrimaryCell( UITableViewCellStyle.Default, SeriesCell.Identifier );
+                    cell.Parent = this;
 
                     // take the parent table's width so we inherit its width constraint
                     cell.Bounds = new RectangleF( cell.Bounds.X, cell.Bounds.Y, tableView.Bounds.Width, cell.Bounds.Height );
 
                     // configure the cell colors
-                    cell.BackgroundColor = PlatformBaseUI.GetUIColor( NoteConfig.Series_Details_Table_CellBackgroundColor );
-                    cell.Label.TextColor = PlatformBaseUI.GetUIColor( NoteConfig.Series_Details_Table_CellTextColor );
+                    cell.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_Color );
                     cell.SelectionStyle = UITableViewCellSelectionStyle.None;
                 }
 
-                cell.RowIndex = indexPath.Row;
+                // Banner Image
+                cell.Image.Image = Banner;
+                cell.Image.SizeToFit( );
 
-                // setup the image
-                UIImageView image = cell.Image;
-                image.Image = Messages[ indexPath.Row ].Thumbnail;
-                image.ContentMode = UIViewContentMode.ScaleAspectFit;
-                image.Layer.AnchorPoint = new System.Drawing.PointF( 0, 0 );
-                image.SizeToFit( );
+                // resize the image to fit the width of the device
+                float imageAspect = cell.Image.Bounds.Height / cell.Image.Bounds.Width;
+                cell.Image.Frame = new RectangleF( 0, 0, cell.Bounds.Width, cell.Bounds.Width * imageAspect );
 
-                // foce the image to be sized according to the height of the cell
-                image.Frame = new RectangleF( (cell.Frame.Width - NoteConfig.Series_Details_CellImageWidth) / 2, 
-                                               0, 
-                                               NoteConfig.Series_Details_CellImageWidth, 
-                                               NoteConfig.Series_Details_CellImageHeight );
+                // Title
+                cell.Title.Text = Series.Name;
+                cell.Title.SizeToFit( );
+                cell.Title.Frame = new RectangleF( 5, cell.Image.Frame.Bottom + 5, cell.Frame.Width - 5, cell.Title.Frame.Height + 5 );
 
-                // create a text label next to the image that allows word wrapping
-                UILabel textLabel = cell.Label;
-                textLabel.Text = Messages[ indexPath.Row ].Message.Name;
-                textLabel.LineBreakMode = UILineBreakMode.TailTruncation;
+                // Date
+                cell.Date.Text = Series.DateRanges;
+                cell.Date.SizeToFit( );
+                cell.Date.Frame = new RectangleF( 5, cell.Title.Frame.Bottom, cell.Frame.Width - 5, cell.Date.Frame.Height + 5 );
 
-                // set the allowed width for the text, then adjust the size, and then expand the height in case it's too small.
-                textLabel.TextAlignment = UITextAlignment.Center;
-                textLabel.Frame = new System.Drawing.RectangleF( 0, 0, cell.Frame.Width, 0 );
-                textLabel.SizeToFit( );
-                textLabel.Frame = new System.Drawing.RectangleF( 0, image.Frame.Bottom, cell.Frame.Width, textLabel.Frame.Height );
+                // Description
+                cell.Desc.Text = Series.Description;
+                cell.Desc.Bounds = new RectangleF( 0, 0, cell.Frame.Width - 10, float.MaxValue );
+                cell.Desc.SizeToFit( );
+                cell.Desc.Frame = new RectangleF( 5, cell.Date.Frame.Bottom, cell.Frame.Width - 10, cell.Desc.Frame.Height + 5 );
 
-                cell.Watch.Frame = new RectangleF( CellHorizontalPadding, textLabel.Frame.Bottom, cell.Watch.Frame.Width, cell.Watch.Frame.Height );
-                cell.Read.Frame = new RectangleF( cell.Frame.Width - cell.Read.Frame.Width - CellHorizontalPadding, textLabel.Frame.Bottom, cell.Read.Frame.Width, cell.Read.Frame.Height );
+                // Footer
+                cell.Footer.Frame = new RectangleF( 0, cell.Desc.Frame.Bottom, cell.Bounds.Width, 10 );
 
-                // the watch button should only be enabled if the message has a podcast
-                cell.Watch.Enabled = Messages[ indexPath.Row ].HasPodcast;
-
-                PendingCellHeight = cell.Read.Frame.Bottom + CellVerticalPadding * 2;
+                PendingPrimaryCellHeight = cell.Footer.Frame.Bottom;
 
                 return cell;
+            }
+
+            UITableViewCell GetStandardCell( UITableView tableView, int row )
+            {
+                SeriesCell cell = tableView.DequeueReusableCell( SeriesPrimaryCell.Identifier ) as SeriesCell;
+
+                // if there are no cells to reuse, create a new one
+                if ( cell == null )
+                {
+                    cell = new SeriesCell( UITableViewCellStyle.Default, SeriesCell.Identifier );
+                    cell.Parent = this;
+
+                    // take the parent table's width so we inherit its width constraint
+                    cell.Bounds = new RectangleF( cell.Bounds.X, cell.Bounds.Y, tableView.Bounds.Width, cell.Bounds.Height );
+
+                    // configure the cell colors
+                    cell.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor );
+                    cell.SelectionStyle = UITableViewCellSelectionStyle.None;
+                }
+
+                // update the cell's row index so on button taps we know which one was tapped
+                cell.RowIndex = row;
+
+                float rowHeight = 100;
+
+                // Buttons
+                cell.TakeNotesButton.Frame = new RectangleF( cell.Bounds.Width - cell.TakeNotesButton.Bounds.Width, 
+                    (rowHeight - cell.TakeNotesButton.Bounds.Height) / 2, 
+                                                             cell.TakeNotesButton.Bounds.Width, 
+                                                             cell.TakeNotesButton.Bounds.Height );
+
+                cell.WatchButton.Frame = new RectangleF( cell.TakeNotesButton.Frame.Left - cell.WatchButton.Bounds.Width - 20, 
+                    (rowHeight - cell.WatchButton.Bounds.Height) / 2, 
+                                                         cell.WatchButton.Bounds.Width, 
+                                                         cell.WatchButton.Bounds.Height );
+
+                float availableWidth = cell.Bounds.Width - cell.WatchButton.Bounds.Width - cell.TakeNotesButton.Bounds.Width - 5 - 20;
+
+                // disable the button if there's no watch URL
+                if ( string.IsNullOrEmpty( Series.Messages[ 0 ].WatchUrl ) )
+                {
+                    cell.ToggleWatchButton( false );
+                }
+                else
+                {
+                    cell.ToggleWatchButton( true );
+                }
+
+                // disable the button if there's no note URL
+                if ( string.IsNullOrEmpty( Series.Messages[ 0 ].NoteUrl ) )
+                {
+                    cell.ToggleTakeNotesButton( false );
+                }
+                else
+                {
+                    cell.ToggleTakeNotesButton( true );
+                }
+
+                // Create the title
+                cell.Title.Text = Series.Messages[ row ].Name;
+                cell.Title.SizeToFit( );
+
+                // Date
+                cell.Date.Text = Series.Messages[ row ].Date;
+                cell.Date.SizeToFit( );
+
+                cell.Speaker.Text = Series.Messages[ row ].Speaker;
+                cell.Speaker.SizeToFit( );
+
+                // Position the Title & Date in the center to the right of the image
+                float totalTextHeight = cell.Title.Bounds.Height + cell.Date.Bounds.Height + cell.Speaker.Bounds.Height + 5;
+
+                cell.Title.Frame = new RectangleF( 5, (rowHeight - totalTextHeight) / 2, availableWidth, cell.Title.Frame.Height );
+                cell.Date.Frame = new RectangleF( cell.Title.Frame.Left, cell.Title.Frame.Bottom, availableWidth, cell.Date.Frame.Height );
+                cell.Speaker.Frame = new RectangleF( cell.Title.Frame.Left, cell.Date.Frame.Bottom, availableWidth, cell.Speaker.Frame.Height + 5 );
+
+                // add the seperator to the bottom
+                cell.Seperator.Frame = new RectangleF( 0, rowHeight - 1, cell.Bounds.Width, 1 );
+
+                PendingCellHeight = rowHeight;
+
+                return cell;
+            }
+
+            public void RowButtonClicked( int row, int buttonIndex )
+            {
+                Parent.RowClicked( row, buttonIndex );
             }
         }
 
@@ -178,6 +405,7 @@ namespace iOS
         }
 
         public Series Series { get; set; }
+        public UIImage SeriesBillboard { get; set; }
         public List<MessageEntry> Messages { get; set; }
         public UIImage ThumbnailPlaceholder{ get; set; }
         bool IsVisible { get; set; }
@@ -193,11 +421,11 @@ namespace iOS
             // setup the table view and general background view colors
             View.BackgroundColor = PlatformBaseUI.GetUIColor( NoteConfig.Series_Details_Table_BackgroundColor );
             SeriesTable.BackgroundColor = PlatformBaseUI.GetUIColor( NoteConfig.Series_Details_Table_BackgroundColor );
-            SeriesTable.SeparatorColor = PlatformBaseUI.GetUIColor( NoteConfig.Series_Details_Table_SeperatorBackgroundColor );
+            SeriesTable.SeparatorStyle = UITableViewCellSeparatorStyle.None;
 
             // setup the messages list
             Messages = new List<MessageEntry>();
-            SeriesTable.Source = new TableSource( this, Messages );
+            SeriesTable.Source = new TableSource( this, Messages, Series, SeriesBillboard );
 
             IsVisible = true;
 
@@ -292,6 +520,7 @@ namespace iOS
             {
                 NotesWatchUIViewController viewController = Storyboard.InstantiateViewController( "NotesWatchUIViewController" ) as NotesWatchUIViewController;
                 viewController.WatchUrl = Series.Messages[ row ].WatchUrl;
+                viewController.ShareUrl = Series.Messages[ row ].ShareUrl;
 
                 Task.PerformSegue( this, viewController );
             }

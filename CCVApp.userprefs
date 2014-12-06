@@ -1,25 +1,34 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget.Jered's iPhone" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/SpringboardViewController.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" PreferredExecutionTarget="Android.192.168.56.101:5555" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Tasks/NotesTask/NotesPrimaryFragment.cs">
     <Files>
-      <File FileName="iOS/UserManagement/LoginViewController.cs" Line="9" Column="9" />
-      <File FileName="iOS/SpringboardViewController.cs" Line="26" Column="26" />
+      <File FileName="iOS/UserManagement/LoginViewController.cs" Line="1" Column="1" />
+      <File FileName="Droid/Tasks/NotesTask/NotesPrimaryFragment.cs" Line="42" Column="42" />
+      <File FileName="Droid/Tasks/NotesTask/NotesDetailsFragment.cs" Line="18" Column="18" />
+      <File FileName="CCVApp.Shared/Config.cs" Line="37" Column="37" />
+      <File FileName="Droid/Springboard.cs" Line="13" Column="13" />
+      <File FileName="iOS/Tasks/Notes/NotesMainUIViewController.cs" Line="44" Column="44" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="Droid" expanded="True">
-            <Node name="Properties" expanded="True" />
+            <Node name="Tasks" expanded="True">
+              <Node name="NewsTask" expanded="True" />
+              <Node name="NotesTask" expanded="True">
+                <Node name="NotesPrimaryFragment.cs" selected="True" />
+              </Node>
+            </Node>
           </Node>
           <Node name="iOS" expanded="True">
             <Node name="Tasks" expanded="True">
               <Node name="News" expanded="True" />
+              <Node name="Notes" expanded="True" />
               <Node name="Prayer" expanded="True" />
             </Node>
             <Node name="UserManagement" expanded="True">
               <Node name="ProfileViewController.cs" expanded="True" />
             </Node>
-            <Node name="SpringboardViewController.cs" selected="True" />
           </Node>
         </State>
       </Pad>

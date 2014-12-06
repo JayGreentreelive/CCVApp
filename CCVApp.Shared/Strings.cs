@@ -121,6 +121,13 @@ namespace CCVApp.Shared
             /// </summary>
             public const string Watch_Share_DownloadApp_Html = "<p>Or <a href={0}>Click here to download the mobile app and watch it in that.</a></p>";
 
+            public const string Series_TopBanner = "This Week's Message";
+
+            public const string Series_Table_Watch = "Watch";
+            public const string Series_Table_TakeNotes = "Take Notes";
+
+            public const string Series_Table_PreviousMessages = "Previous Message Series";
+
         }
 
         public class PrayerStrings

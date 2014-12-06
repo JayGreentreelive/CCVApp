@@ -12,6 +12,7 @@ namespace iOS
 	partial class NotesWatchUIViewController : TaskUIViewController
 	{
         public string WatchUrl { get; set; }
+        public string ShareUrl { get; set; }
 
         MPMoviePlayerController MoviePlayer  { get; set; }
         UIActivityIndicatorView ActivityIndicator { get; set; }
@@ -137,7 +138,7 @@ namespace iOS
 
         public void ShareVideo( )
         {
-            string noteString = MessagesStrings.Watch_Share_Header_Html + string.Format( MessagesStrings.Watch_Share_Body_Html, WatchUrl );
+            string noteString = MessagesStrings.Watch_Share_Header_Html + string.Format( MessagesStrings.Watch_Share_Body_Html, ShareUrl );
 
             // if they set a mobile app url, add that.
             if( string.IsNullOrEmpty( MessagesStrings.Watch_Mobile_App_Url ) == false )
