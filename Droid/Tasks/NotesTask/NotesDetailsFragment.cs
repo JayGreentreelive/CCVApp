@@ -20,6 +20,8 @@ using CCVApp.Shared;
 using Rock.Mobile.PlatformCommon;
 using Rock.Mobile.PlatformUI;
 using System.IO;
+using CCVApp.Shared.Config;
+using CCVApp.Shared.Strings;
 
 namespace Droid
 {
@@ -31,18 +33,25 @@ namespace Droid
             {
                 List<MessageEntry> Messages { get; set; }
 
+                Series Series { get; set; }
+                Bitmap SeriesBillboard { get; set; }
+
                 NotesDetailsFragment ParentFragment { get; set; }
 
-                public NotesDetailsArrayAdapter( NotesDetailsFragment parentFragment, List<MessageEntry> messages )
+                public NotesDetailsArrayAdapter( NotesDetailsFragment parentFragment, List<MessageEntry> messages, Series series, Bitmap seriesBillboard )
                 {
                     ParentFragment = parentFragment;
 
                     Messages = messages;
+
+                    Series = series;
+
+                    SeriesBillboard = seriesBillboard;
                 }
 
                 public override int Count 
                 {
-                    get { return Messages.Count; }
+                    get { return Messages.Count + 1; }
                 }
 
                 public override Java.Lang.Object GetItem (int position) 
@@ -59,14 +68,50 @@ namespace Droid
 
                 public override View GetView(int position, View convertView, ViewGroup parent)
                 {
-                    MessageListItem messageItem = (MessageListItem)convertView ?? new MessageListItem( ParentFragment.Activity.BaseContext );
+                    if ( position == 0 )
+                    {
+                        return GetPrimaryView( convertView, parent );
+                    }
+                    else
+                    {
+                        return GetStandardView( position - 1, convertView, parent );
+                    }
+                }
+
+                View GetPrimaryView( View convertView, ViewGroup parent )
+                {
+                    MessagePrimaryListItem messageItem = convertView as MessagePrimaryListItem;
+                    if ( messageItem == null )
+                    {
+                        messageItem = new MessagePrimaryListItem( ParentFragment.Activity.BaseContext );
+                    }
+
+                    messageItem.ParentAdapter = this;
+
+                    messageItem.Thumbnail.SetImageBitmap( SeriesBillboard );
+                    messageItem.Thumbnail.SetScaleType( ImageView.ScaleType.CenterCrop );
+
+                    messageItem.Title.Text = Series.Name;
+                    messageItem.DateRange.Text = Series.DateRanges;
+                    messageItem.Desc.Text = Series.Description;
+
+                    return messageItem;
+                }
+
+                View GetStandardView( int position, View convertView, ViewGroup parent )
+                {
+                    MessageListItem messageItem = convertView as MessageListItem;
+                    if ( messageItem == null )
+                    {
+                        messageItem = new MessageListItem( ParentFragment.Activity.BaseContext );
+                    }
+
                     messageItem.ParentAdapter = this;
                     messageItem.Position = position;
 
-                    messageItem.Thumbnail.SetImageBitmap( Messages[ position ].Thumbnail );
-                    messageItem.Thumbnail.SetScaleType( ImageView.ScaleType.CenterCrop );
-
-                    messageItem.Label.Text = Messages[ position ].Message.Name;
+                    messageItem.Title.Text = Messages[ position ].Message.Name;
+                    messageItem.Date.Text = Messages[ position ].Message.Date;
+                    messageItem.Speaker.Text = Messages[ position ].Message.Speaker;
 
                     messageItem.WatchButton.Enabled = Messages[ position ].HasPodcast;
 
@@ -79,10 +124,71 @@ namespace Droid
                 }
             }
 
+            public class MessagePrimaryListItem : LinearLayout
+            {
+                public NotesDetailsArrayAdapter ParentAdapter { get; set; }
+
+                // stuff that will be set by data
+                public DroidScaledImageView Thumbnail { get; set; }
+                public TextView Title { get; set; }
+                public TextView DateRange { get; set; }
+                public TextView Desc { get; set; }
+                //
+
+
+                TextView Footer { get; set; }
+
+                public MessagePrimaryListItem( Context context ) : base( context )
+                {
+                    SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
+
+                    Orientation = Orientation.Vertical;
+
+                    Thumbnail = new DroidScaledImageView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    Thumbnail.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
+                    Thumbnail.SetScaleType( ImageView.ScaleType.CenterCrop );
+                    AddView( Thumbnail );
+
+                    Title = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    Title.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                    Title.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Series_Table_Medium_FontSize );
+                    Title.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    ( (LinearLayout.LayoutParams)Title.LayoutParameters ).TopMargin = 25;
+                    ( (LinearLayout.LayoutParams)Title.LayoutParameters ).LeftMargin = 25;
+                    AddView( Title );
+
+                    DateRange = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    DateRange.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                    DateRange.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Series_Table_Small_FontSize );
+                    DateRange.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    ( (LinearLayout.LayoutParams)DateRange.LayoutParameters ).TopMargin = 25;
+                    ( (LinearLayout.LayoutParams)DateRange.LayoutParameters ).LeftMargin = 25;
+                    AddView( DateRange );
+
+                    Desc = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    Desc.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                    Desc.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Series_Table_Small_FontSize );
+                    Desc.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    ( (LinearLayout.LayoutParams)Desc.LayoutParameters ).TopMargin = 25;
+                    ( (LinearLayout.LayoutParams)Desc.LayoutParameters ).LeftMargin = 25;
+                    ( (LinearLayout.LayoutParams)Desc.LayoutParameters ).RightMargin = 25;
+                    ( (LinearLayout.LayoutParams)Desc.LayoutParameters ).BottomMargin = 50;
+                    AddView( Desc );
+
+                    Footer = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    Footer.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
+                    Footer.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.Table_Footer_Color ) );
+                    Footer.Gravity = GravityFlags.Center;
+                    AddView( Footer );
+                }
+            }
+
             public class MessageListItem : LinearLayout
             {
-                public DroidScaledImageView Thumbnail { get; set; }
-                public TextView Label { get; set; }
+                public LinearLayout TitleLayout { get; set; }
+                public TextView Title { get; set; }
+                public TextView Date { get; set; }
+                public TextView Speaker { get; set; }
 
                 RelativeLayout ButtonFrameLayout { get; set; }
                 public Button WatchButton { get; set; }
@@ -93,34 +199,64 @@ namespace Droid
 
                 public MessageListItem( Context context ) : base( context )
                 {
-                    Orientation = Orientation.Vertical;
+                    Orientation = Orientation.Horizontal;
 
-                    Thumbnail = new DroidScaledImageView( Rock.Mobile.PlatformCommon.Droid.Context );
-                    Thumbnail.SetScaleType( ImageView.ScaleType.CenterCrop );
-                    AddView( Thumbnail );
+                    SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+                    LayoutParameters = new AbsListView.LayoutParams( LayoutParams.MatchParent, LayoutParams.MatchParent );
 
-                    Label = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
-                    Label.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-                    ( (LinearLayout.LayoutParams)Label.LayoutParameters ).Gravity = GravityFlags.Center;
-                    AddView( Label );
+                    TitleLayout = new LinearLayout( Rock.Mobile.PlatformCommon.Droid.Context );
+                    TitleLayout.Orientation = Orientation.Vertical;
+                    TitleLayout.LayoutParameters = new LinearLayout.LayoutParams( LayoutParams.WrapContent, LayoutParams.WrapContent );
+                    ( (LinearLayout.LayoutParams)TitleLayout.LayoutParameters ).Weight = 1;
+                    ( (LinearLayout.LayoutParams)TitleLayout.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
+                    ( (LinearLayout.LayoutParams)TitleLayout.LayoutParameters ).LeftMargin = 25;
+                    ( (LinearLayout.LayoutParams)TitleLayout.LayoutParameters ).TopMargin = 50;
+                    ( (LinearLayout.LayoutParams)TitleLayout.LayoutParameters ).BottomMargin = 50;
+                    AddView( TitleLayout );
 
-                    // setup the buttons in a relative layout
-                    ButtonFrameLayout = new RelativeLayout( Rock.Mobile.PlatformCommon.Droid.Context );
-                    ButtonFrameLayout.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
-                    ButtonFrameLayout.SetPadding( 0, 0, 0, (int)PlatformBaseUI.UnitToPx( 25 ) );
+                    Title = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    Title.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                    Title.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Series_Table_Medium_FontSize );
+                    Title.SetSingleLine( );
+                    Title.Ellipsize = Android.Text.TextUtils.TruncateAt.End;
+                    Title.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    TitleLayout.AddView( Title );
 
-                    AddView( ButtonFrameLayout );
+                    Date = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    Date.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                    Date.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Series_Table_Small_FontSize );
+                    Date.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    TitleLayout.AddView( Date );
+
+                    Speaker = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    Speaker.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                    Speaker.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Series_Table_Small_FontSize );
+                    Speaker.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    TitleLayout.AddView( Speaker );
+
+
+                    // setup the buttons
+                    Typeface buttonFontFace = DroidFontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary );
 
                     WatchButton = new Button( Rock.Mobile.PlatformCommon.Droid.Context );
-                    WatchButton.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-                    WatchButton.Text = "Watch";
-                    ButtonFrameLayout.AddView( WatchButton );
+                    WatchButton.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                    ( (LinearLayout.LayoutParams)WatchButton.LayoutParameters ).Weight = 0;
+                    ( (LinearLayout.LayoutParams)WatchButton.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
+                    WatchButton.SetTypeface( buttonFontFace, TypefaceStyle.Normal );
+                    WatchButton.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Series_Table_IconSize );
+                    WatchButton.Text = NoteConfig.Series_Table_Watch_Icon;
+                    WatchButton.SetBackgroundDrawable( null );
+                    AddView( WatchButton );
 
                     TakeNotesButton = new Button( Rock.Mobile.PlatformCommon.Droid.Context );
-                    TakeNotesButton.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-                    ( (RelativeLayout.LayoutParams)TakeNotesButton.LayoutParameters ).AddRule( LayoutRules.AlignParentRight );
-                    TakeNotesButton.Text = "Take Notes";
-                    ButtonFrameLayout.AddView( TakeNotesButton );
+                    TakeNotesButton.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                    ( (LinearLayout.LayoutParams)TakeNotesButton.LayoutParameters ).Weight = 0;
+                    ( (LinearLayout.LayoutParams)TakeNotesButton.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
+                    TakeNotesButton.SetTypeface( buttonFontFace, TypefaceStyle.Normal );
+                    TakeNotesButton.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Series_Table_IconSize );
+                    TakeNotesButton.Text = NoteConfig.Series_Table_TakeNotes_Icon;
+                    TakeNotesButton.SetBackgroundDrawable( null );
+                    AddView( TakeNotesButton );
 
                     WatchButton.Click += (object sender, EventArgs e ) =>
                         {
@@ -198,7 +334,7 @@ namespace Droid
                     Messages.Clear( );
 
                     // setup the messages list
-                    MessagesListView.Adapter = new NotesDetailsArrayAdapter( this, Messages );
+                    MessagesListView.Adapter = new NotesDetailsArrayAdapter( this, Messages, Series, ThumbnailPlaceholder );
 
                     // now add the messages
                     for ( int i = 0; i < Series.Messages.Count; i++ )

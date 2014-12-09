@@ -115,9 +115,34 @@ namespace Droid
                         // decide what to do.
                         if ( source == MainPage )
                         {
-                            DetailsPage.Series = MainPage.SeriesEntries[ buttonId ].Series;
-                            DetailsPage.ThumbnailPlaceholder = MainPage.SeriesEntries[ buttonId ].Thumbnail;
-                            PresentFragment( DetailsPage, true );
+                            // on the main page, if the buttonId was -1, the user tapped the header,
+                            // so we need to either go to the Watch or Take Notes page
+                            if ( buttonId == -1 )
+                            {
+                                // the context is the button they clicked (watch or take notes)
+                                int buttonChoice = (int)context;
+
+                                // 0 is watch
+                                if ( buttonChoice == 0 )
+                                {
+                                    WatchPage.VideoUrl = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].WatchUrl;
+                                    WatchPage.ShareUrl = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].ShareUrl;
+                                    PresentFragment( WatchPage, true );
+                                }
+                                else if ( buttonChoice == 1 )
+                                {
+                                    NotesPage.NoteName = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].NoteUrl;
+                                    NotesPage.NotePresentableName = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].Name;
+
+                                    PresentFragment( NotesPage, true );
+                                }
+                            }
+                            else
+                            {
+                                DetailsPage.Series = MainPage.SeriesEntries[ buttonId ].Series;
+                                DetailsPage.ThumbnailPlaceholder = MainPage.SeriesEntries[ buttonId ].Thumbnail;
+                                PresentFragment( DetailsPage, true );
+                            }
                         }
                         else if ( source == DetailsPage )
                         {
@@ -127,7 +152,7 @@ namespace Droid
                             if ( buttonChoice == 0 )
                             {
                                 WatchPage.VideoUrl = DetailsPage.Messages[ buttonId ].Message.WatchUrl;
-
+                                WatchPage.ShareUrl = DetailsPage.Messages[ buttonId ].Message.ShareUrl;
                                 PresentFragment( WatchPage, true );
                             }
                             else if ( buttonChoice == 1 )

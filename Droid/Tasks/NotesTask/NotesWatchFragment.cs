@@ -28,6 +28,7 @@ namespace Droid
                 ProgressBar ProgressBar { get; set; }
 
                 public string VideoUrl { get; set; }
+                public string ShareUrl { get; set; }
 
                 public override void OnCreate( Bundle savedInstanceState )
                 {
@@ -104,7 +105,7 @@ namespace Droid
 
                             sendIntent.PutExtra( Intent.ExtraSubject, MessagesStrings.Watch_Share_Subject );
 
-                            string noteString = MessagesStrings.Watch_Share_Header_Html + string.Format( MessagesStrings.Watch_Share_Body_Html, VideoUrl );
+                            string noteString = MessagesStrings.Watch_Share_Header_Html + string.Format( MessagesStrings.Watch_Share_Body_Html, ShareUrl );
 
                             // if they set a mobile app url, add that.
                             if( string.IsNullOrEmpty( MessagesStrings.Watch_Mobile_App_Url ) == false )

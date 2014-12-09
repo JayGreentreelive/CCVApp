@@ -52,7 +52,7 @@
     <MtouchI18n>
     </MtouchI18n>
     <MtouchArch>ARMv7</MtouchArch>
-    <CodesignProvision>2531bc11-da55-4fbb-b469-040e52c916f7</CodesignProvision>
+    <CodesignProvision>d65dc294-aa3f-4a64-8fd2-9975d3a9feb4</CodesignProvision>
     <BuildIpa>true</BuildIpa>
     <IpaPackageName>
     </IpaPackageName>
@@ -67,7 +67,10 @@
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <ConsolePause>false</ConsolePause>
     <CodesignKey>iPhone Developer: Jered McFerron (5U8BJ9M783)</CodesignKey>
-    <CodesignProvision>2531bc11-da55-4fbb-b469-040e52c916f7</CodesignProvision>
+    <CodesignProvision>d65dc294-aa3f-4a64-8fd2-9975d3a9feb4</CodesignProvision>
+    <MtouchI18n>
+    </MtouchI18n>
+    <MtouchArch>ARMv7</MtouchArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Ad-Hoc|iPhone' ">
     <DebugType>full</DebugType>

@@ -498,13 +498,13 @@ namespace CCVApp
                 public const float ScrollRateForNavBarHide = 50;
 
 
-                public const string Series_Table_Large_Font = "Helvetica";
+                public const string Series_Table_Large_Font = "OpenSans-Regular";
                 public const uint Series_Table_Large_FontSize = 23;
 
-                public const string Series_Table_Medium_Font = "Helvetica";
+                public const string Series_Table_Medium_Font = "OpenSans-Regular";
                 public const uint Series_Table_Medium_FontSize = 21;
 
-                public const string Series_Table_Small_Font = "Helvetica";
+                public const string Series_Table_Small_Font = "OpenSans-Regular";
                 public const uint Series_Table_Small_FontSize = 16;
 
                 public const string Series_Table_Watch_Icon = "";

@@ -23,6 +23,7 @@ using Rock.Mobile.PlatformUI;
 using System.Net;
 using System.IO;
 using CCVApp.Shared;
+using Rock.Mobile.PlatformUI.DroidNative;
 
 namespace Droid
 {
@@ -74,7 +75,13 @@ namespace Droid
 
                 View GetPrimaryView( View convertView, ViewGroup parent )
                 {
-                    SeriesPrimaryListItem primaryItem = (SeriesPrimaryListItem)convertView ?? new SeriesPrimaryListItem( ParentFragment.Activity.BaseContext );
+                    SeriesPrimaryListItem primaryItem = convertView as SeriesPrimaryListItem;
+                    if ( primaryItem == null )
+                    {
+                        primaryItem = new SeriesPrimaryListItem( Rock.Mobile.PlatformCommon.Droid.Context );
+                    }
+
+                    primaryItem.ParentAdapter = this;
 
                     primaryItem.Thumbnail.SetImageBitmap( SeriesEntries[ 0 ].Thumbnail );
                     primaryItem.Thumbnail.SetScaleType( ImageView.ScaleType.CenterCrop );
@@ -83,12 +90,37 @@ namespace Droid
                     primaryItem.Speaker.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Speaker;
                     primaryItem.Date.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Date;
 
+                    // toggle the Take Notes button
+                    if ( string.IsNullOrEmpty( SeriesEntries[ 0 ].Series.Messages[ 0 ].NoteUrl ) == false )
+                    {
+                        primaryItem.ToggleTakeNotesButton( true );
+                    }
+                    else
+                    {
+                        primaryItem.ToggleTakeNotesButton( false );
+                    }
+
+                    // toggle the Watch button
+                    if ( string.IsNullOrEmpty( SeriesEntries[ 0 ].Series.Messages[ 0 ].WatchUrl ) == false )
+                    {
+                        primaryItem.ToggleWatchButton( true );
+                    }
+                    else
+                    {
+                        primaryItem.ToggleWatchButton( false );
+                    }
+
                     return primaryItem;
                 }
 
                 View GetStandardView( int position, View convertView, ViewGroup parent )
                 {
-                    SeriesListItem seriesItem = (SeriesListItem)convertView ?? new SeriesListItem( ParentFragment.Activity.BaseContext );
+                    SeriesListItem seriesItem = convertView as SeriesListItem;
+                    if ( seriesItem == null )
+                    {
+                        seriesItem = new SeriesListItem( Rock.Mobile.PlatformCommon.Droid.Context );
+                    }
+
                     seriesItem.Thumbnail.SetImageBitmap( SeriesEntries[ position ].Thumbnail );
                     seriesItem.Thumbnail.SetScaleType( ImageView.ScaleType.CenterCrop );
 
@@ -97,19 +129,75 @@ namespace Droid
 
                     return seriesItem;
                 }
+
+                public void WatchButtonClicked( )
+                {
+                    ParentFragment.WatchButtonClicked( );
+                }
+
+                public void TakeNotesButtonClicked( )
+                {
+                    ParentFragment.TakeNotesButtonClicked( );
+                }
+            }
+
+            internal class BorderedActionButton
+            {
+                public BorderedRectView Layout { get; set; }
+                public Button Button { get; set; }
+                public TextView Icon { get; set; }
+                public TextView Label { get; set; }
+
+                public void AddToView( ViewGroup parentView )
+                {
+                    // first, create the layout that will store the button and label
+                    Layout = new BorderedRectView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    Layout.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                    parentView.AddView( Layout );
+
+                    // now create the linearLayout that will store the button labels (Symbol & Text)
+                    LinearLayout labelLayout = new LinearLayout( Rock.Mobile.PlatformCommon.Droid.Context );
+                    labelLayout.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                    ( (RelativeLayout.LayoutParams)labelLayout.LayoutParameters ).AddRule( LayoutRules.CenterInParent );
+                    Layout.AddView( labelLayout );
+
+                    // add the button, which is just a frame wrapping the entire layout
+                    Button = new Button( Rock.Mobile.PlatformCommon.Droid.Context );
+                    Button.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent );
+                    Button.SetBackgroundDrawable( null );
+                    Layout.AddView( Button );
+
+                    // now set the icon
+                    Icon = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    labelLayout.AddView( Icon );
+
+                    // and lastly the text
+                    Label = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    Label.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                    ( (LinearLayout.LayoutParams)Label.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
+                    labelLayout.AddView( Label );
+                }
             }
 
             public class SeriesPrimaryListItem : LinearLayout
             {
-                public TextView Header { get; set; }
-                public DroidScaledImageView Thumbnail { get; set; }
+                public NotesArrayAdapter ParentAdapter { get; set; }
 
-                public LinearLayout DetailsLayout { get; set; }
+                TextView Header { get; set; }
+                LinearLayout DetailsLayout { get; set; }
+
+                // stuff that will be set by data
+                public DroidScaledImageView Thumbnail { get; set; }
                 public TextView Title { get; set; }
                 public TextView Date { get; set; }
                 public TextView Speaker { get; set; }
+                //
 
-                public TextView Footer { get; set; }
+                LinearLayout ButtonLayout { get; set; }
+                BorderedActionButton WatchButton { get; set; }
+                BorderedActionButton TakeNotesButton { get; set; }
+
+                TextView Footer { get; set; }
 
                 public SeriesPrimaryListItem( Context context ) : base( context )
                 {
@@ -128,7 +216,6 @@ namespace Droid
                     Thumbnail = new DroidScaledImageView( Rock.Mobile.PlatformCommon.Droid.Context );
                     Thumbnail.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
                     Thumbnail.SetScaleType( ImageView.ScaleType.CenterCrop );
-                    Thumbnail.Id = 999;
                     AddView( Thumbnail );
 
                     Title = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
@@ -139,7 +226,6 @@ namespace Droid
                     ( (LinearLayout.LayoutParams)Title.LayoutParameters ).LeftMargin = 25;
                     AddView( Title );
 
-
                     DetailsLayout = new LinearLayout( Rock.Mobile.PlatformCommon.Droid.Context );
                     DetailsLayout.Orientation = Orientation.Horizontal;
                     DetailsLayout.LayoutParameters = new LinearLayout.LayoutParams( LayoutParams.WrapContent, LayoutParams.WrapContent );
@@ -148,7 +234,6 @@ namespace Droid
                     ( (LinearLayout.LayoutParams)DetailsLayout.LayoutParameters ).RightMargin = 25;
                     ( (LinearLayout.LayoutParams)DetailsLayout.LayoutParameters ).BottomMargin = 25;
                     AddView( DetailsLayout );
-
 
                     Date = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
                     Date.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
@@ -169,6 +254,70 @@ namespace Droid
                     DetailsLayout.AddView( Speaker );
 
 
+                    // setup the buttons
+                    ButtonLayout = new LinearLayout( Rock.Mobile.PlatformCommon.Droid.Context );
+                    ButtonLayout.Orientation = Orientation.Horizontal;
+                    ButtonLayout.LayoutParameters = new LinearLayout.LayoutParams( LayoutParams.MatchParent, LayoutParams.WrapContent );
+                    AddView( ButtonLayout );
+
+
+                    // Watch Button
+                    WatchButton = new BorderedActionButton();
+                    WatchButton.AddToView( ButtonLayout );
+
+                    ( (LinearLayout.LayoutParams)WatchButton.Layout.LayoutParameters ).LeftMargin = -5;
+                    ( (LinearLayout.LayoutParams)WatchButton.Layout.LayoutParameters ).RightMargin = -1;
+                    ( (LinearLayout.LayoutParams)WatchButton.Layout.LayoutParameters ).Weight = 1;
+                    WatchButton.Layout.BorderWidth = 1;
+                    WatchButton.Layout.SetBorderColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+                    WatchButton.Layout.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
+
+                    WatchButton.Icon.SetTypeface( DroidFontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary ), TypefaceStyle.Normal );
+                    WatchButton.Icon.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Series_Table_IconSize );
+                    WatchButton.Icon.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    WatchButton.Icon.Text = NoteConfig.Series_Table_Watch_Icon;
+
+                    WatchButton.Label.SetTypeface( DroidFontManager.Instance.GetFont( NoteConfig.Series_Table_Small_Font ), TypefaceStyle.Normal );
+                    WatchButton.Label.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Series_Table_Small_FontSize );
+                    WatchButton.Label.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    WatchButton.Label.Text = MessagesStrings.Series_Table_Watch;
+
+                    WatchButton.Button.Click += (object sender, EventArgs e ) =>
+                    {
+                        ParentAdapter.WatchButtonClicked( );
+                    };
+                    //
+
+
+
+                    // TakeNotes Button
+                    TakeNotesButton = new BorderedActionButton();
+                    TakeNotesButton.AddToView( ButtonLayout );
+
+                    ( (LinearLayout.LayoutParams)TakeNotesButton.Layout.LayoutParameters ).LeftMargin = -2;
+                    ( (LinearLayout.LayoutParams)TakeNotesButton.Layout.LayoutParameters ).RightMargin = -5;
+                    ( (LinearLayout.LayoutParams)TakeNotesButton.Layout.LayoutParameters ).Weight = 1;
+                    TakeNotesButton.Layout.BorderWidth = 1;
+                    TakeNotesButton.Layout.SetBorderColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+                    TakeNotesButton.Layout.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
+
+                    TakeNotesButton.Icon.SetTypeface( DroidFontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary ), TypefaceStyle.Normal );
+                    TakeNotesButton.Icon.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Series_Table_IconSize );
+                    TakeNotesButton.Icon.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    TakeNotesButton.Icon.Text = NoteConfig.Series_Table_TakeNotes_Icon;
+
+                    TakeNotesButton.Label.SetTypeface( DroidFontManager.Instance.GetFont( NoteConfig.Series_Table_Small_Font ), TypefaceStyle.Normal );
+                    TakeNotesButton.Label.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Series_Table_Small_FontSize );
+                    TakeNotesButton.Label.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    TakeNotesButton.Label.Text = MessagesStrings.Series_Table_TakeNotes;
+
+                    TakeNotesButton.Button.Click += (object sender, EventArgs e ) =>
+                    {
+                        ParentAdapter.TakeNotesButtonClicked( );
+                    };
+                    //
+
+
                     Footer = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
                     Footer.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
                     Footer.Text = MessagesStrings.Series_Table_PreviousMessages;
@@ -177,6 +326,38 @@ namespace Droid
                     Footer.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.Table_Footer_Color ) );
                     Footer.Gravity = GravityFlags.Center;
                     AddView( Footer );
+                }
+
+                public void ToggleWatchButton( bool enabled )
+                {
+                    WatchButton.Button.Enabled = enabled;
+
+                    if ( enabled == true )
+                    {
+                        WatchButton.Icon.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                        WatchButton.Label.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    }
+                    else
+                    {
+                        WatchButton.Icon.SetTextColor( Color.DimGray );
+                        WatchButton.Label.SetTextColor( Color.DimGray );
+                    }
+                }
+
+                public void ToggleTakeNotesButton( bool enabled )
+                {
+                    TakeNotesButton.Button.Enabled = enabled;
+
+                    if ( enabled == true )
+                    {
+                        TakeNotesButton.Icon.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                        TakeNotesButton.Label.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    }
+                    else
+                    {
+                        TakeNotesButton.Icon.SetTextColor( Color.DarkGray );
+                        TakeNotesButton.Label.SetTextColor( Color.DarkGray );
+                    }
                 }
             }
 
@@ -199,7 +380,6 @@ namespace Droid
                     Thumbnail.LayoutParameters = new LinearLayout.LayoutParams( 280, 280 );
                     ( (LinearLayout.LayoutParams)Thumbnail.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
                     Thumbnail.SetScaleType( ImageView.ScaleType.CenterCrop );
-                    Thumbnail.Id = 777;
                     AddView( Thumbnail );
 
                     TitleLayout = new LinearLayout( Rock.Mobile.PlatformCommon.Droid.Context );
@@ -284,11 +464,27 @@ namespace Droid
 
                     ListView.ItemClick += (object sender, AdapterView.ItemClickEventArgs e ) =>
                         {
-                            ParentTask.OnClick( this, e.Position );
+                            // we ignore a tap on position 0, because that's the header with Watch/Take Notes
+                            if( e.Position > 0 )
+                            {
+                                ParentTask.OnClick( this, e.Position - 1 );
+                            }
                         };
                     ListView.SetOnTouchListener( this );
 
                     return view;
+                }
+
+                public void WatchButtonClicked( )
+                {
+                    // notify the task that the Watch button was clicked
+                    ParentTask.OnClick( this, -1, 0 );
+                }
+
+                public void TakeNotesButtonClicked( )
+                {
+                    // notify the task that the Take Notes button was clicked
+                    ParentTask.OnClick( this, -1, 1 );
                 }
 
                 public override void OnResume()
