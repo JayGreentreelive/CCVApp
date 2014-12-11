@@ -91,6 +91,7 @@ namespace iOS
             PrayerRequest.BackgroundColor = UIColor.Clear;
             PrayerRequestPlaceholder.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
             PrayerRequestPlaceholder.BackgroundColor = UIColor.Clear;
+            PrayerRequestPlaceholder.Text = PrayerStrings.CreatePrayer_PrayerRequest;
             ControlStyling.StyleBGLayer( PrayerRequestLayer );
 
 

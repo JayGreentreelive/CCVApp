@@ -13,6 +13,10 @@ using Android.Views;
 using Android.Widget;
 using Android.Graphics;
 using Rock.Mobile.PlatformCommon;
+using Rock.Mobile.PlatformUI;
+using CCVApp.Shared.Config;
+using CCVApp.Shared.Strings;
+using Android.Text.Method;
 
 namespace Droid
 {
@@ -39,11 +43,11 @@ namespace Droid
 
                     View view = inflater.Inflate(Resource.Layout.News_Details, container, false);
                     view.SetOnTouchListener( this );
+                    view.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor ) );
 
                     // set the banner
                     DroidScaledImageView banner = new DroidScaledImageView( Activity );
-                    banner.Id = 777;
-                    ( (RelativeLayout)view ).AddView( banner );
+                    ( (LinearLayout)view ).AddView( banner, 0 );
 
                     System.IO.Stream assetStream = Activity.BaseContext.Assets.Open( NewsItem.HeaderImageName );
                     banner.SetImageBitmap( BitmapFactory.DecodeStream( assetStream ) );
@@ -52,7 +56,8 @@ namespace Droid
                     // set the description
                     TextView description = view.FindViewById<TextView>( Resource.Id.news_details_details );
                     description.Text = NewsItem.Description;
-                    ( (RelativeLayout.LayoutParams)description.LayoutParameters ).AddRule( LayoutRules.Below, banner.Id );
+                    description.MovementMethod = new ScrollingMovementMethod();
+                    description.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
 
 
                     Button launchUrlButton = view.FindViewById<Button>(Resource.Id.news_details_launch_url);
@@ -61,6 +66,7 @@ namespace Droid
                             // move to the next page..somehow.
                             ParentTask.OnClick( this, launchUrlButton.Id );
                         };
+                    ControlStyling.StyleButton( launchUrlButton, NewsStrings.LearnMore );
 
                     return view;
                 }

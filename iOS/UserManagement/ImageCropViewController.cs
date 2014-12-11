@@ -151,7 +151,7 @@ namespace iOS
             NSString cancelLabel = new NSString( ImageCropConfig.CropCancelButton_Text );
 
             CancelButton = new UIButton(UIButtonType.System);
-            CancelButton.Font = iOSCommon.LoadFontDynamic( ImageCropConfig.CropCancelButton_Font, ImageCropConfig.CropCancelButton_Size );
+            CancelButton.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Primary, ImageCropConfig.CropCancelButton_Size );
             CancelButton.SetTitle( cancelLabel.ToString( ), UIControlState.Normal );
 
             SizeF buttonSize = cancelLabel.StringSize( CancelButton.Font );
@@ -174,7 +174,7 @@ namespace iOS
             NSString editLabel = new NSString( ImageCropConfig.CropOkButton_Text );
 
             EditButton = new UIButton(UIButtonType.System);
-            EditButton.Font = iOSCommon.LoadFontDynamic( ImageCropConfig.CropOkButton_Font, ImageCropConfig.CropOkButton_Size );
+            EditButton.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Primary, ImageCropConfig.CropOkButton_Size );
             EditButton.SetTitle( editLabel.ToString( ), UIControlState.Normal );
             EditButton.HorizontalAlignment = UIControlContentHorizontalAlignment.Right;
 

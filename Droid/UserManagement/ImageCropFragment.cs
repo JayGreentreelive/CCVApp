@@ -212,7 +212,7 @@ namespace Droid
             ((RelativeLayout.LayoutParams)CancelButton.LayoutParameters).AddRule( LayoutRules.AlignParentLeft );
 
             // set the crop button's font
-            Android.Graphics.Typeface fontFace = DroidFontManager.Instance.GetFont( ImageCropConfig.CropCancelButton_Font );
+            Android.Graphics.Typeface fontFace = DroidFontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary );
             CancelButton.SetTypeface( fontFace, Android.Graphics.TypefaceStyle.Normal );
             CancelButton.SetTextSize( Android.Util.ComplexUnitType.Dip, ImageCropConfig.CropCancelButton_Size );
             CancelButton.Text = ImageCropConfig.CropCancelButton_Text;
@@ -241,7 +241,7 @@ namespace Droid
             ((RelativeLayout.LayoutParams)confirmButton.LayoutParameters).AddRule( LayoutRules.AlignParentRight );
 
             // set the crop button's font
-            fontFace = DroidFontManager.Instance.GetFont( ImageCropConfig.CropCancelButton_Font );
+            fontFace = DroidFontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary );
             confirmButton.SetTypeface( fontFace, Android.Graphics.TypefaceStyle.Normal );
             confirmButton.SetTextSize( Android.Util.ComplexUnitType.Dip, ImageCropConfig.CropOkButton_Size );
             confirmButton.Text = ImageCropConfig.CropOkButton_Text;

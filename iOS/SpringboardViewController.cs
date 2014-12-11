@@ -74,8 +74,7 @@ namespace iOS
                 // Create the logo view containing the image.
                 LogoView = new UILabel();
                 LogoView.Text = imageChar;
-                LogoView.Font = iOSCommon.LoadFontDynamic( SpringboardConfig.Font, SpringboardConfig.Element_FontSize );
-                LogoView.TextColor = PlatformBaseUI.GetUIColor( SpringboardConfig.Element_FontColor );
+                LogoView.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Primary, SpringboardConfig.Element_FontSize );
                 LogoView.SizeToFit( );
                 LogoView.BackgroundColor = UIColor.Clear;
                 BackingView.AddSubview( LogoView );
@@ -90,7 +89,7 @@ namespace iOS
 
                 // Create the seperator
                 Seperator = new UIView( );
-                Seperator.BackgroundColor = PlatformBaseUI.GetUIColor( SpringboardConfig.Element_SeperatorColor );
+                Seperator.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_Color );
                 BackingView.AddSubview( Seperator );
 
                 // Create the button
@@ -116,15 +115,15 @@ namespace iOS
 
             public void Activate( )
             {
-                LogoView.TextColor = PlatformBaseUI.GetUIColor( SpringboardConfig.Element_SelectedFontColor );
-                TextLabel.TextColor = PlatformBaseUI.GetUIColor( SpringboardConfig.Element_SelectedFontColor );
+                LogoView.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
+                TextLabel.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
                 BackingView.BackgroundColor = PlatformBaseUI.GetUIColor( SpringboardConfig.Element_SelectedColor );
             }
 
             public void Deactivate( )
             {
-                LogoView.TextColor = PlatformBaseUI.GetUIColor( SpringboardConfig.Element_FontColor );
-                TextLabel.TextColor = PlatformBaseUI.GetUIColor( SpringboardConfig.Element_FontColor );
+                LogoView.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+                TextLabel.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
                 BackingView.BackgroundColor = UIColor.Clear;
             }
         };
@@ -266,7 +265,7 @@ namespace iOS
 
             // add a bottom seperator for the final element
             BottomSeperator = new UIView();
-            BottomSeperator.BackgroundColor = PlatformBaseUI.GetUIColor( SpringboardConfig.Element_SeperatorColor );
+            BottomSeperator.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_Color );
             View.AddSubview( BottomSeperator );
             BottomSeperator.Frame = new RectangleF( 0, 0, View.Frame.Width, 1.0f );
 
@@ -281,10 +280,10 @@ namespace iOS
             //
 
             // setup the campus selector and settings button
-            CampusButton.SetTitleColor( PlatformBaseUI.GetUIColor( SpringboardConfig.Element_FontColor ), UIControlState.Normal );
+            CampusButton.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
 
-            SettingsButton.SetTitleColor( PlatformBaseUI.GetUIColor( SpringboardConfig.Element_FontColor ), UIControlState.Normal );
-            SettingsButton.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( SpringboardConfig.Font, SpringboardConfig.SettingsSymbolSize );
+            SettingsButton.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
+            SettingsButton.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Primary, SpringboardConfig.SettingsSymbolSize );
             SettingsButton.SetTitle( SpringboardConfig.SettingsSymbol, UIControlState.Normal );
             SettingsButton.SizeToFit( );
 
@@ -297,13 +296,13 @@ namespace iOS
             ProfileImageView.Layer.Position = PointF.Empty;
             LoginButton.AddSubview( ProfileImageView );
 
-            LoginButton.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( SpringboardConfig.Font, SpringboardConfig.ProfileSymbolFontSize );
-            LoginButton.SetTitleColor( PlatformBaseUI.GetUIColor( SpringboardConfig.ProfileSymbolColor ), UIControlState.Normal );
-            LoginButton.Layer.BorderColor = PlatformBaseUI.GetUIColor( SpringboardConfig.ProfileOutlineCircleColor ).CGColor;
+            LoginButton.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Primary, SpringboardConfig.ProfileSymbolFontSize );
+            LoginButton.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
+            LoginButton.Layer.BorderColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ).CGColor;
             LoginButton.Layer.CornerRadius = LoginButton.Bounds.Width / 2;
             LoginButton.Layer.BorderWidth = 4;
 
-            View.BackgroundColor = PlatformBaseUI.GetUIColor( SpringboardConfig.BackgroundColor );
+            View.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             AddChildViewController( NavViewController );
             View.AddSubview( NavViewController.View );

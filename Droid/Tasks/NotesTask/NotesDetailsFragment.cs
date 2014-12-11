@@ -236,7 +236,7 @@ namespace Droid
 
 
                     // setup the buttons
-                    Typeface buttonFontFace = DroidFontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary );
+                    Typeface buttonFontFace = DroidFontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
 
                     WatchButton = new Button( Rock.Mobile.PlatformCommon.Droid.Context );
                     WatchButton.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );

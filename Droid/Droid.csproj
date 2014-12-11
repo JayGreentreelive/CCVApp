@@ -79,63 +79,19 @@
     <Compile Include="Tasks\NotesTask\NotesPrimaryFragment.cs" />
     <Compile Include="Tasks\NotesTask\NotesDetailsFragment.cs" />
     <Compile Include="Tasks\NotesTask\NotesWatchFragment.cs" />
+    <Compile Include="ControlStyling.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\Strings.xml" />
-    <AndroidResource Include="Resources\layout-sw600dp\Main.axml" />
-    <AndroidResource Include="Resources\layout-sw600dp\News_Details.axml" />
-    <AndroidResource Include="Resources\layout-sw600dp\Notes.axml" />
-    <AndroidResource Include="Resources\layout-sw600dp\Springboard.axml" />
-    <AndroidResource Include="Resources\layout-sw480dp\Main.axml" />
-    <AndroidResource Include="Resources\layout-sw480dp\Notes.axml" />
-    <AndroidResource Include="Resources\layout-sw480dp\Springboard.axml" />
-    <AndroidResource Include="Resources\layout-sw480dp\News_Details.axml" />
-    <AndroidResource Include="Resources\layout-sw320dp\Main.axml" />
-    <AndroidResource Include="Resources\layout-sw320dp\News_Details.axml" />
-    <AndroidResource Include="Resources\layout-sw320dp\Notes.axml" />
-    <AndroidResource Include="Resources\layout-sw320dp\Springboard.axml" />
-    <AndroidResource Include="Resources\layout-sw600dp\Navbar.axml" />
-    <AndroidResource Include="Resources\layout-sw320dp\Navbar.axml" />
-    <AndroidResource Include="Resources\layout-sw480dp\Navbar.axml" />
-    <AndroidResource Include="Resources\layout-sw600dp\Login.axml" />
-    <AndroidResource Include="Resources\layout-sw320dp\Login.axml" />
-    <AndroidResource Include="Resources\layout-sw480dp\Login.axml" />
     <AndroidResource Include="..\Assets\ccvLogo%402x.png">
       <Link>Resources\drawable-hdpi\ccvLogo.png</Link>
     </AndroidResource>
-    <AndroidResource Include="Resources\layout-sw600dp\Profile.axml" />
-    <AndroidResource Include="Resources\layout-sw480dp\Profile.axml" />
-    <AndroidResource Include="Resources\layout-sw320dp\Profile.axml" />
     <AndroidResource Include="..\Assets\androidPhotoMask%402x.png">
       <Link>Resources\drawable-hdpi\androidPhotoMask.png</Link>
     </AndroidResource>
-    <AndroidResource Include="Resources\layout-sw320dp\ImageCrop.axml" />
-    <AndroidResource Include="Resources\layout-sw480dp\ImageCrop.axml" />
-    <AndroidResource Include="Resources\layout-sw600dp\ImageCrop.axml" />
-    <AndroidResource Include="Resources\layout-sw320dp\Prayer_Primary.axml" />
-    <AndroidResource Include="Resources\layout-sw480dp\Prayer_Primary.axml" />
-    <AndroidResource Include="Resources\layout-sw600dp\Prayer_Primary.axml" />
-    <AndroidResource Include="Resources\layout-sw320dp\News_Primary.axml" />
-    <AndroidResource Include="Resources\layout-sw480dp\News_Primary.axml" />
-    <AndroidResource Include="Resources\layout-sw600dp\News_Primary.axml" />
-    <AndroidResource Include="Resources\layout-sw600dp\About_Primary.axml" />
-    <AndroidResource Include="Resources\layout-sw320dp\About_Primary.axml" />
-    <AndroidResource Include="Resources\layout-sw480dp\About_Primary.axml" />
-    <AndroidResource Include="Resources\layout-sw320dp\Prayer_Create.axml" />
-    <AndroidResource Include="Resources\layout-sw600dp\Prayer_Create.axml" />
-    <AndroidResource Include="Resources\layout-sw480dp\Prayer_Create.axml" />
-    <AndroidResource Include="Resources\layout-sw320dp\Give_Primary.axml" />
-    <AndroidResource Include="Resources\layout-sw480dp\Give_Primary.axml" />
-    <AndroidResource Include="Resources\layout-sw600dp\Give_Primary.axml" />
-    <AndroidResource Include="Resources\layout-sw320dp\Notes_Primary.axml" />
-    <AndroidResource Include="Resources\layout-sw480dp\Notes_Primary.axml" />
-    <AndroidResource Include="Resources\layout-sw600dp\Notes_Primary.axml" />
-    <AndroidResource Include="Resources\layout-sw600dp\Notes_Details.axml" />
-    <AndroidResource Include="Resources\layout-sw480dp\Notes_Details.axml" />
-    <AndroidResource Include="Resources\layout-sw320dp\Notes_Details.axml" />
     <AndroidResource Include="..\Assets\podcastThumbnailPlaceholder%402x.png">
       <Link>Resources\drawable-hdpi\thumbnailPlaceholder.png</Link>
     </AndroidResource>
@@ -147,6 +103,21 @@
     <AndroidResource Include="..\Assets\Icons\Icon.png">
       <Link>Resources\drawable-mdpi\Icon.png</Link>
     </AndroidResource>
+    <AndroidResource Include="Resources\layout\Prayer_Create.axml" />
+    <AndroidResource Include="Resources\layout\Profile.axml" />
+    <AndroidResource Include="Resources\layout\Notes.axml" />
+    <AndroidResource Include="Resources\layout\About_Primary.axml" />
+    <AndroidResource Include="Resources\layout\Main.axml" />
+    <AndroidResource Include="Resources\layout\ImageCrop.axml" />
+    <AndroidResource Include="Resources\layout\navbar.axml" />
+    <AndroidResource Include="Resources\layout\Give_Primary.axml" />
+    <AndroidResource Include="Resources\layout\Prayer_Primary.axml" />
+    <AndroidResource Include="Resources\layout\News_Details.axml" />
+    <AndroidResource Include="Resources\layout\News_Primary.axml" />
+    <AndroidResource Include="Resources\layout\Login.axml" />
+    <AndroidResource Include="Resources\layout\Notes_Details.axml" />
+    <AndroidResource Include="Resources\layout\Notes_Primary.axml" />
+    <AndroidResource Include="Resources\layout\Springboard.axml" />
   </ItemGroup>
   <Import Project="..\..\Rock.Mobile\Rock.Mobile.projitems" Label="Shared" Condition="Exists('..\..\Rock.Mobile\Rock.Mobile.projitems')" />
   <Import Project="..\..\Rock\Rock.Client\Rock.Client.Models.projitems" Label="Shared" Condition="Exists('..\..\Rock\Rock.Client\Rock.Client.Models.projitems')" />
@@ -165,6 +136,8 @@
     <Folder Include="Tasks\AboutTask\" />
     <Folder Include="Tasks\PrayerTask\" />
     <Folder Include="Tasks\GiveTask\" />
+    <Folder Include="Resources\layout\" />
+    <Folder Include="Resources\layout-sw480dp\" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="..\Assets\Fonts\Bevan.ttf">

@@ -30,60 +30,97 @@ namespace Droid
                 class PrayerLayoutRender
                 {
                     public LinearLayout LinearLayout { get; set; }
-                    TextView Name { get; set; }
-                    TextView Date { get; set; }
-                    TextView Prayer { get; set; }
+                    public TextView Name { get; set; }
+                    public TextView Date { get; set; }
+                    public TextView Category { get; set; }
+                    public TextView Prayer { get; set; }
 
                     int PrayerMaxScroll { get; set; }
 
                     public PrayerLayoutRender( RectangleF bounds, Rock.Client.PrayerRequest prayer )
                     {
-                        Name = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
-                        Name.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-
-                        Date = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
-                        Date.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-
-                        Prayer = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
-                        Prayer.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-                        Prayer.SetMinWidth( (int)bounds.Width );
-                        Prayer.SetMaxWidth( (int)bounds.Width );
-
-
-                        // set the text color
-                        Name.SetTextColor( Android.Graphics.Color.White );
-                        Date.SetTextColor( Android.Graphics.Color.White );
-                        Prayer.SetTextColor( Android.Graphics.Color.White );
-
+                        // Create the core layout that stores the prayer
                         LinearLayout = new LinearLayout( Rock.Mobile.PlatformCommon.Droid.Context );
-                        LinearLayout.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
+                        //LinearLayout.SetBackgroundColor( Android.Graphics.Color.Green );
+                        LinearLayout.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                         LinearLayout.Orientation = Orientation.Vertical;
-                        LinearLayout.AddView( Name );
-                        LinearLayout.AddView( Date );
 
-                        LinearLayout.AddView( Prayer );
 
-                        // set the contents
+                        // add the name
+                        Name = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                        Name.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                        ((LinearLayout.LayoutParams)Name.LayoutParameters).LeftMargin = 10;
+                        Name.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
+                        Name.SetTypeface( DroidFontManager.Instance.GetFont( PrayerConfig.Card_NameFont ), TypefaceStyle.Normal );
+                        Name.SetTextSize( ComplexUnitType.Dip, PrayerConfig.Card_NameSize );
                         Name.Text = prayer.FirstName;
-                        Date.Text = string.Format( "{0:dddd MMMM d}, {2:yyyy}", prayer.CreatedDateTime, prayer.CreatedDateTime, prayer.CreatedDateTime );
+                        LinearLayout.AddView( Name );
 
+
+
+                        // create the layout for managing the category / date
+                        LinearLayout detailsLayout = new LinearLayout( Rock.Mobile.PlatformCommon.Droid.Context );
+                        detailsLayout.Orientation = Orientation.Horizontal;
+                        detailsLayout.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
+                        LinearLayout.AddView( detailsLayout );
+
+                        // category
+                        Category = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                        Category.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                        ((LinearLayout.LayoutParams)Category.LayoutParameters).LeftMargin = 10;
+                        Category.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                        Category.SetTypeface( DroidFontManager.Instance.GetFont( PrayerConfig.Card_CategoryFont ), TypefaceStyle.Normal );
+                        Category.SetTextSize( ComplexUnitType.Dip, PrayerConfig.Card_CategorySize );
+                        Category.Text = "Category";
+                        detailsLayout.AddView( Category );
+
+                        // add a dummy view that will force the date over to the right
+                        View dummyView = new View( Rock.Mobile.PlatformCommon.Droid.Context );
+                        dummyView.LayoutParameters = new LinearLayout.LayoutParams( 0, 0 );
+                        ( (LinearLayout.LayoutParams)dummyView.LayoutParameters ).Weight = 1;
+                        detailsLayout.AddView( dummyView );
+
+                        // date
+                        Date = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                        Date.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                        ((LinearLayout.LayoutParams)Date.LayoutParameters).RightMargin = 10;
+                        Date.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                        Date.SetTypeface( DroidFontManager.Instance.GetFont( PrayerConfig.Card_DateFont ), TypefaceStyle.Normal );
+                        Date.SetTextSize( ComplexUnitType.Dip, PrayerConfig.Card_DateSize );
+                        Date.Text = string.Format( "{0:MM/dd/yy}", prayer.CreatedDateTime );
+                        detailsLayout.AddView( Date );
+
+                        // actual prayer
+                        Prayer = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                        Prayer.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                        //((LinearLayout.LayoutParams)Prayer.LayoutParameters).LeftMargin = 10;
+                        //((LinearLayout.LayoutParams)Prayer.LayoutParameters).RightMargin = 10;
+                        //Prayer.SetMinWidth( (int)bounds.Width );
+                        //Prayer.SetMaxWidth( (int)bounds.Width );
+                        Prayer.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                        Prayer.SetTypeface( DroidFontManager.Instance.GetFont( PrayerConfig.Card_PrayerFont ), TypefaceStyle.Normal );
+                        Prayer.SetTextSize( ComplexUnitType.Dip, PrayerConfig.Card_PrayerSize );
                         Prayer.Text = prayer.Text;
+                        LinearLayout.AddView( Prayer );
                     }
 
                     public void Scroll( float distanceY )
                     {
-                        // create the specs we want for measurement
-                        int widthMeasureSpec = View.MeasureSpec.MakeMeasureSpec( LinearLayout.Width, MeasureSpecMode.AtMost );
-                        int heightMeasureSpec = View.MeasureSpec.MakeMeasureSpec( 0, MeasureSpecMode.Unspecified );
+                        if ( Prayer != null )
+                        {
+                            // create the specs we want for measurement
+                            int widthMeasureSpec = View.MeasureSpec.MakeMeasureSpec( LinearLayout.Width, MeasureSpecMode.AtMost );
+                            int heightMeasureSpec = View.MeasureSpec.MakeMeasureSpec( 0, MeasureSpecMode.Unspecified );
 
-                        // measure the label given the current width/height/text
-                        Prayer.Measure( widthMeasureSpec, heightMeasureSpec );
+                            // measure the label given the current width/height/text
+                            Prayer.Measure( widthMeasureSpec, heightMeasureSpec );
 
-                        Prayer.ScrollY += (int)distanceY;
+                            Prayer.ScrollY += (int)distanceY;
 
-                        // allow scrolling enough to show all the content of the prayer, but no more than that.
-                        int availableHeight = LinearLayout.Height - (int)Prayer.GetY( );
-                        Prayer.ScrollY = Math.Max( 0, Math.Min( Prayer.ScrollY, Prayer.MeasuredHeight - availableHeight ) );
+                            // allow scrolling enough to show all the content of the prayer, but no more than that.
+                            int availableHeight = LinearLayout.Height - (int)Prayer.GetY( );
+                            Prayer.ScrollY = Math.Max( 0, Math.Min( Prayer.ScrollY, Prayer.MeasuredHeight - availableHeight ) );
+                        }
                     }
                 }
 
@@ -97,37 +134,97 @@ namespace Droid
                     {
                         View = PlatformView.Create( );
                         View.Bounds = bounds;
+                        View.BackgroundColor = ControlStylingConfig.BG_Layer_Color;
+                        View.BorderColor = ControlStylingConfig.BG_Layer_BorderColor;
+                        View.CornerRadius = ControlStylingConfig.Button_CornerRadius;
+                        View.BorderWidth = ControlStylingConfig.BG_Layer_BorderWidth;
+
+                        // create a vertically oriented linearLayout that will act as our root
+                        LinearLayout root = new LinearLayout( Rock.Mobile.PlatformCommon.Droid.Context );
+                        //root.SetBackgroundColor( Android.Graphics.Color.GreenYellow );
+                        root.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent );
+                        root.Orientation = Orientation.Vertical;
+
+                        // use a dummy view to pad the root and force the "I Prayed" label to the bottom area
+                        View dummyView = new View( Rock.Mobile.PlatformCommon.Droid.Context );
+                        //dummyView.SetBackgroundColor( Android.Graphics.Color.Orange );
+                        dummyView.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, 0 );
+                        ( (LinearLayout.LayoutParams)dummyView.LayoutParameters ).Weight = 10;
+                        root.AddView( dummyView );
+
+
+                        // create the bottom prayer layout
+                        RelativeLayout frameLayout = new RelativeLayout( Rock.Mobile.PlatformCommon.Droid.Context );
+                        //frameLayout.SetBackgroundColor( Android.Graphics.Color.Aqua );
+                        frameLayout.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, 0 );
+                        ((LinearLayout.LayoutParams)frameLayout.LayoutParameters).Weight = 1;
+                        root.AddView( frameLayout );
+
 
                         // Pray Button
                         Pray = new Button( Rock.Mobile.PlatformCommon.Droid.Context );
-
-                        RelativeLayout prayButtonLayout = new RelativeLayout( Rock.Mobile.PlatformCommon.Droid.Context );
-                        prayButtonLayout.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
-                        ((RelativeLayout.LayoutParams)prayButtonLayout.LayoutParameters).AddRule( LayoutRules.AlignParentBottom );
-
-                        Pray.Text = "Pray";
-                        Pray.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-                        ((RelativeLayout.LayoutParams)Pray.LayoutParameters).AddRule( LayoutRules.CenterHorizontal );
-                        prayButtonLayout.AddView( Pray );
-
                         Pray.Enabled = false;
+                        Pray.SetBackgroundDrawable( null );
+                        Pray.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent );
+                        frameLayout.AddView( Pray );
+
+
+                        // Layout for the text and circle
+                        LinearLayout prayedLayout = new LinearLayout( Rock.Mobile.PlatformCommon.Droid.Context );
+                        //prayedLayout.SetBackgroundColor( Android.Graphics.Color.Bisque );
+                        prayedLayout.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                        ( (RelativeLayout.LayoutParams)prayedLayout.LayoutParameters ).AddRule( LayoutRules.AlignParentRight );
+                        prayedLayout.Orientation = Orientation.Horizontal;
+                        frameLayout.AddView( prayedLayout );
+
+
+
+                        // Setup the "I Prayed" label
+                        TextView prayedLabel = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                        //prayedLabel.SetBackgroundColor( Android.Graphics.Color.Green );
+                        prayedLabel.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.MatchParent );
+                        prayedLabel.Text = PrayerStrings.Prayer_Confirm;
+                        prayedLabel.Gravity = GravityFlags.Center;
+                        prayedLabel.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                        prayedLayout.AddView( prayedLabel );
+
+                        CircleView tappedCircle = new CircleView( Rock.Mobile.PlatformCommon.Droid.Context );
+                        tappedCircle.LayoutParameters = new LinearLayout.LayoutParams( 75, ViewGroup.LayoutParams.MatchParent );
+                        //tappedCircle.SetBackgroundColor( Android.Graphics.Color.Purple );
+                        tappedCircle.Color = PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor );
+                        tappedCircle.Radius = 8;
+                        tappedCircle.StrokeWidth = 1;
+                        //tappedCircle.Style = Android.Graphics.Paint.Style.FillAndStroke;
+                        prayedLayout.AddView( tappedCircle );
+
+
+                        // hack until we get actual pray stamping in
+                        Pray.Click += (object sender, EventArgs e) => 
+                            {
+                                if( tappedCircle.Style == Android.Graphics.Paint.Style.Stroke )
+                                {
+                                    tappedCircle.Style = Android.Graphics.Paint.Style.FillAndStroke;
+                                }
+                                else
+                                {
+                                    tappedCircle.Style = Android.Graphics.Paint.Style.Stroke;
+                                }
+                                tappedCircle.Invalidate( );
+                            };
                         //
 
-                       // set the outline for the card
-                        View.BorderColor = 0x777777FF;
-                        View.CornerRadius = 4;
-                        View.BorderWidth = 1;
 
                         // add the controls
                         ViewGroup nativeView = View.PlatformNativeObject as ViewGroup;
-
-                        nativeView.AddView( prayButtonLayout );
+                        nativeView.AddView( root );
 
                         cardView = View;
                     }
 
                     public void SetPrayer( PrayerLayoutRender prayer )
                     {
+                        Rock.Mobile.Profiler.Instance.Start( "SetPrayer" );
+
                         ViewGroup nativeView = View.PlatformNativeObject as ViewGroup;
 
                         // if a valid prayer is given
@@ -157,6 +254,8 @@ namespace Droid
 
                             Pray.Enabled = false;
                         }
+
+                        Rock.Mobile.Profiler.Instance.Stop( "SetPrayer" );
                     }
 
                     public void Scroll( float distanceY )
@@ -200,6 +299,8 @@ namespace Droid
 
                     View view = inflater.Inflate(Resource.Layout.Prayer_Primary, container, false);
                     view.SetOnTouchListener( this );
+
+                    view.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor ) );
 
                     ActivityIndicator = (ProgressBar)view.FindViewById<ProgressBar>( Resource.Id.prayer_primary_activityIndicator );
                     ActivityIndicator.Visibility = ViewStates.Gone;
@@ -345,6 +446,8 @@ namespace Droid
 
                 void UpdatePrayerCards( int prayerIndex )
                 {
+                    Rock.Mobile.Profiler.Instance.Start( "Update Prayer Cards" );
+
                     if( prayerIndex < PrayerRequests.Count )
                     {
                         CenterPrayer.SetPrayer( PrayerLayouts[ prayerIndex ] );
@@ -370,6 +473,8 @@ namespace Droid
                             PostRightPrayer.SetPrayer( PrayerLayouts[ prayerIndex + 2 ] );
                         }
                     }
+
+                    Rock.Mobile.Profiler.Instance.Stop( "Update Prayer Cards" );
                 }
 
                 public void SpringboardClosed( )

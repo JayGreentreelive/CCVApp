@@ -197,7 +197,7 @@ namespace CCVApp
                     TextField.SetFont( mStyle.mFont.mName, mStyle.mFont.mSize.Value );
                     TextField.TextColor = mStyle.mFont.mColor.Value;
                     TextField.Placeholder = "Enter note";
-                    TextField.PlaceholderTextColor = NoteConfig.UserNote_PlaceholderTextColor;
+                    TextField.PlaceholderTextColor = ControlStylingConfig.TextField_PlaceholderTextColor;
                      
                     // check for border styling
                     if ( mStyle.mBorderColor.HasValue )
@@ -230,7 +230,7 @@ namespace CCVApp
                     // Setup the anchor color
                     Anchor.Text = NoteConfig.UserNote_Icon;
                     Anchor.TextColor = NoteConfig.UserNote_IconColor;
-                    Anchor.SetFont( NoteConfig.UserNote_IconFont, NoteConfig.UserNote_IconSize );
+                    Anchor.SetFont( ControlStylingConfig.Icon_Font_Primary, NoteConfig.UserNote_IconSize );
                     Anchor.SizeToFit();
                     if( mStyle.mBackgroundColor.HasValue )
                     {
@@ -264,7 +264,7 @@ namespace CCVApp
                     // setup the delete button
                     DeleteButton.Text = NoteConfig.UserNote_DeleteIcon;
                     DeleteButton.TextColor = NoteConfig.UserNote_DeleteIconColor;
-                    DeleteButton.SetFont( NoteConfig.UserNote_DeleteIconFont, NoteConfig.UserNote_DeleteIconSize );
+                    DeleteButton.SetFont( ControlStylingConfig.Icon_Font_Primary, NoteConfig.UserNote_DeleteIconSize );
                     DeleteButton.Hidden = true;
                     DeleteButton.SizeToFit( );
                     if( mStyle.mBackgroundColor.HasValue )

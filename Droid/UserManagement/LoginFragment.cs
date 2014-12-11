@@ -13,6 +13,8 @@ using Android.Views;
 using Android.Widget;
 using CCVApp.Shared.Network;
 using CCVApp.Shared.Config;
+using CCVApp.Shared.Strings;
+using Rock.Mobile.PlatformUI;
 
 namespace Droid
 {
@@ -36,7 +38,7 @@ namespace Droid
         ProgressBar LoginActivityIndicator { get; set; }
         Button LoginButton { get; set; }
         Button CancelButton { get; set; }
-        Button CreateAccountButton { get; set; }
+        Button RegisterButton { get; set; }
         EditText UsernameField { get; set; }
         EditText PasswordField { get; set; }
         TextView LoginResultLabel { get; set; }
@@ -60,27 +62,46 @@ namespace Droid
             }
 
             View view = inflater.Inflate(Resource.Layout.Login, container, false);
+            view.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+
+            RelativeLayout navBar = view.FindViewById<RelativeLayout>( Resource.Id.navbar_relative_layout );
+            navBar.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+
+            View backgroundView = view.FindViewById<View>( Resource.Id.login_background );
+            ControlStyling.StyleBGLayer( backgroundView );
 
             LoginActivityIndicator = view.FindViewById<ProgressBar>( Resource.Id.login_progressBar );
             LoginActivityIndicator.Visibility = ViewStates.Gone;
 
-            LoginButton = view.FindViewById<Button>( Resource.Id.login_loginButton );
-            CancelButton = view.FindViewById<Button>( Resource.Id.login_cancelButton );
-            CreateAccountButton = view.FindViewById<Button>( Resource.Id.login_needAccountButton );
-
-            UsernameField = view.FindViewById<EditText>( Resource.Id.login_usernameText );
-            PasswordField = view.FindViewById<EditText>( Resource.Id.login_passwordText );
-            LoginResultLabel = view.FindViewById<TextView>( Resource.Id.login_loginResultLabel );
-
+            LoginButton = view.FindViewById<Button>( Resource.Id.loginButton );
+            ControlStyling.StyleButton( LoginButton, LoginStrings.LoginButton );
             LoginButton.Click += (object sender, EventArgs e) => 
                 {
                     TryLogin( );
                 };
 
+            CancelButton = view.FindViewById<Button>( Resource.Id.cancelButton );
+            ControlStyling.StyleButton( CancelButton, GeneralStrings.Cancel );
+            CancelButton.SetBackgroundDrawable( null );
             CancelButton.Click += (object sender, EventArgs e) => 
                 {
                     SpringboardParent.ModalFragmentFinished( this, null );
                 };
+
+            RegisterButton = view.FindViewById<Button>( Resource.Id.registerButton );
+            ControlStyling.StyleButton( RegisterButton, LoginStrings.RegisterButton );
+
+            UsernameField = view.FindViewById<EditText>( Resource.Id.usernameText );
+            ControlStyling.StyleTextField( UsernameField, LoginStrings.UsernamePlaceholder );
+
+            View borderView = backgroundView.FindViewById<View>( Resource.Id.middle_border );
+            borderView.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+
+            PasswordField = view.FindViewById<EditText>( Resource.Id.passwordText );
+            ControlStyling.StyleTextField( PasswordField, LoginStrings.PasswordPlaceholder );
+
+            LoginResultLabel = view.FindViewById<TextView>( Resource.Id.loginResult );
+            ControlStyling.StyleUILabel( LoginResultLabel );
 
             return view;
         }
@@ -156,7 +177,7 @@ namespace Droid
                     LoginActivityIndicator.Visibility = ViewStates.Gone;
                     CancelButton.Visibility = ViewStates.Invisible;
                     LoginButton.Visibility = ViewStates.Invisible;
-                    CreateAccountButton.Visibility = ViewStates.Invisible;
+                    RegisterButton.Visibility = ViewStates.Invisible;
 
                     // update the UI
                     LoginResultLabel.Text = string.Format( "Welcome back, {0}!", model.FirstName );
@@ -222,8 +243,8 @@ namespace Droid
                     PasswordField.Enabled = true;
                     LoginButton.Enabled = true;
                     CancelButton.Enabled = true;
-                    CreateAccountButton.Visibility = ViewStates.Visible;
-                    CreateAccountButton.Enabled = true;
+                    RegisterButton.Visibility = ViewStates.Visible;
+                    RegisterButton.Enabled = true;
 
                     break;
                 }
@@ -235,7 +256,7 @@ namespace Droid
                     PasswordField.Enabled = false;
                     LoginButton.Enabled = false;
                     CancelButton.Enabled = false;
-                    CreateAccountButton.Enabled = false;
+                    RegisterButton.Enabled = false;
 
                     break;
                 }

@@ -105,7 +105,7 @@ namespace iOS
 
                     WatchButtonIcon = new UILabel( );
                     WatchButton.AddSubview( WatchButtonIcon );
-                    WatchButtonIcon.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Primary, NoteConfig.Series_Table_IconSize );
+                    WatchButtonIcon.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Secondary, NoteConfig.Series_Table_IconSize );
                     WatchButtonIcon.Text = NoteConfig.Series_Table_Watch_Icon;
                     WatchButtonIcon.SizeToFit( );
 
@@ -128,7 +128,7 @@ namespace iOS
 
                     TakeNotesButtonIcon = new UILabel( );
                     TakeNotesButton.AddSubview( TakeNotesButtonIcon );
-                    TakeNotesButtonIcon.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Primary, NoteConfig.Series_Table_IconSize );
+                    TakeNotesButtonIcon.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Secondary, NoteConfig.Series_Table_IconSize );
                     TakeNotesButtonIcon.Text = NoteConfig.Series_Table_TakeNotes_Icon;
                     TakeNotesButtonIcon.SizeToFit( );
 
@@ -223,7 +223,7 @@ namespace iOS
 
                     Chevron = new UILabel( );
                     AddSubview( Chevron );
-                    Chevron.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Primary, NoteConfig.Series_Table_IconSize );
+                    Chevron.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Secondary, NoteConfig.Series_Table_IconSize );
                     Chevron.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
                     Chevron.Text = NoteConfig.Series_Table_Navigate_Icon;
                     Chevron.SizeToFit( );
@@ -512,7 +512,7 @@ namespace iOS
             base.ViewDidLoad();
 
             // setup our table
-            NotesTableView.BackgroundColor = PlatformBaseUI.GetUIColor( NoteConfig.Series_Main_Table_BackgroundColor );
+            NotesTableView.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor );
             NotesTableView.SeparatorStyle = UITableViewCellSeparatorStyle.None;
 
             ActivityIndicator = new UIActivityIndicatorView( new RectangleF( View.Frame.Width / 2, View.Frame.Height / 2, 0, 0 ) );

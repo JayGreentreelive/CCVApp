@@ -72,10 +72,10 @@ namespace iOS
             NSString backLabel = new NSString(SubNavToolbarConfig.BackButton_Text);
 
             BackButton = new UIButton(UIButtonType.System);
-            BackButton.Font = iOSCommon.LoadFontDynamic( SubNavToolbarConfig.BackButton_Font, SubNavToolbarConfig.BackButton_Size );
+            BackButton.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Secondary, SubNavToolbarConfig.BackButton_Size );
             BackButton.SetTitle( backLabel.ToString( ), UIControlState.Normal );
-            BackButton.SetTitleColor( PlatformBaseUI.GetUIColor( SubNavToolbarConfig.BackButton_EnabledColor ), UIControlState.Normal );
-            BackButton.SetTitleColor( PlatformBaseUI.GetUIColor( SubNavToolbarConfig.BackButton_DisabledColor ), UIControlState.Disabled );
+            BackButton.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ), UIControlState.Normal );
+            BackButton.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Disabled );
 
             SizeF buttonSize = backLabel.StringSize( BackButton.Font );
             BackButton.Bounds = new RectangleF( 0, 0, buttonSize.Width, buttonSize.Height );
@@ -85,10 +85,10 @@ namespace iOS
             NSString shareLabel = new NSString(SubNavToolbarConfig.ShareButton_Text);
 
             ShareButton = new UIButton(UIButtonType.System);
-            ShareButton.Font = iOSCommon.LoadFontDynamic( SubNavToolbarConfig.ShareButton_Font, SubNavToolbarConfig.ShareButton_Size );
+            ShareButton.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Secondary, SubNavToolbarConfig.ShareButton_Size );
             ShareButton.SetTitle( shareLabel.ToString( ), UIControlState.Normal );
-            ShareButton.SetTitleColor( PlatformBaseUI.GetUIColor( SubNavToolbarConfig.ShareButton_EnabledColor ), UIControlState.Normal );
-            ShareButton.SetTitleColor( PlatformBaseUI.GetUIColor( SubNavToolbarConfig.ShareButton_DisabledColor ), UIControlState.Disabled );
+            ShareButton.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ), UIControlState.Normal );
+            ShareButton.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Disabled );
 
             // determine its dimensions
             buttonSize = shareLabel.StringSize( ShareButton.Font );
@@ -100,10 +100,10 @@ namespace iOS
             NSString createLabel = new NSString(SubNavToolbarConfig.CreateButton_Text);
 
             CreateButton = new UIButton(UIButtonType.System);
-            CreateButton.Font = iOSCommon.LoadFontDynamic( SubNavToolbarConfig.CreateButton_Font, SubNavToolbarConfig.CreateButton_Size );
+            CreateButton.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Secondary, SubNavToolbarConfig.CreateButton_Size );
             CreateButton.SetTitle( createLabel.ToString( ), UIControlState.Normal );
-            CreateButton.SetTitleColor( PlatformBaseUI.GetUIColor( SubNavToolbarConfig.CreateButton_EnabledColor ), UIControlState.Normal );
-            CreateButton.SetTitleColor( PlatformBaseUI.GetUIColor( SubNavToolbarConfig.CreateButton_DisabledColor ), UIControlState.Disabled );
+            CreateButton.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ), UIControlState.Normal );
+            CreateButton.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Disabled );
 
             // determine its dimensions
             buttonSize = createLabel.StringSize( CreateButton.Font );

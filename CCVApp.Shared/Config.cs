@@ -38,16 +38,6 @@ namespace CCVApp
                 public const float ProfileSymbolFontSize = 48;
 
                 /// <summary>
-                /// The color of the outline circle around the profile image.
-                /// </summary>
-                public const uint ProfileOutlineCircleColor = 0x959595FF;
-
-                /// <summary>
-                /// The color of the profile symbols when there is no profile picture.
-                /// </summary>
-                public const uint ProfileSymbolColor = 0x959595FF;
-
-                /// <summary>
                 /// When we store their profile pic, thisi s what it's called.
                 /// When the HasProfileImage flag is true, we'll load it from this file.
                 /// </summary>
@@ -62,31 +52,11 @@ namespace CCVApp
                 /// The size of the symbol representing the settings button.
                 /// </summary>
                 public const float SettingsSymbolSize = 14;
-
-                /// <summary>
-                /// The font to use for all non-text on the sprinboard.
-                /// </summary>
-                public const string Font = "FontAwesome";
                
                 /// <summary>
                 /// The size of font to use for the element's logo.
                 /// </summary>
                 public const int Element_FontSize = 23;
-
-                /// <summary>
-                /// The color of the font to use for the SELECTED element's logo and text.
-                /// </summary>
-                public const uint Element_SelectedFontColor = 0xE4E4E4FF;
-
-                /// <summary>
-                /// The color of the font to use for the element's logo and text.
-                /// </summary>
-                public const uint Element_FontColor = 0x959595FF;
-
-                /// <summary>
-                /// The color of the seperating line between elements
-                /// </summary>
-                public const uint Element_SeperatorColor = 0x3E3E3EFF;
 
                 /// <summary>
                 /// The X offset to place the CENTER of the element's logo.
@@ -132,20 +102,10 @@ namespace CCVApp
                 /// The icon to use representing the More element
                 /// </summary>
                 public const string Element_More_Icon = "";
-
-                /// <summary>
-                /// The background color of the springboard.
-                /// </summary>
-                public const int BackgroundColor = 0x303030FF;
             }
 
             public class ImageCropConfig
             {
-                /// <summary>
-                /// The font to use for displaying the 'ok to crop' button.
-                /// </summary>
-                public const string CropOkButton_Font = "FontAwesome";
-
                 /// <summary>
                 /// The text to display for the 'ok to crop' button.
                 /// </summary>
@@ -155,11 +115,6 @@ namespace CCVApp
                 /// The size (in font points) of the 'ok to crop' button.
                 /// </summary>
                 public const int CropOkButton_Size = 36;
-
-                /// <summary>
-                /// The font to use for displaying the 'cancel crop' button.
-                /// </summary>
-                public const string CropCancelButton_Font = "FontAwesome";
 
                 /// <summary>
                 /// The text to display for the 'cancel crop' button.
@@ -202,26 +157,6 @@ namespace CCVApp
                 public const float iOS_ButtonSpacing = 5.0f;
 
                 /// <summary>
-                /// The font to use for displaying the subNavigation toolbar's back button. (the one at the bottom)
-                /// </summary>
-                public const string BackButton_Font = "Bh";
-
-                /// <summary>
-                /// The color to use for displaying the subNavigation toolbar's back button when enabled. (the one at the bottom)
-                /// </summary>
-                public const uint BackButton_EnabledColor = 0xFFFFFFFF;
-
-                /// <summary>
-                /// The color to use for displaying the subNavigation toolbar's back button when pressed. (Android Only) (the one at the bottom)
-                /// </summary>
-                public const uint BackButton_PressedColor = 0x444444FF;
-
-                /// <summary>
-                /// The color to use for displaying the subNavigation toolbar's back button when disabled. (the one at the bottom)
-                /// </summary>
-                public const uint BackButton_DisabledColor = 0x444444FF;
-
-                /// <summary>
                 /// The text to display for the subNavigation toolbar's back button. (the one at the bottom)
                 /// </summary>
                 public const string BackButton_Text = "";
@@ -232,26 +167,6 @@ namespace CCVApp
                 public const int BackButton_Size = 36;
 
                 /// <summary>
-                /// The font to use for displaying the subNavigation toolbar's share button. (the one at the bottom)
-                /// </summary>
-                public const string ShareButton_Font = "Bh";
-
-                /// <summary>
-                /// The color to use for displaying the subNavigation toolbar's share button when enabled. (the one at the bottom)
-                /// </summary>
-                public const uint ShareButton_EnabledColor = 0xFFFFFFFF;
-
-                /// <summary>
-                /// The color to use for displaying the subNavigation toolbar's share button when pressed. (Android Only) (the one at the bottom)
-                /// </summary>
-                public const uint ShareButton_PressedColor = 0x444444FF;
-
-                /// <summary>
-                /// The color to use for displaying the subNavigation toolbar's share button when disabled. (the one at the bottom)
-                /// </summary>
-                public const uint ShareButton_DisabledColor = 0x444444FF;
-
-                /// <summary>
                 /// The text to display for the subNavigation toolbar's share button. (the one at the bottom)
                 /// </summary>
                 public const string ShareButton_Text = "";
@@ -260,26 +175,6 @@ namespace CCVApp
                 /// The size (in font points) of the sub nav toolbar share button. (the one at the bottom)
                 /// </summary>
                 public const int ShareButton_Size = 36;
-
-                /// <summary>
-                /// The font to use for displaying the subNavigation toolbar's create button. (the one at the bottom)
-                /// </summary>
-                public const string CreateButton_Font = "Bh";
-
-                /// <summary>
-                /// The color to use for displaying the subNavigation toolbar's create button when enabled. (the one at the bottom)
-                /// </summary>
-                public const uint CreateButton_EnabledColor = 0xFFFFFFFF;
-
-                /// <summary>
-                /// The color to use for displaying the subNavigation toolbar's create button when pressed. (Android Only) (the one at the bottom)
-                /// </summary>
-                public const uint CreateButton_PressedColor = 0x444444FF;
-
-                /// <summary>
-                /// The color to use for displaying the subNavigation toolbar's create button when disabled. (the one at the bottom)
-                /// </summary>
-                public const uint CreateButton_DisabledColor = 0x444444FF;
 
                 /// <summary>
                 /// The text to display for the subNavigation toolbar's create button. (the one at the bottom)
@@ -308,26 +203,6 @@ namespace CCVApp
                 public const string RevealButton_Text = "";
 
                 /// <summary>
-                /// The font to use for displaying the reveal button.
-                /// </summary>
-                public const string RevealButton_Font = "Bh";
-
-                /// <summary>
-                /// The color of the reveal button when not pressed.
-                /// </summary>
-                public const uint RevealButton_DepressedColor = 0x818181FF;
-
-                /// <summary>
-                /// The color of the reveal button when pressed. (Android Only)
-                /// </summary>
-                public const uint RevealButton_PressedColor = 0x444444FF;
-
-                /// <summary>
-                /// The color of the reveal button when disabled. (Android Only)
-                /// </summary>
-                public const uint RevealButton_DisabledColor = 0x444444FF;
-
-                /// <summary>
                 /// The percentage of the navbar width to slide over when revealing the Springboard. (Android Only)
                 /// </summary>
                 public const float RevealPercentage = .65f;
@@ -336,11 +211,6 @@ namespace CCVApp
                 /// The size of the character representing the reveal button.
                 /// </summary>
                 public const int RevealButton_Size = 36;
-
-                /// <summary>
-                /// The color of the primary nav bar background.
-                /// </summary>
-                public const uint BackgroundColor = 0x303030FF;
             }
 
             /// <summary>
@@ -373,34 +243,6 @@ namespace CCVApp
                 /// The offset of the shadow cast by the primary container on top of the springboard.
                 /// </summary>
                 public static SizeF ShadowOffset = new SizeF( 0.0f, 5.0f );
-
-                /// <summary>
-                /// The color of the shadow cast by the primary container on top of the springboard.
-                /// </summary>
-                public const uint ShadowColor = 0x000000FF;
-            }
-
-            public class NewsConfig
-            {
-                /// <summary>
-                /// The color of the news table background. (You most likely want this to match Table_CellBackgroundColor)
-                /// </summary>
-                public const uint Table_BackgroundColor = 0x1C1C1CFF;
-
-                /// <summary>
-                /// The color of the news table cell seperators.
-                /// </summary>
-                public const uint Table_SeperatorBackgroundColor = 0x000000FF;
-
-                /// <summary>
-                /// The color of an in-use table cell. (You most likely want this to match Table_BackgroundColor)
-                /// </summary>
-                public const uint Table_CellBackgroundColor = 0x1C1C1CFF;
-
-                /// <summary>
-                /// The color of an in-use table cell. (You most likely want this to match Table_BackgroundColor)
-                /// </summary>
-                public const uint Table_CellTextColor = 0xFFFFFFFF;
             }
 
             public class NoteConfig
@@ -432,11 +274,6 @@ namespace CCVApp
                 public const int BorderPadding = 2;
 
                 /// <summary>
-                /// The font to use for displaying the user note icon.
-                /// </summary>
-                public const string UserNote_IconFont = "FontAwesome";
-
-                /// <summary>
                 /// The icon to use for displaying the user note icon.
                 /// </summary>
                 public const string UserNote_Icon = "";
@@ -457,11 +294,6 @@ namespace CCVApp
                 public const uint UserNote_IconColor = 0x7a1315FF;
 
                 /// <summary>
-                /// The font to use for displaying the delete icon on user notes.
-                /// </summary>
-                public const string UserNote_DeleteIconFont = "FontAwesome";
-
-                /// <summary>
                 /// The icon to use for displaying the delete icon on user notes.
                 /// </summary>
                 public const string UserNote_DeleteIcon = "";
@@ -476,11 +308,6 @@ namespace CCVApp
                 /// </summary>
                 /// 
                 public const int UserNote_DeleteIconSize = 24;
-
-                /// <summary>
-                /// Color of the placeholder text displayed when the note is empty.
-                /// </summary>
-                public const uint UserNote_PlaceholderTextColor = 0xc7c7cdFF;
 
                 /// <summary>
                 /// The amount to scale the navBarReveal amount by for Android.
@@ -512,23 +339,6 @@ namespace CCVApp
                 public const string Series_Table_Navigate_Icon = "";
                 public const uint Series_Table_IconSize = 48;
 
-
-
-                /// <summary>
-                /// The color of the series main (first) table background.
-                /// </summary>
-                public const uint Series_Main_Table_BackgroundColor = 0x1C1C1CFF;
-
-                /// <summary>
-                /// The color of an in-use table cell. (You most likely want this to match Series_Main_Table_BackgroundColor)
-                /// </summary>
-                public const uint Series_Main_Table_CellBackgroundColor = 0x1C1C1CFF;
-
-                /// <summary>
-                /// The color of an in-use table cell. (You most likely want this to match Series_Main_Table_BackgroundColor)
-                /// </summary>
-                public const uint Series_Main_Table_CellTextColor = 0xFFFFFFFF;
-
                 /// <summary>
                 /// The height that an image should be within the cell
                 /// </summary>
@@ -538,70 +348,34 @@ namespace CCVApp
                 /// The width that an image should be within the cell
                 /// </summary>
                 public const float Series_Main_CellImageWidth = 70;
-
-
-                /// <summary>
-                /// The color of the series details table background. (You most likely want this to match Table_CellBackgroundColor)
-                /// </summary>
-                public const uint Series_Details_Table_BackgroundColor = 0x1C1C1CFF;
-
-                /// <summary>
-                /// The color of an in-use table cell. (You most likely want this to match Series_Details_Table_BackgroundColor)
-                /// </summary>
-                public const uint Series_Details_Table_CellBackgroundColor = 0x1C1C1CFF;
-
-                /// <summary>
-                /// The color of an in-use table cell. (You most likely want this to match Series_Details_Table_BackgroundColor)
-                /// </summary>
-                public const uint Series_Details_Table_CellTextColor = 0xFFFFFFFF;
-
-                /// <summary>
-                /// The height that an image should be within the cell
-                /// </summary>
-                public const float Series_Details_CellImageHeight = 180;
-
-                /// <summary>
-                /// The width that an image should be within the cell
-                /// </summary>
-                public const float Series_Details_CellImageWidth = 320;
             }
 
             public class PrayerConfig
             {
-
-
                 /// <summary>
                 /// The length of the animation when a prayer card is animating.
                 /// </summary>
                 public const float Card_AnimationDuration = .25f;
 
-                public const uint Card_BackgroundColor = 0x3E3E3EFF;
-                public const uint Card_BorderColor = 0x9D9D9DFF;
-                public const uint Card_CornerRadius = 3;
-                public const float Card_BorderWidth = .5f;
 
                 public const string Card_DateFont = "OpenSans-Regular";
                 public const uint Card_DateSize = 10;
-                public const uint Card_DateColor = 0x898989FF;
+
 
                 public const string Card_CategoryFont = "OpenSans-Regular";
                 public const uint Card_CategorySize = 10;
-                public const uint Card_CategoryColor = 0x898989FF;
+
 
                 public const string  Card_NameFont = "ChangaOne-Regular";
                 public const uint Card_NameSize = 16;
-                public const uint Card_NameColor = 0xFFFFFFFF;
+
 
                 public const string Card_PrayerFont = "OpenSans-Regular";
                 public const uint Card_PrayerSize = 12;
-                public const uint Card_PrayerColor = 0x989898FF;
 
                 public const string Card_ButtonFont = "OpenSans-Regular";
                 public const uint Card_ButtonSize = 12;
-                public const uint Card_ButtonColor_Normal = 0x989898FF;
-                public const uint Card_ButtonColor_Highlighted = 0x545454FF;
 
-                public const string PostPrayer_ResultSymbolFont = "FontAwesome";
                 public const string PostPrayer_ResultSymbol_SuccessText = "";
                 public const string PostPrayer_ResultSymbol_FailedText = "";
                 public const uint PostPrayer_ResultSymbolSize = 32;
@@ -610,7 +384,7 @@ namespace CCVApp
             public class ControlStylingConfig
             {
                 /// <summary>
-                /// The background color for the pages
+                /// The background color for the pages (basically the darkest area)
                 /// </summary>
                 public const uint BackgroundColor = 0x2D2D2DFF;
 
@@ -636,6 +410,7 @@ namespace CCVApp
 
                 /// <summary>
                 /// The border color for the layer that backs elements (like the strip behind First Name)
+                /// This can also be used to highlight certain elements, as it is a bright color.
                 /// </summary>
                 public const uint BG_Layer_BorderColor = 0x767676FF;
 
@@ -664,9 +439,19 @@ namespace CCVApp
                 /// </summary>
                 public const uint Switch_OnColor = 0x7E7E7EFF;
 
-                public const string Icon_Font_Primary = "Bh";
-                public const string Icon_Font_Secondary = "FontAwesome";
+                /// <summary>
+                /// The primary (most commonly used) icon font
+                /// </summary>
+                public const string Icon_Font_Primary = "FontAwesome";
 
+                /// <summary>
+                /// The secondary (used in occasional spots) icon font
+                /// </summary>
+                public const string Icon_Font_Secondary = "Bh";
+
+                /// <summary>
+                /// The color for the footers of primary table cells. (Like the footer in the Messages->Series primary cell that says "Previous Messages")
+                /// </summary>
                 public const uint Table_Footer_Color = 0x262626FF;
             }
 

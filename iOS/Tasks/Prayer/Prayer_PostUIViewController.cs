@@ -41,7 +41,7 @@ namespace iOS
             ControlStyling.StyleUILabel( ResultLabel );
             ControlStyling.StyleBGLayer( ResultBackground );
 
-            ResultSymbolLabel.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( PrayerConfig.PostPrayer_ResultSymbolFont, PrayerConfig.PostPrayer_ResultSymbolSize );
+            ResultSymbolLabel.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Primary, PrayerConfig.PostPrayer_ResultSymbolSize );
             ResultSymbolLabel.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
             ResultSymbolLabel.BackgroundColor = UIColor.Clear;
 

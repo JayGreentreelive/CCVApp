@@ -60,10 +60,10 @@ namespace iOS
             //setup the actual "card" outline
             View = PlatformView.Create( );
             View.Bounds = bounds;
-            View.BackgroundColor = PrayerConfig.Card_BackgroundColor;
-            View.BorderColor = PrayerConfig.Card_BorderColor;
-            View.CornerRadius = PrayerConfig.Card_CornerRadius;
-            View.BorderWidth = PrayerConfig.Card_BorderWidth;
+            View.BackgroundColor = ControlStylingConfig.BG_Layer_Color;
+            View.BorderColor = ControlStylingConfig.BG_Layer_BorderColor;
+            View.CornerRadius = ControlStylingConfig.Button_CornerRadius;
+            View.BorderWidth = ControlStylingConfig.BG_Layer_BorderWidth;
 
 
             // setup the prayer request text field
@@ -72,7 +72,7 @@ namespace iOS
             PrayerText.BackgroundColor = UIColor.Clear;
             PrayerText.Layer.AnchorPoint = new PointF( 0, 0 );
             PrayerText.DelaysContentTouches = false; // don't allow delaying touch, we need to forward it
-            PrayerText.TextColor = PlatformBaseUI.GetUIColor( PrayerConfig.Card_PrayerColor );
+            PrayerText.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
             PrayerText.Font = iOSCommon.LoadFontDynamic( PrayerConfig.Card_PrayerFont, PrayerConfig.Card_PrayerSize );
             PrayerText.TextContainerInset = UIEdgeInsets.Zero;
             PrayerText.TextContainer.LineFragmentPadding = 0;
@@ -81,8 +81,10 @@ namespace iOS
             Pray = UIButton.FromType( UIButtonType.Custom );
             Pray.Layer.AnchorPoint = new PointF( 0, 0 );
             Pray.SetTitle( PrayerStrings.Prayer_Confirm, UIControlState.Normal );
-            Pray.SetTitleColor( PlatformBaseUI.GetUIColor( PrayerConfig.Card_ButtonColor_Normal ), UIControlState.Normal );
-            Pray.SetTitleColor( PlatformBaseUI.GetUIColor( PrayerConfig.Card_ButtonColor_Highlighted ), UIControlState.Highlighted );
+
+            Pray.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
+            Pray.SetTitleColor( PlatformBaseUI.GetUIColor( PlatformBaseUI.ScaleRGBAColor( ControlStylingConfig.TextField_PlaceholderTextColor, 2, false ) ), UIControlState.Highlighted );
+
             Pray.Font = iOSCommon.LoadFontDynamic( PrayerConfig.Card_ButtonFont, PrayerConfig.Card_ButtonSize );
             Pray.SizeToFit( );
 
@@ -91,7 +93,7 @@ namespace iOS
             PrayFillIn.Layer.Position = new PointF( View.Bounds.Width - PrayFillIn.Layer.Bounds.Width - ViewPadding, View.Bounds.Height - PrayFillIn.Layer.Bounds.Height - (PrayFillIn.Layer.Bounds.Height / 2) );
             PrayFillIn.Layer.CornerRadius = PrayFillIn.Bounds.Width / 2;
             PrayFillIn.Layer.BorderWidth = 1;
-            PrayFillIn.Layer.BorderColor = PlatformBaseUI.GetUIColor( PrayerConfig.Card_PrayerColor ).CGColor;
+            PrayFillIn.Layer.BorderColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ).CGColor;
             PrayFillIn.Layer.AnchorPoint = new PointF( 0, 0 );
 
             Pray.Layer.Position = new PointF( PrayFillIn.Frame.Left - Pray.Layer.Bounds.Width - ViewPadding, View.Bounds.Height - Pray.Layer.Bounds.Height );
@@ -110,20 +112,20 @@ namespace iOS
             // setup the name field
             Name = new UILabel( );
             Name.Layer.AnchorPoint = new PointF( 0, 0 );
-            Name.TextColor = PlatformBaseUI.GetUIColor( PrayerConfig.Card_NameColor );
+            Name.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
             Name.Font = iOSCommon.LoadFontDynamic( PrayerConfig.Card_NameFont, PrayerConfig.Card_NameSize );
 
             // setup the date field
             Date = new UILabel( );
             Date.Layer.AnchorPoint = new PointF( 0, 0 );
-            Date.TextColor = PlatformBaseUI.GetUIColor( PrayerConfig.Card_DateColor );
+            Date.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
             Date.Font = iOSCommon.LoadFontDynamic( PrayerConfig.Card_DateFont, PrayerConfig.Card_DateSize );
 
 
             // setup the category field
             Category = new UILabel( );
             Category.Layer.AnchorPoint = new PointF( 0, 0 );
-            Category.TextColor = PlatformBaseUI.GetUIColor( PrayerConfig.Card_CategoryColor );
+            Category.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
             Category.Font = iOSCommon.LoadFontDynamic( PrayerConfig.Card_CategoryFont, PrayerConfig.Card_CategorySize );
 
 
@@ -186,7 +188,7 @@ namespace iOS
             // Hack - Use FlagCount to track whether we've prayed for this or not
             if( PrayerRequest.FlagCount != 0 )
             {
-                PrayFillIn.BackgroundColor = PlatformBaseUI.GetUIColor( PrayerConfig.Card_PrayerColor );
+                PrayFillIn.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor );
             }
             else
             {

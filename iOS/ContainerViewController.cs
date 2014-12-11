@@ -89,7 +89,7 @@ namespace iOS
             NSString buttonLabel = new NSString(PrimaryNavBarConfig.RevealButton_Text);
 
             SpringboardRevealButton = new UIButton(UIButtonType.System);
-            SpringboardRevealButton.Font = iOSCommon.LoadFontDynamic( PrimaryNavBarConfig.RevealButton_Font, PrimaryNavBarConfig.RevealButton_Size );
+            SpringboardRevealButton.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Secondary, PrimaryNavBarConfig.RevealButton_Size );
             SpringboardRevealButton.SetTitle( buttonLabel.ToString( ), UIControlState.Normal );
 
             // determine its dimensions

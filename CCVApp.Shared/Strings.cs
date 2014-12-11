@@ -89,6 +89,11 @@ namespace CCVApp.Shared
             public const string LogoutButtonTitle = "Logout";
         }
 
+        public class NewsStrings
+        {
+            public const string LearnMore = "Learn More";
+        }
+
         public class MessagesStrings
         {
             public const string Error_Title = "Messages";
@@ -149,6 +154,7 @@ namespace CCVApp.Shared
             public const string CreatePrayer_SelectCategoryLabel = "Select a Category";
             public const string CreatePrayer_PostAnonymously = "Post Anonymously";
             public const string CreatePrayer_MakePublic = "Make Public";
+            public const string CreatePrayer_PrayerRequest = "Prayer Request";
 
             public const string PostPrayer_Status_Submitting = "Submitting";
             public const string PostPrayer_Status_SuccessText = "Submitted";

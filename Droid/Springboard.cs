@@ -56,7 +56,7 @@ namespace Droid
             Button = Layout.FindViewById<Button>( Resource.Id.button );
             Text = Layout.FindViewById<TextView>( Resource.Id.text );
 
-            Typeface fontFace = DroidFontManager.Instance.GetFont( SpringboardConfig.Font );
+            Typeface fontFace = DroidFontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary );
             Icon.SetTypeface( fontFace, TypefaceStyle.Normal );
             Icon.SetTextSize( Android.Util.ComplexUnitType.Dip, SpringboardConfig.Element_FontSize );
             Icon.SetX( Icon.GetX() - Icon.Width / 2 );
@@ -68,23 +68,23 @@ namespace Droid
 
             // setup the seperator color
             View seperator = Layout.FindViewById<View>( Resource.Id.seperator );
-            seperator.SetBackgroundColor( PlatformBaseUI.GetUIColor( SpringboardConfig.Element_SeperatorColor ) );
+            seperator.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
         }
 
         public void Deactivate( )
         {
-            Icon.SetTextColor( PlatformBaseUI.GetUIColor( SpringboardConfig.Element_FontColor ) );
+            Icon.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
 
-            Text.SetTextColor( PlatformBaseUI.GetUIColor( SpringboardConfig.Element_FontColor ) );
+            Text.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
 
             Layout.SetBackgroundColor( PlatformBaseUI.GetUIColor( 0x00000000 ) );
         }
 
         public void Activate( )
         {
-            Icon.SetTextColor( PlatformBaseUI.GetUIColor( SpringboardConfig.Element_SelectedFontColor ) );
+            Icon.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
 
-            Text.SetTextColor( PlatformBaseUI.GetUIColor( SpringboardConfig.Element_SelectedFontColor ) );
+            Text.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
 
             Layout.SetBackgroundColor( PlatformBaseUI.GetUIColor( SpringboardConfig.Element_SelectedColor ) );
         }
@@ -218,7 +218,7 @@ namespace Droid
             }
 
             view.SetOnTouchListener( this );
-            view.SetBackgroundColor( PlatformBaseUI.GetUIColor( SpringboardConfig.BackgroundColor ) );
+            view.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor ) );
 
             // set the task we wish to have active
             ActivateElement( Elements[ ActiveElementIndex ] );
@@ -230,10 +230,10 @@ namespace Droid
                 {
                     ManageProfilePic( );
                 };
-            Typeface fontFace = DroidFontManager.Instance.GetFont( SpringboardConfig.Font );
+            Typeface fontFace = DroidFontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary );
             ProfileImageButton.SetTypeface( fontFace, TypefaceStyle.Normal );
             ProfileImageButton.SetTextSize( Android.Util.ComplexUnitType.Dip, SpringboardConfig.ProfileSymbolFontSize );
-            ProfileImageButton.SetTextColor( PlatformBaseUI.GetUIColor( SpringboardConfig.ProfileSymbolColor ) );
+            ProfileImageButton.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
             ProfileImageButton.LayoutParameters.Width = (int)PlatformBaseUI.UnitToPx( 140 );
             ProfileImageButton.LayoutParameters.Height = (int)PlatformBaseUI.UnitToPx( 140 );
             ProfileImageButton.SetBackgroundColor( Color.Transparent );
@@ -246,11 +246,10 @@ namespace Droid
             CircleView circle = new CircleView( Activity.BaseContext );
 
             //note: these are converted from dp to pixels, so don't do it here.
-            circle.Position = new PointF( 75, 75 ); 
             circle.Radius = 70;
             circle.StrokeWidth = 7;
 
-            circle.Color = PlatformBaseUI.GetUIColor( SpringboardConfig.ProfileOutlineCircleColor );
+            circle.Color = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
             circle.SetBackgroundColor( Color.Transparent );
             circle.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
             ( (RelativeLayout.LayoutParams)circle.LayoutParameters ).AddRule( LayoutRules.CenterInParent );
@@ -296,20 +295,23 @@ namespace Droid
             LinearLayout profileContainer = view.FindViewById<LinearLayout>( Resource.Id.springboard_profile_image_container );
             profileContainer.LayoutParameters.Width = (int) ( Resources.DisplayMetrics.WidthPixels * PrimaryNavBarConfig.RevealPercentage );
 
-            RelativeLayout campusContainer = view.FindViewById<RelativeLayout>( Resource.Id.campus_container );
+            View campusContainer = view.FindViewById<View>( Resource.Id.campus_container );
             campusContainer.LayoutParameters.Width = (int) ( Resources.DisplayMetrics.WidthPixels * PrimaryNavBarConfig.RevealPercentage );
+            campusContainer.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor ) );
 
-            // setup the final bottom element seperator
             View seperator = view.FindViewById<View>( Resource.Id.end_seperator );
-            seperator.SetBackgroundColor( PlatformBaseUI.GetUIColor( SpringboardConfig.Element_SeperatorColor ) );
+            seperator.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
 
 
+            // setup the bottom campus / settings selector
             Button campusButton = campusContainer.FindViewById<Button>( Resource.Id.campus_selection );
-            campusButton.SetTextColor( PlatformBaseUI.GetUIColor( SpringboardConfig.Element_FontColor ) );
+            campusButton.Ellipsize = Android.Text.TextUtils.TruncateAt.End;
+            campusButton.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+            campusButton.SetSingleLine( );
 
             Button settingsButton = campusContainer.FindViewById<Button>( Resource.Id.settings_button );
             settingsButton.SetTypeface( fontFace, TypefaceStyle.Normal );
-            settingsButton.SetTextColor( PlatformBaseUI.GetUIColor( SpringboardConfig.Element_FontColor ) );
+            settingsButton.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
             settingsButton.SetTextSize( Android.Util.ComplexUnitType.Dip, SpringboardConfig.SettingsSymbolSize );
             settingsButton.Text = SpringboardConfig.SettingsSymbol;
 

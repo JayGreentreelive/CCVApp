@@ -97,7 +97,7 @@ namespace Droid
             ( (LinearLayout.LayoutParams)BackButton.LayoutParameters ).Gravity = GravityFlags.Top;
 
             // set the back button's font
-            Typeface fontFace = DroidFontManager.Instance.GetFont( SubNavToolbarConfig.BackButton_Font );
+            Typeface fontFace = DroidFontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
             BackButton.SetTypeface( fontFace, TypefaceStyle.Normal );
             BackButton.SetTextSize( Android.Util.ComplexUnitType.Dip, SubNavToolbarConfig.BackButton_Size );
 
@@ -120,9 +120,9 @@ namespace Droid
 
             int [] colors = new int[]
                 {
-                    PlatformBaseUI.GetUIColor( SubNavToolbarConfig.BackButton_PressedColor ),
-                    PlatformBaseUI.GetUIColor( SubNavToolbarConfig.BackButton_EnabledColor ),
-                    PlatformBaseUI.GetUIColor( SubNavToolbarConfig.BackButton_DisabledColor ),
+                    PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ),
+                    PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ),
+                    PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ),
                 };
             BackButton.SetTextColor( new Android.Content.Res.ColorStateList( states, colors ) );
 
@@ -133,7 +133,7 @@ namespace Droid
             ( (LinearLayout.LayoutParams)ShareButton.LayoutParameters ).Gravity = GravityFlags.Top;
 
             // set the share button's font
-            fontFace = DroidFontManager.Instance.GetFont( SubNavToolbarConfig.ShareButton_Font );
+            fontFace = DroidFontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
             ShareButton.SetTypeface( fontFace, TypefaceStyle.Normal );
             ShareButton.SetTextSize( Android.Util.ComplexUnitType.Dip, SubNavToolbarConfig.ShareButton_Size );
             ShareButton.SetPadding( 0, 0, 0, 0 );
@@ -154,9 +154,9 @@ namespace Droid
 
             colors = new int[]
                 {
-                    PlatformBaseUI.GetUIColor( SubNavToolbarConfig.ShareButton_PressedColor ),
-                    PlatformBaseUI.GetUIColor( SubNavToolbarConfig.ShareButton_EnabledColor ),
-                    PlatformBaseUI.GetUIColor( SubNavToolbarConfig.ShareButton_DisabledColor ),
+                    PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ),
+                    PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ),
+                    PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ),
                 };
             ShareButton.SetTextColor( new Android.Content.Res.ColorStateList( states, colors ) );
 
@@ -167,7 +167,7 @@ namespace Droid
             ( (LinearLayout.LayoutParams)CreateButton.LayoutParameters ).Gravity = GravityFlags.Top;
 
             // set the create button's font
-            fontFace = DroidFontManager.Instance.GetFont( SubNavToolbarConfig.CreateButton_Font );
+            fontFace = DroidFontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
             CreateButton.SetTypeface( fontFace, TypefaceStyle.Normal );
             CreateButton.SetTextSize( Android.Util.ComplexUnitType.Dip, SubNavToolbarConfig.CreateButton_Size );
             CreateButton.SetPadding( 0, 0, 0, 0 );
@@ -188,9 +188,9 @@ namespace Droid
 
             colors = new int[]
                 {
-                    PlatformBaseUI.GetUIColor( SubNavToolbarConfig.CreateButton_PressedColor ),
-                    PlatformBaseUI.GetUIColor( SubNavToolbarConfig.CreateButton_EnabledColor ),
-                    PlatformBaseUI.GetUIColor( SubNavToolbarConfig.CreateButton_DisabledColor ),
+                    PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ),
+                    PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ),
+                    PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ),
                 };
             CreateButton.SetTextColor( new Android.Content.Res.ColorStateList( states, colors ) );
 

@@ -15,6 +15,8 @@ using Android.Widget;
 using CCVApp.Shared.Network;
 using Android.Views.InputMethods;
 using CCVApp.Shared.Strings;
+using CCVApp.Shared.Config;
+using Rock.Mobile.PlatformUI;
 
 namespace Droid
 {
@@ -22,11 +24,19 @@ namespace Droid
     {
         public Springboard SpringboardParent { get; set; }
 
-        EditText FirstNameField { get; set; }
-        EditText MiddleNameField { get; set; }
-        EditText LastNameField { get; set; }
         EditText NickNameField { get; set; }
+        EditText LastNameField { get; set; }
+
+        EditText CellPhoneField { get; set; }
         EditText EmailField { get; set; }
+
+        EditText StreetField { get; set; }
+        EditText CityField { get; set; }
+        EditText StateField { get; set; }
+        EditText ZipField { get; set; }
+
+        EditText BirthdateField { get; set; }
+        EditText GenderField { get; set; }
 
         Button DoneButton { get; set; }
         Button LogoutButton { get; set; }
@@ -50,24 +60,95 @@ namespace Droid
             }
 
             View view = inflater.Inflate(Resource.Layout.Profile, container, false);
+            view.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor ) );
 
-            FirstNameField = view.FindViewById<EditText>( Resource.Id.profile_first_name );
-            FirstNameField.AfterTextChanged += (sender, e) => { Dirty = true; };
+            RelativeLayout navBar = view.FindViewById<RelativeLayout>( Resource.Id.navbar_relative_layout );
+            navBar.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor ) );
 
-            MiddleNameField = view.FindViewById<EditText>( Resource.Id.profile_middle_name );
-            MiddleNameField.AfterTextChanged += (sender, e) => { Dirty = true; };
+            // setup the name section
+            RelativeLayout backgroundView = view.FindViewById<RelativeLayout>( Resource.Id.name_background );
+            ControlStyling.StyleBGLayer( backgroundView );
 
-            LastNameField = view.FindViewById<EditText>( Resource.Id.profile_last_name );
-            LastNameField.AfterTextChanged += (sender, e) => { Dirty = true; };
-
-            NickNameField = view.FindViewById<EditText>( Resource.Id.profile_nickname );
+            NickNameField = backgroundView.FindViewById<EditText>( Resource.Id.nickNameText );
+            ControlStyling.StyleTextField( NickNameField, ProfileStrings.NickNamePlaceholder );
             NickNameField.AfterTextChanged += (sender, e) => { Dirty = true; };
 
-            EmailField = view.FindViewById<EditText>( Resource.Id.profile_email );
+            View borderView = backgroundView.FindViewById<View>( Resource.Id.middle_border );
+            borderView.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+
+            LastNameField = backgroundView.FindViewById<EditText>( Resource.Id.lastNameText );
+            ControlStyling.StyleTextField( LastNameField, ProfileStrings.LastNamePlaceholder );
+            LastNameField.AfterTextChanged += (sender, e) => { Dirty = true; };
+
+
+            // setup the contact section
+            backgroundView = view.FindViewById<RelativeLayout>( Resource.Id.contact_background );
+            ControlStyling.StyleBGLayer( backgroundView );
+
+            CellPhoneField = backgroundView.FindViewById<EditText>( Resource.Id.cellPhoneText );
+            ControlStyling.StyleTextField( CellPhoneField, ProfileStrings.CellPhonePlaceholder );
+            CellPhoneField.AfterTextChanged += (sender, e) => { Dirty = true; };
+
+            borderView = backgroundView.FindViewById<View>( Resource.Id.middle_border );
+            borderView.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+
+            EmailField = backgroundView.FindViewById<EditText>( Resource.Id.emailAddressText );
+            ControlStyling.StyleTextField( EmailField, ProfileStrings.EmailPlaceholder );
             EmailField.AfterTextChanged += (sender, e) => { Dirty = true; };
 
-            DoneButton = view.FindViewById<Button>( Resource.Id.profile_doneButton );
-            LogoutButton = view.FindViewById<Button>( Resource.Id.profile_logoutButton );
+
+            // setup the address section
+            backgroundView = view.FindViewById<RelativeLayout>( Resource.Id.address_background );
+            ControlStyling.StyleBGLayer( backgroundView );
+
+            StreetField = backgroundView.FindViewById<EditText>( Resource.Id.streetAddressText );
+            ControlStyling.StyleTextField( StreetField, ProfileStrings.StreetPlaceholder );
+            StreetField.AfterTextChanged += (sender, e) => { Dirty = true; };
+
+            borderView = backgroundView.FindViewById<View>( Resource.Id.street_border );
+            borderView.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+
+            CityField = backgroundView.FindViewById<EditText>( Resource.Id.cityAddressText );
+            ControlStyling.StyleTextField( CityField, ProfileStrings.CityPlaceholder );
+            CityField.AfterTextChanged += (sender, e) => { Dirty = true; };
+
+            borderView = backgroundView.FindViewById<View>( Resource.Id.city_border );
+            borderView.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+
+            StateField = backgroundView.FindViewById<EditText>( Resource.Id.stateAddressText );
+            ControlStyling.StyleTextField( StateField, ProfileStrings.StatePlaceholder );
+            StateField.AfterTextChanged += (sender, e) => { Dirty = true; };
+
+            borderView = backgroundView.FindViewById<View>( Resource.Id.state_border );
+            borderView.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+
+            ZipField = backgroundView.FindViewById<EditText>( Resource.Id.zipAddressText );
+            ControlStyling.StyleTextField( ZipField, ProfileStrings.ZipPlaceholder );
+            ZipField.AfterTextChanged += (sender, e) => { Dirty = true; };
+
+
+            // personal
+            backgroundView = view.FindViewById<RelativeLayout>( Resource.Id.personal_background );
+            ControlStyling.StyleBGLayer( backgroundView );
+
+            BirthdateField = backgroundView.FindViewById<EditText>( Resource.Id.birthdateText );
+            ControlStyling.StyleTextField( BirthdateField, ProfileStrings.BirthdatePlaceholder );
+            BirthdateField.AfterTextChanged += (sender, e) => { Dirty = true; };
+
+            borderView = backgroundView.FindViewById<View>( Resource.Id.middle_border );
+            borderView.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+
+            GenderField = view.FindViewById<EditText>( Resource.Id.genderText );
+            ControlStyling.StyleTextField( GenderField, ProfileStrings.GenderPlaceholder );
+            GenderField.AfterTextChanged += (sender, e) => { Dirty = true; };
+
+
+            // Done buttons
+            DoneButton = view.FindViewById<Button>( Resource.Id.doneButton );
+            ControlStyling.StyleButton( DoneButton, ProfileStrings.DoneButtonTitle );
+
+            LogoutButton = view.FindViewById<Button>( Resource.Id.logoutButton );
+            ControlStyling.StyleButton( LogoutButton, ProfileStrings.LogoutButtonTitle );
 
             DoneButton.Click += (object sender, EventArgs e) => 
                 {
@@ -144,11 +225,8 @@ namespace Droid
             // logged in sanity check.
             if( RockMobileUser.Instance.LoggedIn == false ) throw new Exception("A user must be logged in before viewing a profile. How did you do this?" );
 
-            FirstNameField.Text = RockMobileUser.Instance.Person.FirstName;
-            MiddleNameField.Text = RockMobileUser.Instance.Person.MiddleName;
-            LastNameField.Text = RockMobileUser.Instance.Person.LastName;
-
             NickNameField.Text = RockMobileUser.Instance.Person.NickName;
+            LastNameField.Text = RockMobileUser.Instance.Person.LastName;
 
             EmailField.Text = RockMobileUser.Instance.Person.Email;
 
@@ -162,11 +240,7 @@ namespace Droid
             // copy all the edited fields into the person object
             RockMobileUser.Instance.Person.Email = EmailField.Text;
 
-            RockMobileUser.Instance.Person.MiddleName = MiddleNameField.Text;
-
             RockMobileUser.Instance.Person.NickName = NickNameField.Text;
-
-            RockMobileUser.Instance.Person.FirstName = FirstNameField.Text;
             RockMobileUser.Instance.Person.LastName = LastNameField.Text;
 
             // request the person object be sync'd with the server. because we save the object locally,

@@ -1,21 +1,11 @@
 Both
-	NoteScript parsing errors now always give the line number of the error.
-	Prayer categories are now display on each prayer.
-	Only public, active approved prayers are now received.
-	Added actual standard starting news items
-	Added ability to share Sermon Videos
-	The selected springboard element now lights up white.
-	New app icon.
-	Lots of color tuning to match final design.
-	Updated Springboard layout to match final design and work across multiple
-		device sizes.
-	Added a dimming effect when revealing the springboard.
+	Added final design for Message details and series.
+	Added final design for the Profile page.
+	Added final design for the Login page. 
 
 Android
-	Fixed an issue causing the nav toolbar to be too large on some devices
-	Fixed some issues causing the Nav Toolbar to appear when it shouldn't.
-	Cleaned up Android support to officially correctly support Android 4.1 and newer.
+	Fixed an issue causing prayer requests to fail posting.
+	Updated prayer viewing and creation to match final design.
 
 iOS
-	Fixed an issue causing text in the TakeAway and user notes to draw incorrectly on top of other controls
-	Added native support for iPhone 6 and 6 Plus
+	

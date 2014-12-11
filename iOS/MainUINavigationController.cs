@@ -97,14 +97,14 @@ namespace iOS
             View.AddSubview( DarkPanel );
 
             // setup the style of the nav bar
-            NavigationBar.TintColor = PlatformBaseUI.GetUIColor( PrimaryNavBarConfig.RevealButton_DepressedColor );
+            NavigationBar.TintColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
 
 
             UIImage solidColor = new UIImage();
             UIGraphics.BeginImageContext( new SizeF( 1, 1 ) );
             CGContext context = UIGraphics.GetCurrentContext( );
 
-            context.SetFillColorWithColor( PlatformBaseUI.GetUIColor( PrimaryNavBarConfig.BackgroundColor ).CGColor );
+            context.SetFillColorWithColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor ).CGColor );
             context.FillRect( new RectangleF( 0, 0, 1, 1 ) );
 
             solidColor = UIGraphics.GetImageFromCurrentImageContext( );
@@ -122,7 +122,7 @@ namespace iOS
             // setup a shadow that provides depth when this panel is slid "out" from the springboard.
             UIBezierPath shadowPath = UIBezierPath.FromRect( View.Bounds );
             View.Layer.MasksToBounds = false;
-            View.Layer.ShadowColor = PlatformBaseUI.GetUIColor( PrimaryContainerConfig.ShadowColor ).CGColor;
+            View.Layer.ShadowColor = UIColor.Black.CGColor;
             View.Layer.ShadowOffset = PrimaryContainerConfig.ShadowOffset;
             View.Layer.ShadowOpacity = PrimaryContainerConfig.ShadowOpacity;
             View.Layer.ShadowPath = shadowPath.CGPath;

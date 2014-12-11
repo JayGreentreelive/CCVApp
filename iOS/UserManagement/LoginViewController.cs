@@ -124,7 +124,7 @@ namespace iOS
             // setup the header shadow
             UIBezierPath shadowPath = UIBezierPath.FromRect( HeaderView.Bounds );
             HeaderView.Layer.MasksToBounds = false;
-            HeaderView.Layer.ShadowColor = PlatformBaseUI.GetUIColor( PrimaryContainerConfig.ShadowColor ).CGColor;
+            HeaderView.Layer.ShadowColor = UIColor.Black.CGColor;
             HeaderView.Layer.ShadowOffset = new System.Drawing.SizeF( 0.0f, .0f );
             HeaderView.Layer.ShadowOpacity = .23f;
             HeaderView.Layer.ShadowPath = shadowPath.CGPath;

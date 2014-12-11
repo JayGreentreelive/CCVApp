@@ -125,7 +125,7 @@ namespace iOS
                     WatchButton = new UIButton( UIButtonType.Custom );
                     WatchButton.TouchUpInside += (object sender, EventArgs e) => { Parent.RowButtonClicked( RowIndex, 0 ); };
                     WatchButton.Layer.AnchorPoint = PointF.Empty;
-                    WatchButton.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Primary, NoteConfig.Series_Table_IconSize );
+                    WatchButton.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Secondary, NoteConfig.Series_Table_IconSize );
                     WatchButton.SetTitle( NoteConfig.Series_Table_Watch_Icon, UIControlState.Normal );
                     WatchButton.BackgroundColor = UIColor.Clear;
                     WatchButton.SizeToFit( );
@@ -133,7 +133,7 @@ namespace iOS
 
                     TakeNotesButton = new UIButton( UIButtonType.Custom );
                     TakeNotesButton.TouchUpInside += (object sender, EventArgs e) => { Parent.RowButtonClicked( RowIndex, 1 ); };
-                    TakeNotesButton.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Primary, NoteConfig.Series_Table_IconSize );
+                    TakeNotesButton.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Secondary, NoteConfig.Series_Table_IconSize );
                     TakeNotesButton.SetTitle( NoteConfig.Series_Table_TakeNotes_Icon, UIControlState.Normal );
                     TakeNotesButton.Layer.AnchorPoint = PointF.Empty;
                     TakeNotesButton.BackgroundColor = UIColor.Clear;
@@ -419,8 +419,7 @@ namespace iOS
             base.ViewDidLoad( );
 
             // setup the table view and general background view colors
-            View.BackgroundColor = PlatformBaseUI.GetUIColor( NoteConfig.Series_Details_Table_BackgroundColor );
-            SeriesTable.BackgroundColor = PlatformBaseUI.GetUIColor( NoteConfig.Series_Details_Table_BackgroundColor );
+            SeriesTable.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor );
             SeriesTable.SeparatorStyle = UITableViewCellSeparatorStyle.None;
 
             // setup the messages list

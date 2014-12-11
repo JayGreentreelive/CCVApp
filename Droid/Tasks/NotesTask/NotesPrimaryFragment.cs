@@ -272,7 +272,7 @@ namespace Droid
                     WatchButton.Layout.SetBorderColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
                     WatchButton.Layout.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
 
-                    WatchButton.Icon.SetTypeface( DroidFontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary ), TypefaceStyle.Normal );
+                    WatchButton.Icon.SetTypeface( DroidFontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary ), TypefaceStyle.Normal );
                     WatchButton.Icon.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Series_Table_IconSize );
                     WatchButton.Icon.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                     WatchButton.Icon.Text = NoteConfig.Series_Table_Watch_Icon;
@@ -301,7 +301,7 @@ namespace Droid
                     TakeNotesButton.Layout.SetBorderColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
                     TakeNotesButton.Layout.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
 
-                    TakeNotesButton.Icon.SetTypeface( DroidFontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary ), TypefaceStyle.Normal );
+                    TakeNotesButton.Icon.SetTypeface( DroidFontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary ), TypefaceStyle.Normal );
                     TakeNotesButton.Icon.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Series_Table_IconSize );
                     TakeNotesButton.Icon.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                     TakeNotesButton.Icon.Text = NoteConfig.Series_Table_TakeNotes_Icon;
@@ -377,7 +377,7 @@ namespace Droid
                     SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor ) );
 
                     Thumbnail = new DroidScaledImageView( Rock.Mobile.PlatformCommon.Droid.Context );
-                    Thumbnail.LayoutParameters = new LinearLayout.LayoutParams( 280, 280 );
+                    Thumbnail.LayoutParameters = new LinearLayout.LayoutParams( (int)PlatformBaseUI.UnitToPx( 75 ), (int)PlatformBaseUI.UnitToPx( 75 ) );
                     ( (LinearLayout.LayoutParams)Thumbnail.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
                     Thumbnail.SetScaleType( ImageView.ScaleType.CenterCrop );
                     AddView( Thumbnail );
@@ -395,6 +395,8 @@ namespace Droid
                     Title.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                     Title.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Series_Table_Medium_FontSize );
                     Title.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    Title.SetSingleLine( );
+                    Title.Ellipsize = Android.Text.TextUtils.TruncateAt.End;
                     TitleLayout.AddView( Title );
 
                     DateRange = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
@@ -412,7 +414,7 @@ namespace Droid
                     Chevron = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
                     Chevron.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                     ( (LinearLayout.LayoutParams)Chevron.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
-                    Typeface fontFace = DroidFontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary );
+                    Typeface fontFace = DroidFontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
                     Chevron.SetTypeface(  fontFace, TypefaceStyle.Normal );
                     Chevron.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Series_Table_IconSize );
                     Chevron.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
