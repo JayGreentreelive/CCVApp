@@ -9,6 +9,8 @@ using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformCommon;
 using Rock.Mobile.PlatformUI;
 using CCVApp.Shared.Strings;
+using CCVApp.Shared;
+using Rock.Mobile.Threading;
 
 namespace iOS
 {
@@ -48,6 +50,8 @@ namespace iOS
 
         UIImageView LogoView { get; set; }
 
+        UIImageView FBImageView { get; set; }
+
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
@@ -65,7 +69,7 @@ namespace iOS
                 {
                     textField.ResignFirstResponder();
 
-                    TryLogin();
+                    TryRockBind();
                     return true;
                 };
 
@@ -75,7 +79,7 @@ namespace iOS
                 {
                     textField.ResignFirstResponder();
 
-                    TryLogin();
+                    TryRockBind();
                     return true;
                 };
 
@@ -85,17 +89,29 @@ namespace iOS
                 {
                     if( RockMobileUser.Instance.LoggedIn == true )
                     {
-                        RockMobileUser.Instance.Logout( );
+                        RockMobileUser.Instance.LogoutAndUnbind( );
 
                         SetUIState( LoginState.Out );
                     }
                     else
                     {
-                        TryLogin();
+                        TryRockBind();
                     }
                 };
 
             ControlStyling.StyleButton( RegisterButton, LoginStrings.RegisterButton );
+
+            // setup the facebook button
+            string imagePath = NSBundle.MainBundle.BundlePath + "/" + "facebook_login.png";
+            FBImageView = new UIImageView( new UIImage( imagePath ) );
+
+            FacebookLogin.SetTitle( "", UIControlState.Normal );
+            FacebookLogin.AddSubview( FBImageView );
+
+            FacebookLogin.TouchUpInside += (object sender, EventArgs e) => 
+                {
+                    TryFacebookBind();
+                };
 
             // If cancel is pressed, notify the springboard we're done.
             CancelButton.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
@@ -112,7 +128,7 @@ namespace iOS
             // setup the fake header
             HeaderView.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor );
 
-            string imagePath = NSBundle.MainBundle.BundlePath + "/" + PrimaryNavBarConfig.LogoFile;
+            imagePath = NSBundle.MainBundle.BundlePath + "/" + PrimaryNavBarConfig.LogoFile;
             LogoView = new UIImageView( new UIImage( imagePath ) );
             HeaderView.AddSubview( LogoView );
         }
@@ -130,6 +146,14 @@ namespace iOS
             HeaderView.Layer.ShadowPath = shadowPath.CGPath;
 
             LogoView.Layer.Position = new System.Drawing.PointF( HeaderView.Bounds.Width / 2, HeaderView.Bounds.Height / 2 );
+            FBImageView.Layer.Position = new System.Drawing.PointF( FacebookLogin.Bounds.Width / 2, FacebookLogin.Bounds.Height / 2 );
+        }
+
+        public override void ViewWillAppear(bool animated)
+        {
+            base.ViewWillAppear(animated);
+
+            LoginResultLayer.Layer.Opacity = 0.00f;
         }
 
         public override void ViewDidAppear(bool animated)
@@ -145,8 +169,8 @@ namespace iOS
             if( RockMobileUser.Instance.LoggedIn )
             {
                 // populate them with the user's info
-                UsernameText.Text = RockMobileUser.Instance.Username;
-                PasswordText.Text = RockMobileUser.Instance.Password;
+                UsernameText.Text = RockMobileUser.Instance.UserID;
+                PasswordText.Text = RockMobileUser.Instance.RockPassword;
 
                 SetUIState( LoginState.In );
             }
@@ -186,7 +210,7 @@ namespace iOS
             return Springboard.PrefersStatusBarHidden();
         }
 
-        public void TryLogin()
+        public void TryRockBind()
         {
             // if both fields are valid, attempt a login!
             if( string.IsNullOrEmpty( UsernameText.Text ) == false &&
@@ -194,7 +218,65 @@ namespace iOS
             {
                 SetUIState( LoginState.Trying );
 
-                RockMobileUser.Instance.Login( UsernameText.Text, PasswordText.Text, LoginComplete );
+                RockMobileUser.Instance.BindRockAccount( UsernameText.Text, PasswordText.Text, BindComplete );
+            }
+        }
+
+        public void TryFacebookBind( )
+        {
+            SetUIState( LoginState.Trying );
+
+            RockMobileUser.Instance.BindFacebookAccount( delegate(string fromUri, Facebook.FacebookClient session) 
+            {
+                DeleteCacheandCookies( );
+
+                // invoke a webview
+                UIWebView webView = new UIWebView( View.Frame );
+                webView.LoadStarted += (object s, EventArgs eArgs) => 
+                    {
+                    };
+
+                webView.LoadError += (object s, UIWebErrorArgs eArgs) => 
+                    {
+                        RockMobileUser.Instance.FacebookCredentialResult( "", session, BindComplete );
+                    };
+
+                webView.LoadFinished += (object s, EventArgs eArgs) => 
+                    {
+                        if ( RockMobileUser.Instance.HasFacebookResponse( webView.Request.Url.ToString(), session ) )
+                        {
+                            webView.RemoveFromSuperview( );
+
+                            RockMobileUser.Instance.FacebookCredentialResult( webView.Request.Url.ToString(), session, BindComplete );
+                        }
+                    };
+
+                View.AddSubview( webView );
+                webView.LoadRequest( new NSUrlRequest( new NSUrl( fromUri ) ) );
+            });
+        }
+
+        private void DeleteCacheandCookies ()
+        {
+            NSUrlCache.SharedCache.RemoveAllCachedResponses ();
+            NSHttpCookieStorage storage = NSHttpCookieStorage.SharedStorage;
+
+            foreach (var item in storage.Cookies) {
+                storage.DeleteCookie (item);
+            }
+            NSUserDefaults.StandardUserDefaults.Synchronize ();
+        }
+
+        public void BindComplete( bool success )
+        {
+            if ( success )
+            {
+                // However we chose to bind, we can now login with the bound account
+                RockMobileUser.Instance.Login( LoginComplete );
+            }
+            else
+            {
+                LoginComplete( System.Net.HttpStatusCode.BadRequest, "" );
             }
         }
 
@@ -264,7 +346,15 @@ namespace iOS
                 // if we received No Content, we're logged in
                 case System.Net.HttpStatusCode.NoContent:
                 {
-                    RockMobileUser.Instance.GetProfile( ProfileComplete );
+                    // hack: Until facebook is fully implemented in rock, don't attempt syncing the profile cause it won't exist.
+                    if ( RockMobileUser.Instance.AccountType == RockMobileUser.BoundAccountType.Facebook )
+                    {
+                        ProfileComplete( System.Net.HttpStatusCode.OK, "", RockMobileUser.Instance.Person );
+                    }
+                    else
+                    {
+                        RockMobileUser.Instance.GetProfile( ProfileComplete );
+                    }
                     break;
                 }
 
@@ -302,6 +392,14 @@ namespace iOS
 
         public void ProfileComplete(System.Net.HttpStatusCode code, string desc, Rock.Client.Person model) 
         {
+            UIThreading.PerformOnUIThread( delegate
+                {
+                    UIThread_ProfileComplete( code, desc, model );
+                } );
+        }
+
+        void UIThread_ProfileComplete( System.Net.HttpStatusCode code, string desc, Rock.Client.Person model ) 
+        {
             BlockerView.FadeOut( delegate
                 {
                     switch ( code )
@@ -309,10 +407,7 @@ namespace iOS
                         case System.Net.HttpStatusCode.OK:
                         {
                             // if they have a profile picture, grab it.
-                            if ( model.PhotoId != null )
-                            {
-                                RockMobileUser.Instance.DownloadProfilePicture( GeneralConfig.ProfileImageSize, ProfileImageComplete );
-                            }
+                            RockMobileUser.Instance.TryDownloadProfilePicture( GeneralConfig.ProfileImageSize, ProfileImageComplete );
 
                             // update the UI
                             FadeLoginResult( true );
@@ -320,13 +415,13 @@ namespace iOS
 
                             // start the timer, which will notify the springboard we're logged in when it ticks.
                             LoginSuccessfulTimer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>
-                            {
-                                // when the timer fires, notify the springboard we're done.
-                                Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate
-                                    {
-                                        Springboard.ResignModelViewController( this, null );
-                                    } );
-                            };
+                                {
+                                    // when the timer fires, notify the springboard we're done.
+                                    UIThreading.PerformOnUIThread( delegate
+                                        {
+                                            Springboard.ResignModelViewController( this, null );
+                                        } );
+                                };
 
                             LoginSuccessfulTimer.Start( );
 
@@ -341,7 +436,7 @@ namespace iOS
                             // if we couldn't get their profile, that should still count as a failed login.
                             SetUIState( LoginState.Out );
 
-                            RockMobileUser.Instance.Logout( );
+                            RockMobileUser.Instance.LogoutAndUnbind( );
 
                             LoginResultLabel.Text = LoginStrings.Error_Unknown;
                             break;
@@ -357,7 +452,7 @@ namespace iOS
                 case System.Net.HttpStatusCode.OK:
                 {
                     // sweet! make the UI update.
-                    Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate { Springboard.UpdateProfilePic( ); } );
+                    UIThreading.PerformOnUIThread( delegate { Springboard.UpdateProfilePic( ); } );
                     break;
                 }
 

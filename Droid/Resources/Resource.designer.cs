@@ -26,6 +26,7 @@ namespace Droid
 		
 		public static void UpdateIdValues()
 		{
+			global::FacebookMonoDroid.Resource.String.library_name = global::Droid.Resource.String.library_name;
 		}
 		
 		public partial class Attribute
@@ -51,13 +52,16 @@ namespace Droid
 			public const int ccvLogo = 2130837505;
 			
 			// aapt resource value: 0x7f020002
-			public const int Icon = 2130837506;
+			public const int facebook_login = 2130837506;
 			
 			// aapt resource value: 0x7f020003
-			public const int shadow = 2130837507;
+			public const int Icon = 2130837507;
 			
 			// aapt resource value: 0x7f020004
-			public const int thumbnailPlaceholder = 2130837508;
+			public const int shadow = 2130837508;
+			
+			// aapt resource value: 0x7f020005
+			public const int thumbnailPlaceholder = 2130837509;
 			
 			static Drawable()
 			{
@@ -413,11 +417,14 @@ namespace Droid
 		public partial class String
 		{
 			
+			// aapt resource value: 0x7f040002
+			public const int app_name = 2130968578;
+			
 			// aapt resource value: 0x7f040001
-			public const int app_name = 2130968577;
+			public const int hello = 2130968577;
 			
 			// aapt resource value: 0x7f040000
-			public const int hello = 2130968576;
+			public const int library_name = 2130968576;
 			
 			static String()
 			{

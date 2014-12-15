@@ -108,6 +108,9 @@
     <Reference Include="RestSharp.MonoTouch">
       <HintPath>..\Components\restsharp-104.4.0\lib\ios\RestSharp.MonoTouch.dll</HintPath>
     </Reference>
+    <Reference Include="Facebook">
+      <HintPath>..\Components\facebook-sdk-6.2.1\lib\ios\Facebook.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="..\Assets\Fonts\Bevan.ttf">
@@ -308,6 +311,15 @@
     <BundleResource Include="..\Assets\news_baptism_header%403x.png">
       <Link>Resources\news_baptism_header%403x.png</Link>
     </BundleResource>
+    <BundleResource Include="..\Assets\facebook_login.png">
+      <Link>Resources\facebook_login.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\facebook_login%402x.png">
+      <Link>Resources\facebook_login%402x.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\facebook_login%403x.png">
+      <Link>Resources\facebook_login%403x.png</Link>
+    </BundleResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -430,6 +442,10 @@
     </XamarinComponentReference>
     <XamarinComponentReference Include="restsharp">
       <Version>104.4.0</Version>
+      <Visible>False</Visible>
+    </XamarinComponentReference>
+    <XamarinComponentReference Include="facebook-sdk">
+      <Version>6.2.1</Version>
       <Visible>False</Visible>
     </XamarinComponentReference>
   </ItemGroup>

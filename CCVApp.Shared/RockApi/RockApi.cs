@@ -141,7 +141,7 @@ namespace CCVApp
                     RestRequest request = new RestRequest( Method.GET );
 
                     string requestUrl = BaseUrl + GetProfileEndPoint;
-                    requestUrl += string.IsNullOrEmpty( userName ) == true ? RockMobileUser.Instance.Username : userName;
+                    requestUrl += string.IsNullOrEmpty( userName ) == true ? RockMobileUser.Instance.UserID : userName;
 
                     Request.ExecuteAsync<Rock.Client.Person>( requestUrl, request, resultHandler);
                 }

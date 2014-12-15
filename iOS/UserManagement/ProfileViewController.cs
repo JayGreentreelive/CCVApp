@@ -143,7 +143,7 @@ namespace iOS
                             if( ev.ButtonIndex == actionSheet.DestructiveButtonIndex )
                             {
                                 // then log them out.
-                                RockMobileUser.Instance.Logout( );
+                                RockMobileUser.Instance.LogoutAndUnbind( );
 
                                 Springboard.ResignModelViewController( this, null );
                             }
@@ -184,6 +184,13 @@ namespace iOS
             HeaderView.Layer.ShadowPath = shadowPath.CGPath;
 
             LogoView.Layer.Position = new System.Drawing.PointF( HeaderView.Bounds.Width / 2, HeaderView.Bounds.Height / 2 );
+        }
+
+        public override void ViewWillAppear(bool animated)
+        {
+            base.ViewWillAppear(animated);
+
+            ScrollView.ContentOffset = PointF.Empty;
         }
 
         public void SubmitActionSheetClicked(object sender, UIButtonEventArgs e)

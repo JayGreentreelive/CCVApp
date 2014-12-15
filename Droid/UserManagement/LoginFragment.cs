@@ -15,6 +15,8 @@ using CCVApp.Shared.Network;
 using CCVApp.Shared.Config;
 using CCVApp.Shared.Strings;
 using Rock.Mobile.PlatformUI;
+using Android.Webkit;
+using Rock.Mobile.Threading;
 
 namespace Droid
 {
@@ -39,6 +41,7 @@ namespace Droid
         Button LoginButton { get; set; }
         Button CancelButton { get; set; }
         Button RegisterButton { get; set; }
+        ImageButton FacebookButton { get; set; }
         EditText UsernameField { get; set; }
         EditText PasswordField { get; set; }
         TextView LoginResultLabel { get; set; }
@@ -77,7 +80,7 @@ namespace Droid
             ControlStyling.StyleButton( LoginButton, LoginStrings.LoginButton );
             LoginButton.Click += (object sender, EventArgs e) => 
                 {
-                    TryLogin( );
+                    TryRockBind( );
                 };
 
             CancelButton = view.FindViewById<Button>( Resource.Id.cancelButton );
@@ -103,6 +106,14 @@ namespace Droid
             LoginResultLabel = view.FindViewById<TextView>( Resource.Id.loginResult );
             ControlStyling.StyleUILabel( LoginResultLabel );
 
+            // Setup the facebook button
+            FacebookButton = view.FindViewById<ImageButton>( Resource.Id.facebookButton );
+            FacebookButton.SetBackgroundDrawable( null );
+            FacebookButton.Click += (object sender, EventArgs e ) =>
+            {
+                TryFacebookBind( );
+            };
+
             return view;
         }
 
@@ -113,7 +124,7 @@ namespace Droid
             SetUIState( LoginState.Out );
         }
 
-        protected void TryLogin()
+        protected void TryRockBind()
         {
             // if both fields are valid, attempt a login!
             if( string.IsNullOrEmpty( UsernameField.Text ) == false &&
@@ -121,7 +132,69 @@ namespace Droid
             {
                 SetUIState( LoginState.Trying );
 
-                RockMobileUser.Instance.Login( UsernameField.Text, PasswordField.Text, LoginComplete );
+                RockMobileUser.Instance.BindRockAccount( UsernameField.Text, PasswordField.Text, BindComplete );
+            }
+        }
+
+        class FBWebViewClient : WebViewClient
+        {
+            public LoginFragment Parent { get; set; }
+
+            public override void OnPageFinished(WebView view, string url)
+            {
+                base.OnPageFinished(view, url);
+
+                Parent.OnPageFinished( view, url );
+            }
+        }
+
+        Facebook.FacebookClient Session { get; set; }
+        WebView WebView { get; set; }
+        public void TryFacebookBind( )
+        {
+            SetUIState( LoginState.Trying );
+
+            RockMobileUser.Instance.BindFacebookAccount( delegate(string fromUri, Facebook.FacebookClient session) 
+                {
+                    Session = session;
+
+                    // invoke a webview
+                    WebView = new WebView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    WebView.SetWebViewClient( new FBWebViewClient( ) { Parent = this } );
+                    WebView.Settings.JavaScriptEnabled = true;
+                    WebView.Settings.SetSupportZoom(true);
+                    WebView.Settings.BuiltInZoomControls = true;
+                    WebView.Settings.LoadWithOverviewMode = true; //Load 100% zoomed out
+                    WebView.ScrollBarStyle = ScrollbarStyles.OutsideOverlay;
+                    WebView.ScrollbarFadingEnabled = true;
+
+                    WebView.VerticalScrollBarEnabled = true;
+                    WebView.HorizontalScrollBarEnabled = true;
+
+                    (View as LinearLayout).AddView( WebView, 0 );
+                    WebView.LoadUrl( fromUri );
+                });
+        }
+
+        public void OnPageFinished( WebView view, string url )
+        {
+            if ( RockMobileUser.Instance.HasFacebookResponse( url, Session ) )
+            {
+                ( View as LinearLayout ).RemoveView( WebView );
+
+                RockMobileUser.Instance.FacebookCredentialResult( url, Session, BindComplete );
+            }
+        }
+
+        public void BindComplete( bool success )
+        {
+            if ( success )
+            {// However we chose to bind, we can now login with the bound account
+                RockMobileUser.Instance.Login( LoginComplete );
+            }
+            else
+            {
+                LoginComplete( System.Net.HttpStatusCode.BadRequest, "" );
             }
         }
 
@@ -132,7 +205,15 @@ namespace Droid
                 // if we received No Content, we're logged in
                 case System.Net.HttpStatusCode.NoContent:
                 {
-                    RockMobileUser.Instance.GetProfile( ProfileComplete );
+                    // hack: Until facebook is fully implemented in rock, don't attempt syncing the profile cause it won't exist.
+                    if ( RockMobileUser.Instance.AccountType == RockMobileUser.BoundAccountType.Facebook )
+                    {
+                        ProfileComplete( System.Net.HttpStatusCode.OK, "", RockMobileUser.Instance.Person );
+                    }
+                    else
+                    {
+                        RockMobileUser.Instance.GetProfile( ProfileComplete );
+                    }
                     break;
                 }
 
@@ -160,17 +241,22 @@ namespace Droid
             }
         }
 
-        public void ProfileComplete(System.Net.HttpStatusCode code, string desc, Rock.Client.Person model) 
+        public void ProfileComplete(System.Net.HttpStatusCode code, string desc, Rock.Client.Person model)
+        {
+            UIThreading.PerformOnUIThread( delegate
+                {
+                    UIThread_ProfileComplete( code, desc, model );
+                } );
+        }
+
+        void UIThread_ProfileComplete(System.Net.HttpStatusCode code, string desc, Rock.Client.Person model)
         {
             switch( code )
             {
                 case System.Net.HttpStatusCode.OK:
                 {
                     // if they have a profile picture, grab it.
-                    if( model.PhotoId != null )
-                    {
-                        RockMobileUser.Instance.DownloadProfilePicture( GeneralConfig.ProfileImageSize, ProfileImageComplete );
-                    }
+                    RockMobileUser.Instance.TryDownloadProfilePicture( GeneralConfig.ProfileImageSize, ProfileImageComplete );
 
                     // hide the activity indicator, because we are now logged in,
                     // but leave the buttons all disabled.
@@ -199,7 +285,7 @@ namespace Droid
                     // if we couldn't get their profile, that should still count as a failed login.
                     SetUIState( LoginState.Out );
 
-                    RockMobileUser.Instance.Logout( );
+                    RockMobileUser.Instance.LogoutAndUnbind( );
 
                     LoginResultLabel.Text = "Unable to Login. Try Again";
                     break;

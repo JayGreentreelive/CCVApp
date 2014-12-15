@@ -18,6 +18,16 @@ namespace CCVApp
                 /// The size (in pixels) of the profile image to download from Rock
                 /// </summary>
                 public const uint ProfileImageSize = 200;
+
+                /// <summary>
+                /// The Facebook app ID reprsenting the Facebook app that will get things on behalf of the user.
+                /// </summary>
+                public const string FBAppID = "381237785371059";
+
+                /// <summary>
+                /// The permissions the Facebook App should request. You probably shouldn't change this.
+                /// </summary>
+                public const string FBAppPermissions = "public_profile, user_friends, email";
             }
 
             public class SpringboardConfig

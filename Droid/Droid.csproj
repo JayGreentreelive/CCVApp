@@ -50,6 +50,9 @@
     <Reference Include="RestSharp.MonoDroid">
       <HintPath>..\Components\restsharp-104.4.0\lib\android\RestSharp.MonoDroid.dll</HintPath>
     </Reference>
+    <Reference Include="Facebook">
+      <HintPath>..\Components\facebook-sdk-6.2.1\lib\android\Facebook.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
@@ -118,6 +121,9 @@
     <AndroidResource Include="Resources\layout\Notes_Details.axml" />
     <AndroidResource Include="Resources\layout\Notes_Primary.axml" />
     <AndroidResource Include="Resources\layout\Springboard.axml" />
+    <AndroidResource Include="..\Assets\facebook_login%403x.png">
+      <Link>Resources\drawable-hdpi\facebook_login.png</Link>
+    </AndroidResource>
   </ItemGroup>
   <Import Project="..\..\Rock.Mobile\Rock.Mobile.projitems" Label="Shared" Condition="Exists('..\..\Rock.Mobile\Rock.Mobile.projitems')" />
   <Import Project="..\..\Rock\Rock.Client\Rock.Client.Models.projitems" Label="Shared" Condition="Exists('..\..\Rock\Rock.Client\Rock.Client.Models.projitems')" />
@@ -304,6 +310,10 @@
     </XamarinComponentReference>
     <XamarinComponentReference Include="restsharp">
       <Version>104.4.0</Version>
+      <Visible>False</Visible>
+    </XamarinComponentReference>
+    <XamarinComponentReference Include="facebook-sdk">
+      <Version>6.2.1</Version>
       <Visible>False</Visible>
     </XamarinComponentReference>
   </ItemGroup>

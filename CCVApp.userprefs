@@ -1,31 +1,33 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|iPhone" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Tasks/NotesTask/NotesPrimaryFragment.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.192.168.56.101:5555" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/UserManagement/LoginFragment.cs">
     <Files>
-      <File FileName="Droid/Springboard.cs" Line="106" Column="106" />
-      <File FileName="Droid/Tasks/NotesTask/NotesDetailsFragment.cs" Line="113" Column="113" />
-      <File FileName="Droid/Tasks/NotesTask/NotesPrimaryFragment.cs" Line="51" Column="51" />
-      <File FileName="iOS/Tasks/Notes/NotesMainUIViewController.cs" Line="130" Column="130" />
-      <File FileName="iOS/Tasks/Notes/NotesDetailsUIViewController.cs" Line="21" Column="21" />
+      <File FileName="Droid/UserManagement/LoginFragment.cs" Line="37" Column="37" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="Droid" selected="True" />
+          <Node name="Droid" expanded="True">
+            <Node name="ComponentReferenceFolder" expanded="True" />
+            <Node name="Resources" expanded="True">
+              <Node name="layout" expanded="True" />
+            </Node>
+            <Node name="Tasks" expanded="True">
+              <Node name="NotesTask" expanded="True" />
+            </Node>
+            <Node name="UserManagement" expanded="True">
+              <Node name="LoginFragment.cs" selected="True" />
+            </Node>
+          </Node>
           <Node name="iOS" expanded="True">
             <Node name="Tasks" expanded="True">
-              <Node name="News" expanded="True" />
               <Node name="Notes" expanded="True" />
-              <Node name="Prayer" expanded="True" />
             </Node>
-            <Node name="UserManagement" expanded="True" />
           </Node>
         </State>
       </Pad>
       <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State>
-          <Value>(long)mutedColor</Value>
-        </State>
+        <State />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>

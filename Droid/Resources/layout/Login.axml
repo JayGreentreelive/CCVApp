@@ -100,11 +100,11 @@
         android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:id="@+id/loginResult" />
-    <Button
-        android:text="Login with Facebook"
+    <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/facebookButton"
+        android:src="@drawable/facebook_login"
         android:layout_gravity="center_horizontal" />
     <Space
         android:layout_width="match_parent"

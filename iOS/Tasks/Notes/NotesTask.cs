@@ -75,6 +75,7 @@ namespace iOS
                 NavToolbar.SetCreateButtonEnabled( false, null );
                 NavToolbar.SetShareButtonEnabled( false, null );
                 NavToolbar.SetBackButtonEnabled( false );
+                NavToolbar.Reveal( false );
             }
         }
 
@@ -83,7 +84,12 @@ namespace iOS
             base.TouchesEnded(taskUIViewController, touches, evt);
 
             // if they touched a dead area, reveal the nav toolbar again.
-            NavToolbar.RevealForTime( 3.0f );
+            // Don't do this for the Notes themselves, because they reveal it thru the
+            // scroll gesture
+            if ( ( ActiveViewController as NotesViewController ) == null )
+            {
+                NavToolbar.RevealForTime( 3.0f );
+            }
         }
 
         public override void ViewDidScroll( float scrollDelta )

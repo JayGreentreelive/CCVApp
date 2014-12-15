@@ -15,6 +15,13 @@ Initial Data (Updated anytime "Launch Data"'s "General Data" Version Number is n
         Titles
         Suffixes
         Default News
+
+Login
+    Rock Username/Password (Done)
+    Facebook ID
+    Cookie Valid check
+
+Any endpoint where I'd pass up a Username needs to support a Facebook ID representing a FB account.
         
 Profile Data
 	Name (First, Middle, Last)

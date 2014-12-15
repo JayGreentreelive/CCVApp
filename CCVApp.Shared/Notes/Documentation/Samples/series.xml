@@ -2,11 +2,21 @@
 <SeriesList>
 	<Series>
 		<Message>
+			<Name>Make Room For Relationships</Name>
+			<Speaker>Dr. Don Wilson</Speaker>
+			<Date>12/14/2014</Date>
+			<NoteUrl>http://www.jeredmcferron.com/message_12_13_2014.xml</NoteUrl>
+			<WatchUrl></WatchUrl>
+			<ShareUrl></ShareUrl>
+		</Message>
+
+		<Message>
 			<Name>Make Room For Serving</Name>
 			<Speaker>Dr. Don Wilson</Speaker>
 			<Date>12/7/2014</Date>
 			<NoteUrl>http://www.jeredmcferron.com/message_12_6_2014.xml</NoteUrl>
-			<WatchUrl></WatchUrl>
+			<WatchUrl>http://player.vimeo.com/external/113873526.m3u8?p=high,standard,mobile&amp;s=595bdf7b301a5e29ae48bdad98f0fd70</WatchUrl>
+			<ShareUrl>http://www.ccvonline.com/Arena/default.aspx?page=17529&amp;item=482</ShareUrl>
 		</Message>
 
 		<Name>Uncluttered</Name>

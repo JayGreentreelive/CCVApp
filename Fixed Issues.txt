@@ -1,11 +1,13 @@
 Both
 	Added final design for Message details and series.
 	Added final design for the Profile page.
-	Added final design for the Login page. 
+	Added final design for the Login page.
+	Added ability to login via Facebook (still experimental as it doesn't tie to Rock yet) 
 
 Android
 	Fixed an issue causing prayer requests to fail posting.
 	Updated prayer viewing and creation to match final design.
 
 iOS
-	
+	Fixed an issue causing the NavToolbar to reveal when tapping the screen in Notes.
+	Replaced the Pray button with a "Create" button in the Nav Toolbar

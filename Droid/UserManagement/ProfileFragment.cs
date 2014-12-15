@@ -205,7 +205,7 @@ namespace Droid
                                 {
                                     switch( clickArgs.Which )
                                     {
-                                        case 0: RockMobileUser.Instance.Logout( ); SpringboardParent.ModalFragmentFinished( this, null ); break;
+                                        case 0: RockMobileUser.Instance.LogoutAndUnbind( ); SpringboardParent.ModalFragmentFinished( this, null ); break;
                                         case 1: SpringboardParent.ModalFragmentFinished( this, null ); break;
                                         case 2: break;
                                     }
