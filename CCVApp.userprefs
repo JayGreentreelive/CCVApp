@@ -1,35 +1,9 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.192.168.56.101:5555" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/UserManagement/LoginFragment.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.SelectDevice" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Tasks/PrayerTask/PrayerCreateFragment.cs">
     <Files>
-      <File FileName="Droid/UserManagement/LoginFragment.cs" Line="37" Column="37" />
+      <File FileName="Droid/Tasks/PrayerTask/PrayerCreateFragment.cs" Line="45" Column="45" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="Droid" expanded="True">
-            <Node name="ComponentReferenceFolder" expanded="True" />
-            <Node name="Resources" expanded="True">
-              <Node name="layout" expanded="True" />
-            </Node>
-            <Node name="Tasks" expanded="True">
-              <Node name="NotesTask" expanded="True" />
-            </Node>
-            <Node name="UserManagement" expanded="True">
-              <Node name="LoginFragment.cs" selected="True" />
-            </Node>
-          </Node>
-          <Node name="iOS" expanded="True">
-            <Node name="Tasks" expanded="True">
-              <Node name="Notes" expanded="True" />
-            </Node>
-          </Node>
-        </State>
-      </Pad>
-      <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
@@ -39,5 +13,5 @@
     <Watch file="iOS/UserManagement/ImageCropViewController.cs" line="498" offsetX="806" offsetY="7455" expression="resultTransform" liveUpdate="False" />
     <Watch file="Droid/Tasks/NotesTask/NotesDetailsFragment.cs" line="215" offsetX="1268" offsetY="3210" expression="ThumbnailPlaceholder" liveUpdate="False" />
   </MonoDevelop.Ide.DebuggingService.PinnedWatches>
-  <MonoDevelop.Ide.ItemProperties.Droid MonoForAntroid.PreferredDevice="4.65&quot; 720p (Galaxy Nexus)" MonoForAntroid.PreferredTheme="Theme.DeviceDefault" />
+  <MonoDevelop.Ide.ItemProperties.Droid MonoForAntroid.PreferredDevice="Nexus 4" />
 </Properties>

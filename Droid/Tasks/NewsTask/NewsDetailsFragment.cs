@@ -52,13 +52,16 @@ namespace Droid
                     System.IO.Stream assetStream = Activity.BaseContext.Assets.Open( NewsItem.HeaderImageName );
                     banner.SetImageBitmap( BitmapFactory.DecodeStream( assetStream ) );
 
+                    TextView title = view.FindViewById<TextView>( Resource.Id.news_details_title );
+                    title.Text = NewsItem.Title;
+                    ControlStyling.StyleUILabel( title, ControlStylingConfig.Large_Font_Bold, ControlStylingConfig.Large_FontSize );
 
                     // set the description
                     TextView description = view.FindViewById<TextView>( Resource.Id.news_details_details );
                     description.Text = NewsItem.Description;
                     description.MovementMethod = new ScrollingMovementMethod();
-                    description.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
-
+                    //description.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
+                    ControlStyling.StyleUILabel( description, ControlStylingConfig.Small_Font_Light, ControlStylingConfig.Small_FontSize );
 
                     Button launchUrlButton = view.FindViewById<Button>(Resource.Id.news_details_launch_url);
                     launchUrlButton.Click += (object sender, EventArgs e) => 
@@ -66,7 +69,7 @@ namespace Droid
                             // move to the next page..somehow.
                             ParentTask.OnClick( this, launchUrlButton.Id );
                         };
-                    ControlStyling.StyleButton( launchUrlButton, NewsStrings.LearnMore );
+                    ControlStyling.StyleButton( launchUrlButton, NewsStrings.LearnMore, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
 
                     return view;
                 }

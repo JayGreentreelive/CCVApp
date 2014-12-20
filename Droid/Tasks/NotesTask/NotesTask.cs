@@ -13,6 +13,7 @@ namespace Droid
                 NotesPrimaryFragment MainPage { get; set; }
                 NotesDetailsFragment DetailsPage { get; set; }
                 NotesWatchFragment WatchPage { get; set; }
+                NotesWebViewFragment WebViewPage { get; set; }
 
                 public NotesTask( NavbarFragment navFragment ) : base( navFragment )
                 {
@@ -41,12 +42,17 @@ namespace Droid
                         WatchPage = new NotesWatchFragment( );
                     }
 
-
+                    WebViewPage = (NotesWebViewFragment)NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.Notes.NotesWebViewFragment" );
+                    if ( WebViewPage == null )
+                    {
+                        WebViewPage = new NotesWebViewFragment( );
+                    }
 
                     MainPage.ParentTask = this;
                     DetailsPage.ParentTask = this;
                     NotesPage.ParentTask = this;
                     WatchPage.ParentTask = this;
+                    WebViewPage.ParentTask = this;
                 }
 
                 public override void SpringboardDidAnimate( bool springboardRevealed )
@@ -140,7 +146,7 @@ namespace Droid
                             else
                             {
                                 DetailsPage.Series = MainPage.SeriesEntries[ buttonId ].Series;
-                                DetailsPage.ThumbnailPlaceholder = MainPage.SeriesEntries[ buttonId ].Thumbnail;
+                                DetailsPage.SeriesBillboard = MainPage.SeriesEntries[ buttonId ].Thumbnail;
                                 PresentFragment( DetailsPage, true );
                             }
                         }
@@ -162,6 +168,14 @@ namespace Droid
 
                                 PresentFragment( NotesPage, true );
                             }
+                        }
+                        else if ( source == NotesPage )
+                        {
+                            // the context is the activeURL to visit.
+                            string activeUrl = (string)context;
+                            WebViewPage.ActiveUrl = activeUrl;
+
+                            PresentFragment( WebViewPage, true );
                         }
                     }
                 }

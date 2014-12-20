@@ -88,6 +88,13 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Tap to personalize" lineBreakMode="tailTruncation" minimumFontSize="10" id="506" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO">
+                                <rect key="frame" x="0.0" y="153" width="115" height="21"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" colorSpace="calibratedRGB" red="1" green="1" blue="1" alpha="1"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.082352941176470587" green="0.082352941176470587" blue="0.082352941176470587" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
@@ -95,7 +102,7 @@
                     <connections>
                         <outlet property="ConnectElement" destination="486" id="name-outlet-486"/>
                         <outlet property="GiveElement" destination="467" id="name-outlet-467"/>
-                        <outlet property="LoginButton" destination="283" id="name-outlet-283"/>
+                        <outlet property="EditPictureButton" destination="283" id="name-outlet-283"/>
                         <outlet property="MessagesElement" destination="479" id="name-outlet-479"/>
                         <outlet property="MoreElement" destination="456" id="name-outlet-456"/>
                         <outlet property="NewsElement" destination="491" id="name-outlet-491"/>
@@ -105,6 +112,7 @@
                         <outlet property="WelcomeField" destination="449" id="name-outlet-449"/>
                         <outlet property="CampusButton" destination="498" id="name-outlet-498"/>
                         <outlet property="SettingsButton" destination="499" id="name-outlet-499"/>
+                        <outlet property="ViewProfileLabel" destination="506" id="name-outlet-506"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="13" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -174,5 +182,6 @@
         <image name="podcastThumbnailPlaceholder.png" width="590" height="332"/>
         <image name="spot_mask.png" width="128" height="128"/>
         <image name="news_baptism_header.png" width="320" height="180"/>
+        <image name="facebook_login.png" width="250" height="35"/>
     </resources>
 </document>

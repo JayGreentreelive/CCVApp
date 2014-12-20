@@ -96,10 +96,18 @@ namespace iOS
             }
             else
             {
-                MoviePlayer.View.Frame = View.Frame;
+                // if we goto landscape throw the view into fullscreen
+                if ( MoviePlayer.Fullscreen != true )
+                {
+                    MoviePlayer.SetFullscreen( true, true );
+                    //MoviePlayer.View.Frame = View.Frame;
+                }
             }
 
             ActivityIndicator.Layer.Position = new System.Drawing.PointF( ( View.Frame.Width - ActivityIndicator.Frame.Width ) / 2, ( View.Frame.Height - ActivityIndicator.Frame.Height ) / 2 );
+
+            // don't let the back button work when in landscape mode.
+            Task.NavToolbar.SetBackButtonEnabled( UIDevice.CurrentDevice.Orientation == UIDeviceOrientation.Portrait ? true : false );
         }
 
         public override void ViewDidAppear(bool animated)

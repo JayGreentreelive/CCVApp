@@ -46,6 +46,12 @@ namespace CCVApp
                 /// <value>The bounds.</value>
                 protected RectangleF Frame { get; set; }
 
+                /// <summary>
+                /// Url in case this label should send the user to a website
+                /// </summary>
+                /// <value>The active URL.</value>
+                protected string ActiveUrl { get; set; }
+
                 protected override void Initialize( )
                 {
                     base.Initialize( );
@@ -112,6 +118,9 @@ namespace CCVApp
 
                     // now calculate the available width based on padding. (Don't actually change our width)
                     float availableWidth = bounds.Width - padding.Left - padding.Width - (borderPaddingPx * 2);
+
+                    // see if there's a URL we should care about
+                    ActiveUrl = reader.GetAttribute( "Url" );
 
 
                     // now read what our children's alignment should be
@@ -423,19 +432,32 @@ namespace CCVApp
                     Frame = new RectangleF( Frame.X + xOffset, Frame.Y + yOffset, Frame.Width, Frame.Height );
                 }
 
-                public override bool TouchesEnded( PointF touch )
+                public override IUIControl TouchesEnded( PointF touch )
                 {
                     // let each child handle it
                     foreach( IUIControl control in ChildControls )
                     {
                         // if a child consumes it, stop and report it was consumed.
-                        if(control.TouchesEnded( touch ))
+                        IUIControl consumingControl = control.TouchesEnded( touch );
+                        if( consumingControl != null)
                         {
-                            return true;
+                            return consumingControl;
                         }
                     }
 
-                    return false;
+                    // if our controls above didn't care, we should consume IF we 
+                    // have a url to launch
+                    if ( string.IsNullOrEmpty( ActiveUrl ) == false && Frame.Contains( touch ) )
+                    {
+                        return this;
+                    }
+
+                    return null;
+                }
+
+                public override string GetActiveUrl()
+                {
+                    return ActiveUrl;
                 }
 
                 public override void AddToView( object obj )

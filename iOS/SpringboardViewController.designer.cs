@@ -24,11 +24,11 @@ namespace iOS
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UIView GiveElement { get; set; }
+		UIButton EditPictureButton { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UIButton LoginButton { get; set; }
+		UIView GiveElement { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
@@ -60,6 +60,10 @@ namespace iOS
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
+		UILabel ViewProfileLabel { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
 		UILabel WelcomeField { get; set; }
 
 		void ReleaseDesignerOutlets ()
@@ -72,13 +76,13 @@ namespace iOS
 				ConnectElement.Dispose ();
 				ConnectElement = null;
 			}
+			if (EditPictureButton != null) {
+				EditPictureButton.Dispose ();
+				EditPictureButton = null;
+			}
 			if (GiveElement != null) {
 				GiveElement.Dispose ();
 				GiveElement = null;
-			}
-			if (LoginButton != null) {
-				LoginButton.Dispose ();
-				LoginButton = null;
 			}
 			if (MessagesElement != null) {
 				MessagesElement.Dispose ();
@@ -107,6 +111,10 @@ namespace iOS
 			if (ViewProfileButton != null) {
 				ViewProfileButton.Dispose ();
 				ViewProfileButton = null;
+			}
+			if (ViewProfileLabel != null) {
+				ViewProfileLabel.Dispose ();
+				ViewProfileLabel = null;
 			}
 			if (WelcomeField != null) {
 				WelcomeField.Dispose ();

@@ -129,7 +129,6 @@ namespace iOS
 
             // setup the toolbar that will manage task navigation and any other tasks the task needs
             SubNavToolbar = new NavToolbar();
-            SubNavToolbar.Frame = new RectangleF( 0, View.Frame.Height - SubNavToolbarConfig.Height, View.Frame.Width, SubNavToolbarConfig.Height);
             SubNavToolbar.BarTintColor = PlatformBaseUI.GetUIColor( SubNavToolbarConfig.BackgroundColor );
             SubNavToolbar.Layer.Opacity = SubNavToolbarConfig.Opacity;
             SubNavigationController.View.AddSubview( SubNavToolbar );
@@ -152,6 +151,13 @@ namespace iOS
             View.AddSubview( SubNavigationController.View );
 
             SubNavigationController.View.BackgroundColor = UIColor.Black;
+        }
+
+        public override void ViewDidLayoutSubviews()
+        {
+            base.ViewDidLayoutSubviews();
+
+            SubNavToolbar.ViewDidLayoutSubviews( );
         }
 
         public void NavWillShowViewController( UIViewController viewController )

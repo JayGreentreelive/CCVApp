@@ -280,7 +280,7 @@ namespace Droid
 
             // now determine the alpha
             float maxSlide = ( View.Width * PrimaryNavBarConfig.RevealPercentage );
-            FadeOutFrame.Alpha = Math.Min( xPos / maxSlide, 1.0f - PrimaryContainerConfig.ShadowOpacity );
+            FadeOutFrame.Alpha = Math.Min( xPos / maxSlide, PrimaryContainerConfig.SlideDarkenAmount );
         }
 
         public void OnDown( MotionEvent e )
@@ -466,10 +466,10 @@ namespace Droid
         {
             // first, are we active? If we aren't, there's no way
             // we ever activated a task, so there's no need to deactivate anything.
-            if( IsFragmentActive == true )
+            if ( IsFragmentActive == true )
             {
                 // we are active, so if we have a current task, deactivate it.
-                if( ActiveTask != null )
+                if ( ActiveTask != null )
                 {
                     ActiveTask.Deactivate( false );
                 }
@@ -479,6 +479,11 @@ namespace Droid
 
                 // force the springboard to close
                 RevealSpringboard( false );
+            }
+            else
+            {
+                // activate the new task
+                newTask.Activate( false );
             }
 
             // take our active task. If we didn't activate it because we aren't

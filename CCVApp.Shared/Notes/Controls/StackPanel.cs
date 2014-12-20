@@ -248,19 +248,20 @@ namespace CCVApp
                     ChildControls.Sort( BaseControl.Sort );
                 }
 
-                public override bool TouchesEnded( PointF touch )
+                public override IUIControl TouchesEnded( PointF touch )
                 {
                     // let each child handle it
                     foreach( IUIControl control in ChildControls )
                     {
                         // if a child consumes it, stop and report it was consumed.
-                        if(control.TouchesEnded( touch ))
+                        IUIControl consumingControl = control.TouchesEnded( touch );
+                        if( consumingControl != null)
                         {
-                            return true;
+                            return consumingControl;
                         }
                     }
 
-                    return false;
+                    return null;
                 }
 
                 public override void AddOffset( float xOffset, float yOffset )

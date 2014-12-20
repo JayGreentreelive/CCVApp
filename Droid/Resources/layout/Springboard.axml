@@ -33,7 +33,7 @@
             <!--Relative layout that wraps the "Welcome: Jered" with a button surrounding it-->
                 <RelativeLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="30dp"
+                    android:layout_height="50dp"
                     android:background="@android:color/transparent"
                     android:layout_gravity="center_horizontal">
                     <Button
@@ -43,9 +43,10 @@
                         android:id="@+id/springboard_login_button" />
                     <LinearLayout
                         android:background="@android:color/transparent"
+                        android:id="@+id/profile_name_linearlayout"
+                        android:layout_centerHorizontal="true"
                         android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        android:layout_centerInParent="true">
+                        android:layout_width="wrap_content">
                         <TextView
                             android:id="@+id/profile_prefix"
                             android:text="Welcome:"
@@ -57,6 +58,13 @@
                             android:layout_height="wrap_content"
                             android:layout_width="wrap_content" />
                     </LinearLayout>
+                    <TextView
+                        android:id="@+id/view_profile"
+                        android:text="View Profile"
+                        android:layout_below="@+id/profile_name_linearlayout"
+                        android:layout_centerHorizontal="true"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content" />
                 </RelativeLayout>
             <!--End "Welcome: Jered"-->
             </LinearLayout>
@@ -69,8 +77,8 @@
             <!--Definition for a springboard element-->
                 <RelativeLayout
                     android:id="@+id/springboard_news_frame"
-                    android:layout_marginTop="25dp"
-                    android:layout_height="60dp"
+                    android:layout_marginTop="40dp"
+                    android:layout_height="40dp"
                     android:layout_width="match_parent">
                     <Button
                         android:layout_width="match_parent"
@@ -104,7 +112,7 @@
                 <RelativeLayout
                     android:layout_below="@id/springboard_news_frame"
                     android:id="@+id/springboard_groupfinder_frame"
-                    android:layout_height="60dp"
+                    android:layout_height="40dp"
                     android:layout_width="match_parent">
                     <Button
                         android:layout_width="match_parent"
@@ -138,7 +146,7 @@
                 <RelativeLayout
                     android:layout_below="@id/springboard_groupfinder_frame"
                     android:id="@+id/springboard_notes_frame"
-                    android:layout_height="60dp"
+                    android:layout_height="40dp"
                     android:layout_width="match_parent">
                     <Button
                         android:layout_width="match_parent"
@@ -172,7 +180,7 @@
                 <RelativeLayout
                     android:layout_below="@id/springboard_notes_frame"
                     android:id="@+id/springboard_prayer_frame"
-                    android:layout_height="60dp"
+                    android:layout_height="40dp"
                     android:layout_width="match_parent">
                     <Button
                         android:layout_width="match_parent"
@@ -206,7 +214,7 @@
                 <RelativeLayout
                     android:layout_below="@id/springboard_prayer_frame"
                     android:id="@+id/springboard_give_frame"
-                    android:layout_height="60dp"
+                    android:layout_height="40dp"
                     android:layout_width="match_parent">
                     <Button
                         android:layout_width="match_parent"
@@ -240,7 +248,7 @@
                 <RelativeLayout
                     android:layout_below="@id/springboard_give_frame"
                     android:id="@+id/springboard_about_frame"
-                    android:layout_height="60dp"
+                    android:layout_height="40dp"
                     android:layout_width="match_parent">
                     <Button
                         android:layout_width="match_parent"
@@ -278,7 +286,7 @@
                     android:background="#FFF00FFF" />
                 <Space
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="40dp"
                     android:background="#FFF00FFF" />
             </LinearLayout>
         </RelativeLayout>
@@ -288,7 +296,7 @@
         android:id="@+id/campus_container"
         android:background="#FFFF0000"
         android:layout_height="40dp"
-        android:layout_width="match_parent"
+        android:layout_width="50dp"
         android:layout_gravity="bottom"
         android:layout_alignParentBottom="true">
         <Button

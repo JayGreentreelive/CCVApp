@@ -12,7 +12,7 @@ namespace CCVApp.Shared
             {
                 get
                 {
-                    return "Alpha (Build 5)";
+                    return "Alpha (Build 6)";
                 }
             }
         }
@@ -40,8 +40,11 @@ namespace CCVApp.Shared
             public const string Camera_Error_Title = "No Camera";
             public const string Camera_Error_Message = "This device does not have a camera.";
 
-            public const string LoggedIn_Prefix = "Welcome: ";
-            public const string LoggedOut_Promo = "You're Not Logged In";
+            public const string LoggedIn_Prefix = "Welcome ";
+            public const string LoggedOut_Label = "Log In";
+            public const string LoggedOut_Promo = "Tap to Personalize";
+
+            public const string ViewProfile = "View Profile";
 
             public const string Element_News_Title = "News";
             public const string Element_Connect_Title = "Connect";
@@ -132,6 +135,8 @@ namespace CCVApp.Shared
             public const string Series_Table_TakeNotes = "Take Notes";
 
             public const string Series_Table_PreviousMessages = "Previous Message Series";
+
+            public const string UserNote_Placeholder = "Enter note";
 
         }
 

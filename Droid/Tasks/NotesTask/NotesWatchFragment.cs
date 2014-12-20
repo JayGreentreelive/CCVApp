@@ -134,7 +134,6 @@ namespace Droid
                     base.OnPause();
 
                     ParentTask.NavbarFragment.EnableSpringboardRevealButton( true );
-                    Activity.RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
                     ParentTask.NavbarFragment.ToggleFullscreen( false );
 
                     // stop playback

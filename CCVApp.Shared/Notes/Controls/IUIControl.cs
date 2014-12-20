@@ -29,7 +29,9 @@ namespace CCVApp
 
                 void TouchesMoved( PointF touch );
 
-                bool TouchesEnded( PointF touch );
+                IUIControl TouchesEnded( PointF touch );
+
+                string GetActiveUrl( );
 
                 Styles.Alignment GetHorzAlignment( );
 

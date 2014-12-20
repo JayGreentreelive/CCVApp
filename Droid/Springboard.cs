@@ -73,18 +73,18 @@ namespace Droid
 
         public void Deactivate( )
         {
-            Icon.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+            Icon.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.Springboard_InActiveElementColor ) );
 
-            Text.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+            Text.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.Springboard_InActiveElementColor ) );
 
             Layout.SetBackgroundColor( PlatformBaseUI.GetUIColor( 0x00000000 ) );
         }
 
         public void Activate( )
         {
-            Icon.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
+            Icon.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.Springboard_ActiveElementColor ) );
 
-            Text.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
+            Text.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.Springboard_ActiveElementColor ) );
 
             Layout.SetBackgroundColor( PlatformBaseUI.GetUIColor( SpringboardConfig.Element_SelectedColor ) );
         }
@@ -112,8 +112,11 @@ namespace Droid
 
         protected Button LoginProfileButton { get; set; }
         protected TextView ProfileName { get; set; }
+        protected TextView ViewProfileLabel { get; set; }
 
         protected int ActiveElementIndex { get; set; }
+
+        bool DisplayingModalFragment { get; set; }
 
         /// <summary>
         /// When true, we need to launch the image cropper. We have to wait
@@ -218,7 +221,7 @@ namespace Droid
             }
 
             view.SetOnTouchListener( this );
-            view.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+            view.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.SpringboardBackgroundColor ) );
 
             // set the task we wish to have active
             ActivateElement( Elements[ ActiveElementIndex ] );
@@ -247,7 +250,7 @@ namespace Droid
 
             //note: these are converted from dp to pixels, so don't do it here.
             circle.Radius = 70;
-            circle.StrokeWidth = 7;
+            circle.StrokeWidth = 4;
 
             circle.Color = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
             circle.SetBackgroundColor( Color.Transparent );
@@ -262,34 +265,35 @@ namespace Droid
             LoginProfileButton = view.FindViewById<Button>( Resource.Id.springboard_login_button );
             LoginProfileButton.Click += (object sender, EventArgs e) => 
                 {
-                    // replace the entire screen with a user management fragment
-                    var ft = FragmentManager.BeginTransaction();
-                    ft.SetTransition(FragmentTransit.FragmentFade);
-
                     // if we're logged in, it'll be the profile one
                     if( RockMobileUser.Instance.LoggedIn == true )
                     {
-                        ft.Replace(Resource.Id.fullscreen, ProfileFragment);
-                        ft.AddToBackStack( ProfileFragment.ToString() );
+                        StartModalFragment( ProfileFragment );
                     }
                     else
                     {
                         // else it'll be the login one
-                        ft.Replace(Resource.Id.fullscreen, LoginFragment);
-                        ft.AddToBackStack( LoginFragment.ToString() );
+                        StartModalFragment( LoginFragment );
                     }
-
-                    ft.Commit();
                 };
 
 
             // setup the textView for rendering the user's name when they're logged in "Welcome: Jered"
             ProfilePrefix = view.FindViewById<TextView>( Resource.Id.profile_prefix );
-            ProfilePrefix.SetTextSize( Android.Util.ComplexUnitType.Dip, 20 );
+            ProfilePrefix.SetTypeface( DroidFontManager.Instance.GetFont( ControlStylingConfig.Large_Font_Light ), TypefaceStyle.Normal );
+            ProfilePrefix.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Large_FontSize );
+            ProfilePrefix.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.Label_TextColor ) );
 
             ProfileName = view.FindViewById<TextView>( Resource.Id.profile_name );
-            ProfileName.SetTextSize( Android.Util.ComplexUnitType.Dip, 20 );
-            ProfileName.SetTextColor( PlatformBaseUI.GetUIColor( 0xFFFFFFFF ) );
+            ProfileName.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.Label_TextColor ) );
+            ProfileName.SetTypeface( DroidFontManager.Instance.GetFont( ControlStylingConfig.Large_Font_Bold ), TypefaceStyle.Normal );
+            ProfileName.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Large_FontSize );
+
+            // setup the textView for rendering either "Tap to Personalize" or "View Profile"
+            ViewProfileLabel = view.FindViewById<TextView>( Resource.Id.view_profile );
+            ViewProfileLabel.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.Label_TextColor ) );
+            ViewProfileLabel.SetTypeface( DroidFontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Light ), TypefaceStyle.Normal );
+            ViewProfileLabel.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
 
             // setup the width of the springboard area and campus selector
             LinearLayout profileContainer = view.FindViewById<LinearLayout>( Resource.Id.springboard_profile_image_container );
@@ -297,7 +301,7 @@ namespace Droid
 
             View campusContainer = view.FindViewById<View>( Resource.Id.campus_container );
             campusContainer.LayoutParameters.Width = (int) ( Resources.DisplayMetrics.WidthPixels * PrimaryNavBarConfig.RevealPercentage );
-            campusContainer.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+            campusContainer.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.SpringboardBackgroundColor ) );
 
             View seperator = view.FindViewById<View>( Resource.Id.end_seperator );
             seperator.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
@@ -307,6 +311,8 @@ namespace Droid
             Button campusButton = campusContainer.FindViewById<Button>( Resource.Id.campus_selection );
             campusButton.Ellipsize = Android.Text.TextUtils.TruncateAt.End;
             campusButton.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+            campusButton.SetTypeface( DroidFontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Light ), TypefaceStyle.Normal );
+            campusButton.SetTextSize(Android.Util.ComplexUnitType.Dip,  ControlStylingConfig.Small_FontSize );
             campusButton.SetSingleLine( );
 
             Button settingsButton = campusContainer.FindViewById<Button>( Resource.Id.settings_button );
@@ -318,7 +324,29 @@ namespace Droid
             return view;
         }
 
-        public void ModalFragmentFinished( Fragment fragment, object context )
+        public void StartModalFragment( Fragment fragment )
+        {
+            // replace the entire screen with a modal fragment
+            var ft = FragmentManager.BeginTransaction();
+            ft.SetTransition(FragmentTransit.FragmentFade);
+
+            ft.Replace(Resource.Id.fullscreen, fragment);
+            ft.AddToBackStack( fragment.ToString() );
+
+            ft.Commit();
+        }
+
+        public void ModalFragmentOpened( Fragment fragment )
+        {
+            DisplayingModalFragment = true;
+        }
+
+        public void ModalFragmentClosed( Fragment fragment )
+        {
+            DisplayingModalFragment = false;
+        }
+
+        public void ModalFragmentDone( Fragment fragment, object context )
         {
             // called by modal (full screen) fragments that Springboard launches
             // when the fragments are done and ok to be closed.
@@ -459,11 +487,7 @@ namespace Droid
             // create the crop fragment
             ImageCropFragment.Begin( filePath, 1.00f );
 
-            // launch the image cropper
-            var ft = FragmentManager.BeginTransaction();
-            ft.Replace(Resource.Id.fullscreen, ImageCropFragment);
-            ft.AddToBackStack( ImageCropFragment.ToString() );
-            ft.Commit( );
+            StartModalFragment( ImageCropFragment );
         }
 
         public override void OnPause()
@@ -503,11 +527,13 @@ namespace Droid
                 // get their profile
                 ProfilePrefix.Text = SpringboardStrings.LoggedIn_Prefix;
                 ProfileName.Text = RockMobileUser.Instance.PreferredName( );
+                ViewProfileLabel.Text = SpringboardStrings.ViewProfile;
             }
             else
             {
-                ProfilePrefix.Text = SpringboardStrings.LoggedOut_Promo;
+                ProfilePrefix.Text = SpringboardStrings.LoggedOut_Label;
                 ProfileName.Text = "";
+                ViewProfileLabel.Text = SpringboardStrings.LoggedOut_Promo;
             }
 
             SetProfileImage( );
@@ -541,7 +567,7 @@ namespace Droid
                     }
 
                     // generate the masked image
-                    ProfileMaskedImage = Rock.Mobile.PlatformCommon.Droid.ApplyMaskToBitmap( scaledImage, ProfileMask );
+                    ProfileMaskedImage = Rock.Mobile.PlatformCommon.Droid.ApplyMaskToBitmap( scaledImage, ProfileMask, 0, 0 );
 
                     scaledImage.Dispose( );
                     scaledImage = null;
@@ -570,7 +596,8 @@ namespace Droid
                 case MotionEventActions.Up:
                 {
                     // only allow changing tasks via button press if the springboard is open 
-                    if( NavbarFragment.ShouldSpringboardAllowInput( ) == true )
+                    // and we're not showing a modal fragment (like the Login screen)
+                    if( NavbarFragment.ShouldSpringboardAllowInput( ) == true && DisplayingModalFragment == false )
                     {
                         // no matter what, close the springboard
                         NavbarFragment.RevealSpringboard( false );

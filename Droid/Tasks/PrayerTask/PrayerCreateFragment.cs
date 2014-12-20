@@ -25,6 +25,28 @@ namespace Droid
     {
         namespace Prayer
         {
+            public class SpinnerArrayAdapter : ArrayAdapter
+            {
+                int ResourceId { get; set; }
+                public SpinnerArrayAdapter( Context context, int resourceId ) : base( context, resourceId )
+                {
+                    ResourceId = resourceId;
+                }
+
+                public override View GetView(int position, View convertView, ViewGroup parent)
+                {
+                    if ( convertView as TextView == null )
+                    {
+                        convertView = ( Context as Activity ).LayoutInflater.Inflate( ResourceId, parent, false );
+                        ControlStyling.StyleUILabel( (convertView as TextView), ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+                    }
+
+                    ( convertView as TextView ).Text = this.GetItem( position ).ToString( );
+
+                    return convertView;
+                }
+            }
+
             public class PrayerCreateFragment : TaskFragment
             {
                 public override void OnCreate( Bundle savedInstanceState )
@@ -68,13 +90,13 @@ namespace Droid
 
                     // setup the text views
                     EditText firstNameText = (EditText)view.FindViewById<EditText>( Resource.Id.prayer_create_firstNameText );
-                    ControlStyling.StyleTextField( firstNameText, PrayerStrings.CreatePrayer_FirstNamePlaceholderText );
+                    ControlStyling.StyleTextField( firstNameText, PrayerStrings.CreatePrayer_FirstNamePlaceholderText, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
 
                     EditText lastNameText = (EditText)view.FindViewById<EditText>( Resource.Id.prayer_create_lastNameText );
-                    ControlStyling.StyleTextField( lastNameText, PrayerStrings.CreatePrayer_LastNamePlaceholderText );
+                    ControlStyling.StyleTextField( lastNameText, PrayerStrings.CreatePrayer_LastNamePlaceholderText, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
 
                     EditText requestText = (EditText)view.FindViewById<EditText>( Resource.Id.prayer_create_requestText );
-                    ControlStyling.StyleTextField( requestText, PrayerStrings.CreatePrayer_PrayerRequest );
+                    ControlStyling.StyleTextField( requestText, PrayerStrings.CreatePrayer_PrayerRequest, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
 
 
                     ProgressBar ActivityIndicator = (ProgressBar)view.FindViewById<ProgressBar>( Resource.Id.prayer_create_activityIndicator );
@@ -105,9 +127,15 @@ namespace Droid
                     Switch publicSwitch = (Switch)view.FindViewById<Switch>( Resource.Id.makePublicSwitch );
                     publicSwitch.Checked = true;
 
+                    TextView postAnonymousLabel = view.FindViewById<TextView>( Resource.Id.postAnonymous );
+                    ControlStyling.StyleUILabel( postAnonymousLabel, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+
+                    TextView publicLabel = view.FindViewById<TextView>( Resource.Id.makePublic );
+                    ControlStyling.StyleUILabel( publicLabel, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+
                     // setup our category spinner
                     Spinner spinner = (Spinner)view.FindViewById<Spinner>( Resource.Id.categorySpinner );
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>( Rock.Mobile.PlatformCommon.Droid.Context, Android.Resource.Layout.SimpleListItem1 );
+                    ArrayAdapter adapter = new SpinnerArrayAdapter( Rock.Mobile.PlatformCommon.Droid.Context, Android.Resource.Layout.SimpleListItem1 );
                     adapter.SetDropDownViewResource( Android.Resource.Layout.SimpleSpinnerDropDownItem );
                     spinner.Adapter = adapter;
 
@@ -118,6 +146,7 @@ namespace Droid
                     }
 
                     Button submitButton = (Button)view.FindViewById<Button>( Resource.Id.prayer_create_submitButton );
+                    ControlStyling.StyleButton( submitButton, PrayerStrings.CreatePrayer_SubmitButtonText, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
                     submitButton.Click += (object sender, EventArgs e ) =>
                     {
                             if( (string.IsNullOrEmpty( firstNameText.Text ) == false || anonymousSwitch.Checked == true) &&

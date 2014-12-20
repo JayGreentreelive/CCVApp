@@ -15,6 +15,7 @@ using CCVApp.Shared.Strings;
 using Rock.Mobile.PlatformUI;
 using System.Net;
 using CCVApp.Shared;
+using Rock.Mobile.PlatformCommon;
 
 namespace iOS
 {
@@ -31,8 +32,6 @@ namespace iOS
                 public static string Identifier = "SeriesPrimaryCell";
 
                 public TableSource Parent { get; set; }
-
-                public UILabel TopBanner { get; set; }
 
                 public UIImageView Image { get; set; }
 
@@ -55,23 +54,13 @@ namespace iOS
                 {
                     BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_Color );
 
-                    // anything that's constant can be set here once in the constructor
-                    TopBanner = new UILabel( );
-                    TopBanner.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( NoteConfig.Series_Table_Small_Font, NoteConfig.Series_Table_Small_FontSize );
-                    TopBanner.Layer.AnchorPoint = PointF.Empty;
-                    TopBanner.Text = MessagesStrings.Series_TopBanner;
-                    TopBanner.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
-                    TopBanner.BackgroundColor = UIColor.Clear;
-                    TopBanner.TextAlignment = UITextAlignment.Center;
-                    AddSubview( TopBanner );
-
                     Image = new UIImageView( );
                     Image.ContentMode = UIViewContentMode.ScaleAspectFit;
                     Image.Layer.AnchorPoint = PointF.Empty;
                     AddSubview( Image );
 
                     Title = new UILabel( );
-                    Title.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( NoteConfig.Series_Table_Large_Font, NoteConfig.Series_Table_Large_FontSize );
+                    Title.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Large_Font_Bold, ControlStylingConfig.Large_FontSize );
                     Title.Layer.AnchorPoint = PointF.Empty;
                     Title.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
                     Title.BackgroundColor = UIColor.Clear;
@@ -79,7 +68,7 @@ namespace iOS
                     AddSubview( Title );
 
                     Date = new UILabel( );
-                    Date.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( NoteConfig.Series_Table_Small_Font, NoteConfig.Series_Table_Small_FontSize );
+                    Date.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
                     Date.Layer.AnchorPoint = PointF.Empty;
                     Date.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
                     Date.BackgroundColor = UIColor.Clear;
@@ -87,7 +76,7 @@ namespace iOS
                     AddSubview( Date );
 
                     Speaker = new UILabel( );
-                    Speaker.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( NoteConfig.Series_Table_Small_Font, NoteConfig.Series_Table_Small_FontSize );
+                    Speaker.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
                     Speaker.Layer.AnchorPoint = PointF.Empty;
                     Speaker.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
                     Speaker.BackgroundColor = UIColor.Clear;
@@ -111,7 +100,7 @@ namespace iOS
 
                     WatchButtonLabel = new UILabel( );
                     WatchButton.AddSubview( WatchButtonLabel );
-                    WatchButtonLabel.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( NoteConfig.Series_Table_Small_Font, NoteConfig.Series_Table_Small_FontSize );
+                    WatchButtonLabel.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
                     WatchButtonLabel.Text = MessagesStrings.Series_Table_Watch;
                     WatchButtonLabel.SizeToFit( );
                     
@@ -134,13 +123,13 @@ namespace iOS
 
                     TakeNotesButtonLabel = new UILabel( );
                     TakeNotesButton.AddSubview( TakeNotesButtonLabel );
-                    TakeNotesButtonLabel.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( NoteConfig.Series_Table_Small_Font, NoteConfig.Series_Table_Small_FontSize );
+                    TakeNotesButtonLabel.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
                     TakeNotesButtonLabel.Text = MessagesStrings.Series_Table_TakeNotes;
                     TakeNotesButtonLabel.SizeToFit( );
 
 
                     BottomBanner = new UILabel( );
-                    BottomBanner.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( NoteConfig.Series_Table_Small_Font, NoteConfig.Series_Table_Small_FontSize );
+                    BottomBanner.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
                     BottomBanner.Layer.AnchorPoint = new System.Drawing.PointF( 0, 0 );
                     BottomBanner.Text = MessagesStrings.Series_Table_PreviousMessages;
                     BottomBanner.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
@@ -206,15 +195,15 @@ namespace iOS
                     AddSubview( Image );
 
                     Title = new UILabel( );
-                    Title.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( NoteConfig.Series_Table_Medium_Font, NoteConfig.Series_Table_Medium_FontSize );
+                    Title.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
                     Title.Layer.AnchorPoint = PointF.Empty;
-                    Title.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
+                    Title.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.Label_TextColor );
                     Title.BackgroundColor = UIColor.Clear;
                     Title.LineBreakMode = UILineBreakMode.TailTruncation;
                     AddSubview( Title );
 
                     Date = new UILabel( );
-                    Date.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( NoteConfig.Series_Table_Small_Font, NoteConfig.Series_Table_Small_FontSize );
+                    Date.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
                     Date.Layer.AnchorPoint = PointF.Empty;
                     Date.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
                     Date.BackgroundColor = UIColor.Clear;
@@ -334,11 +323,6 @@ namespace iOS
                     cell.SelectionStyle = UITableViewCellSelectionStyle.None;
                 }
 
-                // // Top Banner
-                cell.TopBanner.SizeToFit( );
-                cell.TopBanner.Bounds = new RectangleF( 0, 0, cell.Bounds.Width, cell.TopBanner.Bounds.Height + 10 );
-
-
                 // Banner Image
                 cell.Image.Image = SeriesEntries[ 0 ].Thumbnail;
                 cell.Image.SizeToFit( );
@@ -346,7 +330,7 @@ namespace iOS
                 // resize the image to fit the width of the device
                 float imageAspect = cell.Image.Bounds.Height / cell.Image.Bounds.Width;
                 cell.Image.Frame = new RectangleF( 0, 
-                                                   cell.TopBanner.Frame.Bottom, 
+                                                   0, 
                                                    cell.Bounds.Width, 
                                                    cell.Bounds.Width * imageAspect );
 
@@ -354,17 +338,17 @@ namespace iOS
                 // Create the title
                 cell.Title.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Name;
                 cell.Title.SizeToFit( );
-                cell.Title.Frame = new RectangleF( 5, cell.Image.Frame.Bottom + 5, cell.Frame.Width, cell.Title.Frame.Height + 5 );
+                cell.Title.Frame = new RectangleF( 5, cell.Image.Frame.Bottom + 5, cell.Frame.Width - 10, cell.Title.Frame.Height + 5 );
 
 
                 // Date & Speaker
                 cell.Date.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Date;
                 cell.Date.SizeToFit( );
-                cell.Date.Frame = new RectangleF( 5, cell.Title.Frame.Bottom, cell.Frame.Width, cell.Date.Frame.Height + 5 );
+                cell.Date.Frame = new RectangleF( 5, cell.Title.Frame.Bottom - 5, cell.Frame.Width, cell.Date.Frame.Height + 5 );
 
                 cell.Speaker.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Speaker;
                 cell.Speaker.SizeToFit( );
-                cell.Speaker.Frame = new RectangleF( cell.Frame.Width - cell.Speaker.Bounds.Width - 5, cell.Title.Frame.Bottom, cell.Frame.Width, cell.Speaker.Frame.Height + 5 );
+                cell.Speaker.Frame = new RectangleF( cell.Frame.Width - cell.Speaker.Bounds.Width - 5, cell.Title.Frame.Bottom - 5, cell.Frame.Width, cell.Speaker.Frame.Height + 5 );
 
 
                 // Watch Button & Labels
@@ -443,7 +427,7 @@ namespace iOS
                                                    NoteConfig.Series_Main_CellImageWidth, 
                                                    NoteConfig.Series_Main_CellImageHeight );
 
-                float availableTextWidth = cell.Bounds.Width - cell.Chevron.Bounds.Width - cell.Image.Bounds.Width - 5;
+                float availableTextWidth = cell.Bounds.Width - cell.Chevron.Bounds.Width - cell.Image.Bounds.Width - 10;
 
                 // Chevron
                 cell.Chevron.Layer.Position = new PointF( cell.Bounds.Width - (cell.Chevron.Bounds.Width / 2) - 5, (NoteConfig.Series_Main_CellImageHeight) / 2 );
@@ -457,9 +441,9 @@ namespace iOS
                 cell.Date.SizeToFit( );
 
                 // Position the Title & Date in the center to the right of the image
-                float totalTextHeight = cell.Title.Bounds.Height + cell.Date.Bounds.Height + 5;
-                cell.Title.Frame = new RectangleF( cell.Image.Frame.Right + 5, (NoteConfig.Series_Main_CellImageHeight - totalTextHeight) / 2, availableTextWidth - 5, cell.Title.Frame.Height );
-                cell.Date.Frame = new RectangleF( cell.Title.Frame.Left, cell.Title.Frame.Bottom, availableTextWidth - 5, cell.Date.Frame.Height + 5 );
+                float totalTextHeight = cell.Title.Bounds.Height + cell.Date.Bounds.Height - 1;
+                cell.Title.Frame = new RectangleF( cell.Image.Frame.Right + 10, (NoteConfig.Series_Main_CellImageHeight - totalTextHeight) / 2, availableTextWidth - 5, cell.Title.Frame.Height );
+                cell.Date.Frame = new RectangleF( cell.Title.Frame.Left, cell.Title.Frame.Bottom - 6, availableTextWidth - 5, cell.Date.Frame.Height + 5 );
 
                 // add the seperator to the bottom
                 cell.Seperator.Frame = new RectangleF( 0, cell.Image.Frame.Bottom - 1, cell.Bounds.Width, 1 );
@@ -700,11 +684,16 @@ namespace iOS
         /// </summary>
         public void TakeNotesClicked( )
         {
-            NotesViewController viewController = new NotesViewController();
-            viewController.NotePresentableName = string.Format( "Message - {0}", SeriesEntries[ 0 ].Series.Messages[ 0 ].Name );
-            viewController.NoteName = SeriesEntries[ 0 ].Series.Messages[ 0 ].NoteUrl;
+            // maybe technically a hack...we know our parent is a NoteTask,
+            // so cast it so we can use the existing NotesViewController.
+            NotesTask noteTask = Task as NotesTask;
+            if ( noteTask != null )
+            {
+                noteTask.NoteController.NotePresentableName = string.Format( "Message - {0}", SeriesEntries[ 0 ].Series.Messages[ 0 ].Name );
+                noteTask.NoteController.NoteName = SeriesEntries[ 0 ].Series.Messages[ 0 ].NoteUrl;
 
-            Task.PerformSegue( this, viewController );
+                Task.PerformSegue( this, noteTask.NoteController );
+            }
         }
 
         public void RowClicked( int row )
@@ -717,7 +706,8 @@ namespace iOS
             // the series banner comes down, resulting in them seeing the generic thumbnail.
             // This isn't really a bug, more just a design issue. Ultimately it'll go away when we
             // start caching images
-            DetailsViewController.ThumbnailPlaceholder = SeriesEntries[ row ].Thumbnail;
+            //JHM 12-15-14: Don't set thumbnails, the latest design doesn't call for images on the entries.
+            //DetailsViewController.ThumbnailPlaceholder = SeriesEntries[ row ].Thumbnail;
 
             Task.PerformSegue( this, DetailsViewController );
         }

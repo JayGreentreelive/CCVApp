@@ -26,6 +26,10 @@ namespace iOS
 		[GeneratedCode ("iOS Designer", "1.0")]
 		UITextView NewsDescription { get; set; }
 
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UILabel NewsTitle { get; set; }
+
 		void ReleaseDesignerOutlets ()
 		{
 			if (ImageBanner != null) {
@@ -39,6 +43,10 @@ namespace iOS
 			if (NewsDescription != null) {
 				NewsDescription.Dispose ();
 				NewsDescription = null;
+			}
+			if (NewsTitle != null) {
+				NewsTitle.Dispose ();
+				NewsTitle = null;
 			}
 		}
 	}

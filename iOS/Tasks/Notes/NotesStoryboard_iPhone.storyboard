@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="5">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="5">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
     </dependencies>
     <scenes>
         <!--Notes MainUI View Controller-->
@@ -82,10 +82,23 @@
             </objects>
             <point key="canvasLocation" x="567" y="-287"/>
         </scene>
+        <!--Notes Web View Controller-->
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
+    <resources>
+        <image name="ccvLogo.png" width="57" height="28"/>
+        <image name="news_baptism_main.png" width="375" height="242"/>
+        <image name="news_learnmore_header.png" width="375" height="211"/>
+        <image name="news_learnmore_main.png" width="375" height="242"/>
+        <image name="news_startingpoint_header.png" width="1242" height="699"/>
+        <image name="news_startingpoint_main.png" width="375" height="242"/>
+        <image name="podcastThumbnailPlaceholder.png" width="590" height="332"/>
+        <image name="spot_mask.png" width="128" height="128"/>
+        <image name="news_baptism_header.png" width="320" height="180"/>
+        <image name="facebook_login.png" width="250" height="35"/>
+    </resources>
 </document>

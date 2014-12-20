@@ -4,6 +4,7 @@ using System.Linq;
 
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
+using MonoTouch.AVFoundation;
 
 namespace iOS
 {
@@ -37,6 +38,13 @@ namespace iOS
 			
             // make the window visible
             window.MakeKeyAndVisible( );
+
+            // request the Playback category session
+            NSError error;
+            AVAudioSession instance = AVAudioSession.SharedInstance();
+            instance.SetCategory(new NSString("AVAudioSessionCategoryPlayback"), AVAudioSessionCategoryOptions.MixWithOthers, out error);
+            instance.SetMode(new NSString("AVAudioSessionModeDefault"), out error);
+            instance.SetActive(true, AVAudioSessionSetActiveOptions.NotifyOthersOnDeactivation, out error);
 			
             return true;
         }

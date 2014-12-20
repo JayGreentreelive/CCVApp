@@ -119,6 +119,9 @@ namespace CCVApp
 
                         case BoundAccountType.Facebook:
                         {
+                            //todo: We dont' need to do this anymore! We know they logged in once, so
+                            // that's all we have to care about
+
                             // first verify that we're still good with Facebook (the user didn't revoke our permissions)
                             FacebookClient fbSession = new FacebookClient( AccessToken );
                             string infoRequest = FacebookManager.Instance.CreateInfoRequest( );
@@ -224,12 +227,13 @@ namespace CCVApp
                                     if ( t.IsFaulted == false || t.Exception == null )
                                     {
                                         // get the user ID
-                                        UserID = FacebookManager.Instance.GetUserID( t.Result );
+                                        UserID = /*"facebook_" +  */FacebookManager.Instance.GetUserID( t.Result );
 
                                         // copy over all the facebook info we can into the Person object
                                         SyncFacebookInfoToPerson( t.Result );
 
                                         //TODO: Send this up to Rock. We can't since it doesn't accept UserIDs yet, so consider us logged in.
+                                        //also, don't worry about revalidating Facebook, we've logged in ONCE that's all we care about till they logout.
 
                                         RockPassword = "";
                                         AccessToken = oauthResult.AccessToken;

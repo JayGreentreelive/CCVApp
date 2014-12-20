@@ -64,41 +64,42 @@ namespace iOS
             //setup styles
             View.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor );
 
-            ControlStyling.StyleTextField( NickNameText, ProfileStrings.NickNamePlaceholder );
+            ControlStyling.StyleTextField( NickNameText, ProfileStrings.NickNamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( NickNameLayer );
 
-            ControlStyling.StyleTextField( LastNameText, ProfileStrings.LastNamePlaceholder );
+            ControlStyling.StyleTextField( LastNameText, ProfileStrings.LastNamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( LastNameLayer );
 
 
-            ControlStyling.StyleTextField( EmailText, ProfileStrings.EmailPlaceholder );
+            ControlStyling.StyleTextField( EmailText, ProfileStrings.EmailPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( EmailLayer );
 
-            ControlStyling.StyleTextField( CellPhoneText, ProfileStrings.CellPhonePlaceholder );
+            ControlStyling.StyleTextField( CellPhoneText, ProfileStrings.CellPhonePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( CellPhoneLayer );
 
 
-            ControlStyling.StyleTextField( StreetText, ProfileStrings.StreetPlaceholder );
+            ControlStyling.StyleTextField( StreetText, ProfileStrings.StreetPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( StreetLayer );
 
-            ControlStyling.StyleTextField( CityText, ProfileStrings.CityPlaceholder );
+            ControlStyling.StyleTextField( CityText, ProfileStrings.CityPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( CityLayer );
 
-            ControlStyling.StyleTextField( StateText, ProfileStrings.StatePlaceholder );
+            ControlStyling.StyleTextField( StateText, ProfileStrings.StatePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( StateLayer );
 
-            ControlStyling.StyleTextField( ZipText, ProfileStrings.ZipPlaceholder );
+            ControlStyling.StyleTextField( ZipText, ProfileStrings.ZipPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( ZipLayer );
 
 
-            ControlStyling.StyleTextField( GenderText, ProfileStrings.GenderPlaceholder );
+            ControlStyling.StyleTextField( GenderText, ProfileStrings.GenderPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( GenderLayer );
 
-            ControlStyling.StyleTextField( BirthdateText, ProfileStrings.BirthdatePlaceholder );
+            ControlStyling.StyleTextField( BirthdateText, ProfileStrings.BirthdatePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( BirthdateLayer );
 
-            ControlStyling.StyleButton( DoneButton, ProfileStrings.DoneButtonTitle );
-            ControlStyling.StyleButton( LogoutButton, ProfileStrings.LogoutButtonTitle );
+            ControlStyling.StyleButton( DoneButton, ProfileStrings.DoneButtonTitle, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            ControlStyling.StyleButton( LogoutButton, ProfileStrings.LogoutButtonTitle, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+
 
             // Allow the return on username and password to start
             // the login process

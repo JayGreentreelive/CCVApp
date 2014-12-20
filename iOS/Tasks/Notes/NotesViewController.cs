@@ -166,6 +166,42 @@ namespace iOS
         /// <value>The keyboard adjust manager.</value>
         KeyboardAdjustManager KeyboardAdjustManager { get; set; }
 
+        /// <summary>
+        /// The amount of times to try downloading the note before
+        /// reporting an error to the user (which should be our last resort)
+        /// We set it to 0 in debug because that means we WANT the error, as
+        /// the user could be working on notes and need the error.
+        /// </summary>
+        #if DEBUG
+        static int MaxDownloadAttempts = 0;
+        #else
+        static int MaxDownloadAttempts = 5;
+        #endif
+
+        /// <summary>
+        /// The currently loaded Note XML, so that we can avoid downloading 
+        /// when we don't have to
+        /// </summary>
+        string CachedNoteXml { get; set; }
+
+        /// <summary>
+        /// The currently loaded Style XML, so that we can avoid downloading when
+        /// we don't have to
+        /// </summary>
+        string CachedStyleXml { get; set; }
+
+        /// <summary>
+        /// The currently cached note name
+        /// </summary>
+        string CachedNoteName { get; set; }
+
+        /// <summary>
+        /// The amount of times we've attempted to download the current note.
+        /// When it hits 0, we'll just fail out and tell the user to check their network settings.
+        /// </summary>
+        /// <value>The note download retries.</value>
+        int NoteDownloadRetries { get; set; }
+
         public NotesViewController( ) : base( )
         {
             ObserverHandles = new List<NSObject>();
@@ -215,15 +251,11 @@ namespace iOS
 				Indicator.Layer.Position = new PointF (View.Bounds.Width / 2, View.Bounds.Height / 2);
 
 				// re-create our notes with the new dimensions
-				string noteXml = null;
-				string styleSheetXml = null;
-				if (Note != null) 
-                {
-					noteXml = Note.NoteXml;
-					styleSheetXml = ControlStyles.StyleSheetXml;
-				}
-				CreateNotes (noteXml, styleSheetXml);
+				CreateNotes (CachedNoteXml, CachedStyleXml);
 			}
+
+            // don't let the back button work when in landscape mode.
+            Task.NavToolbar.SetBackButtonEnabled( UIDevice.CurrentDevice.Orientation == UIDeviceOrientation.Portrait ? true : false );
         }
 
         public override void ViewDidLoad( )
@@ -232,7 +264,7 @@ namespace iOS
 
             Orientation = UIDeviceOrientation.Unknown;
 
-            UIScrollView = new CustomScrollView( );
+            UIScrollView = new CustomScrollView();
             UIScrollView.Interceptor = this;
             UIScrollView.Frame = View.Frame;
             UIScrollView.BackgroundColor = PlatformBaseUI.GetUIColor( 0x1C1C1CFF );
@@ -241,7 +273,7 @@ namespace iOS
 
             UITapGestureRecognizer tapGesture = new UITapGestureRecognizer();
             tapGesture.NumberOfTapsRequired = 2;
-            tapGesture.AddTarget (this, new MonoTouch.ObjCRuntime.Selector("DoubleTapSelector:"));
+            tapGesture.AddTarget( this, new MonoTouch.ObjCRuntime.Selector( "DoubleTapSelector:" ) );
             UIScrollView.AddGestureRecognizer( tapGesture );
 
             View.BackgroundColor = UIScrollView.BackgroundColor;
@@ -258,15 +290,37 @@ namespace iOS
 
             // if they tap the refresh button, refresh the list
             RefreshButton.TouchUpInside += (object sender, EventArgs e ) =>
-                {
-                    CreateNotes( null, null );
-                };
+            {
+                CreateNotes( null, null );
+            };
 
             KeyboardAdjustManager = new KeyboardAdjustManager( View, UIScrollView );
 
             #if DEBUG
             View.AddSubview( RefreshButton );
             #endif
+        }
+
+        public override void ViewWillAppear(bool animated)
+        {
+            base.ViewWillAppear(animated);
+
+            // since we're reappearing, we know we're safe to reset our download count
+            NoteDownloadRetries = MaxDownloadAttempts;
+            Console.WriteLine( "Resetting Download Attempts" );
+
+            // if the note name doesn't match our cache, dump our cache 
+            // so we download the correct note
+            if ( CachedNoteName != NoteName )
+            {
+                CachedNoteXml = null;
+                CachedStyleXml = null;
+
+                CreateNotes( CachedNoteXml, CachedStyleXml );
+            }
+
+            // don't let the back button work when in landscape mode.
+            Task.NavToolbar.SetBackButtonEnabled( UIDevice.CurrentDevice.Orientation == UIDeviceOrientation.Portrait ? true : false );
         }
 
         public override void ViewDidAppear(bool animated)
@@ -422,7 +476,14 @@ namespace iOS
             {
                 if( Note != null )
                 {
-                    Note.TouchesEnded( touch.LocationInView( UIScrollView ) );
+                    // should we visit a website?
+                    string activeUrl = Note.TouchesEnded( touch.LocationInView( UIScrollView ) );
+                    if ( string.IsNullOrEmpty( activeUrl ) == false )
+                    {
+                        NotesWebViewController viewController = new NotesWebViewController( );
+                        viewController.ActiveUrl = activeUrl;
+                        Task.PerformSegue( this, viewController );
+                    }
                 }
             }
 
@@ -461,6 +522,11 @@ namespace iOS
         {
             if( RefreshingNotes == false )
             {
+                // if we're recreating the notes, reset our scrollview.
+                UIScrollView.ContentOffset = PointF.Empty;
+
+                Console.WriteLine( "CREATING NOTES" );
+
                 RefreshingNotes = true;
 
                 SaveNoteState( );
@@ -473,6 +539,8 @@ namespace iOS
                 // if we don't have BOTH xml strings, re-download
                 if( noteXml == null || styleSheetXml == null )
                 {
+                    Console.WriteLine( "CACHE INVALID. DOWNLOADING NEW NOTES" );
+
                     //download the notes
                     Rock.Mobile.Network.HttpRequest request = new HttpRequest();
 
@@ -546,6 +614,10 @@ namespace iOS
                             UIScrollView.ContentSize = new SizeF( UIScrollView.Bounds.Width, frame.Size.Height + ( UIScrollView.Bounds.Height / 3 ) );
 
                             FinishNotesCreation( );
+
+                            CachedNoteXml = Note.NoteXml;
+                            CachedStyleXml = ControlStyles.StyleSheetXml;
+                            CachedNoteName = NoteName;
                         }
                         catch( Exception ex )
                         {
@@ -567,19 +639,31 @@ namespace iOS
         {
             new NSObject( ).InvokeOnMainThread( delegate
                 {
-                    if( e != null )
-                    {
-                        errorMsg += "\n" + e.Message;
-                    }
-
-                    // explain that we couldn't generate notes
-                    UIAlertView alert = new UIAlertView( );
-                    alert.Title = "Note Error";
-                    alert.Message = errorMsg;
-                    alert.AddButton( "Ok" );
-                    alert.Show( );
-
                     FinishNotesCreation( );
+
+                    // since there was an error, try redownloading the notes
+                    if( NoteDownloadRetries > 0 )
+                    {
+                        Console.WriteLine( "Download error. Trying again" );
+
+                        NoteDownloadRetries--;
+                        CreateNotes( null, null );
+                    }
+                    else 
+                    {
+                        // we've tried as many times as we're going to. Give up and error.
+                        if( e != null )
+                        {
+                            errorMsg += "\n" + e.Message;
+                        }
+
+                        // explain that we couldn't generate notes
+                        UIAlertView alert = new UIAlertView( );
+                        alert.Title = "Note Error";
+                        alert.Message = errorMsg;
+                        alert.AddButton( "Ok" );
+                        alert.Show( );
+                    }
                 } );
         }
     }

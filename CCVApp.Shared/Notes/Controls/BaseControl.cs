@@ -244,9 +244,9 @@ namespace CCVApp
                 {
                 }
 
-                public virtual bool TouchesEnded( PointF touch )
+                public virtual IUIControl TouchesEnded( PointF touch )
                 {
-                    return false;
+                    return null;
                 }
 
                 public Alignment GetHorzAlignment( )
@@ -295,6 +295,11 @@ namespace CCVApp
                 public RectangleF GetMargin( )
                 {
                     return Margin;
+                }
+
+                public virtual string GetActiveUrl( )
+                {
+                    return string.Empty;
                 }
 
                 public virtual bool ShouldShowBulletPoint( )

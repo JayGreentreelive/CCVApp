@@ -51,8 +51,8 @@ namespace Droid
                         Name.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                         ((LinearLayout.LayoutParams)Name.LayoutParameters).LeftMargin = 10;
                         Name.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
-                        Name.SetTypeface( DroidFontManager.Instance.GetFont( PrayerConfig.Card_NameFont ), TypefaceStyle.Normal );
-                        Name.SetTextSize( ComplexUnitType.Dip, PrayerConfig.Card_NameSize );
+                        Name.SetTypeface( DroidFontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
+                        Name.SetTextSize( ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
                         Name.Text = prayer.FirstName;
                         LinearLayout.AddView( Name );
 
@@ -69,8 +69,8 @@ namespace Droid
                         Category.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                         ((LinearLayout.LayoutParams)Category.LayoutParameters).LeftMargin = 10;
                         Category.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
-                        Category.SetTypeface( DroidFontManager.Instance.GetFont( PrayerConfig.Card_CategoryFont ), TypefaceStyle.Normal );
-                        Category.SetTextSize( ComplexUnitType.Dip, PrayerConfig.Card_CategorySize );
+                        Category.SetTypeface( DroidFontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
+                        Category.SetTextSize( ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
                         Category.Text = "Category";
                         detailsLayout.AddView( Category );
 
@@ -85,8 +85,8 @@ namespace Droid
                         Date.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                         ((LinearLayout.LayoutParams)Date.LayoutParameters).RightMargin = 10;
                         Date.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
-                        Date.SetTypeface( DroidFontManager.Instance.GetFont( PrayerConfig.Card_DateFont ), TypefaceStyle.Normal );
-                        Date.SetTextSize( ComplexUnitType.Dip, PrayerConfig.Card_DateSize );
+                        Date.SetTypeface( DroidFontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
+                        Date.SetTextSize( ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
                         Date.Text = string.Format( "{0:MM/dd/yy}", prayer.CreatedDateTime );
                         detailsLayout.AddView( Date );
 
@@ -98,8 +98,8 @@ namespace Droid
                         //Prayer.SetMinWidth( (int)bounds.Width );
                         //Prayer.SetMaxWidth( (int)bounds.Width );
                         Prayer.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
-                        Prayer.SetTypeface( DroidFontManager.Instance.GetFont( PrayerConfig.Card_PrayerFont ), TypefaceStyle.Normal );
-                        Prayer.SetTextSize( ComplexUnitType.Dip, PrayerConfig.Card_PrayerSize );
+                        Prayer.SetTypeface( DroidFontManager.Instance.GetFont( ControlStylingConfig.Medium_Font_Regular ), TypefaceStyle.Normal );
+                        Prayer.SetTextSize( ComplexUnitType.Dip, ControlStylingConfig.Medium_FontSize );
                         Prayer.Text = prayer.Text;
                         LinearLayout.AddView( Prayer );
                     }

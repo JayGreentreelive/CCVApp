@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -63,7 +63,6 @@
     <Compile Include="Tasks\NotesTask\NotesFragment.cs" />
     <Compile Include="Tasks\NewsTask\NewsTask.cs" />
     <Compile Include="Tasks\Task.cs" />
-    <Compile Include="Tasks\NotesTask\NotesTask.cs" />
     <Compile Include="Tasks\TaskFragment.cs" />
     <Compile Include="Tasks\NewsTask\NewsDetailsFragment.cs" />
     <Compile Include="Tasks\NewsTask\NewsPrimaryFragment.cs" />
@@ -81,6 +80,8 @@
     <Compile Include="Tasks\GiveTask\GiveTask.cs" />
     <Compile Include="Tasks\NotesTask\NotesPrimaryFragment.cs" />
     <Compile Include="Tasks\NotesTask\NotesDetailsFragment.cs" />
+    <Compile Include="Tasks\NotesTask\NotesTask.cs" />
+    <Compile Include="Tasks\NotesTask\NotesWebViewFragment.cs" />
     <Compile Include="Tasks\NotesTask\NotesWatchFragment.cs" />
     <Compile Include="ControlStyling.cs" />
   </ItemGroup>
@@ -124,6 +125,9 @@
     <AndroidResource Include="..\Assets\facebook_login%403x.png">
       <Link>Resources\drawable-hdpi\facebook_login.png</Link>
     </AndroidResource>
+    <AndroidResource Include="Resources\drawable\dark_cursor.axml" />
+    <AndroidResource Include="Resources\drawable\light_cursor.axml" />
+    <AndroidResource Include="Resources\layout\Notes_WebView.axml" />
   </ItemGroup>
   <Import Project="..\..\Rock.Mobile\Rock.Mobile.projitems" Label="Shared" Condition="Exists('..\..\Rock.Mobile\Rock.Mobile.projitems')" />
   <Import Project="..\..\Rock\Rock.Client\Rock.Client.Models.projitems" Label="Shared" Condition="Exists('..\..\Rock\Rock.Client\Rock.Client.Models.projitems')" />
@@ -144,6 +148,7 @@
     <Folder Include="Tasks\GiveTask\" />
     <Folder Include="Resources\layout\" />
     <Folder Include="Resources\layout-sw480dp\" />
+    <Folder Include="Resources\drawable\" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="..\Assets\Fonts\Bevan.ttf">

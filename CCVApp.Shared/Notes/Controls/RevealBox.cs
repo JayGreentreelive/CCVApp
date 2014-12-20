@@ -137,7 +137,7 @@ namespace CCVApp
                     PlatformLabel.Position = new PointF( bounds.X, bounds.Y );
                 }
 
-                public override bool TouchesEnded( PointF touch )
+                public override IUIControl TouchesEnded( PointF touch )
                 {
                     // create an expanded bounding box and see if the touch fell within that.
                     // we expand the height by 50% in both directions
@@ -152,10 +152,10 @@ namespace CCVApp
                         float targetFade = 1.0f - PlatformLabel.GetFade( );
 
                         PlatformLabel.AnimateToFade( targetFade );
-                        return true;
+                        return this;
                     }
 
-                    return false;
+                    return null;
                 }
 
                 public NoteState.RevealBoxState GetState( )

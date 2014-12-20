@@ -52,8 +52,7 @@
                     android:id="@+id/nickNameText"
                     android:inputType="textPersonName"
                     android:maxLength="16"
-                    android:maxLines="1"
-                    android:layout_marginLeft="5dp" />
+                    android:maxLines="1" />
                 <View
                     android:id="@+id/middle_border"
                     android:layout_below="@+id/nickNameText"
@@ -67,7 +66,6 @@
                     android:layout_below="@+id/middle_border"
                     android:id="@+id/lastNameText"
                     android:inputType="textPersonName"
-                    android:layout_marginLeft="5dp"
                     android:maxLength="12"
                     android:maxLines="1" />
             </RelativeLayout>
@@ -92,29 +90,27 @@
                     android:background="#FFFFFFFF"
                     android:layout_alignParentBottom="true" />
                 <EditText
-                    android:hint="Cell Phone"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/top_border"
-                    android:id="@+id/cellPhoneText"
-                    android:inputType="phone"
-                    android:maxLines="1"
-                    android:layout_marginLeft="5dp" />
-                <View
-                    android:id="@+id/middle_border"
-                    android:layout_below="@+id/cellPhoneText"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp" />
-                <EditText
                     android:hint="Email Address"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/middle_border"
+                    android:layout_below="@+id/top_border"
                     android:id="@+id/emailAddressText"
                     android:inputType="textEmailAddress"
-                    android:layout_marginLeft="5dp"
+                    android:maxLines="1" />
+                <View
+                    android:id="@+id/middle_border"
+                    android:layout_below="@+id/emailAddressText"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp" />
+                <EditText
+                    android:hint="Cell Phone"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/middle_border"
+                    android:id="@+id/cellPhoneText"
+                    android:inputType="phone"
                     android:maxLines="1" />
             </RelativeLayout>
             <Space
@@ -146,8 +142,7 @@
                     android:id="@+id/streetAddressText"
                     android:inputType="textPersonName"
                     android:maxLength="16"
-                    android:maxLines="1"
-                    android:layout_marginLeft="5dp" />
+                    android:maxLines="1" />
                 <View
                     android:id="@+id/street_border"
                     android:layout_below="@+id/streetAddressText"
@@ -161,7 +156,6 @@
                     android:layout_below="@+id/street_border"
                     android:id="@+id/cityAddressText"
                     android:inputType="textPersonName"
-                    android:layout_marginLeft="5dp"
                     android:maxLength="12"
                     android:maxLines="1" />
                 <View
@@ -177,7 +171,6 @@
                     android:layout_below="@+id/city_border"
                     android:id="@+id/stateAddressText"
                     android:inputType="textPersonName"
-                    android:layout_marginLeft="5dp"
                     android:maxLength="12"
                     android:maxLines="1" />
                 <View
@@ -193,7 +186,6 @@
                     android:layout_below="@+id/state_border"
                     android:id="@+id/zipAddressText"
                     android:inputType="number"
-                    android:layout_marginLeft="5dp"
                     android:maxLength="12"
                     android:maxLines="1" />
             </RelativeLayout>
@@ -226,8 +218,7 @@
                     android:id="@+id/birthdateText"
                     android:inputType="date"
                     android:maxLength="16"
-                    android:maxLines="1"
-                    android:layout_marginLeft="5dp" />
+                    android:maxLines="1" />
                 <View
                     android:id="@+id/middle_border"
                     android:layout_below="@+id/birthdateText"
@@ -241,7 +232,6 @@
                     android:layout_below="@+id/middle_border"
                     android:id="@+id/genderText"
                     android:inputType="textPersonName"
-                    android:layout_marginLeft="5dp"
                     android:maxLength="12"
                     android:maxLines="1" />
             </RelativeLayout>
@@ -254,18 +244,20 @@
                 android:layout_height="wrap_content">
                 <Button
                     android:text="Done"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
                     android:id="@+id/doneButton"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp" />
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="5dp"
+                    android:gravity="top|center_horizontal" />
                 <Button
                     android:text="Logout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
                     android:id="@+id/logoutButton"
                     android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginRight="15dp"
+                    android:gravity="top|center_horizontal"
                     android:layout_alignParentRight="true" />
             </RelativeLayout>
             <Space

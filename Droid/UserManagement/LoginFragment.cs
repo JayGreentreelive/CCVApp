@@ -77,34 +77,34 @@ namespace Droid
             LoginActivityIndicator.Visibility = ViewStates.Gone;
 
             LoginButton = view.FindViewById<Button>( Resource.Id.loginButton );
-            ControlStyling.StyleButton( LoginButton, LoginStrings.LoginButton );
+            ControlStyling.StyleButton( LoginButton, LoginStrings.LoginButton, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             LoginButton.Click += (object sender, EventArgs e) => 
                 {
                     TryRockBind( );
                 };
 
             CancelButton = view.FindViewById<Button>( Resource.Id.cancelButton );
-            ControlStyling.StyleButton( CancelButton, GeneralStrings.Cancel );
+            ControlStyling.StyleButton( CancelButton, GeneralStrings.Cancel, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             CancelButton.SetBackgroundDrawable( null );
             CancelButton.Click += (object sender, EventArgs e) => 
                 {
-                    SpringboardParent.ModalFragmentFinished( this, null );
+                    SpringboardParent.ModalFragmentDone( this, null );
                 };
 
             RegisterButton = view.FindViewById<Button>( Resource.Id.registerButton );
-            ControlStyling.StyleButton( RegisterButton, LoginStrings.RegisterButton );
+            ControlStyling.StyleButton( RegisterButton, LoginStrings.RegisterButton, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
 
             UsernameField = view.FindViewById<EditText>( Resource.Id.usernameText );
-            ControlStyling.StyleTextField( UsernameField, LoginStrings.UsernamePlaceholder );
+            ControlStyling.StyleTextField( UsernameField, LoginStrings.UsernamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
 
             View borderView = backgroundView.FindViewById<View>( Resource.Id.middle_border );
             borderView.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
             PasswordField = view.FindViewById<EditText>( Resource.Id.passwordText );
-            ControlStyling.StyleTextField( PasswordField, LoginStrings.PasswordPlaceholder );
+            ControlStyling.StyleTextField( PasswordField, LoginStrings.PasswordPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
 
             LoginResultLabel = view.FindViewById<TextView>( Resource.Id.loginResult );
-            ControlStyling.StyleUILabel( LoginResultLabel );
+            ControlStyling.StyleUILabel( LoginResultLabel, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
 
             // Setup the facebook button
             FacebookButton = view.FindViewById<ImageButton>( Resource.Id.facebookButton );
@@ -122,6 +122,8 @@ namespace Droid
             base.OnResume();
 
             SetUIState( LoginState.Out );
+
+            SpringboardParent.ModalFragmentOpened( this );
         }
 
         protected void TryRockBind()
@@ -189,7 +191,8 @@ namespace Droid
         public void BindComplete( bool success )
         {
             if ( success )
-            {// However we chose to bind, we can now login with the bound account
+            {
+                // However we chose to bind, we can now login with the bound account
                 RockMobileUser.Instance.Login( LoginComplete );
             }
             else
@@ -241,6 +244,13 @@ namespace Droid
             }
         }
 
+        public override void OnStop()
+        {
+            base.OnStop();
+
+            SpringboardParent.ModalFragmentClosed( this );
+        }
+
         public void ProfileComplete(System.Net.HttpStatusCode code, string desc, Rock.Client.Person model)
         {
             UIThreading.PerformOnUIThread( delegate
@@ -272,7 +282,7 @@ namespace Droid
                     LoginSuccessfulTimer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e) => 
                         {
                             // when the timer fires, notify the springboard we're done.
-                            Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate { SpringboardParent.ModalFragmentFinished( this, null ); } );
+                            Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate { SpringboardParent.ModalFragmentDone( this, null ); } );
                         };
 
                     LoginSuccessfulTimer.Start();
@@ -353,4 +363,3 @@ namespace Droid
 
     }
 }
-

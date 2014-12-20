@@ -1,13 +1,17 @@
-Both
-	Added final design for Message details and series.
-	Added final design for the Profile page.
-	Added final design for the Login page.
-	Added ability to login via Facebook (still experimental as it doesn't tie to Rock yet) 
+Both:
+	Implemented Note caching, reducing the frequency of downloading the Note when going back and forth between UI pages.
 
-Android
-	Fixed an issue causing prayer requests to fail posting.
-	Updated prayer viewing and creation to match final design.
+	Added auto-retry when a note download fails. Usually it's caused by a minor hiccup in the network, and a simple retry fixes it.
+		This saves the user from having to see an error dialog and manually retry.
 
 iOS
-	Fixed an issue causing the NavToolbar to reveal when tapping the screen in Notes.
-	Replaced the Pray button with a "Create" button in the Nav Toolbar
+	The Nav Toolbar now works in landscape mode. (But not when watching a landscape video cause that sucks)
+	Audio works with the volume switch off
+	Automatically go to fullscreen when entering landscape and watching a video.
+	Tapping on the news description text now correctly brings up the navbar.
+
+Android
+	The app no longer resets to the first page in a section when backgrounding / resuming.
+	Fixed an issue causing the Springboard to stop working if back was pressed while Login/Profile/ImageCropping were open.
+
+	Fixed an issue causing spellcheck to be on for news items.

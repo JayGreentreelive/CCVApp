@@ -5,6 +5,7 @@ using Rock.Mobile.PlatformUI;
 using System.Threading;
 using System.Collections.Generic;
 using CCVApp.Shared.Config;
+using CCVApp.Shared.Strings;
 
 namespace CCVApp
 {
@@ -196,7 +197,7 @@ namespace CCVApp
                     // Setup the font
                     TextField.SetFont( mStyle.mFont.mName, mStyle.mFont.mSize.Value );
                     TextField.TextColor = mStyle.mFont.mColor.Value;
-                    TextField.Placeholder = "Enter note";
+                    TextField.Placeholder = MessagesStrings.UserNote_Placeholder;
                     TextField.PlaceholderTextColor = ControlStylingConfig.TextField_PlaceholderTextColor;
                      
                     // check for border styling
@@ -418,7 +419,7 @@ namespace CCVApp
                 }
 
                 // By design, this will only be called on the UserNote that received a TouchesBegan IN ANCHOR RANGE.
-                public override bool TouchesEnded( PointF touch )
+                public override IUIControl TouchesEnded( PointF touch )
                 {
                     bool consumed = false;
 
@@ -473,7 +474,7 @@ namespace CCVApp
 
                     DeleteTimer.Stop();
 
-                    return consumed;
+                    return consumed == true ? this : null;
                 }
 
                 protected void DeleteTimerDidFire(object sender, System.Timers.ElapsedEventArgs e)

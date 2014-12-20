@@ -70,14 +70,14 @@ namespace Droid
             ControlStyling.StyleBGLayer( backgroundView );
 
             NickNameField = backgroundView.FindViewById<EditText>( Resource.Id.nickNameText );
-            ControlStyling.StyleTextField( NickNameField, ProfileStrings.NickNamePlaceholder );
+            ControlStyling.StyleTextField( NickNameField, ProfileStrings.NickNamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             NickNameField.AfterTextChanged += (sender, e) => { Dirty = true; };
 
             View borderView = backgroundView.FindViewById<View>( Resource.Id.middle_border );
             borderView.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
             LastNameField = backgroundView.FindViewById<EditText>( Resource.Id.lastNameText );
-            ControlStyling.StyleTextField( LastNameField, ProfileStrings.LastNamePlaceholder );
+            ControlStyling.StyleTextField( LastNameField, ProfileStrings.LastNamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             LastNameField.AfterTextChanged += (sender, e) => { Dirty = true; };
 
 
@@ -86,14 +86,14 @@ namespace Droid
             ControlStyling.StyleBGLayer( backgroundView );
 
             CellPhoneField = backgroundView.FindViewById<EditText>( Resource.Id.cellPhoneText );
-            ControlStyling.StyleTextField( CellPhoneField, ProfileStrings.CellPhonePlaceholder );
+            ControlStyling.StyleTextField( CellPhoneField, ProfileStrings.CellPhonePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             CellPhoneField.AfterTextChanged += (sender, e) => { Dirty = true; };
 
             borderView = backgroundView.FindViewById<View>( Resource.Id.middle_border );
             borderView.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
             EmailField = backgroundView.FindViewById<EditText>( Resource.Id.emailAddressText );
-            ControlStyling.StyleTextField( EmailField, ProfileStrings.EmailPlaceholder );
+            ControlStyling.StyleTextField( EmailField, ProfileStrings.EmailPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             EmailField.AfterTextChanged += (sender, e) => { Dirty = true; };
 
 
@@ -102,28 +102,28 @@ namespace Droid
             ControlStyling.StyleBGLayer( backgroundView );
 
             StreetField = backgroundView.FindViewById<EditText>( Resource.Id.streetAddressText );
-            ControlStyling.StyleTextField( StreetField, ProfileStrings.StreetPlaceholder );
+            ControlStyling.StyleTextField( StreetField, ProfileStrings.StreetPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             StreetField.AfterTextChanged += (sender, e) => { Dirty = true; };
 
             borderView = backgroundView.FindViewById<View>( Resource.Id.street_border );
             borderView.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
             CityField = backgroundView.FindViewById<EditText>( Resource.Id.cityAddressText );
-            ControlStyling.StyleTextField( CityField, ProfileStrings.CityPlaceholder );
+            ControlStyling.StyleTextField( CityField, ProfileStrings.CityPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             CityField.AfterTextChanged += (sender, e) => { Dirty = true; };
 
             borderView = backgroundView.FindViewById<View>( Resource.Id.city_border );
             borderView.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
             StateField = backgroundView.FindViewById<EditText>( Resource.Id.stateAddressText );
-            ControlStyling.StyleTextField( StateField, ProfileStrings.StatePlaceholder );
+            ControlStyling.StyleTextField( StateField, ProfileStrings.StatePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             StateField.AfterTextChanged += (sender, e) => { Dirty = true; };
 
             borderView = backgroundView.FindViewById<View>( Resource.Id.state_border );
             borderView.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
             ZipField = backgroundView.FindViewById<EditText>( Resource.Id.zipAddressText );
-            ControlStyling.StyleTextField( ZipField, ProfileStrings.ZipPlaceholder );
+            ControlStyling.StyleTextField( ZipField, ProfileStrings.ZipPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ZipField.AfterTextChanged += (sender, e) => { Dirty = true; };
 
 
@@ -132,23 +132,23 @@ namespace Droid
             ControlStyling.StyleBGLayer( backgroundView );
 
             BirthdateField = backgroundView.FindViewById<EditText>( Resource.Id.birthdateText );
-            ControlStyling.StyleTextField( BirthdateField, ProfileStrings.BirthdatePlaceholder );
+            ControlStyling.StyleTextField( BirthdateField, ProfileStrings.BirthdatePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             BirthdateField.AfterTextChanged += (sender, e) => { Dirty = true; };
 
             borderView = backgroundView.FindViewById<View>( Resource.Id.middle_border );
             borderView.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
             GenderField = view.FindViewById<EditText>( Resource.Id.genderText );
-            ControlStyling.StyleTextField( GenderField, ProfileStrings.GenderPlaceholder );
+            ControlStyling.StyleTextField( GenderField, ProfileStrings.GenderPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             GenderField.AfterTextChanged += (sender, e) => { Dirty = true; };
 
 
             // Done buttons
             DoneButton = view.FindViewById<Button>( Resource.Id.doneButton );
-            ControlStyling.StyleButton( DoneButton, ProfileStrings.DoneButtonTitle );
+            ControlStyling.StyleButton( DoneButton, ProfileStrings.DoneButtonTitle, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
 
             LogoutButton = view.FindViewById<Button>( Resource.Id.logoutButton );
-            ControlStyling.StyleButton( LogoutButton, ProfileStrings.LogoutButtonTitle );
+            ControlStyling.StyleButton( LogoutButton, ProfileStrings.LogoutButtonTitle, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
 
             DoneButton.Click += (object sender, EventArgs e) => 
                 {
@@ -171,8 +171,8 @@ namespace Droid
                                     {
                                         switch( clickArgs.Which )
                                         {
-                                            case 0: SubmitChanges( ); SpringboardParent.ModalFragmentFinished( this, null ); break;
-                                            case 1: SpringboardParent.ModalFragmentFinished( this, null ); break;
+                                            case 0: SubmitChanges( ); SpringboardParent.ModalFragmentDone( this, null ); break;
+                                            case 1: SpringboardParent.ModalFragmentDone( this, null ); break;
                                             case 2: break;
                                         }
                                     });
@@ -182,7 +182,7 @@ namespace Droid
                     }
                     else
                     {
-                        SpringboardParent.ModalFragmentFinished( this, null );
+                        SpringboardParent.ModalFragmentDone( this, null );
                     }
                 };
 
@@ -195,8 +195,7 @@ namespace Droid
                     Java.Lang.ICharSequence [] strings = new Java.Lang.ICharSequence[]
                         {
                             new Java.Lang.String( GeneralStrings.Yes ),
-                            new Java.Lang.String( GeneralStrings.No ),
-                            new Java.Lang.String( GeneralStrings.Cancel )
+                            new Java.Lang.String( GeneralStrings.No )
                         };
 
                     builder.SetItems( strings, delegate(object s, DialogClickEventArgs clickArgs) 
@@ -205,9 +204,8 @@ namespace Droid
                                 {
                                     switch( clickArgs.Which )
                                     {
-                                        case 0: RockMobileUser.Instance.LogoutAndUnbind( ); SpringboardParent.ModalFragmentFinished( this, null ); break;
-                                        case 1: SpringboardParent.ModalFragmentFinished( this, null ); break;
-                                        case 2: break;
+                                        case 0: RockMobileUser.Instance.LogoutAndUnbind( ); SpringboardParent.ModalFragmentDone( this, null ); break;
+                                        case 1: break;
                                     }
                                 });
                         });
@@ -233,6 +231,15 @@ namespace Droid
             // clear the dirty flag AFTER setting all values so the initial setup
             // doesn't get flagged as dirty
             Dirty = false;
+
+            SpringboardParent.ModalFragmentOpened( this );
+        }
+
+        public override void OnStop()
+        {
+            base.OnStop();
+
+            SpringboardParent.ModalFragmentClosed( this );
         }
 
         void SubmitChanges()

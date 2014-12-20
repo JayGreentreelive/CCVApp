@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Styles>
-     <Note Padding="5%" BackgroundColor="#1c1c1cFF"/>
+     <Note Padding="5%" BackgroundColor="#262626FF"/>
      <Paragraph/>
-     <RevealBox FontName="Bevan" FontSize="14" FontColor="#b52e2eFF"/>
-     <Quote MarginBottom="5%" FontName="Merriweather-BoldItalic" FontSize="16" FontColor="#ec3e3eFF"/>
+     <RevealBox FontName="OpenSans-Bold" FontSize="14" FontColor="#b52e2eFF"/>
+     <Quote MarginBottom="5%" FontName="OpenSans-Italic" FontSize="16" FontColor="#ec3e3eFF"/>
 
-     <TextInput BorderWidth="2" BorderRadius="5" FontName="Bevan" FontSize="16" FontColor="#AFAFAFFF"/>
+     <TextInput BorderWidth="2" BorderRadius="5" FontName="OpenSans-Regular" FontSize="16" FontColor="#AFAFAFFF"/>
      
-     <UserNote BorderWidth="2" BorderRadius="5" BorderColor="#777777FF" TextInputBackgroundColor="#FFFFFFFF"/>
+     <UserNote FontColor="#AFAFAFFF" FontName="OpenSans-Regular" FontSize="16" BorderWidth="2" BorderRadius="5" BorderColor="#777777FF" TextInputBackgroundColor="#FFFFFFFF"/>
      
-     <Header.Container MarginBottom="5%" BorderWidth="2" BorderRadius="3" BorderColor="#777777FF" Alignment="Left"/>
-     <Header.Title Alignment="Center" FontName="Bevan" FontSize="18" FontColor="#AFAFAFFF"/>
-     <Header.Speaker FontName="Bevan" FontSize="12" FontColor="#AFAFAFFF"/>
-     <Header.Date FontName="Bevan" FontSize="12" FontColor="#AFAFAFFF"/>
+     <Header.Container MarginBottom="5%" Alignment="Left"/>
+     <Header.Title Alignment="Center" FontName="OpenSans-Semibold" FontSize="24" FontColor="#AFAFAFFF"/>
+     <Header.Speaker FontName="OpenSans-Light" FontSize="16" FontColor="#AFAFAFFF"/>
+     <Header.Date FontName="OpenSans-Light" FontSize="16" FontColor="#AFAFAFFF"/>
      
-     <Text FontName="Bevan" FontSize="16" FontColor="#AFAFAFFF"/>
+     <Text FontName="OpenSans-Regular" FontSize="18" FontColor="#AFAFAFFF"/>
      
      <List Indentation="5%" BulletPoint="☞"/>
      <ListItem PaddingBottom="5%"/>

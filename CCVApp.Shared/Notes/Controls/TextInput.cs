@@ -155,12 +155,12 @@ namespace CCVApp
                     TextField.PlaceholderTextColor = mStyle.mFont.mColor.Value;
                 }
 
-                public override bool TouchesEnded( PointF touch )
+                public override IUIControl TouchesEnded( PointF touch )
                 {
                     // hide the keyboard
                     TextField.ResignFirstResponder( );
 
-                    return false;
+                    return null;
                 }
 
                 public override void AddOffset( float xOffset, float yOffset )

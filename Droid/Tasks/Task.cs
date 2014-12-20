@@ -39,10 +39,14 @@ namespace Droid
 
             public virtual void Activate( bool forResume )
             {
-                NavbarFragment.FragmentManager.PopBackStack( null, PopBackStackFlags.Inclusive );
+                // if we're simply resuming, we dont need to reset the fragment, the task is already setup.
+                if ( forResume == false )
+                {
+                    NavbarFragment.FragmentManager.PopBackStack( null, PopBackStackFlags.Inclusive );
 
-                // present our starting fragment, and don't allow back navigation
-                PresentFragment( StartingFragment( ), false );
+                    // present our starting fragment, and don't allow back navigation
+                    PresentFragment( StartingFragment( ), false );
+                }
             }
 
             public virtual void Deactivate( bool forPause )

@@ -36,8 +36,7 @@
                 android:id="@+id/prayer_create_firstNameText"
                 android:inputType="textPersonName"
                 android:maxLength="16"
-                android:maxLines="1"
-                android:layout_marginLeft="5dp" />
+                android:maxLines="1" />
             <View
                 android:id="@+id/middle_border"
                 android:layout_below="@+id/prayer_create_firstNameText"
@@ -51,7 +50,6 @@
                 android:layout_below="@+id/middle_border"
                 android:id="@+id/prayer_create_lastNameText"
                 android:inputType="textPersonName"
-                android:layout_marginLeft="5dp"
                 android:maxLength="12"
                 android:maxLines="1" />
         </RelativeLayout>
@@ -80,7 +78,6 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:layout_marginLeft="5dp"
                 android:layout_below="@+id/top_border"
                 android:gravity="top"
                 android:inputType="textMultiLine"
@@ -94,7 +91,7 @@
     <!--Spinner-->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:id="@+id/spinner_background">
             <View
                 android:id="@+id/top_border"
@@ -105,7 +102,7 @@
             <View
                 android:id="@+id/bottom_border"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="0dp"
                 android:background="#FFFFFFFF"
                 android:layout_alignParentBottom="true" />
             <Spinner
@@ -121,7 +118,7 @@
     <!--Toggle Switches-->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="80dp"
             android:id="@+id/switch_background">
             <View
                 android:id="@+id/top_border"
@@ -135,28 +132,54 @@
                 android:layout_height="1dp"
                 android:background="#FFFFFFFF"
                 android:layout_alignParentBottom="true" />
-            <TextView
-                android:id="@+id/postAnonymous"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Post Anonymously" />
-            <Switch
-                android:id="@+id/postAnonymousSwitch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true" />
-            <TextView
-                android:id="@+id/makePublic"
-                android:layout_below="@+id/postAnonymousSwitch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Make Public" />
-            <Switch
-                android:layout_below="@+id/postAnonymousSwitch"
-                android:id="@+id/makePublicSwitch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true" />
+                android:layout_centerInParent="true">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/postAnonymous"
+                        android:layout_marginLeft="15dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Post Anonymously" />
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+                    <Switch
+                        android:id="@+id/postAnonymousSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="15dp"
+                        android:layout_gravity="right" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/makePublic"
+                        android:layout_marginLeft="15dp"
+                        android:layout_below="@+id/postAnonymousSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Make Public" />
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+                    <Switch
+                        android:layout_below="@+id/postAnonymousSwitch"
+                        android:id="@+id/makePublicSwitch"
+                        android:layout_marginRight="15dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right" />
+                </LinearLayout>
+            </LinearLayout>
         </RelativeLayout>
         <Space
             android:layout_width="match_parent"
@@ -167,8 +190,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/prayer_create_submitButton"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp" />
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp" />
         <ProgressBar
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"

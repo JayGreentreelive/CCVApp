@@ -9,6 +9,7 @@ using CCVApp.Shared;
 using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
 using System.IO;
+using Rock.Mobile.PlatformCommon;
 
 namespace iOS
 {
@@ -32,8 +33,6 @@ namespace iOS
                 public UITextView Desc { get; set; }
                 public UILabel Date { get; set; }
 
-                public UILabel Footer { get; set; }
-
                 public SeriesPrimaryCell( UITableViewCellStyle style, string cellIdentifier ) : base( style, cellIdentifier )
                 {
                     BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_Color );
@@ -45,35 +44,31 @@ namespace iOS
                     AddSubview( Image );
 
                     Title = new UILabel( );
-                    Title.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( NoteConfig.Series_Table_Large_Font, NoteConfig.Series_Table_Large_FontSize );
+                    Title.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Large_Font_Bold, ControlStylingConfig.Large_FontSize );
                     Title.Layer.AnchorPoint = PointF.Empty;
-                    Title.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
+                    Title.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.Label_TextColor );
                     Title.BackgroundColor = UIColor.Clear;
                     Title.LineBreakMode = UILineBreakMode.TailTruncation;
                     AddSubview( Title );
 
                     Date = new UILabel( );
-                    Date.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( NoteConfig.Series_Table_Small_Font, NoteConfig.Series_Table_Small_FontSize );
+                    Date.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Small_Font_Light, ControlStylingConfig.Small_FontSize );
                     Date.Layer.AnchorPoint = PointF.Empty;
-                    Date.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+                    Date.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.Label_TextColor );
                     Date.BackgroundColor = UIColor.Clear;
                     Date.LineBreakMode = UILineBreakMode.TailTruncation;
                     AddSubview( Date );
 
                     Desc = new UITextView( );
-                    Desc.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( NoteConfig.Series_Table_Small_Font, NoteConfig.Series_Table_Small_FontSize );
+                    Desc.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Small_Font_Light, ControlStylingConfig.Small_FontSize );
                     Desc.Layer.AnchorPoint = PointF.Empty;
-                    Desc.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+                    Desc.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.Label_TextColor );
                     Desc.BackgroundColor = UIColor.Clear;
                     Desc.TextContainerInset = UIEdgeInsets.Zero;
                     Desc.TextContainer.LineFragmentPadding = 0;
                     Desc.Editable = false;
                     Desc.UserInteractionEnabled = false;
                     AddSubview( Desc );
-
-                    Footer = new UILabel( );
-                    Footer.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.Table_Footer_Color );
-                    AddSubview( Footer );
                 }
             }
 
@@ -99,15 +94,16 @@ namespace iOS
                 public SeriesCell( UITableViewCellStyle style, string cellIdentifier ) : base( style, cellIdentifier )
                 {
                     Title = new UILabel( );
-                    Title.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( NoteConfig.Series_Table_Medium_Font, NoteConfig.Series_Table_Medium_FontSize );
+                    Title.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+
                     Title.Layer.AnchorPoint = PointF.Empty;
-                    Title.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
+                    Title.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.Label_TextColor );
                     Title.BackgroundColor = UIColor.Clear;
                     Title.LineBreakMode = UILineBreakMode.TailTruncation;
                     AddSubview( Title );
 
                     Date = new UILabel( );
-                    Date.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( NoteConfig.Series_Table_Small_Font, NoteConfig.Series_Table_Small_FontSize );
+                    Date.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
                     Date.Layer.AnchorPoint = PointF.Empty;
                     Date.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
                     Date.BackgroundColor = UIColor.Clear;
@@ -115,7 +111,7 @@ namespace iOS
                     AddSubview( Date );
 
                     Speaker = new UILabel( );
-                    Speaker.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( NoteConfig.Series_Table_Small_Font, NoteConfig.Series_Table_Small_FontSize );
+                    Speaker.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
                     Speaker.Layer.AnchorPoint = PointF.Empty;
                     Speaker.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
                     Speaker.BackgroundColor = UIColor.Clear;
@@ -125,7 +121,7 @@ namespace iOS
                     WatchButton = new UIButton( UIButtonType.Custom );
                     WatchButton.TouchUpInside += (object sender, EventArgs e) => { Parent.RowButtonClicked( RowIndex, 0 ); };
                     WatchButton.Layer.AnchorPoint = PointF.Empty;
-                    WatchButton.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Secondary, NoteConfig.Series_Table_IconSize );
+                    WatchButton.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Secondary, NoteConfig.Details_Table_IconSize );
                     WatchButton.SetTitle( NoteConfig.Series_Table_Watch_Icon, UIControlState.Normal );
                     WatchButton.BackgroundColor = UIColor.Clear;
                     WatchButton.SizeToFit( );
@@ -133,7 +129,7 @@ namespace iOS
 
                     TakeNotesButton = new UIButton( UIButtonType.Custom );
                     TakeNotesButton.TouchUpInside += (object sender, EventArgs e) => { Parent.RowButtonClicked( RowIndex, 1 ); };
-                    TakeNotesButton.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Secondary, NoteConfig.Series_Table_IconSize );
+                    TakeNotesButton.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Secondary, NoteConfig.Details_Table_IconSize );
                     TakeNotesButton.SetTitle( NoteConfig.Series_Table_TakeNotes_Icon, UIControlState.Normal );
                     TakeNotesButton.Layer.AnchorPoint = PointF.Empty;
                     TakeNotesButton.BackgroundColor = UIColor.Clear;
@@ -151,7 +147,7 @@ namespace iOS
                     if ( enabled == true )
                     {
                         WatchButton.Enabled = true;
-                        WatchButton.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ), UIControlState.Normal );
+                        WatchButton.SetTitleColor( PlatformBaseUI.GetUIColor( 0xc43535FF ), UIControlState.Normal );
                     }
                     else
                     {
@@ -165,7 +161,7 @@ namespace iOS
                     if ( enabled == true )
                     {
                         TakeNotesButton.Enabled = true;
-                        TakeNotesButton.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ), UIControlState.Normal );
+                        TakeNotesButton.SetTitleColor( PlatformBaseUI.GetUIColor( 0xc43535FF ), UIControlState.Normal );
                     }
                     else
                     {
@@ -285,7 +281,7 @@ namespace iOS
                 // Title
                 cell.Title.Text = Series.Name;
                 cell.Title.SizeToFit( );
-                cell.Title.Frame = new RectangleF( 5, cell.Image.Frame.Bottom + 5, cell.Frame.Width - 5, cell.Title.Frame.Height + 5 );
+                cell.Title.Frame = new RectangleF( 5, cell.Image.Frame.Bottom + 5, cell.Frame.Width - 10, cell.Title.Frame.Height + 5 );
 
                 // Date
                 cell.Date.Text = Series.DateRanges;
@@ -298,10 +294,7 @@ namespace iOS
                 cell.Desc.SizeToFit( );
                 cell.Desc.Frame = new RectangleF( 5, cell.Date.Frame.Bottom, cell.Frame.Width - 10, cell.Desc.Frame.Height + 5 );
 
-                // Footer
-                cell.Footer.Frame = new RectangleF( 0, cell.Desc.Frame.Bottom, cell.Bounds.Width, 10 );
-
-                PendingPrimaryCellHeight = cell.Footer.Frame.Bottom;
+                PendingPrimaryCellHeight = cell.Desc.Frame.Bottom;
 
                 return cell;
             }
@@ -343,7 +336,7 @@ namespace iOS
                 float availableWidth = cell.Bounds.Width - cell.WatchButton.Bounds.Width - cell.TakeNotesButton.Bounds.Width - 5 - 20;
 
                 // disable the button if there's no watch URL
-                if ( string.IsNullOrEmpty( Series.Messages[ 0 ].WatchUrl ) )
+                if ( string.IsNullOrEmpty( Series.Messages[ row ].WatchUrl ) )
                 {
                     cell.ToggleWatchButton( false );
                 }
@@ -374,11 +367,11 @@ namespace iOS
                 cell.Speaker.SizeToFit( );
 
                 // Position the Title & Date in the center to the right of the image
-                float totalTextHeight = cell.Title.Bounds.Height + cell.Date.Bounds.Height + cell.Speaker.Bounds.Height + 5;
+                float totalTextHeight = cell.Title.Bounds.Height + cell.Date.Bounds.Height + cell.Speaker.Bounds.Height + 20;
 
-                cell.Title.Frame = new RectangleF( 5, (rowHeight - totalTextHeight) / 2, availableWidth, cell.Title.Frame.Height );
-                cell.Date.Frame = new RectangleF( cell.Title.Frame.Left, cell.Title.Frame.Bottom, availableWidth, cell.Date.Frame.Height );
-                cell.Speaker.Frame = new RectangleF( cell.Title.Frame.Left, cell.Date.Frame.Bottom, availableWidth, cell.Speaker.Frame.Height + 5 );
+                cell.Title.Frame = new RectangleF( 5, (rowHeight - totalTextHeight) / 2, availableWidth, cell.Title.Frame.Height + 15);
+                cell.Date.Frame = new RectangleF( cell.Title.Frame.Left, cell.Title.Frame.Bottom - 5, availableWidth, cell.Date.Frame.Height );
+                cell.Speaker.Frame = new RectangleF( cell.Title.Frame.Left, cell.Date.Frame.Bottom - 5, availableWidth, cell.Speaker.Frame.Height + 5 );
 
                 // add the seperator to the bottom
                 cell.Seperator.Frame = new RectangleF( 0, rowHeight - 1, cell.Bounds.Width, 1 );
@@ -400,14 +393,13 @@ namespace iOS
         public class MessageEntry
         {
             public Series.Message Message { get; set; }
-            public UIImage Thumbnail { get; set; }
-            public bool HasPodcast { get; set; }
+            //public UIImage Thumbnail { get; set; }
         }
 
         public Series Series { get; set; }
         public UIImage SeriesBillboard { get; set; }
         public List<MessageEntry> Messages { get; set; }
-        public UIImage ThumbnailPlaceholder{ get; set; }
+        //public UIImage ThumbnailPlaceholder{ get; set; }
         bool IsVisible { get; set; }
 
 		public NotesDetailsUIViewController (IntPtr handle) : base (handle)
@@ -434,11 +426,12 @@ namespace iOS
                 Messages.Add( messageEntry );
 
                 // give each message entry its message and the default thumbnail, which is the series billboard
+                //JHM 12-15-14: Don't set thumbnails, the latest design doesn't call for images on the entries.
                 messageEntry.Message = Series.Messages[ i ];
-                messageEntry.Thumbnail = ThumbnailPlaceholder;
+                //messageEntry.Thumbnail = ThumbnailPlaceholder;
 
                 // grab the thumbnail IF it has a podcast
-                if ( string.IsNullOrEmpty( Series.Messages[ i ].WatchUrl ) == false )
+                /*if ( string.IsNullOrEmpty( Series.Messages[ i ].WatchUrl ) == false )
                 {
                     messageEntry.HasPodcast = true;
 
@@ -475,11 +468,11 @@ namespace iOS
                                 }
                             } );
                     }
-                }
+                }*/
             }
         }
 
-        void ApplyBillboardImage( MessageEntry messageEntry, MemoryStream imageBuffer )
+        /*void ApplyBillboardImage( MessageEntry messageEntry, MemoryStream imageBuffer )
         {
             // show the image
             NSData imageData = NSData.FromStream( imageBuffer );
@@ -487,7 +480,7 @@ namespace iOS
 
             messageEntry.Thumbnail = uiImage;
             SeriesTable.ReloadData( );
-        }
+        }*/
 
         public override void ViewWillDisappear(bool animated)
         {
@@ -526,11 +519,16 @@ namespace iOS
             // and 1 would be the second button, which is Notes
             else if ( buttonIndex == 1 )
             {
-                NotesViewController viewController = new NotesViewController();
-                viewController.NotePresentableName = string.Format( "Message - {0}", Series.Messages[ row ].Name );
-                viewController.NoteName = Series.Messages[ row ].NoteUrl;
+                // maybe technically a hack...we know our parent is a NoteTask,
+                // so cast it so we can use the existing NotesViewController.
+                NotesTask noteTask = Task as NotesTask;
+                if ( noteTask != null )
+                {
+                    noteTask.NoteController.NotePresentableName = string.Format( "Message - {0}", Series.Messages[ row ].Name );
+                    noteTask.NoteController.NoteName = Series.Messages[ row ].NoteUrl;
 
-                Task.PerformSegue( this, viewController );
+                    Task.PerformSegue( this, noteTask.NoteController );
+                }
             }
         }
 	}

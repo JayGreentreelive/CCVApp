@@ -414,6 +414,7 @@
       <DependentUpon>Prayer_PostUIViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="ControlStyling.cs" />
+    <Compile Include="Tasks\Notes\NotesWebViewController.cs" />
   </ItemGroup>
   <Import Project="..\..\Rock\Rock.Client\Rock.Client.Models.projitems" Label="Shared" Condition="Exists('..\..\Rock\Rock.Client\Rock.Client.Models.projitems')" />
   <Import Project="..\..\Rock.Mobile\Rock.Mobile.projitems" Label="Shared" Condition="Exists('..\..\Rock.Mobile\Rock.Mobile.projitems')" />

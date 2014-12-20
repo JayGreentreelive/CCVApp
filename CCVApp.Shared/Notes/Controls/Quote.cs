@@ -43,6 +43,11 @@ namespace CCVApp
                 /// <value>The bounds.</value>
                 protected RectangleF Frame { get; set; }
 
+                /// <summary>
+                /// If valid, a URL that the user should be taken to if they tap this control
+                /// </summary>
+                protected string ActiveUrl { get; set; }
+
                 protected override void Initialize( )
                 {
                     base.Initialize( );
@@ -50,6 +55,8 @@ namespace CCVApp
                     QuoteLabel = PlatformLabel.Create( );
                     Citation = PlatformLabel.Create( );
                     BorderView = PlatformView.Create( );
+
+                    ActiveUrl = string.Empty;
                 }
 
                 public Quote( CreateParams parentParams, XmlReader reader )
@@ -132,6 +139,9 @@ namespace CCVApp
                         Citation.Bounds = new RectangleF( bounds.X + padding.Left + borderPaddingPx, bounds.Y + padding.Top + borderPaddingPx, availableWidth, 0 );
                         Citation.SizeToFit( );
                     }
+
+                    // see if there's a Url attribute, which is where the user should be taken if they tap the link
+                    ActiveUrl = reader.GetAttribute( "Url" );
 
                     bool finishedScripture = false;
                     while( finishedScripture == false && reader.Read( ) )
@@ -273,6 +283,22 @@ namespace CCVApp
                     Citation.RemoveAsSubview( obj );
 
                     TryRemoveDebugLayer( obj );
+                }
+
+                public override IUIControl TouchesEnded( PointF touch )
+                {
+                    // if we have an active URL and they're tapping within us, consume.
+                    if ( string.IsNullOrEmpty( ActiveUrl ) == false && Frame.Contains( touch ) )
+                    {
+                        return this;
+                    }
+
+                    return null;
+                }
+
+                public override string GetActiveUrl()
+                {
+                    return ActiveUrl;
                 }
 
                 public override void BuildHTMLContent( ref string htmlStream, List<IUIControl> userNotes )

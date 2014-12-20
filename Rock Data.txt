@@ -1,47 +1,53 @@
 Needed End Points & Data
 -=-=-=-=-=-=-=-=-=-=-=-=
-Launch Data (Updated each time the app is run)
-	"General Data" Version Number (will be compared with the client's current "General Data" version number)
-    News
-    Latest Sermon Note
-    Valid Cookie?
-    	Profile
-    Else
-    	Null Profile (tells me the cookie is invalid)
+Endpoint: GetLaunchData
+Data: Launch Data (Updated each time the app is run)
+	       "General Data" Version Number (will be compared with the client's current "General Data" version number)
+            News
+            Latest Sermon Note URL
 
-Initial Data (Updated anytime "Launch Data"'s "General Data" Version Number is newer)
-    General Values (Most value tables associated with value IDs)
-        Campuses
-        Titles
-        Suffixes
-        Default News
+Endpoint: GetInitialData
+Data:     Initial Data (Updated anytime "Launch Data"'s "General Data" Version Number is newer)
+            General Values (Most value tables associated with value IDs)
+                Campuses
+                Default News
+                Prayer Categories
 
-Login
-    Rock Username/Password (Done)
-    Facebook ID
-    Cookie Valid check
 
-Any endpoint where I'd pass up a Username needs to support a Facebook ID representing a FB account.
+Endpoint: Login via Rock Username/Password (Done)
+          Login via Facebook ID
+            *Any endpoint where I'd pass up a Username needs to support a Facebook ID representing a FB account.
         
-Profile Data
-	Name (First, Middle, Last)
-	Nickname
-	Email
-	Address
-	Phone Number
-	Profile Pic URL
-	Campus
+Endpoint: Get Profile (The current endpoint returns a Person, which is not all the data I need)
+Data: Profile
+	       Name (First, Middle, Last)
+	       Nickname
+	       Email
+	       Address (Street, City, State, Zip)
+	       Phone Number
+	       Campus
+           Gender
+           Birthdate
 
-Prayer
-    "Prayed for" end point
-    Categories on pulldown
 
-Profile
-    Picture Upload (with account association)
+Endpoint: GetPrayers (without need for authentication)
+          "Prayed For"
+          Post Prayer (working)
 
-Notes
-    List of all available notes
+Data: Prayer
+            Need category model within Prayer model
 
+
+Endpoint: Picture Upload (with account association)
+
+Endpoint: Get Note Series
+Date: SeriesList
+        Series
+            Message
+
+
+Todo: Find out if we can ask for permission to just access THEIR contact info,
+so that we can send up attendance data without them logging in
 
 -=-=-=-=-=-=-=-=-=-=-
 App Data Flow Chart
@@ -52,7 +58,7 @@ App Data Flow Chart
         	Logged In?
             	Sync Unsaved Changes [Will fail if cookie is invalid]
             	Get "Launch Data"
-            		Cookie Expired?
+            		Cookie Expired? <----DONT EXPLICITELY CHECK THIS. JUST LOG THEM OUT IF YOU'RE EVEN UNAUTHORIZED
             			LogOut() [Will lose unsync'd profile changes]
             		Else
                 		Will contain "Profile"

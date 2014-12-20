@@ -210,6 +210,7 @@ namespace iOS
             InternalReveal( revealed );
         }
 
+        bool ViewChangedDuringAnimation { get; set; }
         void InternalReveal( bool revealed )
         {
             if( Revealed != revealed )
@@ -235,9 +236,40 @@ namespace iOS
                                 Animating = false;
 
                                 Revealed = revealed;
+
+                                // if the view changed while we were animating, update 
+                                // our position on completion
+                                if ( ViewChangedDuringAnimation == true )
+                                {
+                                    ViewChangedDuringAnimation = false;
+                                    ViewDidLayoutSubviews( );
+                                }
                             })
                     );
                 }
+            }
+        }
+
+        public void ViewDidLayoutSubviews( )
+        {
+            RectangleF parentFrame = Superview.Frame;
+
+            // if we're not animating, we can easily update our position
+            if ( Animating == false )
+            {
+                if ( Revealed == true )
+                {
+                    Frame = new RectangleF( 0, parentFrame.Height - Frame.Height, parentFrame.Width, SubNavToolbarConfig.Height );
+                }
+                else
+                {
+                    Frame = new RectangleF( 0, parentFrame.Height, parentFrame.Width, SubNavToolbarConfig.Height );
+                }
+            }
+            else
+            {
+                // if we ARE, we need to have it correct itself when it finishes.
+                ViewChangedDuringAnimation = true;
             }
         }
     }

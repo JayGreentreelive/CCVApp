@@ -73,7 +73,7 @@ namespace iOS
             PrayerText.Layer.AnchorPoint = new PointF( 0, 0 );
             PrayerText.DelaysContentTouches = false; // don't allow delaying touch, we need to forward it
             PrayerText.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
-            PrayerText.Font = iOSCommon.LoadFontDynamic( PrayerConfig.Card_PrayerFont, PrayerConfig.Card_PrayerSize );
+            PrayerText.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             PrayerText.TextContainerInset = UIEdgeInsets.Zero;
             PrayerText.TextContainer.LineFragmentPadding = 0;
 
@@ -85,7 +85,7 @@ namespace iOS
             Pray.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
             Pray.SetTitleColor( PlatformBaseUI.GetUIColor( PlatformBaseUI.ScaleRGBAColor( ControlStylingConfig.TextField_PlaceholderTextColor, 2, false ) ), UIControlState.Highlighted );
 
-            Pray.Font = iOSCommon.LoadFontDynamic( PrayerConfig.Card_ButtonFont, PrayerConfig.Card_ButtonSize );
+            Pray.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             Pray.SizeToFit( );
 
             PrayFillIn = new UIView( );
@@ -113,20 +113,20 @@ namespace iOS
             Name = new UILabel( );
             Name.Layer.AnchorPoint = new PointF( 0, 0 );
             Name.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
-            Name.Font = iOSCommon.LoadFontDynamic( PrayerConfig.Card_NameFont, PrayerConfig.Card_NameSize );
+            Name.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
 
             // setup the date field
             Date = new UILabel( );
             Date.Layer.AnchorPoint = new PointF( 0, 0 );
             Date.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
-            Date.Font = iOSCommon.LoadFontDynamic( PrayerConfig.Card_DateFont, PrayerConfig.Card_DateSize );
+            Date.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
 
 
             // setup the category field
             Category = new UILabel( );
             Category.Layer.AnchorPoint = new PointF( 0, 0 );
             Category.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
-            Category.Font = iOSCommon.LoadFontDynamic( PrayerConfig.Card_CategoryFont, PrayerConfig.Card_CategorySize );
+            Category.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
 
 
             // add the controls
@@ -256,15 +256,15 @@ namespace iOS
             RetrievingPrayersView.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             StatusLabel.Text = PrayerStrings.ViewPrayer_StatusText_Retrieving;
-            ControlStyling.StyleUILabel( StatusLabel );
+            ControlStyling.StyleUILabel( StatusLabel, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             ControlStyling.StyleBGLayer( StatusBackground );
 
-            ControlStyling.StyleUILabel( ResultLabel );
+            ControlStyling.StyleUILabel( ResultLabel, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             ControlStyling.StyleBGLayer( ResultBackground );
 
             View.AddSubview( BlockerView );
 
-            ControlStyling.StyleButton( RetryButton, GeneralStrings.Retry );
+            ControlStyling.StyleButton( RetryButton, GeneralStrings.Retry, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             RetryButton.TouchUpInside += (object sender, EventArgs e ) =>
             {
                 RetrievePrayerRequests( );

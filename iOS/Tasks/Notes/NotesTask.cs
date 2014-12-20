@@ -10,11 +10,17 @@ namespace iOS
     {
         UIViewController ActiveViewController { get; set; }
         NotesMainUIViewController MainViewController { get; set; }
+        public NotesViewController NoteController { get; set; }
 
         public NotesTask( string storyboardName ) : base( storyboardName )
         {
             MainViewController = Storyboard.InstantiateViewController( "MainPageViewController" ) as NotesMainUIViewController;
             MainViewController.Task = this;
+
+            // create the note controller ONCE and let the view controllers grab it as needed.
+            // That way, we can hold it in memory and cache notes, rather than always reloading them.
+            NoteController = new NotesViewController();
+            NoteController.Task = this;
         }
 
         public override void MakeActive( UINavigationController parentViewController, NavToolbar navToolbar )
@@ -34,12 +40,18 @@ namespace iOS
 
         public override void WillShowViewController(UIViewController viewController)
         {
+            // if we're coming from WebView or Notes and going to something else,
+            // force the device back to portrait
+
+
             ActiveViewController = viewController;
 
             // if the notes are active, make sure the share button gets turned on
             if ( ( viewController as NotesViewController ) != null )
             {
-                NavToolbar.SetBackButtonEnabled( true );
+                // Let the view controller manage this being enabled, because
+                // it's conditional on being in landscape or not.
+                //NavToolbar.SetBackButtonEnabled( true );
                 NavToolbar.SetCreateButtonEnabled( false, null );
                 NavToolbar.SetShareButtonEnabled( true, delegate
                     { 
@@ -52,7 +64,9 @@ namespace iOS
             }
             else if ( ( viewController as NotesWatchUIViewController ) != null )
             {
-                NavToolbar.SetBackButtonEnabled( true );
+                // Let the view controller manage this being enabled, because
+                // it's conditional on being in landscape or not.
+                //NavToolbar.SetBackButtonEnabled( true );
                 NavToolbar.SetCreateButtonEnabled( false, null );
                 NavToolbar.SetShareButtonEnabled( true, delegate
                     { 
@@ -70,12 +84,19 @@ namespace iOS
                 NavToolbar.SetBackButtonEnabled( true );
                 NavToolbar.RevealForTime( 3.0f );
             }
-            else
+            else if ( ( viewController as NotesMainUIViewController ) != null )
             {
                 NavToolbar.SetCreateButtonEnabled( false, null );
                 NavToolbar.SetShareButtonEnabled( false, null );
                 NavToolbar.SetBackButtonEnabled( false );
                 NavToolbar.Reveal( false );
+            }
+            else if ( ( viewController as NotesWebViewController ) != null )
+            {
+                NavToolbar.SetCreateButtonEnabled( false, null );
+                NavToolbar.SetShareButtonEnabled( false, null );
+                NavToolbar.SetBackButtonEnabled( true );
+                NavToolbar.Reveal( true );
             }
         }
 
@@ -88,7 +109,11 @@ namespace iOS
             // scroll gesture
             if ( ( ActiveViewController as NotesViewController ) == null )
             {
-                NavToolbar.RevealForTime( 3.0f );
+                // now allow it as long as it isn't the watch window in landscape mode
+                if ( ( ActiveViewController as NotesWatchUIViewController ) == null || UIDevice.CurrentDevice.Orientation == UIDeviceOrientation.Portrait )
+                {
+                    NavToolbar.RevealForTime( 3.0f );
+                }
             }
         }
 
@@ -134,7 +159,7 @@ namespace iOS
         public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations()
         {
             // if we're using the watch or notes controller, allow landscape
-            if ( ( ActiveViewController as NotesViewController ) != null || ( ActiveViewController as NotesWatchUIViewController ) != null )
+            if ( ( ActiveViewController as NotesViewController ) != null || ( ActiveViewController as NotesWatchUIViewController ) != null || ( ActiveViewController as NotesWebViewController ) != null )
             {
                 return UIInterfaceOrientationMask.All;
             }

@@ -77,25 +77,29 @@ namespace iOS
             ScrollView.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor );
             ScrollView.Parent = this;
 
-            ControlStyling.StyleTextField( FirstNameText, PrayerStrings.CreatePrayer_FirstNamePlaceholderText );
+            ControlStyling.StyleTextField( FirstNameText, PrayerStrings.CreatePrayer_FirstNamePlaceholderText, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( FirstNameBackground );
 
-            ControlStyling.StyleTextField( LastNameText, PrayerStrings.CreatePrayer_LastNamePlaceholderText );
+            ControlStyling.StyleTextField( LastNameText, PrayerStrings.CreatePrayer_LastNamePlaceholderText, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( LastNameBackground );
 
             // setup the prayer request field, which requires a fake "placeholder" text field
             PrayerRequest.Delegate = new TextViewDelegate( );
             PrayerRequest.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
             PrayerRequest.TextContainerInset = UIEdgeInsets.Zero;
+            PrayerRequest.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             PrayerRequest.TextContainer.LineFragmentPadding = 0;
             PrayerRequest.BackgroundColor = UIColor.Clear;
             PrayerRequestPlaceholder.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
             PrayerRequestPlaceholder.BackgroundColor = UIColor.Clear;
             PrayerRequestPlaceholder.Text = PrayerStrings.CreatePrayer_PrayerRequest;
+            PrayerRequestPlaceholder.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            //PrayerRequestPlaceholder.SizeToFit( );
             ControlStyling.StyleBGLayer( PrayerRequestLayer );
 
 
             // Setup the anonymous switch
+            PostAnonymouslyLabel.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             PostAnonymouslyLabel.Text = PrayerStrings.CreatePrayer_PostAnonymously;
             UISwitchAnonymous.OnTintColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.Switch_OnColor );
             UISwitchAnonymous.TouchUpInside += (object sender, EventArgs e ) =>
@@ -119,6 +123,7 @@ namespace iOS
                 };
 
             // setup the public switch
+            MakePublicLabel.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             MakePublicLabel.Text = PrayerStrings.CreatePrayer_MakePublic;
             UIPublicSwitch.OnTintColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.Switch_OnColor );
 
@@ -142,7 +147,7 @@ namespace iOS
 
             // setup the category picker and selector button
             CategoryLabel = new UILabel( );
-            ControlStyling.StyleUILabel( CategoryLabel );
+            ControlStyling.StyleUILabel( CategoryLabel, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
 
             CategoryLabel.Layer.AnchorPoint = PointF.Empty;
             CategoryLabel.Text = PrayerStrings.CreatePrayer_SelectCategoryLabel;
@@ -163,11 +168,12 @@ namespace iOS
             };
             CategoryButton.SetTitle( PrayerStrings.CreatePrayer_CategoryButtonText, UIControlState.Normal );
             CategoryButton.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
+            CategoryButton.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( CategoryLayer );
 
 
             // setup the submit button
-            ControlStyling.StyleButton( SubmitButton, PrayerStrings.CreatePrayer_SubmitButtonText );
+            ControlStyling.StyleButton( SubmitButton, PrayerStrings.CreatePrayer_SubmitButtonText, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             SubmitButton.TouchUpInside += SubmitPrayerRequest;
         }
 
@@ -304,6 +310,7 @@ namespace iOS
                     label = new UILabel();
                     label.TextColor = UIColor.White;
                     label.Text = RockGeneralData.Instance.Data.PrayerCategories[ row ];
+                    label.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
                     label.SizeToFit( );
                 }
 

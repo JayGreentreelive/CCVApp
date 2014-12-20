@@ -196,8 +196,8 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="698">
                                         <rect key="frame" x="-10" y="25" width="340" height="33"/>
                                         <subviews>
-                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="699">
-                                                <rect key="frame" x="15" y="2" width="310" height="30"/>
+                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="699">
+                                                <rect key="frame" x="20" y="2" width="300" height="30"/>
                                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -206,14 +206,16 @@
                                         </subviews>
                                         <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="699" secondAttribute="trailing" constant="20" id="0xr-Lb-48q"/>
+                                            <constraint firstItem="699" firstAttribute="leading" secondItem="698" secondAttribute="leading" constant="20" id="Ak6-Wc-JJP"/>
                                             <constraint firstAttribute="height" constant="33" id="YK3-9m-eoj"/>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="700">
                                         <rect key="frame" x="-10" y="58" width="340" height="33"/>
                                         <subviews>
-                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="701">
-                                                <rect key="frame" x="15" y="2" width="310" height="30"/>
+                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="701">
+                                                <rect key="frame" x="20" y="2" width="300" height="30"/>
                                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" spellCheckingType="no"/>
@@ -222,19 +224,21 @@
                                         <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="33" id="GXo-FC-aHj"/>
+                                            <constraint firstAttribute="trailing" secondItem="701" secondAttribute="trailing" constant="20" id="LMR-bE-Ln0"/>
+                                            <constraint firstItem="701" firstAttribute="leading" secondItem="700" secondAttribute="leading" constant="20" id="Vsb-Pn-3xM"/>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="702">
                                         <rect key="frame" x="-10" y="116" width="340" height="150"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Prayer Request" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="703">
-                                                <rect key="frame" x="15" y="5" width="126" height="17"/>
+                                                <rect key="frame" x="20" y="5" width="250" height="26"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="704">
-                                                <rect key="frame" x="15" y="5" width="310" height="140"/>
+                                                <rect key="frame" x="20" y="5" width="300" height="140"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -249,7 +253,7 @@
                                         <rect key="frame" x="-10" y="291" width="340" height="33"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="706">
-                                                <rect key="frame" x="15" y="2" width="305" height="30"/>
+                                                <rect key="frame" x="20" y="2" width="300" height="30"/>
                                                 <state key="normal" title="Button">
                                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
@@ -264,14 +268,14 @@
                                         <rect key="frame" x="-10" y="349" width="349" height="91"/>
                                         <subviews>
                                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" fixedFrame="YES" text="Post Anonymously" lineBreakMode="tailTruncation" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="708">
-                                                <rect key="frame" x="15" y="13" width="198" height="21"/>
+                                                <rect key="frame" x="20" y="13" width="198" height="21"/>
                                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" fixedFrame="YES" text="Make Public" lineBreakMode="tailTruncation" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="709">
-                                                <rect key="frame" x="15" y="57" width="198" height="21"/>
+                                                <rect key="frame" x="20" y="57" width="198" height="21"/>
                                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>

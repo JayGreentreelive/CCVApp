@@ -91,6 +91,9 @@ namespace iOS
         UIButton CancelButton { get; set; }
         UIButton EditButton { get; set; }
 
+        UIView FullscreenBlocker { get; set; }
+        CAShapeLayer FullscreenBlockerMask { get; set; }
+
 		public ImageCropViewController (IntPtr handle) : base (handle)
 		{
 		}
@@ -98,6 +101,7 @@ namespace iOS
         public void Begin( UIImage image, float cropAspectRatio )
         {
             CropAspectRatio = cropAspectRatio;
+
             SourceImage = image;
         }
 
@@ -125,11 +129,13 @@ namespace iOS
         {
             base.ViewDidLoad();
 
+            View.BackgroundColor = UIColor.Black;
+
             // set the image
             ImageView = new UIImageView( );
             ImageView.BackgroundColor = UIColor.Black;
             ImageView.ContentMode = UIViewContentMode.ScaleAspectFit;
-            ImageView.Frame = View.Frame;
+            ImageView.Frame = new RectangleF( View.Frame.X, View.Frame.Y, View.Frame.Width, View.Frame.Height );
 
             View.AddSubview( ImageView );
 
@@ -138,10 +144,24 @@ namespace iOS
             CropView = new UIView( );
             CropView.BackgroundColor = UIColor.Clear;
             CropView.Layer.BorderColor = UIColor.White.CGColor;
-            CropView.Layer.BorderWidth = 2;
+            CropView.Layer.BorderWidth = 1;
             CropView.Layer.CornerRadius = 4;
 
             View.AddSubview( CropView );
+
+
+            // create our fullscreen blocker. It needs to be HUGE so we can center the
+            // masked part
+            FullscreenBlocker = new UIView();
+            FullscreenBlocker.BackgroundColor = UIColor.Black;
+            FullscreenBlocker.Layer.Opacity = 0.00f;
+            FullscreenBlocker.Bounds = new RectangleF( 0, 0, 10000, 10000 );
+            FullscreenBlocker.AutoresizingMask = UIViewAutoresizing.None;
+            View.AddSubview( FullscreenBlocker );
+
+            FullscreenBlockerMask = new CAShapeLayer();
+            FullscreenBlockerMask.FillRule = CAShapeLayer.FillRuleEvenOdd;
+            FullscreenBlocker.Layer.Mask = FullscreenBlockerMask;
 
 
             // create our bottom toolbar
@@ -187,6 +207,7 @@ namespace iOS
                     {
                         // confirm we're done
                         Springboard.ResignModelViewController( this, CroppedImage );
+                        Mode = CropMode.None;
                     }
                     else
                     {
@@ -209,6 +230,8 @@ namespace iOS
         public override void ViewWillDisappear(bool animated)
         {
             base.ViewWillDisappear(animated);
+
+            AnimateBlocker( false );
         }
 
         public override void ViewWillAppear(bool animated)
@@ -271,15 +294,46 @@ namespace iOS
             CropViewMaxPos = new PointF( ( imageStartX + scaledImageWidth ) - cropperWidth,
                                          ( imageStartY + scaledImageHeight ) - cropperHeight );
 
+            // center the cropview
+            CropView.Layer.Position = new PointF( 0, 0 );
+            MoveCropView( new PointF( ImageView.Bounds.Width / 2, ImageView.Bounds.Height / 2 ) );
 
+
+
+            // setup the mask that will reveal only the part of the image that will be cropped
+            FullscreenBlocker.Layer.Opacity = 0.00f;
+            UIBezierPath viewFill = UIBezierPath.FromRect( FullscreenBlocker.Bounds );
+            UIBezierPath cropMask = UIBezierPath.FromRoundedRect( new RectangleF( ( FullscreenBlocker.Bounds.Width - CropView.Bounds.Width ) / 2, 
+                                                                                  ( FullscreenBlocker.Bounds.Height - CropView.Bounds.Height ) / 2, 
+                                                                                    CropView.Bounds.Width, 
+                                                                                    CropView.Bounds.Height ), 4 );
+            viewFill.AppendPath( cropMask );
+            FullscreenBlockerMask.Path = viewFill.CGPath;
+
+            // and set our source image
+            ImageView.Image = SourceImage;
+        }
+
+        public override void ViewDidAppear(bool animated)
+        {
+            base.ViewDidAppear(animated);
 
             // start in editing mode (obviously)
             SetMode( CropMode.Editing );
+        }
 
-            CropView.Layer.Position = new PointF( 0, 0 );
-
-            // force the crop view into correct position
-            MoveCropView( new PointF( 0, 0 ) );
+        void AnimateBlocker( bool visible )
+        {
+            // animate in the blocker
+            UIView.Animate( .5f, 0, UIViewAnimationOptions.CurveEaseInOut, 
+                new NSAction( delegate
+                    { 
+                        FullscreenBlocker.Layer.Opacity = visible == true ? .60f : 0.00f;
+                        CropView.Layer.Opacity = visible == true ? 1.00f : 0.00f;
+                    } )
+                , new NSAction( delegate
+                    { 
+                    } ) );
         }
 
         void MoveCropView( PointF delta )
@@ -293,6 +347,9 @@ namespace iOS
             yPos = Math.Max( CropViewMinPos.Y, Math.Min( yPos, CropViewMaxPos.Y ) );
 
             CropView.Frame = new RectangleF( xPos, yPos, CropView.Frame.Width, CropView.Frame.Height );
+
+            // update the position of the blocking view
+            FullscreenBlocker.Center = CropView.Layer.Position;
         }
 
         public override void TouchesBegan(NSSet touches, UIEvent evt)
@@ -335,33 +392,83 @@ namespace iOS
             {
                 case CropMode.Editing:
                 {
-                    // there's nothing to cancel while editing, so disable the button.
-                    CancelButton.Enabled = true;
+                    // if we're entering Editing for the first time, setup is simple.
+                    if ( Mode == CropMode.None )
+                    {
+                        // fade in the blocker, which will help the user
+                        // see what they're supposed to be doing
+                        AnimateBlocker( true );
+                    }
+                    // If we're coming BACK from previewing
+                    if ( Mode == CropMode.Previewing )
+                    {
+                        // Then we need to reverse the animation we played to crop the image.
+                        UIView.Animate( .5f, 0, UIViewAnimationOptions.CurveEaseInOut, 
+                            // ANIMATING
+                            new NSAction( delegate
+                                { 
+                                    // animate the cropped image down to its original size.
+                                    ImageView.Frame = CropView.Frame;
+                                } )
+                            // DONE ANIMATING
+                            , new NSAction( delegate
+                                { 
+                                    // done, so now set the original image (which will
+                                    // seamlessly replace the cropped image)
+                                    ImageView.Frame = View.Frame;
+                                    ImageView.Image = SourceImage;
 
-                    // turn on our cropper
-                    CropView.Hidden = false;
+                                    // and turn on the blocker fully, so we still only see
+                                    // the cropped part of the image
+                                    FullscreenBlocker.Layer.Opacity = 1.00f;
 
-                    // and set the source image to the scaled source.
-                    ImageView.Image = SourceImage;
+                                    // and finally animate down the blocker, so it restores
+                                    // the original editing appearance
+                                    AnimateBlocker( true );
+                                } ) 
+                        );
+                    }
                     break;
                 }
 
                 case CropMode.Previewing:
                 {
-                    // allow them to cancel this crop and try again.
-                    CancelButton.Enabled = true;
-
                     // create the cropped image
                     CroppedImage = CropImage( SourceImage, new System.Drawing.RectangleF( CropView.Frame.X - CropViewMinPos.X, 
                                                                                           CropView.Frame.Y - CropViewMinPos.Y, 
-                                                                                          CropView.Frame.Width, 
+                                                                                          CropView.Frame.Width , 
                                                                                           CropView.Frame.Height ) );
 
-                    // set the scaled cropped image
-                    ImageView.Image = CroppedImage;
 
-                    // hide the cropper
-                    CropView.Hidden = true;
+                    // Kick off an animation that will simulate cropping and scaling up the image.
+                    UIView.Animate( .5f, 0, UIViewAnimationOptions.CurveEaseInOut, 
+                        // ANIMATING
+                        new NSAction( delegate
+                            { 
+                                // animate in the blocker fully, which will black out the non-cropped parts of the image.
+                                FullscreenBlocker.Layer.Opacity = 1.00f;
+
+                                // fade out the cropper border
+                                CropView.Layer.Opacity = 0.00f;
+                            } )
+                        // DONE ANIMATING
+                        , new NSAction( delegate
+                            { 
+                                // set the scaled cropped image, seamlessly replacing full image
+                                ImageView.Frame = CropView.Frame;
+                                ImageView.Image = CroppedImage;
+
+                                // and turn off the blocker completely (nothing to block now, since we're literally using
+                                // the cropped image
+                                FullscreenBlocker.Layer.Opacity = 0.00f;
+
+                                // and kick off a final (chained) animation that scales UP the cropped image to fill the viewport. 
+                                UIView.Animate( .5f, 0, UIViewAnimationOptions.CurveEaseInOut, 
+                                    new NSAction( delegate
+                                        { 
+                                            ImageView.Frame = View.Frame;
+                                        } ), null );
+                            } ) );
                     break;
                 }
             }
@@ -425,7 +532,6 @@ namespace iOS
             // create a context and render it back out to a CGImage.
             CIContext ciContext = CIContext.FromOptions( null );
             CGImage rotatedCGImage = ciContext.CreateCGImage( ciCorrectedRotatedImage, ciCorrectedRotatedImage.Extent );
-
 
             // now the image is properly orientated, so we can crop it.
             RectangleF cropRegion = new RectangleF( pixelX, pixelY, width, height );

@@ -104,7 +104,7 @@ namespace iOS
             UIGraphics.BeginImageContext( new SizeF( 1, 1 ) );
             CGContext context = UIGraphics.GetCurrentContext( );
 
-            context.SetFillColorWithColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor ).CGColor );
+            context.SetFillColorWithColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.PrimaryNavBarBackgroundColor ).CGColor );
             context.FillRect( new RectangleF( 0, 0, 1, 1 ) );
 
             solidColor = UIGraphics.GetImageFromCurrentImageContext( );

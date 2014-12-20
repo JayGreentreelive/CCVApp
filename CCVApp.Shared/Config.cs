@@ -22,7 +22,7 @@ namespace CCVApp
                 /// <summary>
                 /// The Facebook app ID reprsenting the Facebook app that will get things on behalf of the user.
                 /// </summary>
-                public const string FBAppID = "381237785371059";
+                public const string FBAppID = "495461873811179";
 
                 /// <summary>
                 /// The permissions the Facebook App should request. You probably shouldn't change this.
@@ -263,16 +263,6 @@ namespace CCVApp
                 public const string UserNoteSuffix = "_user_note.dat";
 
                 /// <summary>
-                /// The prefix to attach when building the note name.
-                /// </summary>
-                public const string NamePrefix = "message";
-
-                /// <summary>
-                /// The extension of the note to download.
-                /// </summary>
-                public const string Extension = ".xml";
-
-                /// <summary>
                 /// The base URL to look for Notes. (this may be removed in a future version)
                 /// </summary>
                 public const string BaseURL = "http://www.jeredmcferron.com/";
@@ -320,11 +310,6 @@ namespace CCVApp
                 public const int UserNote_DeleteIconSize = 24;
 
                 /// <summary>
-                /// The amount to scale the navBarReveal amount by for Android.
-                /// </summary>
-                public const float ScrollRateForNavBarReveal_AndroidScalar = .75f;
-
-                /// <summary>
                 /// The rate of scrolling "up" required to reveal the nav bar.
                 /// </summary>
                 public const float ScrollRateForNavBarReveal = -75;
@@ -334,20 +319,25 @@ namespace CCVApp
                 /// </summary>
                 public const float ScrollRateForNavBarHide = 50;
 
-
-                public const string Series_Table_Large_Font = "OpenSans-Regular";
-                public const uint Series_Table_Large_FontSize = 23;
-
-                public const string Series_Table_Medium_Font = "OpenSans-Regular";
-                public const uint Series_Table_Medium_FontSize = 21;
-
-                public const string Series_Table_Small_Font = "OpenSans-Regular";
-                public const uint Series_Table_Small_FontSize = 16;
-
+                /// <summary>
+                /// The icon to use representing "Watch this Message"
+                /// </summary>
                 public const string Series_Table_Watch_Icon = "";
+
+                /// <summary>
+                /// The icon to use representing the action to "Take Notes"
+                /// </summary>
                 public const string Series_Table_TakeNotes_Icon = "";
+
+                /// <summary>
+                /// The icon to use representing that tapping the element will take you to a new page. (Like a > symbol)
+                /// </summary>
                 public const string Series_Table_Navigate_Icon = "";
-                public const uint Series_Table_IconSize = 48;
+
+                /// <summary>
+                /// The size of icons in the Series table.
+                /// </summary>
+                public const uint Series_Table_IconSize = 36;
 
                 /// <summary>
                 /// The height that an image should be within the cell
@@ -358,6 +348,11 @@ namespace CCVApp
                 /// The width that an image should be within the cell
                 /// </summary>
                 public const float Series_Main_CellImageWidth = 70;
+
+                /// <summary>
+                /// Make Private
+                /// </summary>
+                public const uint Details_Table_IconSize = 42;
             }
 
             public class PrayerConfig
@@ -367,41 +362,44 @@ namespace CCVApp
                 /// </summary>
                 public const float Card_AnimationDuration = .25f;
 
-
-                public const string Card_DateFont = "OpenSans-Regular";
-                public const uint Card_DateSize = 10;
-
-
-                public const string Card_CategoryFont = "OpenSans-Regular";
-                public const uint Card_CategorySize = 10;
-
-
-                public const string  Card_NameFont = "ChangaOne-Regular";
-                public const uint Card_NameSize = 16;
-
-
-                public const string Card_PrayerFont = "OpenSans-Regular";
-                public const uint Card_PrayerSize = 12;
-
-                public const string Card_ButtonFont = "OpenSans-Regular";
-                public const uint Card_ButtonSize = 12;
-
+                /// <summary>
+                /// The symbol to use when a prayer is successfully posted.
+                /// </summary>
                 public const string PostPrayer_ResultSymbol_SuccessText = "";
+
+                /// <summary>
+                /// The symbol to use when there was an error posting a prayer.
+                /// </summary>
                 public const string PostPrayer_ResultSymbol_FailedText = "";
+
+                /// <summary>
+                /// The size of the symbol used to representing a prayer post result.
+                /// </summary>
                 public const uint PostPrayer_ResultSymbolSize = 32;
             }
 
             public class ControlStylingConfig
             {
+                public const uint SpringboardBackgroundColor = 0x2D2D2DFF;
+
+                public const uint Springboard_ActiveElementColor = 0xFFFFFFFF;
+
+                /// <summary>
+                /// The color for placeholder text in fields the user can type into.
+                /// </summary>
+                public const uint Springboard_InActiveElementColor = 0xA7A7A7FF;
+
+                public const uint PrimaryNavBarBackgroundColor = 0x191919FF;
+
                 /// <summary>
                 /// The background color for the pages (basically the darkest area)
                 /// </summary>
-                public const uint BackgroundColor = 0x2D2D2DFF;
+                public const uint BackgroundColor = 0x212121FF;
 
                 /// <summary>
                 /// The color of text for buttons
                 /// </summary>
-                public const uint Button_TextColor = 0xFFFFFFFF;
+                public const uint Button_TextColor = 0xCCCCCCFF;
 
                 /// <summary>
                 /// The background color for buttons
@@ -422,7 +420,7 @@ namespace CCVApp
                 /// The border color for the layer that backs elements (like the strip behind First Name)
                 /// This can also be used to highlight certain elements, as it is a bright color.
                 /// </summary>
-                public const uint BG_Layer_BorderColor = 0x767676FF;
+                public const uint BG_Layer_BorderColor = 0x595959FF;
 
                 /// <summary>
                 /// The border thickness for the layer that backs elements (like the strip behind First Name)
@@ -432,17 +430,17 @@ namespace CCVApp
                 /// <summary>
                 /// The color for text that is not placeholder (what the user types in, control labels, etc.)
                 /// </summary>
-                public const uint TextField_ActiveTextColor = 0xFFFFFFFF;
+                public const uint TextField_ActiveTextColor = 0xCCCCCCFF;
 
                 /// <summary>
                 /// The color for placeholder text in fields the user can type into.
                 /// </summary>
-                public const uint TextField_PlaceholderTextColor = 0xA7A7A7FF;
+                public const uint TextField_PlaceholderTextColor = 0x878686FF;
 
                 /// <summary>
                 /// The color of text in standard labels
                 /// </summary>
-                public const uint Label_TextColor = 0xFFFFFFFF;
+                public const uint Label_TextColor = 0xCCCCCCFF;
 
                 /// <summary>
                 /// The color of a UI Switch when turned 'on'
@@ -463,6 +461,66 @@ namespace CCVApp
                 /// The color for the footers of primary table cells. (Like the footer in the Messages->Series primary cell that says "Previous Messages")
                 /// </summary>
                 public const uint Table_Footer_Color = 0x262626FF;
+
+                /// <summary>
+                /// The font to use representing a large bold font throughout the app.
+                /// </summary>
+                public const string Large_Font_Bold = "OpenSans-Semibold";
+
+                /// <summary>
+                /// The font to use representing a large regular font throughout the app.
+                /// </summary>
+                public const string Large_Font_Regular = "OpenSans-Regular";
+
+                /// <summary>
+                /// The font to use representing a large light font throughout the app.
+                /// </summary>
+                public const string Large_Font_Light = "OpenSans-Light";
+
+                /// <summary>
+                /// The size of to use for the large font throughout the app.
+                /// </summary>
+                public const uint Large_FontSize = 23;
+
+                /// <summary>
+                /// The font to use representing a medium bold font throughout the app.
+                /// </summary>
+                public const string Medium_Font_Bold = "OpenSans-Bold";
+
+                /// <summary>
+                /// The font to use representing a medium regular font throughout the app.
+                /// </summary>
+                public const string Medium_Font_Regular = "OpenSans-Regular";
+
+                /// <summary>
+                /// The font to use representing a medium light font throughout the app.
+                /// </summary>
+                public const string Medium_Font_Light = "OpenSans-Light";
+
+                /// <summary>
+                /// The size of to use for the medium font throughout the app.
+                /// </summary>
+                public const uint Medium_FontSize = 19;
+
+                /// <summary>
+                /// The font to use representing a small bold font throughout the app.
+                /// </summary>
+                public const string Small_Font_Bold = "OpenSans-Bold";
+
+                /// <summary>
+                /// The font to use representing a small regular font throughout the app.
+                /// </summary>
+                public const string Small_Font_Regular = "OpenSans-Regular";
+
+                /// <summary>
+                /// The font to use representing a small light font throughout the app.
+                /// </summary>
+                public const string Small_Font_Light = "OpenSans-Light";
+
+                /// <summary>
+                /// The size of to use for the small font throughout the app.
+                /// </summary>
+                public const uint Small_FontSize = 16;
             }
 
             public class AboutConfig

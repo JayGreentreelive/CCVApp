@@ -63,7 +63,7 @@ namespace iOS
 
             // Allow the return on username and password to start
             // the login process
-            ControlStyling.StyleTextField( UsernameText, LoginStrings.UsernamePlaceholder );
+            ControlStyling.StyleTextField( UsernameText, LoginStrings.UsernamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( UsernameLayer );
             UsernameText.ShouldReturn += (textField) => 
                 {
@@ -73,7 +73,7 @@ namespace iOS
                     return true;
                 };
 
-            ControlStyling.StyleTextField( PasswordText, LoginStrings.PasswordPlaceholder );
+            ControlStyling.StyleTextField( PasswordText, LoginStrings.PasswordPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( PasswordLayer );
             PasswordText.ShouldReturn += (textField) => 
                 {
@@ -84,7 +84,7 @@ namespace iOS
                 };
 
             // obviously attempt a login if login is pressed
-            ControlStyling.StyleButton( LoginButton, LoginStrings.LoginButton );
+            ControlStyling.StyleButton( LoginButton, LoginStrings.LoginButton, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             LoginButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
                     if( RockMobileUser.Instance.LoggedIn == true )
@@ -99,7 +99,7 @@ namespace iOS
                     }
                 };
 
-            ControlStyling.StyleButton( RegisterButton, LoginStrings.RegisterButton );
+            ControlStyling.StyleButton( RegisterButton, LoginStrings.RegisterButton, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
 
             // setup the facebook button
             string imagePath = NSBundle.MainBundle.BundlePath + "/" + "facebook_login.png";
@@ -121,7 +121,7 @@ namespace iOS
                 };
 
             // setup the result
-            ControlStyling.StyleUILabel( LoginResultLabel );
+            ControlStyling.StyleUILabel( LoginResultLabel, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             ControlStyling.StyleBGLayer( LoginResultLayer );
             LoginResultLayer.Layer.Opacity = 0.00f;
 

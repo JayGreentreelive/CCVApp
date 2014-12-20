@@ -414,7 +414,7 @@ namespace CCVApp
                     }
                 }
 
-                public void TouchesEnded( PointF touch )
+                public string TouchesEnded( PointF touch )
                 {
                     // TouchesEnded is tricky. It's reasonable a User will have
                     // the keyboard up and decide to open/close/move another Note.
@@ -423,6 +423,11 @@ namespace CCVApp
 
                     // To accomplish this, we rely on ActiveUserNoteAnchor. If it's valid in TouchesEnded,
                     // that means the touch was in an anchor and not a general part of the screen.
+
+                    // Secondly, if a normal control was touched, it may contain an active link. If a control
+                    // consumes input, we will ask it for its link and return that to the caller.
+                    // An example would be a Quote. It will consume input and then return a link to the citation.
+                    string activeUrl = string.Empty;
 
                     // If there's an active UserNote Anchor, notify only it.
                     if( ActiveUserNoteAnchor != null )
@@ -454,14 +459,14 @@ namespace CCVApp
 
 
                         // Now notify all remaining controls until we find out one consumed it.
-                        // This is purely for efficiency.
                         bool consumed = false;
                         foreach( IUIControl control in UserNoteControls )
                         {
                             // was it consumed?
-                            consumed = control.TouchesEnded( touch );
-                            if( consumed )
+                            IUIControl consumingControl = control.TouchesEnded( touch );
+                            if( consumingControl != null )
                             {
+                                consumed = true;
                                 break;
                             }
                         }
@@ -473,15 +478,18 @@ namespace CCVApp
                             foreach( IUIControl control in ChildControls )
                             {
                                 // was it consumed?
-                                consumed = control.TouchesEnded( touch );
-                                
-                                if( consumed )
+                                IUIControl consumingControl = control.TouchesEnded( touch );
+                                if( consumingControl != null )
                                 {
+                                    // then see if it has an active URL we should hit
+                                    activeUrl = consumingControl.GetActiveUrl( );
                                     break;
                                 }
                             }
                         }
                     }
+
+                    return activeUrl;
                 }
 
                 public bool DidDoubleTap(PointF touch)

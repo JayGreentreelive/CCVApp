@@ -115,15 +115,15 @@ namespace iOS
 
             public void Activate( )
             {
-                LogoView.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
-                TextLabel.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
+                LogoView.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.Springboard_ActiveElementColor );
+                TextLabel.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.Springboard_ActiveElementColor );
                 BackingView.BackgroundColor = PlatformBaseUI.GetUIColor( SpringboardConfig.Element_SelectedColor );
             }
 
             public void Deactivate( )
             {
-                LogoView.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
-                TextLabel.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+                LogoView.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.Springboard_InActiveElementColor );
+                TextLabel.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.Springboard_InActiveElementColor );
                 BackingView.BackgroundColor = UIColor.Clear;
             }
         };
@@ -241,6 +241,13 @@ namespace iOS
             }
         }
 
+        public static void ForceDeviceToOrientation( UIInterfaceOrientation toOrientation )
+        {
+            // amazingly, this works.
+            NSNumber value = NSNumber.FromInt32( (int)UIInterfaceOrientation.Portrait );
+            UIDevice.CurrentDevice.SetValueForKey( value, new NSString( "orientation" ) );
+        }
+
         public override void ViewDidLoad()
         {
             base.ViewDidLoad( );
@@ -273,14 +280,15 @@ namespace iOS
             // set the profile image mask so it's circular
             CALayer maskLayer = new CALayer();
             maskLayer.AnchorPoint = new PointF( 0, 0 );
-            maskLayer.Bounds = LoginButton.Layer.Bounds;
-            maskLayer.CornerRadius = LoginButton.Bounds.Width / 2;
+            maskLayer.Bounds = EditPictureButton.Layer.Bounds;
+            maskLayer.CornerRadius = EditPictureButton.Bounds.Width / 2;
             maskLayer.BackgroundColor = UIColor.Black.CGColor;
-            LoginButton.Layer.Mask = maskLayer;
+            EditPictureButton.Layer.Mask = maskLayer;
             //
 
             // setup the campus selector and settings button
             CampusButton.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
+            CampusButton.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
 
             SettingsButton.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
             SettingsButton.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Primary, SpringboardConfig.SettingsSymbolSize );
@@ -292,39 +300,48 @@ namespace iOS
             ProfileImageView.ContentMode = UIViewContentMode.ScaleAspectFit;
 
             ProfileImageView.Layer.AnchorPoint = PointF.Empty;
-            ProfileImageView.Bounds = LoginButton.Bounds;
+            ProfileImageView.Bounds = EditPictureButton.Bounds;
             ProfileImageView.Layer.Position = PointF.Empty;
-            LoginButton.AddSubview( ProfileImageView );
+            EditPictureButton.AddSubview( ProfileImageView );
 
-            LoginButton.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Primary, SpringboardConfig.ProfileSymbolFontSize );
-            LoginButton.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
-            LoginButton.Layer.BorderColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ).CGColor;
-            LoginButton.Layer.CornerRadius = LoginButton.Bounds.Width / 2;
-            LoginButton.Layer.BorderWidth = 4;
+            EditPictureButton.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Primary, SpringboardConfig.ProfileSymbolFontSize );
+            EditPictureButton.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
+            EditPictureButton.Layer.BorderColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ).CGColor;
+            EditPictureButton.Layer.CornerRadius = EditPictureButton.Bounds.Width / 2;
+            EditPictureButton.Layer.BorderWidth = 4;
 
-            View.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor );
+            WelcomeField.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Large_Font_Light, ControlStylingConfig.Large_FontSize );
+            WelcomeField.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.Label_TextColor );
+
+            UserNameField.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Large_Font_Bold, ControlStylingConfig.Large_FontSize );
+            UserNameField.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.Label_TextColor );
+
+            View.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.SpringboardBackgroundColor );
 
             AddChildViewController( NavViewController );
             View.AddSubview( NavViewController.View );
 
             SetNeedsStatusBarAppearanceUpdate( );
 
-            LoginButton.TouchUpInside += (object sender, EventArgs e) => 
+            EditPictureButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
                     if( RockMobileUser.Instance.LoggedIn == true )
                     {
                         // they're logged in, so let them set their profile pic
                         ManageProfilePic( );
                     }
-                    else
-                    {
-                        PresentModelViewController( LoginViewController );
-                    }
                 };
 
             ViewProfileButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
-                    PresentModelViewController( ProfileViewController );
+                    if( RockMobileUser.Instance.LoggedIn == true )
+                    {
+                        PresentModelViewController( ProfileViewController );
+                    }
+                    else
+                    {
+                        PresentModelViewController( LoginViewController );
+                    }
                 };
 
             CCVApp.Shared.Network.RockNetworkManager.Instance.Connect( 
@@ -346,10 +363,14 @@ namespace iOS
                     // only allow the camera if they HAVE one
                     if( Rock.Mobile.Media.PlatformCamera.Instance.IsAvailable( ) )
                     {
+                        ModalControllerVisible = true;
+
                         // launch the camera
                         string jpgFilename = System.IO.Path.Combine ( Environment.GetFolderPath(Environment.SpecialFolder.Personal), "cameraTemp.jpg" );
                         Rock.Mobile.Media.PlatformCamera.Instance.CaptureImage( jpgFilename, this, delegate(object s, Rock.Mobile.Media.PlatformCamera.CaptureImageEventArgs args) 
                             {
+                                ModalControllerVisible = false;
+
                                 // if the result is true, they either got a picture or pressed cancel
                                 bool success = false;
                                 if( args.Result == true )
@@ -381,8 +402,12 @@ namespace iOS
             // setup the photo library
             UIAlertAction photoLibraryAction = UIAlertAction.Create( SpringboardStrings.ProfilePicture_SourcePhotoLibrary, UIAlertActionStyle.Default, delegate(UIAlertAction obj) 
                 {
+                    ModalControllerVisible = true;
+
                     Rock.Mobile.Media.PlatformImagePicker.Instance.PickImage( this, delegate(object s, Rock.Mobile.Media.PlatformImagePicker.ImagePickEventArgs args) 
                         {
+                            ModalControllerVisible = false;
+
                             if( args.Result == true )
                             {
                                 ImageCropperPendingImage = (UIImage) args.Image;
@@ -531,8 +556,8 @@ namespace iOS
         void AdjustSpringboardLayout( )
         {
             // position the login button
-            LoginButton.Layer.AnchorPoint = PointF.Empty;
-            LoginButton.Layer.Position = new PointF( ( PrimaryContainerConfig.SlideAmount - LoginButton.Bounds.Width ) / 2, View.Frame.Height * .05f );
+            EditPictureButton.Layer.AnchorPoint = PointF.Empty;
+            EditPictureButton.Layer.Position = new PointF( ( PrimaryContainerConfig.SlideAmount - EditPictureButton.Bounds.Width ) / 2, View.Frame.Height * .05f );
 
             NewsElement.Layer.AnchorPoint = PointF.Empty;
             NewsElement.Layer.Position = new PointF( 0, View.Frame.Height * .40f );
@@ -570,11 +595,13 @@ namespace iOS
                 // get their profile
                 WelcomeField.Text = SpringboardStrings.LoggedIn_Prefix;
                 UserNameField.Text = RockMobileUser.Instance.PreferredName( );
+                ViewProfileLabel.Text = SpringboardStrings.ViewProfile;
             }
             else
             {
-                WelcomeField.Text = SpringboardStrings.LoggedOut_Promo;
+                WelcomeField.Text = SpringboardStrings.LoggedOut_Label;
                 UserNameField.Text = "";
+                ViewProfileLabel.Text = SpringboardStrings.LoggedOut_Promo;
             }
 
             // update the positioning of the "Welcome: Name"
@@ -582,22 +609,30 @@ namespace iOS
             UserNameField.SizeToFit( );
 
             // center the welcome and name labels within the available Springboard width
-            float totalWidth = WelcomeField.Bounds.Width + UserNameField.Bounds.Width;
-            float totalHeight = Math.Max( WelcomeField.Bounds.Height, UserNameField.Bounds.Height );
+            float totalNameWidth = WelcomeField.Bounds.Width + UserNameField.Bounds.Width;
+            float totalNameHeight = Math.Max( WelcomeField.Bounds.Height, UserNameField.Bounds.Height );
 
             WelcomeField.Layer.AnchorPoint = PointF.Empty;
-            WelcomeField.Layer.Position = new PointF( ( PrimaryContainerConfig.SlideAmount - totalWidth ) / 2, LoginButton.Frame.Bottom + 10 );
-            WelcomeField.Bounds = new RectangleF( 0, 0, WelcomeField.Bounds.Width, totalHeight );
+            WelcomeField.Layer.Position = new PointF( ( PrimaryContainerConfig.SlideAmount - totalNameWidth ) / 2, EditPictureButton.Frame.Bottom + 10 );
+            WelcomeField.Bounds = new RectangleF( 0, 0, WelcomeField.Bounds.Width, totalNameHeight );
 
             UserNameField.Layer.AnchorPoint = PointF.Empty;
             UserNameField.Layer.Position = new PointF( WelcomeField.Frame.Right, WelcomeField.Frame.Y );
-            UserNameField.Bounds = new RectangleF( 0, 0, UserNameField.Bounds.Width, totalHeight );
+            UserNameField.Bounds = new RectangleF( 0, 0, UserNameField.Bounds.Width, totalNameHeight );
+
+            ViewProfileLabel.Layer.AnchorPoint = PointF.Empty;
+            ViewProfileLabel.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Small_Font_Light, ControlStylingConfig.Small_FontSize );
+            ViewProfileLabel.SizeToFit( );
+            ViewProfileLabel.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.Label_TextColor );
+            ViewProfileLabel.Layer.Position = new PointF( EditPictureButton.Layer.Position.X + ((EditPictureButton.Bounds.Width - ViewProfileLabel.Bounds.Width) / 2), WelcomeField.Frame.Bottom );
+
+            float totalHeight = totalNameHeight + ViewProfileLabel.Bounds.Height;
 
             // wrap the view profile button around the entire "Welcome: Name" phrase
             ViewProfileButton.SetTitle( "", UIControlState.Normal );
             ViewProfileButton.Layer.AnchorPoint = PointF.Empty;
-            ViewProfileButton.Layer.Position = new PointF( WelcomeField.Frame.Left, WelcomeField.Frame.Y );
-            ViewProfileButton.Bounds = new RectangleF( 0, 0, totalWidth, totalHeight );
+            ViewProfileButton.Layer.Position = new PointF( 0, WelcomeField.Frame.Y );
+            ViewProfileButton.Bounds = new RectangleF( 0, 0, View.Frame.Width, totalHeight );
 
             UpdateProfilePic( );
         }
@@ -631,22 +666,22 @@ namespace iOS
                 if( useNoPhotoImage == true )
                 {
                     ProfileImageView.Image = null;
-                    LoginButton.SetTitle( SpringboardConfig.NoPhotoSymbol, UIControlState.Normal );
+                    EditPictureButton.SetTitle( SpringboardConfig.NoPhotoSymbol, UIControlState.Normal );
                 }
 
                 // if we're logged in, also display the View Profile button
-                ViewProfileButton.Enabled = true;
-                ViewProfileButton.Hidden = false;
+                //ViewProfileButton.Enabled = true;
+                //ViewProfileButton.Hidden = false;
             }
             else
             {
                 // otherwise display the no profile image.
                 ProfileImageView.Image = null;
-                LoginButton.SetTitle( SpringboardConfig.NoProfileSymbol, UIControlState.Normal );
+                EditPictureButton.SetTitle( SpringboardConfig.NoProfileSymbol, UIControlState.Normal );
 
                 // if we're logged out, hide the view profile button
-                ViewProfileButton.Enabled = false;
-                ViewProfileButton.Hidden = true;
+                //ViewProfileButton.Enabled = false;
+                //ViewProfileButton.Hidden = true;
             }
         }
 

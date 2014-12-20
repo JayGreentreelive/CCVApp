@@ -131,16 +131,22 @@ namespace Droid
                 PowerManager.WakeLock WakeLock { get; set; }
 
                 /// <summary>
+                /// Name of the note that is being stored in memory via CachedNoteXml & CachedStyleSheetXml
+                /// </summary>
+                /// <value>The name of the cached note.</value>
+                string CachedNoteName { get; set; }
+
+                /// <summary>
                 /// reference to the note XML for re-creating the notes in OnResume()
                 /// </summary>
                 /// <value>The note XM.</value>
-                string NoteXml { get; set; }
+                string CachedNoteXml { get; set; }
 
                 /// <summary>
                 /// reference to the style XML for re-creating the notes in OnResume()
                 /// </summary>
                 /// <value>The note XM.</value>
-                string StyleSheetXml { get; set; }
+                string CachedStyleSheetXml { get; set; }
 
                 /// <summary>
                 /// The URL for this note
@@ -173,6 +179,25 @@ namespace Droid
                 /// </summary>
                 /// <value><c>true</c> if did gesture create note; otherwise, <c>false</c>.</value>
                 bool DidGestureCreateNote { get; set; }
+
+                /// <summary>
+                /// The amount of times to try downloading the note before
+                /// reporting an error to the user (which should be our last resort)
+                /// We set it to 0 in debug because that means we WANT the error, as
+                /// the user could be working on notes and need the error.
+                /// </summary>
+                #if DEBUG
+                static int MaxDownloadAttempts = 0;
+                #else
+                static int MaxDownloadAttempts = 5;
+                #endif
+
+                /// <summary>
+                /// The amount of times we've attempted to download the current note.
+                /// When it hits 0, we'll just fail out and tell the user to check their network settings.
+                /// </summary>
+                /// <value>The note download retries.</value>
+                int NoteDownloadRetries { get; set; }
 
                 public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
                 {
@@ -221,13 +246,19 @@ namespace Droid
                     PowerManager pm = PowerManager.FromContext( Rock.Mobile.PlatformCommon.Droid.Context );
                     WakeLock = pm.NewWakeLock(WakeLockFlags.Full, "Notes");
 
-                    //
-                    NoteXml = null;
-                    StyleSheetXml = null;
+                    // if we are loading a different note, force the current cached ones out of memory
+                    if ( NoteName != CachedNoteName )
+                    {
+                        CachedNoteXml = null;
+                        CachedStyleSheetXml = null;
+                    }
+
+                    // if our instance was saved, it's possible our cache was dumped, but it was saved in this instance bundle,
+                    // so grab it.
                     if( savedInstanceState != null )
                     {
-                        NoteXml = savedInstanceState.GetString( XML_NOTE_KEY );
-                        StyleSheetXml = savedInstanceState.GetString( XML_STYLE_KEY );
+                        CachedNoteXml = savedInstanceState.GetString( XML_NOTE_KEY );
+                        CachedStyleSheetXml = savedInstanceState.GetString( XML_STYLE_KEY );
                     }
 
                     return layout;
@@ -246,7 +277,7 @@ namespace Droid
                         ParentTask.NavbarFragment.EnableSpringboardRevealButton( true );
                     }
 
-                    CreateNotes( NoteXml, StyleSheetXml );
+                    CreateNotes( CachedNoteXml, CachedStyleSheetXml );
                 }
 
                 public override void OnResume()
@@ -258,6 +289,8 @@ namespace Droid
 
                     WakeLock.Acquire( );
 
+                    // we're resuming, so reset our download count
+                    NoteDownloadRetries = MaxDownloadAttempts;
 
                     ParentTask.NavbarFragment.NavToolbar.SetBackButtonEnabled( true );
                     ParentTask.NavbarFragment.NavToolbar.SetCreateButtonEnabled( false, null );
@@ -267,7 +300,7 @@ namespace Droid
                             Intent sendIntent = new Intent();
                             sendIntent.SetAction( Intent.ActionSend );
 
-                            //todo: build a nice subject line
+                            // build a nice subject line
                             sendIntent.PutExtra( Intent.ExtraSubject, NotePresentableName );
 
                             string noteString = null;
@@ -286,7 +319,7 @@ namespace Droid
                     FragmentReady = true;
                     if( ParentTask.TaskReadyForFragmentDisplay == true )
                     {
-                        CreateNotes( NoteXml, StyleSheetXml );
+                        CreateNotes( CachedNoteXml, CachedStyleSheetXml );
                     }
                 }
 
@@ -299,7 +332,7 @@ namespace Droid
                     // and we'll create the notes then.
                     if( FragmentReady == true )
                     {
-                        CreateNotes( NoteXml, StyleSheetXml );
+                        CreateNotes( CachedNoteXml, CachedStyleSheetXml );
                     }
                 }
 
@@ -314,7 +347,6 @@ namespace Droid
                     WakeLock.Release( );
 
                     ParentTask.NavbarFragment.EnableSpringboardRevealButton( true );
-                    Activity.RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
 
                     ShutdownNotes( null );
                 }
@@ -342,7 +374,7 @@ namespace Droid
                         ParentTask.NavbarFragment.NavToolbar.Reveal( false );
                     }
                     // did the user scroll "down"? Android is a little less sensitive, so use 75% of it.
-                    else if ( scrollDelta <= (NoteConfig.ScrollRateForNavBarReveal * NoteConfig.ScrollRateForNavBarReveal_AndroidScalar) )
+                    else if ( scrollDelta <= ( Rock.Mobile.PlatformUI.PlatformBaseUI.UnitToPx( NoteConfig.ScrollRateForNavBarReveal ) ) )
                     {
                         ParentTask.NavbarFragment.NavToolbar.Reveal( true );
                     }
@@ -433,7 +465,17 @@ namespace Droid
                             {
                                 if ( Note != null )
                                 {
-                                    Note.TouchesEnded( new PointF( e.GetX( ), e.GetY( ) ) );
+                                    string activeUrl = Note.TouchesEnded( new PointF( e.GetX( ), e.GetY( ) ) );
+
+                                    // again, only process this if we didn't create a note. We don't want to treat a double tap
+                                    // like a request to view a note
+                                    if ( DidGestureCreateNote == false )
+                                    {
+                                        if ( string.IsNullOrEmpty( activeUrl ) == false )
+                                        {
+                                            ParentTask.OnClick( this, 0, activeUrl );
+                                        }
+                                    }
                                 }
 
                                 ScrollView.ScrollEnabled = true;
@@ -461,12 +503,13 @@ namespace Droid
                     }
 
                     // if a bundle was provided, store the note XML in it
-                    // for fast reloading.
+                    // because this entire Fragment might get dumped from memory,
+                    // making our cache incredibly useless
                     if( instanceBundle != null )
                     {
                         // store out xml in the bundle so we don't have to re-download it
-                        instanceBundle.PutString( XML_NOTE_KEY, NoteXml );
-                        instanceBundle.PutString( XML_STYLE_KEY, StyleSheetXml );
+                        instanceBundle.PutString( XML_NOTE_KEY, CachedNoteXml );
+                        instanceBundle.PutString( XML_STYLE_KEY, CachedStyleSheetXml );
                     }
                 }
 
@@ -484,6 +527,8 @@ namespace Droid
                         // if we don't have BOTH xml strings, re-download
                         if( noteXml == null || styleSheetXml == null )
                         {
+                            Console.WriteLine( "NO CACHED NOTES. DOWNLOADING THEM." );
+
                             //download the notes
                             Rock.Mobile.Network.HttpRequest request = new HttpRequest();
                             RestRequest restRequest = new RestRequest( Method.GET );
@@ -502,18 +547,6 @@ namespace Droid
                                         ReportException( "NoteScript Download Error", null );
                                     }
                                 } );
-
-                            /*WebRequest.MakeAsyncRequest( CCVApp.Shared.Config.Note.BaseURL + NoteName + CCVApp.Shared.Config.Note.Extension, ( Exception ex, Dictionary<string, string> responseHeaders, string body ) =>
-                                {
-                                    if( ex == null )
-                                    {
-                                        HandleNotePreReqs( body, null );
-                                    }
-                                    else
-                                    {
-                                        ReportException( "NoteScript Download Error", ex );
-                                    }
-                                } );*/
                         }
                         else
                         {
@@ -568,9 +601,10 @@ namespace Droid
                                     int scrollFrameHeight = ( int )frame.Size.Height + ( this.Resources.DisplayMetrics.HeightPixels / 3 );
                                     ScrollViewLayout.LayoutParameters.Height = scrollFrameHeight;
 
-                                    // store the downloaded note and style xml
-                                    NoteXml = Note.NoteXml;
-                                    StyleSheetXml = ControlStyles.StyleSheetXml;
+                                    // cache the note so we only re-download it if we have to
+                                    CachedNoteXml = Note.NoteXml;
+                                    CachedStyleSheetXml = ControlStyles.StyleSheetXml;
+                                    CachedNoteName = NoteName;
 
                                     FinishNotesCreation( );
                                 } 
@@ -592,16 +626,27 @@ namespace Droid
 
                 protected void ReportException( string errorMsg, Exception e )
                 {
-                    if ( e != null )
-                    {
-                        errorMsg += e.Message;
-                    }
-
-                    Springboard.DisplayError( "Note Error", errorMsg );
-
                     Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate
                         {
                             FinishNotesCreation( );
+
+                            // if we have more download attempts, use them before reporting
+                            // an error to the user.
+                            if( NoteDownloadRetries > 0 )
+                            {
+                                NoteDownloadRetries--;
+
+                                CreateNotes( CachedNoteXml, CachedStyleSheetXml );
+                            }
+                            else
+                            {
+                                if ( e != null )
+                                {
+                                    errorMsg += e.Message;
+                                }
+
+                                Springboard.DisplayError( "Note Error", errorMsg );
+                            }
                         } );
                 }
             }

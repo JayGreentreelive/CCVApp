@@ -114,6 +114,76 @@ namespace Droid
             CropAspectRatio = cropAspectRatio;
         }
 
+
+        class MaskLayer : View
+        {
+            /// <summary>
+            /// Represents the bitmap that contains the fullscreen mask with a cutout for the "masked" portion
+            /// </summary>
+            /// <value>The masked cutout.</value>
+            Bitmap Layer { get; set; }
+
+            Bitmap AlphaMask { get; set; }
+
+            /// <summary>
+            /// The opacity of the layered region
+            /// </summary>
+            /// <value>The opacity.</value>
+            int _Opacity;
+            public float Opacity
+            { 
+                get
+                {
+                    return (float)  _Opacity / 255.0f;
+                }
+
+                set
+                {
+                    _Opacity = (int)( value * 255.0f );
+                }
+            }
+
+            public PointF Position { get; set; }
+
+            public MaskLayer( int layerWidth, int layerHeight, int maskWidth, int maskHeight, Context context ) : base( context )
+            {
+                Position = new PointF( );
+                Opacity = 1.00f;
+
+                // first create the full layer
+                Layer = Bitmap.CreateBitmap( layerWidth, layerHeight, Bitmap.Config.Alpha8 );
+                Layer.EraseColor( Color.Black );
+
+                // now create the mask portion
+                AlphaMask = Bitmap.CreateBitmap( maskWidth, maskHeight, Bitmap.Config.Alpha8 );
+                AlphaMask.EraseColor( Color.Black );
+            }
+
+            protected override void OnDraw(Canvas canvas)
+            {
+                // create a canvas containing the layer, which we'll render the mask into
+                using ( Canvas renderCanvas = new Canvas( Layer ) )
+                {
+                    // render the mask into the layer, which effectively "cuts out" the masked portion
+                    // putting a hole in the layer.
+                    using ( Paint paint = new Paint( PaintFlags.AntiAlias ) )
+                    {
+                        paint.SetXfermode( new PorterDuffXfermode( PorterDuff.Mode.DstOut ) );
+                        renderCanvas.DrawBitmap( AlphaMask, Position.X, Position.Y, paint );
+                    }
+                }
+
+                // Source is what this MaskLayer contains and will draw into canvas.
+                // Destination is the buffer IN canvas
+                using( Paint paint = new Paint( PaintFlags.AntiAlias ) )
+                {
+                    paint.Alpha = _Opacity;
+                    paint.SetXfermode( new PorterDuffXfermode( PorterDuff.Mode.DstOut ) );
+                    canvas.DrawBitmap( Layer, 0, 0, paint );
+                }
+            }
+        }
+
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             if (container == null)
@@ -233,6 +303,12 @@ namespace Droid
             bottomBarLayout.AddView( CancelButton );
 
 
+            // create a mask layer that will block out the parts of the image that will be cropped
+            MaskLayer maskLayer = new MaskLayer( container.Width, container.Height, CropView.LayoutParameters.Width, CropView.LayoutParameters.Height, Rock.Mobile.PlatformCommon.Droid.Context );
+            maskLayer.LayoutParameters = new RelativeLayout.LayoutParams( container.Width, container.Height );
+            maskLayer.Opacity = .50f;
+            view.AddView( maskLayer );
+
 
             // setup the Confirm button, which will use a font to display its graphic
             Button confirmButton = new Button( Rock.Mobile.PlatformCommon.Droid.Context );
@@ -257,7 +333,7 @@ namespace Droid
                     else
                     {
                         // notify the caller
-                        SpringboardParent.ModalFragmentFinished( this, CroppedImage );
+                        SpringboardParent.ModalFragmentDone( this, CroppedImage );
 
                         // now free our resources, cause we're done.
                         Activity.OnBackPressed( );
@@ -269,10 +345,27 @@ namespace Droid
             // start in editing mode (obviously)
             SetMode( CropMode.Editing );
 
-            // force the crop view into correct position
-            MoveCropView( new PointF( 0, 0 ) );
+            // start the cropper centered
+            MoveCropView( new PointF( (container.Width - CropView.LayoutParameters.Width) / 2, (container.Height - CropView.LayoutParameters.Height) / 2 ) );
+
+            maskLayer.Position = new PointF( CropView.GetX( ), CropView.GetY( ) );
+
 
             return view;
+        }
+
+        public override void OnResume()
+        {
+            base.OnResume();
+
+            SpringboardParent.ModalFragmentOpened( this );
+        }
+
+        public override void OnStop()
+        {
+            base.OnStop();
+
+            SpringboardParent.ModalFragmentClosed( this );
         }
 
         public override void OnDestroy()

@@ -35,17 +35,17 @@ namespace iOS
             //setup our appearance
             View.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor );
 
-            ControlStyling.StyleUILabel( StatusLabel );
+            ControlStyling.StyleUILabel( StatusLabel, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             ControlStyling.StyleBGLayer( StatusBackground );
 
-            ControlStyling.StyleUILabel( ResultLabel );
+            ControlStyling.StyleUILabel( ResultLabel, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             ControlStyling.StyleBGLayer( ResultBackground );
 
             ResultSymbolLabel.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Primary, PrayerConfig.PostPrayer_ResultSymbolSize );
             ResultSymbolLabel.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
             ResultSymbolLabel.BackgroundColor = UIColor.Clear;
 
-            ControlStyling.StyleButton( DoneButton, GeneralStrings.Done );
+            ControlStyling.StyleButton( DoneButton, GeneralStrings.Done, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
         }
 
         public override void ViewWillAppear(bool animated)

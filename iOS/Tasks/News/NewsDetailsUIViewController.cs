@@ -6,6 +6,7 @@ using CCVApp.Shared.Network;
 using System.Drawing;
 using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
+using CCVApp.Shared.Strings;
 
 namespace iOS
 {
@@ -26,7 +27,11 @@ namespace iOS
             // populate the details view with this news item.
             NewsDescription.Text = NewsItem.Description;
             NewsDescription.BackgroundColor = UIColor.Clear;
-            NewsDescription.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
+            NewsDescription.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.Label_TextColor );
+            NewsDescription.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Small_Font_Light, ControlStylingConfig.Small_FontSize );
+            NewsDescription.TextContainerInset = UIEdgeInsets.Zero;
+            NewsDescription.TextContainer.LineFragmentPadding = 0;
+            NewsDescription.UserInteractionEnabled = false;
 
             if( string.IsNullOrEmpty( NewsItem.HeaderImageName ) == false )
             {
@@ -44,7 +49,12 @@ namespace iOS
                     UIApplication.SharedApplication.OpenUrl( new NSUrl( NewsItem.ReferenceURL ) );
                 };
 
-            ControlStyling.StyleButton( LearnMoreButton, "Learn More" );
+            ControlStyling.StyleButton( LearnMoreButton, NewsStrings.LearnMore, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+
+            ControlStyling.StyleUILabel( NewsTitle, ControlStylingConfig.Large_Font_Bold, ControlStylingConfig.Large_FontSize );
+            NewsTitle.Text = NewsItem.Title;
+            NewsTitle.SizeToFit( );
+
         }
 
         public override void TouchesEnded(NSSet touches, UIEvent evt)
