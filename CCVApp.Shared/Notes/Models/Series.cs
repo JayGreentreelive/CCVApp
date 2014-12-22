@@ -174,6 +174,23 @@ namespace CCVApp.Shared
             }
 
             /// <summary>
+            /// Url to the thumbnail graphic representing this series
+            /// </summary>
+            string _ThumbnailUrl;
+            public string ThumbnailUrl
+            { 
+                get
+                {
+                    return _ThumbnailUrl;
+                }
+
+                protected set
+                {
+                    _ThumbnailUrl = value.Trim( TrimChars );
+                }
+            }
+
+            /// <summary>
             /// The range of dates this series covered.
             /// </summary>
             string _DateRanges;

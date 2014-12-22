@@ -265,7 +265,7 @@ namespace CCVApp
                 /// <summary>
                 /// The base URL to look for Notes. (this may be removed in a future version)
                 /// </summary>
-                public const string BaseURL = "http://www.jeredmcferron.com/";
+                public const string BaseURL = "http://www.jeredmcferron.com/ccv/";
 
                 /// <summary>
                 /// The space between the border of a view and the contents.

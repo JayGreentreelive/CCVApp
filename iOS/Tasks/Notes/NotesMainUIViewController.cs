@@ -226,14 +226,16 @@ namespace iOS
 
             NotesMainUIViewController Parent { get; set; }
             List<SeriesEntry> SeriesEntries { get; set; }
+            UIImage ImagePlaceholder { get; set; }
 
             float PendingPrimaryCellHeight { get; set; }
             float PendingCellHeight { get; set; }
 
-            public TableSource (NotesMainUIViewController parent, List<SeriesEntry> series )
+            public TableSource (NotesMainUIViewController parent, List<SeriesEntry> series, UIImage imagePlaceholder )
             {
                 Parent = parent;
                 SeriesEntries = series;
+                ImagePlaceholder = imagePlaceholder;
             }
 
             public override int RowsInSection (UITableView tableview, int section)
@@ -324,7 +326,7 @@ namespace iOS
                 }
 
                 // Banner Image
-                cell.Image.Image = SeriesEntries[ 0 ].Thumbnail;
+                cell.Image.Image = SeriesEntries[ 0 ].mBillboard != null ? SeriesEntries[ 0 ].mBillboard : ImagePlaceholder;
                 cell.Image.SizeToFit( );
 
                 // resize the image to fit the width of the device
@@ -418,7 +420,7 @@ namespace iOS
                 }
 
                 // Thumbnail Image
-                cell.Image.Image = SeriesEntries[ row ].Thumbnail;
+                cell.Image.Image = SeriesEntries[ row ].mThumbnail != null ? SeriesEntries[ row ].mThumbnail : ImagePlaceholder;
                 cell.Image.SizeToFit( );
 
                 // force the image to be sized according to the height of the cell
@@ -426,6 +428,8 @@ namespace iOS
                                                    0, 
                                                    NoteConfig.Series_Main_CellImageWidth, 
                                                    NoteConfig.Series_Main_CellImageHeight );
+
+                cell.Image.BackgroundColor = UIColor.Red;
 
                 float availableTextWidth = cell.Bounds.Width - cell.Chevron.Bounds.Width - cell.Image.Bounds.Width - 10;
 
@@ -470,10 +474,11 @@ namespace iOS
         public class SeriesEntry
         {
             public Series Series { get; set; }
-            public UIImage Thumbnail { get; set; }
+            public UIImage mBillboard;
+            public UIImage mThumbnail;
         }
         List<SeriesEntry> SeriesEntries { get; set; }
-        UIImage ThumbnailPlaceholder{ get; set; }
+        UIImage ImagePlaceholder{ get; set; }
 
         UIActivityIndicatorView ActivityIndicator { get; set; }
 
@@ -488,7 +493,7 @@ namespace iOS
             SeriesEntries = new List<SeriesEntry>();
 
             string imagePath = NSBundle.MainBundle.BundlePath + "/" + "podcastThumbnailPlaceholder.png";
-            ThumbnailPlaceholder = new UIImage( imagePath );
+            ImagePlaceholder = new UIImage( imagePath );
         }
 
         public override void ViewDidLoad()
@@ -565,7 +570,7 @@ namespace iOS
                                         // only update the table if we're still visible
                                         if ( IsVisible == true )
                                         {
-                                            TableSource source = new TableSource( this, SeriesEntries );
+                                            TableSource source = new TableSource( this, SeriesEntries, ImagePlaceholder );
                                             NotesTableView.Source = source;
                                             NotesTableView.ReloadData( );
                                         }
@@ -590,7 +595,7 @@ namespace iOS
             }
             else
             {
-                TableSource source = new TableSource( this, SeriesEntries );
+                TableSource source = new TableSource( this, SeriesEntries, ImagePlaceholder );
                 NotesTableView.Source = source;
                 NotesTableView.ReloadData( );
             }
@@ -606,65 +611,103 @@ namespace iOS
 
                 // copy over the series and give it a placeholder image
                 entry.Series = series;
-                entry.Thumbnail = ThumbnailPlaceholder;
 
-                // first see if the image is cached
-                MemoryStream image = ImageCache.Instance.ReadImage( entry.Series.Name );
-                if ( image != null )
+                // attempt to load both its images from cache
+                bool needDownload = TryLoadCachedImage( entry );
+                if ( needDownload )
                 {
-                    ApplyBillboardImage( entry, image );
-
-                    image.Dispose( );
-
-                    if ( IsVisible == true )
+                    // something failed, so see what needs to be downloaded (could be both)
+                    if ( entry.mBillboard == null )
                     {
-                        NotesTableView.ReloadData( );
+                        DownloadImageToCache( entry.Series.BillboardUrl, entry.Series.Name + "_bb" );
                     }
-                }
-                else
-                {
-                    // darn, it isn't here, so we'll need to download it.
 
-                    // request the thumbnail image for the series
-                    HttpRequest webRequest = new HttpRequest();
-                    RestRequest restRequest = new RestRequest( Method.GET );
-
-                    webRequest.ExecuteAsync( series.BillboardUrl, restRequest, 
-                        delegate(HttpStatusCode statusCode, string statusDescription, byte[] model )
-                        {
-                            if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
-                            {
-                                // update the image on the UI Thread ONLY!
-                                InvokeOnMainThread( delegate
-                                    {
-                                        MemoryStream imageBuffer = new MemoryStream( model );
-
-                                        // write it to cache
-                                        ImageCache.Instance.WriteImage( imageBuffer, entry.Series.Name );
-
-                                        ApplyBillboardImage( entry, imageBuffer );
-
-                                        if ( IsVisible == true )
-                                        {
-                                            NotesTableView.ReloadData( );
-                                        }
-
-                                        // dump the memory stream
-                                        imageBuffer.Dispose( );
-                                    });
-                            }
-                        } );
+                    if ( entry.mThumbnail == null )
+                    {
+                        DownloadImageToCache( entry.Series.ThumbnailUrl, entry.Series.Name + "_thumb" );
+                    }
                 }
             }
         }
 
-        void ApplyBillboardImage( SeriesEntry entry, MemoryStream imageBuffer )
+        bool TryLoadCachedImage( SeriesEntry entry )
         {
-            // create a UIImage out of the stream
-            NSData imageData = NSData.FromStream( imageBuffer );
-            UIImage uiImage = new UIImage( imageData, UIScreen.MainScreen.Scale );
+            bool needImage = false;
 
-            entry.Thumbnail = uiImage;
+            // check the billboard
+            if ( entry.mBillboard == null )
+            {
+                MemoryStream imageStream = ImageCache.Instance.ReadImage( entry.Series.Name + "_bb" );
+                if ( imageStream != null )
+                {
+                    NSData imageData = NSData.FromStream( imageStream );
+                    entry.mBillboard = new UIImage( imageData, UIScreen.MainScreen.Scale );
+                    imageStream.Dispose( );
+                }
+                else
+                {
+                    needImage = true;
+                }
+            }
+
+            // check the thumbnail
+            if ( entry.mThumbnail == null )
+            {
+                MemoryStream imageStream = ImageCache.Instance.ReadImage( entry.Series.Name + "_thumb" );
+                if ( imageStream != null )
+                {
+                    NSData imageData = NSData.FromStream( imageStream );
+                    entry.mThumbnail = new UIImage( imageData, UIScreen.MainScreen.Scale );
+                    imageStream.Dispose( );
+                }
+                else
+                {
+                    needImage = true;
+                }
+            }
+
+            return needImage;
+        }
+
+        void DownloadImageToCache( string downloadUrl, string cachedFilename )
+        {
+            if ( string.IsNullOrEmpty( downloadUrl ) == false )
+            {
+                // request the image for the series
+                HttpRequest webRequest = new HttpRequest();
+                RestRequest restRequest = new RestRequest( Method.GET );
+
+                webRequest.ExecuteAsync( downloadUrl, restRequest, 
+                    delegate(HttpStatusCode statusCode, string statusDescription, byte[] model )
+                    {
+                        if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
+                        {
+                            // write it to cache
+                            MemoryStream imageBuffer = new MemoryStream( model );
+                            ImageCache.Instance.WriteImage( imageBuffer, cachedFilename );
+                            imageBuffer.Dispose( );
+
+                            SeriesImageDownloaded( );
+                        }
+                    } );
+            }
+        }
+
+        void SeriesImageDownloaded( )
+        {
+            if ( IsVisible == true )
+            {
+                InvokeOnMainThread( delegate
+                    {
+                        // using only the cache, try to load any image that isn't loaded
+                        foreach ( SeriesEntry entry in SeriesEntries )
+                        {
+                            TryLoadCachedImage( entry );
+                        }
+
+                        NotesTableView.ReloadData( );
+                    } );
+            }
         }
 
         /// <summary>
@@ -700,14 +743,14 @@ namespace iOS
         {
             DetailsViewController = Storyboard.InstantiateViewController( "NotesDetailsUIViewController" ) as NotesDetailsUIViewController;
             DetailsViewController.Series = SeriesEntries[ row ].Series;
-            DetailsViewController.SeriesBillboard = SeriesEntries[ row ].Thumbnail;
+            DetailsViewController.SeriesBillboard = SeriesEntries[ row ].mBillboard != null ? SeriesEntries[ row ].mBillboard : ImagePlaceholder;
 
             // Note - if they are fast enough, they will end up going to the details of a series before
-            // the series banner comes down, resulting in them seeing the generic thumbnail.
+            // the series banner comes down, resulting in them seeing the generic image placeholder.
             // This isn't really a bug, more just a design issue. Ultimately it'll go away when we
             // start caching images
-            //JHM 12-15-14: Don't set thumbnails, the latest design doesn't call for images on the entries.
-            //DetailsViewController.ThumbnailPlaceholder = SeriesEntries[ row ].Thumbnail;
+            //JHM 12-15-14: Don't set billboards, the latest design doesn't call for images on the entries.
+            //DetailsViewController.ImagePlaceholder = SeriesEntries[ row ].Billboard;
 
             Task.PerformSegue( this, DetailsViewController );
         }

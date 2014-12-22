@@ -557,7 +557,7 @@ namespace iOS
         {
             // position the login button
             EditPictureButton.Layer.AnchorPoint = PointF.Empty;
-            EditPictureButton.Layer.Position = new PointF( ( PrimaryContainerConfig.SlideAmount - EditPictureButton.Bounds.Width ) / 2, View.Frame.Height * .05f );
+            EditPictureButton.Layer.Position = new PointF( ( PrimaryContainerConfig.SlideAmount - EditPictureButton.Bounds.Width ) / 2, View.Frame.Height * .02f );
 
             NewsElement.Layer.AnchorPoint = PointF.Empty;
             NewsElement.Layer.Position = new PointF( 0, View.Frame.Height * .40f );

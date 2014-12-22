@@ -2,19 +2,28 @@
 <SeriesList>
 	<Series>
 		<Message>
+			<Name>Make Room For Giving</Name>
+			<Speaker>Todd Clark</Speaker>
+			<Date>12/21/2014</Date>
+			<NoteUrl>http://www.jeredmcferron.com/ccv/message_12_20_2014.xml</NoteUrl>
+			<WatchUrl>http://player.vimeo.com/external/115115130.m3u8?p=high,standard,mobile&amp;s=c0ca3976224569f67d5a82ac67a71074</WatchUrl>
+			<ShareUrl>http://www.ccvonline.com/Arena/default.aspx?page=17529&amp;item=484</ShareUrl>
+		</Message>
+
+		<Message>
 			<Name>Make Room For Relationships</Name>
 			<Speaker>Dr. Don Wilson</Speaker>
 			<Date>12/14/2014</Date>
-			<NoteUrl>http://www.jeredmcferron.com/message_12_13_2014.xml</NoteUrl>
-			<WatchUrl></WatchUrl>
-			<ShareUrl></ShareUrl>
+			<NoteUrl>http://www.jeredmcferron.com/ccv/message_12_13_2014.xml</NoteUrl>
+			<WatchUrl>http://player.vimeo.com/external/114482297.m3u8?p=high,standard,mobile&amp;s=00d86cfe8ba5dfba5609172fdf0555cc</WatchUrl>
+			<ShareUrl>http://www.ccvonline.com/Arena/default.aspx?page=17529&amp;item=483</ShareUrl>
 		</Message>
 
 		<Message>
 			<Name>Make Room For Serving</Name>
 			<Speaker>Dr. Don Wilson</Speaker>
 			<Date>12/7/2014</Date>
-			<NoteUrl>http://www.jeredmcferron.com/message_12_6_2014.xml</NoteUrl>
+			<NoteUrl>http://www.jeredmcferron.com/ccv/message_12_6_2014.xml</NoteUrl>
 			<WatchUrl>http://player.vimeo.com/external/113873526.m3u8?p=high,standard,mobile&amp;s=595bdf7b301a5e29ae48bdad98f0fd70</WatchUrl>
 			<ShareUrl>http://www.ccvonline.com/Arena/default.aspx?page=17529&amp;item=482</ShareUrl>
 		</Message>
@@ -24,14 +33,15 @@
 			Does the Christmas season have you feeling exhausted? It is easy to become so caught up in the festivities that sometimes we lose the real reason for the celebration. This December we'll discover what an "Uncluttered" Christmas looks like. Invite a friend to join you as we make room for the most important part of the Christmas season, Jesus Christ.
 		</Description>
 		<DateRanges>12/7/2014 - 12/31/2014</DateRanges>
-		<BillboardUrl>http://www.jeredmcferron.com/uncluttered.png</BillboardUrl>
+		<BillboardUrl>http://www.jeredmcferron.com/ccv/uncluttered.png</BillboardUrl>
+		<ThumbnailUrl>http://www.jeredmcferron.com/ccv/uncluttered_thumb.png</ThumbnailUrl>
 	</Series>
 	<Series>
 		<Message>
 			<Name>There Is Hope - For Our Culture</Name>
 			<Speaker>John Stonestreet</Speaker>
 			<Date>11/30/2014</Date>
-			<NoteUrl>http://www.jeredmcferron.com/message_11_29_2014.xml</NoteUrl>
+			<NoteUrl>http://www.jeredmcferron.com/ccv/message_11_29_2014.xml</NoteUrl>
 			<WatchUrl>http://player.vimeo.com/external/113338811.m3u8?p=high,standard,mobile&amp;s=29aec2037f545e21dee13b067c0752bb</WatchUrl>
 			<ShareUrl>http://www.ccvonline.com/Arena/default.aspx?page=17529&amp;item=481</ShareUrl>
 		</Message>
@@ -39,7 +49,7 @@
 			<Name>There Is Hope - For Your Finances</Name>
 			<Speaker>Dave Ramsey</Speaker>
 			<Date>11/23/2014</Date>
-			<NoteUrl>http://www.jeredmcferron.com/message_11_22_2014.xml</NoteUrl>
+			<NoteUrl>http://www.jeredmcferron.com/ccv/message_11_22_2014.xml</NoteUrl>
 			<WatchUrl>http://player.vimeo.com/external/112712667.m3u8?p=high,standard,mobile&amp;s=cdfa965739fed7f1cab1601a8fce1a78</WatchUrl>
 			<ShareUrl>http://www.ccvonline.com/Arena/default.aspx?page=17529&amp;item=480</ShareUrl>
 		</Message>
@@ -47,7 +57,7 @@
 			<Name>There Is Hope - For Your Workplace</Name>
 			<Speaker>Dr. Don Wilson</Speaker>
 			<Date>11/16/2014</Date>
-			<NoteUrl>http://www.jeredmcferron.com/message_11_15_2014.xml</NoteUrl>
+			<NoteUrl>http://www.jeredmcferron.com/ccv/message_11_15_2014.xml</NoteUrl>
 			<WatchUrl>http://player.vimeo.com/external/112065685.m3u8?p=high,standard,mobile&amp;s=fe6376dc9d3881f989648737cf592ef3</WatchUrl>
 			<ShareUrl>http://www.ccvonline.com/Arena/default.aspx?page=17529&amp;item=479</ShareUrl>
 		</Message>
@@ -55,7 +65,7 @@
 			<Name>There Is Hope - Marriage</Name>
 			<Speaker>Dr. Shaunti Feldhahn</Speaker>
 			<Date>11/9/2014</Date>
-			<NoteUrl>http://www.jeredmcferron.com/message_11_8_2014.xml</NoteUrl>
+			<NoteUrl>http://www.jeredmcferron.com/ccv/message_11_8_2014.xml</NoteUrl>
 			<WatchUrl>http://player.vimeo.com/external/111342574.m3u8?p=high,standard,mobile&amp;s=0a5e0dbcb44d80e60baa53b16c3e845e</WatchUrl>
 			<ShareUrl>http://www.ccvonline.com/Arena/default.aspx?page=17529&amp;item=478</ShareUrl>
 		</Message>
@@ -63,7 +73,7 @@
 			<Name>There Is Hope - Family</Name>
 			<Speaker>Dr. Kevin Leman</Speaker>
 			<Date>11/2/2014</Date>
-			<NoteUrl>http://www.jeredmcferron.com/message_11_1_2014.xml</NoteUrl>
+			<NoteUrl>http://www.jeredmcferron.com/ccv/message_11_1_2014.xml</NoteUrl>
 			<WatchUrl>http://player.vimeo.com/external/110803854.m3u8?p=high,standard,mobile&amp;s=710549d248d633dc466f777cc4a2d42b</WatchUrl>
 			<ShareUrl>http://www.ccvonline.com/Arena/default.aspx?page=17529&amp;item=477</ShareUrl>
 		</Message>
@@ -73,14 +83,15 @@
 		<Description>
 			Hope is a powerful thing. In this series we will be studying how the Bible says we can gain HOPE for our marriages, families, finances, workplaces and culture. Join us as we learn from some of the leading experts in the country and discover There Is Hope.
 		</Description>
-		<BillboardUrl>http://www.jeredmcferron.com/there_is_hope.png</BillboardUrl>
+		<BillboardUrl>http://www.jeredmcferron.com/ccv/there_is_hope.png</BillboardUrl>
+		<ThumbnailUrl>http://www.jeredmcferron.com/ccv/there_is_hope_thumb.png</ThumbnailUrl>
 	</Series>
 	<Series>
 		<Message>
 			<Name>Honesty</Name>
 			<Speaker>Todd Clark</Speaker>
 			<Date>10/26/2014</Date>
-			<NoteUrl>http://www.jeredmcferron.com/message_10_25_2014.xml</NoteUrl>
+			<NoteUrl>http://www.jeredmcferron.com/ccv/message_10_25_2014.xml</NoteUrl>
 			<WatchUrl>http://player.vimeo.com/external/110150296.m3u8?p=high,standard,mobile&amp;s=2a58d2404936be3a2358a53ce1dda48c</WatchUrl>
 		</Message>
 
@@ -88,7 +99,7 @@
 			<Name>Laziness</Name>
 			<Speaker>Todd Clark</Speaker>
 			<Date>10/19/2014</Date>
-			<NoteUrl>http://www.jeredmcferron.com/message_10_18_2014.xml</NoteUrl>
+			<NoteUrl>http://www.jeredmcferron.com/ccv/message_10_18_2014.xml</NoteUrl>
 			<WatchUrl>http://player.vimeo.com/external/109377228.m3u8?p=high,standard,mobile&amp;s=326cbe8841cdea2bf134bc3f733e8e45</WatchUrl>
 		</Message>
 
@@ -96,7 +107,7 @@
 			<Name>Conflict</Name>
 			<Speaker>Dr. Don &amp; Sue Wilson</Speaker>
 			<Date>10/12/2014</Date>
-			<NoteUrl>http://www.jeredmcferron.com/message_10_11_2014.xml</NoteUrl>
+			<NoteUrl>http://www.jeredmcferron.com/ccv/message_10_11_2014.xml</NoteUrl>
 			<WatchUrl>http://player.vimeo.com/external/108744882.m3u8?p=high,standard,mobile&amp;s=8e34de4873d2258550c1367f174c2c6b</WatchUrl>
 		</Message>
 
@@ -104,7 +115,7 @@
 			<Name>Soul</Name>
 			<Speaker>Todd Clark</Speaker>
 			<Date>10/5/2014</Date>
-			<NoteUrl>http://www.jeredmcferron.com/message_10_4_2014.xml</NoteUrl>
+			<NoteUrl>http://www.jeredmcferron.com/ccv/message_10_4_2014.xml</NoteUrl>
 			<WatchUrl></WatchUrl>
 		</Message>
 
@@ -112,7 +123,7 @@
 			<Name>Pride</Name>
 			<Speaker>Dr. Mark Moore</Speaker>
 			<Date>9/28/2014</Date>
-			<NoteUrl>http://www.jeredmcferron.com/message_9_27_2014.xml</NoteUrl>
+			<NoteUrl>http://www.jeredmcferron.com/ccv/message_9_27_2014.xml</NoteUrl>
 			<WatchUrl>http://player.vimeo.com/external/107767528.m3u8?p=high,standard,mobile&amp;s=91461a3e46627b8212ae39605f51377f</WatchUrl>
 		</Message>
 
@@ -120,7 +131,7 @@
 			<Name>Anger</Name>
 			<Speaker>Todd Clark</Speaker>
 			<Date>9/21/2014</Date>
-			<NoteUrl>http://www.jeredmcferron.com/message_9_20_2014.xml</NoteUrl>
+			<NoteUrl>http://www.jeredmcferron.com/ccv/message_9_20_2014.xml</NoteUrl>
 			<WatchUrl>http://player.vimeo.com/external/106738802.m3u8?p=high,standard,mobile&amp;s=cdce5b8ff22a0fa6964d6cc7d1deb40d</WatchUrl>
 		</Message>
 
@@ -128,7 +139,7 @@
 			<Name>Getting Directions</Name>
 			<Speaker>Ashley Wooldridge</Speaker>
 			<Date>9/14/2014</Date>
-			<NoteUrl>http://www.jeredmcferron.com/message_9_13_2014.xml</NoteUrl>
+			<NoteUrl>http://www.jeredmcferron.com/ccv/message_9_13_2014.xml</NoteUrl>
 			<WatchUrl>http://player.vimeo.com/external/106189969.m3u8?p=high,standard,mobile&amp;s=fd8605ffefc0220498c817e5dfa8176d</WatchUrl>
 		</Message>
 
@@ -136,7 +147,7 @@
 			<Name>Get Wisdom</Name>
 			<Speaker>Todd Clark</Speaker>
 			<Date>9/7/2014</Date>
-			<NoteUrl>http://www.jeredmcferron.com/message_9_6_2014.xml</NoteUrl>
+			<NoteUrl>http://www.jeredmcferron.com/ccv/message_9_6_2014.xml</NoteUrl>
 			<WatchUrl>http://player.vimeo.com/external/105602163.m3u8?p=high,standard,mobile&amp;s=15b75063ee27bd391e13deb5139d9a76</WatchUrl>
 		</Message>
 
@@ -145,7 +156,8 @@
 		<Description>
 			Each day we make decisions and each decision often has many options that are morally permissible. It&apos;s not so much which is the &quot;right&quot; choice, it&apos;s which is the &quot;wise&quot; choice. Wisdom goes beyond right and wrong, and illuminates which choice is best based on the complex realities of life. So join us as we seek and gain wisdom that will benefit every area of our lives.
 		</Description>
-		<BillboardUrl>http://www.jeredmcferron.com/wisdom.png</BillboardUrl>
+		<BillboardUrl>http://www.jeredmcferron.com/ccv/wisdom.png</BillboardUrl>
+		<ThumbnailUrl>http://www.jeredmcferron.com/ccv/wisdom_thumb.png</ThumbnailUrl>
 	</Series>
 
 	<Series>
@@ -153,7 +165,7 @@
 			<Name>Worry: When Life Spins Out of Control</Name>
 			<Speaker>Dr. Don Wilson</Speaker>
 			<Date>8/31/2014</Date>
-			<NoteUrl>http://www.jeredmcferron.com/message_8_31_2014.xml</NoteUrl>
+			<NoteUrl>http://www.jeredmcferron.com/ccv/message_8_31_2014.xml</NoteUrl>
 			<WatchUrl>http://player.vimeo.com/external/104860435.m3u8?p=high,standard,mobile&amp;s=b2f06d32c18f54c306478f289078f4c2</WatchUrl>
 		</Message>
 
@@ -161,7 +173,7 @@
 			<Name>Change: When Life Needs to Change</Name>
 			<Speaker>Dr. Don Wilson</Speaker>
 			<Date>8/24/2014</Date>
-			<NoteUrl>http://www.jeredmcferron.com/message_8_24_2014.xml</NoteUrl>
+			<NoteUrl>http://www.jeredmcferron.com/ccv/message_8_24_2014.xml</NoteUrl>
 			<WatchUrl>http://player.vimeo.com/external/104337503.m3u8?p=high,standard,mobile&amp;s=3c6ad520722f1597a1e61a2f074dad5c</WatchUrl>
 		</Message>
 
@@ -169,7 +181,7 @@
 			<Name>Priorities: When Life Is Out Of Balance</Name>
 			<Speaker>Dr. Don Wilson</Speaker>
 			<Date>8/17/2014</Date>
-			<NoteUrl>http://www.jeredmcferron.com/message_8_17_2014.xml</NoteUrl>
+			<NoteUrl>http://www.jeredmcferron.com/ccv/message_8_17_2014.xml</NoteUrl>
 			<WatchUrl>http://player.vimeo.com/external/103646977.m3u8?p=high,standard,mobile&amp;s=8cd1b5594ddfc7fbb16d994dea7ee63b</WatchUrl>
 		</Message>
 
@@ -178,6 +190,7 @@
 			Do you ever feel like you are living life right on the edge? The stress associated with maintaining healthy friendships, family, marriages, and career can seem overwhelming at times. In this new series we will discover how to move away from the edge and gain greater margin and balance in our everyday lives.
 		</Description>
 		<DateRanges>8/3/2014 - 8/31/2014</DateRanges>
-		<BillboardUrl>http://www.jeredmcferron.com/living_on_the_edge.png</BillboardUrl>
+		<BillboardUrl>http://www.jeredmcferron.com/ccv/living_on_the_edge.png</BillboardUrl>
+		<ThumbnailUrl>http://www.jeredmcferron.com/ccv/living_on_the_edge_thumb.png</ThumbnailUrl>
 	</Series>
 </SeriesList>

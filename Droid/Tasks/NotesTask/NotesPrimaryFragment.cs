@@ -34,14 +34,16 @@ namespace Droid
             public class NotesArrayAdapter : BaseAdapter
             {
                 List<SeriesEntry> SeriesEntries { get; set; }
-
                 NotesPrimaryFragment ParentFragment { get; set; }
+                Bitmap ImagePlaceholder { get; set; }
 
-                public NotesArrayAdapter( NotesPrimaryFragment parentFragment, List<SeriesEntry> series )
+                public NotesArrayAdapter( NotesPrimaryFragment parentFragment, List<SeriesEntry> series, Bitmap imagePlaceholder )
                 {
                     ParentFragment = parentFragment;
 
                     SeriesEntries = series;
+
+                    ImagePlaceholder = imagePlaceholder;
                 }
 
                 public override int Count 
@@ -83,8 +85,8 @@ namespace Droid
 
                     primaryItem.ParentAdapter = this;
 
-                    primaryItem.Thumbnail.SetImageBitmap( SeriesEntries[ 0 ].Thumbnail );
-                    primaryItem.Thumbnail.SetScaleType( ImageView.ScaleType.CenterCrop );
+                    primaryItem.Billboard.SetImageBitmap( SeriesEntries[ 0 ].Billboard != null ? SeriesEntries[ 0 ].Billboard : ImagePlaceholder );
+                    primaryItem.Billboard.SetScaleType( ImageView.ScaleType.CenterCrop );
 
                     primaryItem.Title.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Name;
                     primaryItem.Speaker.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Speaker;
@@ -121,7 +123,7 @@ namespace Droid
                         seriesItem = new SeriesListItem( Rock.Mobile.PlatformCommon.Droid.Context );
                     }
 
-                    seriesItem.Thumbnail.SetImageBitmap( SeriesEntries[ position ].Thumbnail );
+                    seriesItem.Thumbnail.SetImageBitmap( SeriesEntries[ position ].Thumbnail != null ? SeriesEntries[ position ].Thumbnail : ImagePlaceholder );
                     seriesItem.Thumbnail.SetScaleType( ImageView.ScaleType.CenterCrop );
 
                     seriesItem.Title.Text = SeriesEntries[ position ].Series.Name;
@@ -187,7 +189,7 @@ namespace Droid
                 LinearLayout DetailsLayout { get; set; }
 
                 // stuff that will be set by data
-                public DroidScaledImageView Thumbnail { get; set; }
+                public DroidScaledImageView Billboard { get; set; }
                 public TextView Title { get; set; }
                 public TextView Date { get; set; }
                 public TextView Speaker { get; set; }
@@ -214,10 +216,10 @@ namespace Droid
                     ( (LinearLayout.LayoutParams)Header.LayoutParameters ).Gravity = GravityFlags.Center;
                     AddView( Header );*/
 
-                    Thumbnail = new DroidScaledImageView( Rock.Mobile.PlatformCommon.Droid.Context );
-                    Thumbnail.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
-                    Thumbnail.SetScaleType( ImageView.ScaleType.CenterCrop );
-                    AddView( Thumbnail );
+                    Billboard = new DroidScaledImageView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    Billboard.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
+                    Billboard.SetScaleType( ImageView.ScaleType.CenterCrop );
+                    AddView( Billboard );
 
                     Title = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
                     Title.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
@@ -450,6 +452,7 @@ namespace Droid
             public class SeriesEntry
             {
                 public Series Series { get; set; }
+                public Bitmap Billboard { get; set; }
                 public Bitmap Thumbnail { get; set; }
             }
 
@@ -460,7 +463,7 @@ namespace Droid
                 ProgressBar ProgressBar { get; set; }
                 ListView ListView { get; set; }
 
-                Bitmap ThumbnailPlaceholder { get; set; }
+                Bitmap ImagePlaceholder { get; set; }
                 bool RequestingSeries { get; set; }
 
                 bool FragmentActive { get; set; }
@@ -468,7 +471,7 @@ namespace Droid
                 public NotesPrimaryFragment( ) : base( )
                 {
                     SeriesEntries = new List<SeriesEntry>();
-                    ThumbnailPlaceholder = BitmapFactory.DecodeResource( Rock.Mobile.PlatformCommon.Droid.Context.Resources, Resource.Drawable.thumbnailPlaceholder );
+                    ImagePlaceholder = BitmapFactory.DecodeResource( Rock.Mobile.PlatformCommon.Droid.Context.Resources, Resource.Drawable.thumbnailPlaceholder );
                 }
 
                 public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -547,7 +550,7 @@ namespace Droid
                                         {
                                             if( FragmentActive == true )
                                             {
-                                                ListView.Adapter = new NotesArrayAdapter( this, SeriesEntries );
+                                                ListView.Adapter = new NotesArrayAdapter( this, SeriesEntries, ImagePlaceholder );
                                             }
 
                                             // setup the series entries either way, because that doesn't require the fragment to be active
@@ -567,7 +570,7 @@ namespace Droid
                     else
                     {
                         ProgressBar.Visibility = ViewStates.Gone;
-                        ListView.Adapter = new NotesArrayAdapter( this, SeriesEntries );
+                        ListView.Adapter = new NotesArrayAdapter( this, SeriesEntries, ImagePlaceholder );
                     }
                 }
 
@@ -581,58 +584,100 @@ namespace Droid
 
                         // copy over the series and give it a placeholder image
                         entry.Series = series;
-                        entry.Thumbnail = ThumbnailPlaceholder;
 
-                        // first see if the image is cached
-                        MemoryStream image = ImageCache.Instance.ReadImage( entry.Series.Name );
-                        if ( image != null )
+                        // attempt to load both its images from cache
+                        bool needDownload = TryLoadCachedImage( entry );
+                        if ( needDownload )
                         {
-                            entry.Thumbnail = BitmapFactory.DecodeStream( image );
-                            image.Dispose( );
-
-                            // if we're still active, update the list
-                            if ( FragmentActive == true )
+                            // something failed, so see what needs to be downloaded (could be both)
+                            if ( entry.Billboard == null )
                             {
-                                ( ListView.Adapter as NotesArrayAdapter ).NotifyDataSetChanged( );
+                                DownloadImageToCache( entry.Series.BillboardUrl, entry.Series.Name + "_bb" );
                             }
+
+                            if ( entry.Thumbnail == null )
+                            {
+                                DownloadImageToCache( entry.Series.ThumbnailUrl, entry.Series.Name + "_thumb" );
+                            }
+                        }
+                    }
+                }
+
+                bool TryLoadCachedImage( SeriesEntry entry )
+                {
+                    bool needImage = false;
+
+                    // check the billboard
+                    if ( entry.Billboard == null )
+                    {
+                        MemoryStream imageStream = ImageCache.Instance.ReadImage( entry.Series.Name + "_bb" );
+                        if ( imageStream != null )
+                        {
+                            entry.Billboard = BitmapFactory.DecodeStream( imageStream );
+                            imageStream.Dispose( );
                         }
                         else
                         {
-                            // it ain't, so we need to download it
-
-                            // request the thumbnail image for the series
-                            HttpRequest webRequest = new HttpRequest();
-                            RestRequest restRequest = new RestRequest( Method.GET );
-
-                            // don't worry about protecting against multiple calls, because if they leave this page and return it will 
-                            // abandon these series entry objects and create new ones.
-                            webRequest.ExecuteAsync( series.BillboardUrl, restRequest, 
-                                delegate(HttpStatusCode statusCode, string statusDescription, byte[] model )
-                                {
-                                    if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
-                                    {
-                                        // on the main thread, update the images
-                                        Rock.Mobile.Threading.UIThreading.PerformOnUIThread(delegate
-                                            {
-                                                // get it as a stream
-                                                MemoryStream memoryStream = new MemoryStream( model );
-
-                                                // write it to cache
-                                                ImageCache.Instance.WriteImage( memoryStream, entry.Series.Name );
-
-                                                // apply it to our entry
-                                                entry.Thumbnail = BitmapFactory.DecodeStream( memoryStream );
-                                                memoryStream.Dispose( );
-
-                                                // if we're still active, update the list
-                                                if( FragmentActive == true )
-                                                {
-                                                    (ListView.Adapter as NotesArrayAdapter).NotifyDataSetChanged( );
-                                                }
-                                            });
-                                    }
-                                } );
+                            needImage = true;
                         }
+                    }
+
+                    // check the thumbnail
+                    if ( entry.Thumbnail == null )
+                    {
+                        MemoryStream imageStream = ImageCache.Instance.ReadImage( entry.Series.Name + "_thumb" );
+                        if ( imageStream != null )
+                        {
+                            entry.Thumbnail = BitmapFactory.DecodeStream( imageStream );
+                            imageStream.Dispose( );
+                        }
+                        else
+                        {
+                            needImage = true;
+                        }
+                    }
+
+                    return needImage;
+                }
+
+                void DownloadImageToCache( string downloadUrl, string cachedFilename )
+                {
+                    if ( string.IsNullOrEmpty( downloadUrl ) == false )
+                    {
+                        // request the image for the series
+                        HttpRequest webRequest = new HttpRequest();
+                        RestRequest restRequest = new RestRequest( Method.GET );
+
+                        webRequest.ExecuteAsync( downloadUrl, restRequest, 
+                            delegate(HttpStatusCode statusCode, string statusDescription, byte[] model )
+                            {
+                                if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
+                                {
+                                    // write it to cache
+                                    MemoryStream imageBuffer = new MemoryStream( model );
+                                    ImageCache.Instance.WriteImage( imageBuffer, cachedFilename );
+                                    imageBuffer.Dispose( );
+
+                                    SeriesImageDownloaded( );
+                                }
+                            } );
+                    }
+                }
+
+                void SeriesImageDownloaded( )
+                {
+                    if ( FragmentActive == true )
+                    {
+                        Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate
+                            {
+                                // using only the cache, try to load any image that isn't loaded
+                                foreach ( SeriesEntry entry in SeriesEntries )
+                                {
+                                    TryLoadCachedImage( entry );
+                                }
+
+                                ( ListView.Adapter as NotesArrayAdapter ).NotifyDataSetChanged( );
+                            } );
                     }
                 }
 

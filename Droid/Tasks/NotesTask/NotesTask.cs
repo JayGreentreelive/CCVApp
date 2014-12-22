@@ -146,7 +146,7 @@ namespace Droid
                             else
                             {
                                 DetailsPage.Series = MainPage.SeriesEntries[ buttonId ].Series;
-                                DetailsPage.SeriesBillboard = MainPage.SeriesEntries[ buttonId ].Thumbnail;
+                                DetailsPage.SeriesBillboard = MainPage.SeriesEntries[ buttonId ].Billboard;
                                 PresentFragment( DetailsPage, true );
                             }
                         }
