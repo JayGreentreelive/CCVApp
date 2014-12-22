@@ -448,8 +448,6 @@ namespace Droid
             CropView.SetX( xPos );
             CropView.SetY( yPos );
 
-            /*MaskLayer.Position = new PointF( CropView.GetX( ), CropView.GetY( ) );
-            MaskLayer.Invalidate( );*/
             MaskLayer.Position = new PointF( CropView.GetX( ), CropView.GetY( ) );
         }
 
