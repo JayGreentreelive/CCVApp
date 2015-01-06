@@ -26,7 +26,7 @@ namespace CCVApp.Shared
                 //string cachePath = MonoTouch.Foundation.NSFileManager.DefaultManager.GetUrls (MonoTouch.Foundation.NSSearchPathDirectory.DocumentDirectory, MonoTouch.Foundation.NSSearchPathDomain.User) [0].ToString();
                 string cachePath = System.IO.Path.Combine ( Environment.GetFolderPath(Environment.SpecialFolder.Personal), "" );
                 #else
-                string cachePath = Rock.Mobile.PlatformCommon.Droid.Context.GetExternalFilesDir( null ).ToString( );
+                string cachePath = Rock.Mobile.PlatformSpecific.Android.Core.Context.GetExternalFilesDir( null ).ToString( );
                 #endif
 
                 cachePath += "/" + GeneralConfig.ImageCacheDirectory;

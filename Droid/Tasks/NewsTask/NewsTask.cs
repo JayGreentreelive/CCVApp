@@ -60,7 +60,7 @@ namespace Droid
                             if ( buttonId == Resource.Id.news_details_launch_url )
                             {
                                 Intent browserIntent = new Intent( Intent.ActionView, Android.Net.Uri.Parse( DetailsPage.NewsItem.ReferenceURL ) );
-                                Rock.Mobile.PlatformCommon.Droid.Context.StartActivity( browserIntent );
+                                Rock.Mobile.PlatformSpecific.Android.Core.Context.StartActivity( browserIntent );
                             }
                         }
                     }

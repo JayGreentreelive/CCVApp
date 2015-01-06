@@ -97,14 +97,14 @@ namespace iOS
             View.AddSubview( DarkPanel );
 
             // setup the style of the nav bar
-            NavigationBar.TintColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+            NavigationBar.TintColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
 
 
             UIImage solidColor = new UIImage();
             UIGraphics.BeginImageContext( new SizeF( 1, 1 ) );
             CGContext context = UIGraphics.GetCurrentContext( );
 
-            context.SetFillColorWithColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.PrimaryNavBarBackgroundColor ).CGColor );
+            context.SetFillColorWithColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.PrimaryNavBarBackgroundColor ).CGColor );
             context.FillRect( new RectangleF( 0, 0, 1, 1 ) );
 
             solidColor = UIGraphics.GetImageFromCurrentImageContext( );

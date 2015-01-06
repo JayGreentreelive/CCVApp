@@ -5,7 +5,6 @@ using System.CodeDom.Compiler;
 using System.Drawing;
 using System.Collections.Generic;
 using System.Threading;
-using Rock.Mobile.PlatformCommon;
 using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
 
@@ -89,7 +88,7 @@ namespace iOS
             NSString buttonLabel = new NSString(PrimaryNavBarConfig.RevealButton_Text);
 
             SpringboardRevealButton = new UIButton(UIButtonType.System);
-            SpringboardRevealButton.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Secondary, PrimaryNavBarConfig.RevealButton_Size );
+            SpringboardRevealButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, PrimaryNavBarConfig.RevealButton_Size );
             SpringboardRevealButton.SetTitle( buttonLabel.ToString( ), UIControlState.Normal );
 
             // determine its dimensions
@@ -129,7 +128,7 @@ namespace iOS
 
             // setup the toolbar that will manage task navigation and any other tasks the task needs
             SubNavToolbar = new NavToolbar();
-            SubNavToolbar.BarTintColor = PlatformBaseUI.GetUIColor( SubNavToolbarConfig.BackgroundColor );
+            SubNavToolbar.BarTintColor = Rock.Mobile.PlatformUI.Util.GetUIColor( SubNavToolbarConfig.BackgroundColor );
             SubNavToolbar.Layer.Opacity = SubNavToolbarConfig.Opacity;
             SubNavigationController.View.AddSubview( SubNavToolbar );
 

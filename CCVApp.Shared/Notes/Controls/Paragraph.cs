@@ -100,7 +100,7 @@ namespace CCVApp
                     if( mStyle.mBorderWidth.HasValue )
                     {
                         BorderView.BorderWidth = mStyle.mBorderWidth.Value;
-                        borderPaddingPx = (int)PlatformBaseUI.UnitToPx( mStyle.mBorderWidth.Value + NoteConfig.BorderPadding );
+                        borderPaddingPx = (int)Rock.Mobile.Graphics.Util.UnitToPx( mStyle.mBorderWidth.Value + NoteConfig.BorderPadding );
                     }
 
                     if( mStyle.mTextInputBackgroundColor.HasValue )

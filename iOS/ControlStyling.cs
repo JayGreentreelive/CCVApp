@@ -12,36 +12,36 @@ namespace iOS
         {
             button.SetTitle( text, UIControlState.Normal );
 
-            button.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.Button_TextColor ), UIControlState.Normal );
-            button.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.Button_BGColor );
+            button.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Button_TextColor ), UIControlState.Normal );
+            button.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Button_BGColor );
 
             button.Layer.CornerRadius = ControlStylingConfig.Button_CornerRadius;
 
-            button.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( font, size );
+            button.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( font, size );
         }
 
         public static void StyleUILabel( UILabel label, string font, uint size )
         {
-            label.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.Label_TextColor );
+            label.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
             label.BackgroundColor = UIColor.Clear;
 
-            label.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( font, size );
+            label.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( font, size );
         }
 
         public static void StyleBGLayer( UIView view )
         {
-            view.Layer.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_Color ).CGColor;
-            view.Layer.BorderColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ).CGColor;
+            view.Layer.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ).CGColor;
+            view.Layer.BorderColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ).CGColor;
             view.Layer.BorderWidth = ControlStylingConfig.BG_Layer_BorderWidth;
         }
 
         public static void StyleTextField( UITextField textField, string placeholderText, string font, uint size )
         {
-            textField.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
-            textField.AttributedPlaceholder = new NSAttributedString( placeholderText, null, PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+            textField.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
+            textField.AttributedPlaceholder = new NSAttributedString( placeholderText, null, Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
             textField.BackgroundColor = UIColor.Clear;
 
-            textField.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( font, size );
+            textField.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( font, size );
         }  
     }
 }

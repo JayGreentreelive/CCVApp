@@ -62,7 +62,7 @@ namespace iOS
             base.ViewDidLoad();
 
             //setup styles
-            View.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor );
+            View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             ControlStyling.StyleTextField( NickNameText, ProfileStrings.NickNamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( NickNameLayer );
@@ -163,7 +163,7 @@ namespace iOS
             EmailText.Text = RockMobileUser.Instance.Person.Email;
 
             // setup the fake header
-            HeaderView.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor );
+            HeaderView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             string imagePath = NSBundle.MainBundle.BundlePath + "/" + PrimaryNavBarConfig.LogoFile;
             LogoView = new UIImageView( new UIImage( imagePath ) );

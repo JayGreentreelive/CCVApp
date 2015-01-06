@@ -210,7 +210,7 @@ namespace Droid
                     RefreshButton = layout.FindViewById<Button>( Resource.Id.refreshButton );
 
                     // create our overridden lockable scroll view
-                    ScrollView = new LockableScrollView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    ScrollView = new LockableScrollView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     ScrollView.ScrollBarStyle = ScrollbarStyles.InsideInset;
                     ScrollView.OverScrollMode = OverScrollMode.Always;
                     ScrollView.VerticalScrollbarPosition = ScrollbarPosition.Default;
@@ -225,11 +225,11 @@ namespace Droid
 
                     Indicator = layout.FindViewById<ProgressBar>( Resource.Id.progressBar );
                     Indicator.Visibility = ViewStates.Gone;
-                    Indicator.SetBackgroundColor( PlatformBaseUI.GetUIColor( 0 ) );
+                    Indicator.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( 0 ) );
                     Indicator.BringToFront();
 
                     // create the layout that will contain the notes
-                    ScrollViewLayout = new RelativeLayout( Rock.Mobile.PlatformCommon.Droid.Context );
+                    ScrollViewLayout = new RelativeLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     ScrollView.AddView( ScrollViewLayout );
                     ScrollViewLayout.SetOnTouchListener( this );
 
@@ -243,7 +243,7 @@ namespace Droid
                     #endif
 
                     // get our power management control
-                    PowerManager pm = PowerManager.FromContext( Rock.Mobile.PlatformCommon.Droid.Context );
+                    PowerManager pm = PowerManager.FromContext( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     WakeLock = pm.NewWakeLock(WakeLockFlags.Full, "Notes");
 
                     // if we are loading a different note, force the current cached ones out of memory
@@ -374,7 +374,7 @@ namespace Droid
                         ParentTask.NavbarFragment.NavToolbar.Reveal( false );
                     }
                     // did the user scroll "down"? Android is a little less sensitive, so use 75% of it.
-                    else if ( scrollDelta <= ( Rock.Mobile.PlatformUI.PlatformBaseUI.UnitToPx( NoteConfig.ScrollRateForNavBarReveal ) ) )
+                    else if ( scrollDelta <= ( Rock.Mobile.Graphics.Util.UnitToPx( NoteConfig.ScrollRateForNavBarReveal ) ) )
                     {
                         ParentTask.NavbarFragment.NavToolbar.Reveal( true );
                     }
@@ -576,7 +576,7 @@ namespace Droid
                     }
                     else
                     {
-                        Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate
+                        Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
                             {
                                 Note = note;
 
@@ -593,7 +593,7 @@ namespace Droid
 
 
                                     // set the requested background color
-                                    ScrollView.SetBackgroundColor( ( Android.Graphics.Color )PlatformBaseUI.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value ) );
+                                    ScrollView.SetBackgroundColor( ( Android.Graphics.Color )Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value ) );
 
                                     // update the height of the scroll view to fit all content
                                     RectangleF frame = Note.GetFrame( );
@@ -626,7 +626,7 @@ namespace Droid
 
                 protected void ReportException( string errorMsg, Exception e )
                 {
-                    Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate
+                    Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
                         {
                             FinishNotesCreation( );
 

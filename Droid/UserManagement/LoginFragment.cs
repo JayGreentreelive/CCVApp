@@ -65,10 +65,10 @@ namespace Droid
             }
 
             View view = inflater.Inflate(Resource.Layout.Login, container, false);
-            view.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+            view.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
 
             RelativeLayout navBar = view.FindViewById<RelativeLayout>( Resource.Id.navbar_relative_layout );
-            navBar.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+            navBar.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
 
             View backgroundView = view.FindViewById<View>( Resource.Id.login_background );
             ControlStyling.StyleBGLayer( backgroundView );
@@ -98,7 +98,7 @@ namespace Droid
             ControlStyling.StyleTextField( UsernameField, LoginStrings.UsernamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
 
             View borderView = backgroundView.FindViewById<View>( Resource.Id.middle_border );
-            borderView.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+            borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
             PasswordField = view.FindViewById<EditText>( Resource.Id.passwordText );
             ControlStyling.StyleTextField( PasswordField, LoginStrings.PasswordPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
@@ -161,7 +161,7 @@ namespace Droid
                     Session = session;
 
                     // invoke a webview
-                    WebView = new WebView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    WebView = new WebView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     WebView.SetWebViewClient( new FBWebViewClient( ) { Parent = this } );
                     WebView.Settings.JavaScriptEnabled = true;
                     WebView.Settings.SetSupportZoom(true);
@@ -253,7 +253,7 @@ namespace Droid
 
         public void ProfileComplete(System.Net.HttpStatusCode code, string desc, Rock.Client.Person model)
         {
-            UIThreading.PerformOnUIThread( delegate
+            Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
                 {
                     UIThread_ProfileComplete( code, desc, model );
                 } );
@@ -282,7 +282,7 @@ namespace Droid
                     LoginSuccessfulTimer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e) => 
                         {
                             // when the timer fires, notify the springboard we're done.
-                            Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate { SpringboardParent.ModalFragmentDone( this, null ); } );
+                            Rock.Mobile.Threading.Util.PerformOnUIThread( delegate { SpringboardParent.ModalFragmentDone( this, null ); } );
                         };
 
                     LoginSuccessfulTimer.Start();
@@ -310,7 +310,7 @@ namespace Droid
                 case System.Net.HttpStatusCode.OK:
                 {
                     // sweet! make the UI update.
-                    Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate { SpringboardParent.SetProfileImage( ); } );
+                    Rock.Mobile.Threading.Util.PerformOnUIThread( delegate { SpringboardParent.SetProfileImage( ); } );
                     break;
                 }
 

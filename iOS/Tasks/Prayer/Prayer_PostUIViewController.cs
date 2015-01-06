@@ -5,7 +5,6 @@ using System.CodeDom.Compiler;
 using CCVApp.Shared.Strings;
 using Rock.Mobile.PlatformUI;
 using System.Drawing;
-using Rock.Mobile.PlatformCommon;
 using CCVApp.Shared.Config;
 
 namespace iOS
@@ -17,7 +16,7 @@ namespace iOS
         bool Success { get; set; }
         bool IsActive { get; set; }
 
-        BlockerView BlockerView { get; set; }
+        Rock.Mobile.PlatformSpecific.iOS.UI.BlockerView BlockerView { get; set; }
 
 		public Prayer_PostUIViewController (IntPtr handle) : base (handle)
 		{
@@ -27,13 +26,13 @@ namespace iOS
         {
             base.ViewDidLoad();
 
-            BlockerView = new BlockerView( View.Frame );
+            BlockerView = new Rock.Mobile.PlatformSpecific.iOS.UI.BlockerView( View.Frame );
             View.AddSubview( BlockerView );
 
             StatusLabel.Text = PrayerStrings.PostPrayer_Status_Submitting;
 
             //setup our appearance
-            View.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor );
+            View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             ControlStyling.StyleUILabel( StatusLabel, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             ControlStyling.StyleBGLayer( StatusBackground );
@@ -41,8 +40,8 @@ namespace iOS
             ControlStyling.StyleUILabel( ResultLabel, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             ControlStyling.StyleBGLayer( ResultBackground );
 
-            ResultSymbolLabel.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Primary, PrayerConfig.PostPrayer_ResultSymbolSize );
-            ResultSymbolLabel.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
+            ResultSymbolLabel.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Primary, PrayerConfig.PostPrayer_ResultSymbolSize );
+            ResultSymbolLabel.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
             ResultSymbolLabel.BackgroundColor = UIColor.Clear;
 
             ControlStyling.StyleButton( DoneButton, GeneralStrings.Done, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );

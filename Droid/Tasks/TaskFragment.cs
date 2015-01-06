@@ -11,6 +11,7 @@ using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
+using Android.Animation;
 
 namespace Droid
 {
@@ -67,7 +68,7 @@ namespace Droid
 
             public TaskFragment( ) : base( )
             {
-                GestureDetector = new GestureDetector( Rock.Mobile.PlatformCommon.Droid.Context, new TaskFragmentGestureDetector( this ) );
+                GestureDetector = new GestureDetector( Rock.Mobile.PlatformSpecific.Android.Core.Context, new TaskFragmentGestureDetector( this ) );
             }
 
             public virtual bool OnDownGesture( MotionEvent e )

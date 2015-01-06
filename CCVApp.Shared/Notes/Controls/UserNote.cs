@@ -483,7 +483,7 @@ namespace CCVApp
                     if ( TouchInAnchorRange( TrackingLastPos ) && State == TouchState.Hold )
                     {
                         // reveal the delete button
-                        Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate {  DeleteButton.Hidden = false; } );
+                        Rock.Mobile.Threading.Util.PerformOnUIThread( delegate {  DeleteButton.Hidden = false; } );
                         DeleteEnabled = true;
                     }
                 }

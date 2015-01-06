@@ -14,7 +14,6 @@ using System.Net;
 using System.Text;
 using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
-using Rock.Mobile.PlatformCommon;
 
 namespace iOS
 {
@@ -164,7 +163,7 @@ namespace iOS
         /// The manager that ensures views being edited are visible when the keyboard comes up.
         /// </summary>
         /// <value>The keyboard adjust manager.</value>
-        KeyboardAdjustManager KeyboardAdjustManager { get; set; }
+        Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager KeyboardAdjustManager { get; set; }
 
         /// <summary>
         /// The amount of times to try downloading the note before
@@ -267,7 +266,7 @@ namespace iOS
             UIScrollView = new CustomScrollView();
             UIScrollView.Interceptor = this;
             UIScrollView.Frame = View.Frame;
-            UIScrollView.BackgroundColor = PlatformBaseUI.GetUIColor( 0x1C1C1CFF );
+            UIScrollView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( 0x1C1C1CFF );
             UIScrollView.Delegate = new NotesScrollViewDelegate() { Parent = this };
             UIScrollView.Layer.AnchorPoint = new PointF( 0, 0 );
 
@@ -294,7 +293,7 @@ namespace iOS
                 CreateNotes( null, null );
             };
 
-            KeyboardAdjustManager = new KeyboardAdjustManager( View, UIScrollView );
+            KeyboardAdjustManager = new Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager( View, UIScrollView );
 
             #if DEBUG
             View.AddSubview( RefreshButton );
@@ -329,10 +328,10 @@ namespace iOS
             UIApplication.SharedApplication.IdleTimerDisabled = true;
 
             // monitor for text field being edited, and keyboard show/hide notitications
-            NSObject handle = NSNotificationCenter.DefaultCenter.AddObserver (KeyboardAdjustManager.TextFieldDidBeginEditingNotification, KeyboardAdjustManager.OnTextFieldDidBeginEditing);
+            NSObject handle = NSNotificationCenter.DefaultCenter.AddObserver (Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager.TextFieldDidBeginEditingNotification, KeyboardAdjustManager.OnTextFieldDidBeginEditing);
             ObserverHandles.Add( handle );
 
-            handle = NSNotificationCenter.DefaultCenter.AddObserver (KeyboardAdjustManager.TextFieldChangedNotification, KeyboardAdjustManager.OnTextFieldChanged);
+            handle = NSNotificationCenter.DefaultCenter.AddObserver (Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager.TextFieldChangedNotification, KeyboardAdjustManager.OnTextFieldChanged);
             ObserverHandles.Add( handle );
 
             handle = NSNotificationCenter.DefaultCenter.AddObserver (UIKeyboard.WillHideNotification, KeyboardAdjustManager.OnKeyboardNotification);
@@ -606,7 +605,7 @@ namespace iOS
                             UIScrollView.ScrollEnabled = true;
 
                             // take the requested background color
-                            UIScrollView.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value );
+                            UIScrollView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value );
                             View.BackgroundColor = UIScrollView.BackgroundColor; //Make the view itself match too
 
                             // update the height of the scroll view to fit all content

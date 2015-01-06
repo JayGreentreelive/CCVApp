@@ -6,7 +6,6 @@ using Rock.Mobile.PlatformUI;
 using CCVApp.Shared.Strings;
 using System.Collections.Generic;
 using System.Drawing;
-using Rock.Mobile.PlatformCommon;
 using CCVApp.Shared.Config;
 using CCVApp.Shared.Network;
 
@@ -19,13 +18,13 @@ namespace iOS
         {
             public override bool ShouldBeginEditing(UITextView textView)
             {
-                NSNotificationCenter.DefaultCenter.PostNotificationName( KeyboardAdjustManager.TextFieldDidBeginEditingNotification, NSValue.FromRectangleF( textView.Frame ) );
+                NSNotificationCenter.DefaultCenter.PostNotificationName( Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager.TextFieldDidBeginEditingNotification, NSValue.FromRectangleF( textView.Frame ) );
                 return true;
             }
 
             public override void Changed(UITextView textView)
             {
-                NSNotificationCenter.DefaultCenter.PostNotificationName( KeyboardAdjustManager.TextFieldChangedNotification, NSValue.FromRectangleF( textView.Frame ) );
+                NSNotificationCenter.DefaultCenter.PostNotificationName( Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager.TextFieldChangedNotification, NSValue.FromRectangleF( textView.Frame ) );
             }
         }
 
@@ -37,7 +36,7 @@ namespace iOS
         /// <summary>
         /// The keyboard manager that will adjust the UIView to not be obscured by the software keyboard
         /// </summary>
-        KeyboardAdjustManager KeyboardAdjustManager { get; set; }
+        Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager KeyboardAdjustManager { get; set; }
 
         /// <summary>
         /// The starting position of the scrollView so we can restore after the user uses the UIPicker
@@ -68,13 +67,13 @@ namespace iOS
 
             // create our keyboard adjustment manager, which works to make sure text fields scroll into visible
             // range when a keyboard appears
-            KeyboardAdjustManager = new KeyboardAdjustManager( View, ScrollView );
+            KeyboardAdjustManager = new Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager( View, ScrollView );
 
             // setup the default control styles
             PrayerRequest.Editable = true;
 
             // skin the controls
-            ScrollView.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor );
+            ScrollView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
             ScrollView.Parent = this;
 
             ControlStyling.StyleTextField( FirstNameText, PrayerStrings.CreatePrayer_FirstNamePlaceholderText, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
@@ -85,23 +84,23 @@ namespace iOS
 
             // setup the prayer request field, which requires a fake "placeholder" text field
             PrayerRequest.Delegate = new TextViewDelegate( );
-            PrayerRequest.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
+            PrayerRequest.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
             PrayerRequest.TextContainerInset = UIEdgeInsets.Zero;
-            PrayerRequest.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            PrayerRequest.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             PrayerRequest.TextContainer.LineFragmentPadding = 0;
             PrayerRequest.BackgroundColor = UIColor.Clear;
-            PrayerRequestPlaceholder.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+            PrayerRequestPlaceholder.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
             PrayerRequestPlaceholder.BackgroundColor = UIColor.Clear;
             PrayerRequestPlaceholder.Text = PrayerStrings.CreatePrayer_PrayerRequest;
-            PrayerRequestPlaceholder.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            PrayerRequestPlaceholder.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             //PrayerRequestPlaceholder.SizeToFit( );
             ControlStyling.StyleBGLayer( PrayerRequestLayer );
 
 
             // Setup the anonymous switch
-            PostAnonymouslyLabel.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            PostAnonymouslyLabel.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             PostAnonymouslyLabel.Text = PrayerStrings.CreatePrayer_PostAnonymously;
-            UISwitchAnonymous.OnTintColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.Switch_OnColor );
+            UISwitchAnonymous.OnTintColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Switch_OnColor );
             UISwitchAnonymous.TouchUpInside += (object sender, EventArgs e ) =>
                 {
                     if( UISwitchAnonymous.On == true )
@@ -115,27 +114,27 @@ namespace iOS
                     else
                     {
                         FirstNameText.Enabled = true;
-                        FirstNameText.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
+                        FirstNameText.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
 
                         LastNameText.Enabled = true;
-                        LastNameText.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
+                        LastNameText.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
                     }
                 };
 
             // setup the public switch
-            MakePublicLabel.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            MakePublicLabel.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             MakePublicLabel.Text = PrayerStrings.CreatePrayer_MakePublic;
-            UIPublicSwitch.OnTintColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.Switch_OnColor );
+            UIPublicSwitch.OnTintColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Switch_OnColor );
 
             ControlStyling.StyleBGLayer( SwitchBackground );
 
 
 
             // monitor for text field being edited, and keyboard show/hide notitications
-            NSObject handle = NSNotificationCenter.DefaultCenter.AddObserver (KeyboardAdjustManager.TextFieldDidBeginEditingNotification, KeyboardAdjustManager.OnTextFieldDidBeginEditing);
+            NSObject handle = NSNotificationCenter.DefaultCenter.AddObserver (Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager.TextFieldDidBeginEditingNotification, KeyboardAdjustManager.OnTextFieldDidBeginEditing);
             ObserverHandles.Add( handle );
 
-            handle = NSNotificationCenter.DefaultCenter.AddObserver (KeyboardAdjustManager.TextFieldChangedNotification, OnTextChanged);
+            handle = NSNotificationCenter.DefaultCenter.AddObserver (Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager.TextFieldChangedNotification, OnTextChanged);
             ObserverHandles.Add( handle );
 
             handle = NSNotificationCenter.DefaultCenter.AddObserver (UIKeyboard.WillHideNotification, KeyboardAdjustManager.OnKeyboardNotification);
@@ -167,8 +166,8 @@ namespace iOS
                 OnToggleCategoryPicker( true );
             };
             CategoryButton.SetTitle( PrayerStrings.CreatePrayer_CategoryButtonText, UIControlState.Normal );
-            CategoryButton.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
-            CategoryButton.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            CategoryButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
+            CategoryButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( CategoryLayer );
 
 
@@ -271,7 +270,7 @@ namespace iOS
         public void PickerSelected( int row )
         {
             // set the category's text to be the item they selected. Note that we now change the color to Active from the original Placeholder
-            CategoryButton.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ), UIControlState.Normal );
+            CategoryButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ), UIControlState.Normal );
             CategoryButton.SetTitle( RockGeneralData.Instance.Data.PrayerCategories[ row ], UIControlState.Normal );
         }
 
@@ -310,7 +309,7 @@ namespace iOS
                     label = new UILabel();
                     label.TextColor = UIColor.White;
                     label.Text = RockGeneralData.Instance.Data.PrayerCategories[ row ];
-                    label.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+                    label.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
                     label.SizeToFit( );
                 }
 

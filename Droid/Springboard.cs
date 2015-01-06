@@ -13,11 +13,9 @@ using Android.Views;
 using Android.Widget;
 using CCVApp.Shared.Network;
 using Android.Graphics;
-using DroidContext = Rock.Mobile.PlatformCommon.Droid;
 using Java.IO;
 using Droid.Tasks;
 using System.IO;
-using Rock.Mobile.PlatformCommon;
 using CCVApp.Shared;
 using CCVApp.Shared.Config;
 using CCVApp.Shared.Strings;
@@ -56,7 +54,7 @@ namespace Droid
             Button = Layout.FindViewById<Button>( Resource.Id.button );
             Text = Layout.FindViewById<TextView>( Resource.Id.text );
 
-            Typeface fontFace = DroidFontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary );
+            Typeface fontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary );
             Icon.SetTypeface( fontFace, TypefaceStyle.Normal );
             Icon.SetTextSize( Android.Util.ComplexUnitType.Dip, SpringboardConfig.Element_FontSize );
             Icon.SetX( Icon.GetX() - Icon.Width / 2 );
@@ -68,25 +66,25 @@ namespace Droid
 
             // setup the seperator color
             View seperator = Layout.FindViewById<View>( Resource.Id.seperator );
-            seperator.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
+            seperator.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
         }
 
         public void Deactivate( )
         {
-            Icon.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.Springboard_InActiveElementColor ) );
+            Icon.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Springboard_InActiveElementColor ) );
 
-            Text.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.Springboard_InActiveElementColor ) );
+            Text.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Springboard_InActiveElementColor ) );
 
-            Layout.SetBackgroundColor( PlatformBaseUI.GetUIColor( 0x00000000 ) );
+            Layout.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( 0x00000000 ) );
         }
 
         public void Activate( )
         {
-            Icon.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.Springboard_ActiveElementColor ) );
+            Icon.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Springboard_ActiveElementColor ) );
 
-            Text.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.Springboard_ActiveElementColor ) );
+            Text.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Springboard_ActiveElementColor ) );
 
-            Layout.SetBackgroundColor( PlatformBaseUI.GetUIColor( SpringboardConfig.Element_SelectedColor ) );
+            Layout.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( SpringboardConfig.Element_SelectedColor ) );
         }
     }
 
@@ -167,7 +165,7 @@ namespace Droid
             }
 
             // get the mask used for the profile pic
-            ProfileMask = BitmapFactory.DecodeResource( DroidContext.Context.Resources, Resource.Drawable.androidPhotoMask );
+            ProfileMask = BitmapFactory.DecodeResource( Rock.Mobile.PlatformSpecific.Android.Core.Context.Resources, Resource.Drawable.androidPhotoMask );
 
             // Execute a transaction, replacing any existing
             // fragment with this one inside the frame.
@@ -221,7 +219,7 @@ namespace Droid
             }
 
             view.SetOnTouchListener( this );
-            view.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.SpringboardBackgroundColor ) );
+            view.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.SpringboardBackgroundColor ) );
 
             // set the task we wish to have active
             ActivateElement( Elements[ ActiveElementIndex ] );
@@ -233,12 +231,12 @@ namespace Droid
                 {
                     ManageProfilePic( );
                 };
-            Typeface fontFace = DroidFontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary );
+            Typeface fontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary );
             ProfileImageButton.SetTypeface( fontFace, TypefaceStyle.Normal );
             ProfileImageButton.SetTextSize( Android.Util.ComplexUnitType.Dip, SpringboardConfig.ProfileSymbolFontSize );
-            ProfileImageButton.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
-            ProfileImageButton.LayoutParameters.Width = (int)PlatformBaseUI.UnitToPx( 140 );
-            ProfileImageButton.LayoutParameters.Height = (int)PlatformBaseUI.UnitToPx( 140 );
+            ProfileImageButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+            ProfileImageButton.LayoutParameters.Width = (int)Rock.Mobile.Graphics.Util.UnitToPx( 140 );
+            ProfileImageButton.LayoutParameters.Height = (int)Rock.Mobile.Graphics.Util.UnitToPx( 140 );
             ProfileImageButton.SetBackgroundColor( Color.Transparent );
 
 
@@ -246,18 +244,18 @@ namespace Droid
             RelativeLayout layout = view.FindViewById<RelativeLayout>( Resource.Id.springboard_profile_image_layout );
             layout.SetBackgroundColor( Color.Transparent );
 
-            CircleView circle = new CircleView( Activity.BaseContext );
+            Rock.Mobile.PlatformSpecific.Android.Graphics.CircleView circle = new Rock.Mobile.PlatformSpecific.Android.Graphics.CircleView( Activity.BaseContext );
 
             //note: these are converted from dp to pixels, so don't do it here.
             circle.Radius = 70;
             circle.StrokeWidth = 4;
 
-            circle.Color = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+            circle.Color = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
             circle.SetBackgroundColor( Color.Transparent );
             circle.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
             ( (RelativeLayout.LayoutParams)circle.LayoutParameters ).AddRule( LayoutRules.CenterInParent );
-            circle.LayoutParameters.Width = (int)PlatformBaseUI.UnitToPx( 150 );
-            circle.LayoutParameters.Height = (int)PlatformBaseUI.UnitToPx( 150 );
+            circle.LayoutParameters.Width = (int)Rock.Mobile.Graphics.Util.UnitToPx( 150 );
+            circle.LayoutParameters.Height = (int)Rock.Mobile.Graphics.Util.UnitToPx( 150 );
             layout.AddView( circle );
 
 
@@ -280,19 +278,19 @@ namespace Droid
 
             // setup the textView for rendering the user's name when they're logged in "Welcome: Jered"
             ProfilePrefix = view.FindViewById<TextView>( Resource.Id.profile_prefix );
-            ProfilePrefix.SetTypeface( DroidFontManager.Instance.GetFont( ControlStylingConfig.Large_Font_Light ), TypefaceStyle.Normal );
+            ProfilePrefix.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Large_Font_Light ), TypefaceStyle.Normal );
             ProfilePrefix.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Large_FontSize );
-            ProfilePrefix.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.Label_TextColor ) );
+            ProfilePrefix.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
 
             ProfileName = view.FindViewById<TextView>( Resource.Id.profile_name );
-            ProfileName.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.Label_TextColor ) );
-            ProfileName.SetTypeface( DroidFontManager.Instance.GetFont( ControlStylingConfig.Large_Font_Bold ), TypefaceStyle.Normal );
+            ProfileName.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
+            ProfileName.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Large_Font_Bold ), TypefaceStyle.Normal );
             ProfileName.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Large_FontSize );
 
             // setup the textView for rendering either "Tap to Personalize" or "View Profile"
             ViewProfileLabel = view.FindViewById<TextView>( Resource.Id.view_profile );
-            ViewProfileLabel.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.Label_TextColor ) );
-            ViewProfileLabel.SetTypeface( DroidFontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Light ), TypefaceStyle.Normal );
+            ViewProfileLabel.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
+            ViewProfileLabel.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Light ), TypefaceStyle.Normal );
             ViewProfileLabel.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
 
             // setup the width of the springboard area and campus selector
@@ -301,23 +299,23 @@ namespace Droid
 
             View campusContainer = view.FindViewById<View>( Resource.Id.campus_container );
             campusContainer.LayoutParameters.Width = (int) ( Resources.DisplayMetrics.WidthPixels * PrimaryNavBarConfig.RevealPercentage );
-            campusContainer.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.SpringboardBackgroundColor ) );
+            campusContainer.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.SpringboardBackgroundColor ) );
 
             View seperator = view.FindViewById<View>( Resource.Id.end_seperator );
-            seperator.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
+            seperator.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
 
 
             // setup the bottom campus / settings selector
             Button campusButton = campusContainer.FindViewById<Button>( Resource.Id.campus_selection );
             campusButton.Ellipsize = Android.Text.TextUtils.TruncateAt.End;
-            campusButton.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
-            campusButton.SetTypeface( DroidFontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Light ), TypefaceStyle.Normal );
+            campusButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+            campusButton.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Light ), TypefaceStyle.Normal );
             campusButton.SetTextSize(Android.Util.ComplexUnitType.Dip,  ControlStylingConfig.Small_FontSize );
             campusButton.SetSingleLine( );
 
             Button settingsButton = campusContainer.FindViewById<Button>( Resource.Id.settings_button );
             settingsButton.SetTypeface( fontFace, TypefaceStyle.Normal );
-            settingsButton.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+            settingsButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
             settingsButton.SetTextSize( Android.Util.ComplexUnitType.Dip, SpringboardConfig.SettingsSymbolSize );
             settingsButton.Text = SpringboardConfig.SettingsSymbol;
 
@@ -413,14 +411,14 @@ namespace Droid
 
                 builder.SetItems( strings, delegate(object sender, DialogClickEventArgs clickArgs) 
                     {
-                        Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate
+                        Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
                             {
                                 switch( clickArgs.Which )
                                 {
                                     // Photo Library
                                     case 0:
                                     {
-                                        Rock.Mobile.Media.PlatformImagePicker.Instance.PickImage( DroidContext.Context, delegate(object s, Rock.Mobile.Media.PlatformImagePicker.ImagePickEventArgs args) 
+                                        Rock.Mobile.Media.PlatformImagePicker.Instance.PickImage( Rock.Mobile.PlatformSpecific.Android.Core.Context, delegate(object s, Rock.Mobile.Media.PlatformImagePicker.ImagePickEventArgs args) 
                                             {
                                                 // android returns a path TO the image
                                                 if( args.Image != null )
@@ -437,7 +435,7 @@ namespace Droid
                                         if( Rock.Mobile.Media.PlatformCamera.Instance.IsAvailable( ) )
                                         {
                                             // start up the camera and get our picture.
-                                            string jpgFilename = Rock.Mobile.PlatformCommon.Droid.Context.GetExternalFilesDir( null ).ToString( ) + "cameratemp.jpg";
+                                            string jpgFilename = Rock.Mobile.PlatformSpecific.Android.Core.Context.GetExternalFilesDir( null ).ToString( ) + "cameratemp.jpg";
                                             Rock.Mobile.Media.PlatformCamera.Instance.CaptureImage( new Java.IO.File( jpgFilename ), null, 
 
                                                 delegate(object s, Rock.Mobile.Media.PlatformCamera.CaptureImageEventArgs args) 
@@ -567,7 +565,7 @@ namespace Droid
                     }
 
                     // generate the masked image
-                    ProfileMaskedImage = Rock.Mobile.PlatformCommon.Droid.ApplyMaskToBitmap( scaledImage, ProfileMask, 0, 0 );
+                    ProfileMaskedImage = Rock.Mobile.PlatformSpecific.Android.Graphics.Util.ApplyMaskToBitmap( scaledImage, ProfileMask, 0, 0 );
 
                     scaledImage.Dispose( );
                     scaledImage = null;
@@ -669,9 +667,9 @@ namespace Droid
 
         public static void DisplayError( string title, string message )
         {
-            Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate
+            Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
                 {
-                    AlertDialog.Builder dlgAlert = new AlertDialog.Builder( DroidContext.Context );                      
+                    AlertDialog.Builder dlgAlert = new AlertDialog.Builder( Rock.Mobile.PlatformSpecific.Android.Core.Context );                      
                     dlgAlert.SetTitle( title ); 
                     dlgAlert.SetMessage( message ); 
                     dlgAlert.SetPositiveButton( "Ok", delegate(object sender, DialogClickEventArgs ev )

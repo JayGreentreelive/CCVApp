@@ -13,7 +13,6 @@ using Android.Views;
 using Android.Widget;
 using CCVApp.Shared.Network;
 using Android.Graphics;
-using Rock.Mobile.PlatformCommon;
 
 namespace Droid
 {
@@ -55,7 +54,7 @@ namespace Droid
 
                 public override View GetView(int position, View convertView, ViewGroup parent)
                 {
-                    DroidScaledImageView view = (DroidScaledImageView) convertView ?? new DroidScaledImageView( ParentFragment.Activity.BaseContext );
+                    Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView view = (Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView) convertView ?? new Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView( ParentFragment.Activity.BaseContext );
                     view.LayoutParameters = new AbsListView.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent );
 
                     view.SetImageBitmap( NewsImage[ position ] );

@@ -18,7 +18,6 @@ using Rock.Mobile.Network;
 using CCVApp.Shared.Notes.Model;
 using CCVApp.Shared.Config;
 using CCVApp.Shared.Strings;
-using Rock.Mobile.PlatformCommon;
 using Rock.Mobile.PlatformUI;
 using System.Net;
 using System.IO;
@@ -80,7 +79,7 @@ namespace Droid
                     SeriesPrimaryListItem primaryItem = convertView as SeriesPrimaryListItem;
                     if ( primaryItem == null )
                     {
-                        primaryItem = new SeriesPrimaryListItem( Rock.Mobile.PlatformCommon.Droid.Context );
+                        primaryItem = new SeriesPrimaryListItem( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     }
 
                     primaryItem.ParentAdapter = this;
@@ -120,7 +119,7 @@ namespace Droid
                     SeriesListItem seriesItem = convertView as SeriesListItem;
                     if ( seriesItem == null )
                     {
-                        seriesItem = new SeriesListItem( Rock.Mobile.PlatformCommon.Droid.Context );
+                        seriesItem = new SeriesListItem( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     }
 
                     seriesItem.Thumbnail.SetImageBitmap( SeriesEntries[ position ].Thumbnail != null ? SeriesEntries[ position ].Thumbnail : ImagePlaceholder );
@@ -153,28 +152,28 @@ namespace Droid
                 public void AddToView( ViewGroup parentView )
                 {
                     // first, create the layout that will store the button and label
-                    Layout = new BorderedRectView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    Layout = new BorderedRectView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     Layout.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                     parentView.AddView( Layout );
 
                     // now create the linearLayout that will store the button labels (Symbol & Text)
-                    LinearLayout labelLayout = new LinearLayout( Rock.Mobile.PlatformCommon.Droid.Context );
+                    LinearLayout labelLayout = new LinearLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     labelLayout.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                     ( (RelativeLayout.LayoutParams)labelLayout.LayoutParameters ).AddRule( LayoutRules.CenterInParent );
                     Layout.AddView( labelLayout );
 
                     // add the button, which is just a frame wrapping the entire layout
-                    Button = new Button( Rock.Mobile.PlatformCommon.Droid.Context );
+                    Button = new Button( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     Button.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent );
                     Button.SetBackgroundDrawable( null );
                     Layout.AddView( Button );
 
                     // now set the icon
-                    Icon = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    Icon = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     labelLayout.AddView( Icon );
 
                     // and lastly the text
-                    Label = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    Label = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     Label.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                     ( (LinearLayout.LayoutParams)Label.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
                     labelLayout.AddView( Label );
@@ -189,7 +188,7 @@ namespace Droid
                 LinearLayout DetailsLayout { get; set; }
 
                 // stuff that will be set by data
-                public DroidScaledImageView Billboard { get; set; }
+                public Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView Billboard { get; set; }
                 public TextView Title { get; set; }
                 public TextView Date { get; set; }
                 public TextView Speaker { get; set; }
@@ -203,34 +202,34 @@ namespace Droid
 
                 public SeriesPrimaryListItem( Context context ) : base( context )
                 {
-                    SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
+                    SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
 
                     Orientation = Orientation.Vertical;
 
-                    /*Header = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    /*Header = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     Header.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                     Header.Text = MessagesStrings.Series_TopBanner;
-                    Header.SetTypeface( DroidFontManager.Instance.GetFont( ControlStylingConfig.Medium_Font_Regular ), TypefaceStyle.Normal );
+                    Header.SetTypeface( Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Medium_Font_Regular ), TypefaceStyle.Normal );
                     Header.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Medium_FontSize );
-                    Header.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    Header.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                     ( (LinearLayout.LayoutParams)Header.LayoutParameters ).Gravity = GravityFlags.Center;
                     AddView( Header );*/
 
-                    Billboard = new DroidScaledImageView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    Billboard = new Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     Billboard.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
                     Billboard.SetScaleType( ImageView.ScaleType.CenterCrop );
                     AddView( Billboard );
 
-                    Title = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    Title = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     Title.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-                    Title.SetTypeface( DroidFontManager.Instance.GetFont( ControlStylingConfig.Large_Font_Bold ), TypefaceStyle.Normal );
+                    Title.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Large_Font_Bold ), TypefaceStyle.Normal );
                     Title.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Large_FontSize );
-                    Title.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
+                    Title.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
                     ( (LinearLayout.LayoutParams)Title.LayoutParameters ).TopMargin = 25;
                     ( (LinearLayout.LayoutParams)Title.LayoutParameters ).LeftMargin = 25;
                     AddView( Title );
 
-                    DetailsLayout = new LinearLayout( Rock.Mobile.PlatformCommon.Droid.Context );
+                    DetailsLayout = new LinearLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     DetailsLayout.Orientation = Orientation.Horizontal;
                     DetailsLayout.LayoutParameters = new LinearLayout.LayoutParams( LayoutParams.WrapContent, LayoutParams.WrapContent );
                     ( (LinearLayout.LayoutParams)DetailsLayout.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
@@ -239,29 +238,29 @@ namespace Droid
                     ( (LinearLayout.LayoutParams)DetailsLayout.LayoutParameters ).BottomMargin = 50;
                     AddView( DetailsLayout );
 
-                    Date = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    Date = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     Date.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-                    Date.SetTypeface( DroidFontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
+                    Date.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
                     Date.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
-                    Date.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    Date.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                     DetailsLayout.AddView( Date );
 
                     // fill the remaining space with a dummy view, and that will align our speaker to the right
-                    View dummyView = new View( Rock.Mobile.PlatformCommon.Droid.Context );
+                    View dummyView = new View( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     dummyView.LayoutParameters = new LinearLayout.LayoutParams( 0, 0 );
                     ( (LinearLayout.LayoutParams)dummyView.LayoutParameters ).Weight = 1;
                     DetailsLayout.AddView( dummyView );
 
-                    Speaker = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    Speaker = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     Speaker.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-                    Speaker.SetTypeface( DroidFontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
+                    Speaker.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
                     Speaker.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
-                    Speaker.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    Speaker.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                     DetailsLayout.AddView( Speaker );
 
 
                     // setup the buttons
-                    ButtonLayout = new LinearLayout( Rock.Mobile.PlatformCommon.Droid.Context );
+                    ButtonLayout = new LinearLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     ButtonLayout.Orientation = Orientation.Horizontal;
                     ButtonLayout.LayoutParameters = new LinearLayout.LayoutParams( LayoutParams.MatchParent, LayoutParams.WrapContent );
                     AddView( ButtonLayout );
@@ -275,17 +274,17 @@ namespace Droid
                     ( (LinearLayout.LayoutParams)WatchButton.Layout.LayoutParameters ).RightMargin = -1;
                     ( (LinearLayout.LayoutParams)WatchButton.Layout.LayoutParameters ).Weight = 1;
                     WatchButton.Layout.BorderWidth = 1;
-                    WatchButton.Layout.SetBorderColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
-                    WatchButton.Layout.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
+                    WatchButton.Layout.SetBorderColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+                    WatchButton.Layout.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
 
-                    WatchButton.Icon.SetTypeface( DroidFontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary ), TypefaceStyle.Normal );
+                    WatchButton.Icon.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary ), TypefaceStyle.Normal );
                     WatchButton.Icon.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Series_Table_IconSize );
-                    WatchButton.Icon.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    WatchButton.Icon.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                     WatchButton.Icon.Text = NoteConfig.Series_Table_Watch_Icon;
 
-                    WatchButton.Label.SetTypeface( DroidFontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
+                    WatchButton.Label.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
                     WatchButton.Label.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
-                    WatchButton.Label.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    WatchButton.Label.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                     WatchButton.Label.Text = MessagesStrings.Series_Table_Watch;
 
                     WatchButton.Button.Click += (object sender, EventArgs e ) =>
@@ -304,17 +303,17 @@ namespace Droid
                     ( (LinearLayout.LayoutParams)TakeNotesButton.Layout.LayoutParameters ).RightMargin = -5;
                     ( (LinearLayout.LayoutParams)TakeNotesButton.Layout.LayoutParameters ).Weight = 1;
                     TakeNotesButton.Layout.BorderWidth = 1;
-                    TakeNotesButton.Layout.SetBorderColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
-                    TakeNotesButton.Layout.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
+                    TakeNotesButton.Layout.SetBorderColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+                    TakeNotesButton.Layout.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
 
-                    TakeNotesButton.Icon.SetTypeface( DroidFontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary ), TypefaceStyle.Normal );
+                    TakeNotesButton.Icon.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary ), TypefaceStyle.Normal );
                     TakeNotesButton.Icon.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Series_Table_IconSize );
-                    TakeNotesButton.Icon.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    TakeNotesButton.Icon.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                     TakeNotesButton.Icon.Text = NoteConfig.Series_Table_TakeNotes_Icon;
 
-                    TakeNotesButton.Label.SetTypeface( DroidFontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
+                    TakeNotesButton.Label.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
                     TakeNotesButton.Label.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
-                    TakeNotesButton.Label.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    TakeNotesButton.Label.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                     TakeNotesButton.Label.Text = MessagesStrings.Series_Table_TakeNotes;
 
                     TakeNotesButton.Button.Click += (object sender, EventArgs e ) =>
@@ -324,14 +323,14 @@ namespace Droid
                     //
 
 
-                    Footer = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    Footer = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     Footer.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
                     ( (LinearLayout.LayoutParams)Footer.LayoutParameters ).TopMargin = -5;
                     Footer.Text = MessagesStrings.Series_Table_PreviousMessages;
-                    Footer.SetTypeface( DroidFontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
+                    Footer.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
                     Footer.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
-                    Footer.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
-                    Footer.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.Table_Footer_Color ) );
+                    Footer.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    Footer.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Table_Footer_Color ) );
                     Footer.Gravity = GravityFlags.Center;
                     AddView( Footer );
                 }
@@ -342,8 +341,8 @@ namespace Droid
 
                     if ( enabled == true )
                     {
-                        WatchButton.Icon.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
-                        WatchButton.Label.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
+                        WatchButton.Icon.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
+                        WatchButton.Label.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
                     }
                     else
                     {
@@ -358,8 +357,8 @@ namespace Droid
 
                     if ( enabled == true )
                     {
-                        TakeNotesButton.Icon.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
-                        TakeNotesButton.Label.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
+                        TakeNotesButton.Icon.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
+                        TakeNotesButton.Label.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
                     }
                     else
                     {
@@ -371,7 +370,7 @@ namespace Droid
 
             public class SeriesListItem : LinearLayout
             {
-                public DroidScaledImageView Thumbnail { get; set; }
+                public Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView Thumbnail { get; set; }
 
                 public LinearLayout TitleLayout { get; set; }
                 public TextView Title { get; set; }
@@ -383,20 +382,20 @@ namespace Droid
                 {
                     Orientation = Orientation.Vertical;
 
-                    SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+                    SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
 
-                    LinearLayout contentLayout = new LinearLayout( Rock.Mobile.PlatformCommon.Droid.Context );
+                    LinearLayout contentLayout = new LinearLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     contentLayout.Orientation = Orientation.Horizontal;
                     contentLayout.LayoutParameters = new LinearLayout.LayoutParams( LayoutParams.WrapContent, LayoutParams.WrapContent );
                     AddView( contentLayout );
 
-                    Thumbnail = new DroidScaledImageView( Rock.Mobile.PlatformCommon.Droid.Context );
-                    Thumbnail.LayoutParameters = new LinearLayout.LayoutParams( (int)PlatformBaseUI.UnitToPx( 75 ), (int)PlatformBaseUI.UnitToPx( 75 ) );
+                    Thumbnail = new Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    Thumbnail.LayoutParameters = new LinearLayout.LayoutParams( (int)Rock.Mobile.Graphics.Util.UnitToPx( 75 ), (int)Rock.Mobile.Graphics.Util.UnitToPx( 75 ) );
                     ( (LinearLayout.LayoutParams)Thumbnail.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
                     Thumbnail.SetScaleType( ImageView.ScaleType.CenterCrop );
                     contentLayout.AddView( Thumbnail );
 
-                    TitleLayout = new LinearLayout( Rock.Mobile.PlatformCommon.Droid.Context );
+                    TitleLayout = new LinearLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     TitleLayout.Orientation = Orientation.Vertical;
                     TitleLayout.LayoutParameters = new LinearLayout.LayoutParams( LayoutParams.WrapContent, LayoutParams.WrapContent );
                     ( (LinearLayout.LayoutParams)TitleLayout.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
@@ -405,43 +404,43 @@ namespace Droid
                     ( (LinearLayout.LayoutParams)TitleLayout.LayoutParameters ).BottomMargin = 50;
                     contentLayout.AddView( TitleLayout );
 
-                    Title = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    Title = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     Title.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-                    Title.SetTypeface( DroidFontManager.Instance.GetFont( ControlStylingConfig.Medium_Font_Regular ), TypefaceStyle.Normal );
+                    Title.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Medium_Font_Regular ), TypefaceStyle.Normal );
                     Title.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Medium_FontSize );
-                    Title.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
+                    Title.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
                     Title.SetSingleLine( );
                     Title.Ellipsize = Android.Text.TextUtils.TruncateAt.End;
                     TitleLayout.AddView( Title );
 
-                    DateRange = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    DateRange = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     DateRange.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-                    DateRange.SetTypeface( DroidFontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
+                    DateRange.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
                     DateRange.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
-                    DateRange.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    DateRange.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                     TitleLayout.AddView( DateRange );
 
                     // fill the remaining space with a dummy view, and that will align our chevron to the right
-                    View dummyView = new View( Rock.Mobile.PlatformCommon.Droid.Context );
+                    View dummyView = new View( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     dummyView.LayoutParameters = new LinearLayout.LayoutParams( 0, 0 );
                     ( (LinearLayout.LayoutParams)dummyView.LayoutParameters ).Weight = 1;
                     contentLayout.AddView( dummyView );
 
-                    Chevron = new TextView( Rock.Mobile.PlatformCommon.Droid.Context );
+                    Chevron = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     Chevron.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                     ( (LinearLayout.LayoutParams)Chevron.LayoutParameters ).Gravity = GravityFlags.CenterVertical | GravityFlags.Right;
-                    Typeface fontFace = DroidFontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
+                    Typeface fontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
                     Chevron.SetTypeface(  fontFace, TypefaceStyle.Normal );
                     Chevron.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Series_Table_IconSize );
-                    Chevron.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    Chevron.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                     Chevron.Text = NoteConfig.Series_Table_Navigate_Icon;
                     contentLayout.AddView( Chevron );
 
                     // add our own custom seperator at the bottom
-                    Seperator = new View( Rock.Mobile.PlatformCommon.Droid.Context );
+                    Seperator = new View( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     Seperator.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, 0 );
                     Seperator.LayoutParameters.Height = 2;
-                    Seperator.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+                    Seperator.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
                     AddView( Seperator );
                 }
             }
@@ -471,7 +470,7 @@ namespace Droid
                 public NotesPrimaryFragment( ) : base( )
                 {
                     SeriesEntries = new List<SeriesEntry>();
-                    ImagePlaceholder = BitmapFactory.DecodeResource( Rock.Mobile.PlatformCommon.Droid.Context.Resources, Resource.Drawable.thumbnailPlaceholder );
+                    ImagePlaceholder = BitmapFactory.DecodeResource( Rock.Mobile.PlatformSpecific.Android.Core.Context.Resources, Resource.Drawable.thumbnailPlaceholder );
                 }
 
                 public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -541,7 +540,7 @@ namespace Droid
                             delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Series> model )
                             {
                                 // on the main thread, update the list
-                                Rock.Mobile.Threading.UIThreading.PerformOnUIThread(delegate
+                                Rock.Mobile.Threading.Util.PerformOnUIThread(delegate
                                     {
                                         RequestingSeries = false;
                                         ProgressBar.Visibility = ViewStates.Gone;
@@ -668,7 +667,7 @@ namespace Droid
                 {
                     if ( FragmentActive == true )
                     {
-                        Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate
+                        Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
                             {
                                 // using only the cache, try to load any image that isn't loaded
                                 foreach ( SeriesEntry entry in SeriesEntries )

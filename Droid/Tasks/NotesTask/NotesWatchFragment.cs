@@ -43,9 +43,9 @@ namespace Droid
                         return null;
                     }
 
-                    MediaController = new MediaController( Rock.Mobile.PlatformCommon.Droid.Context );
+                    MediaController = new MediaController( Rock.Mobile.PlatformSpecific.Android.Core.Context );
 
-                    RelativeLayout view = new RelativeLayout( Rock.Mobile.PlatformCommon.Droid.Context );
+                    RelativeLayout view = new RelativeLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     view.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent );
                     view.SetBackgroundColor( Android.Graphics.Color.Black );
                     view.SetOnTouchListener( this );
@@ -60,9 +60,9 @@ namespace Droid
                     VideoPlayer.SetOnPreparedListener( this );
                     VideoPlayer.SetOnErrorListener( this );
 
-                    ProgressBar = new ProgressBar( Rock.Mobile.PlatformCommon.Droid.Context );
+                    ProgressBar = new ProgressBar( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     ProgressBar.Indeterminate = true;
-                    ProgressBar.SetBackgroundColor( PlatformBaseUI.GetUIColor( 0 ) );
+                    ProgressBar.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( 0 ) );
                     ProgressBar.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                     ( (RelativeLayout.LayoutParams)ProgressBar.LayoutParameters ).AddRule( LayoutRules.CenterInParent );
                     view.AddView( ProgressBar );

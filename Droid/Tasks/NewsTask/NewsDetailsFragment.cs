@@ -12,7 +12,6 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using Android.Graphics;
-using Rock.Mobile.PlatformCommon;
 using Rock.Mobile.PlatformUI;
 using CCVApp.Shared.Config;
 using CCVApp.Shared.Strings;
@@ -43,10 +42,10 @@ namespace Droid
 
                     View view = inflater.Inflate(Resource.Layout.News_Details, container, false);
                     view.SetOnTouchListener( this );
-                    view.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+                    view.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
 
                     // set the banner
-                    DroidScaledImageView banner = new DroidScaledImageView( Activity );
+                    Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView banner = new Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView( Activity );
                     ( (LinearLayout)view ).AddView( banner, 0 );
 
                     System.IO.Stream assetStream = Activity.BaseContext.Assets.Open( NewsItem.HeaderImageName );
@@ -60,7 +59,7 @@ namespace Droid
                     TextView description = view.FindViewById<TextView>( Resource.Id.news_details_details );
                     description.Text = NewsItem.Description;
                     description.MovementMethod = new ScrollingMovementMethod();
-                    //description.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
+                    //description.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
                     ControlStyling.StyleUILabel( description, ControlStylingConfig.Small_Font_Light, ControlStylingConfig.Small_FontSize );
 
                     Button launchUrlButton = view.FindViewById<Button>(Resource.Id.news_details_launch_url);

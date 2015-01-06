@@ -22,13 +22,13 @@ namespace iOS
         {
             base.ViewDidLoad();
 
-            View.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor );
+            View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             // populate the details view with this news item.
             NewsDescription.Text = NewsItem.Description;
             NewsDescription.BackgroundColor = UIColor.Clear;
-            NewsDescription.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.Label_TextColor );
-            NewsDescription.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Small_Font_Light, ControlStylingConfig.Small_FontSize );
+            NewsDescription.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
+            NewsDescription.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Light, ControlStylingConfig.Small_FontSize );
             NewsDescription.TextContainerInset = UIEdgeInsets.Zero;
             NewsDescription.TextContainer.LineFragmentPadding = 0;
             NewsDescription.UserInteractionEnabled = false;

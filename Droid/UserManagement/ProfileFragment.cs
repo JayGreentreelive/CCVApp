@@ -60,10 +60,10 @@ namespace Droid
             }
 
             View view = inflater.Inflate(Resource.Layout.Profile, container, false);
-            view.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+            view.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
 
             RelativeLayout navBar = view.FindViewById<RelativeLayout>( Resource.Id.navbar_relative_layout );
-            navBar.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+            navBar.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
 
             // setup the name section
             RelativeLayout backgroundView = view.FindViewById<RelativeLayout>( Resource.Id.name_background );
@@ -74,7 +74,7 @@ namespace Droid
             NickNameField.AfterTextChanged += (sender, e) => { Dirty = true; };
 
             View borderView = backgroundView.FindViewById<View>( Resource.Id.middle_border );
-            borderView.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+            borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
             LastNameField = backgroundView.FindViewById<EditText>( Resource.Id.lastNameText );
             ControlStyling.StyleTextField( LastNameField, ProfileStrings.LastNamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
@@ -90,7 +90,7 @@ namespace Droid
             CellPhoneField.AfterTextChanged += (sender, e) => { Dirty = true; };
 
             borderView = backgroundView.FindViewById<View>( Resource.Id.middle_border );
-            borderView.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+            borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
             EmailField = backgroundView.FindViewById<EditText>( Resource.Id.emailAddressText );
             ControlStyling.StyleTextField( EmailField, ProfileStrings.EmailPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
@@ -106,21 +106,21 @@ namespace Droid
             StreetField.AfterTextChanged += (sender, e) => { Dirty = true; };
 
             borderView = backgroundView.FindViewById<View>( Resource.Id.street_border );
-            borderView.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+            borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
             CityField = backgroundView.FindViewById<EditText>( Resource.Id.cityAddressText );
             ControlStyling.StyleTextField( CityField, ProfileStrings.CityPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             CityField.AfterTextChanged += (sender, e) => { Dirty = true; };
 
             borderView = backgroundView.FindViewById<View>( Resource.Id.city_border );
-            borderView.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+            borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
             StateField = backgroundView.FindViewById<EditText>( Resource.Id.stateAddressText );
             ControlStyling.StyleTextField( StateField, ProfileStrings.StatePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             StateField.AfterTextChanged += (sender, e) => { Dirty = true; };
 
             borderView = backgroundView.FindViewById<View>( Resource.Id.state_border );
-            borderView.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+            borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
             ZipField = backgroundView.FindViewById<EditText>( Resource.Id.zipAddressText );
             ControlStyling.StyleTextField( ZipField, ProfileStrings.ZipPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
@@ -136,7 +136,7 @@ namespace Droid
             BirthdateField.AfterTextChanged += (sender, e) => { Dirty = true; };
 
             borderView = backgroundView.FindViewById<View>( Resource.Id.middle_border );
-            borderView.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+            borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
             GenderField = view.FindViewById<EditText>( Resource.Id.genderText );
             ControlStyling.StyleTextField( GenderField, ProfileStrings.GenderPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
@@ -167,7 +167,7 @@ namespace Droid
 
                         builder.SetItems( strings, delegate(object s, DialogClickEventArgs clickArgs) 
                             {
-                                Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate
+                                Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
                                     {
                                         switch( clickArgs.Which )
                                         {
@@ -200,7 +200,7 @@ namespace Droid
 
                     builder.SetItems( strings, delegate(object s, DialogClickEventArgs clickArgs) 
                         {
-                            Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate
+                            Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
                                 {
                                     switch( clickArgs.Which )
                                     {

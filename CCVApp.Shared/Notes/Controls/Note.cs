@@ -159,7 +159,7 @@ namespace CCVApp
                             // when the timer fires, hide the toolbar.
                             // Although the timer fires on a seperate thread, because we queue the reveal
                             // on the main (UI) thread, we don't have to worry about race conditions.
-                            Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate { LoadState( UserNotePath ); } );
+                            Rock.Mobile.Threading.Util.PerformOnUIThread( delegate { LoadState( UserNotePath ); } );
                         };
 
                     UserNotePath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), userNoteFileName);

@@ -14,7 +14,6 @@ using Android.Widget;
 using CCVApp.Shared.Network;
 using Android.Graphics;
 using Rock.Mobile.PlatformUI;
-using Rock.Mobile.PlatformCommon;
 using System.Drawing;
 using CCVApp.Shared.Strings;
 using CCVApp.Shared.Config;
@@ -65,14 +64,14 @@ namespace Droid
                     View view = inflater.Inflate(Resource.Layout.Prayer_Create, container, false);
                     view.SetOnTouchListener( this );
 
-                    view.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+                    view.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
 
                     // setup the name background
                     RelativeLayout backgroundLayout = view.FindViewById<RelativeLayout>( Resource.Id.name_background );
                     ControlStyling.StyleBGLayer( backgroundLayout );
 
                     View borderView = backgroundLayout.FindViewById<View>( Resource.Id.middle_border );
-                    borderView.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+                    borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
                     //
 
                     // setup the prayer request background
@@ -111,8 +110,8 @@ namespace Droid
                                 firstNameText.Enabled = true;
                                 lastNameText.Enabled = true;
 
-                                firstNameText.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
-                                lastNameText.SetTextColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
+                                firstNameText.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
+                                lastNameText.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
                             }
                             else
                             {
@@ -135,7 +134,7 @@ namespace Droid
 
                     // setup our category spinner
                     Spinner spinner = (Spinner)view.FindViewById<Spinner>( Resource.Id.categorySpinner );
-                    ArrayAdapter adapter = new SpinnerArrayAdapter( Rock.Mobile.PlatformCommon.Droid.Context, Android.Resource.Layout.SimpleListItem1 );
+                    ArrayAdapter adapter = new SpinnerArrayAdapter( Rock.Mobile.PlatformSpecific.Android.Core.Context, Android.Resource.Layout.SimpleListItem1 );
                     adapter.SetDropDownViewResource( Android.Resource.Layout.SimpleSpinnerDropDownItem );
                     spinner.Adapter = adapter;
 

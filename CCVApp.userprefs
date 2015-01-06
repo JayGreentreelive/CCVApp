@@ -1,22 +1,41 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.192.168.56.101:5555" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="../Rock.Mobile/PlatformCommon/DroidCommon.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/UserManagement/ImageCropFragment.cs">
     <Files>
-      <File FileName="iOS/SpringboardViewController.cs" Line="34" Column="34" />
-      <File FileName="Droid/UserManagement/ImageCropFragment.cs" Line="83" Column="83" />
-      <File FileName="../Rock.Mobile/PlatformCommon/DroidCommon.cs" Line="47" Column="47" />
+      <File FileName="Droid/UserManagement/ImageCropFragment.cs" Line="43" Column="43" />
+      <File FileName="iOS/UserManagement/ImageCropViewController.cs" Line="34" Column="34" />
+      <File FileName="Droid/Tasks/Task.cs" Line="51" Column="51" />
+      <File FileName="Droid/Tasks/TaskFragment.cs" Line="68" Column="68" />
+      <File FileName="../Rock.Mobile/PlatformSpecific/Android/Animation.cs" Line="43" Column="43" />
+      <File FileName="Droid/Tasks/NotesTask/NotesFragment.cs" Line="57" Column="57" />
+      <File FileName="Droid/Tasks/NotesTask/NotesTask.cs" Line="51" Column="51" />
+      <File FileName="../Rock.Mobile/PlatformSpecific/Android/Graphics.cs" Line="10" Column="10" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="Droid" expanded="True">
             <Node name="Tasks" expanded="True">
+              <Node name="NewsTask" expanded="True" />
               <Node name="NotesTask" expanded="True" />
               <Node name="PrayerTask" expanded="True" />
             </Node>
             <Node name="UserManagement" expanded="True">
               <Node name="ImageCropFragment.cs" selected="True" />
             </Node>
+          </Node>
+          <Node name="iOS" expanded="True">
+            <Node name="Tasks" expanded="True">
+              <Node name="Notes" expanded="True" />
+              <Node name="Prayer" expanded="True" />
+            </Node>
+            <Node name="UserManagement" expanded="True" />
+          </Node>
+          <Node name="Rock.Mobile" expanded="True">
+            <Node name="PlatformSpecific" expanded="True">
+              <Node name="Android" expanded="True" />
+            </Node>
+            <Node name="PlatformUI" expanded="True" />
           </Node>
         </State>
       </Pad>

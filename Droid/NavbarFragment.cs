@@ -14,7 +14,6 @@ using Android.Widget;
 using Android.Animation;
 using Droid.Tasks;
 using Android.Graphics;
-using Rock.Mobile.PlatformCommon;
 using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
 
@@ -162,7 +161,7 @@ namespace Droid
 
             //The navbar should basically be a background with logo and a springboard reveal button in the upper left.
             Navbar = inflater.Inflate(Resource.Layout.navbar, container, false) as RelativeLayout;
-            Navbar.SetBackgroundColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+            Navbar.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
 
             // create the springboard reveal button
             CreateSpringboardButton( Navbar );
@@ -188,7 +187,7 @@ namespace Droid
 
 
             // set the font and text
-            Typeface fontFace = DroidFontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
+            Typeface fontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
             SpringboardRevealButton.SetTypeface( fontFace, TypefaceStyle.Normal );
             SpringboardRevealButton.SetTextSize( Android.Util.ComplexUnitType.Dip, PrimaryNavBarConfig.RevealButton_Size );
             SpringboardRevealButton.Text = PrimaryNavBarConfig.RevealButton_Text;
@@ -202,13 +201,13 @@ namespace Droid
                 };
 
             // let the "pressed" version just use a darker version of the normal color
-            uint mutedColor = PlatformBaseUI.ScaleRGBAColor( ControlStylingConfig.TextField_PlaceholderTextColor, 2, false );
+            uint mutedColor = Rock.Mobile.Graphics.Util.ScaleRGBAColor( ControlStylingConfig.TextField_PlaceholderTextColor, 2, false );
 
             int [] colors = new int[]
                 {
-                    PlatformBaseUI.GetUIColor( mutedColor ),
-                    PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ),
-                    PlatformBaseUI.GetUIColor( mutedColor ),
+                    Rock.Mobile.PlatformUI.Util.GetUIColor( mutedColor ),
+                    Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ),
+                    Rock.Mobile.PlatformUI.Util.GetUIColor( mutedColor ),
                 };
             SpringboardRevealButton.SetTextColor( new Android.Content.Res.ColorStateList( states, colors ) );
 

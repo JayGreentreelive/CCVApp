@@ -6,7 +6,6 @@ using Rock.Mobile.Network;
 using CCVApp.Shared.Network;
 using System.IO;
 using CCVApp.Shared.Config;
-using Rock.Mobile.PlatformCommon;
 using Rock.Mobile.PlatformUI;
 using CCVApp.Shared.Strings;
 using CCVApp.Shared;
@@ -28,7 +27,7 @@ namespace iOS
         /// <value>The login successful timer.</value>
         System.Timers.Timer LoginSuccessfulTimer { get; set; }
 
-        BlockerView BlockerView { get; set; }
+        Rock.Mobile.PlatformSpecific.iOS.UI.BlockerView BlockerView { get; set; }
 
 		public LoginViewController (IntPtr handle) : base (handle)
 		{
@@ -56,10 +55,10 @@ namespace iOS
         {
             base.ViewDidLoad();
 
-            BlockerView = new BlockerView( View.Frame );
+            BlockerView = new Rock.Mobile.PlatformSpecific.iOS.UI.BlockerView( View.Frame );
             View.AddSubview( BlockerView );
 
-            View.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor );
+            View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             // Allow the return on username and password to start
             // the login process
@@ -114,7 +113,7 @@ namespace iOS
                 };
 
             // If cancel is pressed, notify the springboard we're done.
-            CancelButton.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
+            CancelButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
             CancelButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
                     Springboard.ResignModelViewController( this, null );
@@ -126,7 +125,7 @@ namespace iOS
             LoginResultLayer.Layer.Opacity = 0.00f;
 
             // setup the fake header
-            HeaderView.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor );
+            HeaderView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             imagePath = NSBundle.MainBundle.BundlePath + "/" + PrimaryNavBarConfig.LogoFile;
             LogoView = new UIImageView( new UIImage( imagePath ) );
@@ -392,7 +391,7 @@ namespace iOS
 
         public void ProfileComplete(System.Net.HttpStatusCode code, string desc, Rock.Client.Person model) 
         {
-            UIThreading.PerformOnUIThread( delegate
+            Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
                 {
                     UIThread_ProfileComplete( code, desc, model );
                 } );
@@ -417,7 +416,7 @@ namespace iOS
                             LoginSuccessfulTimer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>
                                 {
                                     // when the timer fires, notify the springboard we're done.
-                                    UIThreading.PerformOnUIThread( delegate
+                                    Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
                                         {
                                             Springboard.ResignModelViewController( this, null );
                                         } );
@@ -452,7 +451,7 @@ namespace iOS
                 case System.Net.HttpStatusCode.OK:
                 {
                     // sweet! make the UI update.
-                    UIThreading.PerformOnUIThread( delegate { Springboard.UpdateProfilePic( ); } );
+                    Rock.Mobile.Threading.Util.PerformOnUIThread( delegate { Springboard.UpdateProfilePic( ); } );
                     break;
                 }
 

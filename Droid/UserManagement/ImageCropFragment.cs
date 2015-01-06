@@ -15,9 +15,10 @@ using Android.Graphics;
 using Android.Graphics.Drawables;
 using Android.Graphics.Drawables.Shapes;
 using Java.IO;
-using Rock.Mobile.PlatformCommon;
 using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
+using Rock.Mobile.PlatformSpecific.Android.Animation;
+using Rock.Mobile.PlatformSpecific.Android.Graphics;
 
 namespace Droid
 {
@@ -48,6 +49,12 @@ namespace Droid
         float ScreenToImageScalar { get; set; }
 
         /// <summary>
+        /// The dimensions of the screen, needed for animating the image.
+        /// </summary>
+        /// <value>The size of the screen.</value>
+        System.Drawing.SizeF ScreenSize { get; set; }
+
+        /// <summary>
         /// The image we're cropping
         /// </summary>
         /// <value>The source image.</value>
@@ -75,7 +82,7 @@ namespace Droid
         /// The view that displays the source/cropped image
         /// </summary>
         /// <value>The image view.</value>
-        ImageView ImageView { get; set; }
+        AspectScaledImageView ImageView { get; set; }
 
         /// <summary>
         /// The aspect ratio we should be cropping the picture to.
@@ -103,7 +110,11 @@ namespace Droid
 
         Button CancelButton { get; set; }
 
-        MaskLayer MaskLayer { get; set; }
+        Button ConfirmButton { get; set; }
+
+        bool Animating { get; set; }
+
+        Rock.Mobile.PlatformSpecific.Android.Graphics.MaskLayer MaskLayer { get; set; }
 
         public override void OnCreate( Bundle savedInstanceState )
         {
@@ -123,6 +134,8 @@ namespace Droid
                 // Currently in a layout without a container, so no reason to create our view.
                 return null;
             }
+
+            ScreenSize = new System.Drawing.SizeF( container.Width, container.Height );
 
             // scale the image to match the view's width
             ScreenToImageScalar = (float) SourceImage.Width / (float) container.Width;
@@ -150,14 +163,19 @@ namespace Droid
 
 
             // create the view that will display the image to crop
-            ImageView = new ImageView( Rock.Mobile.PlatformCommon.Droid.Context );
-            ImageView.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.MatchParent );
-            ((RelativeLayout.LayoutParams)ImageView.LayoutParameters).AddRule( LayoutRules.CenterInParent );
+            ImageView = new AspectScaledImageView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+            ImageView.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+            ImageView.LayoutParameters.Width = ScaledSourceImage.Width;
+            ImageView.LayoutParameters.Height = ScaledSourceImage.Height;
+
+            // center the image
+            ImageView.SetX( (container.Width - ImageView.LayoutParameters.Width ) / 2 );
+            ImageView.SetY( (container.Height - ImageView.LayoutParameters.Height ) / 2 );
 
             view.AddView( ImageView );
 
             // create the draggable crop view that will let the user pic which part of the image to use.
-            CropView = new View( Rock.Mobile.PlatformCommon.Droid.Context );
+            CropView = new View( Rock.Mobile.PlatformSpecific.Android.Core.Context );
             CropView.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
 
             // the crop view's dimensions should be based on what the user wanted to crop to. We'll do width, and then height as a scale of width.
@@ -191,88 +209,94 @@ namespace Droid
 
             view.AddView( CropView );
 
+            // create a mask layer that will block out the parts of the image that will be cropped
+            MaskLayer = new Rock.Mobile.PlatformSpecific.Android.Graphics.MaskLayer( container.Width, container.Height, CropView.LayoutParameters.Width, CropView.LayoutParameters.Height, Rock.Mobile.PlatformSpecific.Android.Core.Context );
+            MaskLayer.LayoutParameters = new RelativeLayout.LayoutParams( container.Width, container.Height );
+            MaskLayer.Opacity = 0.00f;
+            view.AddView( MaskLayer );
+
+
 
             // Now setup our bottom area with cancel, crop, and text to explain
-            RelativeLayout bottomBarLayout = new RelativeLayout( Rock.Mobile.PlatformCommon.Droid.Context );
+            RelativeLayout bottomBarLayout = new RelativeLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
             bottomBarLayout.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
             ((RelativeLayout.LayoutParams)bottomBarLayout.LayoutParameters).AddRule( LayoutRules.AlignParentBottom );
 
             // set the nav subBar color (including opacity)
-            Color navColor = PlatformBaseUI.GetUIColor( SubNavToolbarConfig.BackgroundColor );
+            Color navColor = Rock.Mobile.PlatformUI.Util.GetUIColor( SubNavToolbarConfig.BackgroundColor );
             navColor.A = (Byte) ( (float) navColor.A * SubNavToolbarConfig.Opacity );
             bottomBarLayout.SetBackgroundColor( navColor );
 
             bottomBarLayout.LayoutParameters.Height = 150;
             view.AddView( bottomBarLayout );
 
-
-
             // setup the cancel button (which will undo cropping or take you back to the picture taker)
-            CancelButton = new Button( Rock.Mobile.PlatformCommon.Droid.Context );
+            CancelButton = new Button( Rock.Mobile.PlatformSpecific.Android.Core.Context );
             CancelButton.LayoutParameters = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
             CancelButton.Gravity = GravityFlags.Left;
             ((RelativeLayout.LayoutParams)CancelButton.LayoutParameters).AddRule( LayoutRules.AlignParentLeft );
 
             // set the crop button's font
-            Android.Graphics.Typeface fontFace = DroidFontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary );
+            Android.Graphics.Typeface fontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary );
             CancelButton.SetTypeface( fontFace, Android.Graphics.TypefaceStyle.Normal );
             CancelButton.SetTextSize( Android.Util.ComplexUnitType.Dip, ImageCropConfig.CropCancelButton_Size );
             CancelButton.Text = ImageCropConfig.CropCancelButton_Text;
 
             CancelButton.Click += (object sender, EventArgs e) => 
                 {
-                    // if they hit cancel while previewing, go back to editing
-                    if( Mode == CropMode.Previewing )
+                    // don't allow button presses while animations are going on
+                    if( Animating == false )
                     {
-                        SetMode( CropMode.Editing );
-                    }
-                    else
-                    {
-                        // they pressed it while they're in crop mode, so go back to camera mode
+                        // if they hit cancel while previewing, go back to editing
+                        if( Mode == CropMode.Previewing )
+                        {
+                            SetMode( CropMode.Editing );
+                        }
+                        else
+                        {
+                            // they pressed it while they're in editing mode, so go back to camera mode
+                            Activity.OnBackPressed( );
+                        }
                     }
                 };
 
             bottomBarLayout.AddView( CancelButton );
 
-
-            // create a mask layer that will block out the parts of the image that will be cropped
-            MaskLayer = new MaskLayer( container.Width, container.Height, CropView.LayoutParameters.Width, CropView.LayoutParameters.Height, Rock.Mobile.PlatformCommon.Droid.Context );
-            MaskLayer.LayoutParameters = new RelativeLayout.LayoutParams( container.Width, container.Height );
-            MaskLayer.Opacity = .50f;
-            view.AddView( MaskLayer );
-
-
             // setup the Confirm button, which will use a font to display its graphic
-            Button confirmButton = new Button( Rock.Mobile.PlatformCommon.Droid.Context );
-            confirmButton.LayoutParameters = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-            confirmButton.Gravity = GravityFlags.Right;
-            ((RelativeLayout.LayoutParams)confirmButton.LayoutParameters).AddRule( LayoutRules.AlignParentRight );
+            ConfirmButton = new Button( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+            ConfirmButton.LayoutParameters = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+            ConfirmButton.Gravity = GravityFlags.Right;
+            ((RelativeLayout.LayoutParams)ConfirmButton.LayoutParameters).AddRule( LayoutRules.AlignParentRight );
 
             // set the crop button's font
-            fontFace = DroidFontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary );
-            confirmButton.SetTypeface( fontFace, Android.Graphics.TypefaceStyle.Normal );
-            confirmButton.SetTextSize( Android.Util.ComplexUnitType.Dip, ImageCropConfig.CropOkButton_Size );
-            confirmButton.Text = ImageCropConfig.CropOkButton_Text;
+            fontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary );
+            ConfirmButton.SetTypeface( fontFace, Android.Graphics.TypefaceStyle.Normal );
+            ConfirmButton.SetTextSize( Android.Util.ComplexUnitType.Dip, ImageCropConfig.CropOkButton_Size );
+            ConfirmButton.Text = ImageCropConfig.CropOkButton_Text;
 
             // when clicked, we should crop the image.
-            confirmButton.Click += (object sender, EventArgs e) => 
+            ConfirmButton.Click += (object sender, EventArgs e) => 
                 {
-                    // if they pressed confirm while editing, go to preview
-                    if( Mode == CropMode.Editing )
+                    // don't allow button presses while animations are going on
+                    if( Animating == false )
                     {
-                        SetMode( CropMode.Previewing );
-                    }
-                    else
-                    {
-                        // notify the caller
-                        SpringboardParent.ModalFragmentDone( this, CroppedImage );
+                        // if they pressed confirm while editing, go to preview
+                        if( Mode == CropMode.Editing )
+                        {
+                            SetMode( CropMode.Previewing );
+                        }
+                        else
+                        {
+                            // notify the caller
+                            SpringboardParent.ModalFragmentDone( this, CroppedImage );
 
-                        // now free our resources, cause we're done.
-                        Activity.OnBackPressed( );
+                            // now free our resources, cause we're done.
+                            Activity.OnBackPressed( );
+                        }
                     }
                 };
 
-            bottomBarLayout.AddView( confirmButton );
+            bottomBarLayout.AddView( ConfirmButton );
 
             // start in editing mode (obviously)
             SetMode( CropMode.Editing );
@@ -335,6 +359,10 @@ namespace Droid
             SetMode( CropMode.None );
         }
 
+        const long ImageAnimationTimeMS = 250;
+        const long MaskFadeTimeMS = 500;
+        const float MaskFadeAmount = .50f;
+
         void SetMode( CropMode mode )
         {
             if( mode == Mode )
@@ -346,62 +374,207 @@ namespace Droid
             {
                 case CropMode.Editing:
                 {
-                    // there's nothing to cancel while editing, so disable the button.
-                    CancelButton.Enabled = false;
-
-                    ImageView.SetImageBitmap( null );
-
-                    // release any cropped image we had.
-                    if ( CroppedImage != null )
+                    // If we're entering edit mode for the first time
+                    if ( Mode == CropMode.None )
                     {
-                        CroppedImage.Dispose( );
-                        CroppedImage = null;
+                        // Animate in the mask
+                        SimpleAnimatorFloat floatAnimator = new SimpleAnimatorFloat( MaskLayer.Opacity, MaskFadeAmount, MaskFadeTimeMS, 
+                            delegate( float percent, object value )
+                            {
+                                Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                                    {
+                                        MaskLayer.Opacity = (float)value;
+                                    } ); 
+                            }, 
+                            null );
+
+                        floatAnimator.Start( );
+
+
+                        // turn on our cropper
+                        CropView.Visibility = ViewStates.Visible;
+
+                        // and set the source image to the scaled source.
+                        ImageView.SetImageBitmap( ScaledSourceImage );
+                    }
+                    // else we're coming FROM Preview Mode, so we need to animate
+                    else
+                    {
+                        Animating = true;
+
+                        // setup the dimension changes
+                        System.Drawing.SizeF startSize = new System.Drawing.SizeF( ImageView.Width, ImageView.Height );
+                        System.Drawing.SizeF endSize = new System.Drawing.SizeF( CropView.Width, CropView.Height );
+
+                        PointF startPos = new PointF( ImageView.GetX( ), ImageView.GetY( ) );
+                        PointF endPos = new PointF( CropView.GetX( ), CropView.GetY( ) );
+
+
+                        // now animate the cropped image up to its full size
+                        AnimateImageView( ImageView, startPos, endPos, startSize, endSize, ImageAnimationTimeMS, 
+                            delegate 
+                            { 
+                                ImageView.SetImageBitmap( null );
+
+                                // release any cropped image we had.
+                                if ( CroppedImage != null )
+                                {
+                                    CroppedImage.Dispose( );
+                                    CroppedImage = null;
+                                }
+
+                                // release the scaled version if we had it
+                                if ( ScaledCroppedImage != null )
+                                {
+                                    ScaledCroppedImage.Dispose( );
+                                    ScaledCroppedImage = null;
+                                }
+
+
+                                ImageView.SetImageBitmap( ScaledSourceImage );
+                                ImageView.LayoutParameters.Width = ScaledSourceImage.Width;
+                                ImageView.LayoutParameters.Height = ScaledSourceImage.Height;
+
+                                // center the image
+                                ImageView.SetX( (ScreenSize.Width - ImageView.LayoutParameters.Width ) / 2 );
+                                ImageView.SetY( (ScreenSize.Height - ImageView.LayoutParameters.Height ) / 2 );
+
+                                MaskLayer.Visibility = ViewStates.Visible;
+                                CropView.Visibility = ViewStates.Visible;
+
+                                SimpleAnimatorFloat floatAnimator = new SimpleAnimatorFloat( MaskLayer.Opacity, MaskFadeAmount, MaskFadeTimeMS, 
+                                    delegate( float percent, object value )
+                                    {
+                                        Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                                            {
+                                                MaskLayer.Opacity = (float)value;
+                                                CropView.Alpha = percent;
+                                            } ); 
+                                    }, 
+                                    // FINISHED MASK FADE-OUT
+                                    delegate
+                                    {
+                                        Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                                            {
+                                                Animating = false;
+                                            });
+                                    });
+                                floatAnimator.Start( );
+                            } );
                     }
 
-                    // release the scaled version if we had it
-                    if( ScaledCroppedImage != null )
-                    {
-                        ScaledCroppedImage.Dispose( );
-                        ScaledCroppedImage = null;
-                    }
-
-                    // turn on our cropper
-                    CropView.Visibility = ViewStates.Visible;
-
-                    // and set the source image to the scaled source.
-                    ImageView.SetImageBitmap( ScaledSourceImage );
                     break;
                 }
 
                 case CropMode.Previewing:
                 {
-                    // allow them to cancel this crop and try again.
-                    CancelButton.Enabled = true;
+                    // don't allow a state change while we're animating
+                    Animating = true;
 
-                    ImageView.SetImageBitmap( null );
+                    SimpleAnimatorFloat floatAnimator = new SimpleAnimatorFloat( MaskLayer.Opacity, 1.00f, MaskFadeTimeMS, 
+                        delegate( float percent, object value )
+                        {
+                            Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                                {
+                                    MaskLayer.Opacity = (float)value;
+                                    CropView.Alpha = 1.0f - percent;
+                                } ); 
+                        }, 
+                        // FINISHED MASK FADE-IN
+                        delegate
+                        {
+                            Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                                {
+                                    // hide the mask and cropper
+                                    MaskLayer.Visibility = ViewStates.Gone;
+                                    CropView.Visibility = ViewStates.Gone;
 
-                    // create the cropped image
-                    CroppedImage = CropImage( SourceImage, new System.Drawing.RectangleF( CropView.GetX( ) - CropViewMinPos.X, 
-                                                                                          CropView.GetY( ) - CropViewMinPos.Y, 
-                                                                                          CropView.LayoutParameters.Width, 
-                                                                                          CropView.LayoutParameters.Height ) );
+                                    // create the cropped image
+                                    CroppedImage = CropImage( SourceImage, new System.Drawing.RectangleF( CropView.GetX( ) - CropViewMinPos.X, 
+                                        CropView.GetY( ) - CropViewMinPos.Y, 
+                                        CropView.LayoutParameters.Width, 
+                                        CropView.LayoutParameters.Height ) );
 
-                    // create a scaled version of the cropped image
-                    float scaledWidth = (float)CroppedImage.Width * (1.0f / ScreenToImageScalar);
-                    float scaledHeight = (float)CroppedImage.Height * (1.0f / ScreenToImageScalar);
-                    ScaledCroppedImage = Bitmap.CreateScaledBitmap( CroppedImage, (int)scaledWidth, (int)scaledHeight, false );
+                                    // create a scaled version of the cropped image
+                                    float scaledWidth = (float)CroppedImage.Width * (1.0f / ScreenToImageScalar);
+                                    float scaledHeight = (float)CroppedImage.Height * (1.0f / ScreenToImageScalar);
+                                    ScaledCroppedImage = Bitmap.CreateScaledBitmap( CroppedImage, (int)scaledWidth, (int)scaledHeight, false );
 
-                    // set the scaled cropped image
-                    ImageView.SetImageBitmap( ScaledCroppedImage );
-                    ImageView.SetBackgroundColor( Color.Black );
+                                    // set the scaled cropped image
+                                    ImageView.SetImageBitmap( null );
+                                    ImageView.SetImageBitmap( ScaledCroppedImage );
 
-                    // hide the cropper
-                    CropView.Visibility = ViewStates.Gone;
+                                    // start the scaled cropped image scaled down further to match its size within the full image.
+                                    ImageView.SetX( CropView.GetX( ) );
+                                    ImageView.SetY( CropView.GetY( ) );
+                                    ImageView.LayoutParameters.Width = CropView.Width;
+                                    ImageView.LayoutParameters.Height = CropView.Height;
+
+
+                                    // setup the dimension changes
+                                    System.Drawing.SizeF startSize = new System.Drawing.SizeF( ScaledCroppedImage.Width, ScaledCroppedImage.Height );
+                                    System.Drawing.SizeF endSize = new System.Drawing.SizeF( ScreenSize.Width, (float)System.Math.Ceiling( ScreenSize.Width * ( startSize.Width / startSize.Height ) ) );
+
+                                    PointF startPos = new PointF( CropView.GetX( ), CropView.GetY( ) );
+                                    PointF endPos = new PointF( (ScreenSize.Width - endSize.Width) / 2, (ScreenSize.Height - endSize.Height) / 2 );
+
+
+                                    // now animate the cropped image up to its full size
+                                    AnimateImageView( ImageView, startPos, endPos, startSize, endSize, ImageAnimationTimeMS, 
+                                        delegate 
+                                        { 
+                                            Animating = false;
+                                        } );
+                                } ); 
+                        } );
+
+                    floatAnimator.Start( );
                     break;
                 }
             }
 
             Mode = mode;
+        }
+
+        void AnimateImageView( View imageView, PointF startPos, PointF endPos, System.Drawing.SizeF startSize, System.Drawing.SizeF endSize, long durationMS, SimpleAnimator.AnimationComplete completeDelegate )
+        {
+            // calculate the deltas once before we start
+            float xDelta = endPos.X - startPos.X;
+            float yDelta = endPos.Y - startPos.Y;
+
+            float deltaWidth = endSize.Width - startSize.Width;
+            float deltaHeight = endSize.Height - startSize.Height;
+
+            // create an animator
+            SimpleAnimatorFloat imageAnimator = new SimpleAnimatorFloat( 0.00f, 1.00f, durationMS, 
+                delegate( float percent, object value )
+                {
+                    Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                        {
+                            // each update, interpolate the deltas and apply 
+                            imageView.SetX( startPos.X + ( xDelta * percent ) );
+                            imageView.SetY( startPos.Y + ( yDelta * percent ) );
+
+                            imageView.LayoutParameters.Width = (int)( startSize.Width + ( deltaWidth * percent ) );
+                            imageView.LayoutParameters.Height = (int)( startSize.Height + ( deltaHeight * percent ) );
+
+                            // force the image to re-evaluate its size
+                            imageView.RequestLayout( );
+                        } ); 
+                }, 
+                //ANIMATION COMPLETE
+                delegate
+                {
+                    if ( completeDelegate != null )
+                    {
+                        Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                            {
+                                completeDelegate( );
+                            } );
+                    }
+                } );
+
+            imageAnimator.Start( );
         }
 
         public bool OnTouch( View v, MotionEvent e )

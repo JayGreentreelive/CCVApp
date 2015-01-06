@@ -22,7 +22,7 @@ namespace Droid
             // default our app to protrait mode, and let the notes change it.
             RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
 
-            Rock.Mobile.PlatformCommon.Droid.Context = this;
+            Rock.Mobile.PlatformSpecific.Android.Core.Context = this;
 
             DisplayMetrics metrics = Resources.DisplayMetrics;
             Console.WriteLine("Android Device detected dpi: {0}", metrics.DensityDpi );

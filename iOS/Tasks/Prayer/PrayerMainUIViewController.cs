@@ -5,7 +5,6 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Drawing;
 using MonoTouch.CoreAnimation;
-using Rock.Mobile.PlatformCommon;
 using Rock.Mobile.PlatformUI;
 using CCVApp.Shared.Config;
 using CCVApp.Shared.Strings;
@@ -72,8 +71,8 @@ namespace iOS
             PrayerText.BackgroundColor = UIColor.Clear;
             PrayerText.Layer.AnchorPoint = new PointF( 0, 0 );
             PrayerText.DelaysContentTouches = false; // don't allow delaying touch, we need to forward it
-            PrayerText.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
-            PrayerText.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            PrayerText.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+            PrayerText.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             PrayerText.TextContainerInset = UIEdgeInsets.Zero;
             PrayerText.TextContainer.LineFragmentPadding = 0;
 
@@ -82,10 +81,10 @@ namespace iOS
             Pray.Layer.AnchorPoint = new PointF( 0, 0 );
             Pray.SetTitle( PrayerStrings.Prayer_Confirm, UIControlState.Normal );
 
-            Pray.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
-            Pray.SetTitleColor( PlatformBaseUI.GetUIColor( PlatformBaseUI.ScaleRGBAColor( ControlStylingConfig.TextField_PlaceholderTextColor, 2, false ) ), UIControlState.Highlighted );
+            Pray.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
+            Pray.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( Rock.Mobile.Graphics.Util.ScaleRGBAColor( ControlStylingConfig.TextField_PlaceholderTextColor, 2, false ) ), UIControlState.Highlighted );
 
-            Pray.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            Pray.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             Pray.SizeToFit( );
 
             PrayFillIn = new UIView( );
@@ -93,7 +92,7 @@ namespace iOS
             PrayFillIn.Layer.Position = new PointF( View.Bounds.Width - PrayFillIn.Layer.Bounds.Width - ViewPadding, View.Bounds.Height - PrayFillIn.Layer.Bounds.Height - (PrayFillIn.Layer.Bounds.Height / 2) );
             PrayFillIn.Layer.CornerRadius = PrayFillIn.Bounds.Width / 2;
             PrayFillIn.Layer.BorderWidth = 1;
-            PrayFillIn.Layer.BorderColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ).CGColor;
+            PrayFillIn.Layer.BorderColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ).CGColor;
             PrayFillIn.Layer.AnchorPoint = new PointF( 0, 0 );
 
             Pray.Layer.Position = new PointF( PrayFillIn.Frame.Left - Pray.Layer.Bounds.Width - ViewPadding, View.Bounds.Height - Pray.Layer.Bounds.Height );
@@ -112,21 +111,21 @@ namespace iOS
             // setup the name field
             Name = new UILabel( );
             Name.Layer.AnchorPoint = new PointF( 0, 0 );
-            Name.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
-            Name.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            Name.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
+            Name.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
 
             // setup the date field
             Date = new UILabel( );
             Date.Layer.AnchorPoint = new PointF( 0, 0 );
-            Date.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
-            Date.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            Date.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+            Date.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
 
 
             // setup the category field
             Category = new UILabel( );
             Category.Layer.AnchorPoint = new PointF( 0, 0 );
-            Category.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
-            Category.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            Category.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+            Category.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
 
 
             // add the controls
@@ -188,7 +187,7 @@ namespace iOS
             // Hack - Use FlagCount to track whether we've prayed for this or not
             if( PrayerRequest.FlagCount != 0 )
             {
-                PrayFillIn.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor );
+                PrayFillIn.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor );
             }
             else
             {
@@ -216,7 +215,7 @@ namespace iOS
         bool RequestingPrayers { get; set; }
         bool ViewActive { get; set; }
 
-        BlockerView BlockerView { get; set; }
+        Rock.Mobile.PlatformSpecific.iOS.UI.BlockerView BlockerView { get; set; }
 
 		public PrayerMainUIViewController (IntPtr handle) : base (handle)
 		{
@@ -226,9 +225,9 @@ namespace iOS
         {
             base.ViewDidLoad();
 
-            BlockerView = new BlockerView( View.Frame );
+            BlockerView = new Rock.Mobile.PlatformSpecific.iOS.UI.BlockerView( View.Frame );
 
-            View.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor );
+            View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             float viewRealHeight = ( View.Bounds.Height - Task.NavToolbar.Frame.Height);
 
@@ -253,7 +252,7 @@ namespace iOS
 
             // Setup the request prayers layer
             //setup our appearance
-            RetrievingPrayersView.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor );
+            RetrievingPrayersView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             StatusLabel.Text = PrayerStrings.ViewPrayer_StatusText_Retrieving;
             ControlStyling.StyleUILabel( StatusLabel, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );

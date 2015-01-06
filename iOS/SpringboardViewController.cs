@@ -5,7 +5,6 @@ using System.CodeDom.Compiler;
 using MonoTouch.CoreAnimation;
 using System.Drawing;
 using System.Collections.Generic;
-using Rock.Mobile.PlatformCommon;
 using Rock.Mobile.Network;
 using CCVApp.Shared.Network;
 using MonoTouch.AssetsLibrary;
@@ -74,7 +73,7 @@ namespace iOS
                 // Create the logo view containing the image.
                 LogoView = new UILabel();
                 LogoView.Text = imageChar;
-                LogoView.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Primary, SpringboardConfig.Element_FontSize );
+                LogoView.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Primary, SpringboardConfig.Element_FontSize );
                 LogoView.SizeToFit( );
                 LogoView.BackgroundColor = UIColor.Clear;
                 BackingView.AddSubview( LogoView );
@@ -89,7 +88,7 @@ namespace iOS
 
                 // Create the seperator
                 Seperator = new UIView( );
-                Seperator.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_Color );
+                Seperator.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
                 BackingView.AddSubview( Seperator );
 
                 // Create the button
@@ -115,15 +114,15 @@ namespace iOS
 
             public void Activate( )
             {
-                LogoView.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.Springboard_ActiveElementColor );
-                TextLabel.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.Springboard_ActiveElementColor );
-                BackingView.BackgroundColor = PlatformBaseUI.GetUIColor( SpringboardConfig.Element_SelectedColor );
+                LogoView.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Springboard_ActiveElementColor );
+                TextLabel.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Springboard_ActiveElementColor );
+                BackingView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( SpringboardConfig.Element_SelectedColor );
             }
 
             public void Deactivate( )
             {
-                LogoView.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.Springboard_InActiveElementColor );
-                TextLabel.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.Springboard_InActiveElementColor );
+                LogoView.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Springboard_InActiveElementColor );
+                TextLabel.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Springboard_InActiveElementColor );
                 BackingView.BackgroundColor = UIColor.Clear;
             }
         };
@@ -272,7 +271,7 @@ namespace iOS
 
             // add a bottom seperator for the final element
             BottomSeperator = new UIView();
-            BottomSeperator.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BG_Layer_Color );
+            BottomSeperator.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
             View.AddSubview( BottomSeperator );
             BottomSeperator.Frame = new RectangleF( 0, 0, View.Frame.Width, 1.0f );
 
@@ -287,11 +286,11 @@ namespace iOS
             //
 
             // setup the campus selector and settings button
-            CampusButton.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
-            CampusButton.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            CampusButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
+            CampusButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
 
-            SettingsButton.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
-            SettingsButton.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Primary, SpringboardConfig.SettingsSymbolSize );
+            SettingsButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
+            SettingsButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Primary, SpringboardConfig.SettingsSymbolSize );
             SettingsButton.SetTitle( SpringboardConfig.SettingsSymbol, UIControlState.Normal );
             SettingsButton.SizeToFit( );
 
@@ -304,19 +303,19 @@ namespace iOS
             ProfileImageView.Layer.Position = PointF.Empty;
             EditPictureButton.AddSubview( ProfileImageView );
 
-            EditPictureButton.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Primary, SpringboardConfig.ProfileSymbolFontSize );
-            EditPictureButton.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
-            EditPictureButton.Layer.BorderColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ).CGColor;
+            EditPictureButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Primary, SpringboardConfig.ProfileSymbolFontSize );
+            EditPictureButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
+            EditPictureButton.Layer.BorderColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ).CGColor;
             EditPictureButton.Layer.CornerRadius = EditPictureButton.Bounds.Width / 2;
             EditPictureButton.Layer.BorderWidth = 4;
 
-            WelcomeField.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Large_Font_Light, ControlStylingConfig.Large_FontSize );
-            WelcomeField.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.Label_TextColor );
+            WelcomeField.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Large_Font_Light, ControlStylingConfig.Large_FontSize );
+            WelcomeField.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
 
-            UserNameField.Font = Rock.Mobile.PlatformCommon.iOSCommon.LoadFontDynamic( ControlStylingConfig.Large_Font_Bold, ControlStylingConfig.Large_FontSize );
-            UserNameField.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.Label_TextColor );
+            UserNameField.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Large_Font_Bold, ControlStylingConfig.Large_FontSize );
+            UserNameField.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
 
-            View.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.SpringboardBackgroundColor );
+            View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.SpringboardBackgroundColor );
 
             AddChildViewController( NavViewController );
             View.AddSubview( NavViewController.View );
@@ -621,9 +620,9 @@ namespace iOS
             UserNameField.Bounds = new RectangleF( 0, 0, UserNameField.Bounds.Width, totalNameHeight );
 
             ViewProfileLabel.Layer.AnchorPoint = PointF.Empty;
-            ViewProfileLabel.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Small_Font_Light, ControlStylingConfig.Small_FontSize );
+            ViewProfileLabel.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Light, ControlStylingConfig.Small_FontSize );
             ViewProfileLabel.SizeToFit( );
-            ViewProfileLabel.TextColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.Label_TextColor );
+            ViewProfileLabel.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
             ViewProfileLabel.Layer.Position = new PointF( EditPictureButton.Layer.Position.X + ((EditPictureButton.Bounds.Width - ViewProfileLabel.Bounds.Width) / 2), WelcomeField.Frame.Bottom );
 
             float totalHeight = totalNameHeight + ViewProfileLabel.Bounds.Height;
@@ -687,7 +686,7 @@ namespace iOS
 
         public static void DisplayError( string title, string message )
         {
-            Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate
+            Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
                 {
                     UIAlertView alert = new UIAlertView();
                     alert.Title = title;

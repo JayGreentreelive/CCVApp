@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using MonoTouch.Foundation;
 using System.Drawing;
 using CCVApp.Shared.Config;
-using Rock.Mobile.PlatformCommon;
 using Rock.Mobile.PlatformUI;
 
 namespace iOS
@@ -64,7 +63,7 @@ namespace iOS
                     // when the timer fires, hide the toolbar.
                     // Although the timer fires on a seperate thread, because we queue the reveal
                     // on the main (UI) thread, we don't have to worry about race conditions.
-                    Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate { Reveal( false ); } );
+                    Rock.Mobile.Threading.Util.PerformOnUIThread( delegate { Reveal( false ); } );
                 };
 
 
@@ -72,10 +71,10 @@ namespace iOS
             NSString backLabel = new NSString(SubNavToolbarConfig.BackButton_Text);
 
             BackButton = new UIButton(UIButtonType.System);
-            BackButton.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Secondary, SubNavToolbarConfig.BackButton_Size );
+            BackButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, SubNavToolbarConfig.BackButton_Size );
             BackButton.SetTitle( backLabel.ToString( ), UIControlState.Normal );
-            BackButton.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ), UIControlState.Normal );
-            BackButton.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Disabled );
+            BackButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ), UIControlState.Normal );
+            BackButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Disabled );
 
             SizeF buttonSize = backLabel.StringSize( BackButton.Font );
             BackButton.Bounds = new RectangleF( 0, 0, buttonSize.Width, buttonSize.Height );
@@ -85,10 +84,10 @@ namespace iOS
             NSString shareLabel = new NSString(SubNavToolbarConfig.ShareButton_Text);
 
             ShareButton = new UIButton(UIButtonType.System);
-            ShareButton.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Secondary, SubNavToolbarConfig.ShareButton_Size );
+            ShareButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, SubNavToolbarConfig.ShareButton_Size );
             ShareButton.SetTitle( shareLabel.ToString( ), UIControlState.Normal );
-            ShareButton.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ), UIControlState.Normal );
-            ShareButton.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Disabled );
+            ShareButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ), UIControlState.Normal );
+            ShareButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Disabled );
 
             // determine its dimensions
             buttonSize = shareLabel.StringSize( ShareButton.Font );
@@ -100,10 +99,10 @@ namespace iOS
             NSString createLabel = new NSString(SubNavToolbarConfig.CreateButton_Text);
 
             CreateButton = new UIButton(UIButtonType.System);
-            CreateButton.Font = iOSCommon.LoadFontDynamic( ControlStylingConfig.Icon_Font_Secondary, SubNavToolbarConfig.CreateButton_Size );
+            CreateButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, SubNavToolbarConfig.CreateButton_Size );
             CreateButton.SetTitle( createLabel.ToString( ), UIControlState.Normal );
-            CreateButton.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ), UIControlState.Normal );
-            CreateButton.SetTitleColor( PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Disabled );
+            CreateButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ), UIControlState.Normal );
+            CreateButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Disabled );
 
             // determine its dimensions
             buttonSize = createLabel.StringSize( CreateButton.Font );

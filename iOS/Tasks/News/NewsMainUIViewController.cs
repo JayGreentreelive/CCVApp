@@ -104,7 +104,7 @@ namespace iOS
             TableSource source = new TableSource( this, News, NewsImage );
             NewsTableView.Source = source;
 
-            NewsTableView.BackgroundColor = PlatformBaseUI.GetUIColor( ControlStylingConfig.BackgroundColor );
+            NewsTableView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
             NewsTableView.SeparatorStyle = UITableViewCellSeparatorStyle.None;
         }
 

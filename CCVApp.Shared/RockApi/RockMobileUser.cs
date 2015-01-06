@@ -357,7 +357,7 @@ namespace CCVApp
                         #if __IOS__
                         string jpgFilename = System.IO.Path.Combine ( Environment.GetFolderPath(Environment.SpecialFolder.Personal), SpringboardConfig.ProfilePic );
                         #else
-                        string jpgFilename = Rock.Mobile.PlatformCommon.Droid.Context.GetExternalFilesDir( null ).ToString( ) + SpringboardConfig.ProfilePic;
+                        string jpgFilename = Rock.Mobile.PlatformSpecific.Android.Core.Context.GetExternalFilesDir( null ).ToString( ) + SpringboardConfig.ProfilePic;
                         #endif
 
                         return jpgFilename;

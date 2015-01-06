@@ -4,6 +4,10 @@ Both:
 	Added auto-retry when a note download fails. Usually it's caused by a minor hiccup in the network, and a simple retry fixes it.
 		This saves the user from having to see an error dialog and manually retry.
 
+	Refreshed the Profile Picture Cropper to be more polished with animations.
+
+	Refreshed the overall design with color / font adjustments. 
+
 iOS
 	The Nav Toolbar now works in landscape mode. (But not when watching a landscape video cause that sucks)
 	Audio works with the volume switch off
@@ -13,5 +17,4 @@ iOS
 Android
 	The app no longer resets to the first page in a section when backgrounding / resuming.
 	Fixed an issue causing the Springboard to stop working if back was pressed while Login/Profile/ImageCropping were open.
-
 	Fixed an issue causing spellcheck to be on for news items.

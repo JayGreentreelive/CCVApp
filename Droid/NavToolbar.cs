@@ -6,7 +6,6 @@ using Android.Animation;
 using Android.Graphics;
 using Android.App;
 using Android.OS;
-using Rock.Mobile.PlatformCommon;
 using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
 
@@ -55,10 +54,10 @@ namespace Droid
 
         public NavToolbarFragment( ) : base( )
         {
-            BackButton = new Button( Rock.Mobile.PlatformCommon.Droid.Context );
-            ShareButton = new Button( Rock.Mobile.PlatformCommon.Droid.Context );
-            CreateButton = new Button( Rock.Mobile.PlatformCommon.Droid.Context );
-            ButtonLayout = new LinearLayout( Rock.Mobile.PlatformCommon.Droid.Context );
+            BackButton = new Button( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+            ShareButton = new Button( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+            CreateButton = new Button( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+            ButtonLayout = new LinearLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
         }
 
         public override void OnCreate( Bundle savedInstanceState )
@@ -78,18 +77,18 @@ namespace Droid
                     // when the timer fires, hide the toolbar.
                     // Although the timer fires on a seperate thread, because we queue the reveal
                     // on the main (UI) thread, we don't have to worry about race conditions.
-                    Rock.Mobile.Threading.UIThreading.PerformOnUIThread( delegate { InternalReveal( false ); } );
+                    Rock.Mobile.Threading.Util.PerformOnUIThread( delegate { InternalReveal( false ); } );
                 };
 
             ButtonLayout.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
             ButtonLayout.BaselineAligned = false;
 
             // set the nav subBar color (including opacity)
-            Color navColor = PlatformBaseUI.GetUIColor( SubNavToolbarConfig.BackgroundColor );
+            Color navColor = Rock.Mobile.PlatformUI.Util.GetUIColor( SubNavToolbarConfig.BackgroundColor );
             navColor.A = (Byte) ( (float) navColor.A * SubNavToolbarConfig.Opacity );
             ButtonLayout.SetBackgroundColor( navColor );
 
-            ButtonLayout.LayoutParameters.Height = (int)Rock.Mobile.PlatformUI.PlatformBaseUI.UnitToPx( 50.0f );
+            ButtonLayout.LayoutParameters.Height = (int)Rock.Mobile.Graphics.Util.UnitToPx( 50.0f );
 
 
             // create the back button
@@ -97,12 +96,12 @@ namespace Droid
             ( (LinearLayout.LayoutParams)BackButton.LayoutParameters ).Gravity = GravityFlags.Top;
 
             // set the back button's font
-            Typeface fontFace = DroidFontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
+            Typeface fontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
             BackButton.SetTypeface( fontFace, TypefaceStyle.Normal );
             BackButton.SetTextSize( Android.Util.ComplexUnitType.Dip, SubNavToolbarConfig.BackButton_Size );
 
             BackButton.Text = SubNavToolbarConfig.BackButton_Text;
-            BackButton.SetBackgroundColor( PlatformBaseUI.GetUIColor( 0 ) );
+            BackButton.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( 0 ) );
             BackButton.SetPadding( 0, 0, 0, 0 );
 
             BackButton.Click += delegate{ Activity.OnBackPressed(); };
@@ -120,9 +119,9 @@ namespace Droid
 
             int [] colors = new int[]
                 {
-                    PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ),
-                    PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ),
-                    PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ),
+                    Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ),
+                    Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ),
+                    Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ),
                 };
             BackButton.SetTextColor( new Android.Content.Res.ColorStateList( states, colors ) );
 
@@ -133,13 +132,13 @@ namespace Droid
             ( (LinearLayout.LayoutParams)ShareButton.LayoutParameters ).Gravity = GravityFlags.Top;
 
             // set the share button's font
-            fontFace = DroidFontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
+            fontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
             ShareButton.SetTypeface( fontFace, TypefaceStyle.Normal );
             ShareButton.SetTextSize( Android.Util.ComplexUnitType.Dip, SubNavToolbarConfig.ShareButton_Size );
             ShareButton.SetPadding( 0, 0, 0, 0 );
 
             ShareButton.Text = SubNavToolbarConfig.ShareButton_Text;
-            ShareButton.SetBackgroundColor( PlatformBaseUI.GetUIColor( 0 ) );
+            ShareButton.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( 0 ) );
 
             // default to NOT enabled
             ShareButton.Enabled = false;
@@ -154,9 +153,9 @@ namespace Droid
 
             colors = new int[]
                 {
-                    PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ),
-                    PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ),
-                    PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ),
+                    Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ),
+                    Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ),
+                    Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ),
                 };
             ShareButton.SetTextColor( new Android.Content.Res.ColorStateList( states, colors ) );
 
@@ -167,13 +166,13 @@ namespace Droid
             ( (LinearLayout.LayoutParams)CreateButton.LayoutParameters ).Gravity = GravityFlags.Top;
 
             // set the create button's font
-            fontFace = DroidFontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
+            fontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
             CreateButton.SetTypeface( fontFace, TypefaceStyle.Normal );
             CreateButton.SetTextSize( Android.Util.ComplexUnitType.Dip, SubNavToolbarConfig.CreateButton_Size );
             CreateButton.SetPadding( 0, 0, 0, 0 );
 
             CreateButton.Text = SubNavToolbarConfig.CreateButton_Text;
-            CreateButton.SetBackgroundColor( PlatformBaseUI.GetUIColor( 0 ) );
+            CreateButton.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( 0 ) );
 
             // default to NOT enabled
             CreateButton.Enabled = false;
@@ -188,9 +187,9 @@ namespace Droid
 
             colors = new int[]
                 {
-                    PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ),
-                    PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ),
-                    PlatformBaseUI.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ),
+                    Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ),
+                    Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ),
+                    Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ),
                 };
             CreateButton.SetTextColor( new Android.Content.Res.ColorStateList( states, colors ) );
 
@@ -201,7 +200,7 @@ namespace Droid
         {
             base.OnResume();
 
-            ButtonLayout.SetY( (int)Rock.Mobile.PlatformUI.PlatformBaseUI.UnitToPx( 50.0f ) );
+            ButtonLayout.SetY( (int)Rock.Mobile.Graphics.Util.UnitToPx( 50.0f ) );
 
             UpdateButtons( );
         }
