@@ -116,6 +116,21 @@ namespace Droid
 
         Rock.Mobile.PlatformSpecific.Android.Graphics.MaskLayer MaskLayer { get; set; }
 
+        /// <summary>
+        /// Time for the cropped animation to scale up or down
+        /// </summary>
+        const long ImageAnimationTimeMS = 250;
+
+        /// <summary>
+        /// Time for the mask to fade in / our
+        /// </summary>
+        const long MaskFadeTimeMS = 500;
+
+        /// <summary>
+        /// AMOUNT of opacity the mask should faded in by.
+        /// </summary>
+        const float MaskFadeAmount = .50f;
+
         public override void OnCreate( Bundle savedInstanceState )
         {
             base.OnCreate( savedInstanceState );
@@ -358,10 +373,6 @@ namespace Droid
 
             SetMode( CropMode.None );
         }
-
-        const long ImageAnimationTimeMS = 250;
-        const long MaskFadeTimeMS = 500;
-        const float MaskFadeAmount = .50f;
 
         void SetMode( CropMode mode )
         {
