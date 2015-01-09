@@ -24,6 +24,10 @@ namespace iOS
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
+		UIButton BirthdayButton { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
 		UIView CellPhoneLayer { get; set; }
 
 		[Outlet]
@@ -49,6 +53,10 @@ namespace iOS
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
 		UITextField EmailText { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UIButton GenderButton { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
@@ -84,7 +92,7 @@ namespace iOS
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UIScrollView ScrollView { get; set; }
+		UIScrollViewWrapper ScrollView { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
@@ -120,6 +128,10 @@ namespace iOS
 				BirthdateText.Dispose ();
 				BirthdateText = null;
 			}
+			if (BirthdayButton != null) {
+				BirthdayButton.Dispose ();
+				BirthdayButton = null;
+			}
 			if (CellPhoneLayer != null) {
 				CellPhoneLayer.Dispose ();
 				CellPhoneLayer = null;
@@ -147,6 +159,10 @@ namespace iOS
 			if (EmailText != null) {
 				EmailText.Dispose ();
 				EmailText = null;
+			}
+			if (GenderButton != null) {
+				GenderButton.Dispose ();
+				GenderButton = null;
 			}
 			if (GenderLayer != null) {
 				GenderLayer.Dispose ();

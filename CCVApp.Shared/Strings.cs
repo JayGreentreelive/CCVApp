@@ -12,7 +12,7 @@ namespace CCVApp.Shared
             {
                 get
                 {
-                    return "Alpha (Build 6)";
+                    return "Alpha (Build 7)";
                 }
             }
         }
@@ -90,6 +90,9 @@ namespace CCVApp.Shared
 
             public const string DoneButtonTitle = "Done";
             public const string LogoutButtonTitle = "Logout";
+
+            public const string SelectBirthdateLabel = "Select Birthday";
+            public const string SelectGenderLabel = "Select a Gender";
         }
 
         public class NewsStrings

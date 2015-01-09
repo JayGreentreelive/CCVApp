@@ -17,6 +17,8 @@ using Android.Views.InputMethods;
 using CCVApp.Shared.Strings;
 using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
+using Android.Telephony;
+using Rock.Mobile.Util.Strings;
 
 namespace Droid
 {
@@ -88,6 +90,7 @@ namespace Droid
             CellPhoneField = backgroundView.FindViewById<EditText>( Resource.Id.cellPhoneText );
             ControlStyling.StyleTextField( CellPhoneField, ProfileStrings.CellPhonePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             CellPhoneField.AfterTextChanged += (sender, e) => { Dirty = true; };
+            CellPhoneField.AddTextChangedListener(new PhoneNumberFormattingTextWatcher());
 
             borderView = backgroundView.FindViewById<View>( Resource.Id.middle_border );
             borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
@@ -133,15 +136,62 @@ namespace Droid
 
             BirthdateField = backgroundView.FindViewById<EditText>( Resource.Id.birthdateText );
             ControlStyling.StyleTextField( BirthdateField, ProfileStrings.BirthdatePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
-            BirthdateField.AfterTextChanged += (sender, e) => { Dirty = true; };
+            BirthdateField.FocusableInTouchMode = false;
+            BirthdateField.Focusable = false;
+            Button birthdateButton = backgroundView.FindViewById<Button>( Resource.Id.birthdateButton );
+            birthdateButton.Click += (object sender, EventArgs e ) =>
+            {
+                    // setup the initial date to use ( either now, or the date in the field )
+                    DateTime initialDateTime = DateTime.Now;
+                    if( string.IsNullOrEmpty( BirthdateField.Text ) == false )
+                    {
+                        initialDateTime = DateTime.Parse( BirthdateField.Text );
+                    }
+
+                    DatePickerDialog datePicker = new DatePickerDialog( Activity, 
+                        delegate(object s, DatePickerDialog.DateSetEventArgs dateArgs) 
+                        {
+                            Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                                {
+                                    BirthdateField.Text = string.Format( "{0:MMMMM dd yyyy}", dateArgs.Date );
+                                    Dirty = true;
+                                });
+                        }, 
+                        initialDateTime.Year, initialDateTime.Month - 1, initialDateTime.Day );
+
+                    datePicker.Show( );
+            };
+
 
             borderView = backgroundView.FindViewById<View>( Resource.Id.middle_border );
             borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
+            // Gender
             GenderField = view.FindViewById<EditText>( Resource.Id.genderText );
             ControlStyling.StyleTextField( GenderField, ProfileStrings.GenderPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
-            GenderField.AfterTextChanged += (sender, e) => { Dirty = true; };
+            GenderField.FocusableInTouchMode = false;
+            GenderField.Focusable = false;
+            Button genderButton = backgroundView.FindViewById<Button>( Resource.Id.genderButton );
+            genderButton.Click += (object sender, EventArgs e ) =>
+            {
+                    AlertDialog.Builder builder = new AlertDialog.Builder( Activity );
+                    Java.Lang.ICharSequence [] strings = new Java.Lang.ICharSequence[]
+                        {
+                            new Java.Lang.String( CCVApp.Shared.Network.RockGeneralData.Instance.Data.Genders[ 1 ] ),
+                            new Java.Lang.String( CCVApp.Shared.Network.RockGeneralData.Instance.Data.Genders[ 2 ] ),
+                        };
 
+                    builder.SetItems( strings, delegate(object s, DialogClickEventArgs clickArgs) 
+                        {
+                            Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                                {
+                                    GenderField.Text = CCVApp.Shared.Network.RockGeneralData.Instance.Data.Genders[ clickArgs.Which + 1 ];
+                                    Dirty = true;
+                                });
+                        });
+
+                    builder.Show( );
+            };
 
             // Done buttons
             DoneButton = view.FindViewById<Button>( Resource.Id.doneButton );
@@ -228,6 +278,29 @@ namespace Droid
 
             EmailField.Text = RockMobileUser.Instance.Person.Email;
 
+            // cellphone
+            CellPhoneField.Text = RockMobileUser.Instance.TryGetPhoneNumber( CCVApp.Shared.Config.GeneralConfig.CellPhoneValueId ).Number;
+
+            // gender
+            if ( RockMobileUser.Instance.Person.Gender > 0 )
+            {
+                GenderField.Text = CCVApp.Shared.Network.RockGeneralData.Instance.Data.Genders[ RockMobileUser.Instance.Person.Gender ];
+            }
+            else
+            {
+                GenderField.Text = string.Empty;
+            }
+
+            // birthdate
+            if ( RockMobileUser.Instance.Person.BirthDate.HasValue == true )
+            {
+                BirthdateField.Text = string.Format( "{0:MMMMM dd yyyy}", RockMobileUser.Instance.Person.BirthDate );
+            }
+            else
+            {
+                BirthdateField.Text = string.Empty;
+            }
+
             // clear the dirty flag AFTER setting all values so the initial setup
             // doesn't get flagged as dirty
             Dirty = false;
@@ -249,6 +322,25 @@ namespace Droid
 
             RockMobileUser.Instance.Person.NickName = NickNameField.Text;
             RockMobileUser.Instance.Person.LastName = LastNameField.Text;
+
+            // Update their cell phone. 
+            if ( string.IsNullOrEmpty( CellPhoneField.Text ) == false )
+            {
+                // update the phone number
+                RockMobileUser.Instance.UpdateOrAddPhoneNumber( CellPhoneField.Text.AsNumeric( ), CCVApp.Shared.Config.GeneralConfig.CellPhoneValueId );
+            }
+
+            // Gender
+            if ( string.IsNullOrEmpty( GenderField.Text ) == false )
+            {
+                RockMobileUser.Instance.Person.Gender = CCVApp.Shared.Network.RockGeneralData.Instance.Data.Genders.IndexOf( GenderField.Text );
+            }
+
+            // Birthdate
+            if ( string.IsNullOrEmpty( BirthdateField.Text ) == false )
+            {
+                RockMobileUser.Instance.Person.BirthDate = DateTime.Parse( BirthdateField.Text );
+            }
 
             // request the person object be sync'd with the server. because we save the object locally,
             // if the sync fails, the profile will try again at the next login

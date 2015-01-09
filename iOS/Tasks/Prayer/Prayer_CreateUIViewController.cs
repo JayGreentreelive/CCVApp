@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using CCVApp.Shared.Config;
 using CCVApp.Shared.Network;
+using Rock.Mobile.PlatformSpecific.iOS.UI;
 
 namespace iOS
 {
@@ -36,7 +37,7 @@ namespace iOS
         /// <summary>
         /// The keyboard manager that will adjust the UIView to not be obscured by the software keyboard
         /// </summary>
-        Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager KeyboardAdjustManager { get; set; }
+        KeyboardAdjustManager KeyboardAdjustManager { get; set; }
 
         /// <summary>
         /// The starting position of the scrollView so we can restore after the user uses the UIPicker
@@ -44,17 +45,7 @@ namespace iOS
         /// <value>The starting scroll position.</value>
         PointF StartingScrollPos { get; set; }
 
-        /// <summary>
-        /// The category picker used for selecting a prayer category
-        /// </summary>
-        UIPickerView CategoryPicker { get; set; }
-
-        UILabel CategoryLabel { get; set; }
-
-        /// <summary>
-        /// True when the category picker is revealed
-        /// </summary>
-        bool CategoryPickerRevealed { get; set; }
+        PickerAdjustManager PickerAdjustManager { get; set; }
 
         public Prayer_CreateUIViewController (IntPtr handle) : base (handle)
         {
@@ -145,21 +136,16 @@ namespace iOS
 
 
             // setup the category picker and selector button
-            CategoryLabel = new UILabel( );
-            ControlStyling.StyleUILabel( CategoryLabel, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            UILabel categoryLabel = new UILabel( );
+            ControlStyling.StyleUILabel( categoryLabel, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            categoryLabel.Text = PrayerStrings.CreatePrayer_SelectCategoryLabel;
 
-            CategoryLabel.Layer.AnchorPoint = PointF.Empty;
-            CategoryLabel.Text = PrayerStrings.CreatePrayer_SelectCategoryLabel;
-            CategoryLabel.SizeToFit( );
-            CategoryLabel.Layer.Position = new PointF( (View.Bounds.Width - CategoryLabel.Bounds.Width) / 2, View.Frame.Bottom );
-            View.AddSubview( CategoryLabel );
+            PickerAdjustManager = new PickerAdjustManager( View, ScrollView, categoryLabel, CategoryLayer );
+            UIPickerView pickerView = new UIPickerView();
+            pickerView.Model = new CategoryPickerModel() { Parent = this };
+            PickerAdjustManager.SetPicker( pickerView );
+            ControlStyling.StyleBGLayer( PickerAdjustManager.Picker ); //although it's a derived class, it can still be skinned like a straight UIView
 
-            CategoryPicker = new UIPickerView( );
-            CategoryPicker.Layer.AnchorPoint = PointF.Empty;
-            CategoryPicker.Model = new CategoryPickerModel() { Parent = this };
-            CategoryPicker.Layer.Position = new PointF( 0, CategoryLabel.Frame.Bottom );
-            ControlStyling.StyleBGLayer( CategoryPicker ); //although it's a derived class, it can still be skinned like a straight UIView
-            View.AddSubview( CategoryPicker );
 
             CategoryButton.TouchUpInside += (object sender, EventArgs e ) =>
             {
@@ -221,47 +207,13 @@ namespace iOS
         /// </summary>
         public void OnToggleCategoryPicker( bool enabled )
         {
-            // only do something if there's a state change
-            if ( CategoryPickerRevealed != enabled )
+            if ( enabled == true )
             {
-                //Start an animation
-                UIView.BeginAnimations( "AnimateForPicker" );
-                UIView.SetAnimationBeginsFromCurrentState( true );
-                UIView.SetAnimationDuration( .5f );
-                UIView.SetAnimationCurve( UIViewAnimationCurve.EaseInOut );
-
-                if ( enabled == true )
-                {
-                    // we're going to show it, so hide the nav bar
-                    Task.NavToolbar.Reveal( false );
-
-                    // stamp the scroll position of the scrollview
-                    StartingScrollPos = ScrollView.ContentOffset;
-
-                    // set the picker to be on screen
-                    CategoryLabel.Layer.Position = new PointF( CategoryLabel.Layer.Position.X, View.Bounds.Height - (CategoryLabel.Bounds.Height + CategoryPicker.Bounds.Height) );
-                    CategoryPicker.Layer.Position = new PointF( 0, CategoryLabel.Frame.Bottom );
-
-                    // scroll the category field into view and lock scrolling
-                    ScrollView.ContentOffset = new PointF( 0, CategoryLayer.Frame.Top - CategoryLayer.Frame.Height );
-                    ScrollView.ScrollEnabled = false;
-                }
-                else
-                {
-                    // we're hiding the picker, so restore the original scroll position and enable it
-                    ScrollView.ContentOffset = StartingScrollPos;
-                    ScrollView.ScrollEnabled = true;
-
-                    // move the picker off screen
-                    CategoryLabel.Layer.Position = new PointF( CategoryLabel.Layer.Position.X, View.Frame.Bottom );
-                    CategoryPicker.Layer.Position = new PointF( 0, CategoryLabel.Frame.Bottom );
-                }
-
-                CategoryPickerRevealed = enabled;
-
-                //Commit the animation
-                UIView.CommitAnimations( ); 
+                // we're going to show it, so hide the nav bar
+                Task.NavToolbar.Reveal( false );
             }
+
+            PickerAdjustManager.TogglePicker( enabled );
         }
 
         /// <summary>
@@ -384,7 +336,7 @@ namespace iOS
         public override void TouchesEnded(NSSet touches, UIEvent evt)
         {
             // if we're picking a category, don't allow anything else.
-            if ( CategoryPickerRevealed == true )
+            if ( PickerAdjustManager.Revealed == true )
             {
                 OnToggleCategoryPicker( false );
             }

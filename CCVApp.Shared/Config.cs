@@ -28,6 +28,18 @@ namespace CCVApp
                 /// The permissions the Facebook App should request. You probably shouldn't change this.
                 /// </summary>
                 public const string FBAppPermissions = "public_profile, user_friends, email";
+
+
+                /// <summary>
+                /// Defined in Rock, this should NEVER change, and is the key the mobile app uses so Rock
+                /// knows who it's talking to.
+                /// </summary>
+                public const string RockMobileAppAuthorizationKey = "hWTaZ7buziBcJQH31KCm3Pzz";
+
+                /// <summary>
+                /// Todo: Get this from Rock, or SOMETHING. This is not ok.
+                /// </summary>
+                public const int CellPhoneValueId = 12;
             }
 
             public class SpringboardConfig

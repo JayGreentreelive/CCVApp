@@ -38,11 +38,10 @@ namespace CCVApp
                         Campuses.Add( "East Valley" );
                         Campuses.Add( "Anthem" );
 
-                        Titles = new List<string>( );
-                        Titles.Add( "Mr." );
-                        Titles.Add( "Ms." );
-                        Titles.Add( "Mrs." );
-                        Titles.Add(" Dr." );
+                        Genders = new List<string>( );
+                        Genders.Add( "Unknown" );
+                        Genders.Add( "Male" );
+                        Genders.Add( "Female" );
 
                         News = new List<RockNews>( );
                         News.Add( new RockNews( "Baptisms", "Baptism is one of the most important events in the life of a Christian. If you've made a commitment to Christ, " + 
@@ -87,7 +86,7 @@ namespace CCVApp
                     public GeneralData( object obj )
                     {
                         Campuses = new List<string>( );
-                        Titles = new List<string>( );
+                        Genders = new List<string>( );
                         News = new List<RockNews>( );
                         PrayerCategories = new List<string>( );
                     }
@@ -106,10 +105,10 @@ namespace CCVApp
                     public List<string> Campuses { get; set; }
 
                     /// <summary>
-                    /// List of sirnames to use.
+                    /// List of genders
                     /// </summary>
-                    /// <value>The titles.</value>
-                    public List<string> Titles { get; set; }
+                    /// <value>The genders.</value>
+                    public List<string> Genders { get; set; }
 
                     /// <summary>
                     /// Default news to display when there's no connection available

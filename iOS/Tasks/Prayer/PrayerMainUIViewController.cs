@@ -159,7 +159,7 @@ namespace iOS
             Name.SizeToFit( );
             Name.Frame = new RectangleF( ViewPadding, ViewPadding, View.Bounds.Width - (ViewPadding * 2), Name.Bounds.Height );
 
-            Category.Text = "Category";//prayer.Category.Name; //todo: waiting on a decision from the guys about this.  
+            Category.Text = prayer.Category != null ? prayer.Category.Name : "";
             Category.SizeToFit( );
             Category.Layer.Position = new PointF( ViewPadding, Name.Frame.Bottom );
 

@@ -36,6 +36,11 @@ namespace CCVApp
                 const string AuthLoginEndPoint = "api/Auth/Login";
 
                 /// <summary>
+                /// End point for logging in
+                /// </summary>
+                const string AuthFacebookLoginEndPoint = "api/Auth/FacebookLogin";
+
+                /// <summary>
                 /// End point for retrieving a Person object
                 /// </summary>
                 const string GetProfileEndPoint = "api/People/GetByUserName/";
@@ -50,7 +55,8 @@ namespace CCVApp
                 /// </summary>
                 /// 
                 //const string GetPrayerRequestsEndPoint = "api/prayerrequests";
-                const string GetPrayerRequestsEndPoint = "api/prayerrequests?$filter=(IsApproved eq true) and (IsPublic eq true) and (IsActive eq true) and ( (ExpirationDate ge datetime'{0:yyyy-MM-dd}') or (ExpirationDate eq null) )&$expand=Category";
+                //const string GetPrayerRequestsEndPoint = "api/prayerrequests?$filter=(IsApproved eq true) and (IsPublic eq true) and (IsActive eq true) and ( (ExpirationDate ge datetime'{0:yyyy-MM-dd}') or (ExpirationDate eq null) )&$expand=Category";
+                const string GetPrayerRequestsEndPoint = "api/prayerrequests/public";
 
                 /// <summary>
                 /// End point for posting a prayer request
@@ -61,6 +67,11 @@ namespace CCVApp
                 /// End point for updating a Person object
                 /// </summary>
                 const string PutProfileEndPoint = "api/People/";
+
+                /// <summary>
+                /// The header key used for passing up the mobile app authorization token.
+                /// </summary>
+                const string AuthorizationTokenHeaderKey = "Authorization-Token";
 
                 /// <summary>
                 /// Stores the cookies received from Rock
@@ -76,15 +87,38 @@ namespace CCVApp
 
                 RockApi( )
                 {
-                    CookieContainer = new System.Net.CookieContainer();
+                    //CookieContainer = new System.Net.CookieContainer();
 
                     Request = new HttpRequest();
-                    Request.CookieContainer = CookieContainer;
+                    //Request.CookieContainer = CookieContainer;
+                }
+
+                public void LoginFacebook( object facebookUser, HttpRequest.RequestResult resultHandler )
+                {
+                    RestRequest request = GetRockRestRequest( Method.POST );
+                    //request.Resource = AuthLoginEndPoint;
+
+                    request.AddBody( facebookUser );
+
+                    Request.ExecuteAsync( BaseUrl + AuthFacebookLoginEndPoint, request, delegate(HttpStatusCode statusCode, string statusDescription, object model) 
+                        {
+                            // if login was a success, save our cookie
+                            if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
+                            {
+                                //SaveCookieToDevice();
+                            }
+
+                            // either way, notifiy the caller
+                            if( resultHandler != null )
+                            {
+                                resultHandler( statusCode, statusDescription );
+                            }
+                        });
                 }
 
                 public void Login( string username, string password, HttpRequest.RequestResult resultHandler )
                 {
-                    RestRequest request = new RestRequest( Method.POST );
+                    RestRequest request = GetRockRestRequest( Method.POST );
                     //request.Resource = AuthLoginEndPoint;
 
                     request.AddParameter( "Username", username );
@@ -96,7 +130,7 @@ namespace CCVApp
                             // if login was a success, save our cookie
                             if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
                             {
-                                SaveCookieToDevice();
+                                //SaveCookieToDevice();
                             }
 
                             // either way, notifiy the caller
@@ -116,7 +150,7 @@ namespace CCVApp
                 public void GetPrayers( HttpRequest.RequestResult< List<Rock.Client.PrayerRequest> > resultHandler )
                 {
                     // request a profile by the username. If no username is specified, we'll use the logged in user's name.
-                    RestRequest request = new RestRequest( Method.GET );
+                    RestRequest request = GetRockRestRequest( Method.GET );
 
                     // insert today's date as the expiration limit
                     string requestString = BaseUrl + string.Format( GetPrayerRequestsEndPoint, DateTime.Now );
@@ -127,9 +161,7 @@ namespace CCVApp
                 public void PutPrayer( Rock.Client.PrayerRequest prayer, HttpRequest.RequestResult resultHandler )
                 {
                     // request a profile by the username. If no username is specified, we'll use the logged in user's name.
-                    RestRequest request = new RestRequest( Method.POST );
-
-                    request.RequestFormat = DataFormat.Json;
+                    RestRequest request = GetRockRestRequest( Method.POST );
                     request.AddBody( prayer );
 
                     Request.ExecuteAsync( BaseUrl + PutPrayerRequestEndPoint, request, resultHandler);
@@ -138,7 +170,7 @@ namespace CCVApp
                 public void GetProfile( string userName, HttpRequest.RequestResult<Rock.Client.Person> resultHandler )
                 {
                     // request a profile by the username. If no username is specified, we'll use the logged in user's name.
-                    RestRequest request = new RestRequest( Method.GET );
+                    RestRequest request = GetRockRestRequest( Method.GET );
 
                     string requestUrl = BaseUrl + GetProfileEndPoint;
                     requestUrl += string.IsNullOrEmpty( userName ) == true ? RockMobileUser.Instance.UserID : userName;
@@ -149,9 +181,7 @@ namespace CCVApp
                 public void UpdateProfile( Rock.Client.Person person, HttpRequest.RequestResult resultHandler )
                 {
                     // request a profile by the username. If no username is specified, we'll use the logged in user's name.
-                    RestRequest request = new RestRequest( Method.PUT );
-
-                    request.RequestFormat = DataFormat.Json;
+                    RestRequest request = GetRockRestRequest( Method.PUT );
                     request.AddBody( person );
 
                     Request.ExecuteAsync( BaseUrl + PutProfileEndPoint + person.Id, request, resultHandler);
@@ -160,7 +190,7 @@ namespace CCVApp
                 public void GetProfilePicture( string photoId, uint dimensionSize, HttpRequest.RequestResult<MemoryStream> resultHandler )
                 {
                     // request a profile by the username. If no username is specified, we'll use the logged in user's name.
-                    RestRequest request = new RestRequest( Method.GET );
+                    RestRequest request = GetRockRestRequest( Method.GET );
                     string requestUrl = BaseUrl + string.Format( GetProfilePictureEndPoint, photoId, dimensionSize );
 
                     // get the raw response
@@ -177,14 +207,26 @@ namespace CCVApp
                 /*public void UpdateProfilePicture( string photoId, int dimensionSize, MemoryStream image, RequestResult resultHandler )
                 {
                     // request a profile by the username. If no username is specified, we'll use the logged in user's name.
-                    RestRequest request = new RestRequest( Method.PUT );
+                    RestRequest request = GetRockRestRequest( Method.PUT );
                     request.Resource = string.Format( GetProfilePictureEndPoint, photoId, dimensionSize );
-
-                    request.RequestFormat = DataFormat.Json;
                     request.AddBody( image );
 
                     ExecuteAsync( request, resultHandler);
                 }*/
+
+                /// <summary>
+                /// Simple wrapper function to make sure all required headers get placed in
+                /// any REST request made to Rock.
+                /// </summary>
+                /// <returns>The rock rest request.</returns>
+                RestRequest GetRockRestRequest( Method method )
+                {
+                    RestRequest request = new RestRequest( method );
+                    request.RequestFormat = DataFormat.Json;
+                    request.AddHeader( AuthorizationTokenHeaderKey, CCVApp.Shared.Config.GeneralConfig.RockMobileAppAuthorizationKey );
+                 
+                    return request;
+                }
 
                 public void GetLaunchData( HttpRequest.RequestResult<RockLaunchData.LaunchData> resultHandler )
                 {
@@ -198,7 +240,7 @@ namespace CCVApp
                     resultHandler( HttpStatusCode.OK, "Success", RockGeneralData.Instance.Data );
                 }
 
-                private void SaveCookieToDevice( )
+                /*private void SaveCookieToDevice( )
                 {
                     string filePath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), COOKIE_FILENAME);
 
@@ -208,16 +250,16 @@ namespace CCVApp
                         // store our cookies. We cannot serialize the container, so we retrieve and save just the 
                         // cookies we care about.
                         CookieCollection cookieCollection = CookieContainer.GetCookies( new Uri( BaseUrl ) );
-                        writer.WriteLine( cookieCollection.Count.ToString() );
-                        for( int i = 0; i < cookieCollection.Count; i++ )
+                        writer.WriteLine( cookieCollection.Count.ToString( ) );
+                        for ( int i = 0; i < cookieCollection.Count; i++ )
                         {
-                            string cookieStr = JsonConvert.SerializeObject( cookieCollection[i] );
+                            string cookieStr = JsonConvert.SerializeObject( cookieCollection[ i ] );
                             writer.WriteLine( cookieStr );
                         }
                     }
-                }
+                }*/
 
-                private void LoadCookieFromDevice( )
+                /*private void LoadCookieFromDevice( )
                 {
                     // at startup, this should be called to allow current objects to be restored.
                     string filePath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), COOKIE_FILENAME);
@@ -238,20 +280,20 @@ namespace CCVApp
                             }
                         }
                     }
-                }
+                }*/
 
                 public void SaveObjectsToDevice( )
                 {
                     RockGeneralData.Instance.SaveToDevice( );
                     RockMobileUser.Instance.SaveToDevice( );
-                    SaveCookieToDevice( );
+                    //SaveCookieToDevice( );
                 }
 
                 public void LoadObjectsFromDevice( )
                 {
                     RockGeneralData.Instance.LoadFromDevice( );
                     RockMobileUser.Instance.LoadFromDevice( );
-                    LoadCookieFromDevice( );
+                    //LoadCookieFromDevice( );
                 }
 
                 public void SyncWithServer( HttpRequest.RequestResult result )

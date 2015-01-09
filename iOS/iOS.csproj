@@ -405,10 +405,6 @@
     <Compile Include="Tasks\Prayer\Prayer_CreateUIViewController.designer.cs">
       <DependentUpon>Prayer_CreateUIViewController.cs</DependentUpon>
     </Compile>
-    <Compile Include="UIScrollViewWrapper.cs" />
-    <Compile Include="UIScrollViewWrapper.designer.cs">
-      <DependentUpon>UIScrollViewWrapper.cs</DependentUpon>
-    </Compile>
     <Compile Include="Tasks\Prayer\Prayer_PostUIViewController.cs" />
     <Compile Include="Tasks\Prayer\Prayer_PostUIViewController.designer.cs">
       <DependentUpon>Prayer_PostUIViewController.cs</DependentUpon>

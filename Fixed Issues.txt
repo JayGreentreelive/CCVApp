@@ -1,21 +1,13 @@
 Both:
-	Implemented Note caching, reducing the frequency of downloading the Note when going back and forth between UI pages.
-
-	Added auto-retry when a note download fails. Usually it's caused by a minor hiccup in the network, and a simple retry fixes it.
-		This saves the user from having to see an error dialog and manually retry.
-
-	Refreshed the Profile Picture Cropper to be more polished with animations.
-
-	Refreshed the overall design with color / font adjustments. 
+	The login password field is once again secure.
+	Prayers can now be viewed whether the user is logged in or not.
+	Fixed login issues.
 
 iOS
-	The Nav Toolbar now works in landscape mode. (But not when watching a landscape video cause that sucks)
-	Audio works with the volume switch off
-	Automatically go to fullscreen when entering landscape and watching a video.
-	Tapping on the news description text now correctly brings up the navbar.
+	Fixed a crash if trying to login with Facebook without a network connection.
+	Fixed an issue causing unsubmitted changes to remain in the Profile View
+	Fixed an issue preventing the keyboard from dismissing in the Profile View
+	Fixed layout issues in the Prayer Creation page on iPhone 4s
 
 Android
-	The app no longer resets to the first page in a section when backgrounding / resuming.
-	Fixed an issue causing the Springboard to stop working if back was pressed while Login/Profile/ImageCropping were open.
-	Fixed an issue causing spellcheck to be on for news items.
-	Now works with Android 4.1 (down from 4.3) 
+	

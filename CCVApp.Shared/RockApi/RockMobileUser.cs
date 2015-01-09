@@ -102,6 +102,85 @@ namespace CCVApp
                 }
 
                 /// <summary>
+                /// Returns the phone number matching phoneTypeId, or an empty one if no match is found.
+                /// </summary>
+                /// <returns>The phone number.</returns>
+                /// <param name="phoneTypeId">Phone type identifier.</param>
+                public Rock.Client.PhoneNumber TryGetPhoneNumber( int phoneTypeId )
+                {
+                    Rock.Client.PhoneNumber requestedNumber = new Rock.Client.PhoneNumber( );
+
+                    // if the user has phone numbers
+                    if ( Person.PhoneNumbers != null )
+                    {
+                        // get an enumerator
+                        IEnumerator<Rock.Client.PhoneNumber> enumerator = Person.PhoneNumbers.GetEnumerator( );
+                        enumerator.MoveNext( );
+
+                        // search for the phone number type requested
+                        while ( enumerator.Current != null )
+                        {
+                            Rock.Client.PhoneNumber phoneNumber = enumerator.Current as Rock.Client.PhoneNumber;
+
+                            // is this the right type?
+                            if ( phoneNumber.NumberTypeValueId == phoneTypeId )
+                            {
+                                requestedNumber = phoneNumber;
+                                break;
+                            }
+                            enumerator.MoveNext( );
+                        }
+                    }
+
+                    return requestedNumber;
+                }
+
+                public void UpdateOrAddPhoneNumber( string phoneNumberDigits, int phoneTypeId )
+                {
+                    // begin by assuming we will need to add a new number
+                    bool addNewPhoneNumber = true;
+
+                    // do they have numbers?
+                    if ( Person.PhoneNumbers != null )
+                    {
+                        // search for a matching Id
+                        IEnumerator<Rock.Client.PhoneNumber> enumerator = Person.PhoneNumbers.GetEnumerator( );
+                        enumerator.MoveNext( );
+
+                        while ( enumerator.Current != null )
+                        {
+                            Rock.Client.PhoneNumber phoneNumber = enumerator.Current as Rock.Client.PhoneNumber;
+
+                            // is this the phone type?
+                            if ( phoneNumber.NumberTypeValueId == phoneTypeId )
+                            {
+                                // then set it, and we won't need to create one.
+                                addNewPhoneNumber = false;
+                                phoneNumber.Number = phoneNumberDigits;
+                                break;
+                            }
+                            enumerator.MoveNext( );
+                        }
+                    }
+
+                    // if this is true, we couldn't find a matching phone type,
+                    // so we'll add it as a new one.
+                    if ( addNewPhoneNumber == true )
+                    {
+                        Rock.Client.PhoneNumber phoneNumber = new Rock.Client.PhoneNumber();
+                        phoneNumber.Number = phoneNumberDigits;
+                        phoneNumber.NumberTypeValueId = phoneTypeId;
+
+                        // make sure they even HAVE a phone number set
+                        if ( Person.PhoneNumbers == null )
+                        {
+                            Person.PhoneNumbers = new List<PhoneNumber>();
+                        }
+                        Person.PhoneNumbers.Add( phoneNumber );
+                    }
+                }
+
+                /// <summary>
                 /// Attempts to login with whatever account type is bound.
                 /// </summary>
                 public void Login( HttpRequest.RequestResult loginResult )
@@ -110,7 +189,9 @@ namespace CCVApp
                     {
                         case BoundAccountType.Rock:
                         {
-                            // todo: call a rock endpoint validating that we're still good. For now, we are.
+                            //todo: we could put a rock validation end point here, but
+                            // it's not necessary. Our cookie will eventually just expire
+                            // and we'll relogin.
                             LoggedIn = true;
 
                             loginResult( System.Net.HttpStatusCode.NoContent, "" );
@@ -119,35 +200,12 @@ namespace CCVApp
 
                         case BoundAccountType.Facebook:
                         {
-                            //todo: We dont' need to do this anymore! We know they logged in once, so
-                            // that's all we have to care about
+                            //todo: we could put a rock validation end point here, but
+                            // it's not necessary. Our cookie will eventually just expire
+                            // and we'll relogin.
+                            LoggedIn = true;
 
-                            // first verify that we're still good with Facebook (the user didn't revoke our permissions)
-                            FacebookClient fbSession = new FacebookClient( AccessToken );
-                            string infoRequest = FacebookManager.Instance.CreateInfoRequest( );
-
-                            fbSession.GetTaskAsync( infoRequest ).ContinueWith( t =>
-                                {
-                                    if( t.IsFaulted == false || t.Exception == null )
-                                    {
-                                        // Since they logged in with Facebook, let's use that as their
-                                        // latest info. Therefore, update it now.
-                                        SyncFacebookInfoToPerson( t.Result );
-
-
-                                        // move on to validate their ID with rock. For now, we are validated.
-                                        LoggedIn = true;
-
-
-                                        loginResult( System.Net.HttpStatusCode.NoContent, "" );
-                                    }
-                                    else
-                                    {
-                                        // error
-                                        LogoutAndUnbind( );
-                                        loginResult( System.Net.HttpStatusCode.BadRequest, "" );
-                                    }
-                                } );
+                            loginResult( System.Net.HttpStatusCode.NoContent, "" );
                             break;
                         }
 
@@ -226,23 +284,28 @@ namespace CCVApp
                                     // if there was no problem, we are logged in and can send this up to Rock
                                     if ( t.IsFaulted == false || t.Exception == null )
                                     {
-                                        // get the user ID
-                                        UserID = /*"facebook_" +  */FacebookManager.Instance.GetUserID( t.Result );
+                                        // now login via rock with the facebook credentials to verify we're good
+                                        RockApi.Instance.LoginFacebook( t.Result, delegate(System.Net.HttpStatusCode statusCode, string statusDescription) 
+                                            {
+                                                if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
+                                                {
+                                                    UserID = "facebook_" + FacebookManager.Instance.GetUserID( t.Result );
+                                                    RockPassword = "";
 
-                                        // copy over all the facebook info we can into the Person object
-                                        SyncFacebookInfoToPerson( t.Result );
+                                                    AccessToken = oauthResult.AccessToken;
 
-                                        //TODO: Send this up to Rock. We can't since it doesn't accept UserIDs yet, so consider us logged in.
-                                        //also, don't worry about revalidating Facebook, we've logged in ONCE that's all we care about till they logout.
+                                                    AccountType = BoundAccountType.Facebook;
 
-                                        RockPassword = "";
-                                        AccessToken = oauthResult.AccessToken;
+                                                    // save!
+                                                    SaveToDevice( );
 
-                                        AccountType = BoundAccountType.Facebook;
-
-                                        SaveToDevice( );
-
-                                        result( true );
+                                                    result( true );
+                                                }
+                                                else
+                                                {
+                                                    result( false );
+                                                }
+                                            });
                                     }
                                     else
                                     {
@@ -374,7 +437,8 @@ namespace CCVApp
                         case BoundAccountType.Facebook:
                         {
                             // grab the actual image
-                            string profilePictureUrl = string.Format("https://graph.facebook.com/{0}/picture?type={1}&access_token={2}", UserID, "large", AccessToken);
+                            string facebookID = UserID.Substring( UserID.IndexOf( "_" ) + 1 ); //chop off the "facebook_" prefix we add.
+                            string profilePictureUrl = string.Format("https://graph.facebook.com/{0}/picture?type={1}&access_token={2}", facebookID, "large", AccessToken);
                             RestRequest request = new RestRequest( Method.GET );
 
                             // get the raw response
@@ -473,8 +537,12 @@ namespace CCVApp
                         // read it
                         using (StreamReader reader = new StreamReader(filePath))
                         {
+                            // guard against corrupt data
                             string json = reader.ReadLine();
-                            _Instance = JsonConvert.DeserializeObject<RockMobileUser>( json ) as RockMobileUser;
+                            if ( json != null )
+                            {
+                                _Instance = JsonConvert.DeserializeObject<RockMobileUser>( json ) as RockMobileUser;
+                            }
                         }
                     }
                 }

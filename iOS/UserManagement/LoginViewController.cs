@@ -237,7 +237,8 @@ namespace iOS
 
                 webView.LoadError += (object s, UIWebErrorArgs eArgs) => 
                     {
-                        RockMobileUser.Instance.FacebookCredentialResult( "", session, BindComplete );
+                        webView.RemoveFromSuperview( );
+                        BindComplete( false );
                     };
 
                 webView.LoadFinished += (object s, EventArgs eArgs) => 
@@ -345,15 +346,7 @@ namespace iOS
                 // if we received No Content, we're logged in
                 case System.Net.HttpStatusCode.NoContent:
                 {
-                    // hack: Until facebook is fully implemented in rock, don't attempt syncing the profile cause it won't exist.
-                    if ( RockMobileUser.Instance.AccountType == RockMobileUser.BoundAccountType.Facebook )
-                    {
-                        ProfileComplete( System.Net.HttpStatusCode.OK, "", RockMobileUser.Instance.Person );
-                    }
-                    else
-                    {
-                        RockMobileUser.Instance.GetProfile( ProfileComplete );
-                    }
+                    RockMobileUser.Instance.GetProfile( ProfileComplete );
                     break;
                 }
 
