@@ -16,6 +16,6 @@
      
      <Text FontName="OpenSans-Regular" FontSize="18" FontColor="#AFAFAFFF"/>
      
-     <List Indentation="5%" BulletPoint="☞"/>
+     <List Indentation="5%" BulletPoint="・"/>
      <ListItem PaddingBottom="5%"/>
 </Styles>

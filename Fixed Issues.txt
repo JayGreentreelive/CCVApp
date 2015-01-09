@@ -2,6 +2,8 @@ Both:
 	The login password field is once again secure.
 	Prayers can now be viewed whether the user is logged in or not.
 	Fixed login issues.
+	Phone Numbers are now auto-formatted as they are typed in.
+	Profile Page now supports gender and birthday.
 
 iOS
 	Fixed a crash if trying to login with Facebook without a network connection.

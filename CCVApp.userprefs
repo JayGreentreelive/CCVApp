@@ -1,11 +1,8 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhone4s.8.1" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/UserManagement/ProfileViewController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/UserManagement/ProfileFragment.cs">
     <Files>
-      <File FileName="CCVApp.Shared/RockApi/RockMobileUser.cs" Line="1" Column="1" />
-      <File FileName="iOS/ControlStyling.cs" Line="1" Column="1" />
       <File FileName="Droid/UserManagement/ProfileFragment.cs" Line="1" Column="1" />
-      <File FileName="iOS/UserManagement/ProfileViewController.cs" Line="25" Column="25" />
       <File FileName="../Rock/Rock.Client/CodeGenerated/Person.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>

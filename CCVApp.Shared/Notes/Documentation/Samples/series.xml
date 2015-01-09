@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <SeriesList>
 	<Series>
-		
+		<Message>
+			<Name>Finances</Name>
+			<Speaker>Dr. Mark Moore</Speaker>
+			<Date>1/11/2014</Date>
+			<NoteUrl>http://www.jeredmcferron.com/ccv/message_1_10_2015.xml</NoteUrl>
+			<WatchUrl></WatchUrl>
+			<ShareUrl></ShareUrl>
+		</Message>
+
 		<Message>
 			<Name>Faith</Name>
 			<Speaker>Dr. Don Wilson</Speaker>
 			<Date>1/4/2014</Date>
 			<NoteUrl>http://www.jeredmcferron.com/ccv/message_1_3_2015.xml</NoteUrl>
-			<WatchUrl></WatchUrl>
-			<ShareUrl></ShareUrl>
+			<WatchUrl>http://player.vimeo.com/external/115912898.m3u8?p=high,standard,mobile&amp;s=db8e267ab39cd127fc7ec95ae432b554</WatchUrl>
+			<ShareUrl>http://www.ccvonline.com/Arena/default.aspx?page=17529&amp;item=487</ShareUrl>
 		</Message>
 
 		<Name>Fresh Start</Name>
