@@ -44,17 +44,17 @@ namespace iOS
             }
         }
 
-        PlatformView View { get; set; }
+        public PlatformView View { get; set; }
         UILabel Name { get; set; }
         UILabel Date { get; set; }
         UILabel Category { get; set; }
         PrayerTextView PrayerText { get; set; }
         UIButton Pray { get; set; }
         UIView PrayFillIn { get; set; }
-
         Rock.Client.PrayerRequest PrayerRequest { get; set; }
+        bool Prayed { get; set; }
 
-        public PrayerCard( ref PlatformView cardView, RectangleF bounds )
+        public PrayerCard( Rock.Client.PrayerRequest prayer, RectangleF bounds )
         {
             //setup the actual "card" outline
             View = PlatformView.Create( );
@@ -98,12 +98,13 @@ namespace iOS
             Pray.Layer.Position = new PointF( PrayFillIn.Frame.Left - Pray.Layer.Bounds.Width - ViewPadding, View.Bounds.Height - Pray.Layer.Bounds.Height );
             Pray.TouchUpInside += (object sender, EventArgs e) => 
                 {
-                    // Hack - Use FlagCount to track whether we've prayed for this or not
-                    if ( PrayerRequest != null )
+                    if( Prayed == false )
                     {
-                        PrayerRequest.FlagCount = PrayerRequest.FlagCount == 1 ? 0 : 1;
+                        Prayed = true;
 
-                        TogglePrayerFillIn( );
+                        CCVApp.Shared.Network.RockApi.Instance.IncrementPrayerCount( PrayerRequest.Id, null );
+
+                        PrayFillIn.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor );
                     }
                 };
 
@@ -139,19 +140,13 @@ namespace iOS
             nativeView.AddSubview( PrayFillIn );
             PrayerText.Parent = nativeView;
 
-            cardView = View;
+            SetPrayer( prayer );
         }
 
         const int ViewPadding = 5;
-        public void SetPrayer( Rock.Client.PrayerRequest prayer )
+        void SetPrayer( Rock.Client.PrayerRequest prayer )
         {
             PrayerRequest = prayer;
-
-            // Hack - Use FlagCount to track whether we've prayed for this or not
-            if ( PrayerRequest.FlagCount == null )
-            {
-                PrayerRequest.FlagCount = 0;
-            }
 
             // set the text for the name, size it so we get the height, then
             // restrict its bounds to the card itself
@@ -177,22 +172,6 @@ namespace iOS
             PrayerText.SizeToFit( );
             float prayerHeight = Math.Min( PrayerText.Frame.Height, View.Bounds.Height - PrayerText.Frame.Top - Pray.Frame.Height - ViewPadding );
             PrayerText.Frame = new RectangleF( PrayerText.Frame.Left, PrayerText.Frame.Top, PrayerText.Frame.Width, prayerHeight );
-
-            // set the prayer fill in appropriately
-            TogglePrayerFillIn( );
-        }
-
-        void TogglePrayerFillIn( )
-        {
-            // Hack - Use FlagCount to track whether we've prayed for this or not
-            if( PrayerRequest.FlagCount != 0 )
-            {
-                PrayFillIn.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor );
-            }
-            else
-            {
-                PrayFillIn.BackgroundColor = UIColor.Clear;
-            }
         }
     }
 
@@ -202,23 +181,20 @@ namespace iOS
         /// Actual list of prayer requests
         /// </summary>
         /// <value>The prayer requests.</value>
-        List<Rock.Client.PrayerRequest> PrayerRequests { get; set; }
+        List<PrayerCard> PrayerRequests { get; set; }
 
         PlatformCardCarousel Carousel { get; set; }
 
-        PrayerCard SubLeftPrayer { get; set; }
-        PrayerCard LeftPrayer { get; set; }
-        PrayerCard CenterPrayer { get; set; }
-        PrayerCard RightPrayer { get; set; }
-        PrayerCard PostRightPrayer { get; set; }
-
         bool RequestingPrayers { get; set; }
         bool ViewActive { get; set; }
+
+        RectangleF CardSize { get; set; }
 
         Rock.Mobile.PlatformSpecific.iOS.UI.BlockerView BlockerView { get; set; }
 
 		public PrayerMainUIViewController (IntPtr handle) : base (handle)
 		{
+            PrayerRequests = new List<PrayerCard>();
 		}
 
         public override void ViewDidLoad()
@@ -238,17 +214,9 @@ namespace iOS
             // setup the card positions to be to the offscreen to the left, centered on screen, and offscreen to the right
             float cardYOffset = ( viewRealHeight * .03f );
 
-            Carousel = PlatformCardCarousel.Create( cardWidth, cardHeight, new RectangleF( 0, cardYOffset, View.Bounds.Width, viewRealHeight ), PrayerConfig.Card_AnimationDuration, UpdatePrayerCards );
+            Carousel = PlatformCardCarousel.Create( View, cardWidth, cardHeight, new RectangleF( 0, cardYOffset, View.Bounds.Width, viewRealHeight ), PrayerConfig.Card_AnimationDuration );
 
-            // create our cards
-            SubLeftPrayer = new PrayerCard( ref Carousel.SubLeftCard, new RectangleF( 0, 0, cardWidth, cardHeight ) );
-            LeftPrayer = new PrayerCard( ref Carousel.LeftCard, new RectangleF( 0, 0, cardWidth, cardHeight ) );
-            CenterPrayer = new PrayerCard( ref Carousel.CenterCard, new RectangleF( 0, 0, cardWidth, cardHeight ) );
-            RightPrayer = new PrayerCard( ref Carousel.RightCard, new RectangleF( 0, 0, cardWidth, cardHeight ) );
-            PostRightPrayer = new PrayerCard( ref Carousel.PostRightCard, new RectangleF( 0, 0, cardWidth, cardHeight ) );
-
-            Carousel.Init( View );
-
+            CardSize = new RectangleF( 0, 0, cardWidth, cardHeight );
 
             // Setup the request prayers layer
             //setup our appearance
@@ -275,8 +243,6 @@ namespace iOS
             base.ViewWillAppear(animated);
 
             ViewActive = true;
-
-            Carousel.ViewWillAppear( animated );
             Carousel.Hidden = false;
 
             Task.NavToolbar.SetCreateButtonEnabled( false );
@@ -327,6 +293,9 @@ namespace iOS
                                     // only process this if the view is still active. It's possible this request came in after we left the view.
                                     if ( ViewActive == true )
                                     {
+                                        PrayerRequests.Clear( );
+                                        Carousel.Clear( );
+
                                         RequestingPrayers = false;
 
                                         BlockerView.FadeOut( null );
@@ -338,11 +307,13 @@ namespace iOS
                                             {
                                                 RetrievingPrayersView.Layer.Opacity = 0.00f;
 
-                                                PrayerRequests = prayerRequests;
-
-                                                Carousel.NumItems = PrayerRequests.Count;
-
-                                                UpdatePrayerCards( 0 );
+                                                // setup the card positions to be to the offscreen to the left, centered on screen, and offscreen to the right
+                                                foreach( Rock.Client.PrayerRequest prayer in prayerRequests )
+                                                {
+                                                    PrayerCard card = new PrayerCard( prayer, CardSize );
+                                                    PrayerRequests.Add( card );
+                                                    Carousel.AddCard( card.View );
+                                                }
                                             }
                                         }
                                         else
@@ -373,37 +344,7 @@ namespace iOS
         public override void TouchesEnded(NSSet touches, UIEvent evt)
         {
             // don't call the base because we don't want to support the nav toolbar on this page
-
             Carousel.TouchesEnded( );
-        }
-
-        void UpdatePrayerCards( int prayerIndex )
-        {
-            if( prayerIndex < PrayerRequests.Count )
-            {
-                CenterPrayer.SetPrayer( PrayerRequests[ prayerIndex ] );
-
-                // set the left and right in case they want to swipe thru the prayers
-                if( prayerIndex - 2 >= 0 )
-                {
-                    SubLeftPrayer.SetPrayer( PrayerRequests[ prayerIndex - 2 ] );
-                }
-
-                if( prayerIndex - 1 >= 0 )
-                {
-                    LeftPrayer.SetPrayer( PrayerRequests[ prayerIndex - 1 ] );
-                }
-
-                if( prayerIndex + 1 < PrayerRequests.Count )
-                {
-                    RightPrayer.SetPrayer( PrayerRequests[ prayerIndex + 1 ] );
-                }
-
-                if( prayerIndex + 2 < PrayerRequests.Count )
-                {
-                    PostRightPrayer.SetPrayer( PrayerRequests[ prayerIndex + 2 ] );
-                }
-            }
         }
 	}
 }

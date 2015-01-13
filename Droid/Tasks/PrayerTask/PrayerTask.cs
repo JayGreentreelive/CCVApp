@@ -70,17 +70,6 @@ namespace Droid
                         NavbarFragment.NavToolbar.RevealForTime( 3.00f );
                     }
                 }
-
-                public override void SpringboardDidAnimate(bool springboardRevealed)
-                {
-                    base.SpringboardDidAnimate(springboardRevealed);
-
-                    if ( springboardRevealed == false )
-                    {
-                        // let the main page know the springboard closed.
-                        MainPage.SpringboardClosed( );
-                    }
-                }
             }
         }
     }

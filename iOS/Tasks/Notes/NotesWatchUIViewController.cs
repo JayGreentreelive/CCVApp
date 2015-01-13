@@ -122,6 +122,12 @@ namespace iOS
 
                 DidDisplayError = false;
 
+                // if we're watching the same video we last watched, resume
+                if ( WatchUrl == CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingVideoUrl )
+                {
+                    MoviePlayer.InitialPlaybackTime = CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingVideoPos;
+                }
+
                 MoviePlayer.Play( );
             }
         }
@@ -133,6 +139,8 @@ namespace iOS
             // only process this if we're not entering fullscreen
             if ( EnteringFullscreen == false )
             {
+                double currPlaybackTime = MoviePlayer.CurrentPlaybackTime;
+
                 MoviePlayer.Stop( );
 
                 foreach ( NSObject handle in ObserverHandles )
@@ -197,6 +205,26 @@ namespace iOS
         void PlaybackStateDidChange( NSNotification obj )
         {
             DidDisplayError = false;
+
+            if ( MoviePlayer.PlaybackState != MPMoviePlaybackState.Playing )
+            {
+                // store the last video we watched.
+                CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingVideoUrl = WatchUrl;
+
+                // see where we are in playback. If it's > 10 and < 90, we'll save the time.
+                if ( MoviePlayer.Duration > 0.00f )
+                {
+                    double playbackPerc = MoviePlayer.CurrentPlaybackTime / MoviePlayer.Duration;
+                    if ( playbackPerc > .10f && playbackPerc < .95f )
+                    {
+                        CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingVideoPos = MoviePlayer.CurrentPlaybackTime;
+                    }
+                    else
+                    {
+                        CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingVideoPos = 0;
+                    }
+                }
+            }
         }
 
         void PlaybackDidFinish( NSNotification obj )

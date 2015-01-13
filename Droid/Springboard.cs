@@ -493,8 +493,6 @@ namespace Droid
             base.OnPause();
 
             System.Console.WriteLine( "Springboard OnPause()" );
-
-            RockApi.Instance.SaveObjectsToDevice( );
         }
 
         public override void OnResume()
@@ -644,6 +642,10 @@ namespace Droid
         public override void OnStop()
         {
             base.OnStop();
+
+            // save any final changes that may have been performed by the OnPause of other Fragments
+            RockApi.Instance.SaveObjectsToDevice( );
+
             System.Console.WriteLine( "Springboard OnStop()" );
         }
 

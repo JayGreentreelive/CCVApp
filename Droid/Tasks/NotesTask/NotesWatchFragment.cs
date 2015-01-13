@@ -21,7 +21,7 @@ namespace Droid
     {
         namespace Notes
         {
-            public class NotesWatchFragment : TaskFragment, Android.Media.MediaPlayer.IOnPreparedListener, Android.Media.MediaPlayer.IOnErrorListener
+            public class NotesWatchFragment : TaskFragment, Android.Media.MediaPlayer.IOnPreparedListener, Android.Media.MediaPlayer.IOnErrorListener, Android.Media.MediaPlayer.IOnSeekCompleteListener
             {
                 VideoView VideoPlayer { get; set; }
                 MediaController MediaController { get; set; }
@@ -77,6 +77,26 @@ namespace Droid
                     ProgressBar.Visibility = ViewStates.Gone;
 
                     MediaController.SetAnchorView( VideoPlayer );
+
+                    // setup a seek listener
+                    mp.SetOnSeekCompleteListener( this );
+
+                    // if this is a new video, store the URL
+                    if ( CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingVideoUrl != VideoUrl )
+                    {
+                        CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingVideoUrl = VideoUrl;
+                        VideoPlayer.Start( );
+                    }
+                    else
+                    {
+                        // otherwise, resume where we left off
+                        mp.SeekTo( (int)CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingVideoPos );
+                    }
+                }
+
+                public void OnSeekComplete( MediaPlayer mp )
+                {
+                    VideoPlayer.Start( );
                 }
 
                 public bool OnError( MediaPlayer mp, MediaError error, int extra )
@@ -126,7 +146,7 @@ namespace Droid
                     ProgressBar.Visibility = ViewStates.Visible;
 
                     VideoPlayer.SetVideoURI( Android.Net.Uri.Parse( VideoUrl ) );
-                    VideoPlayer.Start( );
+                    VideoPlayer.Pause( );
                 }
 
                 public override void OnPause()
@@ -135,6 +155,23 @@ namespace Droid
 
                     ParentTask.NavbarFragment.EnableSpringboardRevealButton( true );
                     ParentTask.NavbarFragment.ToggleFullscreen( false );
+
+                    // see if we should store the playback position for resuming
+                    if ( VideoPlayer.Duration > 0 )
+                    {
+                        // if we're within 10 and 90 percent, do it
+                        float playbackPerc = (float)VideoPlayer.CurrentPosition / (float)VideoPlayer.Duration;
+                        if ( playbackPerc > .10f && playbackPerc < .95f )
+                        {
+                            CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingVideoPos = VideoPlayer.CurrentPosition;
+                        }
+                        else
+                        {
+                            // otherwise plan on starting from the beginning
+                            CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingVideoPos = 0;
+                        }
+                    }
+
 
                     // stop playback
                     VideoPlayer.StopPlayback( );

@@ -1,9 +1,12 @@
 Both:
 	The login password field is once again secure.
 	Prayers can now be viewed whether the user is logged in or not.
+	Majorly improved the performance when swiping prayers.
+	Tapping the "Pray" button now actually updates the prayer's count in Rock.
 	Fixed login issues.
 	Phone Numbers are now auto-formatted as they are typed in.
 	Profile Page now supports gender and birthday.
+	Videos now resume where they last left off when streaming.
 
 iOS
 	Fixed a crash if trying to login with Facebook without a network connection.
@@ -12,4 +15,5 @@ iOS
 	Fixed layout issues in the Prayer Creation page on iPhone 4s
 
 Android
-	
+	Fixed an issue causing the "Register" button to be clipped.
+	Fixed an issue that could cause certain preferences to not save on Android.

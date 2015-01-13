@@ -76,14 +76,14 @@
         android:layout_height="wrap_content">
         <Button
             android:text="Login"
-            android:layout_width="90dp"
+            android:layout_width="100dp"
             android:layout_height="40dp"
             android:id="@+id/loginButton"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="5dp" />
         <Button
             android:text="Register"
-            android:layout_width="90dp"
+            android:layout_width="100dp"
             android:layout_height="40dp"
             android:id="@+id/registerButton"
             android:layout_marginLeft="5dp"

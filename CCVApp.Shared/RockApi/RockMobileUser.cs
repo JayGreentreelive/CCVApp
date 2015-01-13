@@ -69,6 +69,20 @@ namespace CCVApp
                 public Person Person;
 
                 /// <summary>
+                /// The URL of the last video streamed, used so we can know whether
+                /// to resume it or not.
+                /// </summary>
+                /// <value>The last streaming video URL.</value>
+                public string LastStreamingVideoUrl { get; set; }
+
+                /// <summary>
+                /// The left off position of the last streaming video, so we can
+                /// resume if desired.
+                /// </summary>
+                /// <value>The last streaming video position.</value>
+                public double LastStreamingVideoPos { get; set; }
+
+                /// <summary>
                 /// If true they have a profile image, so we should look for it in our defined spot.
                 /// The way profile images work is, Rock will tell us they have one via a url.
                 /// We'll request it and retrieve it, and then store it locally.

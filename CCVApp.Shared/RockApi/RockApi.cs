@@ -64,6 +64,11 @@ namespace CCVApp
                 const string PutPrayerRequestEndPoint = "api/prayerrequests";
 
                 /// <summary>
+                /// End point for updating a prayer request's prayed count.
+                /// </summary>
+                const string UpdatePrayerCountEndPoint = "api/prayerrequests/prayed/";
+
+                /// <summary>
                 /// End point for updating a Person object
                 /// </summary>
                 const string PutProfileEndPoint = "api/People/";
@@ -165,6 +170,17 @@ namespace CCVApp
                     request.AddBody( prayer );
 
                     Request.ExecuteAsync( BaseUrl + PutPrayerRequestEndPoint, request, resultHandler);
+                }
+
+                public void IncrementPrayerCount( int prayerId, HttpRequest.RequestResult resultHandler )
+                {
+                    // build a URL that contains the ID for the prayer that is getting another prayer
+                    RestRequest request = GetRockRestRequest( Method.PUT );
+
+                    string requestUrl = BaseUrl + UpdatePrayerCountEndPoint;
+                    requestUrl += prayerId.ToString( );
+
+                    Request.ExecuteAsync( requestUrl, request, resultHandler);
                 }
 
                 public void GetProfile( string userName, HttpRequest.RequestResult<Rock.Client.Person> resultHandler )
