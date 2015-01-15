@@ -251,8 +251,9 @@ namespace Droid
                     ( (LinearLayout.LayoutParams)WatchButton.LayoutParameters ).Weight = 0;
                     ( (LinearLayout.LayoutParams)WatchButton.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
                     WatchButton.SetTypeface( buttonFontFace, TypefaceStyle.Normal );
-                    WatchButton.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Series_Table_IconSize );
+                    WatchButton.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Details_Table_IconSize );
                     WatchButton.Text = NoteConfig.Series_Table_Watch_Icon;
+                    WatchButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
                     WatchButton.SetBackgroundDrawable( null );
                     contentLayout.AddView( WatchButton );
 
@@ -261,8 +262,9 @@ namespace Droid
                     ( (LinearLayout.LayoutParams)TakeNotesButton.LayoutParameters ).Weight = 0;
                     ( (LinearLayout.LayoutParams)TakeNotesButton.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
                     TakeNotesButton.SetTypeface( buttonFontFace, TypefaceStyle.Normal );
-                    TakeNotesButton.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Series_Table_IconSize );
+                    TakeNotesButton.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Details_Table_IconSize );
                     TakeNotesButton.Text = NoteConfig.Series_Table_TakeNotes_Icon;
+                    TakeNotesButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
                     TakeNotesButton.SetBackgroundDrawable( null );
                     contentLayout.AddView( TakeNotesButton );
 

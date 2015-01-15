@@ -7,13 +7,21 @@ Both:
 	Phone Numbers are now auto-formatted as they are typed in.
 	Profile Page now supports gender and birthday.
 	Videos now resume where they last left off when streaming.
+	RevealBox text is now underlined in exported HTML.
+	Fixed the color of disabled buttons in the Nav Toolbar (it's appropriately dark now)
+	Tapping a quote body no longer activates its web URL. Instead, the citation must be tapped.
+	Quote citations are now underlined when they will active a URL on tap.
 
 iOS
 	Fixed a crash if trying to login with Facebook without a network connection.
 	Fixed an issue causing unsubmitted changes to remain in the Profile View
 	Fixed an issue preventing the keyboard from dismissing in the Profile View
 	Fixed layout issues in the Prayer Creation page on iPhone 4s
+	The dark keyboard is now used for text input.
+	Fixed an issue with the Nav Toolbar coloring, where it was being tinted and thus inaccurate.
 
 Android
 	Fixed an issue causing the "Register" button to be clipped.
 	Fixed an issue that could cause certain preferences to not save on Android.
+	The "Dark" material theme will now be used on Android 5.0 devices.
+	Fixed various UI element colors to match iOS.

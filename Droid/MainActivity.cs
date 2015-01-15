@@ -30,9 +30,6 @@ namespace Droid
             // Set our view from the "main" layout resource
             SetContentView( Resource.Layout.Main );
 
-            // turn off the action bar
-            ActionBar.Hide();
-
             // get the active task frame and give it to the springboard
             FrameLayout layout = FindViewById<FrameLayout>(Resource.Id.activetask);
 

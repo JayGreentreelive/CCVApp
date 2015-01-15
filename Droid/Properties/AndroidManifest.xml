@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="2.0" package="com.jered.ccvmobile2" android:versionCode="7">
-	<uses-sdk />
-	<application android:label="CCV Mobile 2" android:icon="@drawable/icon">
+	<uses-sdk android:minSdkVersion="16" />
+	<application android:label="CCV Mobile 2" android:icon="@drawable/icon" android:theme="@style/CCVMobileTheme">
 	</application>
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />

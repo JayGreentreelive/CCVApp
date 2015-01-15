@@ -128,6 +128,7 @@ namespace iOS
 
             // setup the toolbar that will manage task navigation and any other tasks the task needs
             SubNavToolbar = new NavToolbar();
+
             SubNavToolbar.BarTintColor = Rock.Mobile.PlatformUI.Util.GetUIColor( SubNavToolbarConfig.BackgroundColor );
             SubNavToolbar.Layer.Opacity = SubNavToolbarConfig.Opacity;
             SubNavigationController.View.AddSubview( SubNavToolbar );

@@ -19,10 +19,11 @@ using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
 using Android.Telephony;
 using Rock.Mobile.Util.Strings;
+using Java.Lang.Reflect;
 
 namespace Droid
 {
-    public class ProfileFragment : Fragment
+    public class ProfileFragment : Fragment, DatePicker.IOnDateChangedListener
     {
         public Springboard SpringboardParent { get; set; }
 
@@ -148,20 +149,15 @@ namespace Droid
                         initialDateTime = DateTime.Parse( BirthdateField.Text );
                     }
 
-                    DatePickerDialog datePicker = new DatePickerDialog( Activity, 
-                        delegate(object s, DatePickerDialog.DateSetEventArgs dateArgs) 
-                        {
-                            Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
-                                {
-                                    BirthdateField.Text = string.Format( "{0:MMMMM dd yyyy}", dateArgs.Date );
-                                    Dirty = true;
-                                });
-                        }, 
-                        initialDateTime.Year, initialDateTime.Month - 1, initialDateTime.Day );
+                    // build our 
+                    LayoutInflater dateInflate = LayoutInflater.From( Activity );
+                    DatePicker newPicker = (DatePicker)dateInflate.Inflate( Resource.Layout.DatePicker, null );
+                    newPicker.Init( initialDateTime.Year, initialDateTime.Month - 1, initialDateTime.Day, this );
 
-                    datePicker.Show( );
+                    Dialog dialog = new Dialog( Activity );
+                    dialog.AddContentView( newPicker, new ViewGroup.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent ) );
+                    dialog.Show( );
             };
-
 
             borderView = backgroundView.FindViewById<View>( Resource.Id.middle_border );
             borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
@@ -264,6 +260,15 @@ namespace Droid
                 };
 
             return view;
+        }
+
+        public void OnDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth )
+        {
+            Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                {
+                    BirthdateField.Text = string.Format( "{0:MMMMM dd yyyy}", new DateTime( year, monthOfYear + 1, dayOfMonth ) );
+                    Dirty = true;
+                });
         }
 
         public override void OnResume()

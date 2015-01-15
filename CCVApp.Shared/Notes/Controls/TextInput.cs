@@ -55,7 +55,8 @@ namespace CCVApp
                     // create the font that either we or our parent defined
                     TextField.SetFont( mStyle.mFont.mName, mStyle.mFont.mSize.Value );
                     TextField.TextColor = mStyle.mFont.mColor.Value;
-                   
+                    TextField.KeyboardAppearance = CCVApp.Shared.Config.GeneralConfig.iOSPlatformUIKeyboardAppearance;
+
                     // check for border styling
                     if ( mStyle.mBorderColor.HasValue )
                     {

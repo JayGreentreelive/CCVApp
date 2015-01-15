@@ -146,7 +146,7 @@ namespace iOS
                     if ( enabled == true )
                     {
                         WatchButton.Enabled = true;
-                        WatchButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( 0xc43535FF ), UIControlState.Normal );
+                        WatchButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ), UIControlState.Normal );
                     }
                     else
                     {
@@ -160,7 +160,7 @@ namespace iOS
                     if ( enabled == true )
                     {
                         TakeNotesButton.Enabled = true;
-                        TakeNotesButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( 0xc43535FF ), UIControlState.Normal );
+                        TakeNotesButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ), UIControlState.Normal );
                     }
                     else
                     {

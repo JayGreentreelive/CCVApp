@@ -54,7 +54,7 @@
                                             <constraint firstAttribute="trailing" secondItem="654" secondAttribute="trailing" constant="20" id="CbF-3a-TQm"/>
                                         </constraints>
                                     </view>
-                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="667">
+                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="667">
                                         <rect key="frame" x="10" y="350" width="300" height="30"/>
                                         <state key="normal" title="Retry">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -201,7 +201,7 @@
                                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" spellCheckingType="no"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" spellCheckingType="no" keyboardAppearance="alert"/>
                                             </textField>
                                         </subviews>
                                         <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -218,7 +218,7 @@
                                                 <rect key="frame" x="20" y="2" width="300" height="30"/>
                                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" spellCheckingType="no"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" spellCheckingType="no" keyboardAppearance="alert"/>
                                             </textField>
                                         </subviews>
                                         <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -241,7 +241,7 @@
                                                 <rect key="frame" x="20" y="5" width="300" height="140"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" keyboardAppearance="alert"/>
                                             </textView>
                                         </subviews>
                                         <color key="backgroundColor" red="0.05276594215375896" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -362,4 +362,16 @@
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
+    <resources>
+        <image name="ccvLogo.png" width="57" height="28"/>
+        <image name="news_baptism_main.png" width="375" height="242"/>
+        <image name="news_learnmore_header.png" width="375" height="211"/>
+        <image name="news_learnmore_main.png" width="375" height="242"/>
+        <image name="news_startingpoint_header.png" width="1242" height="699"/>
+        <image name="news_startingpoint_main.png" width="375" height="242"/>
+        <image name="podcastThumbnailPlaceholder.png" width="590" height="332"/>
+        <image name="spot_mask.png" width="128" height="128"/>
+        <image name="news_baptism_header.png" width="320" height="180"/>
+        <image name="facebook_login.png" width="250" height="35"/>
+    </resources>
 </document>

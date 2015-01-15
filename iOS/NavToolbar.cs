@@ -5,6 +5,7 @@ using MonoTouch.Foundation;
 using System.Drawing;
 using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
+using MonoTouch.CoreGraphics;
 
 namespace iOS
 {
@@ -66,6 +67,7 @@ namespace iOS
                     Rock.Mobile.Threading.Util.PerformOnUIThread( delegate { Reveal( false ); } );
                 };
 
+            uint disabledColor = Rock.Mobile.Graphics.Util.ScaleRGBAColor( ControlStylingConfig.TextField_PlaceholderTextColor, 2, false );
 
             // create the back button
             NSString backLabel = new NSString(SubNavToolbarConfig.BackButton_Text);
@@ -74,7 +76,7 @@ namespace iOS
             BackButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, SubNavToolbarConfig.BackButton_Size );
             BackButton.SetTitle( backLabel.ToString( ), UIControlState.Normal );
             BackButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ), UIControlState.Normal );
-            BackButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Disabled );
+            BackButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( disabledColor ), UIControlState.Disabled );
 
             SizeF buttonSize = backLabel.StringSize( BackButton.Font );
             BackButton.Bounds = new RectangleF( 0, 0, buttonSize.Width, buttonSize.Height );
@@ -87,7 +89,7 @@ namespace iOS
             ShareButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, SubNavToolbarConfig.ShareButton_Size );
             ShareButton.SetTitle( shareLabel.ToString( ), UIControlState.Normal );
             ShareButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ), UIControlState.Normal );
-            ShareButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Disabled );
+            ShareButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( disabledColor ), UIControlState.Disabled );
 
             // determine its dimensions
             buttonSize = shareLabel.StringSize( ShareButton.Font );
@@ -102,7 +104,7 @@ namespace iOS
             CreateButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, SubNavToolbarConfig.CreateButton_Size );
             CreateButton.SetTitle( createLabel.ToString( ), UIControlState.Normal );
             CreateButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ), UIControlState.Normal );
-            CreateButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Disabled );
+            CreateButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( disabledColor ), UIControlState.Disabled );
 
             // determine its dimensions
             buttonSize = createLabel.StringSize( CreateButton.Font );
@@ -110,6 +112,9 @@ namespace iOS
             //CreateButton.BackgroundColor = UIColor.White;
 
             UpdateButtons( );
+
+            TintColor = UIColor.Clear;
+            Translucent = false;
         }
 
         public void SetBackButtonAction( EventHandler handler )

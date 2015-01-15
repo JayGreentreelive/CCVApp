@@ -91,6 +91,8 @@ namespace Droid
             ButtonLayout.LayoutParameters.Height = (int)Rock.Mobile.Graphics.Util.UnitToPx( 50.0f );
 
 
+            uint disabledColor = Rock.Mobile.Graphics.Util.ScaleRGBAColor( ControlStylingConfig.TextField_PlaceholderTextColor, 4, false );
+
             // create the back button
             BackButton.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
             ( (LinearLayout.LayoutParams)BackButton.LayoutParameters ).Gravity = GravityFlags.Top;
@@ -121,7 +123,7 @@ namespace Droid
                 {
                     Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ),
                     Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ),
-                    Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ),
+                    Rock.Mobile.PlatformUI.Util.GetUIColor( disabledColor ),
                 };
             BackButton.SetTextColor( new Android.Content.Res.ColorStateList( states, colors ) );
 
@@ -155,7 +157,7 @@ namespace Droid
                 {
                     Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ),
                     Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ),
-                    Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ),
+                    Rock.Mobile.PlatformUI.Util.GetUIColor( disabledColor ),
                 };
             ShareButton.SetTextColor( new Android.Content.Res.ColorStateList( states, colors ) );
 
@@ -189,7 +191,7 @@ namespace Droid
                 {
                     Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ),
                     Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ),
-                    Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ),
+                    Rock.Mobile.PlatformUI.Util.GetUIColor( disabledColor ),
                 };
             CreateButton.SetTextColor( new Android.Content.Res.ColorStateList( states, colors ) );
 

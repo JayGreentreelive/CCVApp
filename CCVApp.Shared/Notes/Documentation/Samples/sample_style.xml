@@ -2,7 +2,7 @@
 <Styles>
      <Note Padding="5%" BackgroundColor="#262626FF"/>
      <Paragraph/>
-     <RevealBox FontName="OpenSans-Bold" FontSize="14" FontColor="#b52e2eFF"/>
+     <RevealBox FontName="OpenSans-Bold" FontSize="18" FontColor="#b52e2eFF"/>
      <Quote MarginBottom="5%" FontName="OpenSans-Italic" FontSize="16" FontColor="#ec3e3eFF"/>
 
      <TextInput BorderWidth="2" BorderRadius="5" FontName="OpenSans-Regular" FontSize="16" FontColor="#AFAFAFFF"/>

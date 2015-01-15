@@ -170,7 +170,7 @@ namespace CCVApp
 
                 public override void BuildHTMLContent( ref string htmlStream, List<IUIControl> userNotes )
                 {
-                    htmlStream += PlatformLabel.Text;
+                    htmlStream += string.Format( "<U>{0}</U>", PlatformLabel.Text );
                 }
 
                 public void SetRevealed( bool revealed )

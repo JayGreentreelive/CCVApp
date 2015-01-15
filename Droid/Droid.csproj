@@ -14,7 +14,7 @@
     <AndroidApplication>True</AndroidApplication>
     <AndroidUseLatestPlatformSdk>False</AndroidUseLatestPlatformSdk>
     <AssemblyName>Droid</AssemblyName>
-    <TargetFrameworkVersion>v4.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -125,6 +125,9 @@
     <AndroidResource Include="Resources\drawable\dark_cursor.axml" />
     <AndroidResource Include="Resources\drawable\light_cursor.axml" />
     <AndroidResource Include="Resources\layout\Notes_WebView.axml" />
+    <AndroidResource Include="Resources\values\themes.xml" />
+    <AndroidResource Include="Resources\values-v21\themes.xml" />
+    <AndroidResource Include="Resources\layout\DatePicker.axml" />
   </ItemGroup>
   <Import Project="..\..\Rock.Mobile\Rock.Mobile.projitems" Label="Shared" Condition="Exists('..\..\Rock.Mobile\Rock.Mobile.projitems')" />
   <Import Project="..\..\Rock\Rock.Client\Rock.Client.Models.projitems" Label="Shared" Condition="Exists('..\..\Rock\Rock.Client\Rock.Client.Models.projitems')" />
@@ -146,6 +149,7 @@
     <Folder Include="Resources\layout\" />
     <Folder Include="Resources\layout-sw480dp\" />
     <Folder Include="Resources\drawable\" />
+    <Folder Include="Resources\values-v21\" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="..\Assets\Fonts\Bevan.ttf">

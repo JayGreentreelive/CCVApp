@@ -40,6 +40,14 @@ namespace CCVApp
                 /// Todo: Get this from Rock, or SOMETHING. This is not ok.
                 /// </summary>
                 public const int CellPhoneValueId = 12;
+
+                /// <summary>
+                /// iOS only, this controls what style of keyboard is used for PLATFORM textFields.
+                /// Meaning the ones dynamically created in code via Rock.Mobile. 
+                /// Any normal iOS text field needs to have its style explicitely set.
+                /// Although this is an int, it should match the KeyboardAppearance enum.
+                /// </summary>
+                public const int iOSPlatformUIKeyboardAppearance = 1;
             }
 
             public class SpringboardConfig
@@ -159,7 +167,7 @@ namespace CCVApp
                 /// <summary>
                 /// The color of the subNavigation toolbar (the one at the bottom)
                 /// </summary>
-                public const uint BackgroundColor = 0x1C1C1CFF;
+                public const uint BackgroundColor = 0x505050FF;
 
                 /// <summary>
                 /// The amount of opacity (see throughyness) of the subNavigation toolbar (the one at the bottom)
@@ -364,7 +372,8 @@ namespace CCVApp
                 /// <summary>
                 /// Make Private
                 /// </summary>
-                public const uint Details_Table_IconSize = 42;
+                public const uint Details_Table_IconSize = 64;
+                public const uint Details_Table_IconColor = 0xc43535FF;
             }
 
             public class PrayerConfig

@@ -142,6 +142,10 @@ namespace CCVApp
 
                     // see if there's a Url attribute, which is where the user should be taken if they tap the link
                     ActiveUrl = reader.GetAttribute( "Url" );
+                    if ( string.IsNullOrEmpty( ActiveUrl ) == false )
+                    {
+                        Citation.AddUnderline( );
+                    }
 
                     bool finishedScripture = false;
                     while( finishedScripture == false && reader.Read( ) )
@@ -209,15 +213,22 @@ namespace CCVApp
                     RectangleF frame;
                     if( string.IsNullOrEmpty( QuoteLabel.Text ) != true )
                     {   
-                        // when taking the citation frame, use whichever width is larger,
-                        // because it's certainly possible the quote is shorter than the citation.
+                        // when taking the citation frame, put it at the left edge of the quote,
+                        // because if it's longer than the quote we'll want the bounding frame to use
+                        // its width as opposed to the quote's width.
                         Citation.Frame = new RectangleF( QuoteLabel.Frame.Left, 
                                                          QuoteLabel.Frame.Bottom, 
-                                                         Math.Max( Citation.Frame.Width, QuoteLabel.Frame.Width ),
+                                                         Citation.Frame.Width,
                                                          Citation.Frame.Height );
 
                         // get a bounding frame for the quote and citation
                         frame = Parser.CalcBoundingFrame( QuoteLabel.Frame, Citation.Frame );
+
+                        // now right-adjust it IF it's smaller than the quote
+                        if ( Citation.Frame.Width < QuoteLabel.Frame.Width )
+                        {
+                            Citation.Position = new PointF( QuoteLabel.Frame.Right - Citation.Frame.Width, Citation.Position.Y );
+                        }
                     }
                     else
                     {
@@ -288,7 +299,7 @@ namespace CCVApp
                 public override IUIControl TouchesEnded( PointF touch )
                 {
                     // if we have an active URL and they're tapping within us, consume.
-                    if ( string.IsNullOrEmpty( ActiveUrl ) == false && Frame.Contains( touch ) )
+                    if ( string.IsNullOrEmpty( ActiveUrl ) == false && Citation.Frame.Contains( touch ) )
                     {
                         return this;
                     }
