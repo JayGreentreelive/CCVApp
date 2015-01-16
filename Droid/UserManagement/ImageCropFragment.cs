@@ -119,12 +119,12 @@ namespace Droid
         /// <summary>
         /// Time for the cropped animation to scale up or down
         /// </summary>
-        const long ImageAnimationTimeMS = 250;
+        const float ImageAnimationTime = .25f;
 
         /// <summary>
         /// Time for the mask to fade in / our
         /// </summary>
-        const long MaskFadeTimeMS = 500;
+        const float MaskFadeTime = .50f;
 
         /// <summary>
         /// AMOUNT of opacity the mask should faded in by.
@@ -389,7 +389,7 @@ namespace Droid
                     if ( Mode == CropMode.None )
                     {
                         // Animate in the mask
-                        SimpleAnimatorFloat floatAnimator = new SimpleAnimatorFloat( MaskLayer.Opacity, MaskFadeAmount, MaskFadeTimeMS, 
+                        SimpleAnimatorFloat floatAnimator = new SimpleAnimatorFloat( MaskLayer.Opacity, MaskFadeAmount, MaskFadeTime, 
                             delegate( float percent, object value )
                             {
                                 Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
@@ -422,7 +422,7 @@ namespace Droid
 
 
                         // now animate the cropped image up to its full size
-                        AnimateImageView( ImageView, startPos, endPos, startSize, endSize, ImageAnimationTimeMS, 
+                        AnimateImageView( ImageView, startPos, endPos, startSize, endSize, ImageAnimationTime, 
                             delegate 
                             { 
                                 ImageView.SetImageBitmap( null );
@@ -453,7 +453,7 @@ namespace Droid
                                 MaskLayer.Visibility = ViewStates.Visible;
                                 CropView.Visibility = ViewStates.Visible;
 
-                                SimpleAnimatorFloat floatAnimator = new SimpleAnimatorFloat( MaskLayer.Opacity, MaskFadeAmount, MaskFadeTimeMS, 
+                                SimpleAnimatorFloat floatAnimator = new SimpleAnimatorFloat( MaskLayer.Opacity, MaskFadeAmount, MaskFadeTime, 
                                     delegate( float percent, object value )
                                     {
                                         Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
@@ -482,7 +482,7 @@ namespace Droid
                     // don't allow a state change while we're animating
                     Animating = true;
 
-                    SimpleAnimatorFloat floatAnimator = new SimpleAnimatorFloat( MaskLayer.Opacity, 1.00f, MaskFadeTimeMS, 
+                    SimpleAnimatorFloat floatAnimator = new SimpleAnimatorFloat( MaskLayer.Opacity, 1.00f, MaskFadeTime, 
                         delegate( float percent, object value )
                         {
                             Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
@@ -531,7 +531,7 @@ namespace Droid
 
 
                                     // now animate the cropped image up to its full size
-                                    AnimateImageView( ImageView, startPos, endPos, startSize, endSize, ImageAnimationTimeMS, 
+                                    AnimateImageView( ImageView, startPos, endPos, startSize, endSize, ImageAnimationTime, 
                                         delegate 
                                         { 
                                             Animating = false;
@@ -547,7 +547,7 @@ namespace Droid
             Mode = mode;
         }
 
-        void AnimateImageView( View imageView, PointF startPos, PointF endPos, System.Drawing.SizeF startSize, System.Drawing.SizeF endSize, long durationMS, SimpleAnimator.AnimationComplete completeDelegate )
+        void AnimateImageView( View imageView, PointF startPos, PointF endPos, System.Drawing.SizeF startSize, System.Drawing.SizeF endSize, float duration, SimpleAnimator.AnimationComplete completeDelegate )
         {
             // calculate the deltas once before we start
             float xDelta = endPos.X - startPos.X;
@@ -557,7 +557,7 @@ namespace Droid
             float deltaHeight = endSize.Height - startSize.Height;
 
             // create an animator
-            SimpleAnimatorFloat imageAnimator = new SimpleAnimatorFloat( 0.00f, 1.00f, durationMS, 
+            SimpleAnimatorFloat imageAnimator = new SimpleAnimatorFloat( 0.00f, 1.00f, duration, 
                 delegate( float percent, object value )
                 {
                     Rock.Mobile.Threading.Util.PerformOnUIThread( delegate

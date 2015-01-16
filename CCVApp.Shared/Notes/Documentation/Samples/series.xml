@@ -2,12 +2,20 @@
 <SeriesList>
 	<Series>
 		<Message>
+			<Name>FAMILY</Name>
+			<Speaker>Dr. Don Wilson</Speaker>
+			<Date>1/18/2014</Date>
+			<NoteUrl>http://www.jeredmcferron.com/ccv/message_1_17_2015.xml</NoteUrl>
+			<WatchUrl></WatchUrl>
+			<ShareUrl></ShareUrl>
+		</Message>
+		<Message>
 			<Name>Finances</Name>
 			<Speaker>Dr. Mark Moore</Speaker>
 			<Date>1/11/2014</Date>
 			<NoteUrl>http://www.jeredmcferron.com/ccv/message_1_10_2015.xml</NoteUrl>
-			<WatchUrl></WatchUrl>
-			<ShareUrl></ShareUrl>
+			<WatchUrl>http://player.vimeo.com/external/116591869.m3u8?p=high,standard,mobile&amp;s=952e71be321b377d2c118b7b795ecdb9</WatchUrl>
+			<ShareUrl>http://www.ccvonline.com/Arena/default.aspx?page=17529&amp;item=488</ShareUrl>
 		</Message>
 
 		<Message>

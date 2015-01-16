@@ -112,7 +112,23 @@ namespace Droid
                     messageItem.Date.Text = Messages[ position ].Message.Date;
                     messageItem.Speaker.Text = Messages[ position ].Message.Speaker;
 
-                    messageItem.WatchButton.Enabled = !string.IsNullOrEmpty( Messages[ position ].Message.WatchUrl );
+                    if ( string.IsNullOrEmpty( Messages[ position ].Message.WatchUrl ) == true )
+                    {
+                        messageItem.ToggleWatchButton( false );
+                    }
+                    else
+                    {
+                        messageItem.ToggleWatchButton( true );
+                    }
+
+                    if ( string.IsNullOrEmpty( Messages[ position ].Message.NoteUrl ) == true )
+                    {
+                        messageItem.ToggleTakeNotesButton( false );
+                    }
+                    else
+                    {
+                        messageItem.ToggleTakeNotesButton( true );
+                    }
 
                     return messageItem;
                 }
@@ -277,6 +293,34 @@ namespace Droid
                         {
                             ParentAdapter.OnClick( Position, 1 );
                         };
+                }
+
+                public void ToggleWatchButton( bool enabled )
+                {
+                    if ( enabled == true )
+                    {
+                        WatchButton.Enabled = true;
+                        WatchButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
+                    }
+                    else
+                    {
+                        WatchButton.Enabled = false;
+                        WatchButton.SetTextColor( Color.DarkGray );
+                    }
+                }
+
+                public void ToggleTakeNotesButton( bool enabled )
+                {
+                    if ( enabled == true )
+                    {
+                        TakeNotesButton.Enabled = true;
+                        TakeNotesButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
+                    }
+                    else
+                    {
+                        TakeNotesButton.Enabled = false;
+                        TakeNotesButton.SetTextColor( Color.DarkGray );
+                    }
                 }
             }
 
