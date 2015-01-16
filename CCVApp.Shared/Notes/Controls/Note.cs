@@ -379,18 +379,21 @@ namespace CCVApp
                 /// <param name="touch">Touch.</param>
                 public bool TouchingUserNote( PointF touch )
                 {
-                    // We receive TouchesBegan if anything except a TextField was tapped.
-                    // The only control we have that needs this is the UserNote for its Anchor.
-
-                    // So, see if the user is tapping on a UserNoteAnchor.
-                    foreach( UserNote control in UserNoteControls )
+                    if ( ActiveUserNoteAnchor == null )
                     {
-                        // If a user note returns true, its anchor is being touched.
-                        if( control.TouchesBegan( touch ) == true )
+                        // We receive TouchesBegan if anything except a TextField was tapped.
+                        // The only control we have that needs this is the UserNote for its Anchor.
+
+                        // So, see if the user is tapping on a UserNoteAnchor.
+                        foreach ( UserNote control in UserNoteControls )
                         {
-                            // Begin tracking this anchor for movement and touchEnd
-                            ActiveUserNoteAnchor = control;
-                            return true;
+                            // If a user note returns true, its anchor is being touched.
+                            if ( control.TouchesBegan( touch ) == true )
+                            {
+                                // Begin tracking this anchor for movement and touchEnd
+                                ActiveUserNoteAnchor = control;
+                                return true;
+                            }
                         }
                     }
 
@@ -511,6 +514,8 @@ namespace CCVApp
                         UserNoteControls.Add( userNote );
 
                         userNote.AddToView( MasterView );
+
+                        userNote.OpenNote( );
                         return true;
                     }
 

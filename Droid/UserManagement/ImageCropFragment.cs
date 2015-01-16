@@ -590,32 +590,36 @@ namespace Droid
 
         public bool OnTouch( View v, MotionEvent e )
         {
-            switch( e.Action )
+            if ( Mode == CropMode.Editing )
             {
-                case MotionEventActions.Down:
+                switch ( e.Action )
                 {
-                    // stamp our position so we can update the crop view
-                    LastTapPos = new PointF( e.GetX( ), e.GetY( ) );
-                    break;
-                }
+                    case MotionEventActions.Down:
+                    {
+                        // stamp our position so we can update the crop view
+                        LastTapPos = new PointF( e.GetX( ), e.GetY( ) );
+                        break;
+                    }
 
-                case MotionEventActions.Move:
-                {
-                    // adjust by the amount moved
-                    PointF delta = new PointF( e.GetX( ) - LastTapPos.X, e.GetY( ) - LastTapPos.Y );
+                    case MotionEventActions.Move:
+                    {
+                        // adjust by the amount moved
+                        PointF delta = new PointF( e.GetX( ) - LastTapPos.X, e.GetY( ) - LastTapPos.Y );
 
-                    MoveCropView( delta );
+                        MoveCropView( delta );
 
-                    LastTapPos = new PointF( e.GetX( ), e.GetY( ) );
-                    break;
-                }
+                        LastTapPos = new PointF( e.GetX( ), e.GetY( ) );
+                        break;
+                    }
 
-                case MotionEventActions.Up:
-                {
+                    case MotionEventActions.Up:
+                    {
 
-                    break;
+                        break;
+                    }
                 }
             }
+
             return true;
         }
 

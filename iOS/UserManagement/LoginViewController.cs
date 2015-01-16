@@ -10,6 +10,8 @@ using Rock.Mobile.PlatformUI;
 using CCVApp.Shared.Strings;
 using CCVApp.Shared;
 using Rock.Mobile.Threading;
+using Rock.Mobile.PlatformSpecific.iOS.UI;
+using Rock.Mobile.PlatformSpecific.iOS.Animation;
 
 namespace iOS
 {
@@ -153,6 +155,8 @@ namespace iOS
             base.ViewWillAppear(animated);
 
             LoginResultLayer.Layer.Opacity = 0.00f;
+            UsernameText.Text = "";
+            PasswordText.Text = "";
         }
 
         public override void ViewDidAppear(bool animated)
@@ -225,46 +229,55 @@ namespace iOS
         {
             SetUIState( LoginState.Trying );
 
+            // have our rock mobile user begin the facebook bind process
             RockMobileUser.Instance.BindFacebookAccount( delegate(string fromUri, Facebook.FacebookClient session) 
             {
-                DeleteCacheandCookies( );
+                    // it's ready, so create a webView that will take them to the FBLogin page
+                    WebLayout webLayout = new WebLayout( View.Frame );
+                    webLayout.DeleteCacheandCookies( );
 
-                // invoke a webview
-                UIWebView webView = new UIWebView( View.Frame );
-                webView.LoadStarted += (object s, EventArgs eArgs) => 
-                    {
-                    };
+                    View.AddSubview( webLayout.ContainerView );
 
-                webView.LoadError += (object s, UIWebErrorArgs eArgs) => 
-                    {
-                        webView.RemoveFromSuperview( );
-                        BindComplete( false );
-                    };
+                    // set it totally transparent so we can fade it in
+                    webLayout.ContainerView.BackgroundColor = UIColor.Black;
+                    webLayout.ContainerView.Layer.Opacity = 0.00f;
+                    webLayout.SetCancelButtonColor( ControlStylingConfig.TextField_PlaceholderTextColor );
 
-                webView.LoadFinished += (object s, EventArgs eArgs) => 
-                    {
-                        if ( RockMobileUser.Instance.HasFacebookResponse( webView.Request.Url.ToString(), session ) )
+                    // do a nice fade-in
+                    SimpleAnimator_Float floatAnimator = new SimpleAnimator_Float( 0.00f, 1.00f, .25f, 
+                        delegate(float percent, object value) 
                         {
-                            webView.RemoveFromSuperview( );
+                            webLayout.ContainerView.Layer.Opacity = (float)value;
+                        },
+                        delegate 
+                        {
+                            // once faded in, begin loading the page
+                            webLayout.ContainerView.Layer.Opacity = 1.00f;
 
-                            RockMobileUser.Instance.FacebookCredentialResult( webView.Request.Url.ToString(), session, BindComplete );
-                        }
-                    };
+                            webLayout.LoadUrl( fromUri, delegate(WebLayout.Result result, string url) 
+                                {
+                                    // if fail/success comes in
+                                    if( result != WebLayout.Result.Cancel )
+                                    {
+                                        // see if it's a valid facebook response
+                                        if ( RockMobileUser.Instance.HasFacebookResponse( url, session ) )
+                                        {
+                                            // it is, so remove the webview and continue the bind process
+                                            webLayout.ContainerView.RemoveFromSuperview( );
+                                            RockMobileUser.Instance.FacebookCredentialResult( url, session, BindComplete );
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // they pressed cancel, so simply cancel the attempt
+                                        webLayout.ContainerView.RemoveFromSuperview( );
+                                        LoginComplete( System.Net.HttpStatusCode.ResetContent, "" );
+                                    }
+                                } );
+                        });
 
-                View.AddSubview( webView );
-                webView.LoadRequest( new NSUrlRequest( new NSUrl( fromUri ) ) );
+                    floatAnimator.Start( );
             });
-        }
-
-        private void DeleteCacheandCookies ()
-        {
-            NSUrlCache.SharedCache.RemoveAllCachedResponses ();
-            NSHttpCookieStorage storage = NSHttpCookieStorage.SharedStorage;
-
-            foreach (var item in storage.Cookies) {
-                storage.DeleteCookie (item);
-            }
-            NSUserDefaults.StandardUserDefaults.Synchronize ();
         }
 
         public void BindComplete( bool success )
@@ -362,6 +375,20 @@ namespace iOS
 
                             LoginResultLabel.Text = LoginStrings.Error_Credentials;
                         } );
+                    break;
+                }
+
+                case System.Net.HttpStatusCode.ResetContent:
+                {
+                    // consider this a cancellation
+                    BlockerView.FadeOut( delegate
+                        {
+                            // allow them to attempt logging in again
+                            SetUIState( LoginState.Out );
+
+                            LoginResultLabel.Text = "";
+                        } );
+
                     break;
                 }
 

@@ -261,8 +261,6 @@ namespace iOS
         public override void ViewWillDisappear(bool animated)
         {
             base.ViewWillDisappear(animated);
-
-            Carousel.Hidden = true;
         }
 
         void RetrievePrayerRequests( )
@@ -279,8 +277,13 @@ namespace iOS
 
                     Task.NavToolbar.SetCreateButtonEnabled( true, delegate
                         {
+                            // now disable the button so they can't spam it
+                            Task.NavToolbar.SetCreateButtonEnabled( false );
+
                             Prayer_CreateUIViewController viewController = Storyboard.InstantiateViewController( "Prayer_CreateUIViewController" ) as Prayer_CreateUIViewController;
                             Task.PerformSegue( this, viewController );
+
+                            Console.WriteLine( "pushing" );
                         }
                     );
 
@@ -322,6 +325,8 @@ namespace iOS
                                             RetryButton.Hidden = false;
                                             ResultLabel.Hidden = false;
                                             ResultLabel.Text = PrayerStrings.Error_Retrieve_Message;
+
+                                            Task.NavToolbar.SetCreateButtonEnabled( false );
                                         }
                                     }
                                 } );

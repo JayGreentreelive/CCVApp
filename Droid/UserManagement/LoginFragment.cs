@@ -17,6 +17,9 @@ using CCVApp.Shared.Strings;
 using Rock.Mobile.PlatformUI;
 using Android.Webkit;
 using Rock.Mobile.Threading;
+using Rock.Mobile.PlatformSpecific.Android.Animation;
+using Android.Views.InputMethods;
+using Rock.Mobile.PlatformSpecific.Android.UI;
 
 namespace Droid
 {
@@ -138,54 +141,47 @@ namespace Droid
             }
         }
 
-        class FBWebViewClient : WebViewClient
-        {
-            public LoginFragment Parent { get; set; }
-
-            public override void OnPageFinished(WebView view, string url)
-            {
-                base.OnPageFinished(view, url);
-
-                Parent.OnPageFinished( view, url );
-            }
-        }
-
         Facebook.FacebookClient Session { get; set; }
-        WebView WebView { get; set; }
+
         public void TryFacebookBind( )
         {
-            SetUIState( LoginState.Trying );
-
             RockMobileUser.Instance.BindFacebookAccount( delegate(string fromUri, Facebook.FacebookClient session) 
                 {
                     Session = session;
 
                     // invoke a webview
-                    WebView = new WebView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
-                    WebView.SetWebViewClient( new FBWebViewClient( ) { Parent = this } );
-                    WebView.Settings.JavaScriptEnabled = true;
-                    WebView.Settings.SetSupportZoom(true);
-                    WebView.Settings.BuiltInZoomControls = true;
-                    WebView.Settings.LoadWithOverviewMode = true; //Load 100% zoomed out
-                    WebView.ScrollBarStyle = ScrollbarStyles.OutsideOverlay;
-                    WebView.ScrollbarFadingEnabled = true;
+                    WebLayout webLayout = new WebLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
 
-                    WebView.VerticalScrollBarEnabled = true;
-                    WebView.HorizontalScrollBarEnabled = true;
+                    (View as RelativeLayout).AddView( webLayout, new ViewGroup.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent ) );
 
-                    (View as LinearLayout).AddView( WebView, 0 );
-                    WebView.LoadUrl( fromUri );
+                    webLayout.Alpha = 0;
+                    SimpleAnimatorFloat anim = new SimpleAnimatorFloat( 0, 1.0f, .25f, 
+                        delegate(float percent, object value) 
+                        {
+                            webLayout.Alpha = (float)value;
+                        },
+                        delegate 
+                        {
+                            webLayout.LoadUrl( fromUri, 
+                                delegate( string url )
+                                {
+                                    SetUIState( LoginState.Trying );
+
+                                    // wait for a facebook response
+                                    if ( RockMobileUser.Instance.HasFacebookResponse( url, Session ) )
+                                    {
+                                        ( View as RelativeLayout ).RemoveView( webLayout );
+
+                                        RockMobileUser.Instance.FacebookCredentialResult( url, Session, BindComplete );
+                                    }
+                                });
+                        } );
+
+                    anim.Start( );
+
+                    webLayout.SetBackgroundColor( Android.Graphics.Color.Black );
+                    //
                 });
-        }
-
-        public void OnPageFinished( WebView view, string url )
-        {
-            if ( RockMobileUser.Instance.HasFacebookResponse( url, Session ) )
-            {
-                ( View as LinearLayout ).RemoveView( WebView );
-
-                RockMobileUser.Instance.FacebookCredentialResult( url, Session, BindComplete );
-            }
         }
 
         public void BindComplete( bool success )

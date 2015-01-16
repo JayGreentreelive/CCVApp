@@ -56,6 +56,10 @@ namespace iOS
         {
             base.ViewDidLoad();
 
+            // set the background view to black so we don't get white aliasing flicker during
+            // the pan
+            View.BackgroundColor = UIColor.Black;
+
             // create our keyboard adjustment manager, which works to make sure text fields scroll into visible
             // range when a keyboard appears
             KeyboardAdjustManager = new Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager( View, ScrollView );

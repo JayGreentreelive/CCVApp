@@ -301,7 +301,7 @@ namespace CCVApp
                 /// <summary>
                 /// The size of the font/icon when displaying the user note icon.
                 /// </summary>
-                public const int UserNote_IconSize = 24;
+                public const int UserNote_IconSize = 46;
 
                 /// <summary>
                 /// The max height of a user note.
@@ -327,7 +327,7 @@ namespace CCVApp
                 /// The size of the font/icon when displaying the delete icon on user notes.
                 /// </summary>
                 /// 
-                public const int UserNote_DeleteIconSize = 24;
+                public const int UserNote_DeleteIconSize = 46;
 
                 /// <summary>
                 /// The rate of scrolling "up" required to reveal the nav bar.

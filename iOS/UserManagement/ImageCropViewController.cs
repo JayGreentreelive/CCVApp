@@ -335,6 +335,41 @@ namespace iOS
                     } ) );
         }
 
+        public override void TouchesBegan(NSSet touches, UIEvent evt)
+        {
+            base.TouchesBegan(touches, evt);
+
+            if ( Mode == CropMode.Editing )
+            {
+                UITouch touch = touches.AnyObject as UITouch;
+                if ( touch != null )
+                {
+                    LastTapPos = touch.LocationInView( View );
+                }
+            }
+        }
+
+        public override void TouchesMoved(NSSet touches, UIEvent evt)
+        {
+            base.TouchesMoved(touches, evt);
+
+            if ( Mode == CropMode.Editing )
+            {
+                // adjust by the amount moved
+                UITouch touch = touches.AnyObject as UITouch;
+                if ( touch != null )
+                {
+                    PointF touchPoint = touch.LocationInView( View );
+
+                    PointF delta = new PointF( touchPoint.X - LastTapPos.X, touchPoint.Y - LastTapPos.Y );
+
+                    MoveCropView( delta );
+
+                    LastTapPos = touchPoint;
+                }
+            }
+        }
+
         void MoveCropView( PointF delta )
         {
             // update the crop view by how much it should be moved
@@ -349,35 +384,6 @@ namespace iOS
 
             // update the position of the blocking view
             FullscreenBlocker.Center = CropView.Layer.Position;
-        }
-
-        public override void TouchesBegan(NSSet touches, UIEvent evt)
-        {
-            base.TouchesBegan(touches, evt);
-
-            UITouch touch = touches.AnyObject as UITouch;
-            if( touch != null )
-            {
-                LastTapPos = touch.LocationInView( View );
-            }
-        }
-
-        public override void TouchesMoved(NSSet touches, UIEvent evt)
-        {
-            base.TouchesMoved(touches, evt);
-
-            // adjust by the amount moved
-            UITouch touch = touches.AnyObject as UITouch;
-            if( touch != null )
-            {
-                PointF touchPoint = touch.LocationInView( View );
-
-                PointF delta = new PointF( touchPoint.X - LastTapPos.X, touchPoint.Y - LastTapPos.Y );
-
-                MoveCropView( delta );
-
-                LastTapPos = touchPoint;
-            }
         }
 
         void SetMode( CropMode mode )

@@ -11,6 +11,11 @@ Both:
 	Fixed the color of disabled buttons in the Nav Toolbar (it's appropriately dark now)
 	Tapping a quote body no longer activates its web URL. Instead, the citation must be tapped.
 	Quote citations are now underlined when they will active a URL on tap.
+	Fixed an issue causing the image cropper undo to animate incorrectly if the screen was tapped while previewing a cropped image.
+	Fixed an issue causing User Notes to jump erratically if the screen was multi-touched while dragging a note.
+	Fixed an issue causing User Note input to arbitrarly stop.
+	Added fancy animations to User Notes.
+	Overhauled the Facebook login process to be a lot more polished. (And cancellable)
 
 iOS
 	Fixed a crash if trying to login with Facebook without a network connection.
@@ -19,9 +24,17 @@ iOS
 	Fixed layout issues in the Prayer Creation page on iPhone 4s
 	The dark keyboard is now used for text input.
 	Fixed an issue with the Nav Toolbar coloring, where it was being tinted and thus inaccurate.
+	Fixed an ugly white flickering effect when switching from Prayer Requests to Create Prayer 
+	Fixed an issue allowing the Create Prayer screen to be activated multiple times at once, resulting in confusing UI navigation and usually a crash.
+	Fixed an issue causing the Profile Page to always prompt to submit changes after editing it and submitting.
+	Fixed an issue where profile changes wouldn't be flagged as dirty if the user didn't tap away from the text control being edited.
+	Fixed an issue causing header alignment in the News Details to be wrong on iPhone 6 Plus
+	Fixed an issue causing the News Details' Learn More button to overlap the Nav Toolbar
+	Fixed an issue preventing the News Detail from scrolling on small devices.
 
 Android
 	Fixed an issue causing the "Register" button to be clipped.
 	Fixed an issue that could cause certain preferences to not save on Android.
 	The "Dark" material theme will now be used on Android 5.0 devices.
 	Fixed various UI element colors to match iOS.
+	Fixed an issue causing the springboard layout to be incorrect if the app was launched with the device on its side.

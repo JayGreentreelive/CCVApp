@@ -293,12 +293,20 @@ namespace Droid
             ViewProfileLabel.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Light ), TypefaceStyle.Normal );
             ViewProfileLabel.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
 
+
+            // get the size of the display. We will use this rather than Resources.DeviceManager because this
+            // is absolute and won't change based on orientation
+            Point displaySize = new Point( );
+            Activity.WindowManager.DefaultDisplay.GetSize( displaySize );
+            float displayWidth = displaySize.X;
+
+
             // setup the width of the springboard area and campus selector
             LinearLayout profileContainer = view.FindViewById<LinearLayout>( Resource.Id.springboard_profile_image_container );
-            profileContainer.LayoutParameters.Width = (int) ( Resources.DisplayMetrics.WidthPixels * PrimaryNavBarConfig.RevealPercentage );
+            profileContainer.LayoutParameters.Width = (int) ( displayWidth * PrimaryNavBarConfig.RevealPercentage );
 
             View campusContainer = view.FindViewById<View>( Resource.Id.campus_container );
-            campusContainer.LayoutParameters.Width = (int) ( Resources.DisplayMetrics.WidthPixels * PrimaryNavBarConfig.RevealPercentage );
+            campusContainer.LayoutParameters.Width = (int) ( displayWidth * PrimaryNavBarConfig.RevealPercentage );
             campusContainer.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.SpringboardBackgroundColor ) );
 
             View seperator = view.FindViewById<View>( Resource.Id.end_seperator );

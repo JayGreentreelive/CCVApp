@@ -75,29 +75,37 @@ namespace iOS
 
             ControlStyling.StyleTextField( NickNameText, ProfileStrings.NickNamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( NickNameLayer );
+            NickNameText.EditingDidBegin += (sender, e) => { Dirty = true; };
 
             ControlStyling.StyleTextField( LastNameText, ProfileStrings.LastNamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( LastNameLayer );
+            LastNameText.EditingDidBegin += (sender, e) => { Dirty = true; };
 
 
             ControlStyling.StyleTextField( EmailText, ProfileStrings.EmailPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( EmailLayer );
+            EmailText.EditingDidBegin += (sender, e) => { Dirty = true; };
 
             ControlStyling.StyleTextField( CellPhoneText, ProfileStrings.CellPhonePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( CellPhoneLayer );
+            CellPhoneText.EditingDidBegin += (sender, e) => { Dirty = true; };
 
 
             ControlStyling.StyleTextField( StreetText, ProfileStrings.StreetPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( StreetLayer );
+            StreetText.EditingDidBegin += (sender, e) => { Dirty = true; };
 
             ControlStyling.StyleTextField( CityText, ProfileStrings.CityPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( CityLayer );
+            CityText.EditingDidBegin += (sender, e) => { Dirty = true; };
 
             ControlStyling.StyleTextField( StateText, ProfileStrings.StatePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( StateLayer );
+            StateText.EditingDidBegin += (sender, e) => { Dirty = true; };
 
             ControlStyling.StyleTextField( ZipText, ProfileStrings.ZipPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( ZipLayer );
+            ZipText.EditingDidBegin += (sender, e) => { Dirty = true; };
 
             GenderButton.TouchUpInside += (object sender, EventArgs e ) =>
                 {
@@ -301,10 +309,10 @@ namespace iOS
             switch( e.ButtonIndex )
             {
                 // submit
-                case 0: SubmitChanges( ); Springboard.ResignModelViewController( this, null ); break;
+                case 0: Dirty = false; SubmitChanges( ); Springboard.ResignModelViewController( this, null ); break;
 
                 // No, don't submit
-                case 1: Springboard.ResignModelViewController( this, null ); break;
+                case 1: Dirty = false; Springboard.ResignModelViewController( this, null ); break;
 
                 // cancel
                 case 2: break;
@@ -316,9 +324,6 @@ namespace iOS
             if( textField.IsFirstResponder == true )
             {
                 textField.ResignFirstResponder();
-
-                Dirty = true;
-
                 return true;
             }
 

@@ -165,21 +165,6 @@ namespace CCVApp
 
                     PositionTransform = new PointF( parentParams.Width, parentParams.Height );
 
-                    //JHM 10-28-14 - Moved this to the bottom, and now just using double
-                    // the anchor's width.
-                    //magic number ratio that works well!
-                    /*#if __IOS__
-                    float heightTouchRatio = .048f;
-                    #endif
-                    #if __ANDROID__
-                    float heightTouchRatio = .078f;
-                    #endif
-
-                    // the touch range differs based on various device sizes. It makes more sense
-                    // to give a larger area for a tablet and a smaller area to a phone.
-                    AnchorTouchMaxDist = deviceHeight * heightTouchRatio;
-                    AnchorTouchMaxDist *= AnchorTouchMaxDist;*/
-
                     //setup our timer for allowing movement/
                     DeleteTimer = new System.Timers.Timer();
                     DeleteTimer.Interval = 1000;
@@ -304,6 +289,8 @@ namespace CCVApp
                     {
                         TextField.Text = startingText;
                     }
+
+                    TextField.Hidden = true;
 
                     SetDebugFrame( TextField.Frame );
                 }
@@ -506,9 +493,6 @@ namespace CCVApp
                     // we only want to do that when no other note is touched.
                     TextField.ResignFirstResponder( );
 
-                    // force an offset so that the size of our box refreshes to not have the whitespace at the bottom.
-                    AddOffset( 0, 0 );
-
                     if( DeleteEnabled == true )
                     {
                         DeleteEnabled = false;
@@ -521,10 +505,10 @@ namespace CCVApp
                 public override void AddOffset( float xOffset, float yOffset )
                 {
                     // clamp X & Y movement to within margin of the screen
-                    if( Anchor.Position.X + xOffset < MinNoteWidth )
+                    if( Anchor.Position.X + xOffset < 0 )
                     {
                         // watch the left side
-                        xOffset += MinNoteWidth - (Anchor.Position.X + xOffset);
+                        xOffset += 0 - (Anchor.Position.X + xOffset);
                     }
                     else if( Anchor.Position.X + xOffset > MaxAllowedX )
                     {
@@ -533,9 +517,9 @@ namespace CCVApp
                     }
 
                     // Check Y...
-                    if( Anchor.Position.Y + yOffset < AnchorFrame.Height )
+                    if( Anchor.Position.Y + yOffset < 0 )
                     {
-                        yOffset += AnchorFrame.Height - (Anchor.Position.Y + yOffset);
+                        yOffset += -(Anchor.Position.Y + yOffset);
                     }
                     else if (Anchor.Position.Y + yOffset > MaxAllowedY )
                     {
@@ -566,9 +550,9 @@ namespace CCVApp
                 void ValidateBounds()
                 {
                     // clamp X & Y movement to within margin of the screen
-                    float xPos = Math.Max( Math.Min( AnchorFrame.X, MaxAllowedX ), MinNoteWidth );
+                    float xPos = Math.Max( Math.Min( AnchorFrame.X, MaxAllowedX ), 0 );
 
-                    float yPos = Math.Max( Math.Min( AnchorFrame.Y, MaxAllowedY ), AnchorFrame.Height );
+                    float yPos = Math.Max( Math.Min( AnchorFrame.Y, MaxAllowedY ), 0 );
 
                     Anchor.Position = new PointF( xPos, yPos );
                     AnchorFrame = Anchor.Frame;
@@ -598,13 +582,13 @@ namespace CCVApp
 
                 public void OpenNote()
                 {
-                    TextField.Hidden = false;
+                    TextField.AnimateOpen( );
                     Console.WriteLine( "Opening Note" );
                 }
 
                 public void CloseNote()
                 {
-                    TextField.Hidden = true;
+                    TextField.AnimateClosed( );
                     Console.WriteLine( "Closing Note" );
                 }
 

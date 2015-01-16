@@ -31,7 +31,6 @@ namespace iOS
             NewsDescription.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Light, ControlStylingConfig.Small_FontSize );
             NewsDescription.TextContainerInset = UIEdgeInsets.Zero;
             NewsDescription.TextContainer.LineFragmentPadding = 0;
-            NewsDescription.UserInteractionEnabled = false;
 
             if( string.IsNullOrEmpty( NewsItem.HeaderImageName ) == false )
             {
@@ -54,7 +53,6 @@ namespace iOS
             ControlStyling.StyleUILabel( NewsTitle, ControlStylingConfig.Large_Font_Bold, ControlStylingConfig.Large_FontSize );
             NewsTitle.Text = NewsItem.Title;
             NewsTitle.SizeToFit( );
-
         }
 
         public override void TouchesEnded(NSSet touches, UIEvent evt)
@@ -65,6 +63,16 @@ namespace iOS
         public override void ViewDidLayoutSubviews()
         {
             base.ViewDidLayoutSubviews();
+
+            // if the description needs to scroll, enable user interaction (which disables the nav toolbar)
+            if ( NewsDescription.ContentSize.Height > NewsDescription.Frame.Height )
+            {
+                NewsDescription.UserInteractionEnabled = true;
+            }
+            else
+            {
+                NewsDescription.UserInteractionEnabled = false;
+            }
         }
 	}
 }

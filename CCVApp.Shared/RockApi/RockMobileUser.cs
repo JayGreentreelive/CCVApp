@@ -7,6 +7,7 @@ using CCVApp.Shared.Config;
 using System.Collections.Generic;
 using Facebook;
 using RestSharp;
+using Rock.Mobile.Util.Strings;
 
 namespace CCVApp
 {
@@ -170,7 +171,9 @@ namespace CCVApp
                             {
                                 // then set it, and we won't need to create one.
                                 addNewPhoneNumber = false;
+
                                 phoneNumber.Number = phoneNumberDigits;
+                                phoneNumber.NumberFormatted = phoneNumberDigits.AsPhoneNumber( );
                                 break;
                             }
                             enumerator.MoveNext( );
@@ -183,6 +186,7 @@ namespace CCVApp
                     {
                         Rock.Client.PhoneNumber phoneNumber = new Rock.Client.PhoneNumber();
                         phoneNumber.Number = phoneNumberDigits;
+                        phoneNumber.NumberFormatted = phoneNumberDigits.AsPhoneNumber( );
                         phoneNumber.NumberTypeValueId = phoneTypeId;
 
                         // make sure they even HAVE a phone number set
@@ -409,6 +413,29 @@ namespace CCVApp
                             }
                         });
                 }
+
+                /*public void GetAddress( HttpRequest.RequestResult addressResult )
+                {
+                    RockApi.Instance.GetProfile( UserID, delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.MOBILEUSER_DATA_FILENAME model)
+                        {
+                            if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
+                            {
+                                // on retrieval, convert this version for dirty compares later
+                                Person = model;
+                                LastSyncdPersonJson = JsonConvert.SerializeObject( Person );
+
+                                // save!
+                                SaveToDevice( );
+                            }
+
+                            // notify the caller
+                            if( addressResult != null )
+                            {
+                                addressResult( statusCode, statusDescription, model );
+                            }
+                        });
+                    ///Groups/GetFamilies/
+                }*/
 
                 public void SetProfilePicture( MemoryStream imageStream )
                 {
