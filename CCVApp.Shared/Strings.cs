@@ -12,7 +12,7 @@ namespace CCVApp.Shared
             {
                 get
                 {
-                    return "Alpha (Build 7)";
+                    return "Alpha (Build 8)";
                 }
             }
         }

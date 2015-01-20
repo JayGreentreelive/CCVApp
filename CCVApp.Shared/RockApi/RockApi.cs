@@ -59,6 +59,13 @@ namespace CCVApp
                 const string GetPrayerRequestsEndPoint = "api/prayerrequests/public";
 
                 /// <summary>
+                /// End point for retrieving a Group Object
+                /// </summary>
+                const string GetGroupEndPoint = "api/Groups/GetFamilies/";
+
+                const string PutGroupEndPoint = "api/Groups/GetFamilies/";
+
+                /// <summary>
                 /// End point for posting a prayer request
                 /// </summary>
                 const string PutPrayerRequestEndPoint = "api/prayerrequests";
@@ -228,6 +235,25 @@ namespace CCVApp
                     request.AddBody( image );
 
                     ExecuteAsync( request, resultHandler);
+                }*/
+
+                public void GetGroupLocations( int userId, HttpRequest.RequestResult< List<Rock.Client.Group> > resultHandler )
+                {
+                    // request a profile by the username. If no username is specified, we'll use the logged in user's name.
+                    RestRequest request = GetRockRestRequest( Method.GET );
+                    string requestUrl = BaseUrl + GetGroupEndPoint + userId.ToString( );
+
+                    // get the raw response
+                    Request.ExecuteAsync< List<Rock.Client.Group> >( requestUrl, request, resultHandler);
+                }
+
+                /*public void UpdateGroupLocation( int userId, Rock.Client.GroupLocation groupLocation, HttpRequest.RequestResult resultHandler )
+                {
+                    // update the group location for the specified user
+                    RestRequest request = GetRockRestRequest( Method.PUT );
+                    request.AddBody( groupLocation );
+
+                    Request.ExecuteAsync( BaseUrl + PutGroupEndPoint + userId, request, resultHandler);
                 }*/
 
                 /// <summary>

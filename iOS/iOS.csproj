@@ -459,5 +459,8 @@
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon.png" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon%402x.png" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-60%403x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splashiphone6plus.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splashiphone6.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splash35.png" />
   </ItemGroup>
 </Project>

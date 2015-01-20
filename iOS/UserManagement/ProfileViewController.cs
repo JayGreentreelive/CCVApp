@@ -272,7 +272,6 @@ namespace iOS
 
             ScrollView.ContentOffset = PointF.Empty;
 
-
             // set values
             NickNameText.Text = RockMobileUser.Instance.Person.NickName;
             LastNameText.Text = RockMobileUser.Instance.Person.LastName;
@@ -283,6 +282,11 @@ namespace iOS
             CellPhoneText.Text = RockMobileUser.Instance.TryGetPhoneNumber( CCVApp.Shared.Config.GeneralConfig.CellPhoneValueId ).Number;
             CellPhoneText.Delegate.ShouldChangeCharacters( CellPhoneText, new NSRange( CellPhoneText.Text.Length, 0 ), "" );
 
+            // address
+            StreetText.Text = RockMobileUser.Instance.Street1( );
+            CityText.Text = RockMobileUser.Instance.City( );
+            StateText.Text = RockMobileUser.Instance.State( );
+            ZipText.Text = RockMobileUser.Instance.Zip( );
 
             // gender
             if ( RockMobileUser.Instance.Person.Gender > 0 )

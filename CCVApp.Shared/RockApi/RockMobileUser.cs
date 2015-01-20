@@ -70,6 +70,37 @@ namespace CCVApp
                 public Person Person;
 
                 /// <summary>
+                /// GroupLocation representing the address of their primary residence
+                /// </summary>
+                public Rock.Client.GroupLocation Address;
+
+                // make the address getters methods, not properties, so json doesn't try to serialize them.
+                public string Street1( )
+                {
+                    return Address.Location.Street1;
+                }
+
+                public string Street2( )
+                {
+                    return Address.Location.Street2;
+                }
+
+                public string City( )
+                {
+                    return Address.Location.City;
+                }
+
+                public string State( )
+                {
+                    return Address.Location.State;
+                }
+
+                public string Zip( )
+                {
+                    return Address.Location.PostalCode.Substring( 0, Address.Location.PostalCode.IndexOf( '-' ) );
+                }
+
+                /// <summary>
                 /// The URL of the last video streamed, used so we can know whether
                 /// to resume it or not.
                 /// </summary>
@@ -99,9 +130,12 @@ namespace CCVApp
                 /// <value>The person json.</value>
                 public string LastSyncdPersonJson { get; set; }
 
+                public string LastSyncdAddressJson { get; set; }
+
                 private RockMobileUser( )
                 {
                     Person = new Person();
+                    Address = new GroupLocation();
                 }
 
                 public string PreferredName( )
@@ -414,15 +448,28 @@ namespace CCVApp
                         });
                 }
 
-                /*public void GetAddress( HttpRequest.RequestResult addressResult )
+                public void GetAddress( HttpRequest.RequestResult< List<Rock.Client.Group> > addressResult )
                 {
-                    RockApi.Instance.GetProfile( UserID, delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.MOBILEUSER_DATA_FILENAME model)
+                    // for the address (which implicitly is their primary residence address), first get all group locations associated with them
+                    RockApi.Instance.GetGroupLocations( Person.Id, delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.Group> model)
                         {
                             if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
                             {
+                                // find what we'll consider their primary address
+                                foreach( Rock.Client.Group personGroup in model )
+                                {
+                                    foreach( Rock.Client.GroupLocation groupLocation in personGroup.GroupLocations )
+                                    {
+                                        if( groupLocation.GroupLocationTypeValueId == CCVApp.Shared.Config.GeneralConfig.PrimaryResidenceLocationValueId )
+                                        {
+                                            Address = groupLocation;
+                                            break;
+                                        }
+                                    }
+                                }
+
                                 // on retrieval, convert this version for dirty compares later
-                                Person = model;
-                                LastSyncdPersonJson = JsonConvert.SerializeObject( Person );
+                                LastSyncdAddressJson = JsonConvert.SerializeObject( Address );
 
                                 // save!
                                 SaveToDevice( );
@@ -434,8 +481,32 @@ namespace CCVApp
                                 addressResult( statusCode, statusDescription, model );
                             }
                         });
-                    ///Groups/GetFamilies/
-                }*/
+                }
+
+                public void UpdateAddress( HttpRequest.RequestResult addressResult )
+                {
+                    /*RockApi.Instance.UpdateGroupLocation( Person.Id, Address, delegate(System.Net.HttpStatusCode statusCode, string statusDescription)
+                        {
+                            if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
+                            {
+                                // if successful, update our json so we have a match and don't try to update again later.
+                                LastSyncdAddressJson = JsonConvert.SerializeObject( Address );
+                            }
+
+                            // whether we succeeded in updating with the server or not, save to disk.
+                            SaveToDevice( );
+
+                            if( addressResult != null )
+                            {
+                                addressResult( statusCode, statusDescription );
+                            }
+                        });*/
+
+                    if( addressResult != null )
+                    {
+                        addressResult( System.Net.HttpStatusCode.OK, "" );
+                    }
+                }
 
                 public void SetProfilePicture( MemoryStream imageStream )
                 {
@@ -530,20 +601,25 @@ namespace CCVApp
 
                 public void SyncDirtyObjects( HttpRequest.RequestResult resultCallback )
                 {
-                    // check to see if our person object changed. If our original json
+                    // check to see if our person object OR address object changed. If our original json
                     // created at a point when we know we were sync'd with the server
                     // no longer matches our object, we should update it.
                     string currPersonJson = JsonConvert.SerializeObject( Person );
-                    if( string.Compare( LastSyncdPersonJson, currPersonJson ) != 0 )
+                    string currAddressJson = JsonConvert.SerializeObject( Address );
+
+                    if( string.Compare( LastSyncdPersonJson, currPersonJson ) != 0 || 
+                        string.Compare( LastSyncdAddressJson, currAddressJson ) != 0 )
                     {
                         Console.WriteLine( "RockMobileUser: Syncing Profile" );
                         UpdateProfile( delegate(System.Net.HttpStatusCode statusCode, string statusDescription)
                             {
-                                // If needed, make other calls here, chained, and finally
+                                UpdateAddress( delegate(System.Net.HttpStatusCode code, string description)
+                                    {
+                                        // If needed, make other calls here, chained, and finally
 
-
-                                // return finished.
-                                resultCallback( statusCode, statusDescription );
+                                        // return finished.
+                                        resultCallback( statusCode, statusDescription );
+                                    });
                             });
                     }
                     else

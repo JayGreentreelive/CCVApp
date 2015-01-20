@@ -42,6 +42,11 @@ namespace CCVApp
                 public const int CellPhoneValueId = 12;
 
                 /// <summary>
+                /// Todo: Get this from Rock, or SOMETHING. This is not ok.
+                /// </summary>
+                public const int PrimaryResidenceLocationValueId = 19;
+
+                /// <summary>
                 /// iOS only, this controls what style of keyboard is used for PLATFORM textFields.
                 /// Meaning the ones dynamically created in code via Rock.Mobile. 
                 /// Any normal iOS text field needs to have its style explicitely set.

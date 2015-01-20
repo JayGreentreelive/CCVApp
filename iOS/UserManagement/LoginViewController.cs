@@ -12,6 +12,7 @@ using CCVApp.Shared;
 using Rock.Mobile.Threading;
 using Rock.Mobile.PlatformSpecific.iOS.UI;
 using Rock.Mobile.PlatformSpecific.iOS.Animation;
+using System.Collections.Generic;
 
 namespace iOS
 {
@@ -425,12 +426,51 @@ namespace iOS
                     {
                         case System.Net.HttpStatusCode.OK:
                         {
+                            // get their address
+                            RockMobileUser.Instance.GetAddress( AddressComplete );
+
+                            break;
+                        }
+
+                        default:
+                        {
+                            // failed to login for some reason
+                            FadeLoginResult( true );
+
+                            // if we couldn't get their profile, that should still count as a failed login.
+                            SetUIState( LoginState.Out );
+
+                            RockMobileUser.Instance.LogoutAndUnbind( );
+
+                            LoginResultLabel.Text = LoginStrings.Error_Unknown;
+                            break;
+                        }
+                    }
+                } );
+        }
+
+        public void AddressComplete( System.Net.HttpStatusCode code, string desc, List<Rock.Client.Group> model )
+        {
+            Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                {
+                    UIThread_AddressComplete( code, desc, model );
+                } );
+        }
+
+        void UIThread_AddressComplete( System.Net.HttpStatusCode code, string desc, List<Rock.Client.Group> model ) 
+        {
+            BlockerView.FadeOut( delegate
+                {
+                    switch ( code )
+                    {
+                        case System.Net.HttpStatusCode.OK:
+                        {
                             // if they have a profile picture, grab it.
                             RockMobileUser.Instance.TryDownloadProfilePicture( GeneralConfig.ProfileImageSize, ProfileImageComplete );
 
                             // update the UI
                             FadeLoginResult( true );
-                            LoginResultLabel.Text = string.Format( LoginStrings.Success, model.FirstName );
+                            LoginResultLabel.Text = string.Format( LoginStrings.Success, RockMobileUser.Instance.PreferredName( ) );
 
                             // start the timer, which will notify the springboard we're logged in when it ticks.
                             LoginSuccessfulTimer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>

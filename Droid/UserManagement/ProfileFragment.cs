@@ -286,6 +286,12 @@ namespace Droid
             // cellphone
             CellPhoneField.Text = RockMobileUser.Instance.TryGetPhoneNumber( CCVApp.Shared.Config.GeneralConfig.CellPhoneValueId ).Number;
 
+            // address
+            StreetField.Text = RockMobileUser.Instance.Street1( );
+            CityField.Text = RockMobileUser.Instance.City( );
+            StateField.Text = RockMobileUser.Instance.State( );
+            ZipField.Text = RockMobileUser.Instance.Zip( );
+
             // gender
             if ( RockMobileUser.Instance.Person.Gender > 0 )
             {
