@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4443" systemVersion="13A451" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="227">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+    </dependencies>
+    <scenes>
+        <scene sceneID="168">
+            <objects>
+                <tableViewController id="169" sceneMemberID="viewController" customClass="GroupFinderViewController" storyboardIdentifier="GroupFinderViewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="170">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="173">
+                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="173" id="174">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="169" id="171"/>
+                            <outlet property="delegate" destination="169" id="172"/>
+                        </connections>
+                    </tableView>
+                    <connections>
+                        <outlet property="GroupFinderTableView" destination="170" id="name-outlet-170"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="175" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="552" y="-301"/>
+        </scene>
+        <scene sceneID="217">
+            <objects>
+                <viewController id="218" sceneMemberID="viewController" customClass="ConnectWebViewController" storyboardIdentifier="ConnectWebViewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="215"/>
+                        <viewControllerLayoutGuide type="bottom" id="216"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="219">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="220" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="912" y="-301"/>
+        </scene>
+        <scene sceneID="226">
+            <objects>
+                <tableViewController id="227" sceneMemberID="viewController" customClass="ConnectMainPageViewController" storyboardIdentifier="ConnectMainPageViewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="228">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="231">
+                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="231" id="232">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="227" id="229"/>
+                            <outlet property="delegate" destination="227" id="230"/>
+                        </connections>
+                    </tableView>
+                    <connections>
+                        <outlet property="ConnectTableView" destination="228" id="name-outlet-228"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="233" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="141" y="-292"/>
+        </scene>
+    </scenes>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+    <resources>
+        <image name="Default-568h.png" width="640" height="1136"/>
+        <image name="spot_mask.png" width="128" height="128"/>
+        <image name="me.jpg" width="471" height="480"/>
+        <image name="ccvLogo.png" width="57" height="28"/>
+        <image name="cheeseburger.png" width="22" height="19"/>
+        <image name="info.png" width="38" height="38"/>
+        <image name="give.png" width="44" height="35"/>
+        <image name="groupfinder.png" width="33" height="42"/>
+        <image name="prayer.png" width="47" height="35"/>
+        <image name="noprofile.png" width="223" height="223"/>
+        <image name="addphoto.png" width="223" height="223"/>
+        <image name="Default.png" width="320" height="480"/>
+        <image name="Icon-60.png" width="120" height="120"/>
+        <image name="Icon.png" width="57" height="57"/>
+        <image name="news_general_1.png" width="640" height="434"/>
+        <image name="news_general_2.png" width="640" height="434"/>
+        <image name="news_general_3.png" width="640" height="434"/>
+        <image name="news_general_1_header.png" width="560" height="192"/>
+        <image name="news_general_2_header.png" width="560" height="192"/>
+        <image name="news_general_3_header.png" width="560" height="192"/>
+        <image name="news_baptism_main.png" width="375" height="242"/>
+        <image name="news_learnmore_header.png" width="414" height="180"/>
+        <image name="news_learnmore_main.png" width="375" height="242"/>
+        <image name="news_startingpoint_header.png" width="1242" height="540"/>
+        <image name="news_startingpoint_main.png" width="375" height="242"/>
+        <image name="podcastThumbnailPlaceholder.png" width="590" height="332"/>
+        <image name="news_baptism_header.png" width="414" height="180"/>
+        <image name="facebook_login.png" width="250" height="35"/>
+    </resources>
+</document>

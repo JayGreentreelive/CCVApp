@@ -269,7 +269,7 @@ namespace CCVApp
                     Anchor.Position = startPos;
                     AnchorFrame = Anchor.Frame;
 
-                    AnchorTouchMaxDist = AnchorFrame.Width * 2;
+                    AnchorTouchMaxDist = AnchorFrame.Width;
                     AnchorTouchMaxDist *= AnchorTouchMaxDist;
 
 

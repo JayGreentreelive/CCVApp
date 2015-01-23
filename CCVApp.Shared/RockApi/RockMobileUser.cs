@@ -77,27 +77,40 @@ namespace CCVApp
                 // make the address getters methods, not properties, so json doesn't try to serialize them.
                 public string Street1( )
                 {
-                    return Address.Location.Street1;
+                    return Address.Location != null ? Address.Location.Street1 : "";
                 }
 
                 public string Street2( )
                 {
-                    return Address.Location.Street2;
+                    return Address.Location != null ? Address.Location.Street2 : "";
                 }
 
                 public string City( )
                 {
-                    return Address.Location.City;
+                    return Address.Location != null ? Address.Location.City : "";
                 }
 
                 public string State( )
                 {
-                    return Address.Location.State;
+                    return Address.Location != null ? Address.Location.State : "";
                 }
 
                 public string Zip( )
                 {
-                    return Address.Location.PostalCode.Substring( 0, Address.Location.PostalCode.IndexOf( '-' ) );
+                    return Address.Location != null ? Address.Location.PostalCode.Substring( 0, Address.Location.PostalCode.IndexOf( '-' ) ) : "";
+                }
+
+                public bool HasFullAddress( )
+                {
+                    // by full address, we mean street, city, state, zip
+                    if ( string.IsNullOrEmpty( Street1( ) ) == false &&
+                         string.IsNullOrEmpty( City( ) ) == false &&
+                         string.IsNullOrEmpty( State( ) ) == false &&
+                         string.IsNullOrEmpty( Zip( ) ) == false )
+                    {
+                        return true;
+                    }
+                    return false;
                 }
 
                 /// <summary>
@@ -382,6 +395,7 @@ namespace CCVApp
                 {
                     // clear the person and take a blank copy
                     Person = new Person();
+                    Address = new GroupLocation();
                     LastSyncdPersonJson = JsonConvert.SerializeObject( Person );
 
                     LoggedIn = false;
@@ -451,7 +465,7 @@ namespace CCVApp
                 public void GetAddress( HttpRequest.RequestResult< List<Rock.Client.Group> > addressResult )
                 {
                     // for the address (which implicitly is their primary residence address), first get all group locations associated with them
-                    RockApi.Instance.GetGroupLocations( Person.Id, delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.Group> model)
+                    RockApi.Instance.GetFamiliesOfPerson( Person.Id, delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.Group> model)
                         {
                             if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
                             {

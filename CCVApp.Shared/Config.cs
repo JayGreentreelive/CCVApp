@@ -46,6 +46,9 @@ namespace CCVApp
                 /// </summary>
                 public const int PrimaryResidenceLocationValueId = 19;
 
+                public const int NeighborhoodGroupGeoFenceValueId = 48;
+                public const int NeighborhoodGroupValueId = 49;
+
                 /// <summary>
                 /// iOS only, this controls what style of keyboard is used for PLATFORM textFields.
                 /// Meaning the ones dynamically created in code via Rock.Mobile. 
@@ -402,6 +405,39 @@ namespace CCVApp
                 /// The size of the symbol used to representing a prayer post result.
                 /// </summary>
                 public const uint PostPrayer_ResultSymbolSize = 32;
+            }
+
+            public class Connect
+            {
+                public static string[] WebViews = 
+                    {
+                        "Baptisms", "http://www.ccvonline.com/Arena/default.aspx?page=17655",
+                        "Starting Point", "http://www.ccvonline.com/Arena/default.aspx?page=17400",
+                        "Foundations", "http://www.ccvonline.com/Arena/default.aspx?page=17659"
+                    };
+            }
+
+            public class GroupFinderConfig
+            {
+                /// <summary>
+                /// The default latitude the group finder map will be positioned to before a search is performed.
+                /// </summary>
+                public const double DefaultLatitude = 33.6054149;
+
+                /// <summary>
+                /// The default longitude the group finder map will be positioned to before a search is performed. 
+                /// </summary>
+                public const double DefaultLongitude = -112.125051;
+
+                /// <summary>
+                /// The default latitude scale (how far out) the map will be scaled to before a search is performed.
+                /// </summary>
+                public const int LatitudeScale = 100000;
+
+                /// <summary>
+                /// The default longitude scale (how far out) the map will be scaled to before a search is performed. 
+                /// </summary>
+                public const int LongitudeScale = 100000;
             }
 
             public class ControlStylingConfig

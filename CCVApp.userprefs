@@ -1,29 +1,20 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhone4s.8.1" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/UserManagement/ProfileFragment.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhone6.8.1" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/Tasks/Connect/GroupFinderViewController.cs">
     <Files>
-      <File FileName="Droid/Springboard.cs" Line="9" Column="9" />
-      <File FileName="CCVApp.Shared/RockApi/RockMobileUser.cs" Line="108" Column="108" />
-      <File FileName="CCVApp.Shared/RockApi/RockApi.cs" Line="18" Column="18" />
-      <File FileName="iOS/UserManagement/ProfileViewController.cs" Line="58" Column="58" />
-      <File FileName="iOS/UserManagement/LoginViewController.cs" Line="33" Column="33" />
-      <File FileName="CCVApp.Shared/Config.cs" Line="76" Column="76" />
-      <File FileName="Droid/UserManagement/LoginFragment.cs" Line="9" Column="9" />
-      <File FileName="Droid/UserManagement/ProfileFragment.cs" Line="14" Column="14" />
+      <File FileName="iOS/Tasks/Connect/ConnectTask.cs" Line="17" Column="17" />
+      <File FileName="iOS/Tasks/Connect/GroupFinderViewController.cs" Line="31" Column="31" />
+      <File FileName="iOS/Tasks/Connect/ConnectMainPageViewController.cs" Line="55" Column="55" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="CCVApp.Shared" expanded="True">
-            <Node name="Notes" expanded="True">
-              <Node name="Models" expanded="True" />
+          <Node name="iOS" expanded="True">
+            <Node name="Tasks" expanded="True">
+              <Node name="Connect" expanded="True">
+                <Node name="GroupFinderViewController.cs" selected="True" />
+              </Node>
             </Node>
-            <Node name="RockApi" expanded="True" />
-          </Node>
-          <Node name="Droid" expanded="True">
-            <Node name="UserManagement" expanded="True" />
-          </Node>
-          <Node name="iOS" expanded="True" selected="True">
             <Node name="UserManagement" expanded="True" />
           </Node>
         </State>

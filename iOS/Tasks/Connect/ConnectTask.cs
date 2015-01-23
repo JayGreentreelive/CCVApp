@@ -5,13 +5,13 @@ using MonoTouch.Foundation;
 
 namespace iOS
 {
-    public class GroupFinderTask : Task
+    public class ConnectTask : Task
     {
         TaskUIViewController MainPageVC { get; set; }
 
-        public GroupFinderTask( string storyboardName ) : base( storyboardName )
+        public ConnectTask( string storyboardName ) : base( storyboardName )
         {
-            MainPageVC = Storyboard.InstantiateViewController( "MainPageViewController" ) as TaskUIViewController;
+            MainPageVC = Storyboard.InstantiateViewController( "ConnectMainPageViewController" ) as TaskUIViewController;
             MainPageVC.Task = this;
         }
 
@@ -53,8 +53,16 @@ namespace iOS
             }
             else
             {
+                if ( viewController as ConnectWebViewController != null )
+                {
+                    NavToolbar.Reveal( true );
+                }
+                else
+                {
+                    NavToolbar.RevealForTime( 3.0f );
+                }
+
                 NavToolbar.SetBackButtonEnabled( true );
-                NavToolbar.RevealForTime( 3.0f );
             }
         }
 

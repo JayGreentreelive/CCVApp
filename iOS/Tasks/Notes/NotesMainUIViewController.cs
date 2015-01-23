@@ -402,7 +402,7 @@ namespace iOS
 
             UITableViewCell GetStandardCell( UITableView tableView, int row )
             {
-                SeriesCell cell = tableView.DequeueReusableCell( SeriesPrimaryCell.Identifier ) as SeriesCell;
+                SeriesCell cell = tableView.DequeueReusableCell( SeriesCell.Identifier ) as SeriesCell;
 
                 // if there are no cells to reuse, create a new one
                 if (cell == null)

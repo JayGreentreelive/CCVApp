@@ -61,9 +61,10 @@ namespace CCVApp
                 /// <summary>
                 /// End point for retrieving a Group Object
                 /// </summary>
-                const string GetGroupEndPoint = "api/Groups/GetFamilies/";
+                const string GetFamiliesEndPoint = "api/Groups/GetFamilies/";
+                const string GetGroupsByLocationEndPoint = "api/Groups/ByLocation/{0}/{1}/{2}/{3}/{4}/{5}";
 
-                const string PutGroupEndPoint = "api/Groups/GetFamilies/";
+                //const string PutGroupEndPoint = "api/Groups/GetFamilies/";
 
                 /// <summary>
                 /// End point for posting a prayer request
@@ -237,24 +238,25 @@ namespace CCVApp
                     ExecuteAsync( request, resultHandler);
                 }*/
 
-                public void GetGroupLocations( int userId, HttpRequest.RequestResult< List<Rock.Client.Group> > resultHandler )
+                public void GetFamiliesOfPerson( int personId, HttpRequest.RequestResult< List<Rock.Client.Group> > resultHandler )
                 {
                     // request a profile by the username. If no username is specified, we'll use the logged in user's name.
                     RestRequest request = GetRockRestRequest( Method.GET );
-                    string requestUrl = BaseUrl + GetGroupEndPoint + userId.ToString( );
+                    string requestUrl = BaseUrl + GetFamiliesEndPoint + personId.ToString( );
 
                     // get the raw response
                     Request.ExecuteAsync< List<Rock.Client.Group> >( requestUrl, request, resultHandler);
                 }
 
-                /*public void UpdateGroupLocation( int userId, Rock.Client.GroupLocation groupLocation, HttpRequest.RequestResult resultHandler )
+                public void GetGroupsByLocation( int geoFenceGroupTypeId, int groupTypeId, string street, string city, string state, string zip, HttpRequest.RequestResult< List<Rock.Client.Group> > resultHandler )
                 {
-                    // update the group location for the specified user
-                    RestRequest request = GetRockRestRequest( Method.PUT );
-                    request.AddBody( groupLocation );
+                    // request a profile by the username. If no username is specified, we'll use the logged in user's name.
+                    RestRequest request = GetRockRestRequest( Method.GET );
+                    string requestUrl = BaseUrl + string.Format( GetGroupsByLocationEndPoint, geoFenceGroupTypeId, groupTypeId, street, city, state, zip );
 
-                    Request.ExecuteAsync( BaseUrl + PutGroupEndPoint + userId, request, resultHandler);
-                }*/
+                    // get the raw response
+                    Request.ExecuteAsync< List<Rock.Client.Group> >( requestUrl, request, resultHandler);
+                }
 
                 /// <summary>
                 /// Simple wrapper function to make sure all required headers get placed in

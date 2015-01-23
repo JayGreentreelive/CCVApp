@@ -320,6 +320,15 @@
     <BundleResource Include="..\Assets\facebook_login%403x.png">
       <Link>Resources\facebook_login%403x.png</Link>
     </BundleResource>
+    <BundleResource Include="..\Assets\connect_banner.jpg">
+      <Link>Resources\connect_banner.jpg</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\connect_banner%402x.jpg">
+      <Link>Resources\connect_banner%402x.jpg</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\connect_banner%403x.jpg">
+      <Link>Resources\connect_banner%403x.jpg</Link>
+    </BundleResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -349,7 +358,6 @@
     </Compile>
     <Compile Include="Tasks\About\AboutTask.cs" />
     <Compile Include="Tasks\Give\GiveTask.cs" />
-    <Compile Include="Tasks\GroupFinder\GroupFinderTask.cs" />
     <Compile Include="Tasks\News\NewsTask.cs" />
     <Compile Include="Tasks\Notes\NotesTask.cs" />
     <Compile Include="Tasks\Prayer\PrayerTask.cs" />
@@ -381,10 +389,6 @@
     <Compile Include="Tasks\Prayer\PrayerMainUIViewController.designer.cs">
       <DependentUpon>PrayerMainUIViewController.cs</DependentUpon>
     </Compile>
-    <Compile Include="Tasks\GroupFinder\GroupFinderMainPageUIViewController.cs" />
-    <Compile Include="Tasks\GroupFinder\GroupFinderMainPageUIViewController.designer.cs">
-      <DependentUpon>GroupFinderMainPageUIViewController.cs</DependentUpon>
-    </Compile>
     <Compile Include="Tasks\Give\GIveMainPageUIViewController.cs" />
     <Compile Include="Tasks\Give\GIveMainPageUIViewController.designer.cs">
       <DependentUpon>GIveMainPageUIViewController.cs</DependentUpon>
@@ -411,6 +415,19 @@
     </Compile>
     <Compile Include="ControlStyling.cs" />
     <Compile Include="Tasks\Notes\NotesWebViewController.cs" />
+    <Compile Include="Tasks\Connect\ConnectTask.cs" />
+    <Compile Include="Tasks\Connect\GroupFinderViewController.cs" />
+    <Compile Include="Tasks\Connect\GroupFinderViewController.designer.cs">
+      <DependentUpon>GroupFinderViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tasks\Connect\ConnectWebViewController.cs" />
+    <Compile Include="Tasks\Connect\ConnectWebViewController.designer.cs">
+      <DependentUpon>ConnectWebViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tasks\Connect\ConnectMainPageViewController.cs" />
+    <Compile Include="Tasks\Connect\ConnectMainPageViewController.designer.cs">
+      <DependentUpon>ConnectMainPageViewController.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="..\..\Rock\Rock.Client\Rock.Client.Models.projitems" Label="Shared" Condition="Exists('..\..\Rock\Rock.Client\Rock.Client.Models.projitems')" />
   <Import Project="..\..\Rock.Mobile\Rock.Mobile.projitems" Label="Shared" Condition="Exists('..\..\Rock.Mobile\Rock.Mobile.projitems')" />
@@ -424,8 +441,8 @@
     <InterfaceDefinition Include="Tasks\Give\GiveStoryboard_iPhone.storyboard" />
     <InterfaceDefinition Include="UserManagement\UserManagement.storyboard" />
     <InterfaceDefinition Include="Tasks\Prayer\PrayerStoryboard_iPhone.storyboard" />
-    <InterfaceDefinition Include="Tasks\GroupFinder\GroupFinderStoryboard_iPhone.storyboard" />
     <InterfaceDefinition Include="Tasks\Notes\NotesStoryboard_iPhone.storyboard" />
+    <InterfaceDefinition Include="Tasks\Connect\ConnectStoryboard_iPhone.storyboard" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\Fonts\" />

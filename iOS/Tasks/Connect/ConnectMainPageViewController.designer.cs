@@ -11,11 +11,19 @@ using System.CodeDom.Compiler;
 
 namespace iOS
 {
-	[Register ("GroupFinderMainPageUIViewController")]
-	partial class GroupFinderMainPageUIViewController
+	[Register ("ConnectMainPageViewController")]
+	partial class ConnectMainPageViewController
 	{
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UITableView ConnectTableView { get; set; }
+
 		void ReleaseDesignerOutlets ()
 		{
+			if (ConnectTableView != null) {
+				ConnectTableView.Dispose ();
+				ConnectTableView = null;
+			}
 		}
 	}
 }
