@@ -2,6 +2,14 @@
 <SeriesList>
 	<Series>
 		<Message>
+			<Name>FRIENDS</Name>
+			<Speaker>Todd Clark</Speaker>
+			<Date>1/25/2014</Date>
+			<NoteUrl>http://www.jeredmcferron.com/ccv/message_1_24_2015.xml</NoteUrl>
+			<WatchUrl></WatchUrl>
+			<ShareUrl></ShareUrl>
+		</Message>
+		<Message>
 			<Name>FAMILY</Name>
 			<Speaker>Dr. Don Wilson</Speaker>
 			<Date>1/18/2014</Date>

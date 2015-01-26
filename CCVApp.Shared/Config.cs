@@ -407,7 +407,7 @@ namespace CCVApp
                 public const uint PostPrayer_ResultSymbolSize = 32;
             }
 
-            public class Connect
+            public class ConnectConfig
             {
                 public static string[] WebViews = 
                     {
@@ -415,29 +415,33 @@ namespace CCVApp
                         "Starting Point", "http://www.ccvonline.com/Arena/default.aspx?page=17400",
                         "Foundations", "http://www.ccvonline.com/Arena/default.aspx?page=17659"
                     };
-            }
 
-            public class GroupFinderConfig
-            {
                 /// <summary>
                 /// The default latitude the group finder map will be positioned to before a search is performed.
                 /// </summary>
-                public const double DefaultLatitude = 33.6054149;
+                public const double GroupFinder_DefaultLatitude = 33.6054149;
 
                 /// <summary>
                 /// The default longitude the group finder map will be positioned to before a search is performed. 
                 /// </summary>
-                public const double DefaultLongitude = -112.125051;
+                public const double GroupFinder_DefaultLongitude = -112.125051;
 
                 /// <summary>
                 /// The default latitude scale (how far out) the map will be scaled to before a search is performed.
                 /// </summary>
-                public const int LatitudeScale = 100000;
+                public const int GroupFinder_DefaultScale_iOS = 100000;
 
                 /// <summary>
                 /// The default longitude scale (how far out) the map will be scaled to before a search is performed. 
                 /// </summary>
-                public const int LongitudeScale = 100000;
+                public const float GroupFinder_DefaultScale_Android = 9.25f;
+
+                public const string GroupFinder_SearchIcon = "";
+            }
+
+            public class GiveConfig
+            {
+                public const string GiveUrl = "https://www.ccvonline.com/Arena/default.aspx?page=18485";
             }
 
             public class ControlStylingConfig

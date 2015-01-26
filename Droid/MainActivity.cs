@@ -7,10 +7,42 @@ using Android.Views;
 using Android.Widget;
 using Android.OS;
 using Android.Util;
+using Android.Gms.Maps;
 
 namespace Droid
 {
-    [Activity( Label = "CCV Mobile 2", MainLauncher = true, Icon = "@drawable/icon", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize )]
+    [Activity( Label = "CCV Mobile 2", NoHistory = true, MainLauncher = true, Icon = "@drawable/icon", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize )]
+    public class Splash : Activity
+    {
+        protected override void OnCreate( Bundle bundle )
+        {
+            base.OnCreate( bundle );
+
+            Window.AddFlags( WindowManagerFlags.Fullscreen );
+            RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
+
+            // Set our view from the "main" layout resource
+            SetContentView( Resource.Layout.Splash );
+
+            System.Timers.Timer splashTimer = new System.Timers.Timer();
+            splashTimer.Interval = 1000;
+            splashTimer.AutoReset = false;
+            splashTimer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e) => 
+                {
+
+                    RunOnUiThread( delegate
+                        {
+                            // launch create order intent, which should be a FORM
+                            Intent intent = new Intent(this, typeof(MainActivity));
+                            StartActivity(intent);
+                        });
+                };
+
+            splashTimer.Start( );
+        }
+    }
+
+    [Activity( Label = "CCV Mobile 2", Icon = "@drawable/icon", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize )]
     public class MainActivity : Activity
     {
         protected override void OnCreate( Bundle bundle )
@@ -34,6 +66,7 @@ namespace Droid
             FrameLayout layout = FindViewById<FrameLayout>(Resource.Id.activetask);
 
             Rock.Mobile.PlatformUI.PlatformBaseUI.Init( );
+            MapsInitializer.Initialize( this );
 
             Springboard springboard = FragmentManager.FindFragmentById(Resource.Id.springboard) as Springboard;
             springboard.SetActiveTaskFrame( layout );

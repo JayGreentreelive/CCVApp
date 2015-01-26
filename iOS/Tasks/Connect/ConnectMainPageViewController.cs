@@ -5,6 +5,7 @@ using System.CodeDom.Compiler;
 using System.Drawing;
 using CCVApp.Shared.Config;
 using System.Collections.Generic;
+using CCVApp.Shared;
 
 namespace iOS
 {
@@ -219,16 +220,10 @@ namespace iOS
             }
         }
 
-        public class Link
-        {
-            public string Title { get; set; }
-            public string Url { get; set; }
-        }
-        public List<Link> LinkEntries { get; set; }
+        public List<ConnectLink> LinkEntries { get; set; }
 
 		public ConnectMainPageViewController (IntPtr handle) : base (handle)
 		{
-            LinkEntries = new List<Link>();
 		}
 
         public override void ViewDidLoad()
@@ -237,14 +232,7 @@ namespace iOS
 
             View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( CCVApp.Shared.Config.ControlStylingConfig.BackgroundColor );
 
-            // parse the config and see how many additional links we need.
-            for ( int i = 0; i < CCVApp.Shared.Config.Connect.WebViews.Length; i += 2 )
-            {
-                Link link = new Link();
-                LinkEntries.Add( link );
-                link.Title = CCVApp.Shared.Config.Connect.WebViews[ i ];
-                link.Url = CCVApp.Shared.Config.Connect.WebViews[ i + 1 ];
-            }
+            LinkEntries = ConnectLink.BuildList( );
 
             ConnectTableView.SeparatorStyle = UITableViewCellSeparatorStyle.None;
             ConnectTableView.Source = new TableSource( this );

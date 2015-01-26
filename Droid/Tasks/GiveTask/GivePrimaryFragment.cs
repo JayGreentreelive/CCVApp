@@ -12,6 +12,8 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using Android.Media;
+using CCVApp.Shared.Config;
+using CCVApp.Shared.Strings;
 
 namespace Droid
 {
@@ -38,6 +40,25 @@ namespace Droid
 
                     View view = inflater.Inflate(Resource.Layout.Give_Primary, container, false);
                     view.SetOnTouchListener( this );
+
+
+                    RelativeLayout headerLayer = view.FindViewById<RelativeLayout>( Resource.Id.background );
+                    ControlStyling.StyleBGLayer( headerLayer );
+
+                    TextView headerLabel = view.FindViewById<TextView>( Resource.Id.headerLabel );
+                    headerLabel.Text = GiveStrings.Header;
+                    ControlStyling.StyleUILabel( headerLabel, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+
+                    Button giveButton = view.FindViewById<Button>( Resource.Id.button );
+                    ControlStyling.StyleButton( giveButton, GiveStrings.ButtonLabel, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+
+                    giveButton.Click += (object sender, EventArgs e ) =>
+                    {
+                            // when give is clicked, launch the browser
+                        var uri = Android.Net.Uri.Parse( GiveConfig.GiveUrl );
+                        var intent = new Intent(Intent.ActionView, uri); 
+                        StartActivity(intent);
+                    };
 
                     return view;
                 }

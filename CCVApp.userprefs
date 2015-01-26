@@ -1,26 +1,34 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhone6.8.1" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/Tasks/Connect/GroupFinderViewController.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.192.168.56.101:5555" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Tasks/ConnectTask/GroupFinderFragment.cs">
     <Files>
-      <File FileName="iOS/Tasks/Connect/ConnectTask.cs" Line="17" Column="17" />
-      <File FileName="iOS/Tasks/Connect/GroupFinderViewController.cs" Line="31" Column="31" />
-      <File FileName="iOS/Tasks/Connect/ConnectMainPageViewController.cs" Line="55" Column="55" />
+      <File FileName="Droid/Tasks/ConnectTask/GroupFinderFragment.cs" Line="17" Column="17" />
+      <File FileName="Droid/Tasks/NotesTask/NotesDetailsFragment.cs" Line="1" Column="1" />
+      <File FileName="Droid/Tasks/NotesTask/NotesPrimaryFragment.cs" Line="18" Column="18" />
+      <File FileName="Droid/MainActivity.cs" Line="48" Column="48" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
+          <Node name="CCVApp.Shared" expanded="True" />
+          <Node name="Droid" expanded="True">
+            <Node name="Resources" expanded="True">
+              <Node name="layout" expanded="True" />
+            </Node>
+            <Node name="Tasks" expanded="True">
+              <Node name="ConnectTask" expanded="True">
+                <Node name="GroupFinderFragment.cs" selected="True" />
+              </Node>
+              <Node name="NewsTask" expanded="True" />
+              <Node name="NotesTask" expanded="True" />
+            </Node>
+          </Node>
           <Node name="iOS" expanded="True">
             <Node name="Tasks" expanded="True">
-              <Node name="Connect" expanded="True">
-                <Node name="GroupFinderViewController.cs" selected="True" />
-              </Node>
+              <Node name="Connect" expanded="True" />
             </Node>
-            <Node name="UserManagement" expanded="True" />
           </Node>
         </State>
-      </Pad>
-      <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>

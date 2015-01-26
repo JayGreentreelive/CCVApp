@@ -17,6 +17,9 @@
     <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
   </PropertyGroup>
+  <PropertyGroup>
+    <JavaMaximumHeapSize>1G</JavaMaximumHeapSize>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -50,6 +53,19 @@
     <Reference Include="Facebook">
       <HintPath>..\Components\facebook-sdk-6.2.1\lib\android\Facebook.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.Android.GoogleMaps" />
+    <Reference Include="Xamarin.Android.Support.v4">
+      <HintPath>..\packages\Xamarin.Android.Support.v4.21.0.3.0\lib\MonoAndroid10\Xamarin.Android.Support.v4.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.Android.Support.v7.AppCompat">
+      <HintPath>..\packages\Xamarin.Android.Support.v7.AppCompat.21.0.3.0\lib\MonoAndroid403\Xamarin.Android.Support.v7.AppCompat.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.Android.Support.v7.MediaRouter">
+      <HintPath>..\packages\Xamarin.Android.Support.v7.MediaRouter.21.0.3.0\lib\MonoAndroid403\Xamarin.Android.Support.v7.MediaRouter.dll</HintPath>
+    </Reference>
+    <Reference Include="GooglePlayServicesLib">
+      <HintPath>..\packages\Xamarin.GooglePlayServices.22.0.0.0\lib\MonoAndroid41\GooglePlayServicesLib.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
@@ -81,9 +97,14 @@
     <Compile Include="Tasks\NotesTask\NotesWebViewFragment.cs" />
     <Compile Include="Tasks\NotesTask\NotesWatchFragment.cs" />
     <Compile Include="ControlStyling.cs" />
+    <Compile Include="Tasks\ConnectTask\ConnectPrimaryFragment.cs" />
+    <Compile Include="Tasks\ConnectTask\ConnectTask.cs" />
+    <Compile Include="Tasks\ConnectTask\ConnectWebFragment.cs" />
+    <Compile Include="Tasks\ConnectTask\GroupFinderFragment.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\Strings.xml" />
@@ -128,6 +149,13 @@
     <AndroidResource Include="Resources\values\themes.xml" />
     <AndroidResource Include="Resources\values-v21\themes.xml" />
     <AndroidResource Include="Resources\layout\DatePicker.axml" />
+    <AndroidResource Include="Resources\layout\Connect_Primary.axml" />
+    <AndroidResource Include="Resources\layout\Connect_Web.axml" />
+    <AndroidResource Include="Resources\layout\Connect_GroupFinder.axml" />
+    <AndroidResource Include="Resources\layout\Splash.axml" />
+    <AndroidResource Include="..\Assets\splashiphone6plus.png">
+      <Link>Resources\drawable-hdpi\splash.png</Link>
+    </AndroidResource>
   </ItemGroup>
   <Import Project="..\..\Rock.Mobile\Rock.Mobile.projitems" Label="Shared" Condition="Exists('..\..\Rock.Mobile\Rock.Mobile.projitems')" />
   <Import Project="..\..\Rock\Rock.Client\Rock.Client.Models.projitems" Label="Shared" Condition="Exists('..\..\Rock\Rock.Client\Rock.Client.Models.projitems')" />
@@ -150,6 +178,7 @@
     <Folder Include="Resources\layout-sw480dp\" />
     <Folder Include="Resources\drawable\" />
     <Folder Include="Resources\values-v21\" />
+    <Folder Include="Tasks\ConnectTask\" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="..\Assets\Fonts\Bevan.ttf">
@@ -308,6 +337,9 @@
     <AndroidAsset Include="..\Assets\news_startingpoint_main%402x.png">
       <Link>Assets\news_startingpoint_main.png</Link>
     </AndroidAsset>
+    <AndroidAsset Include="..\Assets\connect_banner%403x.jpg">
+      <Link>Assets\connect_banner.jpg</Link>
+    </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
     <XamarinComponentReference Include="json.net">
@@ -320,6 +352,10 @@
     </XamarinComponentReference>
     <XamarinComponentReference Include="facebook-sdk">
       <Version>6.2.1</Version>
+      <Visible>False</Visible>
+    </XamarinComponentReference>
+    <XamarinComponentReference Include="googleplayservices">
+      <Version>22.0.0.0</Version>
       <Visible>False</Visible>
     </XamarinComponentReference>
   </ItemGroup>

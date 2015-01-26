@@ -42,5 +42,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ImageCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Notes\Models\Series.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FacebookManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConnectLink.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GroupFinder.cs" />
   </ItemGroup>
 </Project>

@@ -10,6 +10,9 @@ using System.Collections.Generic;
 using CCVApp.Shared.Network;
 using Rock.Mobile.Util.Strings;
 using System.Collections;
+using CCVApp.Shared;
+using Rock.Mobile.PlatformSpecific.iOS.UI;
+using CCVApp.Shared.Strings;
 
 namespace iOS
 {
@@ -35,6 +38,7 @@ namespace iOS
 
                 public UILabel SearchResultsBanner { get; set; }
                 //public UILabel NeighborhoodBanner { get; set; }
+                public UIView Seperator { get; set; }
 
                 public UIButton SearchButton { get; set; }
 
@@ -58,8 +62,7 @@ namespace iOS
 
                     SearchButton = UIButton.FromType( UIButtonType.System );
                     SearchButton.Layer.AnchorPoint = new System.Drawing.PointF( 0, 0 );
-                    ControlStyling.StyleButton( SearchButton, "", ControlStylingConfig.Icon_Font_Secondary, 32 );
-                    //SearchButton.BackgroundColor = UIColor.Clear;
+                    ControlStyling.StyleButton( SearchButton, ConnectConfig.GroupFinder_SearchIcon, ControlStylingConfig.Icon_Font_Secondary, 32 );
                     SearchButton.SizeToFit( );
                     SearchButton.Frame = new System.Drawing.RectangleF( parentSize.Width - SearchButton.Frame.Width, 0, SearchButton.Frame.Width, 33 );
                     SearchButton.TouchUpInside += (object sender, EventArgs e) => 
@@ -70,7 +73,7 @@ namespace iOS
 
                     AddressTextField = new UITextField( );
                     AddressTextField.Layer.AnchorPoint = new System.Drawing.PointF( 0, 0 );
-                    ControlStyling.StyleTextField( AddressTextField, "Street address", ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+                    ControlStyling.StyleTextField( AddressTextField, ConnectStrings.GroupFinder_AddressPlaceholder, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
                     AddressTextField.Frame = new System.Drawing.RectangleF( 10, 0, parentSize.Width - SearchButton.Frame.Width - 5, SearchButton.Frame.Height );
                     AddressTextField.ReturnKeyType = UIReturnKeyType.Search;
                     AddressTextField.Delegate = new AddressDelegate( ) { PrimaryCell = this };
@@ -84,7 +87,7 @@ namespace iOS
                     SearchResultsBanner = new UILabel( );
                     SearchResultsBanner.Layer.AnchorPoint = new System.Drawing.PointF( 0, 0 );
                     SearchResultsBanner.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-                    SearchResultsBanner.Text = "Search Results";
+                    SearchResultsBanner.Text = ConnectStrings.GroupFinder_BeforeSearch;
                     SearchResultsBanner.SizeToFit( );
                     SearchResultsBanner.Frame = new RectangleF( 0, MapView.Frame.Bottom, parentSize.Width, SearchResultsBanner.Frame.Height );
                     SearchResultsBanner.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
@@ -102,6 +105,13 @@ namespace iOS
                     NeighborhoodBanner.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Table_Footer_Color );
                     NeighborhoodBanner.TextAlignment = UITextAlignment.Center;
                     AddSubview( NeighborhoodBanner );*/
+
+                    // add the seperator to the bottom
+                    Seperator = new UIView( );
+                    AddSubview( Seperator );
+                    Seperator.Layer.BorderWidth = 1;
+                    Seperator.Layer.BorderColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ).CGColor;
+                    Seperator.Frame = new RectangleF( 0, SearchResultsBanner.Frame.Bottom - 1, Bounds.Width, 1 );
                 }
             }
 
@@ -179,15 +189,14 @@ namespace iOS
                 PrimaryTableCell.SelectionStyle = UITableViewCellSelectionStyle.None;
 
                 // default to our startup location
-                PrimaryTableCell.SearchResultsBanner.Hidden = true;
-                PendingPrimaryCellHeight = PrimaryTableCell.MapView.Frame.Bottom;
+                PendingPrimaryCellHeight = PrimaryTableCell.Seperator.Frame.Bottom;
 
                 // additionally, set the default position for the map to whatever specified area.
                 MKCoordinateRegion region = MKCoordinateRegion.FromDistance( new CLLocationCoordinate2D( 
-                    CCVApp.Shared.Config.GroupFinderConfig.DefaultLatitude, 
-                    CCVApp.Shared.Config.GroupFinderConfig.DefaultLongitude ), 
-                    CCVApp.Shared.Config.GroupFinderConfig.LatitudeScale, 
-                    CCVApp.Shared.Config.GroupFinderConfig.LongitudeScale );
+                    ConnectConfig.GroupFinder_DefaultLatitude, 
+                    ConnectConfig.GroupFinder_DefaultLongitude ), 
+                    ConnectConfig.GroupFinder_DefaultScale_iOS, 
+                    ConnectConfig.GroupFinder_DefaultScale_iOS );
 
                 PrimaryTableCell.MapView.SetRegion( region, true );
             }
@@ -202,24 +211,25 @@ namespace iOS
                 // remove existing annotations
                 PrimaryTableCell.MapView.RemoveAnnotations( PrimaryTableCell.MapView.Annotations );
 
-                // if it HAS, reveal them and populate appropriately
-                PrimaryTableCell.SearchResultsBanner.Hidden = false;
+                // set the search results banner appropriately
                 if ( Parent.GroupEntries.Count > 0 )
                 {
-                    PrimaryTableCell.SearchResultsBanner.Text = "Search Results";
+                    PrimaryTableCell.SearchResultsBanner.Text = ConnectStrings.GroupFinder_GroupsFound;
                 }
                 else
                 {
-                    PrimaryTableCell.SearchResultsBanner.Text = "No groups in your area.";
+                    PrimaryTableCell.SearchResultsBanner.Text = ConnectStrings.GroupFinder_NoGroupsFound;
                 }
-                PendingPrimaryCellHeight = PrimaryTableCell.SearchResultsBanner.Frame.Bottom;
+                PendingPrimaryCellHeight = PrimaryTableCell.Seperator.Frame.Bottom;
 
                 // add an annotation for each position found in the group
                 List<IMKAnnotation> annotations = new List<IMKAnnotation>();
-                foreach ( GroupEntry entry in Parent.GroupEntries )
+                foreach ( GroupFinder.GroupEntry entry in Parent.GroupEntries )
                 {
                     MKPointAnnotation annotation = new MKPointAnnotation();
                     annotation.Coordinate = new CLLocationCoordinate2D( double.Parse( entry.Latitude ), double.Parse( entry.Longitude ) );
+                    annotation.Title = entry.Title;
+                    annotation.Subtitle = entry.Distance;
                     annotations.Add( annotation );
                 }
                 PrimaryTableCell.MapView.ShowAnnotations( annotations.ToArray( ), true );
@@ -341,21 +351,12 @@ namespace iOS
             }
         }
 
-        public class GroupEntry
-        {
-            public string Title { get; set; }
-            public string Address { get; set; }
 
-            public string Distance { get; set; }
-
-            public string NeighborhoodArea { get; set; }
-
-            public string Latitude { get; set; }
-            public string Longitude { get; set; }
-        }
-        List<GroupEntry> GroupEntries { get; set; }
+        List<GroupFinder.GroupEntry> GroupEntries { get; set; }
 
         GroupFinderViewController.TableSource GroupTableSource { get; set; }
+
+        BlockerView BlockerView { get; set; }
 
         public override void ViewDidLoad()
         {
@@ -363,11 +364,14 @@ namespace iOS
 
             View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( CCVApp.Shared.Config.ControlStylingConfig.BackgroundColor );
 
-            GroupEntries = new List<GroupEntry>();
+            GroupEntries = new List<GroupFinder.GroupEntry>();
 
             GroupTableSource = new GroupFinderViewController.TableSource( this );
             GroupFinderTableView.Source = GroupTableSource;
             GroupFinderTableView.SeparatorStyle = UITableViewCellSeparatorStyle.None;
+
+            BlockerView = new BlockerView( View.Frame );
+            View.AddSubview( BlockerView );
         }
 
         public void RowClicked( int row, string context )
@@ -392,6 +396,11 @@ namespace iOS
             base.ViewDidLayoutSubviews();
         }
 
+        public override void TouchesEnded(NSSet touches, UIEvent evt)
+        {
+            base.TouchesEnded(touches, evt);
+        }
+
         public override void ViewWillAppear(bool animated)
         {
             base.ViewWillAppear(animated);
@@ -410,55 +419,26 @@ namespace iOS
         {
             if ( string.IsNullOrEmpty( address ) == false )
             {
-                GroupEntries.Clear( );
-
-                string street = "";
-                string city = "";
-                string state = "";
-                string zip = "";
-                bool result = Parsers.ParseAddress( address, ref street, ref city, ref state, ref zip );
-
-                if ( result == false )
-                {
-                    SpringboardViewController.DisplayError( "Invalid Address", "Use the format 'street, city, state, zip' and try again." );
-                }
-                else
-                {
-                    RockApi.Instance.GetGroupsByLocation( CCVApp.Shared.Config.GeneralConfig.NeighborhoodGroupGeoFenceValueId, 
-                        CCVApp.Shared.Config.GeneralConfig.NeighborhoodGroupValueId,
-                        street, city, state, zip,
-                        delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.Group> model )
-                        {
-                            if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
+                BlockerView.FadeIn( delegate
+                    {
+                        GroupFinder.GetGroups( address, 
+                            delegate( bool result, List<GroupFinder.GroupEntry> groupEntries )
                             {
-                                // first thing we receive is the "area" group(s)
-                                foreach ( Rock.Client.Group areaGroup in model )
-                                {
-                                    // in each area, there's an actual small group
-                                    foreach( Rock.Client.Group smallGroup in areaGroup.Groups )
+                                BlockerView.FadeOut( delegate
                                     {
-                                        // get the group location out of the small group enumerator
-                                        IEnumerator enumerator = smallGroup.GroupLocations.GetEnumerator( );
-                                        enumerator.MoveNext( );
-                                        Rock.Client.Location location = ((Rock.Client.GroupLocation)enumerator.Current).Location;
-
-                                        // and of course, each group has a location
-                                        GroupEntry entry = new GroupEntry( );
-                                        entry.Title = smallGroup.Name;
-                                        entry.Address = location.Street1 + "\n" + location.City + ", " + location.State + " " + location.PostalCode.Substring( 0, Math.Max( 0, location.PostalCode.IndexOf( '-' ) ) );
-                                        entry.NeighborhoodArea = string.Format( "Part of the {0} Neighborhood", areaGroup.Name );
-                                        entry.Latitude = location.Latitude.ToString( );
-                                        entry.Longitude = location.Longitude.ToString( );
-
-                                        GroupEntries.Add( entry );
-                                    }
-                                }
-                            }
-
-                            GroupTableSource.UpdateMap( );
-                            GroupFinderTableView.ReloadData( );
-                        } );
-                }
+                                        if ( result == false )
+                                        {
+                                            SpringboardViewController.DisplayError( ConnectStrings.GroupFinder_InvalidAddressHeader, ConnectStrings.GroupFinder_InvalidAddressMsg );
+                                        }
+                                        else
+                                        {
+                                            GroupEntries = groupEntries;
+                                            GroupTableSource.UpdateMap( );
+                                            GroupFinderTableView.ReloadData( );
+                                        }
+                                    } );
+                            } );
+                    } );
             }
         }
 	}

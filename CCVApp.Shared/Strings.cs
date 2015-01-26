@@ -100,6 +100,23 @@ namespace CCVApp.Shared
             public const string LearnMore = "Learn More";
         }
 
+        public class GiveStrings
+        {
+            public const string Header = "Giving at CCV";
+            public const string ButtonLabel = "Give Online";
+        }
+
+        public class ConnectStrings
+        {
+            public const string GroupFinder_AddressPlaceholder = "Street, city, state, zip";
+            public const string GroupFinder_GroupsFound = "Groups Nearest Your Location";
+            public const string GroupFinder_NoGroupsFound = "No Groups Found Near Your Location";
+            public const string GroupFinder_BeforeSearch = "Type an Address to find Nearby Groups";
+
+            public const string GroupFinder_InvalidAddressHeader = "Invalid Address";
+            public const string GroupFinder_InvalidAddressMsg = "Use the format 'street, city, state, zip' and try again.";
+        }
+
         public class MessagesStrings
         {
             public const string Error_Title = "Messages";

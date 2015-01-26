@@ -14,8 +14,24 @@ namespace iOS
 	[Register ("GIveMainPageUIViewController")]
 	partial class GIveMainPageUIViewController
 	{
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UILabel GiveBanner { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UIView GiveBannerLayer { get; set; }
+
 		void ReleaseDesignerOutlets ()
 		{
+			if (GiveBanner != null) {
+				GiveBanner.Dispose ();
+				GiveBanner = null;
+			}
+			if (GiveBannerLayer != null) {
+				GiveBannerLayer.Dispose ();
+				GiveBannerLayer = null;
+			}
 		}
 	}
 }

@@ -111,7 +111,7 @@
             <!--Definition for a springboard element-->
                 <RelativeLayout
                     android:layout_below="@id/springboard_news_frame"
-                    android:id="@+id/springboard_groupfinder_frame"
+                    android:id="@+id/springboard_connect_frame"
                     android:layout_height="40dp"
                     android:layout_width="match_parent">
                     <Button
@@ -144,7 +144,7 @@
             <!--End springboard element definition-->
             <!--Definition for a springboard element-->
                 <RelativeLayout
-                    android:layout_below="@id/springboard_groupfinder_frame"
+                    android:layout_below="@id/springboard_connect_frame"
                     android:id="@+id/springboard_notes_frame"
                     android:layout_height="40dp"
                     android:layout_width="match_parent">
