@@ -1,36 +1,12 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.192.168.56.101:5555" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Tasks/ConnectTask/GroupFinderFragment.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" PreferredExecutionTarget="Android.192.168.56.101:5555" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="CCVApp.Shared/Notes/Controls/Quote.cs">
     <Files>
-      <File FileName="Droid/Tasks/ConnectTask/GroupFinderFragment.cs" Line="17" Column="17" />
-      <File FileName="Droid/Tasks/NotesTask/NotesDetailsFragment.cs" Line="1" Column="1" />
-      <File FileName="Droid/Tasks/NotesTask/NotesPrimaryFragment.cs" Line="18" Column="18" />
-      <File FileName="Droid/MainActivity.cs" Line="48" Column="48" />
+      <File FileName="Droid/Tasks/NotesTask/NotesPrimaryFragment.cs" Line="1" Column="1" />
+      <File FileName="CCVApp.Shared/Notes/Controls/Quote.cs" Line="46" Column="46" />
+      <File FileName="../Rock.Mobile/PlatformUI/Droid/DroidNative/BorderedRectViews.cs" Line="1" Column="1" />
+      <File FileName="../Rock.Mobile/PlatformUI/Droid/DroidLabel.cs" Line="1" Column="1" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="CCVApp.Shared" expanded="True" />
-          <Node name="Droid" expanded="True">
-            <Node name="Resources" expanded="True">
-              <Node name="layout" expanded="True" />
-            </Node>
-            <Node name="Tasks" expanded="True">
-              <Node name="ConnectTask" expanded="True">
-                <Node name="GroupFinderFragment.cs" selected="True" />
-              </Node>
-              <Node name="NewsTask" expanded="True" />
-              <Node name="NotesTask" expanded="True" />
-            </Node>
-          </Node>
-          <Node name="iOS" expanded="True">
-            <Node name="Tasks" expanded="True">
-              <Node name="Connect" expanded="True" />
-            </Node>
-          </Node>
-        </State>
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
@@ -39,6 +15,7 @@
     <Watch file="CCVApp.Shared/Notes/Controls/Note.cs" line="533" offsetX="1058" offsetY="7980" expression="state" liveUpdate="False" />
     <Watch file="iOS/UserManagement/ImageCropViewController.cs" line="498" offsetX="806" offsetY="7455" expression="resultTransform" liveUpdate="False" />
     <Watch file="Droid/Tasks/NotesTask/NotesDetailsFragment.cs" line="215" offsetX="1268" offsetY="3210" expression="ThumbnailPlaceholder" liveUpdate="False" />
+    <Watch file="../Rock.Mobile/PlatformUI/Droid/DroidLabel.cs" line="78" offsetX="733" offsetY="1155" expression="transparentColor" liveUpdate="False" />
   </MonoDevelop.Ide.DebuggingService.PinnedWatches>
   <MonoDevelop.Ide.ItemProperties.Droid MonoForAntroid.PreferredDevice="Nexus 4" />
 </Properties>

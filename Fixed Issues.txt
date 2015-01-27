@@ -5,9 +5,10 @@ Both:
 	Added Connect
 	Added GroupFinder
 	Added Baptism, Starting Point & Foundations ( configurable by churches )
+	Profile address information is now retrieved.
 
 iOS
 	
 
 Android
-	
+	Fixed an issue on Android 4.2 devices where certain Note elements would have a black background.
