@@ -1,7 +1,7 @@
-﻿using System;
-using MonoTouch.UIKit;
-using System.Drawing;
-using MonoTouch.Foundation;
+using System;
+using UIKit;
+using CoreGraphics;
+using Foundation;
 
 namespace iOS
 {

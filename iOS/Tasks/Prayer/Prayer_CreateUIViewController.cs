@@ -1,11 +1,11 @@
 using System;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using System.CodeDom.Compiler;
 using Rock.Mobile.PlatformUI;
 using CCVApp.Shared.Strings;
 using System.Collections.Generic;
-using System.Drawing;
+using CoreGraphics;
 using CCVApp.Shared.Config;
 using CCVApp.Shared.Network;
 using Rock.Mobile.PlatformSpecific.iOS.UI;
@@ -19,13 +19,13 @@ namespace iOS
         {
             public override bool ShouldBeginEditing(UITextView textView)
             {
-                NSNotificationCenter.DefaultCenter.PostNotificationName( Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager.TextFieldDidBeginEditingNotification, NSValue.FromRectangleF( textView.Frame ) );
+                NSNotificationCenter.DefaultCenter.PostNotificationName( Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager.TextFieldDidBeginEditingNotification, NSValue.FromCGRect( textView.Frame ) );
                 return true;
             }
 
             public override void Changed(UITextView textView)
             {
-                NSNotificationCenter.DefaultCenter.PostNotificationName( Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager.TextFieldChangedNotification, NSValue.FromRectangleF( textView.Frame ) );
+                NSNotificationCenter.DefaultCenter.PostNotificationName( Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager.TextFieldChangedNotification, NSValue.FromCGRect( textView.Frame ) );
             }
         }
 
@@ -43,7 +43,7 @@ namespace iOS
         /// The starting position of the scrollView so we can restore after the user uses the UIPicker
         /// </summary>
         /// <value>The starting scroll position.</value>
-        PointF StartingScrollPos { get; set; }
+        CGPoint StartingScrollPos { get; set; }
 
         PickerAdjustManager PickerAdjustManager { get; set; }
 
@@ -237,34 +237,34 @@ namespace iOS
         {
             public Prayer_CreateUIViewController Parent { get; set; }
 
-            public override int GetComponentCount(UIPickerView picker)
+            public override nint GetComponentCount(UIPickerView picker)
             {
                 return 1;
             }
 
-            public override int GetRowsInComponent(UIPickerView picker, int component)
+            public override nint GetRowsInComponent(UIPickerView picker, nint component)
             {
                 return RockGeneralData.Instance.Data.PrayerCategories.Count;
             }
 
-            public override string GetTitle(UIPickerView picker, int row, int component)
+            public override string GetTitle(UIPickerView picker, nint row, nint component)
             {
-                return RockGeneralData.Instance.Data.PrayerCategories[ row ];
+                return RockGeneralData.Instance.Data.PrayerCategories[ (int)row ];
             }
 
-            public override void Selected(UIPickerView picker, int row, int component)
+            public override void Selected(UIPickerView picker, nint row, nint component)
             {
-                Parent.PickerSelected( row );
+                Parent.PickerSelected( (int)row );
             }
 
-            public override UIView GetView(UIPickerView picker, int row, int component, UIView view)
+            public override UIView GetView(UIPickerView picker, nint row, nint component, UIView view)
             {
                 UILabel label = view as UILabel;
                 if ( label == null )
                 {
                     label = new UILabel();
                     label.TextColor = UIColor.White;
-                    label.Text = RockGeneralData.Instance.Data.PrayerCategories[ row ];
+                    label.Text = RockGeneralData.Instance.Data.PrayerCategories[ (int)row ];
                     label.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
                     label.SizeToFit( );
                 }
@@ -323,7 +323,7 @@ namespace iOS
             base.ViewDidLayoutSubviews();
 
             // once all the controls are laid out, update the content size to provide a little "bounce"
-            ScrollView.ContentSize = new System.Drawing.SizeF( ScrollView.Bounds.Width, ScrollView.Bounds.Height + ( ScrollView.Bounds.Height * .25f ) );
+            ScrollView.ContentSize = new CGSize( ScrollView.Bounds.Width, ScrollView.Bounds.Height + ( ScrollView.Bounds.Height * .25f ) );
         }
 
         void EnableControls( bool enabled )

@@ -1,8 +1,8 @@
 using System;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using System.CodeDom.Compiler;
-using System.Drawing;
+using CoreGraphics;
 using CCVApp.Shared.Config;
 using System.Collections.Generic;
 using CCVApp.Shared;
@@ -25,13 +25,13 @@ namespace iOS
                 public UIButton Button { get; set; }
                 public UILabel BottomBanner { get; set; }
 
-                public PrimaryCell( SizeF parentSize, UITableViewCellStyle style, string cellIdentifier ) : base( style, cellIdentifier )
+                public PrimaryCell( CGSize parentSize, UITableViewCellStyle style, string cellIdentifier ) : base( style, cellIdentifier )
                 {
                     BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
 
                     Image = new UIImageView( );
                     Image.ContentMode = UIViewContentMode.ScaleAspectFit;
-                    Image.Layer.AnchorPoint = PointF.Empty;
+                    Image.Layer.AnchorPoint = CGPoint.Empty;
                     AddSubview( Image );
 
                     // Banner Image
@@ -39,14 +39,14 @@ namespace iOS
                     Image.SizeToFit( );
 
                     // resize the image to fit the width of the device
-                    float imageAspect = Image.Bounds.Height / Image.Bounds.Width;
-                    Image.Frame = new RectangleF( 0, 0, parentSize.Width, parentSize.Width * imageAspect );
+                    nfloat imageAspect = Image.Bounds.Height / Image.Bounds.Width;
+                    Image.Frame = new CGRect( 0, 0, parentSize.Width, parentSize.Width * imageAspect );
 
                     Button = UIButton.FromType( UIButtonType.System );
                     ControlStyling.StyleButton( Button, "Group Finder", ControlStylingConfig.Icon_Font_Secondary, 32 );
                     Button.BackgroundColor = UIColor.Clear;
                     Button.SizeToFit( );
-                    Button.Frame = new System.Drawing.RectangleF( (parentSize.Width - Button.Frame.Width ) / 2, Image.Frame.Bottom - Button.Frame.Height, Button.Frame.Width, Button.Frame.Height );
+                    Button.Frame = new CGRect( (parentSize.Width - Button.Frame.Width ) / 2, Image.Frame.Bottom - Button.Frame.Height, Button.Frame.Width, Button.Frame.Height );
                     Button.TouchUpInside += (object sender, EventArgs e) => 
                         {
                             TableSource.RowClicked( -1 );
@@ -57,7 +57,7 @@ namespace iOS
                     BottomBanner.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
                     BottomBanner.Text = "Other Ways to Connect";
                     BottomBanner.SizeToFit( );
-                    BottomBanner.Frame = new RectangleF( 0, Button.Frame.Bottom, parentSize.Width, BottomBanner.Frame.Height );
+                    BottomBanner.Frame = new CGRect( 0, Button.Frame.Bottom, parentSize.Width, BottomBanner.Frame.Height );
                     BottomBanner.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
                     BottomBanner.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Table_Footer_Color );
                     BottomBanner.TextAlignment = UITextAlignment.Center;
@@ -99,8 +99,8 @@ namespace iOS
 
             ConnectMainPageViewController Parent { get; set; }
 
-            float PendingPrimaryCellHeight { get; set; }
-            float PendingCellHeight { get; set; }
+            nfloat PendingPrimaryCellHeight { get; set; }
+            nfloat PendingCellHeight { get; set; }
 
             PrimaryCell PrimaryTableCell { get; set; }
 
@@ -121,22 +121,22 @@ namespace iOS
                 PendingPrimaryCellHeight = PrimaryTableCell.BottomBanner.Frame.Bottom;
             }
 
-            public override int RowsInSection (UITableView tableview, int section)
+            public override nint RowsInSection (UITableView tableview, nint section)
             {
                 return Parent.LinkEntries.Count + 1;
             }
 
-            public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
+            public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
             {
                 return GetCachedRowHeight( tableView, indexPath );
             }
 
-            public override float EstimatedHeight(UITableView tableView, NSIndexPath indexPath)
+            public override nfloat EstimatedHeight(UITableView tableView, NSIndexPath indexPath)
             {
                 return GetCachedRowHeight( tableView, indexPath );
             }
 
-            float GetCachedRowHeight( UITableView tableView, NSIndexPath indexPath )
+            nfloat GetCachedRowHeight( UITableView tableView, NSIndexPath indexPath )
             {
                 // Depending on the row, we either want the primary cell's height,
                 // or a standard row's height.
@@ -165,7 +165,7 @@ namespace iOS
                 return tableView.Frame.Height;
             }
 
-            public override UITableViewCell GetCell (UITableView tableView, MonoTouch.Foundation.NSIndexPath indexPath)
+            public override UITableViewCell GetCell (UITableView tableView, NSIndexPath indexPath)
             {
                 if ( indexPath.Row == 0 )
                 {
@@ -188,7 +188,7 @@ namespace iOS
                     cell.TableSource = this;
 
                     // take the parent table's width so we inherit its width constraint
-                    cell.Bounds = new RectangleF( cell.Bounds.X, cell.Bounds.Y, tableView.Bounds.Width, cell.Bounds.Height );
+                    cell.Bounds = new CGRect( cell.Bounds.X, cell.Bounds.Y, tableView.Bounds.Width, cell.Bounds.Height );
 
                     // configure the cell colors
                     cell.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
@@ -198,8 +198,8 @@ namespace iOS
                 cell.RowIndex = row;
                 cell.Button.SetTitle( Parent.LinkEntries[ row ].Title, UIControlState.Normal );
                 cell.Button.SizeToFit( );
-                cell.Button.Frame = new System.Drawing.RectangleF( (cell.Bounds.Width - cell.Button.Bounds.Width) / 2, 0, cell.Button.Bounds.Width, cell.Button.Bounds.Height );
-                cell.Seperator.Frame = new RectangleF( 0, cell.Button.Frame.Bottom - 1, cell.Bounds.Width, 1 );
+                cell.Button.Frame = new CGRect( (cell.Bounds.Width - cell.Button.Bounds.Width) / 2, 0, cell.Button.Bounds.Width, cell.Button.Bounds.Height );
+                cell.Seperator.Frame = new CGRect( 0, cell.Button.Frame.Bottom - 1, cell.Bounds.Width, 1 );
 
                 PendingCellHeight = cell.Button.Frame.Bottom;
 

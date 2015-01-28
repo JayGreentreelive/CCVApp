@@ -1,12 +1,11 @@
 using System;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using System.CodeDom.Compiler;
-using MonoTouch.CoreAnimation;
-using MonoTouch.CoreGraphics;
-using System.Drawing;
-using MonoTouch.CoreImage;
-using MonoTouch.AssetsLibrary;
+using CoreAnimation;
+using CoreGraphics;
+using CoreImage;
+using AssetsLibrary;
 using CCVApp.Shared.Config;
 
 namespace iOS
@@ -37,13 +36,13 @@ namespace iOS
         /// Gets or sets the crop view minimum position.
         /// </summary>
         /// <value>The crop view minimum position.</value>
-        PointF CropViewMinPos { get; set; }
+        CGPoint CropViewMinPos { get; set; }
 
         /// <summary>
         /// Gets or sets the crop view max position.
         /// </summary>
         /// <value>The crop view max position.</value>
-        PointF CropViewMaxPos { get; set; }
+        CGPoint CropViewMaxPos { get; set; }
 
         /// <summary>
         /// Scalar to convert from screen points to image pixels and back
@@ -55,7 +54,7 @@ namespace iOS
         /// movement when moving the CropView
         /// </summary>
         /// <value>The last tap position.</value>
-        PointF LastTapPos { get; set; }
+        CGPoint LastTapPos { get; set; }
 
         /// <summary>
         /// The resulting cropped image
@@ -134,7 +133,7 @@ namespace iOS
             ImageView = new UIImageView( );
             ImageView.BackgroundColor = UIColor.Black;
             ImageView.ContentMode = UIViewContentMode.ScaleAspectFit;
-            ImageView.Frame = new RectangleF( View.Frame.X, View.Frame.Y, View.Frame.Width, View.Frame.Height );
+            ImageView.Frame = new CGRect( View.Frame.X, View.Frame.Y, View.Frame.Width, View.Frame.Height );
 
             View.AddSubview( ImageView );
 
@@ -154,7 +153,7 @@ namespace iOS
             FullscreenBlocker = new UIView();
             FullscreenBlocker.BackgroundColor = UIColor.Black;
             FullscreenBlocker.Layer.Opacity = 0.00f;
-            FullscreenBlocker.Bounds = new RectangleF( 0, 0, 10000, 10000 );
+            FullscreenBlocker.Bounds = new CGRect( 0, 0, 10000, 10000 );
             FullscreenBlocker.AutoresizingMask = UIViewAutoresizing.None;
             View.AddSubview( FullscreenBlocker );
 
@@ -164,7 +163,7 @@ namespace iOS
 
 
             // create our bottom toolbar
-            UIToolbar toolbar = new UIToolbar( new RectangleF( 0, View.Bounds.Height - 40, View.Bounds.Width, 40 ) );
+            UIToolbar toolbar = new UIToolbar( new CGRect( 0, View.Bounds.Height - 40, View.Bounds.Width, 40 ) );
 
             // create the cancel button
             NSString cancelLabel = new NSString( ImageCropConfig.CropCancelButton_Text );
@@ -173,8 +172,8 @@ namespace iOS
             CancelButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Primary, ImageCropConfig.CropCancelButton_Size );
             CancelButton.SetTitle( cancelLabel.ToString( ), UIControlState.Normal );
 
-            SizeF buttonSize = cancelLabel.StringSize( CancelButton.Font );
-            CancelButton.Bounds = new RectangleF( 0, 0, buttonSize.Width, buttonSize.Height );
+            CGSize buttonSize = cancelLabel.StringSize( CancelButton.Font );
+            CancelButton.Bounds = new CGRect( 0, 0, buttonSize.Width, buttonSize.Height );
             CancelButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
                     // if cancel was pressed while editing, cancel this entire operation
@@ -199,7 +198,7 @@ namespace iOS
 
             // determine its dimensions
             buttonSize = editLabel.StringSize( EditButton.Font );
-            EditButton.Bounds = new RectangleF( 0, 0, buttonSize.Width, buttonSize.Height );
+            EditButton.Bounds = new CGRect( 0, 0, buttonSize.Width, buttonSize.Height );
             EditButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
                     if( Mode == CropMode.Previewing )
@@ -215,12 +214,12 @@ namespace iOS
                 };
 
             // create a container that will allow us to align the buttons
-            UIView buttonContainer = new UIView( new RectangleF( 0, View.Bounds.Height - 40, View.Bounds.Width, 40 ) );
+            UIView buttonContainer = new UIView( new CGRect( 0, View.Bounds.Height - 40, View.Bounds.Width, 40 ) );
             buttonContainer.AddSubview( EditButton );
             buttonContainer.AddSubview( CancelButton );
 
-            CancelButton.Frame = new RectangleF( (CancelButton.Frame.Width), 0, CancelButton.Frame.Width, CancelButton.Frame.Height );
-            EditButton.Frame = new RectangleF( buttonContainer.Frame.Width - ((EditButton.Frame.Width / 2) + (EditButton.Frame.Width * 2)), 0, EditButton.Frame.Width, EditButton.Frame.Height );
+            CancelButton.Frame = new CGRect( (CancelButton.Frame.Width), 0, CancelButton.Frame.Width, CancelButton.Frame.Height );
+            EditButton.Frame = new CGRect( buttonContainer.Frame.Width - ((EditButton.Frame.Width / 2) + (EditButton.Frame.Width * 2)), 0, EditButton.Frame.Width, EditButton.Frame.Height );
 
             toolbar.SetItems( new UIBarButtonItem[] { new UIBarButtonItem( buttonContainer ) }, false );
             View.AddSubview( toolbar );
@@ -245,17 +244,17 @@ namespace iOS
             float scaledImageHeight = (float)SourceImage.Size.Height * (1.0f / ScreenToImageScalar);
 
             // calculate the image's starting X / Y location
-            float imageStartX = ( ImageView.Frame.Width - scaledImageWidth ) / 2;
-            float imageStartY = ( ImageView.Frame.Height - scaledImageHeight ) / 2;
+            nfloat imageStartX = ( ImageView.Frame.Width - scaledImageWidth ) / 2;
+            nfloat imageStartY = ( ImageView.Frame.Height - scaledImageHeight ) / 2;
 
 
             // now calculate the size of the cropper
-            float cropperWidth = scaledImageWidth;
-            float cropperHeight = scaledImageHeight;
+            nfloat cropperWidth = scaledImageWidth;
+            nfloat cropperHeight = scaledImageHeight;
 
 
             // get the image's aspect ratio so we can shrink down the cropper correctly
-            float aspectRatio = SourceImage.Size.Width / SourceImage.Size.Height;
+            nfloat aspectRatio = SourceImage.Size.Width / SourceImage.Size.Height;
 
             // if the cropper should be wider than it is tall (or square)
             if ( CropAspectRatio <= 1.0f )
@@ -284,25 +283,25 @@ namespace iOS
             }
 
             // set the crop bounds
-            CropView.Frame = new RectangleF( View.Frame.X, View.Frame.Y, cropperWidth, cropperHeight );
+            CropView.Frame = new CGRect( View.Frame.X, View.Frame.Y, cropperWidth, cropperHeight );
 
 
             // Now set the min / max movement bounds for the cropper
-            CropViewMinPos = new PointF( imageStartX, imageStartY );
+            CropViewMinPos = new CGPoint( imageStartX, imageStartY );
 
-            CropViewMaxPos = new PointF( ( imageStartX + scaledImageWidth ) - cropperWidth,
+            CropViewMaxPos = new CGPoint( ( imageStartX + scaledImageWidth ) - cropperWidth,
                                          ( imageStartY + scaledImageHeight ) - cropperHeight );
 
             // center the cropview
-            CropView.Layer.Position = new PointF( 0, 0 );
-            MoveCropView( new PointF( ImageView.Bounds.Width / 2, ImageView.Bounds.Height / 2 ) );
+            CropView.Layer.Position = new CGPoint( 0, 0 );
+            MoveCropView( new CGPoint( ImageView.Bounds.Width / 2, ImageView.Bounds.Height / 2 ) );
 
 
 
             // setup the mask that will reveal only the part of the image that will be cropped
             FullscreenBlocker.Layer.Opacity = 0.00f;
             UIBezierPath viewFill = UIBezierPath.FromRect( FullscreenBlocker.Bounds );
-            UIBezierPath cropMask = UIBezierPath.FromRoundedRect( new RectangleF( ( FullscreenBlocker.Bounds.Width - CropView.Bounds.Width ) / 2, 
+            UIBezierPath cropMask = UIBezierPath.FromRoundedRect( new CGRect( ( FullscreenBlocker.Bounds.Width - CropView.Bounds.Width ) / 2, 
                                                                                   ( FullscreenBlocker.Bounds.Height - CropView.Bounds.Height ) / 2, 
                                                                                     CropView.Bounds.Width, 
                                                                                     CropView.Bounds.Height ), 4 );
@@ -325,12 +324,12 @@ namespace iOS
         {
             // animate in the blocker
             UIView.Animate( .5f, 0, UIViewAnimationOptions.CurveEaseInOut, 
-                new NSAction( delegate
+                new Action( delegate
                     { 
                         FullscreenBlocker.Layer.Opacity = visible == true ? .60f : 0.00f;
                         CropView.Layer.Opacity = visible == true ? 1.00f : 0.00f;
                     } )
-                , new NSAction( delegate
+                , new Action( delegate
                     { 
                     } ) );
         }
@@ -359,9 +358,9 @@ namespace iOS
                 UITouch touch = touches.AnyObject as UITouch;
                 if ( touch != null )
                 {
-                    PointF touchPoint = touch.LocationInView( View );
+                    CGPoint touchPoint = touch.LocationInView( View );
 
-                    PointF delta = new PointF( touchPoint.X - LastTapPos.X, touchPoint.Y - LastTapPos.Y );
+                    CGPoint delta = new CGPoint( touchPoint.X - LastTapPos.X, touchPoint.Y - LastTapPos.Y );
 
                     MoveCropView( delta );
 
@@ -370,17 +369,17 @@ namespace iOS
             }
         }
 
-        void MoveCropView( PointF delta )
+        void MoveCropView( CGPoint delta )
         {
             // update the crop view by how much it should be moved
-            float xPos = CropView.Frame.X + delta.X;
-            float yPos = CropView.Frame.Y + delta.Y;
+            float xPos = (float) (CropView.Frame.X + delta.X);
+            float yPos = (float) (CropView.Frame.Y + delta.Y);
 
             // clamp to valid bounds
-            xPos = Math.Max( CropViewMinPos.X, Math.Min( xPos, CropViewMaxPos.X ) );
-            yPos = Math.Max( CropViewMinPos.Y, Math.Min( yPos, CropViewMaxPos.Y ) );
+            xPos = (float) Math.Max( CropViewMinPos.X, Math.Min( xPos, CropViewMaxPos.X ) );
+            yPos = (float) Math.Max( CropViewMinPos.Y, Math.Min( yPos, CropViewMaxPos.Y ) );
 
-            CropView.Frame = new RectangleF( xPos, yPos, CropView.Frame.Width, CropView.Frame.Height );
+            CropView.Frame = new CGRect( xPos, yPos, CropView.Frame.Width, CropView.Frame.Height );
 
             // update the position of the blocking view
             FullscreenBlocker.Center = CropView.Layer.Position;
@@ -410,13 +409,13 @@ namespace iOS
                         // Then we need to reverse the animation we played to crop the image.
                         UIView.Animate( .5f, 0, UIViewAnimationOptions.CurveEaseInOut, 
                             // ANIMATING
-                            new NSAction( delegate
+                            new Action( delegate
                                 { 
                                     // animate the cropped image down to its original size.
                                     ImageView.Frame = CropView.Frame;
                                 } )
                             // DONE ANIMATING
-                            , new NSAction( delegate
+                            , new Action( delegate
                                 { 
                                     // done, so now set the original image (which will
                                     // seamlessly replace the cropped image)
@@ -439,7 +438,7 @@ namespace iOS
                 case CropMode.Previewing:
                 {
                     // create the cropped image
-                    CroppedImage = CropImage( SourceImage, new System.Drawing.RectangleF( CropView.Frame.X - CropViewMinPos.X, 
+                    CroppedImage = CropImage( SourceImage, new CGRect( CropView.Frame.X - CropViewMinPos.X, 
                                                                                           CropView.Frame.Y - CropViewMinPos.Y, 
                                                                                           CropView.Frame.Width , 
                                                                                           CropView.Frame.Height ) );
@@ -448,7 +447,7 @@ namespace iOS
                     // Kick off an animation that will simulate cropping and scaling up the image.
                     UIView.Animate( .5f, 0, UIViewAnimationOptions.CurveEaseInOut, 
                         // ANIMATING
-                        new NSAction( delegate
+                        new Action( delegate
                             { 
                                 // animate in the blocker fully, which will black out the non-cropped parts of the image.
                                 FullscreenBlocker.Layer.Opacity = 1.00f;
@@ -457,7 +456,7 @@ namespace iOS
                                 CropView.Layer.Opacity = 0.00f;
                             } )
                         // DONE ANIMATING
-                        , new NSAction( delegate
+                        , new Action( delegate
                             { 
                                 // set the scaled cropped image, seamlessly replacing full image
                                 ImageView.Frame = CropView.Frame;
@@ -469,7 +468,7 @@ namespace iOS
 
                                 // and kick off a final (chained) animation that scales UP the cropped image to fill the viewport. 
                                 UIView.Animate( .5f, 0, UIViewAnimationOptions.CurveEaseInOut, 
-                                    new NSAction( delegate
+                                    new Action( delegate
                                         { 
                                             ImageView.Frame = View.Frame;
                                         } ), null );
@@ -481,14 +480,14 @@ namespace iOS
             Mode = mode;
         }
 
-        UIImage CropImage( UIImage sourceImage, RectangleF cropDimension )
+        UIImage CropImage( UIImage sourceImage, CGRect cropDimension )
         {
             // step one, transform the crop region into image space.
             // (So pixelX is a pixel in the actual image, not the scaled screen)
 
             // convert our position on screen to where it should be in the image
-            float pixelX = cropDimension.X * ScreenToImageScalar;
-            float pixelY = cropDimension.Y * ScreenToImageScalar;
+            float pixelX = (float) (cropDimension.X * ScreenToImageScalar);
+            float pixelY = (float) (cropDimension.Y * ScreenToImageScalar);
 
             // same for height, since the image was scaled down to fit the screen.
             float width = (float) cropDimension.Width * ScreenToImageScalar;
@@ -539,12 +538,12 @@ namespace iOS
             CGImage rotatedCGImage = ciContext.CreateCGImage( ciCorrectedRotatedImage, ciCorrectedRotatedImage.Extent );
 
             // now the image is properly orientated, so we can crop it.
-            RectangleF cropRegion = new RectangleF( pixelX, pixelY, width, height );
+            CGRect cropRegion = new CGRect( pixelX, pixelY, width, height );
             CGImage croppedImage = rotatedCGImage.WithImageInRect( cropRegion );
             return new UIImage( croppedImage );
         }
 
-        CGAffineTransform GetImageTransformAboutCenter( float angleDegrees, SizeF imageSize )
+        CGAffineTransform GetImageTransformAboutCenter( float angleDegrees, CGSize imageSize )
         {
             // Create a tranform that will rotate our image about its center
             CGAffineTransform transform = CGAffineTransform.MakeIdentity( );
@@ -555,7 +554,7 @@ namespace iOS
 
             // now we need to concat on a post-transform that will put the image's pivot back at the top left.
             // get the image's dimensions transformed
-            RectangleF transformedImageRect = transform.TransformRect( new RectangleF( 0, 0, imageSize.Width, imageSize.Height ) );
+            CGRect transformedImageRect = transform.TransformRect( new CGRect( 0, 0, imageSize.Width, imageSize.Height ) );
 
             // our post transform simply translates the image back
             CGAffineTransform postTransform = CGAffineTransform.MakeIdentity( );

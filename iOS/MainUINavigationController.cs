@@ -1,11 +1,10 @@
 using System;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using System.CodeDom.Compiler;
-using System.Drawing;
+using CoreGraphics;
 using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
-using MonoTouch.CoreGraphics;
 
 namespace iOS
 {
@@ -39,7 +38,7 @@ namespace iOS
         /// <summary>
         /// Tracks the last position of panning so delta can be applied
         /// </summary>
-        PointF PanLastPos { get; set; }
+        CGPoint PanLastPos { get; set; }
 
         /// <summary>
         /// Direction we're currently panning. Important for syncing the card positions
@@ -101,11 +100,11 @@ namespace iOS
 
 
             UIImage solidColor = new UIImage();
-            UIGraphics.BeginImageContext( new SizeF( 1, 1 ) );
+            UIGraphics.BeginImageContext( new CGSize( 1, 1 ) );
             CGContext context = UIGraphics.GetCurrentContext( );
 
-            context.SetFillColorWithColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.PrimaryNavBarBackgroundColor ).CGColor );
-            context.FillRect( new RectangleF( 0, 0, 1, 1 ) );
+            context.SetFillColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.PrimaryNavBarBackgroundColor ).CGColor );
+            context.FillRect( new CGRect( 0, 0, 1, 1 ) );
 
             solidColor = UIGraphics.GetImageFromCurrentImageContext( );
 
@@ -141,7 +140,7 @@ namespace iOS
                 case UIGestureRecognizerState.Began:
                 {
                     // when panning begins, clear our pan values
-                    PanLastPos = new PointF( 0, 0 );
+                    PanLastPos = new CGPoint( 0, 0 );
                     PanDir = 0;
                     break;
                 }
@@ -149,7 +148,7 @@ namespace iOS
                 case UIGestureRecognizerState.Changed:
                 {
                     // use the velocity to determine the direction of the pan
-                    PointF currVelocity = obj.VelocityInView( View );
+                    CGPoint currVelocity = obj.VelocityInView( View );
                     if( currVelocity.X < 0 )
                     {
                         PanDir = -1;
@@ -160,8 +159,8 @@ namespace iOS
                     }
 
                     // Update the positions of the cards
-                    PointF absPan = obj.TranslationInView( View );
-                    PointF delta = new PointF( absPan.X - PanLastPos.X, 0 );
+                    CGPoint absPan = obj.TranslationInView( View );
+                    CGPoint delta = new CGPoint( absPan.X - PanLastPos.X, 0 );
                     PanLastPos = absPan;
 
                     TryPanSpringboard( delta );
@@ -170,10 +169,10 @@ namespace iOS
 
                 case UIGestureRecognizerState.Ended:
                 {
-                    PointF currVelocity = obj.VelocityInView( View );
+                    CGPoint currVelocity = obj.VelocityInView( View );
 
-                    float restingPoint = (View.Layer.Bounds.Width / 2);
-                    float currX = View.Layer.Position.X - restingPoint;
+                    float restingPoint = (float) (View.Layer.Bounds.Width / 2);
+                    float currX = (float) (View.Layer.Position.X - restingPoint);
 
                     // if they slide at least a third of the way, allow a switch
                     float toggleThreshold = (PrimaryContainerConfig.SlideAmount / 3);
@@ -249,16 +248,16 @@ namespace iOS
             }
         }
 
-        public void TryPanSpringboard( PointF delta )
+        public void TryPanSpringboard( CGPoint delta )
         {
             // make sure the springboard is clamped
-            float xPos = View.Layer.Position.X + delta.X;
+            float xPos = (float) (View.Layer.Position.X + delta.X);
 
-            float viewHalfWidth = ( View.Layer.Bounds.Width / 2 );
+            float viewHalfWidth = (float) ( View.Layer.Bounds.Width / 2 );
 
             xPos = Math.Max( viewHalfWidth, Math.Min( xPos, PrimaryContainerConfig.SlideAmount + viewHalfWidth ) );
 
-            View.Layer.Position = new PointF( xPos, View.Layer.Position.Y );
+            View.Layer.Position = new CGPoint( xPos, View.Layer.Position.Y );
 
             float percentDark = Math.Max( 0, Math.Min( (xPos - viewHalfWidth) / PrimaryContainerConfig.SlideAmount, PrimaryContainerConfig.SlideDarkenAmount ) );
             DarkPanel.Layer.Opacity = percentDark;
@@ -336,26 +335,26 @@ namespace iOS
 
                     // Animate the front panel out
                     UIView.Animate( PrimaryContainerConfig.SlideRate, 0, UIViewAnimationOptions.CurveEaseInOut, 
-                        new NSAction( 
+                        new Action( 
                             delegate 
                             { 
                                 float endPos = 0.0f;
                                 if( wantReveal == true )
                                 {
-                                    endPos = PrimaryContainerConfig.SlideAmount + (View.Layer.Bounds.Width / 2);
+                                    endPos = (float) (PrimaryContainerConfig.SlideAmount + (View.Layer.Bounds.Width / 2));
                                     DarkPanel.Layer.Opacity = PrimaryContainerConfig.SlideDarkenAmount;
                                 }
                                 else
                                 {
-                                    endPos = (View.Layer.Bounds.Width / 2);
+                                    endPos = (float) (View.Layer.Bounds.Width / 2);
                                     DarkPanel.Layer.Opacity = 0.0f;
                                 }
 
-                                float moveAmount = endPos - View.Layer.Position.X;
-                                View.Layer.Position = new PointF( View.Layer.Position.X + moveAmount, View.Layer.Position.Y );
+                                float moveAmount = (float) (endPos - View.Layer.Position.X);
+                                View.Layer.Position = new CGPoint( View.Layer.Position.X + moveAmount, View.Layer.Position.Y );
                             })
 
-                        , new NSAction(
+                        , new Action(
                             delegate
                             {
                                 Animating = false;

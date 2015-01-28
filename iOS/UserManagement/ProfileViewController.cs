@@ -1,17 +1,18 @@
 using System;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using System.CodeDom.Compiler;
 using Rock.Mobile.Network;
 using CCVApp.Shared.Network;
-using MonoTouch.CoreAnimation;
-using System.Drawing;
+using CoreAnimation;
+using CoreGraphics;
 using CCVApp.Shared.Config;
 using CCVApp.Shared.Strings;
 using Rock.Mobile.PlatformUI;
 using System.Collections.Generic;
 using Rock.Mobile.Util.Strings;
 using Rock.Mobile.PlatformSpecific.iOS.UI;
+using Rock.Mobile.PlatformSpecific.Util;
 
 namespace iOS
 {
@@ -129,7 +130,7 @@ namespace iOS
                         initialDate = DateTime.Parse( BirthdateText.Text );
                     }
 
-                    ((UIDatePicker)BirthdatePicker.Picker).Date = initialDate;
+                    ((UIDatePicker)BirthdatePicker.Picker).Date = initialDate.DateTimeToNSDate( );
                     BirthdatePicker.TogglePicker( true );
                 };
             ControlStyling.StyleTextField( BirthdateText, ProfileStrings.BirthdatePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
@@ -158,11 +159,11 @@ namespace iOS
             UIDatePicker datePicker = new UIDatePicker();
             datePicker.SetValueForKey( UIColor.White, new NSString( "textColor" ) );
             datePicker.Mode = UIDatePickerMode.Date;
-            datePicker.MinimumDate = new DateTime( 1900, 1, 1 );
-            datePicker.MaximumDate = DateTime.Now;
+            datePicker.MinimumDate = new DateTime( 1900, 1, 1 ).DateTimeToNSDate( );
+            datePicker.MaximumDate = DateTime.Now.DateTimeToNSDate( );
             datePicker.ValueChanged += (object sender, EventArgs e ) =>
             {
-                DateTime pickerDate = ((UIDatePicker) sender).Date;
+                NSDate pickerDate = ((UIDatePicker) sender).Date;
                 BirthdateText.Text = string.Format( "{0:MMMMM dd yyyy}", pickerDate );
             };
             BirthdatePicker.SetPicker( datePicker );
@@ -253,24 +254,24 @@ namespace iOS
         {
             base.ViewDidLayoutSubviews();
 
-            ScrollView.ContentSize = new SizeF( 0, View.Bounds.Height + ( View.Bounds.Height * .25f ) );
+            ScrollView.ContentSize = new CGSize( 0, View.Bounds.Height + ( View.Bounds.Height * .25f ) );
 
             // setup the header shadow
             UIBezierPath shadowPath = UIBezierPath.FromRect( HeaderView.Bounds );
             HeaderView.Layer.MasksToBounds = false;
             HeaderView.Layer.ShadowColor = UIColor.Black.CGColor;
-            HeaderView.Layer.ShadowOffset = new System.Drawing.SizeF( 0.0f, .0f );
+            HeaderView.Layer.ShadowOffset = new CGSize( 0.0f, .0f );
             HeaderView.Layer.ShadowOpacity = .23f;
             HeaderView.Layer.ShadowPath = shadowPath.CGPath;
 
-            LogoView.Layer.Position = new System.Drawing.PointF( HeaderView.Bounds.Width / 2, HeaderView.Bounds.Height / 2 );
+            LogoView.Layer.Position = new CGPoint( HeaderView.Bounds.Width / 2, HeaderView.Bounds.Height / 2 );
         }
 
         public override void ViewWillAppear(bool animated)
         {
             base.ViewWillAppear(animated);
 
-            ScrollView.ContentOffset = PointF.Empty;
+            ScrollView.ContentOffset = CGPoint.Empty;
 
             // set values
             NickNameText.Text = RockMobileUser.Instance.Person.NickName;
@@ -422,34 +423,34 @@ namespace iOS
         {
             public ProfileViewController Parent { get; set; }
 
-            public override int GetComponentCount(UIPickerView picker)
+            public override nint GetComponentCount(UIPickerView picker)
             {
                 return 1;
             }
 
-            public override int GetRowsInComponent(UIPickerView picker, int component)
+            public override nint GetRowsInComponent(UIPickerView picker, nint component)
             {
                 return RockGeneralData.Instance.Data.Genders.Count - 1;
             }
 
-            public override string GetTitle(UIPickerView picker, int row, int component)
+            public override string GetTitle(UIPickerView picker, nint row, nint component)
             {
-                return RockGeneralData.Instance.Data.Genders[ row + 1 ];
+                return RockGeneralData.Instance.Data.Genders[ (int) (row + 1) ];
             }
 
-            public override void Selected(UIPickerView picker, int row, int component)
+            public override void Selected(UIPickerView picker, nint row, nint component)
             {
-                Parent.PickerSelected( row + 1, component );
+                Parent.PickerSelected( (int) (row + 1), (int) component );
             }
 
-            public override UIView GetView(UIPickerView picker, int row, int component, UIView view)
+            public override UIView GetView(UIPickerView picker, nint row, nint component, UIView view)
             {
                 UILabel label = view as UILabel;
                 if ( label == null )
                 {
                     label = new UILabel();
                     label.TextColor = UIColor.White;
-                    label.Text = RockGeneralData.Instance.Data.Genders[ row + 1 ];
+                    label.Text = RockGeneralData.Instance.Data.Genders[ (int) (row + 1) ];
                     label.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
                     label.SizeToFit( );
                 }

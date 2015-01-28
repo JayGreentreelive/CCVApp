@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using System.Diagnostics;
 
@@ -12,7 +12,7 @@ namespace CCVApp.Shared
             {
                 get
                 {
-                    return "Alpha (Build 8)";
+                    return "Alpha (Build 9)";
                 }
             }
         }

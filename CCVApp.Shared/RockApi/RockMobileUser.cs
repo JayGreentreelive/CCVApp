@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Rock.Client;
 using Newtonsoft.Json;
 using System.IO;

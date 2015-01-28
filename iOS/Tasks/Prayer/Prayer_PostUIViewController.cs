@@ -1,10 +1,10 @@
 using System;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using System.CodeDom.Compiler;
 using CCVApp.Shared.Strings;
 using Rock.Mobile.PlatformUI;
-using System.Drawing;
+using CoreGraphics;
 using CCVApp.Shared.Config;
 
 namespace iOS

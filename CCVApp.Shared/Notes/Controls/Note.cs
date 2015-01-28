@@ -1,13 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Xml;
-using System.Drawing;
 using System.IO;
 
 using CCVApp.Shared.Notes.Styles;
 using CCVApp.Shared.Notes.Model;
 using Newtonsoft.Json;
 using Rock.Mobile.PlatformUI;
+using System.Drawing;
 
 namespace CCVApp
 {

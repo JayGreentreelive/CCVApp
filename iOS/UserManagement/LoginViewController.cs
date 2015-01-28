@@ -1,6 +1,6 @@
 using System;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using System.CodeDom.Compiler;
 using Rock.Mobile.Network;
 using CCVApp.Shared.Network;
@@ -143,12 +143,12 @@ namespace iOS
             UIBezierPath shadowPath = UIBezierPath.FromRect( HeaderView.Bounds );
             HeaderView.Layer.MasksToBounds = false;
             HeaderView.Layer.ShadowColor = UIColor.Black.CGColor;
-            HeaderView.Layer.ShadowOffset = new System.Drawing.SizeF( 0.0f, .0f );
+            HeaderView.Layer.ShadowOffset = new CoreGraphics.CGSize( 0.0f, .0f );
             HeaderView.Layer.ShadowOpacity = .23f;
             HeaderView.Layer.ShadowPath = shadowPath.CGPath;
 
-            LogoView.Layer.Position = new System.Drawing.PointF( HeaderView.Bounds.Width / 2, HeaderView.Bounds.Height / 2 );
-            FBImageView.Layer.Position = new System.Drawing.PointF( FacebookLogin.Bounds.Width / 2, FacebookLogin.Bounds.Height / 2 );
+            LogoView.Layer.Position = new CoreGraphics.CGPoint( HeaderView.Bounds.Width / 2, HeaderView.Bounds.Height / 2 );
+            FBImageView.Layer.Position = new CoreGraphics.CGPoint( FacebookLogin.Bounds.Width / 2, FacebookLogin.Bounds.Height / 2 );
         }
 
         public override void ViewWillAppear(bool animated)
@@ -526,13 +526,13 @@ namespace iOS
         void FadeLoginResult( bool fadeIn )
         {
             UIView.Animate( .33f, 0, UIViewAnimationOptions.CurveEaseInOut, 
-                new NSAction( 
+                new Action( 
                     delegate 
                     { 
                         LoginResultLayer.Layer.Opacity = fadeIn == true ? 1.00f : 0.00f;
                     })
 
-                , new NSAction(
+                , new Action(
                     delegate
                     {
                     })

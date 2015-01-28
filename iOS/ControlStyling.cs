@@ -1,8 +1,8 @@
-﻿using System;
-using MonoTouch.UIKit;
+using System;
+using UIKit;
 using Rock.Mobile.PlatformUI;
 using CCVApp.Shared.Config;
-using MonoTouch.Foundation;
+using Foundation;
 
 namespace iOS
 {

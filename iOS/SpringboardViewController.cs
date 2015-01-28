@@ -1,13 +1,13 @@
 using System;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using System.CodeDom.Compiler;
-using MonoTouch.CoreAnimation;
-using System.Drawing;
+using CoreAnimation;
+using CoreGraphics;
 using System.Collections.Generic;
 using Rock.Mobile.Network;
 using CCVApp.Shared.Network;
-using MonoTouch.AssetsLibrary;
+using AssetsLibrary;
 using System.IO;
 using CCVApp.Shared.Config;
 using CCVApp.Shared.Strings;
@@ -93,7 +93,7 @@ namespace iOS
 
                 // Create the button
                 Button = new UIButton( UIButtonType.Custom );
-                Button.Layer.AnchorPoint = PointF.Empty;
+                Button.Layer.AnchorPoint = CGPoint.Empty;
                 Button.BackgroundColor = UIColor.Clear;
                 Button.TouchUpInside += (object sender, EventArgs e) => 
                     {
@@ -105,11 +105,11 @@ namespace iOS
                 // position the controls
                 Button.Bounds = BackingView.Bounds;
 
-                LogoView.Layer.Position = new PointF( SpringboardConfig.Element_LogoOffsetX, BackingView.Frame.Height / 2 );
+                LogoView.Layer.Position = new CGPoint( SpringboardConfig.Element_LogoOffsetX, BackingView.Frame.Height / 2 );
 
-                TextLabel.Layer.Position = new PointF( SpringboardConfig.Element_LabelOffsetX + ( TextLabel.Frame.Width / 2 ), BackingView.Frame.Height / 2 );
+                TextLabel.Layer.Position = new CGPoint( SpringboardConfig.Element_LabelOffsetX + ( TextLabel.Frame.Width / 2 ), BackingView.Frame.Height / 2 );
 
-                Seperator.Frame = new RectangleF( 0, 0, Button.Frame.Width, 1.0f );
+                Seperator.Frame = new CGRect( 0, 0, Button.Frame.Width, 1.0f );
             }
 
             public void Activate( )
@@ -273,12 +273,12 @@ namespace iOS
             BottomSeperator = new UIView();
             BottomSeperator.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
             View.AddSubview( BottomSeperator );
-            BottomSeperator.Frame = new RectangleF( 0, 0, View.Frame.Width, 1.0f );
+            BottomSeperator.Frame = new CGRect( 0, 0, View.Frame.Width, 1.0f );
 
 
             // set the profile image mask so it's circular
             CALayer maskLayer = new CALayer();
-            maskLayer.AnchorPoint = new PointF( 0, 0 );
+            maskLayer.AnchorPoint = new CGPoint( 0, 0 );
             maskLayer.Bounds = EditPictureButton.Layer.Bounds;
             maskLayer.CornerRadius = EditPictureButton.Bounds.Width / 2;
             maskLayer.BackgroundColor = UIColor.Black.CGColor;
@@ -298,9 +298,9 @@ namespace iOS
             ProfileImageView = new UIImageView( );
             ProfileImageView.ContentMode = UIViewContentMode.ScaleAspectFit;
 
-            ProfileImageView.Layer.AnchorPoint = PointF.Empty;
+            ProfileImageView.Layer.AnchorPoint = CGPoint.Empty;
             ProfileImageView.Bounds = EditPictureButton.Bounds;
-            ProfileImageView.Layer.Position = PointF.Empty;
+            ProfileImageView.Layer.Position = CGPoint.Empty;
             EditPictureButton.AddSubview( ProfileImageView );
 
             EditPictureButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Primary, SpringboardConfig.ProfileSymbolFontSize );
@@ -555,35 +555,35 @@ namespace iOS
         void AdjustSpringboardLayout( )
         {
             // position the login button
-            EditPictureButton.Layer.AnchorPoint = PointF.Empty;
-            EditPictureButton.Layer.Position = new PointF( ( PrimaryContainerConfig.SlideAmount - EditPictureButton.Bounds.Width ) / 2, View.Frame.Height * .02f );
+            EditPictureButton.Layer.AnchorPoint = CGPoint.Empty;
+            EditPictureButton.Layer.Position = new CGPoint( ( PrimaryContainerConfig.SlideAmount - EditPictureButton.Bounds.Width ) / 2, View.Frame.Height * .02f );
 
-            NewsElement.Layer.AnchorPoint = PointF.Empty;
-            NewsElement.Layer.Position = new PointF( 0, View.Frame.Height * .40f );
+            NewsElement.Layer.AnchorPoint = CGPoint.Empty;
+            NewsElement.Layer.Position = new CGPoint( 0, View.Frame.Height * .40f );
 
-            ConnectElement.Layer.AnchorPoint = PointF.Empty;
-            ConnectElement.Layer.Position = new PointF( 0, NewsElement.Frame.Bottom );
+            ConnectElement.Layer.AnchorPoint = CGPoint.Empty;
+            ConnectElement.Layer.Position = new CGPoint( 0, NewsElement.Frame.Bottom );
 
-            MessagesElement.Layer.AnchorPoint = PointF.Empty;
-            MessagesElement.Layer.Position = new PointF( 0, ConnectElement.Frame.Bottom );
+            MessagesElement.Layer.AnchorPoint = CGPoint.Empty;
+            MessagesElement.Layer.Position = new CGPoint( 0, ConnectElement.Frame.Bottom );
 
-            PrayerElement.Layer.AnchorPoint = PointF.Empty;
-            PrayerElement.Layer.Position = new PointF( 0, MessagesElement.Frame.Bottom );
+            PrayerElement.Layer.AnchorPoint = CGPoint.Empty;
+            PrayerElement.Layer.Position = new CGPoint( 0, MessagesElement.Frame.Bottom );
 
-            GiveElement.Layer.AnchorPoint = PointF.Empty;
-            GiveElement.Layer.Position = new PointF( 0, PrayerElement.Frame.Bottom );
+            GiveElement.Layer.AnchorPoint = CGPoint.Empty;
+            GiveElement.Layer.Position = new CGPoint( 0, PrayerElement.Frame.Bottom );
 
-            MoreElement.Layer.AnchorPoint = PointF.Empty;
-            MoreElement.Layer.Position = new PointF( 0, GiveElement.Frame.Bottom );
+            MoreElement.Layer.AnchorPoint = CGPoint.Empty;
+            MoreElement.Layer.Position = new CGPoint( 0, GiveElement.Frame.Bottom );
 
-            BottomSeperator.Layer.AnchorPoint = PointF.Empty;
-            BottomSeperator.Layer.Position = new PointF( 0, MoreElement.Frame.Bottom );
+            BottomSeperator.Layer.AnchorPoint = CGPoint.Empty;
+            BottomSeperator.Layer.Position = new CGPoint( 0, MoreElement.Frame.Bottom );
 
-            CampusButton.Layer.AnchorPoint = PointF.Empty;
-            CampusButton.Layer.Position = new PointF( 5, View.Frame.Height - CampusButton.Frame.Height - 2 );
+            CampusButton.Layer.AnchorPoint = CGPoint.Empty;
+            CampusButton.Layer.Position = new CGPoint( 5, View.Frame.Height - CampusButton.Frame.Height - 2 );
 
-            SettingsButton.Layer.AnchorPoint = PointF.Empty;
-            SettingsButton.Layer.Position = new PointF( PrimaryContainerConfig.SlideAmount - SettingsButton.Bounds.Width, View.Frame.Height - SettingsButton.Frame.Height - 2 );
+            SettingsButton.Layer.AnchorPoint = CGPoint.Empty;
+            SettingsButton.Layer.Position = new CGPoint( PrimaryContainerConfig.SlideAmount - SettingsButton.Bounds.Width, View.Frame.Height - SettingsButton.Frame.Height - 2 );
         }
 
         protected void UpdateLoginState( )
@@ -608,30 +608,30 @@ namespace iOS
             UserNameField.SizeToFit( );
 
             // center the welcome and name labels within the available Springboard width
-            float totalNameWidth = WelcomeField.Bounds.Width + UserNameField.Bounds.Width;
-            float totalNameHeight = Math.Max( WelcomeField.Bounds.Height, UserNameField.Bounds.Height );
+            float totalNameWidth = (float) (WelcomeField.Bounds.Width + UserNameField.Bounds.Width);
+            float totalNameHeight = Math.Max( (float) WelcomeField.Bounds.Height, (float) UserNameField.Bounds.Height );
 
-            WelcomeField.Layer.AnchorPoint = PointF.Empty;
-            WelcomeField.Layer.Position = new PointF( ( PrimaryContainerConfig.SlideAmount - totalNameWidth ) / 2, EditPictureButton.Frame.Bottom + 10 );
-            WelcomeField.Bounds = new RectangleF( 0, 0, WelcomeField.Bounds.Width, totalNameHeight );
+            WelcomeField.Layer.AnchorPoint = CGPoint.Empty;
+            WelcomeField.Layer.Position = new CGPoint( ( PrimaryContainerConfig.SlideAmount - totalNameWidth ) / 2, EditPictureButton.Frame.Bottom + 10 );
+            WelcomeField.Bounds = new CGRect( 0, 0, WelcomeField.Bounds.Width, totalNameHeight );
 
-            UserNameField.Layer.AnchorPoint = PointF.Empty;
-            UserNameField.Layer.Position = new PointF( WelcomeField.Frame.Right, WelcomeField.Frame.Y );
-            UserNameField.Bounds = new RectangleF( 0, 0, UserNameField.Bounds.Width, totalNameHeight );
+            UserNameField.Layer.AnchorPoint = CGPoint.Empty;
+            UserNameField.Layer.Position = new CGPoint( WelcomeField.Frame.Right, WelcomeField.Frame.Y );
+            UserNameField.Bounds = new CGRect( 0, 0, UserNameField.Bounds.Width, totalNameHeight );
 
-            ViewProfileLabel.Layer.AnchorPoint = PointF.Empty;
+            ViewProfileLabel.Layer.AnchorPoint = CGPoint.Empty;
             ViewProfileLabel.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Light, ControlStylingConfig.Small_FontSize );
             ViewProfileLabel.SizeToFit( );
             ViewProfileLabel.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
-            ViewProfileLabel.Layer.Position = new PointF( EditPictureButton.Layer.Position.X + ((EditPictureButton.Bounds.Width - ViewProfileLabel.Bounds.Width) / 2), WelcomeField.Frame.Bottom );
+            ViewProfileLabel.Layer.Position = new CGPoint( EditPictureButton.Layer.Position.X + ((EditPictureButton.Bounds.Width - ViewProfileLabel.Bounds.Width) / 2), WelcomeField.Frame.Bottom );
 
-            float totalHeight = totalNameHeight + ViewProfileLabel.Bounds.Height;
+            float totalHeight = (float) (totalNameHeight + ViewProfileLabel.Bounds.Height);
 
             // wrap the view profile button around the entire "Welcome: Name" phrase
             ViewProfileButton.SetTitle( "", UIControlState.Normal );
-            ViewProfileButton.Layer.AnchorPoint = PointF.Empty;
-            ViewProfileButton.Layer.Position = new PointF( 0, WelcomeField.Frame.Y );
-            ViewProfileButton.Bounds = new RectangleF( 0, 0, View.Frame.Width, totalHeight );
+            ViewProfileButton.Layer.AnchorPoint = CGPoint.Empty;
+            ViewProfileButton.Layer.Position = new CGPoint( 0, WelcomeField.Frame.Y );
+            ViewProfileButton.Bounds = new CGRect( 0, 0, View.Frame.Width, totalHeight );
 
             UpdateProfilePic( );
         }
@@ -716,7 +716,7 @@ namespace iOS
             NavViewController.DidEnterBackground( );
 
             // request quick backgrounding so we can save objects
-            int taskID = UIApplication.SharedApplication.BeginBackgroundTask( () => {});
+            nint taskID = UIApplication.SharedApplication.BeginBackgroundTask( () => {});
 
             RockApi.Instance.SaveObjectsToDevice( );
 

@@ -1,10 +1,10 @@
 using System;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using CCVApp.Shared.Network;
-using System.Drawing;
+using CoreGraphics;
 using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
 
@@ -21,7 +21,7 @@ namespace iOS
 
             string cellIdentifier = "TableCell";
 
-            float PendingCellHeight { get; set; }
+            nfloat PendingCellHeight { get; set; }
 
             public TableSource (NewsMainUIViewController parent, List<RockNews> newsList, List<UIImage> newsImage )
             {
@@ -32,7 +32,7 @@ namespace iOS
                 NewsImage = newsImage;
             }
 
-            public override int RowsInSection (UITableView tableview, int section)
+            public override nint RowsInSection (UITableView tableview, nint section)
             {
                 return News.Count;
             }
@@ -45,7 +45,7 @@ namespace iOS
                 Parent.RowClicked( indexPath.Row );
             }
 
-            public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
+            public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
             {
                 // check the height of the image and let that be the height for this row
                 if ( PendingCellHeight > 0 )
@@ -58,7 +58,7 @@ namespace iOS
                 }
             }
 
-            public override UITableViewCell GetCell (UITableView tableView, MonoTouch.Foundation.NSIndexPath indexPath)
+            public override UITableViewCell GetCell (UITableView tableView, NSIndexPath indexPath)
             {
                 UITableViewCell cell = tableView.DequeueReusableCell (cellIdentifier);
                 // if there are no cells to reuse, create a new one
@@ -72,8 +72,8 @@ namespace iOS
                 cell.ContentView.Layer.Contents = NewsImage[ indexPath.Row ].CGImage;
 
                 // scale down the image to the width of the device
-                float aspectRatio = NewsImage[ indexPath.Row ].Size.Height / NewsImage[ indexPath.Row ].Size.Width;
-                cell.Bounds = new RectangleF( 0, 0, tableView.Bounds.Width, tableView.Bounds.Width * aspectRatio );
+                float aspectRatio = (float) (NewsImage[ indexPath.Row ].Size.Height / NewsImage[ indexPath.Row ].Size.Width);
+                cell.Bounds = new CGRect( 0, 0, tableView.Bounds.Width, tableView.Bounds.Width * aspectRatio );
 
                 PendingCellHeight = cell.Bounds.Height;
                 return cell;
@@ -115,7 +115,7 @@ namespace iOS
             // adjust the table height for our navbar.
             // We MUST do it here, and we also have to set ContentType to Top, as opposed to ScaleToFill, on the view itself,
             // or our changes will be overwritten
-            NewsTableView.Frame = new RectangleF( 0, 0, View.Bounds.Width, View.Bounds.Height );
+            NewsTableView.Frame = new CGRect( 0, 0, View.Bounds.Width, View.Bounds.Height );
         }
 
         public void RowClicked( int row )

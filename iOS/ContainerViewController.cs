@@ -1,8 +1,8 @@
 using System;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using System.CodeDom.Compiler;
-using System.Drawing;
+using CoreGraphics;
 using System.Collections.Generic;
 using System.Threading;
 using CCVApp.Shared.Config;
@@ -92,8 +92,8 @@ namespace iOS
             SpringboardRevealButton.SetTitle( buttonLabel.ToString( ), UIControlState.Normal );
 
             // determine its dimensions
-            SizeF buttonSize = buttonLabel.StringSize( SpringboardRevealButton.Font );
-            SpringboardRevealButton.Bounds = new RectangleF( 0, 0, buttonSize.Width, buttonSize.Height );
+            CGSize buttonSize = buttonLabel.StringSize( SpringboardRevealButton.Font );
+            SpringboardRevealButton.Bounds = new CGRect( 0, 0, buttonSize.Width, buttonSize.Height );
 
             // set its callback
             SpringboardRevealButton.TouchUpInside += (object sender, EventArgs e) => 
@@ -140,7 +140,7 @@ namespace iOS
                     if( TaskControllerAnimating == false )
                     {
                         TaskControllerAnimating = true;
-                        SubNavigationController.PopViewControllerAnimated( true );
+                        SubNavigationController.PopViewController( true );
                     }
                 });
 

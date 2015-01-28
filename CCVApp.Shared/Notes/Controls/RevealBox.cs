@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Xml;
-using System.Drawing;
 using Rock.Mobile.PlatformUI;
 using CCVApp.Shared.Notes.Model;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace CCVApp
 {

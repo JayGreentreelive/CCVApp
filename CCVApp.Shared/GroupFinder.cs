@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Rock.Mobile.Util.Strings;
 using CCVApp.Shared.Network;

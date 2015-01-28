@@ -1,7 +1,7 @@
-﻿using System;
-using System.Drawing;
+using System;
 using System.Collections.Generic;
 using Rock.Mobile.PlatformUI;
+using System.Drawing;
 
 namespace CCVApp
 {
@@ -16,8 +16,8 @@ namespace CCVApp
             {
                 void AddOffset( float xOffset, float yOffset );
 
-                System.Drawing.RectangleF GetFrame( );
-                System.Drawing.RectangleF GetMargin( );
+                RectangleF GetFrame( );
+                RectangleF GetMargin( );
 
                 void GetControlOfType<TControlType>( List<IUIControl> controlList ) where TControlType : class;
 

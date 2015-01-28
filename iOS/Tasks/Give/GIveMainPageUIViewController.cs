@@ -1,9 +1,9 @@
 using System;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using System.CodeDom.Compiler;
-using MonoTouch.AVFoundation;
-using MonoTouch.MediaPlayer;
+using AVFoundation;
+using MediaPlayer;
 using CCVApp.Shared.Config;
 
 namespace iOS
@@ -34,7 +34,7 @@ namespace iOS
             ControlStyling.StyleButton( GiveButton, CCVApp.Shared.Strings.GiveStrings.ButtonLabel, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
 
             GiveButton.SizeToFit( );
-            GiveButton.Frame = new System.Drawing.RectangleF( ( View.Bounds.Width - GiveButton.Bounds.Width ) / 2, ( View.Bounds.Height - GiveButton.Bounds.Height ) / 2, GiveButton.Bounds.Width, GiveButton.Bounds.Height );
+            GiveButton.Frame = new CoreGraphics.CGRect( ( View.Bounds.Width - GiveButton.Bounds.Width ) / 2, ( View.Bounds.Height - GiveButton.Bounds.Height ) / 2, GiveButton.Bounds.Width, GiveButton.Bounds.Height );
             View.AddSubview( GiveButton );
         }
 	}

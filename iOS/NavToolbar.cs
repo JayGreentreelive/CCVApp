@@ -1,11 +1,10 @@
-﻿using System;
-using MonoTouch.UIKit;
+using System;
+using UIKit;
 using System.Collections.Generic;
-using MonoTouch.Foundation;
-using System.Drawing;
+using Foundation;
+using CoreGraphics;
 using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
-using MonoTouch.CoreGraphics;
 
 namespace iOS
 {
@@ -78,8 +77,8 @@ namespace iOS
             BackButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ), UIControlState.Normal );
             BackButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( disabledColor ), UIControlState.Disabled );
 
-            SizeF buttonSize = backLabel.StringSize( BackButton.Font );
-            BackButton.Bounds = new RectangleF( 0, 0, buttonSize.Width, buttonSize.Height );
+            CGSize buttonSize = backLabel.StringSize( BackButton.Font );
+            BackButton.Bounds = new CGRect( 0, 0, buttonSize.Width, buttonSize.Height );
             //BackButton.BackgroundColor = UIColor.White;
 
             // create the share button
@@ -93,7 +92,7 @@ namespace iOS
 
             // determine its dimensions
             buttonSize = shareLabel.StringSize( ShareButton.Font );
-            ShareButton.Bounds = new RectangleF( 0, 0, buttonSize.Width, buttonSize.Height );
+            ShareButton.Bounds = new CGRect( 0, 0, buttonSize.Width, buttonSize.Height );
             //ShareButton.BackgroundColor = UIColor.White;
 
 
@@ -108,7 +107,7 @@ namespace iOS
 
             // determine its dimensions
             buttonSize = createLabel.StringSize( CreateButton.Font );
-            CreateButton.Bounds = new RectangleF( 0, 0, buttonSize.Width, buttonSize.Height );
+            CreateButton.Bounds = new CGRect( 0, 0, buttonSize.Width, buttonSize.Height );
             //CreateButton.BackgroundColor = UIColor.White;
 
             UpdateButtons( );
@@ -226,15 +225,15 @@ namespace iOS
 
                     // Animate the front panel out
                     UIView.Animate( SubNavToolbarConfig.SlideRate, 0, UIViewAnimationOptions.CurveEaseInOut, 
-                        new NSAction( 
+                        new Action( 
                             delegate 
                             { 
-                                float deltaPosition = revealed ? -Frame.Height : Frame.Height;
+                                float deltaPosition = (float)  (revealed ? -Frame.Height : Frame.Height);
 
-                                Layer.Position = new PointF( Layer.Position.X, Layer.Position.Y + deltaPosition);
+                                Layer.Position = new CGPoint( Layer.Position.X, Layer.Position.Y + deltaPosition);
                             })
 
-                        , new NSAction(
+                        , new Action(
                             delegate
                             {
                                 Animating = false;
@@ -256,18 +255,18 @@ namespace iOS
 
         public void ViewDidLayoutSubviews( )
         {
-            RectangleF parentFrame = Superview.Frame;
+            CGRect parentFrame = Superview.Frame;
 
             // if we're not animating, we can easily update our position
             if ( Animating == false )
             {
                 if ( Revealed == true )
                 {
-                    Frame = new RectangleF( 0, parentFrame.Height - Frame.Height, parentFrame.Width, SubNavToolbarConfig.Height );
+                    Frame = new CGRect( 0, parentFrame.Height - Frame.Height, parentFrame.Width, SubNavToolbarConfig.Height );
                 }
                 else
                 {
-                    Frame = new RectangleF( 0, parentFrame.Height, parentFrame.Width, SubNavToolbarConfig.Height );
+                    Frame = new CGRect( 0, parentFrame.Height, parentFrame.Width, SubNavToolbarConfig.Height );
                 }
             }
             else

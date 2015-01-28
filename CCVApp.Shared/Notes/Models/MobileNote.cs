@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+using System;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Xml;

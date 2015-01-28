@@ -2,8 +2,8 @@
 
 using System;
 
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 
 namespace iOS
 {
@@ -24,7 +24,7 @@ namespace iOS
 
             // place a busy indicator
             Indicator = new UIActivityIndicatorView( );
-            Indicator.Layer.Position = new System.Drawing.PointF( View.Frame.Width / 2, View.Frame.Height / 2 );
+            Indicator.Layer.Position = new CoreGraphics.CGPoint( View.Frame.Width / 2, View.Frame.Height / 2 );
             Indicator.ActivityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge;
             Indicator.Color = UIColor.Gray;
             Indicator.StartAnimating( );
@@ -44,7 +44,7 @@ namespace iOS
             base.ViewDidLayoutSubviews();
 
             WebView.Frame = View.Frame;
-            Indicator.Layer.Position = new System.Drawing.PointF( View.Frame.Width / 2, View.Frame.Height / 2 );
+            Indicator.Layer.Position = new CoreGraphics.CGPoint( View.Frame.Width / 2, View.Frame.Height / 2 );
         }
 	}
 }

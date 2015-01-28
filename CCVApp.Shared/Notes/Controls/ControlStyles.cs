@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using System.Xml;
-using System.Drawing;
 using System.IO;
 using Rock.Mobile.Network;
 using RestSharp;

@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Xml;
-using System.Drawing;
 using Rock.Mobile.PlatformUI;
 using System.Collections.Generic;
 using CCVApp.Shared.Config;
+using System.Drawing;
 
 namespace CCVApp
 {

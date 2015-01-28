@@ -1,10 +1,10 @@
 using System;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
-using System.Drawing;
-using MonoTouch.CoreAnimation;
+using CoreGraphics;
+using CoreAnimation;
 using Rock.Mobile.PlatformUI;
 using CCVApp.Shared.Config;
 using CCVApp.Shared.Strings;
@@ -54,11 +54,11 @@ namespace iOS
         Rock.Client.PrayerRequest PrayerRequest { get; set; }
         bool Prayed { get; set; }
 
-        public PrayerCard( Rock.Client.PrayerRequest prayer, RectangleF bounds )
+        public PrayerCard( Rock.Client.PrayerRequest prayer, CGRect bounds )
         {
             //setup the actual "card" outline
             View = PlatformView.Create( );
-            View.Bounds = bounds;
+            View.Bounds = new System.Drawing.RectangleF( (float)bounds.X, (float)bounds.Y, (float)bounds.Width, (float)bounds.Height );
             View.BackgroundColor = ControlStylingConfig.BG_Layer_Color;
             View.BorderColor = ControlStylingConfig.BG_Layer_BorderColor;
             View.CornerRadius = ControlStylingConfig.Button_CornerRadius;
@@ -69,7 +69,7 @@ namespace iOS
             PrayerText = new PrayerTextView( );
             PrayerText.Editable = false;
             PrayerText.BackgroundColor = UIColor.Clear;
-            PrayerText.Layer.AnchorPoint = new PointF( 0, 0 );
+            PrayerText.Layer.AnchorPoint = new CGPoint( 0, 0 );
             PrayerText.DelaysContentTouches = false; // don't allow delaying touch, we need to forward it
             PrayerText.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
             PrayerText.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
@@ -78,7 +78,7 @@ namespace iOS
 
             // setup the bottom prayer button, and its fill-in circle
             Pray = UIButton.FromType( UIButtonType.Custom );
-            Pray.Layer.AnchorPoint = new PointF( 0, 0 );
+            Pray.Layer.AnchorPoint = new CGPoint( 0, 0 );
             Pray.SetTitle( PrayerStrings.Prayer_Confirm, UIControlState.Normal );
 
             Pray.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
@@ -88,14 +88,14 @@ namespace iOS
             Pray.SizeToFit( );
 
             PrayFillIn = new UIView( );
-            PrayFillIn.Bounds = new RectangleF( 0, 0, Pray.Frame.Height / 2, Pray.Frame.Height / 2 );
-            PrayFillIn.Layer.Position = new PointF( View.Bounds.Width - PrayFillIn.Layer.Bounds.Width - ViewPadding, View.Bounds.Height - PrayFillIn.Layer.Bounds.Height - (PrayFillIn.Layer.Bounds.Height / 2) );
+            PrayFillIn.Bounds = new CGRect( 0, 0, Pray.Frame.Height / 2, Pray.Frame.Height / 2 );
+            PrayFillIn.Layer.Position = new CGPoint( View.Bounds.Width - PrayFillIn.Layer.Bounds.Width - ViewPadding, View.Bounds.Height - PrayFillIn.Layer.Bounds.Height - (PrayFillIn.Layer.Bounds.Height / 2) );
             PrayFillIn.Layer.CornerRadius = PrayFillIn.Bounds.Width / 2;
             PrayFillIn.Layer.BorderWidth = 1;
             PrayFillIn.Layer.BorderColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ).CGColor;
-            PrayFillIn.Layer.AnchorPoint = new PointF( 0, 0 );
+            PrayFillIn.Layer.AnchorPoint = new CGPoint( 0, 0 );
 
-            Pray.Layer.Position = new PointF( PrayFillIn.Frame.Left - Pray.Layer.Bounds.Width - ViewPadding, View.Bounds.Height - Pray.Layer.Bounds.Height );
+            Pray.Layer.Position = new CGPoint( PrayFillIn.Frame.Left - Pray.Layer.Bounds.Width - ViewPadding, View.Bounds.Height - Pray.Layer.Bounds.Height );
             Pray.TouchUpInside += (object sender, EventArgs e) => 
                 {
                     if( Prayed == false )
@@ -111,20 +111,20 @@ namespace iOS
 
             // setup the name field
             Name = new UILabel( );
-            Name.Layer.AnchorPoint = new PointF( 0, 0 );
+            Name.Layer.AnchorPoint = new CGPoint( 0, 0 );
             Name.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
             Name.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
 
             // setup the date field
             Date = new UILabel( );
-            Date.Layer.AnchorPoint = new PointF( 0, 0 );
+            Date.Layer.AnchorPoint = new CGPoint( 0, 0 );
             Date.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
             Date.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
 
 
             // setup the category field
             Category = new UILabel( );
-            Category.Layer.AnchorPoint = new PointF( 0, 0 );
+            Category.Layer.AnchorPoint = new CGPoint( 0, 0 );
             Category.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
             Category.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
 
@@ -152,26 +152,26 @@ namespace iOS
             // restrict its bounds to the card itself
             Name.Text = prayer.FirstName;
             Name.SizeToFit( );
-            Name.Frame = new RectangleF( ViewPadding, ViewPadding, View.Bounds.Width - (ViewPadding * 2), Name.Bounds.Height );
+            Name.Frame = new CGRect( ViewPadding, ViewPadding, View.Bounds.Width - (ViewPadding * 2), Name.Bounds.Height );
 
             Category.Text = prayer.Category != null ? prayer.Category.Name : "";
             Category.SizeToFit( );
-            Category.Layer.Position = new PointF( ViewPadding, Name.Frame.Bottom );
+            Category.Layer.Position = new CGPoint( ViewPadding, Name.Frame.Bottom );
 
             // set the date text, then calculate the dimensions so we can right-adjust it
             Date.Text = string.Format( "{0:MM/dd/yy}", prayer.CreatedDateTime );
-            Date.Frame = new RectangleF( ViewPadding, Name.Frame.Bottom, View.Bounds.Width - ViewPadding, 0 );
+            Date.Frame = new CGRect( ViewPadding, Name.Frame.Bottom, View.Bounds.Width - ViewPadding, 0 );
             Date.SizeToFit( );
-            Date.Layer.Position = new PointF( View.Bounds.Width - Date.Frame.Width - ViewPadding, Name.Frame.Bottom );
+            Date.Layer.Position = new CGPoint( View.Bounds.Width - Date.Frame.Width - ViewPadding, Name.Frame.Bottom );
 
             // set the prayer text, allow multiple lines, set the width to be the card itself,
             // and let SizeToFit measure the height.
             PrayerText.Text = prayer.Text;
 
-            PrayerText.Frame = new RectangleF( ViewPadding, Date.Frame.Bottom + ViewPadding, View.Bounds.Width - (ViewPadding * 2), 0 );
+            PrayerText.Frame = new CGRect( ViewPadding, Date.Frame.Bottom + ViewPadding, View.Bounds.Width - (ViewPadding * 2), 0 );
             PrayerText.SizeToFit( );
-            float prayerHeight = Math.Min( PrayerText.Frame.Height, View.Bounds.Height - PrayerText.Frame.Top - Pray.Frame.Height - ViewPadding );
-            PrayerText.Frame = new RectangleF( PrayerText.Frame.Left, PrayerText.Frame.Top, PrayerText.Frame.Width, prayerHeight );
+            float prayerHeight = (float) Math.Min( PrayerText.Frame.Height, View.Bounds.Height - PrayerText.Frame.Top - Pray.Frame.Height - ViewPadding );
+            PrayerText.Frame = new CGRect( PrayerText.Frame.Left, PrayerText.Frame.Top, PrayerText.Frame.Width, prayerHeight );
         }
     }
 
@@ -188,7 +188,7 @@ namespace iOS
         bool RequestingPrayers { get; set; }
         bool ViewActive { get; set; }
 
-        RectangleF CardSize { get; set; }
+        CGRect CardSize { get; set; }
 
         Rock.Mobile.PlatformSpecific.iOS.UI.BlockerView BlockerView { get; set; }
 
@@ -205,18 +205,18 @@ namespace iOS
 
             View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
-            float viewRealHeight = ( View.Bounds.Height - Task.NavToolbar.Frame.Height);
+            float viewRealHeight = (float)( View.Bounds.Height - Task.NavToolbar.Frame.Height);
 
             float cardSizePerc = .83f;
-            float cardWidth = View.Bounds.Width * cardSizePerc;
-            float cardHeight = viewRealHeight * cardSizePerc;
+            float cardWidth = (float)(View.Bounds.Width * cardSizePerc);
+            float cardHeight = (float) (viewRealHeight * cardSizePerc);
 
             // setup the card positions to be to the offscreen to the left, centered on screen, and offscreen to the right
             float cardYOffset = ( viewRealHeight * .03f );
 
-            Carousel = PlatformCardCarousel.Create( View, cardWidth, cardHeight, new RectangleF( 0, cardYOffset, View.Bounds.Width, viewRealHeight ), PrayerConfig.Card_AnimationDuration );
+            Carousel = PlatformCardCarousel.Create( View, cardWidth, cardHeight, new System.Drawing.RectangleF( 0, cardYOffset, (float)View.Bounds.Width, viewRealHeight ), PrayerConfig.Card_AnimationDuration );
 
-            CardSize = new RectangleF( 0, 0, cardWidth, cardHeight );
+            CardSize = new CGRect( 0, 0, cardWidth, cardHeight );
 
             // Setup the request prayers layer
             //setup our appearance

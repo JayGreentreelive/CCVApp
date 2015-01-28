@@ -1,9 +1,9 @@
 using System;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using System.CodeDom.Compiler;
-using MonoTouch.MediaPlayer;
-using System.Drawing;
+using MediaPlayer;
+using CoreGraphics;
 using System.Collections.Generic;
 using CCVApp.Shared.Strings;
 
@@ -54,28 +54,29 @@ namespace iOS
 
 
                 // setup a notification so we know when to hide the spinner
-                NSObject handle = NSNotificationCenter.DefaultCenter.AddObserver( "MPMoviePlayerContentPreloadDidFinishNotification", ContentPreloadDidFinish );
+
+                NSObject handle = NSNotificationCenter.DefaultCenter.AddObserver( new NSString("MPMoviePlayerContentPreloadDidFinishNotification"), ContentPreloadDidFinish );
                 ObserverHandles.Add( handle );
 
                 // setup a notification so we know when they enter fullscreen, cause we'll need to play the movie again
-                handle = NSNotificationCenter.DefaultCenter.AddObserver( "MPMoviePlayerPlaybackStateDidChangeNotification", PlaybackStateDidChange );
+                handle = NSNotificationCenter.DefaultCenter.AddObserver( MPMoviePlayerController.PlaybackStateDidChangeNotification, PlaybackStateDidChange );
                 ObserverHandles.Add( handle );
 
-                handle = NSNotificationCenter.DefaultCenter.AddObserver( "MPMoviePlayerPlaybackDidFinishNotification", PlaybackDidFinish );
+                handle = NSNotificationCenter.DefaultCenter.AddObserver( MPMoviePlayerController.PlaybackDidFinishNotification, PlaybackDidFinish );
                 ObserverHandles.Add( handle );
 
 
                 // monitor our fullscreen status so we can manage a flag and ignore ViewDidAppear/ViewDidDisappear
-                handle = NSNotificationCenter.DefaultCenter.AddObserver( "MPMoviePlayerWillEnterFullscreenNotification", WillEnterFullscreen );
+                handle = NSNotificationCenter.DefaultCenter.AddObserver( MPMoviePlayerController.WillEnterFullscreenNotification, WillEnterFullscreen );
                 ObserverHandles.Add( handle );
 
-                handle = NSNotificationCenter.DefaultCenter.AddObserver( "MPMoviePlayerDidEnterFullscreenNotification", DidEnterFullscreen );
+                handle = NSNotificationCenter.DefaultCenter.AddObserver( MPMoviePlayerController.DidEnterFullscreenNotification, DidEnterFullscreen );
                 ObserverHandles.Add( handle );
 
-                handle = NSNotificationCenter.DefaultCenter.AddObserver( "MPMoviePlayerWillExitFullscreenNotification", WillExitFullscreen );
+                handle = NSNotificationCenter.DefaultCenter.AddObserver( MPMoviePlayerController.WillExitFullscreenNotification, WillExitFullscreen );
                 ObserverHandles.Add( handle );
 
-                handle = NSNotificationCenter.DefaultCenter.AddObserver( "MPMoviePlayerDidExitFullscreenNotification", DidExitFullscreen );
+                handle = NSNotificationCenter.DefaultCenter.AddObserver( MPMoviePlayerController.DidExitFullscreenNotification, DidExitFullscreen );
                 ObserverHandles.Add( handle );
             }
             else
@@ -92,7 +93,7 @@ namespace iOS
             // overlap the bottom nav toolbar.
             if ( UIApplication.SharedApplication.StatusBarOrientation == UIInterfaceOrientation.Portrait )
             {
-                MoviePlayer.View.Frame = new System.Drawing.RectangleF( 0, ( View.Frame.Height - View.Frame.Width ) / 2, View.Frame.Width, View.Frame.Width );
+                MoviePlayer.View.Frame = new CGRect( 0, ( View.Frame.Height - View.Frame.Width ) / 2, View.Frame.Width, View.Frame.Width );
             }
             else
             {
@@ -104,7 +105,7 @@ namespace iOS
                 }
             }
 
-            ActivityIndicator.Layer.Position = new System.Drawing.PointF( ( View.Frame.Width - ActivityIndicator.Frame.Width ) / 2, ( View.Frame.Height - ActivityIndicator.Frame.Height ) / 2 );
+            ActivityIndicator.Layer.Position = new CGPoint( ( View.Frame.Width - ActivityIndicator.Frame.Width ) / 2, ( View.Frame.Height - ActivityIndicator.Frame.Height ) / 2 );
 
             // don't let the back button work when in landscape mode.
             Task.NavToolbar.SetBackButtonEnabled( UIDevice.CurrentDevice.Orientation == UIDeviceOrientation.Portrait ? true : false );
@@ -230,7 +231,7 @@ namespace iOS
         void PlaybackDidFinish( NSNotification obj )
         {
             // watch for any playback errors. This would include failing to play the video in the first place.
-            int error = (obj.UserInfo[ "MPMoviePlayerPlaybackDidFinishReasonUserInfoKey"] as NSNumber).IntValue;
+            int error = (obj.UserInfo[ "MPMoviePlayerPlaybackDidFinishReasonUserInfoKey"] as NSNumber).Int32Value;
 
             // if there WAS an error, report it to the user. Watch our error flag so we don't show the error
             // more than once

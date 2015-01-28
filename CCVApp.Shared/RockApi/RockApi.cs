@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using RestSharp;
 using System.IO;
 using Newtonsoft.Json;

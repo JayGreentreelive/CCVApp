@@ -1,11 +1,9 @@
-﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" PreferredExecutionTarget="Android.192.168.56.101:5555" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="CCVApp.Shared/Notes/Controls/Quote.cs">
+﻿<Properties StartupItem="iOS/iOS.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhone4s.8.1" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/Tasks/Notes/NotesWatchUIViewController.cs">
     <Files>
-      <File FileName="Droid/Tasks/NotesTask/NotesPrimaryFragment.cs" Line="1" Column="1" />
-      <File FileName="CCVApp.Shared/Notes/Controls/Quote.cs" Line="46" Column="46" />
-      <File FileName="../Rock.Mobile/PlatformUI/Droid/DroidNative/BorderedRectViews.cs" Line="1" Column="1" />
-      <File FileName="../Rock.Mobile/PlatformUI/Droid/DroidLabel.cs" Line="1" Column="1" />
+      <File FileName="iOS/UserManagement/ProfileViewController.cs" Line="47" Column="47" />
+      <File FileName="iOS/Tasks/Notes/NotesWatchUIViewController.cs" Line="103" Column="103" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

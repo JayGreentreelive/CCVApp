@@ -1,10 +1,10 @@
 using System;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using System.CodeDom.Compiler;
 using CCVApp.Shared.Notes.Model;
 using System.Collections.Generic;
-using System.Drawing;
+using CoreGraphics;
 using CCVApp.Shared;
 using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
@@ -39,12 +39,12 @@ namespace iOS
                     // anything that's constant can be set here once in the constructor
                     Image = new UIImageView( );
                     Image.ContentMode = UIViewContentMode.ScaleAspectFit;
-                    Image.Layer.AnchorPoint = PointF.Empty;
+                    Image.Layer.AnchorPoint = CGPoint.Empty;
                     AddSubview( Image );
 
                     Title = new UILabel( );
                     Title.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Large_Font_Bold, ControlStylingConfig.Large_FontSize );
-                    Title.Layer.AnchorPoint = PointF.Empty;
+                    Title.Layer.AnchorPoint = CGPoint.Empty;
                     Title.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
                     Title.BackgroundColor = UIColor.Clear;
                     Title.LineBreakMode = UILineBreakMode.TailTruncation;
@@ -52,7 +52,7 @@ namespace iOS
 
                     Date = new UILabel( );
                     Date.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Light, ControlStylingConfig.Small_FontSize );
-                    Date.Layer.AnchorPoint = PointF.Empty;
+                    Date.Layer.AnchorPoint = CGPoint.Empty;
                     Date.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
                     Date.BackgroundColor = UIColor.Clear;
                     Date.LineBreakMode = UILineBreakMode.TailTruncation;
@@ -60,7 +60,7 @@ namespace iOS
 
                     Desc = new UITextView( );
                     Desc.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Light, ControlStylingConfig.Small_FontSize );
-                    Desc.Layer.AnchorPoint = PointF.Empty;
+                    Desc.Layer.AnchorPoint = CGPoint.Empty;
                     Desc.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
                     Desc.BackgroundColor = UIColor.Clear;
                     Desc.TextContainerInset = UIEdgeInsets.Zero;
@@ -95,7 +95,7 @@ namespace iOS
                     Title = new UILabel( );
                     Title.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
 
-                    Title.Layer.AnchorPoint = PointF.Empty;
+                    Title.Layer.AnchorPoint = CGPoint.Empty;
                     Title.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
                     Title.BackgroundColor = UIColor.Clear;
                     Title.LineBreakMode = UILineBreakMode.TailTruncation;
@@ -103,7 +103,7 @@ namespace iOS
 
                     Date = new UILabel( );
                     Date.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-                    Date.Layer.AnchorPoint = PointF.Empty;
+                    Date.Layer.AnchorPoint = CGPoint.Empty;
                     Date.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
                     Date.BackgroundColor = UIColor.Clear;
                     Date.LineBreakMode = UILineBreakMode.TailTruncation;
@@ -111,7 +111,7 @@ namespace iOS
 
                     Speaker = new UILabel( );
                     Speaker.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-                    Speaker.Layer.AnchorPoint = PointF.Empty;
+                    Speaker.Layer.AnchorPoint = CGPoint.Empty;
                     Speaker.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
                     Speaker.BackgroundColor = UIColor.Clear;
                     Speaker.LineBreakMode = UILineBreakMode.TailTruncation;
@@ -119,7 +119,7 @@ namespace iOS
 
                     WatchButton = new UIButton( UIButtonType.Custom );
                     WatchButton.TouchUpInside += (object sender, EventArgs e) => { Parent.RowButtonClicked( RowIndex, 0 ); };
-                    WatchButton.Layer.AnchorPoint = PointF.Empty;
+                    WatchButton.Layer.AnchorPoint = CGPoint.Empty;
                     WatchButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, NoteConfig.Details_Table_IconSize );
                     WatchButton.SetTitle( NoteConfig.Series_Table_Watch_Icon, UIControlState.Normal );
                     WatchButton.BackgroundColor = UIColor.Clear;
@@ -130,7 +130,7 @@ namespace iOS
                     TakeNotesButton.TouchUpInside += (object sender, EventArgs e) => { Parent.RowButtonClicked( RowIndex, 1 ); };
                     TakeNotesButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, NoteConfig.Details_Table_IconSize );
                     TakeNotesButton.SetTitle( NoteConfig.Series_Table_TakeNotes_Icon, UIControlState.Normal );
-                    TakeNotesButton.Layer.AnchorPoint = PointF.Empty;
+                    TakeNotesButton.Layer.AnchorPoint = CGPoint.Empty;
                     TakeNotesButton.BackgroundColor = UIColor.Clear;
                     TakeNotesButton.SizeToFit( );
                     AddSubview( TakeNotesButton );
@@ -175,8 +175,8 @@ namespace iOS
             Series Series { get; set; }
             UIImage Banner { get; set; }
 
-            float PendingPrimaryCellHeight { get; set; }
-            float PendingCellHeight { get; set; }
+            nfloat PendingPrimaryCellHeight { get; set; }
+            nfloat PendingCellHeight { get; set; }
 
             public TableSource (NotesDetailsUIViewController parent, List<MessageEntry> messages, Series series, UIImage banner )
             {
@@ -186,7 +186,7 @@ namespace iOS
                 Banner = banner;
             }
 
-            public override int RowsInSection (UITableView tableview, int section)
+            public override nint RowsInSection (UITableView tableview, nint section)
             {
                 return MessageEntries.Count + 1;
             }
@@ -199,17 +199,17 @@ namespace iOS
                 Parent.RowClicked( 0, -1 );
             }
 
-            public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
+            public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
             {
                 return GetCachedRowHeight( tableView, indexPath );
             }
 
-            public override float EstimatedHeight(UITableView tableView, NSIndexPath indexPath)
+            public override nfloat EstimatedHeight(UITableView tableView, NSIndexPath indexPath)
             {
                 return GetCachedRowHeight( tableView, indexPath );
             }
 
-            float GetCachedRowHeight( UITableView tableView, NSIndexPath indexPath )
+            nfloat GetCachedRowHeight( UITableView tableView, NSIndexPath indexPath )
             {
                 // Depending on the row, we either want the primary cell's height,
                 // or a standard row's height.
@@ -239,7 +239,7 @@ namespace iOS
                 return tableView.Frame.Height;
             }
 
-            public override UITableViewCell GetCell (UITableView tableView, MonoTouch.Foundation.NSIndexPath indexPath)
+            public override UITableViewCell GetCell (UITableView tableView, NSIndexPath indexPath)
             {
                 if ( indexPath.Row == 0 )
                 {
@@ -262,7 +262,7 @@ namespace iOS
                     cell.Parent = this;
 
                     // take the parent table's width so we inherit its width constraint
-                    cell.Bounds = new RectangleF( cell.Bounds.X, cell.Bounds.Y, tableView.Bounds.Width, cell.Bounds.Height );
+                    cell.Bounds = new CGRect( cell.Bounds.X, cell.Bounds.Y, tableView.Bounds.Width, cell.Bounds.Height );
 
                     // configure the cell colors
                     cell.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
@@ -274,24 +274,24 @@ namespace iOS
                 cell.Image.SizeToFit( );
 
                 // resize the image to fit the width of the device
-                float imageAspect = cell.Image.Bounds.Height / cell.Image.Bounds.Width;
-                cell.Image.Frame = new RectangleF( 0, 0, cell.Bounds.Width, cell.Bounds.Width * imageAspect );
+                float imageAspect = (float) (cell.Image.Bounds.Height / cell.Image.Bounds.Width);
+                cell.Image.Frame = new CGRect( 0, 0, cell.Bounds.Width, cell.Bounds.Width * imageAspect );
 
                 // Title
                 cell.Title.Text = Series.Name;
                 cell.Title.SizeToFit( );
-                cell.Title.Frame = new RectangleF( 5, cell.Image.Frame.Bottom + 5, cell.Frame.Width - 10, cell.Title.Frame.Height + 5 );
+                cell.Title.Frame = new CGRect( 5, cell.Image.Frame.Bottom + 5, cell.Frame.Width - 10, cell.Title.Frame.Height + 5 );
 
                 // Date
                 cell.Date.Text = Series.DateRanges;
                 cell.Date.SizeToFit( );
-                cell.Date.Frame = new RectangleF( 5, cell.Title.Frame.Bottom, cell.Frame.Width - 5, cell.Date.Frame.Height + 5 );
+                cell.Date.Frame = new CGRect( 5, cell.Title.Frame.Bottom, cell.Frame.Width - 5, cell.Date.Frame.Height + 5 );
 
                 // Description
                 cell.Desc.Text = Series.Description;
-                cell.Desc.Bounds = new RectangleF( 0, 0, cell.Frame.Width - 10, float.MaxValue );
+                cell.Desc.Bounds = new CGRect( 0, 0, cell.Frame.Width - 10, float.MaxValue );
                 cell.Desc.SizeToFit( );
-                cell.Desc.Frame = new RectangleF( 5, cell.Date.Frame.Bottom, cell.Frame.Width - 10, cell.Desc.Frame.Height + 5 );
+                cell.Desc.Frame = new CGRect( 5, cell.Date.Frame.Bottom, cell.Frame.Width - 10, cell.Desc.Frame.Height + 5 );
 
                 PendingPrimaryCellHeight = cell.Desc.Frame.Bottom;
 
@@ -309,7 +309,7 @@ namespace iOS
                     cell.Parent = this;
 
                     // take the parent table's width so we inherit its width constraint
-                    cell.Bounds = new RectangleF( cell.Bounds.X, cell.Bounds.Y, tableView.Bounds.Width, cell.Bounds.Height );
+                    cell.Bounds = new CGRect( cell.Bounds.X, cell.Bounds.Y, tableView.Bounds.Width, cell.Bounds.Height );
 
                     // configure the cell colors
                     cell.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
@@ -322,17 +322,17 @@ namespace iOS
                 float rowHeight = 100;
 
                 // Buttons
-                cell.TakeNotesButton.Frame = new RectangleF( cell.Bounds.Width - cell.TakeNotesButton.Bounds.Width, 
+                cell.TakeNotesButton.Frame = new CGRect( cell.Bounds.Width - cell.TakeNotesButton.Bounds.Width, 
                     (rowHeight - cell.TakeNotesButton.Bounds.Height) / 2, 
                                                              cell.TakeNotesButton.Bounds.Width, 
                                                              cell.TakeNotesButton.Bounds.Height );
 
-                cell.WatchButton.Frame = new RectangleF( cell.TakeNotesButton.Frame.Left - cell.WatchButton.Bounds.Width - 20, 
+                cell.WatchButton.Frame = new CGRect( cell.TakeNotesButton.Frame.Left - cell.WatchButton.Bounds.Width - 20, 
                     (rowHeight - cell.WatchButton.Bounds.Height) / 2, 
                                                          cell.WatchButton.Bounds.Width, 
                                                          cell.WatchButton.Bounds.Height );
 
-                float availableWidth = cell.Bounds.Width - cell.WatchButton.Bounds.Width - cell.TakeNotesButton.Bounds.Width - 5 - 20;
+                nfloat availableWidth = cell.Bounds.Width - cell.WatchButton.Bounds.Width - cell.TakeNotesButton.Bounds.Width - 5 - 20;
 
                 // disable the button if there's no watch URL
                 if ( string.IsNullOrEmpty( Series.Messages[ row ].WatchUrl ) )
@@ -366,14 +366,14 @@ namespace iOS
                 cell.Speaker.SizeToFit( );
 
                 // Position the Title & Date in the center to the right of the image
-                float totalTextHeight = cell.Title.Bounds.Height + cell.Date.Bounds.Height + cell.Speaker.Bounds.Height + 20;
+                nfloat totalTextHeight = cell.Title.Bounds.Height + cell.Date.Bounds.Height + cell.Speaker.Bounds.Height + 20;
 
-                cell.Title.Frame = new RectangleF( 5, (rowHeight - totalTextHeight) / 2, availableWidth, cell.Title.Frame.Height + 15);
-                cell.Date.Frame = new RectangleF( cell.Title.Frame.Left, cell.Title.Frame.Bottom - 5, availableWidth, cell.Date.Frame.Height );
-                cell.Speaker.Frame = new RectangleF( cell.Title.Frame.Left, cell.Date.Frame.Bottom - 5, availableWidth, cell.Speaker.Frame.Height + 5 );
+                cell.Title.Frame = new CGRect( 5, (rowHeight - totalTextHeight) / 2, availableWidth, cell.Title.Frame.Height + 15);
+                cell.Date.Frame = new CGRect( cell.Title.Frame.Left, cell.Title.Frame.Bottom - 5, availableWidth, cell.Date.Frame.Height );
+                cell.Speaker.Frame = new CGRect( cell.Title.Frame.Left, cell.Date.Frame.Bottom - 5, availableWidth, cell.Speaker.Frame.Height + 5 );
 
                 // add the seperator to the bottom
-                cell.Seperator.Frame = new RectangleF( 0, rowHeight - 1, cell.Bounds.Width, 1 );
+                cell.Seperator.Frame = new CGRect( 0, rowHeight - 1, cell.Bounds.Width, 1 );
 
                 PendingCellHeight = rowHeight;
 
@@ -495,7 +495,7 @@ namespace iOS
             // adjust the table height for our navbar.
             // We MUST do it here, and we also have to set ContentType to Top, as opposed to ScaleToFill, on the view itself,
             // or our changes will be overwritten
-            SeriesTable.Frame = new RectangleF( 0, 0, View.Bounds.Width, View.Bounds.Height );
+            SeriesTable.Frame = new CGRect( 0, 0, View.Bounds.Width, View.Bounds.Height );
         }
 
         public void RowClicked( int row, int buttonIndex )

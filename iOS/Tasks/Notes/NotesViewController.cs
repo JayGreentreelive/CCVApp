@@ -1,11 +1,10 @@
-﻿using System;
-using System.Drawing;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using System;
+using CoreGraphics;
+using Foundation;
+using UIKit;
 using System.Collections.Generic;
 using System.IO;
-using MonoTouch.CoreAnimation;
-using MonoTouch.CoreGraphics;
+using CoreAnimation;
 
 using Rock.Mobile.Network;
 using CCVApp.Shared.Notes;
@@ -14,6 +13,8 @@ using System.Net;
 using System.Text;
 using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
+using System.Drawing;
+using Rock.Mobile.PlatformSpecific.Util;
 
 namespace iOS
 {
@@ -25,10 +26,10 @@ namespace iOS
         // UIScrollView will check for scrolling and suppress touchesBegan
         // if the user is scrolling. We want to allow our controls to consume it
         // before that.
-        public override UIView HitTest(PointF point, UIEvent uievent)
+        public override UIView HitTest(CGPoint point, UIEvent uievent)
         {
             // transform the point into absolute coords (as if there was no scrolling)
-            PointF absolutePoint = new PointF( ( point.X - ContentOffset.X ) + Frame.Left,
+            CGPoint absolutePoint = new CGPoint( ( point.X - ContentOffset.X ) + Frame.Left,
                                                ( point.Y - ContentOffset.Y ) + Frame.Top );
 
             if ( Frame.Contains( absolutePoint ) )
@@ -75,7 +76,7 @@ namespace iOS
     {
         public NotesViewController Parent { get; set; }
 
-        PointF LastPos { get; set; }
+        CGPoint LastPos { get; set; }
 
         double LastTime { get; set; }
 
@@ -91,7 +92,7 @@ namespace iOS
 
             if( timeLapsed > .10f )
             {
-                float delta = scrollView.ContentOffset.Y - LastPos.Y;
+                float delta = (float) (scrollView.ContentOffset.Y - LastPos.Y);
 
                 // notify our parent
                 Parent.ViewDidScroll( delta );
@@ -217,7 +218,7 @@ namespace iOS
         protected void SaveNoteState( )
         {
             // request quick backgrounding so we can save our user notes
-            int taskID = UIApplication.SharedApplication.BeginBackgroundTask( () => {});
+            nint taskID = UIApplication.SharedApplication.BeginBackgroundTask( () => {});
 
             if( Note != null )
             {
@@ -238,16 +239,16 @@ namespace iOS
 				//note: the frame height of the nav bar is what it CURRENTLY is, not what it WILL be after we rotate. So, when we go from Portrait to Landscape,
 				// it says 40, but it's gonna be 32. Conversely, going back, we use 32 and it's actually 40, which causes us to start this view 8px too high.
                 #if DEBUG
-				RefreshButton.Layer.Position = new PointF (View.Bounds.Width / 2, (RefreshButton.Frame.Height / 2));
+				RefreshButton.Layer.Position = new CGPoint (View.Bounds.Width / 2, (RefreshButton.Frame.Height / 2));
 
-				UIScrollView.Frame = new RectangleF (0, 0, View.Bounds.Width, View.Bounds.Height - RefreshButton.Frame.Height );
-				UIScrollView.Layer.Position = new PointF (UIScrollView.Layer.Position.X, UIScrollView.Layer.Position.Y + RefreshButton.Frame.Bottom);
+				UIScrollView.Frame = new CGRect(0, 0, View.Bounds.Width, View.Bounds.Height - RefreshButton.Frame.Height );
+				UIScrollView.Layer.Position = new CGPoint(UIScrollView.Layer.Position.X, UIScrollView.Layer.Position.Y + RefreshButton.Frame.Bottom);
                 #else
-                UIScrollView.Frame = new RectangleF (0, 0, View.Bounds.Width, View.Bounds.Height );
-                UIScrollView.Layer.Position = new PointF (UIScrollView.Layer.Position.X, UIScrollView.Layer.Position.Y );
+                UIScrollView.Frame = new CGRect (0, 0, View.Bounds.Width, View.Bounds.Height );
+                UIScrollView.Layer.Position = new CGPoint (UIScrollView.Layer.Position.X, UIScrollView.Layer.Position.Y );
                 #endif
 
-				Indicator.Layer.Position = new PointF (View.Bounds.Width / 2, View.Bounds.Height / 2);
+				Indicator.Layer.Position = new CGPoint (View.Bounds.Width / 2, View.Bounds.Height / 2);
 
 				// re-create our notes with the new dimensions
 				CreateNotes (CachedNoteXml, CachedStyleXml);
@@ -268,11 +269,11 @@ namespace iOS
             UIScrollView.Frame = View.Frame;
             UIScrollView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( 0x1C1C1CFF );
             UIScrollView.Delegate = new NotesScrollViewDelegate() { Parent = this };
-            UIScrollView.Layer.AnchorPoint = new PointF( 0, 0 );
+            UIScrollView.Layer.AnchorPoint = new CGPoint( 0, 0 );
 
             UITapGestureRecognizer tapGesture = new UITapGestureRecognizer();
             tapGesture.NumberOfTapsRequired = 2;
-            tapGesture.AddTarget( this, new MonoTouch.ObjCRuntime.Selector( "DoubleTapSelector:" ) );
+            tapGesture.AddTarget( this, new ObjCRuntime.Selector( "DoubleTapSelector:" ) );
             UIScrollView.AddGestureRecognizer( tapGesture );
 
             View.BackgroundColor = UIScrollView.BackgroundColor;
@@ -328,10 +329,10 @@ namespace iOS
             UIApplication.SharedApplication.IdleTimerDisabled = true;
 
             // monitor for text field being edited, and keyboard show/hide notitications
-            NSObject handle = NSNotificationCenter.DefaultCenter.AddObserver (Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager.TextFieldDidBeginEditingNotification, KeyboardAdjustManager.OnTextFieldDidBeginEditing);
+            NSObject handle = NSNotificationCenter.DefaultCenter.AddObserver( Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager.TextFieldDidBeginEditingNotification, KeyboardAdjustManager.OnTextFieldDidBeginEditing);
             ObserverHandles.Add( handle );
 
-            handle = NSNotificationCenter.DefaultCenter.AddObserver (Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager.TextFieldChangedNotification, KeyboardAdjustManager.OnTextFieldChanged);
+            handle = NSNotificationCenter.DefaultCenter.AddObserver( Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager.TextFieldChangedNotification, KeyboardAdjustManager.OnTextFieldChanged);
             ObserverHandles.Add( handle );
 
             handle = NSNotificationCenter.DefaultCenter.AddObserver (UIKeyboard.WillHideNotification, KeyboardAdjustManager.OnKeyboardNotification);
@@ -391,7 +392,7 @@ namespace iOS
             }
         }
 
-        public bool HitTest( PointF point )
+        public bool HitTest( CGPoint point )
         {
             if( Note != null )
             {
@@ -400,7 +401,7 @@ namespace iOS
                 // We decide that based on whether the HitTest intersects any of our controls.
                 // By returning true, it can know "Yes, this hits something we need to know about"
                 // and it will result in us receiving TouchBegan
-                if( Note.HitTest( point ) == true )
+                if( Note.HitTest( point.ToPointF( ) ) == true )
                 {
                     return true;
                 }
@@ -409,12 +410,12 @@ namespace iOS
             return false;
         }
 
-        public bool HandleTouchBegan( PointF point )
+        public bool HandleTouchBegan( CGPoint point )
         {
             if( Note != null )
             {
                 // if the note consumed touches Began, don't allow the UIScroll View to scroll.
-                if( Note.TouchesBegan( point ) == true )
+                if( Note.TouchesBegan( point.ToPointF( ) ) == true )
                 {
                     UIScrollView.ScrollEnabled = false;
                     return true;
@@ -429,7 +430,7 @@ namespace iOS
             UITouch touch = touches.AnyObject as UITouch;
             if (touch != null && Note != null)
             {
-                return Note.TouchingUserNote( touch.LocationInView( UIScrollView ) );
+                return Note.TouchingUserNote( touch.LocationInView( UIScrollView ).ToPointF( ) );
             }
 
             return false;
@@ -459,7 +460,7 @@ namespace iOS
             {
                 if( Note != null )
                 {
-                    Note.TouchesMoved( touch.LocationInView( UIScrollView ) );
+                    Note.TouchesMoved( touch.LocationInView( UIScrollView ).ToPointF( ) );
                 }
             }
         }
@@ -476,7 +477,7 @@ namespace iOS
                 if( Note != null )
                 {
                     // should we visit a website?
-                    string activeUrl = Note.TouchesEnded( touch.LocationInView( UIScrollView ) );
+                    string activeUrl = Note.TouchesEnded( touch.LocationInView( UIScrollView ).ToPointF( ) );
                     if ( string.IsNullOrEmpty( activeUrl ) == false )
                     {
                         NotesWebViewController viewController = new NotesWebViewController( );
@@ -496,14 +497,14 @@ namespace iOS
             Task.ViewDidScroll( scrollDelta );
         }
 
-        [MonoTouch.Foundation.Export("DoubleTapSelector:")]
+        [Foundation.Export("DoubleTapSelector:")]
         public void HandleTapGesture(UITapGestureRecognizer tap)
         {
             if( Note != null )
             {
                 if( tap.State == UIGestureRecognizerState.Ended )
                 {
-                    Note.DidDoubleTap( tap.LocationInView( UIScrollView ) );
+                    Note.DidDoubleTap( tap.LocationInView( UIScrollView ).ToPointF( ) );
                 }
             }
         }
@@ -522,7 +523,7 @@ namespace iOS
             if( RefreshingNotes == false )
             {
                 // if we're recreating the notes, reset our scrollview.
-                UIScrollView.ContentOffset = PointF.Empty;
+                UIScrollView.ContentOffset = CGPoint.Empty;
 
                 Console.WriteLine( "CREATING NOTES" );
 
@@ -599,7 +600,7 @@ namespace iOS
                             int lastSlashIndex = NoteName.LastIndexOf( "/" ) + 1;
                             string noteName = NoteName.Substring( lastSlashIndex );
 
-                            Note.Create( UIScrollView.Bounds.Width, UIScrollView.Bounds.Height, this.UIScrollView, noteName + NoteConfig.UserNoteSuffix );
+                            Note.Create( (float)UIScrollView.Bounds.Width, (float)UIScrollView.Bounds.Height, this.UIScrollView, noteName + NoteConfig.UserNoteSuffix );
 
                             // enable scrolling
                             UIScrollView.ScrollEnabled = true;
@@ -609,8 +610,8 @@ namespace iOS
                             View.BackgroundColor = UIScrollView.BackgroundColor; //Make the view itself match too
 
                             // update the height of the scroll view to fit all content
-                            RectangleF frame = Note.GetFrame( );
-                            UIScrollView.ContentSize = new SizeF( UIScrollView.Bounds.Width, frame.Size.Height + ( UIScrollView.Bounds.Height / 3 ) );
+                            CGRect frame = Note.GetFrame( );
+                            UIScrollView.ContentSize = new CGSize( UIScrollView.Bounds.Width, frame.Size.Height + ( UIScrollView.Bounds.Height / 3 ) );
 
                             FinishNotesCreation( );
 

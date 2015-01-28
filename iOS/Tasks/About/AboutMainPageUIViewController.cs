@@ -1,8 +1,8 @@
 using System;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using System.CodeDom.Compiler;
-using System.Drawing;
+using CoreGraphics;
 using CCVApp.Shared.Config;
 using CCVApp.Shared.Strings;
 
@@ -18,10 +18,10 @@ namespace iOS
         {
             base.ViewDidLoad();
 
-            RectangleF webViewFrame;
+            CGRect webViewFrame;
             AboutVersionText.Text = string.Format( "Version: {0}", BuildStrings.Version );
 
-            webViewFrame = new RectangleF( View.Frame.X, 
+            webViewFrame = new CGRect( View.Frame.X, 
                                            View.Frame.Y + AboutVersionText.Frame.Height, 
                                            View.Frame.Width, 
                                            View.Frame.Height - AboutVersionText.Frame.Height );

@@ -1,10 +1,10 @@
 ﻿using System;
 using Rock.Mobile.PlatformUI;
 using System.Xml;
-using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using CCVApp.Shared.Config;
+using System.Drawing;
 
 namespace CCVApp
 {

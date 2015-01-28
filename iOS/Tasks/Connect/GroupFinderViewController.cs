@@ -1,11 +1,11 @@
 using System;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using System.CodeDom.Compiler;
-using MonoTouch.CoreLocation;
-using MonoTouch.MapKit;
+using CoreLocation;
+using MapKit;
 using CCVApp.Shared.Config;
-using System.Drawing;
+using CoreGraphics;
 using System.Collections.Generic;
 using CCVApp.Shared.Network;
 using Rock.Mobile.Util.Strings;
@@ -56,15 +56,15 @@ namespace iOS
                     }
                 }
 
-                public PrimaryCell( SizeF parentSize, UITableViewCellStyle style, string cellIdentifier ) : base( style, cellIdentifier )
+                public PrimaryCell( CGSize parentSize, UITableViewCellStyle style, string cellIdentifier ) : base( style, cellIdentifier )
                 {
                     BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
 
                     SearchButton = UIButton.FromType( UIButtonType.System );
-                    SearchButton.Layer.AnchorPoint = new System.Drawing.PointF( 0, 0 );
+                    SearchButton.Layer.AnchorPoint = new CGPoint( 0, 0 );
                     ControlStyling.StyleButton( SearchButton, ConnectConfig.GroupFinder_SearchIcon, ControlStylingConfig.Icon_Font_Secondary, 32 );
                     SearchButton.SizeToFit( );
-                    SearchButton.Frame = new System.Drawing.RectangleF( parentSize.Width - SearchButton.Frame.Width, 0, SearchButton.Frame.Width, 33 );
+                    SearchButton.Frame = new CGRect( parentSize.Width - SearchButton.Frame.Width, 0, SearchButton.Frame.Width, 33 );
                     SearchButton.TouchUpInside += (object sender, EventArgs e) => 
                         {
                             TableSource.RowClicked( 0, AddressTextField.Text );
@@ -72,24 +72,24 @@ namespace iOS
                     AddSubview( SearchButton );
 
                     AddressTextField = new UITextField( );
-                    AddressTextField.Layer.AnchorPoint = new System.Drawing.PointF( 0, 0 );
+                    AddressTextField.Layer.AnchorPoint = new CGPoint( 0, 0 );
                     ControlStyling.StyleTextField( AddressTextField, ConnectStrings.GroupFinder_AddressPlaceholder, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-                    AddressTextField.Frame = new System.Drawing.RectangleF( 10, 0, parentSize.Width - SearchButton.Frame.Width - 5, SearchButton.Frame.Height );
+                    AddressTextField.Frame = new CGRect( 10, 0, parentSize.Width - SearchButton.Frame.Width - 5, SearchButton.Frame.Height );
                     AddressTextField.ReturnKeyType = UIReturnKeyType.Search;
                     AddressTextField.Delegate = new AddressDelegate( ) { PrimaryCell = this };
                     AddSubview( AddressTextField );
 
                     MapView = new MKMapView( );
-                    MapView.Layer.AnchorPoint = new System.Drawing.PointF( 0, 0 );
-                    MapView.Frame = new System.Drawing.RectangleF( 0, AddressTextField.Frame.Bottom, parentSize.Width, 250 );
+                    MapView.Layer.AnchorPoint = new CGPoint( 0, 0 );
+                    MapView.Frame = new CGRect( 0, AddressTextField.Frame.Bottom, parentSize.Width, 250 );
                     AddSubview( MapView );
 
                     SearchResultsBanner = new UILabel( );
-                    SearchResultsBanner.Layer.AnchorPoint = new System.Drawing.PointF( 0, 0 );
+                    SearchResultsBanner.Layer.AnchorPoint = new CGPoint( 0, 0 );
                     SearchResultsBanner.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
                     SearchResultsBanner.Text = ConnectStrings.GroupFinder_BeforeSearch;
                     SearchResultsBanner.SizeToFit( );
-                    SearchResultsBanner.Frame = new RectangleF( 0, MapView.Frame.Bottom, parentSize.Width, SearchResultsBanner.Frame.Height );
+                    SearchResultsBanner.Frame = new CGRect( 0, MapView.Frame.Bottom, parentSize.Width, SearchResultsBanner.Frame.Height );
                     SearchResultsBanner.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
                     SearchResultsBanner.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Table_Footer_Color );
                     SearchResultsBanner.TextAlignment = UITextAlignment.Center;
@@ -111,7 +111,7 @@ namespace iOS
                     AddSubview( Seperator );
                     Seperator.Layer.BorderWidth = 1;
                     Seperator.Layer.BorderColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ).CGColor;
-                    Seperator.Frame = new RectangleF( 0, SearchResultsBanner.Frame.Bottom - 1, Bounds.Width, 1 );
+                    Seperator.Frame = new CGRect( 0, SearchResultsBanner.Frame.Bottom - 1, Bounds.Width, 1 );
                 }
             }
 
@@ -137,7 +137,7 @@ namespace iOS
                 {
                     Title = new UILabel( );
                     Title.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
-                    Title.Layer.AnchorPoint = PointF.Empty;
+                    Title.Layer.AnchorPoint = CGPoint.Empty;
                     Title.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
                     Title.BackgroundColor = UIColor.Clear;
                     Title.LineBreakMode = UILineBreakMode.TailTruncation;
@@ -145,7 +145,7 @@ namespace iOS
 
                     Address = new UILabel( );
                     Address.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-                    Address.Layer.AnchorPoint = PointF.Empty;
+                    Address.Layer.AnchorPoint = CGPoint.Empty;
                     Address.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
                     Address.BackgroundColor = UIColor.Clear;
                     Address.LineBreakMode = UILineBreakMode.TailTruncation;
@@ -154,7 +154,7 @@ namespace iOS
 
                     Neighborhood = new UILabel( );
                     Neighborhood.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-                    Neighborhood.Layer.AnchorPoint = PointF.Empty;
+                    Neighborhood.Layer.AnchorPoint = CGPoint.Empty;
                     Neighborhood.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
                     Neighborhood.BackgroundColor = UIColor.Clear;
                     Neighborhood.LineBreakMode = UILineBreakMode.TailTruncation;
@@ -169,8 +169,8 @@ namespace iOS
 
             GroupFinderViewController Parent { get; set; }
 
-            float PendingPrimaryCellHeight { get; set; }
-            float PendingCellHeight { get; set; }
+            nfloat PendingPrimaryCellHeight { get; set; }
+            nfloat PendingCellHeight { get; set; }
 
             PrimaryCell PrimaryTableCell { get; set; }
 
@@ -227,7 +227,7 @@ namespace iOS
                 foreach ( GroupFinder.GroupEntry entry in Parent.GroupEntries )
                 {
                     MKPointAnnotation annotation = new MKPointAnnotation();
-                    annotation.Coordinate = new CLLocationCoordinate2D( double.Parse( entry.Latitude ), double.Parse( entry.Longitude ) );
+                    annotation.SetCoordinate( new CLLocationCoordinate2D( double.Parse( entry.Latitude ), double.Parse( entry.Longitude ) ) );
                     annotation.Title = entry.Title;
                     annotation.Subtitle = entry.Distance;
                     annotations.Add( annotation );
@@ -235,22 +235,22 @@ namespace iOS
                 PrimaryTableCell.MapView.ShowAnnotations( annotations.ToArray( ), true );
             }
 
-            public override int RowsInSection (UITableView tableview, int section)
+            public override nint RowsInSection (UITableView tableview, nint section)
             {
                 return Parent.GroupEntries.Count + 1;
             }
 
-            public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
+            public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
             {
                 return GetCachedRowHeight( tableView, indexPath );
             }
 
-            public override float EstimatedHeight(UITableView tableView, NSIndexPath indexPath)
+            public override nfloat EstimatedHeight(UITableView tableView, NSIndexPath indexPath)
             {
                 return GetCachedRowHeight( tableView, indexPath );
             }
 
-            float GetCachedRowHeight( UITableView tableView, NSIndexPath indexPath )
+            nfloat GetCachedRowHeight( UITableView tableView, NSIndexPath indexPath )
             {
                 // Depending on the row, we either want the primary cell's height,
                 // or a standard row's height.
@@ -280,7 +280,7 @@ namespace iOS
                 return tableView.Frame.Height;
             }
 
-            public override UITableViewCell GetCell (UITableView tableView, MonoTouch.Foundation.NSIndexPath indexPath)
+            public override UITableViewCell GetCell (UITableView tableView, NSIndexPath indexPath)
             {
                 if ( indexPath.Row == 0 )
                 {
@@ -303,7 +303,7 @@ namespace iOS
                     cell.TableSource = this;
 
                     // take the parent table's width so we inherit its width constraint
-                    cell.Bounds = new RectangleF( cell.Bounds.X, cell.Bounds.Y, tableView.Bounds.Width, cell.Bounds.Height );
+                    cell.Bounds = new CGRect( cell.Bounds.X, cell.Bounds.Y, tableView.Bounds.Width, cell.Bounds.Height );
 
                     // configure the cell colors
                     cell.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
@@ -325,12 +325,12 @@ namespace iOS
                 cell.Neighborhood.SizeToFit( );
 
                 // Position the Title & Address in the center to the right of the image
-                cell.Title.Frame = new RectangleF( 10, 0, cell.Frame.Width - 5, cell.Title.Frame.Height );
-                cell.Address.Frame = new RectangleF( 10, cell.Title.Frame.Bottom - 6, cell.Frame.Width - 5, cell.Address.Frame.Height + 5 );
-                cell.Neighborhood.Frame = new RectangleF( 10, cell.Address.Frame.Bottom - 6, cell.Frame.Width - 5, cell.Neighborhood.Frame.Height + 5 );
+                cell.Title.Frame = new CGRect( 10, 0, cell.Frame.Width - 5, cell.Title.Frame.Height );
+                cell.Address.Frame = new CGRect( 10, cell.Title.Frame.Bottom - 6, cell.Frame.Width - 5, cell.Address.Frame.Height + 5 );
+                cell.Neighborhood.Frame = new CGRect( 10, cell.Address.Frame.Bottom - 6, cell.Frame.Width - 5, cell.Neighborhood.Frame.Height + 5 );
 
                 // add the seperator to the bottom
-                cell.Seperator.Frame = new RectangleF( 0, cell.Neighborhood.Frame.Bottom - 1, cell.Bounds.Width, 1 );
+                cell.Seperator.Frame = new CGRect( 0, cell.Neighborhood.Frame.Bottom - 1, cell.Bounds.Width, 1 );
 
                 PendingCellHeight = cell.Seperator.Frame.Bottom;
 

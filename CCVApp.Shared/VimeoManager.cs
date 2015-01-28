@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using RestSharp;
 using Rock.Mobile.Network;
 using RestSharp.Deserializers;

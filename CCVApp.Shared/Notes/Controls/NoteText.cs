@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Xml;
 using System.Collections.Generic;
-using System.Drawing;
 using Rock.Mobile.PlatformUI;
+using System.Drawing;
 
 namespace CCVApp
 {
@@ -117,7 +117,7 @@ namespace CCVApp
                     base.AddOffset( xOffset, yOffset );
 
                     PlatformLabel.Position = new PointF( PlatformLabel.Position.X + xOffset, 
-                        PlatformLabel.Position.Y + yOffset );
+                                                         PlatformLabel.Position.Y + yOffset );
                 }
 
                 public override void AddToView( object obj )

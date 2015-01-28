@@ -1,9 +1,9 @@
 using System;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using System.CodeDom.Compiler;
 using CCVApp.Shared.Network;
-using System.Drawing;
+using CoreGraphics;
 using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
 using CCVApp.Shared.Strings;
