@@ -136,6 +136,13 @@ namespace CCVApp
                 public bool HasProfileImage { get; set; }
 
                 /// <summary>
+                /// The index of the campus the user is viewing in the mobile app.
+                /// This may or may NOT be their "home campus" as defined in the Person object.
+                /// </summary>
+                /// <value>The viewing campus.</value>
+                public int ViewingCampus { get; set; }
+
+                /// <summary>
                 /// A json version of the person at the last point it was sync'd with the server.
                 /// This allows us to update Person and save it, and in the case of a server sync failing,
                 /// know that we need to try again.

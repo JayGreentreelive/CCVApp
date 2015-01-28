@@ -12,6 +12,7 @@ using System.IO;
 using CCVApp.Shared.Config;
 using CCVApp.Shared.Strings;
 using Rock.Mobile.PlatformUI;
+using Rock.Mobile.PlatformSpecific.iOS.Graphics;
 
 namespace iOS
 {
@@ -73,7 +74,7 @@ namespace iOS
                 // Create the logo view containing the image.
                 LogoView = new UILabel();
                 LogoView.Text = imageChar;
-                LogoView.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Primary, SpringboardConfig.Element_FontSize );
+                LogoView.Font = FontManager.GetFont( ControlStylingConfig.Icon_Font_Primary, SpringboardConfig.Element_FontSize );
                 LogoView.SizeToFit( );
                 LogoView.BackgroundColor = UIColor.Clear;
                 BackingView.AddSubview( LogoView );
@@ -81,7 +82,7 @@ namespace iOS
                 // Create the text, and populate it with the button's requested text, color and font.
                 TextLabel = new UILabel();
                 TextLabel.Text = labelStr;
-                TextLabel.Font = TextLabel.Font.WithSize( 15.0f );
+                TextLabel.Font = FontManager.GetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
                 TextLabel.BackgroundColor = UIColor.Clear;
                 TextLabel.SizeToFit( );
                 BackingView.AddSubview( TextLabel );
@@ -189,6 +190,10 @@ namespace iOS
         /// <value>The bottom seperator.</value>
         UIView BottomSeperator { get; set; }
 
+        UILabel CampusSelectionText { get; set; }
+        UILabel CampusSelectionIcon { get; set; }
+        UIButton CampusSelectionButton { get; set; }
+
 		public SpringboardViewController (IntPtr handle) : base (handle)
 		{
             UserManagementStoryboard = UIStoryboard.FromName( "UserManagement", null );
@@ -286,13 +291,44 @@ namespace iOS
             //
 
             // setup the campus selector and settings button
-            CampusButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
-            CampusButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            CampusSelectionText = new UILabel();
+            ControlStyling.StyleUILabel( CampusSelectionText, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            CampusSelectionText.Text = string.Format( SpringboardStrings.Viewing_Campus, RockGeneralData.Instance.Data.Campuses[ RockMobileUser.Instance.ViewingCampus ] );
+            CampusSelectionText.SizeToFit( );
+            View.AddSubview( CampusSelectionText );
 
-            SettingsButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
-            SettingsButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Primary, SpringboardConfig.SettingsSymbolSize );
-            SettingsButton.SetTitle( SpringboardConfig.SettingsSymbol, UIControlState.Normal );
-            SettingsButton.SizeToFit( );
+            CampusSelectionIcon = new UILabel();
+            ControlStyling.StyleUILabel( CampusSelectionIcon, ControlStylingConfig.Icon_Font_Primary, ControlStylingConfig.Small_FontSize );
+            CampusSelectionIcon.Text = SpringboardConfig.SettingsSymbol;
+            CampusSelectionIcon.SizeToFit( );
+            View.AddSubview( CampusSelectionIcon );
+
+            CampusSelectionButton = new UIButton();
+            View.AddSubview( CampusSelectionButton );
+            CampusSelectionButton.TouchUpInside += (object sender, EventArgs e ) =>
+            {
+                    UIAlertController actionSheet = UIAlertController.Create( SpringboardStrings.SelectCampus_SourceTitle, 
+                                                                              SpringboardStrings.SelectCampus_SourceDescription, 
+                                                                              UIAlertControllerStyle.ActionSheet );
+
+                    // for each campus, create an entry in the action sheet, and its callback will assign
+                    // that campus index to the user's viewing preference
+                    for( int i = 0; i < RockGeneralData.Instance.Data.Campuses.Count; i++ )
+                    {
+                        UIAlertAction campusAction = UIAlertAction.Create( RockGeneralData.Instance.Data.Campuses[ i ], UIAlertActionStyle.Default, delegate(UIAlertAction obj) 
+                            {
+                                //get the index of the campus based on the selection's title, and then set that campus title as the string
+                                RockMobileUser.Instance.ViewingCampus = RockGeneralData.Instance.Data.Campuses.IndexOf( obj.Title );
+                                CampusSelectionText.Text = string.Format( SpringboardStrings.Viewing_Campus, RockGeneralData.Instance.Data.Campuses[ RockMobileUser.Instance.ViewingCampus ] );
+                                UpdateCampusViews( );
+                        } );
+
+                        actionSheet.AddAction( campusAction );
+                    }
+
+                    PresentViewController( actionSheet, true, null );
+            };
+
 
             // setup the image that will display when the user is logged in
             ProfileImageView = new UIImageView( );
@@ -563,7 +599,7 @@ namespace iOS
 
             ConnectElement.Layer.AnchorPoint = CGPoint.Empty;
             ConnectElement.Layer.Position = new CGPoint( 0, NewsElement.Frame.Bottom );
-
+            
             MessagesElement.Layer.AnchorPoint = CGPoint.Empty;
             MessagesElement.Layer.Position = new CGPoint( 0, ConnectElement.Frame.Bottom );
 
@@ -579,11 +615,21 @@ namespace iOS
             BottomSeperator.Layer.AnchorPoint = CGPoint.Empty;
             BottomSeperator.Layer.Position = new CGPoint( 0, MoreElement.Frame.Bottom );
 
-            CampusButton.Layer.AnchorPoint = CGPoint.Empty;
-            CampusButton.Layer.Position = new CGPoint( 5, View.Frame.Height - CampusButton.Frame.Height - 2 );
+            CampusSelectionText.Layer.AnchorPoint = CGPoint.Empty;
+            CampusSelectionText.Layer.Position = new CGPoint( 5, View.Frame.Height - CampusSelectionText.Frame.Height - 2 );
 
-            SettingsButton.Layer.AnchorPoint = CGPoint.Empty;
-            SettingsButton.Layer.Position = new CGPoint( PrimaryContainerConfig.SlideAmount - SettingsButton.Bounds.Width, View.Frame.Height - SettingsButton.Frame.Height - 2 );
+            UpdateCampusViews( );
+        }
+
+        void UpdateCampusViews( )
+        {
+            CampusSelectionText.SizeToFit( ); 
+
+            CampusSelectionIcon.Layer.AnchorPoint = CGPoint.Empty;
+            CampusSelectionIcon.Layer.Position = new CGPoint( CampusSelectionText.Frame.Right + 4, CampusSelectionText.Frame.Top );
+
+            // overlay the button across the campus text and icon
+            CampusSelectionButton.Frame = new CGRect( CampusSelectionText.Frame.Left, CampusSelectionText.Frame.Top, CampusSelectionIcon.Frame.Right, CampusSelectionText.Frame.Height );
         }
 
         protected void UpdateLoginState( )

@@ -16,10 +16,6 @@ namespace iOS
 	{
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UIButton CampusButton { get; set; }
-
-		[Outlet]
-		[GeneratedCode ("iOS Designer", "1.0")]
 		UIView ConnectElement { get; set; }
 
 		[Outlet]
@@ -48,10 +44,6 @@ namespace iOS
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UIButton SettingsButton { get; set; }
-
-		[Outlet]
-		[GeneratedCode ("iOS Designer", "1.0")]
 		UILabel UserNameField { get; set; }
 
 		[Outlet]
@@ -68,10 +60,6 @@ namespace iOS
 
 		void ReleaseDesignerOutlets ()
 		{
-			if (CampusButton != null) {
-				CampusButton.Dispose ();
-				CampusButton = null;
-			}
 			if (ConnectElement != null) {
 				ConnectElement.Dispose ();
 				ConnectElement = null;
@@ -99,10 +87,6 @@ namespace iOS
 			if (PrayerElement != null) {
 				PrayerElement.Dispose ();
 				PrayerElement = null;
-			}
-			if (SettingsButton != null) {
-				SettingsButton.Dispose ();
-				SettingsButton = null;
 			}
 			if (UserNameField != null) {
 				UserNameField.Dispose ();

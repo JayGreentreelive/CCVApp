@@ -21,6 +21,7 @@ using CCVApp.Shared.Config;
 using CCVApp.Shared.Strings;
 using Rock.Mobile.PlatformUI;
 using Android.Graphics.Drawables;
+using Rock.Mobile.PlatformSpecific.Android.Graphics;
 
 namespace Droid
 {
@@ -54,13 +55,15 @@ namespace Droid
             Button = Layout.FindViewById<Button>( Resource.Id.button );
             Text = Layout.FindViewById<TextView>( Resource.Id.text );
 
-            Typeface fontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary );
+            Typeface fontFace = FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary );
             Icon.SetTypeface( fontFace, TypefaceStyle.Normal );
             Icon.SetTextSize( Android.Util.ComplexUnitType.Dip, SpringboardConfig.Element_FontSize );
             Icon.SetX( Icon.GetX() - Icon.Width / 2 );
             Icon.Text = IconStr;
 
             Text.Text = ElementLabel;
+            Text.SetTypeface( FontManager.Instance.GetFont( ControlStylingConfig.Medium_Font_Regular ), TypefaceStyle.Normal );
+            Text.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Medium_FontSize );
 
             Button.Background = null;
 
@@ -314,18 +317,46 @@ namespace Droid
 
 
             // setup the bottom campus / settings selector
-            Button campusButton = campusContainer.FindViewById<Button>( Resource.Id.campus_selection );
-            campusButton.Ellipsize = Android.Text.TextUtils.TruncateAt.End;
-            campusButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
-            campusButton.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Light ), TypefaceStyle.Normal );
-            campusButton.SetTextSize(Android.Util.ComplexUnitType.Dip,  ControlStylingConfig.Small_FontSize );
-            campusButton.SetSingleLine( );
+            TextView campusText = campusContainer.FindViewById<TextView>( Resource.Id.campus_selection_text );
+            campusText.Ellipsize = Android.Text.TextUtils.TruncateAt.End;
+            campusText.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+            campusText.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
+            campusText.SetTextSize(Android.Util.ComplexUnitType.Dip,  ControlStylingConfig.Small_FontSize );
+            campusText.SetSingleLine( );
 
-            Button settingsButton = campusContainer.FindViewById<Button>( Resource.Id.settings_button );
-            settingsButton.SetTypeface( fontFace, TypefaceStyle.Normal );
-            settingsButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
-            settingsButton.SetTextSize( Android.Util.ComplexUnitType.Dip, SpringboardConfig.SettingsSymbolSize );
-            settingsButton.Text = SpringboardConfig.SettingsSymbol;
+            TextView settingsIcon = campusContainer.FindViewById<TextView>( Resource.Id.campus_selection_icon );
+            settingsIcon.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary ), TypefaceStyle.Normal );
+            settingsIcon.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+            settingsIcon.SetTextSize( Android.Util.ComplexUnitType.Dip, SpringboardConfig.SettingsSymbolSize );
+            settingsIcon.Text = SpringboardConfig.SettingsSymbol;
+
+            // set the campus text to whatever their profile has set for viewing.
+            campusText.Text = string.Format( SpringboardStrings.Viewing_Campus, RockGeneralData.Instance.Data.Campuses[ RockMobileUser.Instance.ViewingCampus ] );
+
+            // setup the campus selection button.
+            Button campusSelectionButton = campusContainer.FindViewById<Button>( Resource.Id.campus_selection_button );
+            campusSelectionButton.Click += (object sender, EventArgs e ) =>
+                {
+                    // build an alert dialog containing all the campus choices
+                    AlertDialog.Builder builder = new AlertDialog.Builder( Activity );
+                    Java.Lang.ICharSequence [] campusStrings = new Java.Lang.ICharSequence[ RockGeneralData.Instance.Data.Campuses.Count ];
+                    for( int i = 0; i < RockGeneralData.Instance.Data.Campuses.Count; i++ )
+                    {
+                        campusStrings[ i ] = new Java.Lang.String( CCVApp.Shared.Network.RockGeneralData.Instance.Data.Campuses[ i ] );
+                    }
+
+                    // launch the dialog, and on selection, update the viewing campus text.
+                    builder.SetItems( campusStrings, delegate(object s, DialogClickEventArgs clickArgs) 
+                        {
+                            Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                                {
+                                    RockMobileUser.Instance.ViewingCampus = clickArgs.Which;
+                                    campusText.Text = string.Format( SpringboardStrings.Viewing_Campus, RockGeneralData.Instance.Data.Campuses[ RockMobileUser.Instance.ViewingCampus ] );
+                                });
+                        });
+
+                    builder.Show( );
+                };
 
             return view;
         }

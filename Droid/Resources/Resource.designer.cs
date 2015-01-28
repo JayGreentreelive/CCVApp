@@ -1593,7 +1593,13 @@ namespace Droid
 			public const int campus_container = 2131493049;
 			
 			// aapt resource value: 0x7f0c00ba
-			public const int campus_selection = 2131493050;
+			public const int campus_selection_button = 2131493050;
+			
+			// aapt resource value: 0x7f0c00bc
+			public const int campus_selection_icon = 2131493052;
+			
+			// aapt resource value: 0x7f0c00bb
+			public const int campus_selection_text = 2131493051;
 			
 			// aapt resource value: 0x7f0c0065
 			public const int cancelButton = 2131492965;
@@ -1930,9 +1936,6 @@ namespace Droid
 			
 			// aapt resource value: 0x7f0c00b2
 			public const int seperator = 2131493042;
-			
-			// aapt resource value: 0x7f0c00bb
-			public const int settings_button = 2131493051;
 			
 			// aapt resource value: 0x7f0c003e
 			public const int shortcut = 2131492926;

@@ -52,6 +52,10 @@ namespace CCVApp.Shared
             public const string Element_Prayer_Title = "Prayer";
             public const string Element_Give_Title = "Give";
             public const string Element_More_Title = "More";
+
+            public const string SelectCampus_SourceTitle = "Campus Selection";
+            public const string SelectCampus_SourceDescription = "Select the campus to view.";
+            public const string Viewing_Campus = "{0} Campus"; 
         }
 
         public class LoginStrings

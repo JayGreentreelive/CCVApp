@@ -84,7 +84,7 @@ namespace CCVApp
                 /// <summary>
                 /// The symbol to use representing the settings button.
                 /// </summary>
-                public const string SettingsSymbol = "";
+                public const string SettingsSymbol = "";
 
                 /// <summary>
                 /// The size of the symbol representing the settings button.
@@ -147,7 +147,7 @@ namespace CCVApp
                 /// <summary>
                 /// The text to display for the 'ok to crop' button.
                 /// </summary>
-                public const string CropOkButton_Text = "";
+                public const string CropOkButton_Text = "";
 
                 /// <summary>
                 /// The size (in font points) of the 'ok to crop' button.
@@ -157,7 +157,7 @@ namespace CCVApp
                 /// <summary>
                 /// The text to display for the 'cancel crop' button.
                 /// </summary>
-                public const string CropCancelButton_Text = "";
+                public const string CropCancelButton_Text = "";//""; (This commented out one is the X with a circle)
 
                 /// <summary>
                 /// The size (in font points) of the 'cancel crop' button.

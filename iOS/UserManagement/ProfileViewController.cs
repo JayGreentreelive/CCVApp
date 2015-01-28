@@ -164,7 +164,7 @@ namespace iOS
             datePicker.ValueChanged += (object sender, EventArgs e ) =>
             {
                 NSDate pickerDate = ((UIDatePicker) sender).Date;
-                BirthdateText.Text = string.Format( "{0:MMMMM dd yyyy}", pickerDate );
+                BirthdateText.Text = string.Format( "{0:MMMMM dd yyyy}", pickerDate.NSDateToDateTime( ) );
             };
             BirthdatePicker.SetPicker( datePicker );
 

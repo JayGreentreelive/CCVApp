@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="7">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="7">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
     </dependencies>
     <scenes>
         <!--Root View Controller-->
@@ -74,25 +74,11 @@
                                 <rect key="frame" x="0.0" y="180" width="275" height="40"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="custom" lineBreakMode="middleTruncation" id="498" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO">
-                                <rect key="frame" x="4" y="538" width="146" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                <state key="normal" title="EAST VALLEY CAMPUS">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="custom" lineBreakMode="middleTruncation" id="499" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO">
-                                <rect key="frame" x="264" y="538" width="46" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                <state key="normal" title="S">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                            </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Tap to personalize" lineBreakMode="tailTruncation" minimumFontSize="10" id="506" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" fixedFrame="YES" text="Tap to personalize" lineBreakMode="tailTruncation" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="506">
                                 <rect key="frame" x="0.0" y="153" width="115" height="21"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" colorSpace="calibratedRGB" red="1" green="1" blue="1" alpha="1"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
@@ -101,18 +87,16 @@
                     <navigationItem key="navigationItem" title="Root View Controller" id="11"/>
                     <connections>
                         <outlet property="ConnectElement" destination="486" id="name-outlet-486"/>
-                        <outlet property="GiveElement" destination="467" id="name-outlet-467"/>
                         <outlet property="EditPictureButton" destination="283" id="name-outlet-283"/>
+                        <outlet property="GiveElement" destination="467" id="name-outlet-467"/>
                         <outlet property="MessagesElement" destination="479" id="name-outlet-479"/>
                         <outlet property="MoreElement" destination="456" id="name-outlet-456"/>
                         <outlet property="NewsElement" destination="491" id="name-outlet-491"/>
                         <outlet property="PrayerElement" destination="476" id="name-outlet-476"/>
                         <outlet property="UserNameField" destination="444" id="name-outlet-444"/>
                         <outlet property="ViewProfileButton" destination="390" id="name-outlet-390"/>
-                        <outlet property="WelcomeField" destination="449" id="name-outlet-449"/>
-                        <outlet property="CampusButton" destination="498" id="name-outlet-498"/>
-                        <outlet property="SettingsButton" destination="499" id="name-outlet-499"/>
                         <outlet property="ViewProfileLabel" destination="506" id="name-outlet-506"/>
+                        <outlet property="WelcomeField" destination="449" id="name-outlet-449"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="13" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -173,15 +157,61 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <resources>
+        <image name="Fonts/Bevan.ttf" width="0" height="0"/>
+        <image name="Fonts/ChangaOne-Italic.ttf" width="0" height="0"/>
+        <image name="Fonts/ChangaOne-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/DroidSerif-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/DroidSerif-BoldItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/DroidSerif-Italic.ttf" width="0" height="0"/>
+        <image name="Fonts/DroidSerif.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-Black.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-BoldItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-HeavyItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-Italic.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-Light.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-LightItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/Montserrat-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/Montserrat-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-BoldItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-ExtraBold.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-ExtraBoldItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-Italic.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-Light.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-LightItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-Semibold.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-SemiboldItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/PassionOne-Black.ttf" width="0" height="0"/>
+        <image name="Fonts/PassionOne-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/PassionOne-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/Quicksand-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/Quicksand-Light.ttf" width="0" height="0"/>
+        <image name="Fonts/Quicksand-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoCondensed-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoCondensed-BoldItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoCondensed-Italic.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoCondensed-Light.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoCondensed-LightItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoCondensed-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoSlab-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoSlab-Light.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoSlab-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoSlab-Thin.ttf" width="0" height="0"/>
+        <image name="Fonts/FontAwesome.ttf" width="0" height="0"/>
+        <image name="Fonts/Bh.ttf" width="0" height="0"/>
         <image name="ccvLogo.png" width="57" height="28"/>
         <image name="news_baptism_main.png" width="375" height="242"/>
-        <image name="news_learnmore_header.png" width="375" height="211"/>
+        <image name="news_learnmore_header.png" width="414" height="180"/>
         <image name="news_learnmore_main.png" width="375" height="242"/>
-        <image name="news_startingpoint_header.png" width="1242" height="699"/>
+        <image name="news_startingpoint_header.png" width="1242" height="540"/>
         <image name="news_startingpoint_main.png" width="375" height="242"/>
         <image name="podcastThumbnailPlaceholder.png" width="590" height="332"/>
         <image name="spot_mask.png" width="128" height="128"/>
-        <image name="news_baptism_header.png" width="320" height="180"/>
+        <image name="news_baptism_header.png" width="414" height="180"/>
         <image name="facebook_login.png" width="250" height="35"/>
+        <image name="connect_banner.jpg" width="595" height="335"/>
     </resources>
 </document>

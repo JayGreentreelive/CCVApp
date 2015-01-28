@@ -292,31 +292,35 @@
         </RelativeLayout>
     </ScrollView>
 <!--Bottom toolbar with Campus and Settings-->
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/campus_container"
         android:background="#FFFF0000"
-        android:layout_height="40dp"
-        android:layout_width="50dp"
+        android:layout_height="30dp"
+        android:layout_width="match_parent"
         android:layout_gravity="bottom"
         android:layout_alignParentBottom="true">
         <Button
-            android:id="@+id/campus_selection"
-            android:text="EAST VALLEY CAMPUS"
+            android:id="@+id/campus_selection_button"
+            android:background="@android:color/transparent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/campus_selection_text"
+            android:text=""
             android:layout_marginLeft="10dp"
-            android:layout_weight="1"
             android:background="@android:color/transparent"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:gravity="center"
+            android:gravity="top"
             android:layout_gravity="center_vertical" />
-        <Button
-            android:id="@+id/settings_button"
-            android:text="Settings"
-            android:layout_weight="1"
+        <TextView
+            android:id="@+id/campus_selection_icon"
+            android:layout_marginLeft="10dp"
+            android:text="S"
+            android:layout_toRightOf="@+id/campus_selection_text"
             android:background="@android:color/transparent"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
-            android:layout_gravity="right"
-            android:gravity="center" />
-    </LinearLayout>
+            android:gravity="top" />
+    </RelativeLayout>
 </RelativeLayout>
