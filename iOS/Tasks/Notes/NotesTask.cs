@@ -23,27 +23,45 @@ namespace iOS
             NoteController.Task = this;
         }
 
-        public override void MakeActive( UINavigationController parentViewController, NavToolbar navToolbar )
+        public override void MakeActive( TaskUINavigationController parentViewController, NavToolbar navToolbar )
         {
             base.MakeActive( parentViewController, navToolbar );
 
             parentViewController.PushViewController( MainViewController, false );
         }
 
+        public override void PerformAction( string action )
+        {
+            base.PerformAction( action );
+
+            switch( action )
+            {
+                case "Page.Read":
+                {
+                    // since we're switching to the read notes VC, pop to the main page root and 
+                    // remove it, because we dont' want back history (where would they go back to?)
+                    ParentViewController.ClearViewControllerStack( );
+
+                    //TODO: We need to get the latest sermon XML from Rock Data. For now,
+                    //I know what it'll be named. (it's the date of the Saturday weekend day.)
+                    NoteController.NotePresentableName = string.Format( "Message - {0}", "" );
+                    NoteController.NoteName = "http://www.jeredmcferron.com/ccv/message_1_24_2015.xml";
+
+                    ParentViewController.PushViewController( NoteController, false );
+                    break;
+                }
+            }
+        }
+
         public override void MakeInActive( )
         {
             base.MakeInActive( );
-
-            MainViewController.View.RemoveFromSuperview( );
-            MainViewController.RemoveFromParentViewController( );
         }
 
         public override void WillShowViewController(UIViewController viewController)
         {
             // if we're coming from WebView or Notes and going to something else,
             // force the device back to portrait
-
-
             ActiveViewController = viewController;
 
             // if the notes are active, make sure the share button gets turned on
@@ -51,7 +69,6 @@ namespace iOS
             {
                 // Let the view controller manage this being enabled, because
                 // it's conditional on being in landscape or not.
-                //NavToolbar.SetBackButtonEnabled( true );
                 NavToolbar.SetCreateButtonEnabled( false, null );
                 NavToolbar.SetShareButtonEnabled( true, delegate
                     { 
@@ -66,7 +83,6 @@ namespace iOS
             {
                 // Let the view controller manage this being enabled, because
                 // it's conditional on being in landscape or not.
-                //NavToolbar.SetBackButtonEnabled( true );
                 NavToolbar.SetCreateButtonEnabled( false, null );
                 NavToolbar.SetShareButtonEnabled( true, delegate
                     { 
@@ -81,21 +97,18 @@ namespace iOS
             {
                 NavToolbar.SetCreateButtonEnabled( false, null );
                 NavToolbar.SetShareButtonEnabled( false, null );
-                NavToolbar.SetBackButtonEnabled( true );
                 NavToolbar.RevealForTime( 3.0f );
             }
             else if ( ( viewController as NotesMainUIViewController ) != null )
             {
                 NavToolbar.SetCreateButtonEnabled( false, null );
                 NavToolbar.SetShareButtonEnabled( false, null );
-                NavToolbar.SetBackButtonEnabled( false );
                 NavToolbar.Reveal( false );
             }
             else if ( ( viewController as NotesWebViewController ) != null )
             {
                 NavToolbar.SetCreateButtonEnabled( false, null );
                 NavToolbar.SetShareButtonEnabled( false, null );
-                NavToolbar.SetBackButtonEnabled( true );
                 NavToolbar.Reveal( true );
             }
         }
@@ -159,7 +172,9 @@ namespace iOS
         public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations()
         {
             // if we're using the watch or notes controller, allow landscape
-            if ( ( ActiveViewController as NotesViewController ) != null || ( ActiveViewController as NotesWatchUIViewController ) != null || ( ActiveViewController as NotesWebViewController ) != null )
+            if ( ( ActiveViewController as NotesViewController ) != null || 
+                 ( ActiveViewController as NotesWatchUIViewController ) != null || 
+                 ( ActiveViewController as NotesWebViewController ) != null )
             {
                 return UIInterfaceOrientationMask.All;
             }

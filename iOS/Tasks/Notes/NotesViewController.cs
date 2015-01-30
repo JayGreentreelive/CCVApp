@@ -255,7 +255,7 @@ namespace iOS
 			}
 
             // don't let the back button work when in landscape mode.
-            Task.NavToolbar.SetBackButtonEnabled( UIDevice.CurrentDevice.Orientation == UIDeviceOrientation.Portrait ? true : false );
+            //Task.NavToolbar.SetBackButtonEnabled( UIDevice.CurrentDevice.Orientation == UIDeviceOrientation.Portrait ? true : false );
         }
 
         public override void ViewDidLoad( )
@@ -318,9 +318,6 @@ namespace iOS
 
                 CreateNotes( CachedNoteXml, CachedStyleXml );
             }
-
-            // don't let the back button work when in landscape mode.
-            Task.NavToolbar.SetBackButtonEnabled( UIDevice.CurrentDevice.Orientation == UIDeviceOrientation.Portrait ? true : false );
         }
 
         public override void ViewDidAppear(bool animated)

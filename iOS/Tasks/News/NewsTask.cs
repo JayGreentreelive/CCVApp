@@ -15,7 +15,7 @@ namespace iOS
             MainPageVC.Task = this;
         }
 
-        public override void MakeActive( UINavigationController parentViewController, NavToolbar navToolbar )
+        public override void MakeActive( TaskUINavigationController parentViewController, NavToolbar navToolbar )
         {
             base.MakeActive( parentViewController, navToolbar );
 
@@ -35,12 +35,10 @@ namespace iOS
             // if it's the main page, disable the back button on the toolbar
             if ( viewController == MainPageVC )
             {
-                NavToolbar.SetBackButtonEnabled( false );
                 NavToolbar.Reveal( false );
             }
             else
             {
-                NavToolbar.SetBackButtonEnabled( true );
                 NavToolbar.RevealForTime( 3.0f );
             }
         }
@@ -56,17 +54,6 @@ namespace iOS
         public override void MakeInActive( )
         {
             base.MakeInActive( );
-
-            // clean up main
-            if( MainPageVC.View != null )
-            {
-                MainPageVC.View.RemoveFromSuperview( );
-            }
-
-            if( MainPageVC.ParentViewController != null )
-            {
-                MainPageVC.RemoveFromParentViewController( );
-            }
         }
 
         public override void AppOnResignActive( )

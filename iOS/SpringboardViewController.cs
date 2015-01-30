@@ -13,6 +13,7 @@ using CCVApp.Shared.Config;
 using CCVApp.Shared.Strings;
 using Rock.Mobile.PlatformUI;
 using Rock.Mobile.PlatformSpecific.iOS.Graphics;
+using Rock.Mobile.PlatformSpecific.iOS.UI;
 
 namespace iOS
 {
@@ -194,6 +195,8 @@ namespace iOS
         UILabel CampusSelectionIcon { get; set; }
         UIButton CampusSelectionButton { get; set; }
 
+        NotificationBillboard Billboard { get; set; }
+
 		public SpringboardViewController (IntPtr handle) : base (handle)
 		{
             UserManagementStoryboard = UIStoryboard.FromName( "UserManagement", null );
@@ -365,6 +368,11 @@ namespace iOS
                         // they're logged in, so let them set their profile pic
                         ManageProfilePic( );
                     }
+                    else
+                    {
+                        //otherwise this button can double as a login button.
+                        PresentModelViewController( LoginViewController );
+                    }
                 };
 
             ViewProfileButton.TouchUpInside += (object sender, EventArgs e) => 
@@ -384,6 +392,31 @@ namespace iOS
                 {
                     // here we know whether the initial handshake with Rock went ok or not
                 });
+
+
+
+            // setup the Notification Banner for Taking Notes
+            Billboard = new NotificationBillboard( View.Bounds.Width );
+            Billboard.SetLabel( SpringboardStrings.TakeNotesNotificationIcon, 
+                                SpringboardStrings.TakeNotesNotificationLabel, 
+                                ControlStylingConfig.TextField_ActiveTextColor, 
+                                SpringboardConfig.Element_SelectedColor, 
+                delegate 
+                {
+                    // find the Notes task, activate it, and tell it to jump to the read page.
+                    foreach( SpringboardElement element in Elements )
+                    {
+                        if ( element.Task as NotesTask != null )
+                        {
+                            ActivateElement( element );
+                            NavViewController.PerformTaskAction( "Page.Read" );
+                            Billboard.Hide( );
+                        }
+                    }
+                } 
+            );
+
+            Billboard.Layer.Position = new CGPoint( Billboard.Layer.Position.X, NavViewController.NavigationBar.Frame.Height );
         }
 
         void ManageProfilePic( )
@@ -582,6 +615,31 @@ namespace iOS
             AdjustSpringboardLayout( );
 
             UpdateLoginState( );
+
+            // if we haven't yet added and processed the billboard, do that now.
+            if ( Billboard.Superview == null )
+            {
+                NavViewController.View.AddSubview( Billboard );
+
+                // should we advertise the notes?
+                // yes, if it's a weekend and we're at CCV (that part will come later)
+                //if ( DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday )
+                {
+                    // kick off a timer to reveal the billboard, because we 
+                    // don't want to do it the MOMENT the view appears.
+                    System.Timers.Timer timer = new System.Timers.Timer();
+                    timer.AutoReset = false;
+                    timer.Interval = 1000;
+                    timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>
+                    {
+                        Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                            {
+                                Billboard.Reveal( );
+                            } );
+                    };
+                    timer.Start( );
+                }
+            }
         }
 
         /// <summary>
@@ -666,7 +724,7 @@ namespace iOS
             UserNameField.Bounds = new CGRect( 0, 0, UserNameField.Bounds.Width, totalNameHeight );
 
             ViewProfileLabel.Layer.AnchorPoint = CGPoint.Empty;
-            ViewProfileLabel.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Light, ControlStylingConfig.Small_FontSize );
+            ViewProfileLabel.Font = FontManager.GetFont( ControlStylingConfig.Small_Font_Light, ControlStylingConfig.Small_FontSize );
             ViewProfileLabel.SizeToFit( );
             ViewProfileLabel.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
             ViewProfileLabel.Layer.Position = new CGPoint( EditPictureButton.Layer.Position.X + ((EditPictureButton.Bounds.Width - ViewProfileLabel.Bounds.Width) / 2), WelcomeField.Frame.Bottom );

@@ -155,7 +155,7 @@ namespace Droid
                     (View as RelativeLayout).AddView( webLayout, new ViewGroup.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent ) );
 
                     webLayout.Alpha = 0;
-                    SimpleAnimatorFloat anim = new SimpleAnimatorFloat( 0, 1.0f, .25f, 
+                    SimpleAnimator_Float anim = new SimpleAnimator_Float( 0, 1.0f, .25f, 
                         delegate(float percent, object value) 
                         {
                             webLayout.Alpha = (float)value;

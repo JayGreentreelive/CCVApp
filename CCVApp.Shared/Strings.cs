@@ -56,6 +56,9 @@ namespace CCVApp.Shared
             public const string SelectCampus_SourceTitle = "Campus Selection";
             public const string SelectCampus_SourceDescription = "Select the campus to view.";
             public const string Viewing_Campus = "{0} Campus"; 
+
+            public const string TakeNotesNotificationIcon = "";
+            public const string TakeNotesNotificationLabel = "Tap Here To Take Notes";
         }
 
         public class LoginStrings

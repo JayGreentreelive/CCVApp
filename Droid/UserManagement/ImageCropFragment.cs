@@ -389,7 +389,7 @@ namespace Droid
                     if ( Mode == CropMode.None )
                     {
                         // Animate in the mask
-                        SimpleAnimatorFloat floatAnimator = new SimpleAnimatorFloat( MaskLayer.Opacity, MaskFadeAmount, MaskFadeTime, 
+                        SimpleAnimator_Float floatAnimator = new SimpleAnimator_Float( MaskLayer.Opacity, MaskFadeAmount, MaskFadeTime, 
                             delegate( float percent, object value )
                             {
                                 Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
@@ -453,7 +453,7 @@ namespace Droid
                                 MaskLayer.Visibility = ViewStates.Visible;
                                 CropView.Visibility = ViewStates.Visible;
 
-                                SimpleAnimatorFloat floatAnimator = new SimpleAnimatorFloat( MaskLayer.Opacity, MaskFadeAmount, MaskFadeTime, 
+                                SimpleAnimator_Float floatAnimator = new SimpleAnimator_Float( MaskLayer.Opacity, MaskFadeAmount, MaskFadeTime, 
                                     delegate( float percent, object value )
                                     {
                                         Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
@@ -482,7 +482,7 @@ namespace Droid
                     // don't allow a state change while we're animating
                     Animating = true;
 
-                    SimpleAnimatorFloat floatAnimator = new SimpleAnimatorFloat( MaskLayer.Opacity, 1.00f, MaskFadeTime, 
+                    SimpleAnimator_Float floatAnimator = new SimpleAnimator_Float( MaskLayer.Opacity, 1.00f, MaskFadeTime, 
                         delegate( float percent, object value )
                         {
                             Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
@@ -557,7 +557,7 @@ namespace Droid
             float deltaHeight = endSize.Height - startSize.Height;
 
             // create an animator
-            SimpleAnimatorFloat imageAnimator = new SimpleAnimatorFloat( 0.00f, 1.00f, duration, 
+            SimpleAnimator_Float imageAnimator = new SimpleAnimator_Float( 0.00f, 1.00f, duration, 
                 delegate( float percent, object value )
                 {
                     Rock.Mobile.Threading.Util.PerformOnUIThread( delegate

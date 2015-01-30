@@ -70,6 +70,23 @@ namespace Droid
                     }
                 }
 
+                public override void PerformTaskAction( string action )
+                {
+                    base.PerformTaskAction( action );
+
+                    switch ( action )
+                    {
+                        case "Page.Read":
+                        {
+                            NotesPage.NotePresentableName = "";
+                            NotesPage.NoteName = "http://www.jeredmcferron.com/ccv/message_1_24_2015.xml";
+
+                            PresentFragment( NotesPage, true );
+                            break;
+                        }
+                    }
+                }
+
                 public override void Activate( bool forResume )
                 {
                     base.Activate( forResume );

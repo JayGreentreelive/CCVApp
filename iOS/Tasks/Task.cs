@@ -7,7 +7,7 @@ namespace iOS
 {
     public class Task
     {
-        protected UINavigationController ParentViewController { get; set; }
+        protected TaskUINavigationController ParentViewController { get; set; }
         public NavToolbar NavToolbar { get; set; }
         protected UIStoryboard Storyboard { get; set; }
 
@@ -48,10 +48,21 @@ namespace iOS
         /// This is NOT called when the application comes into the foreground.
         /// </summary>
         /// <param name="parentViewController">Parent view controller.</param>
-        public virtual void MakeActive( UINavigationController parentViewController, NavToolbar navToolbar )
+        public virtual void MakeActive( TaskUINavigationController parentViewController, NavToolbar navToolbar )
         {
             ParentViewController = parentViewController;
             NavToolbar = navToolbar;
+        }
+
+        /// <summary>
+        /// This acts as a sort of "event" based system, where actions can be performed on tasks
+        /// without the caller knowing specifically what task is running.
+        /// The primary example would be the "Take Notes" billboard launching the Notes
+        /// Task and presenting the sermon notes VC.
+        /// </summary>
+        /// <param name="action">Action.</param>
+        public virtual void PerformAction( string action )
+        {
         }
 
         /// <summary>

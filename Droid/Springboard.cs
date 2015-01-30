@@ -22,6 +22,7 @@ using CCVApp.Shared.Strings;
 using Rock.Mobile.PlatformUI;
 using Android.Graphics.Drawables;
 using Rock.Mobile.PlatformSpecific.Android.Graphics;
+using Rock.Mobile.PlatformSpecific.Android.UI;
 
 namespace Droid
 {
@@ -131,6 +132,8 @@ namespace Droid
         Bitmap ProfileMaskedImage { get; set; }
 
         TextView ProfilePrefix { get; set; }
+
+        NotificationBillboard Billboard { get; set; }
 
         public override void OnCreate( Bundle savedInstanceState )
         {
@@ -358,6 +361,25 @@ namespace Droid
                     builder.Show( );
                 };
 
+            Billboard = new NotificationBillboard( displayWidth, Rock.Mobile.PlatformSpecific.Android.Core.Context );
+            Billboard.SetLabel( SpringboardStrings.TakeNotesNotificationIcon, 
+                                SpringboardStrings.TakeNotesNotificationLabel, 
+                                ControlStylingConfig.TextField_ActiveTextColor, 
+                                SpringboardConfig.Element_SelectedColor, 
+                delegate
+                {
+                    // find the Notes task, activate it, and tell it to jump to the read page.
+                    foreach( SpringboardElement element in Elements )
+                    {
+                        if ( element.Task as Droid.Tasks.Notes.NotesTask != null )
+                        {
+                            ActivateElement( element );
+                            NavbarFragment.PerformTaskAction( "Page.Read" );
+                            Billboard.Hide( );
+                        }
+                    }
+                } );
+
             return view;
         }
 
@@ -534,6 +556,8 @@ namespace Droid
             System.Console.WriteLine( "Springboard OnPause()" );
         }
 
+
+
         public override void OnResume()
         {
             base.OnResume();
@@ -541,6 +565,34 @@ namespace Droid
             System.Console.WriteLine( "Springboard OnResume()" );
 
             UpdateLoginState( );
+
+            // Manage the notification billboard.
+            // This is the only chance we have to kick it off. We have
+            // to wait till onResume because we need all fragment views created.
+            if ( Billboard.Parent == null )
+            {
+                // First add it 
+                ( (FrameLayout)NavbarFragment.ActiveTaskFrame ).AddView( Billboard );
+
+                // is it the weekend?
+                //if ( DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday )
+                {
+                    // then kick off a timer that will reveal it in 1 second.
+                    // we delay because OnResume is cpu intensive, and we can't
+                    // nicely animate during that time.
+                    System.Timers.Timer timer = new System.Timers.Timer();
+                    timer.AutoReset = false;
+                    timer.Interval = 1000;
+                    timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>
+                    {
+                        Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                            {
+                                Billboard.Reveal( );
+                            } );
+                    };
+                    timer.Start( );
+                }
+            }
         }
 
         public void NavbarWasResumed()

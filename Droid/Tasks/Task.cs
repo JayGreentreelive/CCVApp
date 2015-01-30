@@ -54,6 +54,10 @@ namespace Droid
                 // nothing we need to do for deactivation
             }
 
+            public virtual void PerformTaskAction( string action )
+            {
+            }
+
             protected void PresentFragment( TaskFragment fragment, bool allowBack )
             {
                 // get the fragment manager

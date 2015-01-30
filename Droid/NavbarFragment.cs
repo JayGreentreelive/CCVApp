@@ -435,6 +435,14 @@ namespace Droid
             ActiveTask.SpringboardDidAnimate( SpringboardRevealed );
         }
 
+        public void PerformTaskAction( string action )
+        {
+            if( ActiveTask != null )
+            {
+                ActiveTask.PerformTaskAction( action );
+            }
+        }
+
         public override void OnPause( )
         {
             base.OnPause( );

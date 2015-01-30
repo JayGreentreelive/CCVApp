@@ -5,6 +5,8 @@ using System.CodeDom.Compiler;
 using CoreGraphics;
 using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
+using Rock.Mobile.PlatformSpecific.iOS.Graphics;
+using Rock.Mobile.PlatformSpecific.iOS.Animation;
 
 namespace iOS
 {
@@ -278,6 +280,8 @@ namespace iOS
             {
                 Container.ActivateTask( task );
 
+                // I don't think this call does anything, but getting this close to
+                // shipping, i don't want to remove it.
                 PopToRootViewController( false );
 
                 RevealSpringboard( false );
@@ -286,6 +290,14 @@ namespace iOS
             }
 
             return false;
+        }
+
+        public void PerformTaskAction( string action )
+        {
+            if ( CurrentTask != null )
+            {
+                CurrentTask.PerformAction( action );
+            }
         }
 
         public override void ViewWillAppear(bool animated)

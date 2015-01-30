@@ -106,9 +106,6 @@ namespace iOS
             }
 
             ActivityIndicator.Layer.Position = new CGPoint( ( View.Frame.Width - ActivityIndicator.Frame.Width ) / 2, ( View.Frame.Height - ActivityIndicator.Frame.Height ) / 2 );
-
-            // don't let the back button work when in landscape mode.
-            Task.NavToolbar.SetBackButtonEnabled( UIDevice.CurrentDevice.Orientation == UIDeviceOrientation.Portrait ? true : false );
         }
 
         public override void ViewDidAppear(bool animated)

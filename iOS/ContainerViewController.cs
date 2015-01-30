@@ -47,9 +47,11 @@ namespace iOS
         /// <summary>
         /// Each task is placed as a child within this SubNavigation controller.
         /// Instead of using a NavigationBar to go back, however, they use the SubNavToolbar.
+        /// It's basically an invisible container so that we can use the iOS View Controller stack to
+        /// manage our view controllers
         /// </summary>
         /// <value>The sub navigation controller.</value>
-        public UINavigationController SubNavigationController { get; set; }
+        public TaskUINavigationController SubNavigationController { get; set; }
         public NavToolbar SubNavToolbar { get; set; }
 
         /// <summary>
@@ -122,8 +124,9 @@ namespace iOS
 
         protected void CreateSubNavigationController( )
         {
-            // Load the navigationController from the storyboard.
-            SubNavigationController = Storyboard.InstantiateViewController( "SubNavController" ) as UINavigationController;
+            // Create the sub navigation controller
+            SubNavigationController = new TaskUINavigationController();
+            SubNavigationController.NavigationBarHidden = true;
             SubNavigationController.Delegate = new NavBarDelegate( ) { ParentController = this };
 
             // setup the toolbar that will manage task navigation and any other tasks the task needs
@@ -158,6 +161,22 @@ namespace iOS
             base.ViewDidLayoutSubviews();
 
             SubNavToolbar.ViewDidLayoutSubviews( );
+
+            UpdateBackButton( );
+        }
+
+        public void UpdateBackButton( )
+        {
+            // the back button is only allowed if there's a stack of VCs and 
+            // we are in portrait or unknown mode.
+            if ( SubNavigationController.ViewControllers.Length > 1 && (UIDevice.CurrentDevice.Orientation == UIDeviceOrientation.Portrait || UIDevice.CurrentDevice.Orientation == UIDeviceOrientation.Unknown) )
+            {
+                SubNavToolbar.SetBackButtonEnabled( true );
+            }
+            else
+            {
+                SubNavToolbar.SetBackButtonEnabled( false );
+            }
         }
 
         public void NavWillShowViewController( UIViewController viewController )
@@ -168,6 +187,8 @@ namespace iOS
                 TaskControllerAnimating = true;
                 CurrentTask.WillShowViewController( viewController );
             }
+
+            UpdateBackButton( );
         }
 
         public void NavDidShowViewController( UIViewController viewController )
@@ -179,8 +200,9 @@ namespace iOS
 
         public void ActivateTask( Task task )
         {
-            // reset our stack before changing activities
-            SubNavigationController.PopToRootViewController( false );
+            // reset our stack and remove all current view controllers 
+            // before changing activities
+            SubNavigationController.ClearViewControllerStack( );
 
             if( CurrentTask != null )
             {
