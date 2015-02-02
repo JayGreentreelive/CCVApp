@@ -4,6 +4,7 @@
 	<application android:label="CCV Mobile 2" android:icon="@drawable/icon" android:theme="@style/CCVMobileTheme">
 		<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyDEIysN9LbLqYDx8-pvQePayzP0YIwIRPM" />
 		<meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
+		<meta-data android:name="LOCALYTICS_APP_KEY" android:value="9fc62c2f31d6151d89cbd7c-68f09436-a8cb-11e4-a7f7-005cf8cbabd8"/>
 	</application>
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

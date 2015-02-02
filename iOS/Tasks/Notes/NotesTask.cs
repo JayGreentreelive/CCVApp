@@ -44,8 +44,18 @@ namespace iOS
 
                     //TODO: We need to get the latest sermon XML from Rock Data. For now,
                     //I know what it'll be named. (it's the date of the Saturday weekend day.)
-                    NoteController.NotePresentableName = string.Format( "Message - {0}", "" );
-                    NoteController.NoteName = "http://www.jeredmcferron.com/ccv/message_1_24_2015.xml";
+                    // for now, let the note name be the previous saturday
+                    DateTime time = DateTime.UtcNow;
+
+                    // if it's not saturday, find the date of the past saturday
+                    if( time.DayOfWeek != DayOfWeek.Saturday )
+                    {
+                        time = time.Subtract( new TimeSpan( (int)time.DayOfWeek + 1, 0, 0, 0 ) );
+                    }
+
+                    NoteController.NotePresentableName = string.Format( "Sermon Note - {0}.{1}.{2}", time.Month, time.Day, time.Year );
+                    NoteController.NoteName = string.Format("http://www.jeredmcferron.com/ccv/{0}_{1}_{2}_{3}.xml", "message", time.Month, time.Day, time.Year );
+                    //
 
                     ParentViewController.PushViewController( NoteController, false );
                     break;

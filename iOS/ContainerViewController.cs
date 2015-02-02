@@ -161,15 +161,13 @@ namespace iOS
             base.ViewDidLayoutSubviews();
 
             SubNavToolbar.ViewDidLayoutSubviews( );
-
-            UpdateBackButton( );
         }
 
         public void UpdateBackButton( )
         {
             // the back button is only allowed if there's a stack of VCs and 
             // we are in portrait or unknown mode.
-            if ( SubNavigationController.ViewControllers.Length > 1 && (UIDevice.CurrentDevice.Orientation == UIDeviceOrientation.Portrait || UIDevice.CurrentDevice.Orientation == UIDeviceOrientation.Unknown) )
+            if ( SubNavigationController.ViewControllers.Length > 1 && UIApplication.SharedApplication.StatusBarOrientation == UIInterfaceOrientation.Portrait/*(UIDevice.CurrentDevice.Orientation == UIDeviceOrientation.Portrait || UIDevice.CurrentDevice.Orientation == UIDeviceOrientation.Unknown)*/ )
             {
                 SubNavToolbar.SetBackButtonEnabled( true );
             }

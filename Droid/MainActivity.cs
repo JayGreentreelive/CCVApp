@@ -8,6 +8,7 @@ using Android.Widget;
 using Android.OS;
 using Android.Util;
 using Android.Gms.Maps;
+using Com.Localytics.Android;
 
 namespace Droid
 {
@@ -49,6 +50,9 @@ namespace Droid
         {
             base.OnCreate( bundle );
 
+            LocalyticsActivityLifecycleCallbacks callback = new LocalyticsActivityLifecycleCallbacks( this );
+            Application.RegisterActivityLifecycleCallbacks( callback );
+
             Window.AddFlags(WindowManagerFlags.Fullscreen);
 
             // default our app to protrait mode, and let the notes change it.
@@ -70,6 +74,13 @@ namespace Droid
 
             Springboard springboard = FragmentManager.FindFragmentById(Resource.Id.springboard) as Springboard;
             springboard.SetActiveTaskFrame( layout );
+        }
+
+        protected override void OnNewIntent(Intent intent)
+        {
+            base.OnNewIntent(intent);
+
+            Intent = intent;
         }
     }
 }

@@ -115,6 +115,9 @@
     <Reference Include="Facebook">
       <HintPath>..\Components\facebook-sdk-6.2.2\lib\ios-unified\Facebook.dll</HintPath>
     </Reference>
+    <Reference Include="LocalyticsBinding">
+      <HintPath>..\..\LocalyticsBinding\LocalyticsBinding\bin\Debug\LocalyticsBinding.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="..\Assets\Fonts\Bevan.ttf">

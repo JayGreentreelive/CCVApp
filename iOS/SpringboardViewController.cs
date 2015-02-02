@@ -14,6 +14,7 @@ using CCVApp.Shared.Strings;
 using Rock.Mobile.PlatformUI;
 using Rock.Mobile.PlatformSpecific.iOS.Graphics;
 using Rock.Mobile.PlatformSpecific.iOS.UI;
+using LocalyticsBinding;
 
 namespace iOS
 {
@@ -396,7 +397,7 @@ namespace iOS
 
 
             // setup the Notification Banner for Taking Notes
-            Billboard = new NotificationBillboard( View.Bounds.Width );
+            Billboard = new NotificationBillboard( View.Bounds.Width, View.Bounds.Height );
             Billboard.SetLabel( SpringboardStrings.TakeNotesNotificationIcon, 
                                 SpringboardStrings.TakeNotesNotificationLabel, 
                                 ControlStylingConfig.TextField_ActiveTextColor, 
@@ -619,7 +620,7 @@ namespace iOS
             // if we haven't yet added and processed the billboard, do that now.
             if ( Billboard.Superview == null )
             {
-                NavViewController.View.AddSubview( Billboard );
+                View.AddSubview( Billboard );
 
                 // should we advertise the notes?
                 // yes, if it's a weekend and we're at CCV (that part will come later)
@@ -635,12 +636,15 @@ namespace iOS
                         Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
                             {
                                 Billboard.Reveal( );
+                                View.BringSubviewToFront( Billboard );
                             } );
                     };
                     timer.Start( );
                 }
             }
         }
+
+
 
         /// <summary>
         /// Adjusts the positioning of the springboard elements to be spaced out consistently

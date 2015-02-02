@@ -232,6 +232,8 @@ namespace iOS
         public override void WillRotate(UIInterfaceOrientation toInterfaceOrientation, double duration)
         {
             UpdateSpringboardAllowedState( toInterfaceOrientation );
+
+            Container.UpdateBackButton( );
         }
 
         void UpdateSpringboardAllowedState( UIInterfaceOrientation toInterfaceOrientation )
