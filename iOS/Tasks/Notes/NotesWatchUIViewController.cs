@@ -6,6 +6,8 @@ using MediaPlayer;
 using CoreGraphics;
 using System.Collections.Generic;
 using CCVApp.Shared.Strings;
+using CCVApp.Shared;
+using CCVApp.Shared.Analytics;
 
 namespace iOS
 {
@@ -13,6 +15,7 @@ namespace iOS
 	{
         public string WatchUrl { get; set; }
         public string ShareUrl { get; set; }
+        public string Name { get; set; }
 
         MPMoviePlayerController MoviePlayer  { get; set; }
         UIActivityIndicatorView ActivityIndicator { get; set; }
@@ -178,6 +181,8 @@ namespace iOS
         {
             // once the movie is ready, hide the spinner
             ActivityIndicator.Hidden = true;
+
+            MessageAnalytic.Instance.Trigger( MessageAnalytic.Watch, Name );
         }
 
         void WillEnterFullscreen( NSNotification obj )

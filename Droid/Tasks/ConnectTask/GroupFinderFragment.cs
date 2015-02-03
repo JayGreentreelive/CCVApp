@@ -20,6 +20,7 @@ using Android.GoogleMaps;
 using Android.Gms.Maps;
 using CCVApp.Shared;
 using CCVApp.Shared.Network;
+using CCVApp.Shared.Analytics;
 
 namespace Droid
 {
@@ -367,10 +368,18 @@ namespace Droid
                                     Map.AnimateCamera( camPos );
 
                                     SearchResult.Text = ConnectStrings.GroupFinder_GroupsFound;
+
+                                    // record an analytic that they searched
+                                    GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.Location, address );
+
+                                    GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.Neighborhood, groupEntry[ 0 ].NeighborhoodArea );
                                 }
                                 else
                                 {
                                     SearchResult.Text = ConnectStrings.GroupFinder_NoGroupsFound;
+
+                                    // record that this address failed
+                                    GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.OutOfBounds, address );
                                 }
 
                                 GroupEntries = groupEntry;

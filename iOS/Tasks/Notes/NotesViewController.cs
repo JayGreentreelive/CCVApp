@@ -15,6 +15,9 @@ using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
 using System.Drawing;
 using Rock.Mobile.PlatformSpecific.Util;
+using LocalyticsBinding;
+using CCVApp.Shared;
+using CCVApp.Shared.Analytics;
 
 namespace iOS
 {
@@ -139,13 +142,13 @@ namespace iOS
         /// The URL for this note
         /// </summary>
         /// <value>The note URL.</value>
-        public string NoteName { get; set; }
+        public string NoteUrl { get; set; }
 
         /// <summary>
         /// A presentable name for the note. Used for things like email subjects
         /// </summary>
         /// <value>The name of the note presentable.</value>
-        public string NotePresentableName { get; set; }
+        public string NoteName { get; set; }
 
         /// <summary>
         /// The current orientation of the device. We track this
@@ -193,7 +196,7 @@ namespace iOS
         /// <summary>
         /// The currently cached note name
         /// </summary>
-        string CachedNoteName { get; set; }
+        string CachedNoteUrl { get; set; }
 
         /// <summary>
         /// The amount of times we've attempted to download the current note.
@@ -311,7 +314,7 @@ namespace iOS
 
             // if the note name doesn't match our cache, dump our cache 
             // so we download the correct note
-            if ( CachedNoteName != NoteName )
+            if ( CachedNoteUrl != NoteUrl )
             {
                 CachedNoteXml = null;
                 CachedStyleXml = null;
@@ -377,7 +380,9 @@ namespace iOS
                 var items = new NSObject[] { new NSString( emailNote ) };
 
                 UIActivityViewController shareController = new UIActivityViewController( items, null );
-                shareController.SetValueForKey( new NSString( NotePresentableName ), new NSString( "subject" ) );
+
+                string emailSubject = string.Format( CCVApp.Shared.Strings.MessagesStrings.Read_Share_Notes, NoteName );
+                shareController.SetValueForKey( new NSString( emailSubject ), new NSString( "subject" ) );
 
                 shareController.ExcludedActivityTypes = new NSString[] { UIActivityType.PostToFacebook, 
                                                                          UIActivityType.AirDrop, 
@@ -544,7 +549,7 @@ namespace iOS
                     RestRequest restRequest = new RestRequest( Method.GET );
                     restRequest.RequestFormat = DataFormat.Xml;
 
-                    request.ExecuteAsync( NoteName, restRequest, 
+                    request.ExecuteAsync( NoteUrl, restRequest, 
                         delegate(System.Net.HttpStatusCode statusCode, string statusDescription, byte[] model )
                         {
                             if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) )
@@ -592,10 +597,13 @@ namespace iOS
 
                         try
                         {
+                            // log the note they are reading.
+                            MessageAnalytic.Instance.Trigger( MessageAnalytic.Read, NoteName );
+
                             // build the filename of the locally stored user data. If there is no "/" because it isn't a URL,
                             // we'll end up using the base name, which is what we want.
-                            int lastSlashIndex = NoteName.LastIndexOf( "/" ) + 1;
-                            string noteName = NoteName.Substring( lastSlashIndex );
+                            int lastSlashIndex = NoteUrl.LastIndexOf( "/" ) + 1;
+                            string noteName = NoteUrl.Substring( lastSlashIndex );
 
                             Note.Create( (float)UIScrollView.Bounds.Width, (float)UIScrollView.Bounds.Height, this.UIScrollView, noteName + NoteConfig.UserNoteSuffix );
 
@@ -614,7 +622,7 @@ namespace iOS
 
                             CachedNoteXml = Note.NoteXml;
                             CachedStyleXml = ControlStyles.StyleSheetXml;
-                            CachedNoteName = NoteName;
+                            CachedNoteUrl = NoteUrl;
                         }
                         catch( Exception ex )
                         {

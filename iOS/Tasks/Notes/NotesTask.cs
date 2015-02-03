@@ -53,8 +53,8 @@ namespace iOS
                         time = time.Subtract( new TimeSpan( (int)time.DayOfWeek + 1, 0, 0, 0 ) );
                     }
 
-                    NoteController.NotePresentableName = string.Format( "Sermon Note - {0}.{1}.{2}", time.Month, time.Day, time.Year );
-                    NoteController.NoteName = string.Format("http://www.jeredmcferron.com/ccv/{0}_{1}_{2}_{3}.xml", "message", time.Month, time.Day, time.Year );
+                    NoteController.NoteName = string.Format( "Sermon Note - {0}.{1}.{2}", time.Month, time.Day, time.Year );
+                    NoteController.NoteUrl = string.Format("http://www.jeredmcferron.com/ccv/{0}_{1}_{2}_{3}.xml", "message", time.Month, time.Day, time.Year );
                     //
 
                     ParentViewController.PushViewController( NoteController, false );

@@ -13,6 +13,7 @@ using System.Collections;
 using CCVApp.Shared;
 using Rock.Mobile.PlatformSpecific.iOS.UI;
 using CCVApp.Shared.Strings;
+using CCVApp.Shared.Analytics;
 
 namespace iOS
 {
@@ -435,6 +436,21 @@ namespace iOS
                                             GroupEntries = groupEntries;
                                             GroupTableSource.UpdateMap( );
                                             GroupFinderTableView.ReloadData( );
+
+                                            // and record an analytic for the neighborhood that this location was apart of. This helps us know
+                                            // which neighborhoods get the most hits.
+                                            if( groupEntries.Count > 0 )
+                                            {
+                                                // record an analytic that they searched
+                                                GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.Location, address );
+
+                                                GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.Neighborhood, groupEntries[ 0 ].NeighborhoodArea );
+                                            }
+                                            else
+                                            {
+                                                // record that this address failed
+                                                GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.OutOfBounds, address );
+                                            }
                                         }
                                     } );
                             } );

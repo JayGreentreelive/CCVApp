@@ -6,6 +6,7 @@ using CCVApp.Shared.Strings;
 using Rock.Mobile.PlatformUI;
 using CoreGraphics;
 using CCVApp.Shared.Config;
+using CCVApp.Shared.Analytics;
 
 namespace iOS
 {
@@ -143,6 +144,8 @@ namespace iOS
 
                                     DoneButton.Hidden = false;
                                     DoneButton.SetTitle( "Done", UIControlState.Normal );
+
+                                    PrayerAnalytic.Instance.Trigger( PrayerAnalytic.Create );
                                 }
                                 else
                                 {

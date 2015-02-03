@@ -17,6 +17,7 @@ using Rock.Mobile.PlatformUI;
 using System.Drawing;
 using CCVApp.Shared.Strings;
 using CCVApp.Shared.Config;
+using CCVApp.Shared.Analytics;
 
 namespace Droid
 {
@@ -186,6 +187,8 @@ namespace Droid
 
                                         if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
                                         {
+                                            PrayerAnalytic.Instance.Trigger( PrayerAnalytic.Create );
+
                                             Activity.OnBackPressed();
                                         }
                                         else

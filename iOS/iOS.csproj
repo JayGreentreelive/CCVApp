@@ -115,8 +115,8 @@
     <Reference Include="Facebook">
       <HintPath>..\Components\facebook-sdk-6.2.2\lib\ios-unified\Facebook.dll</HintPath>
     </Reference>
-    <Reference Include="LocalyticsBinding">
-      <HintPath>..\..\LocalyticsBinding\LocalyticsBinding\bin\Debug\LocalyticsBinding.dll</HintPath>
+    <Reference Include="iOSLocalytics">
+      <HintPath>..\Libs\iOSLocalytics.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

@@ -14,7 +14,6 @@ using CCVApp.Shared.Strings;
 using Rock.Mobile.PlatformUI;
 using Rock.Mobile.PlatformSpecific.iOS.Graphics;
 using Rock.Mobile.PlatformSpecific.iOS.UI;
-using LocalyticsBinding;
 
 namespace iOS
 {

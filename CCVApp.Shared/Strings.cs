@@ -165,6 +165,8 @@ namespace CCVApp.Shared
 
             public const string UserNote_Placeholder = "Enter note";
 
+            public const string Read_Share_Notes = "Message - {0}";
+
         }
 
         public class PrayerStrings

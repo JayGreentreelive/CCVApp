@@ -17,6 +17,9 @@ using CCVApp.Shared.Notes;
 using CCVApp.Shared.Config;
 using RestSharp;
 using Rock.Mobile.PlatformUI;
+using CCVApp.Shared;
+using CCVApp.Shared.Strings;
+using CCVApp.Shared.Analytics;
 
 namespace Droid
 {
@@ -134,7 +137,7 @@ namespace Droid
                 /// Name of the note that is being stored in memory via CachedNoteXml & CachedStyleSheetXml
                 /// </summary>
                 /// <value>The name of the cached note.</value>
-                string CachedNoteName { get; set; }
+                string CachedNoteUrl { get; set; }
 
                 /// <summary>
                 /// reference to the note XML for re-creating the notes in OnResume()
@@ -152,13 +155,13 @@ namespace Droid
                 /// The URL for this note
                 /// </summary>
                 /// <value>The note URL.</value>
-                public string NoteName { get; set; }
+                public string NoteUrl { get; set; }
 
                 /// <summary>
                 /// A presentable name for the note. Used for things like email subjects
                 /// </summary>
                 /// <value>The name of the note presentable.</value>
-                public string NotePresentableName { get; set; }
+                public string NoteName { get; set; }
 
                 /// <summary>
                 /// True when a user note is being moved. Used to know whether to allow 
@@ -247,7 +250,7 @@ namespace Droid
                     WakeLock = pm.NewWakeLock(WakeLockFlags.Full, "Notes");
 
                     // if we are loading a different note, force the current cached ones out of memory
-                    if ( NoteName != CachedNoteName )
+                    if ( NoteUrl != CachedNoteUrl )
                     {
                         CachedNoteXml = null;
                         CachedStyleSheetXml = null;
@@ -301,7 +304,8 @@ namespace Droid
                             sendIntent.SetAction( Intent.ActionSend );
 
                             // build a nice subject line
-                            sendIntent.PutExtra( Intent.ExtraSubject, NotePresentableName );
+                            string subject = string.Format( MessagesStrings.Read_Share_Notes, NoteName );
+                            sendIntent.PutExtra( Intent.ExtraSubject, subject );
 
                             string noteString = null;
                             Note.GetNotesForEmail( out noteString );
@@ -534,7 +538,7 @@ namespace Droid
                             RestRequest restRequest = new RestRequest( Method.GET );
                             restRequest.RequestFormat = DataFormat.Xml;
 
-                            request.ExecuteAsync( NoteName, restRequest, 
+                            request.ExecuteAsync( NoteUrl, restRequest, 
                                 delegate(System.Net.HttpStatusCode statusCode, string statusDescription, byte[] model )
                                 {
                                     if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) )
@@ -582,10 +586,13 @@ namespace Droid
 
                                 try
                                 {
+                                    // log the note they are reading.
+                                    MessageAnalytic.Instance.Trigger( MessageAnalytic.Read, NoteName );
+
                                     // build the filename of the locally stored user data. If there is no "/" because it isn't a URL,
                                     // we'll end up using the base name, which is what we want.
-                                    int lastSlashIndex = NoteName.LastIndexOf( "/" ) + 1;
-                                    string noteName = NoteName.Substring( lastSlashIndex );
+                                    int lastSlashIndex = NoteUrl.LastIndexOf( "/" ) + 1;
+                                    string noteName = NoteUrl.Substring( lastSlashIndex );
 
                                     // Use the metrics and not ScrollView for dimensions, because depending on when this gets called the ScrollView
                                     // may not have its dimensions set yet.
@@ -604,7 +611,7 @@ namespace Droid
                                     // cache the note so we only re-download it if we have to
                                     CachedNoteXml = Note.NoteXml;
                                     CachedStyleSheetXml = ControlStyles.StyleSheetXml;
-                                    CachedNoteName = NoteName;
+                                    CachedNoteUrl = NoteUrl;
 
                                     FinishNotesCreation( );
                                 } 

@@ -8,6 +8,7 @@ using CoreAnimation;
 using Rock.Mobile.PlatformUI;
 using CCVApp.Shared.Config;
 using CCVApp.Shared.Strings;
+using CCVApp.Shared.Analytics;
 
 namespace iOS
 {
@@ -317,6 +318,9 @@ namespace iOS
                                                     PrayerRequests.Add( card );
                                                     Carousel.AddCard( card.View );
                                                 }
+
+                                                // add a read analytic
+                                                PrayerAnalytic.Instance.Trigger( PrayerAnalytic.Read );
                                             }
                                         }
                                         else

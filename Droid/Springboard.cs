@@ -23,7 +23,7 @@ using Rock.Mobile.PlatformUI;
 using Android.Graphics.Drawables;
 using Rock.Mobile.PlatformSpecific.Android.Graphics;
 using Rock.Mobile.PlatformSpecific.Android.UI;
-using Com.Localytics.Android;
+
 
 namespace Droid
 {

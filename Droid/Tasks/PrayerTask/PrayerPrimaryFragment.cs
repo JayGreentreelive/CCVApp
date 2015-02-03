@@ -17,6 +17,8 @@ using Rock.Mobile.PlatformUI;
 using System.Drawing;
 using CCVApp.Shared.Config;
 using CCVApp.Shared.Strings;
+using CCVApp.Shared;
+using CCVApp.Shared.Analytics;
 
 namespace Droid
 {
@@ -338,6 +340,9 @@ namespace Droid
 
                                                 Carousel.AddCard( prayerCard.View );
                                             }
+
+                                            // prayers received and are being viewed
+                                            PrayerAnalytic.Instance.Trigger( PrayerAnalytic.Read );
                                         }
                                     }
                                     else

@@ -89,8 +89,8 @@ namespace Droid
                                 time = time.Subtract( new TimeSpan( (int)time.DayOfWeek + 1, 0, 0, 0 ) );
                             }
 
-                            NotesPage.NotePresentableName = string.Format( "Sermon Note - {0}.{1}.{2}", time.Month, time.Day, time.Year );
-                            NotesPage.NoteName = string.Format("http://www.jeredmcferron.com/ccv/{0}_{1}_{2}_{3}.xml", "message", time.Month, time.Day, time.Year );
+                            NotesPage.NoteName = string.Format( "Sermon Note - {0}.{1}.{2}", time.Month, time.Day, time.Year );
+                            NotesPage.NoteUrl = string.Format("http://www.jeredmcferron.com/ccv/{0}_{1}_{2}_{3}.xml", "message", time.Month, time.Day, time.Year );
                             //
 
                             PresentFragment( NotesPage, true );
@@ -162,12 +162,13 @@ namespace Droid
                                 {
                                     WatchPage.VideoUrl = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].WatchUrl;
                                     WatchPage.ShareUrl = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].ShareUrl;
+                                    WatchPage.Name = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].Name;
                                     PresentFragment( WatchPage, true );
                                 }
                                 else if ( buttonChoice == 1 )
                                 {
-                                    NotesPage.NoteName = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].NoteUrl;
-                                    NotesPage.NotePresentableName = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].Name;
+                                    NotesPage.NoteUrl = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].NoteUrl;
+                                    NotesPage.NoteName = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].Name;
 
                                     PresentFragment( NotesPage, true );
                                 }
@@ -192,8 +193,8 @@ namespace Droid
                             }
                             else if ( buttonChoice == 1 )
                             {
-                                NotesPage.NoteName = DetailsPage.Messages[ buttonId ].Message.NoteUrl;
-                                NotesPage.NotePresentableName = DetailsPage.Messages[ buttonId ].Message.Name;
+                                NotesPage.NoteUrl = DetailsPage.Messages[ buttonId ].Message.NoteUrl;
+                                NotesPage.NoteName = DetailsPage.Messages[ buttonId ].Message.Name;
 
                                 PresentFragment( NotesPage, true );
                             }

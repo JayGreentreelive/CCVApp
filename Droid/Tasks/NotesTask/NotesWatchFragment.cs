@@ -14,6 +14,8 @@ using Android.Widget;
 using Android.Media;
 using CCVApp.Shared.Strings;
 using Rock.Mobile.PlatformUI;
+using CCVApp.Shared;
+using CCVApp.Shared.Analytics;
 
 namespace Droid
 {
@@ -29,6 +31,7 @@ namespace Droid
 
                 public string VideoUrl { get; set; }
                 public string ShareUrl { get; set; }
+                public string Name { get; set; }
 
                 public override void OnCreate( Bundle savedInstanceState )
                 {
@@ -80,6 +83,9 @@ namespace Droid
 
                     // setup a seek listener
                     mp.SetOnSeekCompleteListener( this );
+
+                    // log the series they tapped on.
+                    MessageAnalytic.Instance.Trigger( MessageAnalytic.Watch, Name );
 
                     // if this is a new video, store the URL
                     if ( CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingVideoUrl != VideoUrl )

@@ -9,6 +9,7 @@ using CCVApp.Shared;
 using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
 using System.IO;
+using CCVApp.Shared.Analytics;
 
 namespace iOS
 {
@@ -417,6 +418,10 @@ namespace iOS
             Messages = new List<MessageEntry>();
             SeriesTable.Source = new TableSource( this, Messages, Series, SeriesBillboard );
 
+            // log the series they tapped on.
+            MessageAnalytic.Instance.Trigger( MessageAnalytic.BrowseSeries, Series.Name );
+
+
             IsVisible = true;
 
             for ( int i = 0; i < Series.Messages.Count; i++ )
@@ -512,6 +517,7 @@ namespace iOS
                 NotesWatchUIViewController viewController = Storyboard.InstantiateViewController( "NotesWatchUIViewController" ) as NotesWatchUIViewController;
                 viewController.WatchUrl = Series.Messages[ row ].WatchUrl;
                 viewController.ShareUrl = Series.Messages[ row ].ShareUrl;
+                viewController.Name = Series.Messages[ row ].Name;
 
                 Task.PerformSegue( this, viewController );
             }
@@ -523,8 +529,8 @@ namespace iOS
                 NotesTask noteTask = Task as NotesTask;
                 if ( noteTask != null )
                 {
-                    noteTask.NoteController.NotePresentableName = string.Format( "Message - {0}", Series.Messages[ row ].Name );
-                    noteTask.NoteController.NoteName = Series.Messages[ row ].NoteUrl;
+                    noteTask.NoteController.NoteName = Series.Messages[ row ].Name;
+                    noteTask.NoteController.NoteUrl = Series.Messages[ row ].NoteUrl;
 
                     Task.PerformSegue( this, noteTask.NoteController );
                 }
