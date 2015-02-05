@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace CCVApp.Shared
 {
@@ -17,6 +18,21 @@ namespace CCVApp.Shared
             /// </summary>
             public class Message
             {
+                public Message( )
+                {
+                }
+
+                [JsonConstructor]
+                public Message( string name, string speaker, string date, string noteUrl, string watchUrl, string shareUrl )
+                {
+                    Name = name;
+                    Speaker = speaker;
+                    Date = date;
+                    NoteUrl = noteUrl;
+                    WatchUrl = watchUrl;
+                    ShareUrl = shareUrl;
+                }
+
                 /// <summary>
                 /// Name of the message
                 /// </summary>
@@ -30,7 +46,7 @@ namespace CCVApp.Shared
 
                     protected set
                     {
-                        _Name = value.Trim( Series.TrimChars );
+                        _Name = value == null ? "" : value.Trim( Series.TrimChars );
                     }
                 }
 
@@ -48,7 +64,7 @@ namespace CCVApp.Shared
 
                     protected set
                     {
-                        _Speaker = value.Trim( Series.TrimChars );
+                        _Speaker = value == null ? "" : value.Trim( Series.TrimChars );
                     }
                 }
 
@@ -65,7 +81,7 @@ namespace CCVApp.Shared
 
                     protected set
                     {
-                        _Date = value.Trim( Series.TrimChars );
+                        _Date = value == null ? "" : value.Trim( Series.TrimChars );
                     }
                 }
 
@@ -82,7 +98,7 @@ namespace CCVApp.Shared
 
                     protected set
                     {
-                        _NoteUrl = value.Trim( Series.TrimChars );
+                        _NoteUrl = value == null ? "" : value.Trim( Series.TrimChars );
                     }
                 }
 
@@ -99,7 +115,7 @@ namespace CCVApp.Shared
 
                     protected set
                     {
-                        _WatchUrl = value.Trim( Series.TrimChars );
+                        _WatchUrl = value == null ? "" : value.Trim( Series.TrimChars );
                     }
                 }
 
@@ -117,9 +133,25 @@ namespace CCVApp.Shared
 
                     protected set
                     {
-                        _ShareUrl = value.Trim( Series.TrimChars );
+                        _ShareUrl = value == null ? "" : value.Trim( Series.TrimChars );
                     }
                 }
+            }
+
+            public Series( )
+            {
+            }
+
+            [JsonConstructor]
+            public Series( string name, string description, string billboardUrl, string thumbnailUrl, string dateRanges, List<Message> messages )
+            {
+                Name = name;
+                Description = description;
+                BillboardUrl = billboardUrl;
+                ThumbnailUrl = thumbnailUrl;
+                DateRanges = dateRanges;
+
+                Messages = messages;
             }
 
             /// <summary>
@@ -135,7 +167,7 @@ namespace CCVApp.Shared
 
                 protected set
                 {
-                    _Name = value.Trim( TrimChars );
+                    _Name = value == null ? "" : value.Trim( TrimChars );
                 }
             }
 
@@ -152,7 +184,7 @@ namespace CCVApp.Shared
 
                 protected set
                 {
-                    _Description = value.Trim( TrimChars );
+                    _Description = value == null ? "" : value.Trim( TrimChars );
                 }
             }
 
@@ -169,7 +201,7 @@ namespace CCVApp.Shared
 
                 protected set
                 {
-                    _BillboardUrl = value.Trim( TrimChars );
+                    _BillboardUrl = value == null ? "" : value.Trim( TrimChars );
                 }
             }
 
@@ -186,7 +218,7 @@ namespace CCVApp.Shared
 
                 protected set
                 {
-                    _ThumbnailUrl = value.Trim( TrimChars );
+                    _ThumbnailUrl = value == null ? "" : value.Trim( TrimChars );
                 }
             }
 
@@ -203,7 +235,7 @@ namespace CCVApp.Shared
 
                 protected set
                 {
-                    _DateRanges = value.Trim( TrimChars );
+                    _DateRanges = value == null ? "" : value.Trim( TrimChars );
                 }
             }
 

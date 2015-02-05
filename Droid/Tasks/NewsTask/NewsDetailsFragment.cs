@@ -48,11 +48,26 @@ namespace Droid
                     Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView banner = new Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView( Activity );
                     ( (LinearLayout)view ).AddView( banner, 0 );
 
-                    System.IO.Stream assetStream = Activity.BaseContext.Assets.Open( NewsItem.HeaderImageName );
-                    banner.SetImageBitmap( BitmapFactory.DecodeStream( assetStream ) );
+                    // IS there a banner?
+                    Bitmap imageBanner = null;
+                    if ( string.IsNullOrEmpty( NewsItem.HeaderImageName ) == false )
+                    {
+                        System.IO.Stream assetStream = Activity.BaseContext.Assets.Open( NewsItem.HeaderImageName );
+                        imageBanner = BitmapFactory.DecodeStream( assetStream );
+                    }
+                    else
+                    {
+                        // if not, use the placeholder
+                        imageBanner = BitmapFactory.DecodeResource( Rock.Mobile.PlatformSpecific.Android.Core.Context.Resources, Resource.Drawable.thumbnailPlaceholder );
+                    }
+                    banner.SetImageBitmap( imageBanner );
 
                     TextView title = view.FindViewById<TextView>( Resource.Id.news_details_title );
                     title.Text = NewsItem.Title;
+                    title.SetSingleLine( );
+                    title.Ellipsize = Android.Text.TextUtils.TruncateAt.End;
+                    title.SetMaxLines( 1 );
+                    title.SetHorizontallyScrolling( true );
                     ControlStyling.StyleUILabel( title, ControlStylingConfig.Large_Font_Bold, ControlStylingConfig.Large_FontSize );
 
                     // set the description

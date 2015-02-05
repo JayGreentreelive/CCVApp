@@ -19,9 +19,9 @@
             android:layout_height="wrap_content"
             android:id="@+id/news_details_title"
             android:gravity="left"
-            android:inputType="textNoSuggestions"
             android:layout_marginTop="5dp"
-            android:layout_marginLeft="10dp" />
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
         <TextView
             android:text="Baptism is one of hte most important events in the life of a Christian."
             android:textAppearance="?android:attr/textAppearanceMedium"

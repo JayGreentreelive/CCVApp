@@ -2,6 +2,7 @@ using System;
 using UIKit;
 using CoreGraphics;
 using Foundation;
+using CCVApp.Shared.Network;
 
 namespace iOS
 {
@@ -19,8 +20,12 @@ namespace iOS
         {
             base.MakeActive( parentViewController, navToolbar );
 
-            // provide the news to the viewer
-            MainPageVC.News = CCVApp.Shared.Network.RockGeneralData.Instance.Data.News;
+            // provide the news to the viewer by COPYING it.
+            MainPageVC.News.Clear( );
+            foreach ( RockNews newsItem in CCVApp.Shared.Network.RockLaunchData.Instance.Data.News )
+            {
+                MainPageVC.News.Add( new RockNews( newsItem ) );
+            }
 
             // set our current page as root
             parentViewController.PushViewController(MainPageVC, false);

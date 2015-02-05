@@ -61,6 +61,13 @@ namespace CCVApp
             public class SpringboardConfig
             {
                 /// <summary>
+                /// The number of hours until the app will resync data with Rock when it is resumed.
+                /// This allows someone to put the app in the background (but not kill it), and come back
+                /// later to updated rock data (news, notes, etc.)
+                /// </summary>
+                public const int SyncRockHoursFrequency = 12;
+
+                /// <summary>
                 /// The text glyph to use as a symbol when the user does not have a profile.
                 /// </summary>
                 public const string NoProfileSymbol = "";
@@ -336,16 +343,6 @@ namespace CCVApp
                 /// </summary>
                 /// 
                 public const int UserNote_DeleteIconSize = 46;
-
-                /// <summary>
-                /// The rate of scrolling "up" required to reveal the nav bar.
-                /// </summary>
-                public const float ScrollRateForNavBarReveal = -75;
-
-                /// <summary>
-                /// The rate of scrolling "down" required to hide the nav bar.
-                /// </summary>
-                public const float ScrollRateForNavBarHide = 50;
 
                 /// <summary>
                 /// The icon to use representing "Watch this Message"

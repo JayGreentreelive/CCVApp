@@ -19,14 +19,9 @@ namespace CCVApp
                 {
                 }
 
-                public void Connect( HttpRequest.RequestResult resultCallback )
+                public void SyncRockData( HttpRequest.RequestResult resultCallback )
                 {
                     ResultCallback = resultCallback;
-
-                    // load our objects and sync with the server any unsaved changes.
-                    Console.WriteLine( "Loading objects from device." );
-                    RockApi.Instance.LoadObjectsFromDevice( );
-                    Console.WriteLine( "Loading objects done." );
 
                     // if we're logged in, sync any changes we've made with the server.
                     if( RockMobileUser.Instance.LoggedIn == true )
@@ -50,7 +45,9 @@ namespace CCVApp
 
                 void LaunchDataReceived(System.Net.HttpStatusCode statusCode, string statusDescription)
                 {
-                    //todo: we can update our various areas of code with all the launch data
+                    // At this point we're finished. Whether we succeeded or failed, we should now validate
+                    // the version number. If getting launch data failed, that's ok, that will guarantee that
+                    // the GeneralData version number isn't LESS than what we stored in LaunchData.
 
                     // if there's a newer General Data, grab it.
                     if( RockGeneralData.Instance.Data.Version < RockLaunchData.Instance.Data.GeneralDataVersion )

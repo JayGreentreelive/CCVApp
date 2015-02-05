@@ -89,14 +89,24 @@ namespace iOS
             NewsImage = new List<UIImage>( );
 		}
 
-        public override void ViewDidLoad()
+        public override void ViewWillAppear(bool animated)
         {
-            base.ViewDidLoad();
+            base.ViewWillAppear(animated);
 
             // load the news images for each item
+            NewsImage.Clear( );
+
             foreach( RockNews news in News )
             {
-                UIImage image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + news.ImageName );
+                UIImage image = null;
+                if ( string.IsNullOrEmpty( news.ImageName ) == false )
+                {
+                    image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + news.ImageName );
+                }
+                else
+                {
+                    image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + "podcastThumbnailPlaceholder.png" );
+                }
                 NewsImage.Add( image );
             }
 

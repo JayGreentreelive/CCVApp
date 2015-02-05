@@ -23,6 +23,7 @@ using System.Net;
 using System.IO;
 using CCVApp.Shared;
 using Rock.Mobile.PlatformUI.DroidNative;
+using System.Threading;
 
 namespace Droid
 {
@@ -362,8 +363,11 @@ namespace Droid
                     }
                     else
                     {
-                        TakeNotesButton.Icon.SetTextColor( Color.DarkGray );
-                        TakeNotesButton.Label.SetTextColor( Color.DarkGray );
+                        uint disabledColorVal = Rock.Mobile.Graphics.Util.ScaleRGBAColor( ControlStylingConfig.TextField_PlaceholderTextColor, 2, false );
+                        Color disabledColor = Rock.Mobile.PlatformUI.Util.GetUIColor( disabledColorVal );
+
+                        TakeNotesButton.Icon.SetTextColor( disabledColor );
+                        TakeNotesButton.Label.SetTextColor( disabledColor );
                     }
                 }
             }
@@ -463,7 +467,6 @@ namespace Droid
                 ListView ListView { get; set; }
 
                 Bitmap ImagePlaceholder { get; set; }
-                bool RequestingSeries { get; set; }
 
                 bool FragmentActive { get; set; }
 
@@ -524,53 +527,72 @@ namespace Droid
                     ParentTask.NavbarFragment.NavToolbar.SetCreateButtonEnabled( false, null );
                     ParentTask.NavbarFragment.NavToolbar.Reveal( false );
 
-                    // if we haven't already, request the series
-                    if ( SeriesEntries.Count == 0 && RequestingSeries == false )
+                    // what's the state of the series xml?
+                    if ( RockLaunchData.Instance.RequestingSeries == false )
                     {
                         ProgressBar.Visibility = ViewStates.Visible;
 
-                        RequestingSeries = true;
+                        // kick off a thread that will poll the download status and
+                        // call "SeriesReady()" when the download is finished.
+                        Thread waitThread = new Thread( WaitAsync );
+                        waitThread.Start( );
 
-                        // grab the series info
-                        Rock.Mobile.Network.HttpRequest request = new HttpRequest();
-                        RestRequest restRequest = new RestRequest( Method.GET );
-                        restRequest.RequestFormat = DataFormat.Xml;
+                        while ( waitThread.IsAlive == false );
+                    }
+                    else if ( RockLaunchData.Instance.Data.Series.Count == 0 )
+                    {
+                        ProgressBar.Visibility = ViewStates.Visible;
 
-                        request.ExecuteAsync<List<Series>>( NoteConfig.BaseURL + "series.xml", restRequest, 
-                            delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Series> model )
+                        RockLaunchData.Instance.GetSeries( delegate
                             {
-                                // on the main thread, update the list
-                                Rock.Mobile.Threading.Util.PerformOnUIThread(delegate
-                                    {
-                                        RequestingSeries = false;
-                                        ProgressBar.Visibility = ViewStates.Gone;
-
-                                        if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) )
-                                        {
-                                            if( FragmentActive == true )
-                                            {
-                                                ListView.Adapter = new NotesArrayAdapter( this, SeriesEntries, ImagePlaceholder );
-                                            }
-
-                                            // setup the series entries either way, because that doesn't require the fragment to be active
-                                            SetupSeriesEntries( model );
-                                        }
-                                        else
-                                        {
-                                            if ( FragmentActive == true )
-                                            {
-                                                // error
-                                                Springboard.DisplayError( MessagesStrings.Error_Title, MessagesStrings.Error_Message );
-                                            }
-                                        }
-                                    } );
+                                // don't worry about the result. The point is we tried,
+                                // and now will either use downloaded data, saved data, or throw an error to the user.
+                                SeriesReady( );
                             } );
                     }
                     else
                     {
-                        ProgressBar.Visibility = ViewStates.Gone;
-                        ListView.Adapter = new NotesArrayAdapter( this, SeriesEntries, ImagePlaceholder );
+                        // we have the series, so we can move forward.
+                        SeriesReady( );
                     }
+                }
+
+                void WaitAsync( )
+                {
+                    // while we're still requesting the series, simply wait
+                    while ( CCVApp.Shared.Network.RockLaunchData.Instance.RequestingSeries == true );
+
+                    // now that tis' finished, update the notes.
+                    SeriesReady( );
+                }
+
+                void SeriesReady( )
+                {
+                    // on the main thread, update the list
+                    Rock.Mobile.Threading.Util.PerformOnUIThread(delegate
+                        {
+                            ProgressBar.Visibility = ViewStates.Gone;
+
+                            // if there are now series entries, we're good
+                            if ( RockLaunchData.Instance.Data.Series.Count > 0 )
+                            {
+                                if( FragmentActive == true )
+                                {
+                                    ListView.Adapter = new NotesArrayAdapter( this, SeriesEntries, ImagePlaceholder );
+                                }
+
+                                // setup the series entries either way, because that doesn't require the fragment to be active
+                                SetupSeriesEntries( RockLaunchData.Instance.Data.Series );
+                            }
+                            else
+                            {
+                                if ( FragmentActive == true )
+                                {
+                                    // error
+                                    Springboard.DisplayError( MessagesStrings.Error_Title, MessagesStrings.Error_Message );
+                                }
+                            }
+                        } );
                 }
 
                 void SetupSeriesEntries( List<Series> seriesList )

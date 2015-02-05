@@ -38,26 +38,17 @@ namespace iOS
             {
                 case "Page.Read":
                 {
-                    // since we're switching to the read notes VC, pop to the main page root and 
-                    // remove it, because we dont' want back history (where would they go back to?)
-                    ParentViewController.ClearViewControllerStack( );
-
-                    //TODO: We need to get the latest sermon XML from Rock Data. For now,
-                    //I know what it'll be named. (it's the date of the Saturday weekend day.)
-                    // for now, let the note name be the previous saturday
-                    DateTime time = DateTime.UtcNow;
-
-                    // if it's not saturday, find the date of the past saturday
-                    if( time.DayOfWeek != DayOfWeek.Saturday )
+                    if ( CCVApp.Shared.Network.RockLaunchData.Instance.Data.Series.Count > 0 )
                     {
-                        time = time.Subtract( new TimeSpan( (int)time.DayOfWeek + 1, 0, 0, 0 ) );
+                        // since we're switching to the read notes VC, pop to the main page root and 
+                        // remove it, because we dont' want back history (where would they go back to?)
+                        ParentViewController.ClearViewControllerStack( );
+
+                        NoteController.NoteName = CCVApp.Shared.Network.RockLaunchData.Instance.Data.Series[ 0 ].Messages[ 0 ].Name;
+                        NoteController.NoteUrl = CCVApp.Shared.Network.RockLaunchData.Instance.Data.Series[ 0 ].Messages[ 0 ].NoteUrl;
+
+                        ParentViewController.PushViewController( NoteController, false );
                     }
-
-                    NoteController.NoteName = string.Format( "Sermon Note - {0}.{1}.{2}", time.Month, time.Day, time.Year );
-                    NoteController.NoteUrl = string.Format("http://www.jeredmcferron.com/ccv/{0}_{1}_{2}_{3}.xml", "message", time.Month, time.Day, time.Year );
-                    //
-
-                    ParentViewController.PushViewController( NoteController, false );
                     break;
                 }
             }
@@ -137,21 +128,6 @@ namespace iOS
                 {
                     NavToolbar.RevealForTime( 3.0f );
                 }
-            }
-        }
-
-        public override void ViewDidScroll( float scrollDelta )
-        {
-            // did the user's finger go "up"?
-            if( scrollDelta >= NoteConfig.ScrollRateForNavBarHide )
-            {
-                // hide the nav bar
-                NavToolbar.Reveal( false );
-            }
-            // did the user scroll "down"?
-            else if ( scrollDelta <= NoteConfig.ScrollRateForNavBarReveal )
-            {
-                NavToolbar.Reveal( true );
             }
         }
 

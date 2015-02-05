@@ -39,7 +39,7 @@ namespace iOS
             }
             else
             {
-                ImageBanner.Image = null;
+                ImageBanner.Image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + "podcastThumbnailPlaceholder.png" );
             }
             ImageBanner.BackgroundColor = UIColor.Green;
 
@@ -52,7 +52,6 @@ namespace iOS
 
             ControlStyling.StyleUILabel( NewsTitle, ControlStylingConfig.Large_Font_Bold, ControlStylingConfig.Large_FontSize );
             NewsTitle.Text = NewsItem.Title;
-            NewsTitle.SizeToFit( );
         }
 
         public override void TouchesEnded(NSSet touches, UIEvent evt)
@@ -73,6 +72,11 @@ namespace iOS
             {
                 NewsDescription.UserInteractionEnabled = false;
             }
+
+            // adjust the news title to have padding on the left and right.
+            NewsTitle.Layer.AnchorPoint = CGPoint.Empty;
+            NewsTitle.SizeToFit( );
+            NewsTitle.Frame = new CGRect( NewsDescription.Frame.Left, ImageBanner.Frame.Bottom + 10, View.Bounds.Width - 30, NewsTitle.Bounds.Height );
         }
 	}
 }

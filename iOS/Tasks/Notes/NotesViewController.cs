@@ -370,6 +370,11 @@ namespace iOS
             UIApplication.SharedApplication.IdleTimerDisabled = false;
         }
 
+        public void DidScroll( )
+        {
+
+        }
+
         public void ShareNotes()
         {
             if ( Note != null )
@@ -496,7 +501,19 @@ namespace iOS
         public void ViewDidScroll( float scrollDelta )
         {
             // notify our task that fast scrolling was detected
-            Task.ViewDidScroll( scrollDelta );
+            //Task.ViewDidScroll( scrollDelta );
+
+            nfloat scrollPerc = UIScrollView.ContentOffset.Y / UIScrollView.ContentSize.Height;
+            if ( scrollPerc < .10f )
+            {
+                Task.NavToolbar.Reveal( true );
+            }
+            else
+            {
+                Task.NavToolbar.Reveal( false );
+            }
+
+            Console.WriteLine( "Scroll Perc: {0}", scrollPerc );
         }
 
         [Foundation.Export("DoubleTapSelector:")]

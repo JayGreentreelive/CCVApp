@@ -195,14 +195,15 @@ namespace Droid
                     // limit the address to 90% of the screen so it doesn't conflict with the progress bar.
                     Point displaySize = new Point( );
                     Activity.WindowManager.DefaultDisplay.GetSize( displaySize );
-                    int fixedWidth = (int) ( displaySize.X * 90.0f );
+                    int fixedWidth = (int) Rock.Mobile.Graphics.Util.UnitToPx( ( displaySize.X * 90.0f ) );
                     Address.SetMinWidth( fixedWidth );
                     Address.SetMaxWidth( fixedWidth );
 
 
                     MapView = new Android.Gms.Maps.MapView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     MapView.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent );
-                    MapView.LayoutParameters.Height = 600;
+
+                    MapView.LayoutParameters.Height = (int) (displaySize.Y * .50f);
                     MapView.GetMapAsync( this );
                     MapView.SetBackgroundColor( Color.Black );
                     MapView.OnCreate( savedInstanceState );

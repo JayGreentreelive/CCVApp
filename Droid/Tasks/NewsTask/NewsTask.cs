@@ -2,6 +2,8 @@
 using Android.App;
 using Android.Content;
 using Android.Views;
+using CCVApp.Shared.Network;
+using System.Collections.Generic;
 
 namespace Droid
 {
@@ -13,6 +15,8 @@ namespace Droid
             {
                 NewsPrimaryFragment MainPage { get; set; }
                 NewsDetailsFragment DetailsPage { get; set; }
+
+                List<RockNews> News { get; set; }
 
                 public NewsTask( NavbarFragment navFragment ) : base( navFragment )
                 {
@@ -30,13 +34,22 @@ namespace Droid
                         DetailsPage = new NewsDetailsFragment( );
                     }
                     DetailsPage.ParentTask = this;
+
+                    // give the main page fragment a reference to OUR list.
+                    News = new List<RockNews>();
+                    MainPage.News = News;
                 }
 
                 public override void Activate( bool forResume )
                 {
                     base.Activate( forResume );
 
-                    MainPage.News = CCVApp.Shared.Network.RockGeneralData.Instance.Data.News;
+                    // provide the news to the viewer by COPYING it.
+                    News.Clear( );
+                    foreach ( RockNews newsItem in RockLaunchData.Instance.Data.News )
+                    {
+                        News.Add( new RockNews( newsItem ) );
+                    }
                 }
 
                 public override TaskFragment StartingFragment()
@@ -52,7 +65,7 @@ namespace Droid
                         // decide what to do.
                         if ( source == MainPage )
                         {
-                            DetailsPage.NewsItem = CCVApp.Shared.Network.RockGeneralData.Instance.Data.News[ buttonId ];
+                            DetailsPage.NewsItem = News[ buttonId ];
                             PresentFragment( DetailsPage, true );
                         }
                         else if ( source == DetailsPage )

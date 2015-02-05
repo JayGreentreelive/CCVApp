@@ -15,6 +15,8 @@ using CCVApp.Shared.Strings;
 using Rock.Mobile.PlatformUI;
 using System.Net;
 using CCVApp.Shared;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace iOS
 {
@@ -481,8 +483,6 @@ namespace iOS
 
         NotesDetailsUIViewController DetailsViewController { get; set; }
 
-        bool RequestSeries { get; set; }
-
         bool IsVisible { get; set; }
 
         public NotesMainUIViewController (IntPtr handle) : base (handle)
@@ -532,70 +532,79 @@ namespace iOS
 
             IsVisible = true;
 
-            // if we haven't already kicked off a request, do so now
-            if ( SeriesEntries.Count == 0 && RequestSeries == false )
+            // what's the state of the series xml?
+            if ( RockLaunchData.Instance.RequestingSeries == false )
             {
+                // it's in the process of downloading, so wait and poll.
                 View.AddSubview( ActivityIndicator );
                 View.BringSubviewToFront( ActivityIndicator );
                 ActivityIndicator.Hidden = false;
 
-                RequestSeries = true;
+                // kick off a thread that will poll the download status and
+                // call "SeriesReady()" when the download is finished.
+                Thread waitThread = new Thread( WaitAsync );
+                waitThread.Start( );
 
-                // grab the series info
-                Rock.Mobile.Network.HttpRequest request = new HttpRequest();
-                RestRequest restRequest = new RestRequest( Method.GET );
-                restRequest.RequestFormat = DataFormat.Xml;
+                while ( waitThread.IsAlive == false );
+            }
+            else if ( RockLaunchData.Instance.Data.Series.Count == 0 )
+            {
+                // it hasn't been downloaded, or failed, or something. Point is we
+                // don't have anything, so request it.
+                View.AddSubview( ActivityIndicator );
+                View.BringSubviewToFront( ActivityIndicator );
+                ActivityIndicator.Hidden = false;
 
-                request.ExecuteAsync<List<Series>>( NoteConfig.BaseURL + "series.xml", restRequest, 
-                    delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Series> model )
+                RockLaunchData.Instance.GetSeries( delegate
                     {
-                        // only do image work on the main thread
-                        InvokeOnMainThread( delegate
-                            {
-                                ActivityIndicator.Hidden = true;
-                                ActivityIndicator.RemoveFromSuperview( );
-
-                                RequestSeries = false;
-
-                                if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) )
-                                {
-                                    if ( model != null )
-                                    {
-                                        // setup each series entry in our table
-                                        SetupSeriesEntries( model );
-
-                                        // only update the table if we're still visible
-                                        if ( IsVisible == true )
-                                        {
-                                            TableSource source = new TableSource( this, SeriesEntries, ImagePlaceholder );
-                                            NotesTableView.Source = source;
-                                            NotesTableView.ReloadData( );
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if ( IsVisible == true )
-                                        {
-                                            SpringboardViewController.DisplayError( MessagesStrings.Error_Title, MessagesStrings.Error_Message );
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    if ( IsVisible == true )
-                                    {
-                                        SpringboardViewController.DisplayError( MessagesStrings.Error_Title, MessagesStrings.Error_Message );
-                                    }
-                                }
-                            });
+                        // don't worry about the result. The point is we tried,
+                        // and now will either use downloaded data, saved data, or throw an error to the user.
+                        SeriesReady( );
                     } );
             }
             else
             {
-                TableSource source = new TableSource( this, SeriesEntries, ImagePlaceholder );
-                NotesTableView.Source = source;
-                NotesTableView.ReloadData( );
+                // we have the series, so we can move forward.
+                SeriesReady( );
             }
+        }
+
+        void WaitAsync( )
+        {
+            // while we're still requesting the series, simply wait
+            while ( CCVApp.Shared.Network.RockLaunchData.Instance.RequestingSeries == true );
+
+            // now that tis' finished, update the notes.
+            SeriesReady( );
+        }
+
+        void SeriesReady( )
+        {
+            // only do image work on the main thread
+            InvokeOnMainThread( delegate
+                {
+                    ActivityIndicator.Hidden = true;
+                    ActivityIndicator.RemoveFromSuperview( );
+
+                    // if there are now series entries, we're good
+                    if ( RockLaunchData.Instance.Data.Series.Count > 0 )
+                    {
+                        // setup each series entry in our table
+                        SetupSeriesEntries( RockLaunchData.Instance.Data.Series );
+
+                        // only update the table if we're still visible
+                        if ( IsVisible == true )
+                        {
+                            TableSource source = new TableSource( this, SeriesEntries, ImagePlaceholder );
+                            NotesTableView.Source = source;
+                            NotesTableView.ReloadData( );
+                        }
+                    }
+                    else if ( IsVisible == true )
+                    {
+                        SpringboardViewController.DisplayError( MessagesStrings.Error_Title, MessagesStrings.Error_Message );
+                    }
+                });
         }
 
         void SetupSeriesEntries( List<Series> seriesList )

@@ -1,3 +1,26 @@
 Both
 	Added a Notification Banner system that allows quick access.
 		First (and probably only usage) is "Tap To Take Notes" on weekends.
+
+	News is now downloaded from Rock at startup.
+
+	Notes are now downloaded at startup (reduces the delay when tapping "Messages")
+
+	Added analytic usage tracking.
+
+	Fixed an issue causing the Title of a news article to bleed off the right edge.
+
+	If a news title is too long, ellipses will now be added.
+
+	Reworked the Nav Toolbar reveal in Notes. It now reveals when near the top, and hides when scrolled.
+
+	Updated the Image Cropper button icons.
+
+Android
+	Fixed an issue causing the group finder map to be tiny on certain devices.
+
+	Fixed an issue causing the Image Cropper buttons to be, ironically, cropped.
+
+	Fixed an issue causing profile images taken with the camera to be the wrong orientation on some devices.
+
+	Fixed an issue causing some disabled buttons to have the wrong "Disabled" color.

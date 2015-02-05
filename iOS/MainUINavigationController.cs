@@ -37,6 +37,8 @@ namespace iOS
 
         UIPanGestureRecognizer PanGesture { get; set; }
 
+        public SpringboardViewController ParentSpringboard { get; set; }
+
         /// <summary>
         /// Tracks the last position of panning so delta can be applied
         /// </summary>
@@ -273,6 +275,8 @@ namespace iOS
             // however, we have a unique situation where we are the parent to ALL OTHER view controllers,
             // so managing ourselves becomes a lot simpler.
             RevealSpringboard( !SpringboardRevealed );
+
+            ParentSpringboard.RevealButtonClicked( );
         }
 
         public bool ActivateTask( Task task )

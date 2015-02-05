@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 
 namespace CCVApp
 {
@@ -18,6 +19,7 @@ namespace CCVApp
                 public string ImageName { get; set; }
                 public string HeaderImageName { get; set; }
 
+                [JsonConstructor]
                 public RockNews( string title, string description, string referenceUrl, string imageName, string headerImageName )
                 {
                     Title = title;
@@ -26,6 +28,17 @@ namespace CCVApp
 
                     ImageName = imageName;
                     HeaderImageName = headerImageName;
+                }
+
+                // create a copy constructor
+                public RockNews( RockNews rhs )
+                {
+                    Title = rhs.Title;
+                    Description = rhs.Description;
+                    ReferenceURL = rhs.ReferenceURL;
+
+                    ImageName = rhs.ImageName;
+                    HeaderImageName = rhs.HeaderImageName;
                 }
             }
         }

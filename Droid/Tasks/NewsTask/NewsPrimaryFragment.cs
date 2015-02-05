@@ -20,8 +20,6 @@ namespace Droid
     {
         namespace News
         {
-
-
             public class NewsArrayAdapter : BaseAdapter
             {
                 List<Bitmap> NewsImage { get; set; }
@@ -69,6 +67,11 @@ namespace Droid
                 public List<RockNews> News { get; set; }
                 List<Bitmap> NewsImage { get; set; }
 
+                public NewsPrimaryFragment( ) : base( )
+                {
+                    NewsImage = new List<Bitmap>();
+                }
+
                 public override void OnCreate( Bundle savedInstanceState )
                 {
                     base.OnCreate( savedInstanceState );
@@ -85,12 +88,23 @@ namespace Droid
 					View view = inflater.Inflate(Resource.Layout.News_Primary, container, false);
                     view.SetOnTouchListener( this );
 
-                    NewsImage = new List<Bitmap>( );
+                    // load the news images for each item
+                    NewsImage.Clear( );
+
                     foreach( RockNews item in News )
                     {
                         // load the stream from assets
-                        System.IO.Stream assetStream = Activity.BaseContext.Assets.Open( item.ImageName );
-                        NewsImage.Add( BitmapFactory.DecodeStream( assetStream ) );
+                        Bitmap imageBanner = null;
+                        if ( string.IsNullOrEmpty( item.ImageName ) == false )
+                        {
+                            System.IO.Stream assetStream = Activity.BaseContext.Assets.Open( item.ImageName );
+                            imageBanner = BitmapFactory.DecodeStream( assetStream );
+                        }
+                        else
+                        {
+                            imageBanner = BitmapFactory.DecodeResource( Rock.Mobile.PlatformSpecific.Android.Core.Context.Resources, Resource.Drawable.thumbnailPlaceholder );
+                        }
+                        NewsImage.Add( imageBanner );
                     }
 
                     ListView listView = view.FindViewById<ListView>( Resource.Id.news_primary_list );

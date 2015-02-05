@@ -136,6 +136,18 @@ namespace Droid
 
         NotificationBillboard Billboard { get; set; }
 
+        /// <summary>
+        /// True when launch data is finished downloading
+        /// </summary>
+        bool LaunchDataFinished { get; set; }
+
+        /// <summary>
+        /// Stores the time of the last rock sync.
+        /// If the user has left our app running > 24 hours we'll redownload
+        /// </summary>
+        /// <value>The last rock sync.</value>
+        DateTime LastRockSync { get; set; }
+
         public override void OnCreate( Bundle savedInstanceState )
         {
             base.OnCreate( savedInstanceState );
@@ -197,10 +209,35 @@ namespace Droid
                 ActiveElementIndex = savedInstanceState.GetInt( "LastActiveElement" );
             }
 
-            CCVApp.Shared.Network.RockNetworkManager.Instance.Connect( 
+            // load our objects from disk
+            System.Console.WriteLine( "Loading objects from device." );
+            RockApi.Instance.LoadObjectsFromDevice( );
+            System.Console.WriteLine( "Loading objects done." );
+
+            // seed the last sync time with now, so that when OnResume gets called we don't do it again.
+            LastRockSync = DateTime.Now;
+
+            SyncRockData( );
+        }
+
+        void SyncRockData( )
+        {
+            LaunchDataFinished = false;
+
+            CCVApp.Shared.Network.RockNetworkManager.Instance.SyncRockData( 
                 delegate(System.Net.HttpStatusCode statusCode, string statusDescription)
                 {
                     // here we know whether the initial handshake with Rock went ok or not
+                    LaunchDataFinished = true;
+
+                    // if the billboard has been added, show it.
+                    // Otherwise, it'll be shown when the view is finished setting up.
+                    if( Billboard.Parent != null )
+                    {
+                        DisplaySeriesBillboard( );
+                    }
+
+                    LastRockSync = DateTime.Now;
                 });
         }
 
@@ -384,6 +421,13 @@ namespace Droid
             return view;
         }
 
+        public void RevealButtonClicked( )
+        {
+            // this will be called by the Navbar (which owns the reveal button) when
+            // it's clicked. We want to make sure we alwas hide the billboard.
+            Billboard.Hide( );
+        }
+
         public void StartModalFragment( Fragment fragment )
         {
             // replace the entire screen with a modal fragment
@@ -557,13 +601,17 @@ namespace Droid
             System.Console.WriteLine( "Springboard OnPause()" );
         }
 
-
-
         public override void OnResume()
         {
             base.OnResume();
 
             System.Console.WriteLine( "Springboard OnResume()" );
+
+            // if it's been longer than N hours, resync rock.
+            if ( DateTime.Now.Subtract( LastRockSync ).Hours > SpringboardConfig.SyncRockHoursFrequency )
+            {
+                SyncRockData( );
+            }
 
             UpdateLoginState( );
 
@@ -575,22 +623,37 @@ namespace Droid
                 // First add it 
                 ( (FrameLayout)NavbarFragment.ActiveTaskFrame ).AddView( Billboard );
 
-                // is it the weekend?
-                //if ( DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday )
+                // if we finished getting launch data, process the billboard
+                if ( LaunchDataFinished == true )
                 {
-                    // then kick off a timer that will reveal it in 1 second.
-                    // we delay because OnResume is cpu intensive, and we can't
-                    // nicely animate during that time.
+                    DisplaySeriesBillboard( );
+                }            
+            }
+        }
+
+        /// <summary>
+        /// Displays the "Tap to take notes" series billboard
+        /// </summary>
+        void DisplaySeriesBillboard( )
+        {
+            // should we advertise the notes?
+            // yes, if it's a weekend and we're at CCV (that part will come later)
+            //if ( DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday )
+            {
+                if ( RockLaunchData.Instance.Data.Series.Count > 0 )
+                {
+                    // kick off a timer to reveal the billboard, because we 
+                    // don't want to do it the MOMENT the view appears.
                     System.Timers.Timer timer = new System.Timers.Timer();
                     timer.AutoReset = false;
                     timer.Interval = 1000;
                     timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>
-                    {
-                        Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
-                            {
-                                Billboard.Reveal( );
-                            } );
-                    };
+                        {
+                            Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                                {
+                                    Billboard.Reveal( );
+                                } );
+                        };
                     timer.Start( );
                 }
             }

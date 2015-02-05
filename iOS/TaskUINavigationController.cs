@@ -20,7 +20,9 @@ namespace iOS
 
             foreach ( UIViewController controller in ChildViewControllers )
             {
+                controller.ViewWillDisappear( false );
                 controller.RemoveFromParentViewController( );
+                controller.ViewDidDisappear( false );
             }
         }
     }

@@ -216,6 +216,8 @@ namespace Droid
             SpringboardRevealButton.Click += (object sender, System.EventArgs e) => 
                 {
                     RevealSpringboard( !SpringboardRevealed );
+
+                    SpringboardParent.RevealButtonClicked( );
                 };
 
             relativeLayout.AddView( SpringboardRevealButton );

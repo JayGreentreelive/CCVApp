@@ -197,11 +197,24 @@ namespace iOS
 
         NotificationBillboard Billboard { get; set; }
 
+        /// <summary>
+        /// True when launch data is finished downloading
+        /// </summary>
+        bool LaunchDataFinished { get; set; }
+
+        /// <summary>
+        /// Stores the time of the last rock sync.
+        /// If the user has left our app running > 24 hours we'll redownload
+        /// </summary>
+        /// <value>The last rock sync.</value>
+        DateTime LastRockSync { get; set; }
+
 		public SpringboardViewController (IntPtr handle) : base (handle)
 		{
             UserManagementStoryboard = UIStoryboard.FromName( "UserManagement", null );
 
             NavViewController = Storyboard.InstantiateViewController( "MainUINavigationController" ) as MainUINavigationController;
+            NavViewController.ParentSpringboard = this;
 
             Elements = new List<SpringboardElement>( );
 		}
@@ -253,6 +266,13 @@ namespace iOS
             // amazingly, this works.
             NSNumber value = NSNumber.FromInt32( (int)UIInterfaceOrientation.Portrait );
             UIDevice.CurrentDevice.SetValueForKey( value, new NSString( "orientation" ) );
+        }
+
+        public void RevealButtonClicked( )
+        {
+            // this will be called by the Navbar (which owns the reveal button) when
+            // it's clicked. We want to make sure we alwas hide the billboard.
+            Billboard.Hide( );
         }
 
         public override void ViewDidLoad()
@@ -387,13 +407,15 @@ namespace iOS
                     }
                 };
 
-            CCVApp.Shared.Network.RockNetworkManager.Instance.Connect( 
-                delegate(System.Net.HttpStatusCode statusCode, string statusDescription)
-                {
-                    // here we know whether the initial handshake with Rock went ok or not
-                });
+            // load our objects from disk
+            Console.WriteLine( "Loading objects from device." );
+            RockApi.Instance.LoadObjectsFromDevice( );
+            Console.WriteLine( "Loading objects done." );
 
+            // seed the last sync time with now, so that when OnActivated gets called we don't do it again.
+            LastRockSync = DateTime.Now;
 
+            SyncRockData( );
 
             // setup the Notification Banner for Taking Notes
             Billboard = new NotificationBillboard( View.Bounds.Width, View.Bounds.Height );
@@ -417,6 +439,27 @@ namespace iOS
             );
 
             Billboard.Layer.Position = new CGPoint( Billboard.Layer.Position.X, NavViewController.NavigationBar.Frame.Height );
+        }
+
+        void SyncRockData( )
+        {
+            LaunchDataFinished = false;
+
+            CCVApp.Shared.Network.RockNetworkManager.Instance.SyncRockData( 
+                delegate(System.Net.HttpStatusCode statusCode, string statusDescription)
+                {
+                    // here we know whether the initial handshake with Rock went ok or not
+                    LaunchDataFinished = true;
+
+                    // if the billboard has been added, show it.
+                    // Otherwise, it'll be shown when the view is finished setting up.
+                    if( Billboard.Superview != null )
+                    {
+                        DisplaySeriesBillboard( );
+                    }
+
+                    LastRockSync = DateTime.Now;
+                });
         }
 
         void ManageProfilePic( )
@@ -621,9 +664,24 @@ namespace iOS
             {
                 View.AddSubview( Billboard );
 
-                // should we advertise the notes?
-                // yes, if it's a weekend and we're at CCV (that part will come later)
-                //if ( DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday )
+                // if we finished getting launch data, process the billboard
+                if ( LaunchDataFinished == true )
+                {
+                    DisplaySeriesBillboard( );
+                }
+            }
+        }
+
+        /// <summary>
+        /// Displays the "Tap to take notes" series billboard
+        /// </summary>
+        void DisplaySeriesBillboard( )
+        {
+            // should we advertise the notes?
+            // yes, if it's a weekend and we're at CCV (that part will come later)
+            //if ( DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday )
+            {
+                if ( RockLaunchData.Instance.Data.Series.Count > 0 )
                 {
                     // kick off a timer to reveal the billboard, because we 
                     // don't want to do it the MOMENT the view appears.
@@ -631,19 +689,17 @@ namespace iOS
                     timer.AutoReset = false;
                     timer.Interval = 1000;
                     timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>
-                    {
-                        Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
-                            {
-                                Billboard.Reveal( );
-                                View.BringSubviewToFront( Billboard );
-                            } );
-                    };
+                        {
+                            Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                                {
+                                    Billboard.Reveal( );
+                                    View.BringSubviewToFront( Billboard );
+                                } );
+                        };
                     timer.Start( );
                 }
             }
         }
-
-
 
         /// <summary>
         /// Adjusts the positioning of the springboard elements to be spaced out consistently
@@ -806,6 +862,12 @@ namespace iOS
         public void OnActivated( )
         {
             NavViewController.OnActivated( );
+
+            // if it's been longer than N hours, resync rock.
+            if ( DateTime.Now.Subtract( LastRockSync ).Hours > SpringboardConfig.SyncRockHoursFrequency )
+            {
+                SyncRockData( );
+            }
         }
 
         public void WillEnterForeground( )

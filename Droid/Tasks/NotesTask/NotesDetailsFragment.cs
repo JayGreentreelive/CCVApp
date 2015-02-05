@@ -306,7 +306,9 @@ namespace Droid
                     else
                     {
                         WatchButton.Enabled = false;
-                        WatchButton.SetTextColor( Color.DarkGray );
+
+                        uint disabledColor = Rock.Mobile.Graphics.Util.ScaleRGBAColor( ControlStylingConfig.TextField_PlaceholderTextColor, 2, false );
+                        WatchButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( disabledColor ) );
                     }
                 }
 
@@ -319,8 +321,8 @@ namespace Droid
                     }
                     else
                     {
-                        TakeNotesButton.Enabled = false;
-                        TakeNotesButton.SetTextColor( Color.DarkGray );
+                        uint disabledColor = Rock.Mobile.Graphics.Util.ScaleRGBAColor( ControlStylingConfig.TextField_PlaceholderTextColor, 2, false );
+                        WatchButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( disabledColor ) );
                     }
                 }
             }

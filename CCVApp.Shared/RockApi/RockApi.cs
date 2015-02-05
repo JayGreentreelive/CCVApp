@@ -59,6 +59,11 @@ namespace CCVApp
                 const string GetPrayerRequestsEndPoint = "api/prayerrequests/public";
 
                 /// <summary>
+                /// End point for getting news items to be displayed in the news section
+                /// </summary>
+                const string GetNewsEndPoint = "api/ContentChannelItems?$filter=ContentChannel/Guid eq guid'EAE51F3E-C27B-4E7C-B9A0-16EB68129637'";// and Status eq 1";
+
+                /// <summary>
                 /// End point for retrieving a Group Object
                 /// </summary>
                 const string GetFamiliesEndPoint = "api/Groups/GetFamilies/";
@@ -258,6 +263,22 @@ namespace CCVApp
                     Request.ExecuteAsync< List<Rock.Client.Group> >( requestUrl, request, resultHandler);
                 }
 
+                public void GetNews( HttpRequest.RequestResult< List<Rock.Client.ContentChannelItem> > resultHandler )
+                {
+                    // request a profile by the username. If no username is specified, we'll use the logged in user's name.
+                    RestRequest request = GetRockRestRequest( Method.GET );
+                    string requestUrl = BaseUrl + GetNewsEndPoint;
+
+                    // get the raw response
+                    Request.ExecuteAsync< List<Rock.Client.ContentChannelItem> >( requestUrl, request, resultHandler );
+                }
+
+                public void GetGeneralData( HttpRequest.RequestResult<RockGeneralData.GeneralData> resultHandler )
+                {
+                    // todo: add a "get GeneralData" end point.
+                    resultHandler( HttpStatusCode.OK, "Success", RockGeneralData.Instance.Data );
+                }
+
                 /// <summary>
                 /// Simple wrapper function to make sure all required headers get placed in
                 /// any REST request made to Rock.
@@ -270,18 +291,6 @@ namespace CCVApp
                     request.AddHeader( AuthorizationTokenHeaderKey, CCVApp.Shared.Config.GeneralConfig.RockMobileAppAuthorizationKey );
                  
                     return request;
-                }
-
-                public void GetLaunchData( HttpRequest.RequestResult<RockLaunchData.LaunchData> resultHandler )
-                {
-                    // todo: add a "get LaunchData" end point.
-                    resultHandler( HttpStatusCode.OK, "Success", RockLaunchData.Instance.Data );
-                }
-
-                public void GetGeneralData( HttpRequest.RequestResult<RockGeneralData.GeneralData> resultHandler )
-                {
-                    // todo: add a "get GeneralData" end point.
-                    resultHandler( HttpStatusCode.OK, "Success", RockGeneralData.Instance.Data );
                 }
 
                 /*private void SaveCookieToDevice( )
@@ -329,6 +338,7 @@ namespace CCVApp
                 public void SaveObjectsToDevice( )
                 {
                     RockGeneralData.Instance.SaveToDevice( );
+                    RockLaunchData.Instance.SaveToDevice( );
                     RockMobileUser.Instance.SaveToDevice( );
                     //SaveCookieToDevice( );
                 }
@@ -336,21 +346,26 @@ namespace CCVApp
                 public void LoadObjectsFromDevice( )
                 {
                     RockGeneralData.Instance.LoadFromDevice( );
+                    RockLaunchData.Instance.LoadFromDevice( );
                     RockMobileUser.Instance.LoadFromDevice( );
                     //LoadCookieFromDevice( );
                 }
 
                 public void SyncWithServer( HttpRequest.RequestResult result )
                 {
+                    // this is a chance for anything saved but not uploaded to Rock to upload to Rock.
                     Console.WriteLine( "Sync with server" );
 
-                    // this is a chance for anything unsaved to go ahead and save
+                    // USER PROFILE
                     RockMobileUser.Instance.SyncDirtyObjects( delegate(System.Net.HttpStatusCode statusCode, string statusDescription)
                         {
                             Console.WriteLine( "Sync with server complete with code {0}", statusCode );
 
                             // this is called back on the main thread, so from here we can execute more requests,
                             // or notify the caller.
+
+                            // ADD MORE THINGS HERE
+
                             result( statusCode, statusDescription );
                         });
                 }

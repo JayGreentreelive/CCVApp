@@ -2,25 +2,51 @@
 <SeriesList>
 	<Series>
 		<Message>
+			<Name>FAN or FOLLOWER</Name>
+			<Speaker>Dr. Don Wilson</Speaker>
+			<Date>2/1/2015</Date>
+			<NoteUrl>http://www.jeredmcferron.com/ccv/message_1_31_2015.xml</NoteUrl>
+			<WatchUrl>http://player.vimeo.com/external/118415552.m3u8?p=high,standard,mobile&amp;s=b565a74f30fc2ee6db55039746840b0c</WatchUrl>
+			<ShareUrl>http://www.ccvonline.com/Arena/default.aspx?page=17529&amp;item=492</ShareUrl>
+		</Message>
+
+		<Name>Fan or Follower</Name>
+		<Description>
+			Are you a fan of Jesus, or are you a follower of Jesus? Join us as we learn about this critical difference, and why it might matter more than you think.
+		</Description>
+		<DateRanges>2/1/2015 - 2/4/2015</DateRanges>
+		<BillboardUrl>http://www.jeredmcferron.com/ccv/fan_or_follower.png</BillboardUrl>
+		<ThumbnailUrl>http://www.jeredmcferron.com/ccv/fan_or_follower_thumb.png</ThumbnailUrl>
+	</Series>
+	<Series>
+		<Message>
+			<Name>FAN or FOLLOWER</Name>
+			<Speaker>Dr. Don Wilson</Speaker>
+			<Date>2/1/2015</Date>
+			<NoteUrl>http://www.jeredmcferron.com/ccv/message_1_31_2015.xml</NoteUrl>
+			<WatchUrl>http://player.vimeo.com/external/118415552.m3u8?p=high,standard,mobile&amp;s=b565a74f30fc2ee6db55039746840b0c</WatchUrl>
+			<ShareUrl>http://www.ccvonline.com/Arena/default.aspx?page=17529&amp;item=492</ShareUrl>
+		</Message>
+		<Message>
 			<Name>FRIENDS</Name>
 			<Speaker>Todd Clark</Speaker>
-			<Date>1/25/2014</Date>
+			<Date>1/25/2015</Date>
 			<NoteUrl>http://www.jeredmcferron.com/ccv/message_1_24_2015.xml</NoteUrl>
-			<WatchUrl></WatchUrl>
-			<ShareUrl></ShareUrl>
+			<WatchUrl>http://player.vimeo.com/external/117838587.m3u8?p=high,standard,mobile&amp;s=b1733ebff4f44f6fc04d5183870db6cb</WatchUrl>
+			<ShareUrl>http://www.ccvonline.com/Arena/default.aspx?page=17529&amp;item=490</ShareUrl>
 		</Message>
 		<Message>
 			<Name>FAMILY</Name>
 			<Speaker>Dr. Don Wilson</Speaker>
-			<Date>1/18/2014</Date>
+			<Date>1/18/2015</Date>
 			<NoteUrl>http://www.jeredmcferron.com/ccv/message_1_17_2015.xml</NoteUrl>
-			<WatchUrl></WatchUrl>
-			<ShareUrl></ShareUrl>
+			<WatchUrl>http://player.vimeo.com/external/117281570.m3u8?p=high,standard,mobile&amp;s=c8c7c2c449f105023948851c147972e4</WatchUrl>
+			<ShareUrl>http://www.ccvonline.com/Arena/default.aspx?page=17529&amp;item=489</ShareUrl>
 		</Message>
 		<Message>
 			<Name>Finances</Name>
 			<Speaker>Dr. Mark Moore</Speaker>
-			<Date>1/11/2014</Date>
+			<Date>1/11/2015</Date>
 			<NoteUrl>http://www.jeredmcferron.com/ccv/message_1_10_2015.xml</NoteUrl>
 			<WatchUrl>http://player.vimeo.com/external/116591869.m3u8?p=high,standard,mobile&amp;s=952e71be321b377d2c118b7b795ecdb9</WatchUrl>
 			<ShareUrl>http://www.ccvonline.com/Arena/default.aspx?page=17529&amp;item=488</ShareUrl>
@@ -29,7 +55,7 @@
 		<Message>
 			<Name>Faith</Name>
 			<Speaker>Dr. Don Wilson</Speaker>
-			<Date>1/4/2014</Date>
+			<Date>1/4/2015</Date>
 			<NoteUrl>http://www.jeredmcferron.com/ccv/message_1_3_2015.xml</NoteUrl>
 			<WatchUrl>http://player.vimeo.com/external/115912898.m3u8?p=high,standard,mobile&amp;s=db8e267ab39cd127fc7ec95ae432b554</WatchUrl>
 			<ShareUrl>http://www.ccvonline.com/Arena/default.aspx?page=17529&amp;item=487</ShareUrl>
@@ -39,7 +65,7 @@
 		<Description>
 			New year’s resolutions center on what we need to change and improve. We often resolve to prioritize our faith, family and friends, take control of our finances and focus on what is really important. But isn’t it easy to find ourselves repeating the same old patterns and routines that we committed to change? Join us as we kick off the new year and discover how to make a Fresh Start that lasts.
 		</Description>
-		<DateRanges>1/4/2014 - 1/31/2014</DateRanges>
+		<DateRanges>1/4/2015 - 2/1/2015</DateRanges>
 		<BillboardUrl>http://www.jeredmcferron.com/ccv/fresh_start.png</BillboardUrl>
 		<ThumbnailUrl>http://www.jeredmcferron.com/ccv/fresh_start_thumb.png</ThumbnailUrl>
 	</Series>

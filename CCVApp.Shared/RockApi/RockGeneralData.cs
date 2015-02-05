@@ -13,6 +13,9 @@ namespace CCVApp
             /// <summary>
             /// Stores data that can safely be used as placeholders for
             /// areas of the app that normally require a network connection.
+            /// On FIRST RUN, the constructor data will be used and saved into the .dat file.
+            /// On subsequent runs, it will use whatever data is loaded from the .dat file, which
+            /// can include updated data we download.
             /// </summary>
             public sealed class RockGeneralData
             {

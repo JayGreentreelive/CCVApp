@@ -371,16 +371,17 @@ namespace Droid
 
                 public void OnScrollChanged( float scrollDelta )
                 {
-                    // did the user's finger go "up"?
-                    if( scrollDelta >= NoteConfig.ScrollRateForNavBarHide )
+
+                    float scrollPerc = (float) ScrollView.ScrollY / (float) ScrollViewLayout.LayoutParameters.Height;
+                    if ( scrollPerc < .10f )
+                    {
+                        // show the nav bar
+                        ParentTask.NavbarFragment.NavToolbar.Reveal( true );
+                    }
+                    else
                     {
                         // hide the nav bar
                         ParentTask.NavbarFragment.NavToolbar.Reveal( false );
-                    }
-                    // did the user scroll "down"? Android is a little less sensitive, so use 75% of it.
-                    else if ( scrollDelta <= ( Rock.Mobile.Graphics.Util.UnitToPx( NoteConfig.ScrollRateForNavBarReveal ) ) )
-                    {
-                        ParentTask.NavbarFragment.NavToolbar.Reveal( true );
                     }
                 }
 

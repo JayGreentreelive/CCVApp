@@ -1,5 +1,6 @@
 ﻿using System;
 using Android.Views;
+using CCVApp.Shared.Network;
 
 namespace Droid
 {
@@ -78,22 +79,13 @@ namespace Droid
                     {
                         case "Page.Read":
                         {
-                            //TODO: We need to get the latest sermon XML from Rock Data. For now,
-                            //I know what it'll be named. (it's the date of the Saturday weekend day.)
-                            // for now, let the note name be the previous saturday
-                            DateTime time = DateTime.UtcNow;
-
-                            // if it's not saturday, find the date of the past saturday
-                            if( time.DayOfWeek != DayOfWeek.Saturday )
+                            if ( RockLaunchData.Instance.Data.Series.Count > 0 )
                             {
-                                time = time.Subtract( new TimeSpan( (int)time.DayOfWeek + 1, 0, 0, 0 ) );
+                                NotesPage.NoteName = RockLaunchData.Instance.Data.Series[ 0 ].Messages[ 0 ].Name;
+                                NotesPage.NoteUrl = RockLaunchData.Instance.Data.Series[ 0 ].Messages[ 0 ].NoteUrl;
+
+                                PresentFragment( NotesPage, true );
                             }
-
-                            NotesPage.NoteName = string.Format( "Sermon Note - {0}.{1}.{2}", time.Month, time.Day, time.Year );
-                            NotesPage.NoteUrl = string.Format("http://www.jeredmcferron.com/ccv/{0}_{1}_{2}_{3}.xml", "message", time.Month, time.Day, time.Year );
-                            //
-
-                            PresentFragment( NotesPage, true );
                             break;
                         }
                     }
