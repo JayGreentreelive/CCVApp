@@ -46,36 +46,6 @@ namespace CCVApp
                         Genders.Add( "Male" );
                         Genders.Add( "Female" );
 
-                        News = new List<RockNews>( );
-                        News.Add( new RockNews( "Baptisms", "Baptism is one of the most important events in the life of a Christian. If you've made a commitment to Christ, " + 
-                                                            "it's time to take the next step and make your decision known. Baptism is the best way to express your faith and " + 
-                                                            "reflect your life change. Find out more about baptism through Starting Point, register online or contact your neighborhood pastor.",
-                                                            
-                                                            "http://www.ccvonline.com/Arena/default.aspx?page=17655",
-
-                                                            "news_baptism_main.png",
-                        
-                                                            "news_baptism_header.png" ) );
-
-                        News.Add( new RockNews( "Starting Point", "If you’re asking yourself, “Where do I begin at CCV?” — the answer is Starting Point. " +
-                                                                  "In Starting Point you’ll find out what CCV is all about, take a deep look at the Christian " + 
-                                                                  "faith, and learn how you can get involved. Childcare is available for attending parents.",
-
-                                                                  "http://www.ccvonline.com/Arena/default.aspx?page=17400",
-
-                                                                  "news_startingpoint_main.png", 
-
-                                                                  "news_startingpoint_header.png" ) );
-
-
-                        News.Add( new RockNews( "Learn More", "Wondering what else CCV is about? Check out our website.", 
-
-                                                              "https://www.ccvonline.com", 
-
-                                                              "news_learnmore_main.png",
-                                                              
-                                                              "news_learnmore_header.png" ) );
-
                         PrayerCategories = new List<string>( );
                         PrayerCategories.Add( "Legendary Gems" );
                         PrayerCategories.Add( "Trophies" );
@@ -90,7 +60,6 @@ namespace CCVApp
                     {
                         Campuses = new List<string>( );
                         Genders = new List<string>( );
-                        News = new List<RockNews>( );
                         PrayerCategories = new List<string>( );
                     }
 
@@ -112,12 +81,6 @@ namespace CCVApp
                     /// </summary>
                     /// <value>The genders.</value>
                     public List<string> Genders { get; set; }
-
-                    /// <summary>
-                    /// Default news to display when there's no connection available
-                    /// </summary>
-                    /// <value>The news.</value>
-                    public List<RockNews> News { get; set; }
 
                     /// <summary>
                     /// Default list of prayer categories supported

@@ -413,7 +413,6 @@ namespace Droid
                         {
                             ActivateElement( element );
                             NavbarFragment.PerformTaskAction( "Page.Read" );
-                            Billboard.Hide( );
                         }
                     }
                 } );
@@ -799,6 +798,7 @@ namespace Droid
             base.OnStop();
 
             // save any final changes that may have been performed by the OnPause of other Fragments
+            FileCache.Instance.SaveCacheMap( );
             RockApi.Instance.SaveObjectsToDevice( );
 
             System.Console.WriteLine( "Springboard OnStop()" );

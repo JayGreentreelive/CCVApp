@@ -14,6 +14,7 @@ using CCVApp.Shared.Strings;
 using Rock.Mobile.PlatformUI;
 using Rock.Mobile.PlatformSpecific.iOS.Graphics;
 using Rock.Mobile.PlatformSpecific.iOS.UI;
+using CCVApp.Shared;
 
 namespace iOS
 {
@@ -272,7 +273,7 @@ namespace iOS
         {
             // this will be called by the Navbar (which owns the reveal button) when
             // it's clicked. We want to make sure we alwas hide the billboard.
-            Billboard.Hide( );
+            //Billboard.Hide( );
         }
 
         public override void ViewDidLoad()
@@ -432,7 +433,6 @@ namespace iOS
                         {
                             ActivateElement( element );
                             NavViewController.PerformTaskAction( "Page.Read" );
-                            Billboard.Hide( );
                         }
                     }
                 } 
@@ -888,6 +888,8 @@ namespace iOS
             nint taskID = UIApplication.SharedApplication.BeginBackgroundTask( () => {});
 
             RockApi.Instance.SaveObjectsToDevice( );
+
+            FileCache.Instance.SaveCacheMap( );
 
             UIApplication.SharedApplication.EndBackgroundTask(taskID);
         }

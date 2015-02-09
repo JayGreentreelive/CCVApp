@@ -33,6 +33,72 @@ namespace CCVApp
 
                         News = new List<RockNews>( );
                         Series = new List<Series>( );
+
+                        // for the hardcoded news, leave OFF the image extensions, so that we can add them with scaling for iOS.
+                        DefaultNews = new List<RockNews>( );
+                        DefaultNews.Add( new RockNews( "Baptisms", "Baptism is one of the most important events in the life of a Christian. If you've made a commitment to Christ, " + 
+                            "it's time to take the next step and make your decision known. Baptism is the best way to express your faith and " + 
+                            "reflect your life change. Find out more about baptism through Starting Point, register online or contact your neighborhood pastor.",
+
+                            "http://www.ccvonline.com/Arena/default.aspx?page=17655",
+
+                            "news_baptism_main",
+
+                            "news_baptism_header" ) );
+
+                        DefaultNews.Add( new RockNews( "Starting Point", "If you’re asking yourself, “Where do I begin at CCV?” — the answer is Starting Point. " +
+                            "In Starting Point you’ll find out what CCV is all about, take a deep look at the Christian " + 
+                            "faith, and learn how you can get involved. Childcare is available for attending parents.",
+
+                            "http://www.ccvonline.com/Arena/default.aspx?page=17400",
+
+                            "news_startingpoint_main", 
+
+                            "news_startingpoint_header" ) );
+
+
+                        DefaultNews.Add( new RockNews( "Learn More", "Wondering what else CCV is about? Check out our website.", 
+
+                            "https://www.ccvonline.com", 
+
+                            "news_learnmore_main",
+
+                            "news_learnmore_header" ) );
+                    }
+
+                    /// <summary>
+                    /// Copies the hardcoded default news into the News list,
+                    /// so that there is SOMETHING for the user to see. Should only be done
+                    /// if there is no news available after getting launch data.
+                    /// </summary>
+                    public void CopyDefaultNews( )
+                    {
+                        // COPY the general items into our own new list.
+                        foreach ( RockNews newsItem in DefaultNews )
+                        {
+                            RockNews copiedNews = new RockNews( newsItem );
+                            News.Add( copiedNews );
+
+                            // also cache the compiled in main and header images so the News system can get them transparently
+                            #if __IOS__
+                            string mainImageName = string.Format( "{0}/{1}@{2}x.png", Foundation.NSBundle.MainBundle.BundlePath, copiedNews.ImageName, UIKit.UIScreen.MainScreen.Scale );
+                            string headerImageName = string.Format( "{0}/{1}@{2}x.png", Foundation.NSBundle.MainBundle.BundlePath, copiedNews.HeaderImageName, UIKit.UIScreen.MainScreen.Scale );
+                            #elif __ANDROID__
+                            string mainImageName = copiedNews.ImageName + ".png";
+                            string headerImageName = copiedNews.HeaderImageName + ".png";
+                            #endif
+
+                            // give the default news item imagess an expiration of 10 years. We should have a new version out by then, right?
+                            TimeSpan timeSpan = new TimeSpan( 3650, 0, 0, 0 );
+
+                            // cache the main image
+                            Stream stream = Rock.Mobile.Util.FileIO.AssetConvert.AssetToStream( mainImageName );
+                            FileCache.Instance.SaveFile( stream, copiedNews.ImageName, timeSpan );
+
+                            // cache the header image
+                            stream = Rock.Mobile.Util.FileIO.AssetConvert.AssetToStream( headerImageName );
+                            FileCache.Instance.SaveFile( stream, copiedNews.HeaderImageName, timeSpan );
+                        }
                     }
 
                     /// <summary>
@@ -56,6 +122,13 @@ namespace CCVApp
                     /// </summary>
                     /// <value>The series.</value>
                     public List<Series> Series { get; set; }
+
+                    /// <summary>
+                    /// Used on the app's first run, or there's no network connection
+                    /// and no valid downloaded news to use.
+                    /// </summary>
+                    /// <value>The default news.</value>
+                    List<RockNews> DefaultNews { get; set; }
                 }
                 public LaunchData Data { get; set; }
 
@@ -200,12 +273,7 @@ namespace CCVApp
                     // take the general data's news.
                     if ( Data.News.Count == 0 )
                     {
-                        // COPY the general items into our own new list.
-                        foreach ( RockNews newsItem in RockGeneralData.Instance.Data.News )
-                        {
-                            RockNews copiedNews = new RockNews( newsItem );
-                            Data.News.Add( copiedNews );
-                        }
+                        Data.CopyDefaultNews( );
                     }
                 }
             }

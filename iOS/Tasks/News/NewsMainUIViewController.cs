@@ -7,6 +7,8 @@ using CCVApp.Shared.Network;
 using CoreGraphics;
 using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
+using CCVApp.Shared;
+using System.IO;
 
 namespace iOS
 {
@@ -99,9 +101,15 @@ namespace iOS
             foreach( RockNews news in News )
             {
                 UIImage image = null;
-                if ( string.IsNullOrEmpty( news.ImageName ) == false )
+
+                // we should always assume images are in cache. If they aren't, show a placeholder.
+                // It is not our job to download them.
+                MemoryStream imageStream = (MemoryStream)FileCache.Instance.LoadFile( news.ImageName );
+                if ( imageStream != null )
                 {
-                    image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + news.ImageName );
+                    NSData imageData = NSData.FromStream( imageStream );
+                    image = new UIImage( imageData, UIScreen.MainScreen.Scale );
+                    imageStream.Dispose( );
                 }
                 else
                 {

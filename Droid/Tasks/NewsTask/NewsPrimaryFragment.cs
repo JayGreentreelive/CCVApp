@@ -13,6 +13,7 @@ using Android.Views;
 using Android.Widget;
 using CCVApp.Shared.Network;
 using Android.Graphics;
+using CCVApp.Shared;
 
 namespace Droid
 {
@@ -93,12 +94,13 @@ namespace Droid
 
                     foreach( RockNews item in News )
                     {
-                        // load the stream from assets
+                        // attempt to load the image from cache. If that doesn't work, use a placeholder
                         Bitmap imageBanner = null;
-                        if ( string.IsNullOrEmpty( item.ImageName ) == false )
+
+                        System.IO.MemoryStream assetStream = (System.IO.MemoryStream)FileCache.Instance.LoadFile( item.ImageName );
+                        if ( assetStream!= null )
                         {
-                            System.IO.Stream assetStream = Activity.BaseContext.Assets.Open( item.ImageName );
-                            imageBanner = BitmapFactory.DecodeStream( assetStream );
+                            imageBanner = BitmapFactory.DecodeByteArray( assetStream.GetBuffer( ), 0, (int)assetStream.Length );
                         }
                         else
                         {

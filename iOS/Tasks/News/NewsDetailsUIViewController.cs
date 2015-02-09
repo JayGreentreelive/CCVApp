@@ -7,6 +7,8 @@ using CoreGraphics;
 using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
 using CCVApp.Shared.Strings;
+using System.IO;
+using CCVApp.Shared;
 
 namespace iOS
 {
@@ -32,15 +34,22 @@ namespace iOS
             NewsDescription.TextContainerInset = UIEdgeInsets.Zero;
             NewsDescription.TextContainer.LineFragmentPadding = 0;
 
-            if( string.IsNullOrEmpty( NewsItem.HeaderImageName ) == false )
+            // we should always assume images are in cache. If they aren't, show a placeholder.
+            // It is not our job to download them.
+            MemoryStream imageStream = (MemoryStream)FileCache.Instance.LoadFile( NewsItem.HeaderImageName );
+            if ( imageStream != null )
             {
-                ImageBanner.Image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + NewsItem.HeaderImageName );
+                NSData imageData = NSData.FromStream( imageStream );
+                ImageBanner.Image = new UIImage( imageData, UIScreen.MainScreen.Scale );
                 ImageBanner.ContentMode = UIViewContentMode.Center;
+
+                imageStream.Dispose( );
             }
             else
             {
                 ImageBanner.Image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + "podcastThumbnailPlaceholder.png" );
             }
+
             ImageBanner.BackgroundColor = UIColor.Green;
 
             LearnMoreButton.TouchUpInside += (object sender, EventArgs e) => 

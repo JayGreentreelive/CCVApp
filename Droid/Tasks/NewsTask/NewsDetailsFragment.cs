@@ -16,6 +16,7 @@ using Rock.Mobile.PlatformUI;
 using CCVApp.Shared.Config;
 using CCVApp.Shared.Strings;
 using Android.Text.Method;
+using CCVApp.Shared;
 
 namespace Droid
 {
@@ -48,16 +49,16 @@ namespace Droid
                     Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView banner = new Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView( Activity );
                     ( (LinearLayout)view ).AddView( banner, 0 );
 
-                    // IS there a banner?
+                    // attempt to load the image from cache. If that doesn't work, use a placeholder
                     Bitmap imageBanner = null;
-                    if ( string.IsNullOrEmpty( NewsItem.HeaderImageName ) == false )
+
+                    System.IO.MemoryStream assetStream = (System.IO.MemoryStream)FileCache.Instance.LoadFile( NewsItem.HeaderImageName );
+                    if ( assetStream!= null )
                     {
-                        System.IO.Stream assetStream = Activity.BaseContext.Assets.Open( NewsItem.HeaderImageName );
-                        imageBanner = BitmapFactory.DecodeStream( assetStream );
+                        imageBanner = BitmapFactory.DecodeByteArray( assetStream.GetBuffer( ), 0, (int)assetStream.Length );
                     }
                     else
                     {
-                        // if not, use the placeholder
                         imageBanner = BitmapFactory.DecodeResource( Rock.Mobile.PlatformSpecific.Android.Core.Context.Resources, Resource.Drawable.thumbnailPlaceholder );
                     }
                     banner.SetImageBitmap( imageBanner );

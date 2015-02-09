@@ -16,6 +16,8 @@ Both
 
 	Updated the Image Cropper button icons.
 
+	Added expirations to cached images (so they can be updated and don't eternally build up)
+
 Android
 	Fixed an issue causing the group finder map to be tiny on certain devices.
 

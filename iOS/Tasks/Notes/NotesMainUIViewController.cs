@@ -609,6 +609,8 @@ namespace iOS
 
         void SetupSeriesEntries( List<Series> seriesList )
         {
+            SeriesEntries.Clear( );
+
             foreach ( Series series in seriesList )
             {
                 // add the entry to our list
@@ -643,7 +645,7 @@ namespace iOS
             // check the billboard
             if ( entry.mBillboard == null )
             {
-                MemoryStream imageStream = ImageCache.Instance.ReadImage( entry.Series.Name + "_bb" );
+                MemoryStream imageStream = (MemoryStream)FileCache.Instance.LoadFile( entry.Series.Name + "_bb" );
                 if ( imageStream != null )
                 {
                     NSData imageData = NSData.FromStream( imageStream );
@@ -659,7 +661,7 @@ namespace iOS
             // check the thumbnail
             if ( entry.mThumbnail == null )
             {
-                MemoryStream imageStream = ImageCache.Instance.ReadImage( entry.Series.Name + "_thumb" );
+                MemoryStream imageStream = (MemoryStream)FileCache.Instance.LoadFile( entry.Series.Name + "_thumb" );
                 if ( imageStream != null )
                 {
                     NSData imageData = NSData.FromStream( imageStream );
@@ -690,7 +692,7 @@ namespace iOS
                         {
                             // write it to cache
                             MemoryStream imageBuffer = new MemoryStream( model );
-                            ImageCache.Instance.WriteImage( imageBuffer, cachedFilename );
+                            FileCache.Instance.SaveFile( imageBuffer, cachedFilename );
                             imageBuffer.Dispose( );
 
                             SeriesImageDownloaded( );

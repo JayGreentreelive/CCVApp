@@ -442,7 +442,7 @@ namespace iOS
                     int requestedIndex = i;
 
                     // first see if the image is cached
-                    MemoryStream image = ImageCache.Instance.ReadImage( messageEntry.Message.Name );
+                    MemoryStream image = FileCache.Instance.ReadImage( messageEntry.Message.Name );
                     if ( image != null )
                     {
                         ApplyBillboardImage( messageEntry, image );
@@ -460,7 +460,7 @@ namespace iOS
                                     // update the image on the UI Thread ONLY!
                                     InvokeOnMainThread( delegate
                                         {
-                                            ImageCache.Instance.WriteImage( imageBuffer, messageEntry.Message.Name );
+                                            FileCache.Instance.WriteImage( imageBuffer, messageEntry.Message.Name );
 
                                             if( IsVisible == true )
                                             {

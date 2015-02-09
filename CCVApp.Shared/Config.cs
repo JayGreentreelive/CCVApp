@@ -12,7 +12,16 @@ namespace CCVApp
         {
             public class GeneralConfig
             {
-                public const string ImageCacheDirectory = "cache";
+                /// <summary>
+                /// The subfolder where cached files should be stored
+                /// </summary>
+                public const string CacheDirectory = "cache";
+
+                /// <summary>
+                /// The length of time a file should remain cached. After this, it will be deleted
+                /// from cache.
+                /// </summary>
+                public static TimeSpan CacheFileExpiration = new TimeSpan( 7, 0, 0 );
 
                 /// <summary>
                 /// The size (in pixels) of the profile image to download from Rock

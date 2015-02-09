@@ -417,7 +417,7 @@ namespace Droid
                             int requestedIndex = i;
 
                             // first see if the image is cached
-                            MemoryStream image = ImageCache.Instance.ReadImage( messageEntry.Message.Name );
+                            MemoryStream image = FileCache.Instance.ReadImage( messageEntry.Message.Name );
                             if ( image != null )
                             {
                                 ApplyBillboardImage( messageEntry, image );
@@ -436,7 +436,7 @@ namespace Droid
                                             Rock.Mobile.Threading.Util.PerformOnUIThread(delegate
                                                 {
                                                     // whether we're still active or not, cache the image downloaded
-                                                    ImageCache.Instance.WriteImage( imageBuffer, messageEntry.Message.Name );
+                                                    FileCache.Instance.WriteImage( imageBuffer, messageEntry.Message.Name );
 
                                                     // only actually load it if we're still loaded
                                                     if ( FragmentActive == true )

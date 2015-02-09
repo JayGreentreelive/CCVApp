@@ -597,6 +597,8 @@ namespace Droid
 
                 void SetupSeriesEntries( List<Series> seriesList )
                 {
+                    SeriesEntries.Clear( );
+
                     foreach ( Series series in seriesList )
                     {
                         // add the entry to our list
@@ -631,7 +633,7 @@ namespace Droid
                     // check the billboard
                     if ( entry.Billboard == null )
                     {
-                        MemoryStream imageStream = ImageCache.Instance.ReadImage( entry.Series.Name + "_bb" );
+                        MemoryStream imageStream = (MemoryStream)FileCache.Instance.LoadFile( entry.Series.Name + "_bb" );
                         if ( imageStream != null )
                         {
                             entry.Billboard = BitmapFactory.DecodeStream( imageStream );
@@ -646,7 +648,7 @@ namespace Droid
                     // check the thumbnail
                     if ( entry.Thumbnail == null )
                     {
-                        MemoryStream imageStream = ImageCache.Instance.ReadImage( entry.Series.Name + "_thumb" );
+                        MemoryStream imageStream = (MemoryStream)FileCache.Instance.LoadFile( entry.Series.Name + "_thumb" );
                         if ( imageStream != null )
                         {
                             entry.Thumbnail = BitmapFactory.DecodeStream( imageStream );
@@ -676,7 +678,7 @@ namespace Droid
                                 {
                                     // write it to cache
                                     MemoryStream imageBuffer = new MemoryStream( model );
-                                    ImageCache.Instance.WriteImage( imageBuffer, cachedFilename );
+                                    FileCache.Instance.SaveFile( imageBuffer, cachedFilename );
                                     imageBuffer.Dispose( );
 
                                     SeriesImageDownloaded( );
