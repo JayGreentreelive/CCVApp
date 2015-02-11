@@ -93,15 +93,37 @@
                 android:layout_marginRight="15dp"
                 android:layout_alignParentRight="true" />
         </RelativeLayout>
-        <TextView
-            android:text="RESULT"
+        <RelativeLayout
+            android:background="#FF0000FF"
+            android:id="@+id/result_background"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="5dp"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"
-            android:id="@+id/loginResult" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_centerInParent="true">
+            <View
+                android:id="@+id/top_border"
+                android:layout_alignParentTop="true"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#FFFFFFFF" />
+            <View
+                android:id="@+id/bottom_border"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#FFFFFFFF"
+                android:layout_below="@+id/loginResult" />
+            <TextView
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/top_border"
+                android:id="@+id/loginResult"
+                android:maxLines="1" />
+        </RelativeLayout>
         <ImageButton
             android:layout_width="250dp"
             android:layout_height="60dp"
@@ -118,10 +140,12 @@
             android:layout_height="wrap_content"
             android:id="@+id/cancelButton"
             android:layout_gravity="center_horizontal" />
-        <ProgressBar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/login_progressBar"
-            android:indeterminate="true" />
     </LinearLayout>
+    <ProgressBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/login_progressBar"
+        android:indeterminate="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
 </RelativeLayout>

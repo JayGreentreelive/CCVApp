@@ -47,7 +47,11 @@ namespace Droid
         ImageButton FacebookButton { get; set; }
         EditText UsernameField { get; set; }
         EditText PasswordField { get; set; }
+
+        View LoginResultLayer { get; set; }
         TextView LoginResultLabel { get; set; }
+
+        Facebook.FacebookClient Session { get; set; }
 
         public override void OnCreate( Bundle savedInstanceState )
         {
@@ -78,6 +82,10 @@ namespace Droid
 
             LoginActivityIndicator = view.FindViewById<ProgressBar>( Resource.Id.login_progressBar );
             LoginActivityIndicator.Visibility = ViewStates.Gone;
+
+            LoginResultLayer = view.FindViewById<View>( Resource.Id.result_background );
+            ControlStyling.StyleBGLayer( LoginResultLayer );
+            LoginResultLayer.Alpha = 0.0f;
 
             LoginButton = view.FindViewById<Button>( Resource.Id.loginButton );
             ControlStyling.StyleButton( LoginButton, LoginStrings.LoginButton, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
@@ -140,8 +148,6 @@ namespace Droid
                 RockMobileUser.Instance.BindRockAccount( UsernameField.Text, PasswordField.Text, BindComplete );
             }
         }
-
-        Facebook.FacebookClient Session { get; set; }
 
         public void TryFacebookBind( )
         {
@@ -210,23 +216,35 @@ namespace Droid
 
                 case System.Net.HttpStatusCode.Unauthorized:
                 {
+                    // allow them to attempt logging in again
+                    SetUIState( LoginState.Out );
+
                     // wrong user name / password
+                    FadeLoginResult( true );
+                    LoginResultLabel.Text = LoginStrings.Error_Credentials;
+                    break;
+                }
+
+                case System.Net.HttpStatusCode.ResetContent:
+                {
+                    // consider this a cancellation
 
                     // allow them to attempt logging in again
                     SetUIState( LoginState.Out );
 
-                    LoginResultLabel.Text = "Invalid Username or Password";
+
+                    LoginResultLabel.Text = "";
                     break;
                 }
 
                 default:
                 {
-                    // failed to login for some reason
-
                     // allow them to attempt logging in again
                     SetUIState( LoginState.Out );
 
-                    LoginResultLabel.Text = "Unable to Login. Try Again";
+                    // failed to login for some reason
+                    FadeLoginResult( true );
+                    LoginResultLabel.Text = LoginStrings.Error_Unknown;
                     break;
                 }
             }
@@ -260,12 +278,13 @@ namespace Droid
 
                 default:
                 {
-                    // if we couldn't get their profile, that should still count as a failed login.
                     SetUIState( LoginState.Out );
 
-                    RockMobileUser.Instance.LogoutAndUnbind( );
+                    // if we couldn't get their profile, that should still count as a failed login.
+                    FadeLoginResult( true );
+                    LoginResultLabel.Text = LoginStrings.Error_Unknown;
 
-                    LoginResultLabel.Text = "Unable to Login. Try Again";
+                    RockMobileUser.Instance.LogoutAndUnbind( );
                     break;
                 }
             }
@@ -291,12 +310,10 @@ namespace Droid
                     // hide the activity indicator, because we are now logged in,
                     // but leave the buttons all disabled.
                     LoginActivityIndicator.Visibility = ViewStates.Gone;
-                    CancelButton.Visibility = ViewStates.Invisible;
-                    LoginButton.Visibility = ViewStates.Invisible;
-                    RegisterButton.Visibility = ViewStates.Invisible;
 
                     // update the UI
-                    LoginResultLabel.Text = string.Format( CCVApp.Shared.Strings.LoginStrings.Success, RockMobileUser.Instance.PreferredName( ) );
+                    FadeLoginResult( true );
+                    LoginResultLabel.Text = string.Format( LoginStrings.Success, RockMobileUser.Instance.PreferredName( ) );
 
                     // start the timer, which will notify the springboard we're logged in when it ticks.
                     LoginSuccessfulTimer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>
@@ -317,9 +334,10 @@ namespace Droid
                     // if we couldn't get their profile, that should still count as a failed login.
                     SetUIState( LoginState.Out );
 
-                    RockMobileUser.Instance.LogoutAndUnbind( );
+                    FadeLoginResult( true );
+                    LoginResultLabel.Text = LoginStrings.Error_Unknown;
 
-                    LoginResultLabel.Text = "Unable to Login. Try Again";
+                    RockMobileUser.Instance.LogoutAndUnbind( );
                     break;
                 }
             }
@@ -369,6 +387,8 @@ namespace Droid
 
                 case LoginState.Trying:
                 {
+                    FadeLoginResult( false );
+
                     LoginActivityIndicator.Visibility = ViewStates.Visible;
                     UsernameField.Enabled = false;
                     PasswordField.Enabled = false;
@@ -383,5 +403,18 @@ namespace Droid
             State = state;
         }
 
+        void FadeLoginResult( bool fadeIn )
+        {
+            SimpleAnimator_Float fader = new SimpleAnimator_Float( LoginResultLayer.Alpha, fadeIn == true ? 1.00f : 0.00f, .33f, 
+                delegate(float percent, object value )
+                {
+                    LoginResultLayer.Alpha = (float)value;
+                },
+                delegate
+                {
+                } );
+
+            fader.Start( );
+        }
     }
 }

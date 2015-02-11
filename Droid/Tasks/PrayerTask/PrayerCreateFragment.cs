@@ -99,9 +99,6 @@ namespace Droid
                     ControlStyling.StyleTextField( requestText, PrayerStrings.CreatePrayer_PrayerRequest, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
 
 
-                    ProgressBar ActivityIndicator = (ProgressBar)view.FindViewById<ProgressBar>( Resource.Id.prayer_create_activityIndicator );
-                    ActivityIndicator.Visibility = ViewStates.Gone;
-
                     Switch anonymousSwitch = (Switch)view.FindViewById<Switch>( Resource.Id.postAnonymousSwitch );
                     anonymousSwitch.Checked = false;
                     anonymousSwitch.CheckedChange += (object sender, CompoundButton.CheckedChangeEventArgs e ) =>
@@ -178,28 +175,8 @@ namespace Droid
                                 prayerRequest.IsPublic = publicSwitch.Checked;
                                 prayerRequest.IsApproved = false;
 
-                                ActivityIndicator.Visibility = ViewStates.Visible;
 
-                                // submit the request
-                                CCVApp.Shared.Network.RockApi.Instance.PutPrayer( prayerRequest, delegate(System.Net.HttpStatusCode statusCode, string statusDescription) 
-                                    {
-                                        ActivityIndicator.Visibility = ViewStates.Gone;
-
-                                        if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
-                                        {
-                                            PrayerAnalytic.Instance.Trigger( PrayerAnalytic.Create );
-
-                                            Activity.OnBackPressed();
-                                        }
-                                        else
-                                        {
-                                            // if it failed to post, let them try again.
-                                            Springboard.DisplayError( PrayerStrings.Error_Title, PrayerStrings.Error_Submit_Message );
-                                            firstNameText.Enabled = true;
-                                            lastNameText.Enabled = true;
-                                            requestText.Enabled = true;
-                                        }
-                                    });
+                                ParentTask.OnClick( this, 0, prayerRequest );
                             }
                     };
 

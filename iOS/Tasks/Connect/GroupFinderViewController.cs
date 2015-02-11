@@ -34,7 +34,11 @@ namespace iOS
 
                 public TableSource TableSource { get; set; }
 
-                public UITextField AddressTextField { get; set; }
+                public UITextField Street { get; set; }
+                public UITextField City { get; set; }
+                public UITextField State { get; set; }
+                public UITextField Zip { get; set; }
+
                 public MKMapView MapView { get; set; }
 
                 public UILabel SearchResultsBanner { get; set; }
@@ -52,7 +56,7 @@ namespace iOS
 
                     public override bool ShouldReturn(UITextField textField)
                     {
-                        PrimaryCell.TableSource.RowClicked( 0, textField.Text );
+                        PrimaryCell.TableSource.GetGroups( );
                         return true;
                     }
                 }
@@ -61,6 +65,7 @@ namespace iOS
                 {
                     BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
 
+                    // define the search button
                     SearchButton = UIButton.FromType( UIButtonType.System );
                     SearchButton.Layer.AnchorPoint = new CGPoint( 0, 0 );
                     ControlStyling.StyleButton( SearchButton, ConnectConfig.GroupFinder_SearchIcon, ControlStylingConfig.Icon_Font_Secondary, 32 );
@@ -68,21 +73,79 @@ namespace iOS
                     SearchButton.Frame = new CGRect( parentSize.Width - SearchButton.Frame.Width, 0, SearchButton.Frame.Width, 33 );
                     SearchButton.TouchUpInside += (object sender, EventArgs e) => 
                         {
-                            TableSource.RowClicked( 0, AddressTextField.Text );
+                            TableSource.GetGroups( );
                         };
                     AddSubview( SearchButton );
 
-                    AddressTextField = new UITextField( );
-                    AddressTextField.Layer.AnchorPoint = new CGPoint( 0, 0 );
-                    ControlStyling.StyleTextField( AddressTextField, ConnectStrings.GroupFinder_AddressPlaceholder, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-                    AddressTextField.Frame = new CGRect( 10, 0, parentSize.Width - SearchButton.Frame.Width - 5, SearchButton.Frame.Height );
-                    AddressTextField.ReturnKeyType = UIReturnKeyType.Search;
-                    AddressTextField.Delegate = new AddressDelegate( ) { PrimaryCell = this };
-                    AddSubview( AddressTextField );
+                    // add all four address fields with a border between each
+                    nfloat widthPerField = (parentSize.Width - SearchButton.Frame.Width - 20) / 4;
 
+                    // Street
+                    Street = new UITextField( );
+                    Street.Layer.AnchorPoint = CGPoint.Empty;
+                    ControlStyling.StyleTextField( Street, ConnectStrings.GroupFinder_StreetPlaceholder, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+                    Street.Frame = new CGRect( 5, 0, widthPerField * 1.5f, SearchButton.Frame.Height );
+                    Street.ReturnKeyType = UIReturnKeyType.Search;
+                    Street.Delegate = new AddressDelegate( ) { PrimaryCell = this };
+                    AddSubview( Street );
+
+                    UIView border = new UIView( );
+                    border.BackgroundColor = UIColor.DarkGray;
+                    border.Layer.AnchorPoint = CGPoint.Empty;
+                    border.Frame = new CGRect( 0, 0, 1, SearchButton.Frame.Height );
+                    border.Layer.Position = new CGPoint( Street.Frame.Right, 0 );
+                    AddSubview( border );
+
+
+                    // City
+                    City = new UITextField( );
+                    City.Layer.AnchorPoint = CGPoint.Empty;
+                    ControlStyling.StyleTextField( City, ConnectStrings.GroupFinder_CityPlaceholder, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+                    City.Frame = new CGRect( border.Frame.Right + 5, 0, widthPerField, SearchButton.Frame.Height );
+                    City.ReturnKeyType = UIReturnKeyType.Search;
+                    City.Delegate = new AddressDelegate( ) { PrimaryCell = this };
+                    AddSubview( City );
+
+                    border = new UIView( );
+                    border.BackgroundColor = UIColor.DarkGray;
+                    border.Layer.AnchorPoint = CGPoint.Empty;
+                    border.Frame = new CGRect( 0, 0, 1, SearchButton.Frame.Height );
+                    border.Layer.Position = new CGPoint( City.Frame.Right, 0 );
+                    AddSubview( border );
+
+
+                    // State
+                    State = new UITextField( );
+                    State.Layer.AnchorPoint = CGPoint.Empty;
+                    ControlStyling.StyleTextField( State, ConnectStrings.GroupFinder_StatePlaceholder, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+                    State.Text = ConnectStrings.GroupFinder_DefaultState;
+                    State.Frame = new CGRect( border.Frame.Right + 5, 0, widthPerField / 2, SearchButton.Frame.Height );
+                    State.ReturnKeyType = UIReturnKeyType.Search;
+                    State.Delegate = new AddressDelegate( ) { PrimaryCell = this };
+                    AddSubview( State );
+
+                    border = new UIView( );
+                    border.BackgroundColor = UIColor.DarkGray;
+                    border.Layer.AnchorPoint = CGPoint.Empty;
+                    border.Frame = new CGRect( 0, 0, 1, SearchButton.Frame.Height );
+                    border.Layer.Position = new CGPoint( State.Frame.Right, 0 );
+                    AddSubview( border );
+
+
+                    // Zip
+                    Zip = new UITextField( );
+                    Zip.Layer.AnchorPoint = CGPoint.Empty;
+                    ControlStyling.StyleTextField( Zip, ConnectStrings.GroupFinder_ZipPlaceholder, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+                    Zip.Frame = new CGRect( border.Frame.Right + 5, 0, widthPerField, SearchButton.Frame.Height );
+                    Zip.ReturnKeyType = UIReturnKeyType.Search;
+                    Zip.Delegate = new AddressDelegate( ) { PrimaryCell = this };
+                    AddSubview( Zip );
+
+
+                    // Map
                     MapView = new MKMapView( );
                     MapView.Layer.AnchorPoint = new CGPoint( 0, 0 );
-                    MapView.Frame = new CGRect( 0, AddressTextField.Frame.Bottom, parentSize.Width, 250 );
+                    MapView.Frame = new CGRect( 0, Street.Frame.Bottom, parentSize.Width, 250 );
                     AddSubview( MapView );
 
                     SearchResultsBanner = new UILabel( );
@@ -202,9 +265,12 @@ namespace iOS
                 PrimaryTableCell.MapView.SetRegion( region, true );
             }
 
-            public void UpdateAddress( string address )
+            public void UpdateAddress( string street, string city, string state, string zip )
             {
-                PrimaryTableCell.AddressTextField.Text = address;
+                PrimaryTableCell.Street.Text = street;
+                PrimaryTableCell.City.Text = city;
+                PrimaryTableCell.State.Text = state;
+                PrimaryTableCell.Zip.Text = zip;
             }
 
             public void UpdateMap( )
@@ -343,12 +409,19 @@ namespace iOS
                 tableView.DeselectRow( indexPath, true );
 
                 // let the parent know it should reveal the nav bar
-                Parent.RowClicked( indexPath.Row, "-1" );
+                Parent.RowClicked( indexPath.Row );
             }
 
-            public void RowClicked( int row, string context = null )
+            public void GetGroups( )
             {
-                Parent.RowClicked( row, context );
+                // if there's a text in each field, search for the group
+                if ( string.IsNullOrEmpty( PrimaryTableCell.Street.Text ) == false &&
+                     string.IsNullOrEmpty( PrimaryTableCell.City.Text ) == false &&
+                     string.IsNullOrEmpty( PrimaryTableCell.State.Text ) == false &&
+                     string.IsNullOrEmpty( PrimaryTableCell.Zip.Text ) == false )
+                {
+                    Parent.GetGroups( PrimaryTableCell.Street.Text, PrimaryTableCell.City.Text, PrimaryTableCell.State.Text, PrimaryTableCell.Zip.Text );
+                }
             }
         }
 
@@ -375,21 +448,9 @@ namespace iOS
             View.AddSubview( BlockerView );
         }
 
-        public void RowClicked( int row, string context )
+        public void RowClicked( int row )
         {
-            if ( context == "-1" )
-            {
-                Task.NavToolbar.RevealForTime( 3.0f );
-            }
-            else
-            {
-                // if the first row was clicked, (and it wasn't a -1 context),
-                // run address searching.
-                if ( row == 0 )
-                {
-                    GetGroups( context );
-                }
-            }
+            Task.NavToolbar.RevealForTime( 3.0f );
         }
 
         public override void ViewDidLayoutSubviews()
@@ -409,48 +470,44 @@ namespace iOS
             // see if there's an address for this person that we can automatically use.
             if ( RockMobileUser.Instance.HasFullAddress( ) == true )
             {
-                string address = RockMobileUser.Instance.Street1( ) + " " + RockMobileUser.Instance.City( ) + ", " + RockMobileUser.Instance.State( ) + ", " + RockMobileUser.Instance.Zip( );
-
-                GetGroups( address );
-                GroupTableSource.UpdateAddress( address );
+                GetGroups( RockMobileUser.Instance.Street1( ), RockMobileUser.Instance.City( ), RockMobileUser.Instance.State( ), RockMobileUser.Instance.Zip( ) );
+                GroupTableSource.UpdateAddress( RockMobileUser.Instance.Street1( ), RockMobileUser.Instance.City( ), RockMobileUser.Instance.State( ), RockMobileUser.Instance.Zip( ) );
             }
         }
 
-        void GetGroups( string address )
+        void GetGroups( string street, string city, string state, string zip )
         {
-            if ( string.IsNullOrEmpty( address ) == false )
+            if ( string.IsNullOrEmpty( street ) == false &&
+                 string.IsNullOrEmpty( city ) == false &&
+                 string.IsNullOrEmpty( state ) == false && 
+                 string.IsNullOrEmpty( zip ) == false )
             {
                 BlockerView.FadeIn( delegate
                     {
-                        GroupFinder.GetGroups( address, 
-                            delegate( bool result, List<GroupFinder.GroupEntry> groupEntries )
+                        GroupFinder.GetGroups( street, city, state, zip, 
+                            delegate( List<GroupFinder.GroupEntry> groupEntries )
                             {
                                 BlockerView.FadeOut( delegate
                                     {
-                                        if ( result == false )
+                                        GroupEntries = groupEntries;
+                                        GroupTableSource.UpdateMap( );
+                                        GroupFinderTableView.ReloadData( );
+
+                                        // and record an analytic for the neighborhood that this location was apart of. This helps us know
+                                        // which neighborhoods get the most hits.
+                                        string address = street + " " + city + ", " + state + ", " + zip;
+
+                                        if( groupEntries.Count > 0 )
                                         {
-                                            SpringboardViewController.DisplayError( ConnectStrings.GroupFinder_InvalidAddressHeader, ConnectStrings.GroupFinder_InvalidAddressMsg );
+                                            // record an analytic that they searched
+                                            GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.Location, address );
+
+                                            GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.Neighborhood, groupEntries[ 0 ].NeighborhoodArea );
                                         }
                                         else
                                         {
-                                            GroupEntries = groupEntries;
-                                            GroupTableSource.UpdateMap( );
-                                            GroupFinderTableView.ReloadData( );
-
-                                            // and record an analytic for the neighborhood that this location was apart of. This helps us know
-                                            // which neighborhoods get the most hits.
-                                            if( groupEntries.Count > 0 )
-                                            {
-                                                // record an analytic that they searched
-                                                GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.Location, address );
-
-                                                GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.Neighborhood, groupEntries[ 0 ].NeighborhoodArea );
-                                            }
-                                            else
-                                            {
-                                                // record that this address failed
-                                                GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.OutOfBounds, address );
-                                            }
+                                            // record that this address failed
+                                            GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.OutOfBounds, address );
                                         }
                                     } );
                             } );

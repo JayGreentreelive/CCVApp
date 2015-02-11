@@ -169,7 +169,7 @@ namespace iOS
             NSString cancelLabel = new NSString( ImageCropConfig.CropCancelButton_Text );
 
             CancelButton = new UIButton(UIButtonType.System);
-            CancelButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Primary, ImageCropConfig.CropCancelButton_Size );
+            CancelButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, ImageCropConfig.CropCancelButton_Size );
             CancelButton.SetTitle( cancelLabel.ToString( ), UIControlState.Normal );
 
             CGSize buttonSize = cancelLabel.StringSize( CancelButton.Font );
@@ -192,7 +192,7 @@ namespace iOS
             NSString editLabel = new NSString( ImageCropConfig.CropOkButton_Text );
 
             EditButton = new UIButton(UIButtonType.System);
-            EditButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Primary, ImageCropConfig.CropOkButton_Size );
+            EditButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, ImageCropConfig.CropOkButton_Size );
             EditButton.SetTitle( editLabel.ToString( ), UIControlState.Normal );
             EditButton.HorizontalAlignment = UIControlContentHorizontalAlignment.Right;
 
@@ -218,8 +218,11 @@ namespace iOS
             buttonContainer.AddSubview( EditButton );
             buttonContainer.AddSubview( CancelButton );
 
-            CancelButton.Frame = new CGRect( (CancelButton.Frame.Width), 0, CancelButton.Frame.Width, CancelButton.Frame.Height );
-            EditButton.Frame = new CGRect( buttonContainer.Frame.Width - ((EditButton.Frame.Width / 2) + (EditButton.Frame.Width * 2)), 0, EditButton.Frame.Width, EditButton.Frame.Height );
+            CancelButton.BackgroundColor = UIColor.Red;
+            CancelButton.Frame = new CGRect( (CancelButton.Frame.Width / 2), 0, CancelButton.Frame.Width, CancelButton.Frame.Height );
+
+            EditButton.BackgroundColor = UIColor.Red;
+            EditButton.Frame = new CGRect( buttonContainer.Frame.Width - (EditButton.Frame.Width * 2.5f), 0, EditButton.Frame.Width, EditButton.Frame.Height );
 
             toolbar.SetItems( new UIBarButtonItem[] { new UIBarButtonItem( buttonContainer ) }, false );
             View.AddSubview( toolbar );
@@ -302,9 +305,9 @@ namespace iOS
             FullscreenBlocker.Layer.Opacity = 0.00f;
             UIBezierPath viewFill = UIBezierPath.FromRect( FullscreenBlocker.Bounds );
             UIBezierPath cropMask = UIBezierPath.FromRoundedRect( new CGRect( ( FullscreenBlocker.Bounds.Width - CropView.Bounds.Width ) / 2, 
-                                                                                  ( FullscreenBlocker.Bounds.Height - CropView.Bounds.Height ) / 2, 
-                                                                                    CropView.Bounds.Width, 
-                                                                                    CropView.Bounds.Height ), 4 );
+                                                                              ( FullscreenBlocker.Bounds.Height - CropView.Bounds.Height ) / 2, 
+                                                                                CropView.Bounds.Width, 
+                                                                                CropView.Bounds.Height ), 4 );
             viewFill.AppendPath( cropMask );
             FullscreenBlockerMask.Path = viewFill.CGPath;
 

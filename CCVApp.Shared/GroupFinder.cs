@@ -25,71 +25,47 @@ namespace CCVApp.Shared
             public string Longitude { get; set; }
         }
 
-        public delegate void GetGroupsComplete( bool result, List<GroupEntry> groupEntry );
-        public static void GetGroups( string address, GetGroupsComplete onCompletion )
+        public delegate void GetGroupsComplete( List<GroupEntry> groupEntry );
+        public static void GetGroups( string street, string city, string state, string zip, GetGroupsComplete onCompletion )
         {
             List<GroupEntry> groupEntries = new List<GroupEntry>();
 
-            // if this is true at the end of this function, we'll invoke onCompletion with a failed result.
-            bool immediateError = true;
-
-            // validate an address
-            if ( string.IsNullOrEmpty( address ) == false )
-            {
-                // parse it
-                string street = "";
-                string city = "";
-                string state = "";
-                string zip = "";
-                bool result = Parsers.ParseAddress( address, ref street, ref city, ref state, ref zip );
-                if ( result == true )
+            // invoke the API, and when it calls our delegate, we can then invoke our original caller's onCompletion
+            RockApi.Instance.GetGroupsByLocation( CCVApp.Shared.Config.GeneralConfig.NeighborhoodGroupGeoFenceValueId, 
+                CCVApp.Shared.Config.GeneralConfig.NeighborhoodGroupValueId,
+                street, city, state, zip,
+                delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.Group> model )
                 {
-                    // we can now safely make the API call, which means THIS function can return without error.
-                    immediateError = false;
-
-                    // invoke the API, and when it calls our delegate, we can then invoke our original caller's onCompletion
-                    RockApi.Instance.GetGroupsByLocation( CCVApp.Shared.Config.GeneralConfig.NeighborhoodGroupGeoFenceValueId, 
-                        CCVApp.Shared.Config.GeneralConfig.NeighborhoodGroupValueId,
-                        street, city, state, zip,
-                        delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.Group> model )
+                    if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
+                    {
+                        // first thing we receive is the "area" group(s)
+                        foreach ( Rock.Client.Group areaGroup in model )
                         {
-                            if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
+                            // in each area, there's an actual small group
+                            foreach ( Rock.Client.Group smallGroup in areaGroup.Groups )
                             {
-                                // first thing we receive is the "area" group(s)
-                                foreach ( Rock.Client.Group areaGroup in model )
-                                {
-                                    // in each area, there's an actual small group
-                                    foreach ( Rock.Client.Group smallGroup in areaGroup.Groups )
-                                    {
-                                        // get the group location out of the small group enumerator
-                                        IEnumerator enumerator = smallGroup.GroupLocations.GetEnumerator( );
-                                        enumerator.MoveNext( );
-                                        Rock.Client.Location location = ( (Rock.Client.GroupLocation)enumerator.Current ).Location;
+                                // get the group location out of the small group enumerator
+                                IEnumerator enumerator = smallGroup.GroupLocations.GetEnumerator( );
+                                enumerator.MoveNext( );
+                                Rock.Client.Location location = ( (Rock.Client.GroupLocation)enumerator.Current ).Location;
 
-                                        // and of course, each group has a location
-                                        GroupEntry entry = new GroupEntry();
-                                        entry.Title = smallGroup.Name;
-                                        entry.Address = location.Street1 + "\n" + location.City + ", " + location.State + " " + location.PostalCode.Substring( 0, Math.Max( 0, location.PostalCode.IndexOf( '-' ) ) );
-                                        entry.NeighborhoodArea = string.Format( "Part of the {0} Neighborhood", areaGroup.Name );
-                                        entry.Distance = "1.5 miles away.";
-                                        entry.Latitude = location.Latitude.ToString( );
-                                        entry.Longitude = location.Longitude.ToString( );
+                                // and of course, each group has a location
+                                GroupEntry entry = new GroupEntry();
+                                entry.Title = smallGroup.Name;
+                                entry.Address = location.Street1 + "\n" + location.City + ", " + location.State + " " + location.PostalCode.Substring( 0, Math.Max( 0, location.PostalCode.IndexOf( '-' ) ) );
+                                entry.NeighborhoodArea = string.Format( "Part of the {0} Neighborhood", areaGroup.Name );
+                                entry.Distance = "1.5 miles away.";
+                                entry.Latitude = location.Latitude.ToString( );
+                                entry.Longitude = location.Longitude.ToString( );
 
-                                        groupEntries.Add( entry );
-                                    }
-                                }
+                                groupEntries.Add( entry );
                             }
+                        }
+                    }
 
-                            // our network delegate has been invoked and compelted, so now call whoever called us.
-                            onCompletion( true, groupEntries );
-                        } );
-                }
-            }
-
-            if( immediateError == true )
-            {
-                onCompletion( false, groupEntries );
-            }
+                    // our network delegate has been invoked and compelted, so now call whoever called us.
+                    onCompletion( groupEntries );
+                } );
         }
     }
 }

@@ -368,12 +368,11 @@ namespace iOS
                 {
                     BlockerView.FadeOut( delegate
                         {
-                            // wrong user name / password
-                            FadeLoginResult( true );
-
                             // allow them to attempt logging in again
                             SetUIState( LoginState.Out );
 
+                            // wrong user name / password
+                            FadeLoginResult( true );
                             LoginResultLabel.Text = LoginStrings.Error_Credentials;
                         } );
                     break;
@@ -397,12 +396,11 @@ namespace iOS
                 {
                     BlockerView.FadeOut( delegate
                         {
-                            // failed to login for some reason
-                            FadeLoginResult( true );
-
                             // allow them to attempt logging in again
                             SetUIState( LoginState.Out );
 
+                            // failed to login for some reason
+                            FadeLoginResult( true );
                             LoginResultLabel.Text = LoginStrings.Error_Unknown;
                         } );
                     break;
@@ -434,15 +432,14 @@ namespace iOS
 
                         default:
                         {
-                            // failed to login for some reason
-                            FadeLoginResult( true );
-
                             // if we couldn't get their profile, that should still count as a failed login.
                             SetUIState( LoginState.Out );
 
-                            RockMobileUser.Instance.LogoutAndUnbind( );
-
+                            // failed to login for some reason
+                            FadeLoginResult( true );
                             LoginResultLabel.Text = LoginStrings.Error_Unknown;
+
+                            RockMobileUser.Instance.LogoutAndUnbind( );
                             break;
                         }
                     }
@@ -489,15 +486,14 @@ namespace iOS
 
                         default:
                         {
-                            // failed to login for some reason
-                            FadeLoginResult( true );
-
                             // if we couldn't get their profile, that should still count as a failed login.
                             SetUIState( LoginState.Out );
 
-                            RockMobileUser.Instance.LogoutAndUnbind( );
-
+                            // failed to login for some reason
+                            FadeLoginResult( true );
                             LoginResultLabel.Text = LoginStrings.Error_Unknown;
+
+                            RockMobileUser.Instance.LogoutAndUnbind( );
                             break;
                         }
                     }

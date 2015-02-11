@@ -104,6 +104,7 @@
     <Compile Include="Tasks\ConnectTask\ConnectTask.cs" />
     <Compile Include="Tasks\ConnectTask\ConnectWebFragment.cs" />
     <Compile Include="Tasks\ConnectTask\GroupFinderFragment.cs" />
+    <Compile Include="Tasks\PrayerTask\PrayerPostFragment.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
@@ -159,6 +160,7 @@
     <AndroidResource Include="..\Assets\splashiphone6plus.png">
       <Link>Resources\drawable-hdpi\splash.png</Link>
     </AndroidResource>
+    <AndroidResource Include="Resources\layout\Prayer_Post.axml" />
   </ItemGroup>
   <Import Project="..\..\Rock.Mobile\Rock.Mobile.projitems" Label="Shared" Condition="Exists('..\..\Rock.Mobile\Rock.Mobile.projitems')" />
   <Import Project="..\..\Rock\Rock.Client\Rock.Client.Models.projitems" Label="Shared" Condition="Exists('..\..\Rock\Rock.Client\Rock.Client.Models.projitems')" />

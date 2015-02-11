@@ -42,6 +42,7 @@ namespace Droid
                 // if we're simply resuming, we dont need to reset the fragment, the task is already setup.
                 if ( forResume == false )
                 {
+                    Console.WriteLine( "Popping back stack" );
                     NavbarFragment.FragmentManager.PopBackStack( null, PopBackStackFlags.Inclusive );
 
                     // present our starting fragment, and don't allow back navigation
@@ -60,6 +61,9 @@ namespace Droid
 
             protected void PresentFragment( TaskFragment fragment, bool allowBack )
             {
+                // allow back means "can you return to the page you're LEAVING? Not, can the
+                // fragment being passed in be returned to"
+
                 // get the fragment manager
                 var ft = NavbarFragment.FragmentManager.BeginTransaction();
 

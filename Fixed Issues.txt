@@ -18,7 +18,13 @@ Both
 
 	Added expirations to cached images (so they can be updated and don't eternally build up)
 
+	When not logged in, the Profile Image button will act as a login button.
+
+	Fixed an issue causing the Nav Toolbar to sometimes hide and not come back on a particular page.
+
 Android
+	Polished the Login Page results to match that of iOS.
+	
 	Fixed an issue causing the group finder map to be tiny on certain devices.
 
 	Fixed an issue causing the Image Cropper buttons to be, ironically, cropped.
@@ -26,3 +32,7 @@ Android
 	Fixed an issue causing profile images taken with the camera to be the wrong orientation on some devices.
 
 	Fixed an issue causing some disabled buttons to have the wrong "Disabled" color.
+
+	Fixed an issue preventing the login screen from automatically dismissing after logging in.
+
+	Fixed a crash when logging in with Facebook on certain Android devices.

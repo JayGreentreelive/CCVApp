@@ -216,40 +216,37 @@ namespace iOS
         bool ViewChangedDuringAnimation { get; set; }
         void InternalReveal( bool revealed )
         {
+            // don't allow double requests of the same type
             if( Revealed != revealed )
             {
-                // of course don't allow a change while we're animating it.
-                if( Animating == false )
-                {
-                    Animating = true;
+                Revealed = revealed;
 
-                    // Animate the front panel out
-                    UIView.Animate( SubNavToolbarConfig.SlideRate, 0, UIViewAnimationOptions.CurveEaseInOut, 
-                        new Action( 
-                            delegate 
-                            { 
-                                float deltaPosition = (float)  (revealed ? -Frame.Height : Frame.Height);
+                Animating = true;
 
-                                Layer.Position = new CGPoint( Layer.Position.X, Layer.Position.Y + deltaPosition);
-                            })
+                // Animate the front panel out
+                UIView.Animate( SubNavToolbarConfig.SlideRate, 0, UIViewAnimationOptions.CurveEaseInOut, 
+                    new Action( 
+                        delegate 
+                        { 
+                            float deltaPosition = (float)  (revealed ? -Frame.Height : Frame.Height);
 
-                        , new Action(
-                            delegate
+                            Layer.Position = new CGPoint( Layer.Position.X, Layer.Position.Y + deltaPosition);
+                        })
+
+                    , new Action(
+                        delegate
+                        {
+                            Animating = false;
+
+                            // if the view changed while we were animating, update 
+                            // our position on completion
+                            if ( ViewChangedDuringAnimation == true )
                             {
-                                Animating = false;
-
-                                Revealed = revealed;
-
-                                // if the view changed while we were animating, update 
-                                // our position on completion
-                                if ( ViewChangedDuringAnimation == true )
-                                {
-                                    ViewChangedDuringAnimation = false;
-                                    ViewDidLayoutSubviews( );
-                                }
-                            })
-                    );
-                }
+                                ViewChangedDuringAnimation = false;
+                                ViewDidLayoutSubviews( );
+                            }
+                        })
+                );
             }
         }
 

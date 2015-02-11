@@ -143,7 +143,7 @@ namespace iOS
                                     ResultSymbolLabel.Text = PrayerConfig.PostPrayer_ResultSymbol_SuccessText;
 
                                     DoneButton.Hidden = false;
-                                    DoneButton.SetTitle( "Done", UIControlState.Normal );
+                                    DoneButton.SetTitle( GeneralStrings.Done, UIControlState.Normal );
 
                                     PrayerAnalytic.Instance.Trigger( PrayerAnalytic.Create );
                                 }
@@ -161,7 +161,7 @@ namespace iOS
                                     ResultSymbolLabel.Text = PrayerConfig.PostPrayer_ResultSymbol_FailedText;
 
                                     DoneButton.Hidden = false;
-                                    DoneButton.SetTitle( "Retry", UIControlState.Normal );
+                                    DoneButton.SetTitle( GeneralStrings.Retry, UIControlState.Normal );
                                 }
                             }
                         } );

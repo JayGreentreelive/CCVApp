@@ -273,7 +273,16 @@ namespace Droid
             ProfileImageButton = view.FindViewById<Button>( Resource.Id.springboard_profile_image );
             ProfileImageButton.Click += (object sender, EventArgs e) => 
                 {
-                    ManageProfilePic( );
+                    // if we're logged in, manage their profile pic
+                    if( RockMobileUser.Instance.LoggedIn == true )
+                    {
+                        ManageProfilePic( );
+                    }
+                    else
+                    {
+                        // otherwise, use it to let them log in
+                        StartModalFragment( LoginFragment );
+                    }
                 };
             Typeface fontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary );
             ProfileImageButton.SetTypeface( fontFace, TypefaceStyle.Normal );
@@ -429,14 +438,18 @@ namespace Droid
 
         public void StartModalFragment( Fragment fragment )
         {
-            // replace the entire screen with a modal fragment
-            var ft = FragmentManager.BeginTransaction();
-            ft.SetTransition(FragmentTransit.FragmentFade);
+            // don't allow multiple modal fragments
+            if ( DisplayingModalFragment == false )
+            {
+                // replace the entire screen with a modal fragment
+                var ft = FragmentManager.BeginTransaction( );
+                ft.SetTransition( FragmentTransit.FragmentFade );
 
-            ft.Replace(Resource.Id.fullscreen, fragment);
-            ft.AddToBackStack( fragment.ToString() );
+                ft.Replace( Resource.Id.fullscreen, fragment );
+                ft.AddToBackStack( fragment.ToString( ) );
 
-            ft.Commit();
+                ft.Commit( );
+            }
         }
 
         public void ModalFragmentOpened( Fragment fragment )
@@ -637,7 +650,7 @@ namespace Droid
         {
             // should we advertise the notes?
             // yes, if it's a weekend and we're at CCV (that part will come later)
-            //if ( DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday )
+            if ( DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday )
             {
                 if ( RockLaunchData.Instance.Data.Series.Count > 0 )
                 {

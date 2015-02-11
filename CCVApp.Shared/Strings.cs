@@ -115,7 +115,13 @@ namespace CCVApp.Shared
 
         public class ConnectStrings
         {
-            public const string GroupFinder_AddressPlaceholder = "Street, city, state, zip";
+            public const string GroupFinder_StreetPlaceholder = "Street";
+            public const string GroupFinder_CityPlaceholder = "City";
+            public const string GroupFinder_StatePlaceholder = "State";
+            public const string GroupFinder_ZipPlaceholder = "Zip";
+
+            public const string GroupFinder_DefaultState = "AZ";
+
             public const string GroupFinder_GroupsFound = "Groups Nearest Your Location";
             public const string GroupFinder_NoGroupsFound = "No Groups Found Near Your Location";
             public const string GroupFinder_BeforeSearch = "Type an Address to find Nearby Groups";

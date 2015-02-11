@@ -273,7 +273,7 @@ namespace iOS
         {
             // this will be called by the Navbar (which owns the reveal button) when
             // it's clicked. We want to make sure we alwas hide the billboard.
-            //Billboard.Hide( );
+            Billboard.Hide( );
         }
 
         public override void ViewDidLoad()
@@ -830,20 +830,12 @@ namespace iOS
                     ProfileImageView.Image = null;
                     EditPictureButton.SetTitle( SpringboardConfig.NoPhotoSymbol, UIControlState.Normal );
                 }
-
-                // if we're logged in, also display the View Profile button
-                //ViewProfileButton.Enabled = true;
-                //ViewProfileButton.Hidden = false;
             }
             else
             {
                 // otherwise display the no profile image.
                 ProfileImageView.Image = null;
                 EditPictureButton.SetTitle( SpringboardConfig.NoProfileSymbol, UIControlState.Normal );
-
-                // if we're logged out, hide the view profile button
-                //ViewProfileButton.Enabled = false;
-                //ViewProfileButton.Hidden = true;
             }
         }
 

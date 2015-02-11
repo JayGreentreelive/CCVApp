@@ -13,6 +13,7 @@ namespace Droid
             {
                 PrayerPrimaryFragment MainPage { get; set; }
                 PrayerCreateFragment CreatePage { get; set; }
+                PrayerPostFragment PostPage { get; set; }
 
                 public PrayerTask( NavbarFragment navFragment ) : base( navFragment )
                 {
@@ -30,6 +31,13 @@ namespace Droid
                         CreatePage = new PrayerCreateFragment();
                     }
                     CreatePage.ParentTask = this;
+
+                    PostPage = (PrayerPostFragment)NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.Prayer.PrayerPostFragment" );
+                    if ( PostPage == null )
+                    {
+                        PostPage = new PrayerPostFragment();
+                    }
+                    PostPage.ParentTask = this;
                 }
 
                 public override void Activate( bool forResume )
@@ -55,6 +63,21 @@ namespace Droid
                             {
                                 PresentFragment( CreatePage, true );
                             }
+                        }
+                        else if ( source == CreatePage )
+                        {
+                            if ( buttonId == 0 )
+                            {
+                                PostPage.PrayerRequest = (Rock.Client.PrayerRequest)context;
+                                PresentFragment( PostPage, true );
+                            }
+                        }
+                        else if ( source == PostPage )
+                        {
+                            // this is our first / only "circular" navigation, as we're returning to the main page after 
+                            // having posted a prayer. In which case, clear the back stack.
+                            NavbarFragment.FragmentManager.PopBackStack( null, PopBackStackFlags.Inclusive );
+                            PresentFragment( MainPage, false );
                         }
                     }
                 }

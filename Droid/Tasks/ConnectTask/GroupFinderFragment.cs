@@ -157,12 +157,19 @@ namespace Droid
 
                 LinearLayout AddressLayout { get; set; }
                 ProgressBar ProgressBar { get; set; }
-                public EditText Address { get; set; }
+                public EditText Street { get; set; }
+                public EditText City { get; set; }
+                public EditText State { get; set; }
+                public EditText Zip { get; set; }
                 public Android.Gms.Maps.MapView MapView { get; set; }
                 public GoogleMap Map { get; set; }
                 public TextView SearchResult { get; set; }
                 View Seperator { get; set; }
                 public List<GroupFinder.GroupEntry> GroupEntries { get; set; }
+
+                View StreetSeperator { get; set; }
+                View CitySeperator { get; set; }
+                View StateSeperator { get; set; }
 
 
                 public override void OnCreate( Bundle savedInstanceState )
@@ -177,27 +184,97 @@ namespace Droid
 
                     ProgressBar = new ProgressBar( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     ProgressBar.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-                    ( (LinearLayout.LayoutParams)ProgressBar.LayoutParameters ).Gravity = GravityFlags.Right;
+                    ( (LinearLayout.LayoutParams)ProgressBar.LayoutParameters ).Gravity = GravityFlags.Center;
                     ProgressBar.Indeterminate = true;
-                    ProgressBar.Visibility = ViewStates.Invisible;
+                    ProgressBar.Visibility = ViewStates.Gone;
 
-                    Address = new EditText( Rock.Mobile.PlatformSpecific.Android.Core.Context );
-                    Address.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-                    ( (LinearLayout.LayoutParams)Address.LayoutParameters ).Weight = 1;
-                    Address.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Large_Font_Bold ), TypefaceStyle.Normal );
-                    Address.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Large_FontSize );
-                    Address.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
-                    Address.SetMaxLines( 1 );
-                    Address.SetSingleLine( );
-                    Address.Hint = ConnectStrings.GroupFinder_AddressPlaceholder;
-                    Address.SetOnEditorActionListener( this );
 
                     // limit the address to 90% of the screen so it doesn't conflict with the progress bar.
                     Point displaySize = new Point( );
                     Activity.WindowManager.DefaultDisplay.GetSize( displaySize );
-                    int fixedWidth = (int) Rock.Mobile.Graphics.Util.UnitToPx( ( displaySize.X * 90.0f ) );
-                    Address.SetMinWidth( fixedWidth );
-                    Address.SetMaxWidth( fixedWidth );
+                    float fixedWidth = displaySize.X / 4.0f;
+
+
+                    // Street
+                    Street = new EditText( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    Street.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                    ( (LinearLayout.LayoutParams)Street.LayoutParameters ).Weight = 1;
+                    Street.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Large_Font_Bold ), TypefaceStyle.Normal );
+                    Street.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Large_FontSize );
+                    Street.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
+                    Street.SetSingleLine( );
+                    Street.SetHorizontallyScrolling( true );
+                    Street.Ellipsize = Android.Text.TextUtils.TruncateAt.End;
+                    Street.Hint = ConnectStrings.GroupFinder_StreetPlaceholder;
+                    Street.SetOnEditorActionListener( this );
+                    Street.SetMinWidth( (int) (fixedWidth * 1.50f) );
+                    Street.SetMaxWidth( (int) (fixedWidth * 1.50f) );
+                    Street.SetBackgroundDrawable( null );
+
+                    StreetSeperator = new View( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    StreetSeperator.LayoutParameters = new LinearLayout.LayoutParams( 0, ViewGroup.LayoutParams.MatchParent );
+                    StreetSeperator.LayoutParameters.Width = 2;
+                    StreetSeperator.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+
+
+                    // City
+                    City = new EditText( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    City.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                    ( (LinearLayout.LayoutParams)City.LayoutParameters ).Weight = 1;
+                    City.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Large_Font_Bold ), TypefaceStyle.Normal );
+                    City.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Large_FontSize );
+                    City.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
+                    City.SetSingleLine( true );
+                    City.SetHorizontallyScrolling( true );
+                    City.SetMaxLines( 1 );
+                    City.Ellipsize = Android.Text.TextUtils.TruncateAt.End;
+                    City.Hint = ConnectStrings.GroupFinder_CityPlaceholder;
+                    City.SetOnEditorActionListener( this );
+                    City.SetMinWidth( (int) (fixedWidth * 1.25f) );
+                    City.SetMaxWidth( (int) (fixedWidth * 1.25f) );
+                    City.SetBackgroundDrawable( null );
+
+                    CitySeperator = new View( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    CitySeperator.LayoutParameters = new LinearLayout.LayoutParams( 0, ViewGroup.LayoutParams.MatchParent );
+                    CitySeperator.LayoutParameters.Width = 2;
+                    CitySeperator.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+
+
+                    // State
+                    State = new EditText( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    State.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                    ( (LinearLayout.LayoutParams)State.LayoutParameters ).Weight = 1;
+                    State.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Large_Font_Bold ), TypefaceStyle.Normal );
+                    State.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Large_FontSize );
+                    State.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
+                    State.SetSingleLine( );
+                    State.Hint = ConnectStrings.GroupFinder_StatePlaceholder;
+                    State.Text = ConnectStrings.GroupFinder_DefaultState;
+                    State.SetOnEditorActionListener( this );
+                    State.SetMinWidth( (int) (fixedWidth / 1.50f) );
+                    State.SetMaxWidth( (int) (fixedWidth / 1.50f) );
+                    State.SetBackgroundDrawable( null );
+
+                    StateSeperator = new View( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    StateSeperator.LayoutParameters = new LinearLayout.LayoutParams( 0, ViewGroup.LayoutParams.MatchParent );
+                    StateSeperator.LayoutParameters.Width = 2;
+                    StateSeperator.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+
+
+                    // Zip
+                    Zip = new EditText( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    Zip.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                    ( (LinearLayout.LayoutParams)Zip.LayoutParameters ).Weight = 1;
+                    Zip.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Large_Font_Bold ), TypefaceStyle.Normal );
+                    Zip.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Large_FontSize );
+                    Zip.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
+                    Zip.SetSingleLine( );
+                    Zip.Hint = ConnectStrings.GroupFinder_ZipPlaceholder;
+                    Zip.SetOnEditorActionListener( this );
+                    Zip.SetMinWidth( (int) (fixedWidth * 1.05f) );
+                    Zip.SetMaxWidth( (int) (fixedWidth * 1.05f) );
+                    Zip.InputType = Android.Text.InputTypes.ClassNumber;
+                    Zip.SetBackgroundDrawable( null );
 
 
                     MapView = new Android.Gms.Maps.MapView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
@@ -236,7 +313,7 @@ namespace Droid
                     // don't allow searching until the map is valid (which it should be by now)
                     if ( Map != null )
                     {
-                        GetGroups( v.Text );
+                        GetGroups( );
                     }
                     return false;
                 }
@@ -252,16 +329,25 @@ namespace Droid
                     View view = inflater.Inflate(Resource.Layout.Connect_GroupFinder, container, false);
                     view.SetOnTouchListener( this );
 
-                    view.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+                    view.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
 
                     // setup the address layout, which has the address text, padding, and finally the progress bar.
                     ((LinearLayout)view).AddView( AddressLayout );
-                    AddressLayout.AddView( Address );
-                    AddressLayout.AddView( ProgressBar );
+                    AddressLayout.AddView( Street );
+                    AddressLayout.AddView( StreetSeperator );
+
+                    AddressLayout.AddView( City );
+                    AddressLayout.AddView( CitySeperator );
+
+                    AddressLayout.AddView( State );
+                    AddressLayout.AddView( StateSeperator );
+
+                    AddressLayout.AddView( Zip );
 
                     ((LinearLayout)view).AddView( MapView );
                     ((LinearLayout)view).AddView( SearchResult );
                     ((LinearLayout)view).AddView( Seperator );
+                    ((LinearLayout)view).AddView( ProgressBar );
                     ((LinearLayout)view).AddView( ListView );
 
                     return view;
@@ -284,8 +370,12 @@ namespace Droid
                     // see if there's an address for this person that we can automatically use.
                     if ( RockMobileUser.Instance.HasFullAddress( ) == true )
                     {
-                        Address.Text = RockMobileUser.Instance.Street1( ) + " " + RockMobileUser.Instance.City( ) + ", " + RockMobileUser.Instance.State( ) + ", " + RockMobileUser.Instance.Zip( );
-                        GetGroups( Address.Text );
+                        Street.Text = RockMobileUser.Instance.Street1( );
+                        City.Text = RockMobileUser.Instance.City( );
+                        State.Text = RockMobileUser.Instance.State( );
+                        Zip.Text = RockMobileUser.Instance.Zip( );
+
+                        GetGroups( );
                     }
                 }
 
@@ -334,25 +424,32 @@ namespace Droid
                     MapView.OnPause( );
                 }
 
-                void GetGroups( string address )
+                void GetGroups( )
                 {
-                    Address.Enabled = false;
-                    ProgressBar.Visibility = ViewStates.Visible;
+                    if ( string.IsNullOrEmpty( Street.Text ) == false &&
+                         string.IsNullOrEmpty( City.Text ) == false &&
+                         string.IsNullOrEmpty( State.Text ) == false &&
+                         string.IsNullOrEmpty( Zip.Text ) == false )
+                    {
+                        Street.Enabled = false;
+                        City.Enabled = false;
+                        State.Enabled = false;
+                        Zip.Enabled = false;
 
-                    CCVApp.Shared.GroupFinder.GetGroups( address, delegate(bool result, List<GroupFinder.GroupEntry> groupEntry )
-                        {
-                            if ( result == true )
+                        ProgressBar.Visibility = ViewStates.Visible;
+
+                        CCVApp.Shared.GroupFinder.GetGroups( Street.Text, City.Text, State.Text, Zip.Text, delegate( List<GroupFinder.GroupEntry> groupEntry )
                             {
                                 Map.Clear( );
 
-                                Android.Gms.Maps.Model.LatLngBounds.Builder builder = new Android.Gms.Maps.Model.LatLngBounds.Builder( );
+                                Android.Gms.Maps.Model.LatLngBounds.Builder builder = new Android.Gms.Maps.Model.LatLngBounds.Builder();
 
-                                for( int i = 0; i < groupEntry.Count; i++ )
+                                for ( int i = 0; i < groupEntry.Count; i++ )
                                 {
                                     // add the positions to the map
-                                    Android.Gms.Maps.Model.MarkerOptions markerOptions = new Android.Gms.Maps.Model.MarkerOptions( );
+                                    Android.Gms.Maps.Model.MarkerOptions markerOptions = new Android.Gms.Maps.Model.MarkerOptions();
                                     Android.Gms.Maps.Model.LatLng pos = new Android.Gms.Maps.Model.LatLng( double.Parse( groupEntry[ i ].Latitude ), double.Parse( groupEntry[ i ].Longitude ) );
-                                    markerOptions.SetPosition( pos  );
+                                    markerOptions.SetPosition( pos );
                                     markerOptions.SetTitle( groupEntry[ i ].Title );
                                     markerOptions.SetSnippet( groupEntry[ i ].Distance );
 
@@ -361,7 +458,9 @@ namespace Droid
                                     Map.AddMarker( markerOptions );
                                 }
 
-                                if( groupEntry.Count > 0 )
+                                string address = Street.Text + " " + City.Text + ", " + State.Text + ", " + Zip.Text;
+
+                                if ( groupEntry.Count > 0 )
                                 {
                                     Android.Gms.Maps.Model.LatLngBounds bounds = builder.Build( );
 
@@ -385,16 +484,14 @@ namespace Droid
 
                                 GroupEntries = groupEntry;
                                 ( ListView.Adapter as BaseAdapter ).NotifyDataSetChanged( );
-                            }
-                            else
-                            {
-                                Springboard.DisplayError( ConnectStrings.GroupFinder_InvalidAddressHeader, ConnectStrings.GroupFinder_InvalidAddressMsg );
-                                SearchResult.Text = ConnectStrings.GroupFinder_BeforeSearch;
-                            }
 
-                            Address.Enabled = true;
-                            ProgressBar.Visibility = ViewStates.Invisible;
-                        } );
+                                Street.Enabled = true;
+                                City.Enabled = true;
+                                State.Enabled = true;
+                                Zip.Enabled = true;
+                                ProgressBar.Visibility = ViewStates.Gone;
+                            } );
+                    }
                 }
             }
         }

@@ -42,9 +42,9 @@ namespace Droid
         bool CreateButtonEnabledPreSuspension { get; set; }
         EventHandler CreateButtonDelegate { get; set; }
 
-        bool Revealed { get; set; }
+        ValueAnimator Animator { get; set; }
 
-        bool Animating { get; set; }
+        bool Revealed { get; set; }
 
         /// <summary>
         /// Timer monitoring the time the toolbar should be shown before auto-hiding.
@@ -195,14 +195,16 @@ namespace Droid
                 };
             CreateButton.SetTextColor( new Android.Content.Res.ColorStateList( states, colors ) );
 
+            // default its position to hidden
+            Revealed = false;
+            ButtonLayout.SetY( (int)Rock.Mobile.Graphics.Util.UnitToPx( 50.0f ) );
+
             return ButtonLayout;
         }
 
         public override void OnResume()
         {
             base.OnResume();
-
-            ButtonLayout.SetY( (int)Rock.Mobile.Graphics.Util.UnitToPx( 50.0f ) );
 
             UpdateButtons( );
         }
@@ -326,31 +328,33 @@ namespace Droid
 
         public void OnAnimationEnd( Animator animation )
         {
-            Animating = false;
-
-            Revealed = !Revealed;
+            Animator = null;
         }
 
         void InternalReveal( bool revealed )
         {
-            if( Revealed != revealed )
+            // make sure we're not doubly requesting the same thing. That would
+            // cause a hitch in the animation.
+            if ( Revealed != revealed )
             {
-                // of course don't allow a change while we're animating it.
-                if( Animating == false )
+                Revealed = revealed;
+
+                // if we're currently animating, cancel the animation
+                if ( Animator != null )
                 {
-                    Animating = true;
-
-                    int yOffset = revealed ? 0 : ButtonLayout.Height;
-
-                    // setup an animation from our current mask scale to the new one.
-                    ValueAnimator animator = ValueAnimator.OfInt((int)ButtonLayout.GetY( ) , yOffset);
-
-                    animator.AddUpdateListener( this );
-                    animator.AddListener( new NavToolbarAnimationListener( ) { NavbarToolbar = this } );
-                    animator.SetDuration( (long) (SubNavToolbarConfig.SlideRate * 1000.0f) );
-
-                    animator.Start();
+                    Animator.Cancel( );
                 }
+
+                int yOffset = revealed ? 0 : ButtonLayout.LayoutParameters.Height;
+
+                // setup an animation from our current mask scale to the new one.
+                Animator = ValueAnimator.OfInt( (int)ButtonLayout.GetY( ), yOffset );
+
+                Animator.AddUpdateListener( this );
+                Animator.AddListener( new NavToolbarAnimationListener() { NavbarToolbar = this } );
+                Animator.SetDuration( (long)( SubNavToolbarConfig.SlideRate * 1000.0f ) );
+
+                Animator.Start( );
             }
         }
     }
