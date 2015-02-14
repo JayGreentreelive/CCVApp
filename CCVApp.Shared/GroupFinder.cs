@@ -17,12 +17,14 @@ namespace CCVApp.Shared
             public string Title { get; set; }
             public string Address { get; set; }
 
-            public string Distance { get; set; }
+            public string Day { get; set; }
+            public string Time { get; set; }
 
             public string NeighborhoodArea { get; set; }
 
-            public string Latitude { get; set; }
-            public string Longitude { get; set; }
+            public double Distance { get; set; }
+            public double Latitude { get; set; }
+            public double Longitude { get; set; }
         }
 
         public delegate void GetGroupsComplete( List<GroupEntry> groupEntry );
@@ -38,6 +40,9 @@ namespace CCVApp.Shared
                 {
                     if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
                     {
+                        Random rand = new Random( );
+
+
                         // first thing we receive is the "area" group(s)
                         foreach ( Rock.Client.Group areaGroup in model )
                         {
@@ -53,10 +58,16 @@ namespace CCVApp.Shared
                                 GroupEntry entry = new GroupEntry();
                                 entry.Title = smallGroup.Name;
                                 entry.Address = location.Street1 + "\n" + location.City + ", " + location.State + " " + location.PostalCode.Substring( 0, Math.Max( 0, location.PostalCode.IndexOf( '-' ) ) );
-                                entry.NeighborhoodArea = string.Format( "Part of the {0} Neighborhood", areaGroup.Name );
-                                entry.Distance = "1.5 miles away.";
-                                entry.Latitude = location.Latitude.ToString( );
-                                entry.Longitude = location.Longitude.ToString( );
+                                entry.NeighborhoodArea = areaGroup.Name;
+
+                                //todo: Get the real info for these
+                                entry.Distance = rand.NextDouble( ) * 10.0f;
+                                entry.Day = "Thursday";
+                                entry.Time = "7pm";
+                                //
+
+                                entry.Latitude = location.Latitude.Value;
+                                entry.Longitude = location.Longitude.Value;
 
                                 groupEntries.Add( entry );
                             }

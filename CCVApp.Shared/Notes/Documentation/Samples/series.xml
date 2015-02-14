@@ -1,15 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <SeriesList>
+	<!--Start Series-->
+	<Series>
+		<Message>
+			<Name>PRAY</Name>
+			<Speaker>Dr. Mark Moore</Speaker>
+			<Date>2/15/2015</Date>
+			<NoteUrl>http://www.jeredmcferron.com/ccv/message_2_14_2015.xml</NoteUrl>
+			<WatchUrl></WatchUrl>
+			<ShareUrl></ShareUrl>
+		</Message>
+
+		<Name>LOVE DOES</Name>
+		<Description>
+			Love your neighbor.
+		</Description>
+		<DateRanges>2/14/2015 - 3/1/2015</DateRanges>
+		<BillboardUrl>http://www.jeredmcferron.com/ccv/fan_or_follower.png</BillboardUrl>
+		<ThumbnailUrl>http://www.jeredmcferron.com/ccv/fan_or_follower_thumb.png</ThumbnailUrl>
+	</Series>
+	<!--End Series-->
+
+	<!--Start Series-->
 	<Series>
 		<Message>
 			<Name>State of the Church</Name>
 			<Speaker>Dr. Don Wilson</Speaker>
 			<Date>2/8/2015</Date>
 			<NoteUrl>http://www.jeredmcferron.com/ccv/message_2_7_2015.xml</NoteUrl>
-			<WatchUrl></WatchUrl>
-			<ShareUrl></ShareUrl>
+			<WatchUrl>http://player.vimeo.com/external/119063101.m3u8?p=high,standard,mobile&amp;s=74c6667e4559303dce5eabc31ca56e14</WatchUrl>
+			<ShareUrl>http://ccv.church/Arena/default.aspx?page=17529&amp;item=493</ShareUrl>
 		</Message>
 
+		<Name>State of the Church</Name>
+		<Description>
+			State of the Church 2015
+		</Description>
+		<DateRanges>2/8/2015 - 2/8/2015</DateRanges>
+		<BillboardUrl>http://www.jeredmcferron.com/ccv/fan_or_follower.png</BillboardUrl>
+		<ThumbnailUrl>http://www.jeredmcferron.com/ccv/fan_or_follower_thumb.png</ThumbnailUrl>
+	</Series>
+	<!--End Series-->
+
+	<!--Start Series-->
+	<Series>
 		<Message>
 			<Name>FAN or FOLLOWER</Name>
 			<Speaker>Dr. Don Wilson</Speaker>
@@ -23,19 +57,14 @@
 		<Description>
 			Are you a fan of Jesus, or are you a follower of Jesus? Join us as we learn about this critical difference, and why it might matter more than you think.
 		</Description>
-		<DateRanges>2/1/2015 - 2/4/2015</DateRanges>
+		<DateRanges>2/1/2015 - 2/1/2015</DateRanges>
 		<BillboardUrl>http://www.jeredmcferron.com/ccv/fan_or_follower.png</BillboardUrl>
 		<ThumbnailUrl>http://www.jeredmcferron.com/ccv/fan_or_follower_thumb.png</ThumbnailUrl>
 	</Series>
+	<!--End Series-->
+
+	<!--Start Series-->
 	<Series>
-		<Message>
-			<Name>FAN or FOLLOWER</Name>
-			<Speaker>Dr. Don Wilson</Speaker>
-			<Date>2/1/2015</Date>
-			<NoteUrl>http://www.jeredmcferron.com/ccv/message_1_31_2015.xml</NoteUrl>
-			<WatchUrl>http://player.vimeo.com/external/118415552.m3u8?p=high,standard,mobile&amp;s=b565a74f30fc2ee6db55039746840b0c</WatchUrl>
-			<ShareUrl>http://www.ccvonline.com/Arena/default.aspx?page=17529&amp;item=492</ShareUrl>
-		</Message>
 		<Message>
 			<Name>FRIENDS</Name>
 			<Speaker>Todd Clark</Speaker>
@@ -74,10 +103,13 @@
 		<Description>
 			New year’s resolutions center on what we need to change and improve. We often resolve to prioritize our faith, family and friends, take control of our finances and focus on what is really important. But isn’t it easy to find ourselves repeating the same old patterns and routines that we committed to change? Join us as we kick off the new year and discover how to make a Fresh Start that lasts.
 		</Description>
-		<DateRanges>1/4/2015 - 2/1/2015</DateRanges>
+		<DateRanges>1/4/2015 - 1/25/2015</DateRanges>
 		<BillboardUrl>http://www.jeredmcferron.com/ccv/fresh_start.png</BillboardUrl>
 		<ThumbnailUrl>http://www.jeredmcferron.com/ccv/fresh_start_thumb.png</ThumbnailUrl>
 	</Series>
+	<!--End Series-->
+
+	<!--Start Series-->
 	<Series>
 		<Message>
 			<Name>Paul to the Phoenicians</Name>
@@ -123,6 +155,9 @@
 		<BillboardUrl>http://www.jeredmcferron.com/ccv/uncluttered.png</BillboardUrl>
 		<ThumbnailUrl>http://www.jeredmcferron.com/ccv/uncluttered_thumb.png</ThumbnailUrl>
 	</Series>
+	<!--End Series-->
+
+	<!--Start Series-->
 	<Series>
 		<Message>
 			<Name>There Is Hope - For Our Culture</Name>
@@ -173,6 +208,9 @@
 		<BillboardUrl>http://www.jeredmcferron.com/ccv/there_is_hope.png</BillboardUrl>
 		<ThumbnailUrl>http://www.jeredmcferron.com/ccv/there_is_hope_thumb.png</ThumbnailUrl>
 	</Series>
+	<!--End Series-->
+
+	<!--Start Series-->
 	<Series>
 		<Message>
 			<Name>Honesty</Name>
@@ -246,7 +284,9 @@
 		<BillboardUrl>http://www.jeredmcferron.com/ccv/wisdom.png</BillboardUrl>
 		<ThumbnailUrl>http://www.jeredmcferron.com/ccv/wisdom_thumb.png</ThumbnailUrl>
 	</Series>
+	<!--End Series-->
 
+	<!--Start Series-->
 	<Series>
 		<Message>
 			<Name>Worry: When Life Spins Out of Control</Name>
@@ -280,4 +320,6 @@
 		<BillboardUrl>http://www.jeredmcferron.com/ccv/living_on_the_edge.png</BillboardUrl>
 		<ThumbnailUrl>http://www.jeredmcferron.com/ccv/living_on_the_edge_thumb.png</ThumbnailUrl>
 	</Series>
+	<!--End Series-->
+
 </SeriesList>

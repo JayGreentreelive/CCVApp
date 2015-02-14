@@ -150,10 +150,12 @@ namespace Droid
                 return null;
             }
 
-            ScreenSize = new System.Drawing.SizeF( container.Width, container.Height );
+            Point displaySize = new Point( );
+            Activity.WindowManager.DefaultDisplay.GetSize( displaySize );
+            ScreenSize = new System.Drawing.SizeF( displaySize.X, displaySize.Y );
 
             // scale the image to match the view's width
-            ScreenToImageScalar = (float) SourceImage.Width / (float) container.Width;
+            ScreenToImageScalar = (float) SourceImage.Width / (float) ScreenSize.Width;
 
             // get the scaled dimensions, maintaining aspect ratio
             float scaledWidth = (float)SourceImage.Width * (1.0f / ScreenToImageScalar);
@@ -161,9 +163,9 @@ namespace Droid
 
             // now, if the scaled height is too large, re-calc with Height is the dominant, 
             // so we guarantee a fit within the view.
-            if( scaledHeight > container.Height )
+            if( scaledHeight > ScreenSize.Height )
             {
-                ScreenToImageScalar = (float) SourceImage.Height / (float) container.Height;
+                ScreenToImageScalar = (float) SourceImage.Height / (float) ScreenSize.Height;
 
                 scaledWidth = (float)SourceImage.Width * (1.0f / ScreenToImageScalar);
                 scaledHeight = (float)SourceImage.Height * (1.0f / ScreenToImageScalar);
@@ -184,8 +186,8 @@ namespace Droid
             ImageView.LayoutParameters.Height = ScaledSourceImage.Height;
 
             // center the image
-            ImageView.SetX( (container.Width - ImageView.LayoutParameters.Width ) / 2 );
-            ImageView.SetY( (container.Height - ImageView.LayoutParameters.Height ) / 2 );
+            ImageView.SetX( (ScreenSize.Width - ImageView.LayoutParameters.Width ) / 2 );
+            ImageView.SetY( (ScreenSize.Height - ImageView.LayoutParameters.Height ) / 2 );
 
             view.AddView( ImageView );
 
@@ -216,8 +218,8 @@ namespace Droid
 
 
             // set our clamp values
-            CropViewMinPos = new PointF( (container.Width - scaledWidth) / 2,
-                                         (container.Height - scaledHeight) / 2 );
+            CropViewMinPos = new PointF( (ScreenSize.Width - scaledWidth) / 2,
+                                         (ScreenSize.Height - scaledHeight) / 2 );
 
             CropViewMaxPos = new PointF( CropViewMinPos.X + (scaledWidth - CropView.LayoutParameters.Width),
                                          CropViewMinPos.Y + (scaledHeight - CropView.LayoutParameters.Height) );
@@ -225,8 +227,8 @@ namespace Droid
             view.AddView( CropView );
 
             // create a mask layer that will block out the parts of the image that will be cropped
-            MaskLayer = new Rock.Mobile.PlatformSpecific.Android.Graphics.MaskLayer( container.Width, container.Height, CropView.LayoutParameters.Width, CropView.LayoutParameters.Height, Rock.Mobile.PlatformSpecific.Android.Core.Context );
-            MaskLayer.LayoutParameters = new RelativeLayout.LayoutParams( container.Width, container.Height );
+            MaskLayer = new Rock.Mobile.PlatformSpecific.Android.Graphics.MaskLayer( (int)ScreenSize.Width, (int)ScreenSize.Height, CropView.LayoutParameters.Width, CropView.LayoutParameters.Height, Rock.Mobile.PlatformSpecific.Android.Core.Context );
+            MaskLayer.LayoutParameters = new RelativeLayout.LayoutParams( (int)ScreenSize.Width, (int)ScreenSize.Height );
             MaskLayer.Opacity = 0.00f;
             view.AddView( MaskLayer );
 
@@ -317,7 +319,7 @@ namespace Droid
             SetMode( CropMode.Editing );
 
             // start the cropper centered
-            MoveCropView( new PointF( (container.Width - CropView.LayoutParameters.Width) / 2, (container.Height - CropView.LayoutParameters.Height) / 2 ) );
+            MoveCropView( new PointF( (ScreenSize.Width - CropView.LayoutParameters.Width) / 2, (ScreenSize.Height - CropView.LayoutParameters.Height) / 2 ) );
 
             MaskLayer.Position = new PointF( CropView.GetX( ), CropView.GetY( ) );
 

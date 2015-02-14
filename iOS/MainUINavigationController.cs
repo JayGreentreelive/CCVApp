@@ -72,13 +72,28 @@ namespace iOS
         }
 
         /// <summary>
-        /// Determines whether the springboard is fully closed or not.
-        /// If its state is open OR animation is going on, consider it open.
+        /// Determines whether the springboard is fully closed.
+        /// If its state is open OR animation is going on, consider it is not closed.
+        /// DO NOT USE THE INVERSE TO KNOW ITS OPEN. USE IsSpringboardOpen()
         /// </summary>
-        /// <returns><c>true</c> if this instance is springboard closed; otherwise, <c>false</c>.</returns>
         public bool IsSpringboardClosed( )
         {
             if( SpringboardRevealed == false && Animating == false )
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Determines whether the springboard is fully open.
+        /// If its state is closed OR animation is going on, consider it not open.
+        /// DO NOT USE THE INVERSE TO KNOW ITS CLOSED. USE IsSpringboardClosed()
+        /// </summary>
+        public bool IsSpringboardOpen( )
+        {
+            if ( SpringboardRevealed == true && Animating == false )
             {
                 return true;
             }
@@ -235,7 +250,7 @@ namespace iOS
         {
             UpdateSpringboardAllowedState( toInterfaceOrientation );
 
-            Container.UpdateBackButton( );
+            Container.UpdateBackButton( toInterfaceOrientation );
         }
 
         void UpdateSpringboardAllowedState( UIInterfaceOrientation toInterfaceOrientation )

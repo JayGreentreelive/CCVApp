@@ -119,7 +119,11 @@ namespace iOS
             CancelButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
             CancelButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
-                    Springboard.ResignModelViewController( this, null );
+                    // don't allow canceling while we wait for a web request.
+                    if( LoginState.Trying != State )
+                    {
+                        Springboard.ResignModelViewController( this, null );
+                    }
                 };
 
             // setup the result

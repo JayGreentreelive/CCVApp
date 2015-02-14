@@ -22,6 +22,25 @@ Both
 
 	Fixed an issue causing the Nav Toolbar to sometimes hide and not come back on a particular page.
 
+	Group Finder - The selected group is now highlighted in the group list, centered on the map, and the tooltip window is opened up.
+
+	Group Finder - The nearest group is now colored red and denoted with an extra label.
+
+	Group Finder - Now displays day & time of the group instead of Address
+
+	Prayer Creation - Required fields will be colored red if you attempt to submit without filling them in.
+	 
+iOS
+	Fixed a crash if cancel was pressed on a WebView before the URL started loading.
+
+	Fixed various weird issues if you spammed the Facebook and Login Cancel buttons.
+
+	Fixed an issue causing task "warping" if multi-touch was used on iOS.
+
+	Fixed an issue causing the back button to be enabled while viewing Notes in landscape.
+
+	Fixed an issue causing animation interpolation percentages to run past 1.00 
+
 Android
 	Polished the Login Page results to match that of iOS.
 	
@@ -36,3 +55,15 @@ Android
 	Fixed an issue preventing the login screen from automatically dismissing after logging in.
 
 	Fixed a crash when logging in with Facebook on certain Android devices.
+
+	When Prayer Request retrieval fails, the error handling is now done via a UI instead of Message Box.
+
+	Updated Prayer Requests to display a status and progress bar while downloading prayers.
+
+	Fixed an issue causing performance issues / crashing when rapidly tapping Facebook / Cancel / Back
+
+	Improved Back Button usage to avoid unexpected app exiting.
+
+	Fixed an issue preventing the springboard from closing when a dead area of the springboard was tapped.
+
+	Majorly improved gesture recognition for panning the Springboard.

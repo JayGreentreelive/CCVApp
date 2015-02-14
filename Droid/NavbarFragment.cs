@@ -44,7 +44,7 @@ namespace Droid
         /// Reference to the currently active task
         /// </summary>
         /// <value>The active task.</value>
-        protected Tasks.Task ActiveTask { get; set; }
+        public Tasks.Task ActiveTask { get; protected set; }
 
         public Springboard SpringboardParent { get; set; }
 
@@ -52,16 +52,15 @@ namespace Droid
         /// True when the navbar fragment and task are slid "out" to reveal the springboard
         /// </summary>
         /// <value><c>true</c> if springboard revealed; otherwise, <c>false</c>.</value>
-        bool SpringboardRevealed { get; set; }
+        public bool SpringboardRevealed { get; set; }
 
         /// <summary>
         /// Returns true if the springboard should accept input.
         /// This will basically be false anytime the springboard is CLOSED or animating
         /// </summary>
-        /// <returns><c>true</c>, if springboard allow input was shoulded, <c>false</c> otherwise.</returns>
         public bool ShouldSpringboardAllowInput( )
         {
-            if ( SpringboardRevealed == true && Animating == false && IsPanning == false )
+            if ( SpringboardRevealed == true && Animating == false && Panning != PanState.Panning )
             {
                 return true;
             }
@@ -72,10 +71,9 @@ namespace Droid
         /// Returns true if the active task should accept input from the user.
         /// This will basically be false anytime the springboard is open or animating
         /// </summary>
-        /// <returns><c>true</c>, if task allow input was shoulded, <c>false</c> otherwise.</returns>
         public bool ShouldTaskAllowInput( )
         {
-            if ( SpringboardRevealed == false && Animating == false && IsPanning == false )
+            if ( SpringboardRevealed == false && Animating == false && Panning != PanState.Panning )
             {
                 return true;
             }
@@ -98,9 +96,50 @@ namespace Droid
 
         Button SpringboardRevealButton { get; set; }
 
-        float LastPanX { get; set; }
+        enum PanState
+        {
+            None,
+            Monitoring,
+            Panning
+        }
+        PanState Panning { get; set; }
 
-        bool IsPanning { get; set; }
+        /// <summary>
+        /// The amount of frames counted during Pan Monitoring.
+        /// </summary>
+        /// <value>The frame count.</value>
+        float FrameCount { get; set; }
+
+        /// <summary>
+        /// The amount panned on Y since the state went to Panning
+        /// </summary>
+        /// <value>The total pan y.</value>
+        float TotalPanY { get; set; }
+
+        /// <summary>
+        /// The amount panned on X since the state went to Panning
+        /// </summary>
+        /// <value>The last pan x.</value>
+        float TotalPanX { get; set; }
+
+        /// <summary>
+        /// When panning actually BEGINS (not when monitoring begins),
+        /// this is the X position. Used to know how much we've already panned.
+        /// </summary>
+        /// <value>The pan start x.</value>
+        float PanStartX { get; set; }
+
+        /// <summary>
+        /// The starting position of the panel, so that as you pan it can
+        /// move relative to this position.
+        /// </summary>
+        /// <value>The panel origin x.</value>
+        float PanelOriginX { get; set; }
+
+        /// <summary>
+        /// Number of frames to track their panning before determining what the user intended.
+        /// </summary>
+        const int sNumPanTrackingFrames = 5;
 
         /// <summary>
         /// The backing view that provides a drop shadow.
@@ -286,7 +325,11 @@ namespace Droid
 
         public void OnDown( MotionEvent e )
         {
-            LastPanX = 0;
+            Panning = PanState.Monitoring;
+            TotalPanX = 0;
+            TotalPanY = 0;
+            FrameCount = 0;
+            PanStartX = 0;
         }
 
         static float sMinVelocity = 2000.0f;
@@ -295,28 +338,28 @@ namespace Droid
             // sanity check, as the events could be null.
             if ( e1 != null && e2 != null )
             {
-                Console.WriteLine( "Flick Velocity: {0}", velocityX );
-
-                // if they flicked it, go ahead and open / close the springboard
-
-                // only allow it if we're NOT animating, the task is ok with us panning, and we're in portrait mode.
-                if ( Animating == false &&
-                     ActiveTask.CanContainerPan( ) &&
-                     Activity.Resources.Configuration.Orientation == Android.Content.Res.Orientation.Portrait )
+                // if they flicked it, go ahead and open / close the springboard.
+                // to know they intended to flick and not scroll, ensure X is > Y
+                if ( Math.Abs( velocityX ) > Math.Abs( velocityY ) )
                 {
-                    if ( velocityX > sMinVelocity )
+                    // only allow it if we're NOT animating, the task is ok with us panning, and we're in portrait mode.
+                    if ( Animating == false &&
+                         ActiveTask.CanContainerPan( ) &&
+                         Activity.Resources.Configuration.Orientation == Android.Content.Res.Orientation.Portrait )
                     {
-                        RevealSpringboard( true );
-                    }
-                    else if ( velocityX < -sMinVelocity )
-                    {
-                        RevealSpringboard( false );
+                        if ( velocityX > sMinVelocity )
+                        {
+                            RevealSpringboard( true );
+                        }
+                        else if ( velocityX < -sMinVelocity )
+                        {
+                            RevealSpringboard( false );
+                        }
                     }
                 }
             }
         }
 
-        const float MinPanThreshold = 150;
         public void OnScroll( MotionEvent e1, MotionEvent e2, float distanceX, float distanceY )
         {
             // sanity check, as the events could be null.
@@ -327,24 +370,52 @@ namespace Droid
                      ActiveTask.CanContainerPan( ) &&
                      Activity.Resources.Configuration.Orientation == Android.Content.Res.Orientation.Portrait )
                 {
-                    IsPanning = true;
-
-                    if ( Math.Abs( e2.RawX - e1.RawX ) > MinPanThreshold )
+                    switch ( Panning )
                     {
-                        if ( LastPanX == 0 )
+                        case PanState.Monitoring:
                         {
-                            LastPanX = e2.RawX;
+                            TotalPanY += Math.Abs( e2.RawY - e1.RawY );
+                            TotalPanX += Math.Abs( e2.RawX - e1.RawX );
+
+                            FrameCount++;
+
+                            if ( FrameCount > sNumPanTrackingFrames )
+                            {
+                                // decide how to proceed
+                                Panning = PanState.None;
+
+                                // put simply, if their total X was more than their total Y, well then,
+                                // lets pan.
+                                if ( TotalPanX > TotalPanY )
+                                {
+                                    Panning = PanState.Panning;
+
+                                    // mark where the panning began, so we can move the field appropriately
+                                    PanStartX = e2.RawX;
+
+                                    PanelOriginX = View.GetX( );
+                                }
+                                else
+                                {
+                                    // Y was greater than X, so they probably intended to scroll, not pan.
+                                    Panning = PanState.None;
+                                }
+
+                            }
+                            break;
                         }
 
-                        distanceX = e2.RawX - LastPanX;
-                        LastPanX = e2.RawX;
+                        case PanState.Panning:
+                        {
+                            distanceX = e2.RawX - PanStartX;
 
-                        float xPos = View.GetX( ) + distanceX;
+                            float xPos = PanelOriginX + distanceX;
+                            float revealAmount = ( View.Width * PrimaryNavBarConfig.RevealPercentage );
+                            xPos = Math.Max( 0, Math.Min( xPos, revealAmount ) );
 
-                        float revealAmount = ( View.Width * PrimaryNavBarConfig.RevealPercentage );
-                        xPos = Math.Max( 0, Math.Min( xPos, revealAmount ) );
-
-                        PanContainerViews( xPos );
+                            PanContainerViews( xPos );
+                            break;
+                        }
                     }
                 }
             }
@@ -353,58 +424,51 @@ namespace Droid
         public void OnUp( MotionEvent e )
         {
             // if we were panning
-            if ( IsPanning )
+            if ( Panning == PanState.Panning )
             {
                 float revealAmount = ( View.Width * PrimaryNavBarConfig.RevealPercentage );
                 if ( SpringboardRevealed == false )
                 {
                     // since the springboard wasn't revealed, require that they moved
-                    // at least 1/3rd the amount before opening it
-                    if ( View.GetX( ) > revealAmount * .33f )
+                    // at least 1/5th the amount before opening it
+                    if ( View.GetX( ) > revealAmount * .20f )
                     {
-                        Console.WriteLine( "OnUp CALLED: Reveal True" );
                         RevealSpringboard( true );
                     }
                     else
                     {
-                        Console.WriteLine( "OnUp CALLED: Reveal False" );
                         RevealSpringboard( false );
                     }
                 }
                 else
                 {
-                    if ( View.GetX( ) < revealAmount * .66f )
+                    if ( View.GetX( ) < revealAmount * .85f )
                     {
-                        Console.WriteLine( "OnUp CALLED: Reveal False" );
                         RevealSpringboard( false );
                     }
                     else
                     {
-                        Console.WriteLine( "OnUp CALLED: Reveal True" );
                         RevealSpringboard( true );
                     }
                 }
             }
             else
             {
-                // if we weren't panning
-                if ( IsPanning == false )
+                // if the task should allowe input, reveal the nav bar
+                if ( ShouldTaskAllowInput( ) == true )
                 {
-                    // if the task should allowe input, reveal the nav bar
-                    if ( ShouldTaskAllowInput( ) == true )
-                    {
-                        // let the active task know that the user released input
-                        ActiveTask.OnUp( e );
-                    }
-                    else if ( ShouldSpringboardAllowInput( ) == true )
-                    {
-                        // else close the springboard
-                        RevealSpringboard( false );
-                    }
+                    // let the active task know that the user released input
+                    ActiveTask.OnUp( e );
+                }
+                else if ( ShouldSpringboardAllowInput( ) == true )
+                {
+                    // else close the springboard
+                    RevealSpringboard( false );
                 }
             }
 
-            IsPanning = false;
+            // no matter what, we're done panning
+            Panning = PanState.None;
         }
 
         public void OnAnimationUpdate(ValueAnimator animation)
@@ -418,7 +482,6 @@ namespace Droid
 
         public void OnAnimationEnd( Animator animation )
         {
-            Console.WriteLine( "OnAnimationEnd CALLED" );
             Animating = false;
 
             // based on the position, set the springboard flag

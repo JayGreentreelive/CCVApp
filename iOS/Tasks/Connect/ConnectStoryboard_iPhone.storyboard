@@ -8,27 +8,7 @@
         <scene sceneID="168">
             <objects>
                 <tableViewController storyboardIdentifier="GroupFinderViewController" id="169" customClass="GroupFinderViewController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="170">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ConnectIdentifier" id="173">
-                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="173" id="174">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </tableViewCellContentView>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="169" id="171"/>
-                            <outlet property="delegate" destination="169" id="172"/>
-                        </connections>
-                    </tableView>
                     <connections>
-                        <outlet property="GroupFinderTableView" destination="170" id="name-outlet-170"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="175" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -90,4 +70,62 @@
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
+    <resources>
+        <image name="Fonts/Bevan.ttf" width="0" height="0"/>
+        <image name="Fonts/ChangaOne-Italic.ttf" width="0" height="0"/>
+        <image name="Fonts/ChangaOne-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/DroidSerif-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/DroidSerif-BoldItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/DroidSerif-Italic.ttf" width="0" height="0"/>
+        <image name="Fonts/DroidSerif.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-Black.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-BoldItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-HeavyItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-Italic.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-Light.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-LightItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/Montserrat-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/Montserrat-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-BoldItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-ExtraBold.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-ExtraBoldItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-Italic.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-Light.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-LightItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-Semibold.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-SemiboldItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/PassionOne-Black.ttf" width="0" height="0"/>
+        <image name="Fonts/PassionOne-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/PassionOne-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/Quicksand-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/Quicksand-Light.ttf" width="0" height="0"/>
+        <image name="Fonts/Quicksand-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoCondensed-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoCondensed-BoldItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoCondensed-Italic.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoCondensed-Light.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoCondensed-LightItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoCondensed-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoSlab-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoSlab-Light.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoSlab-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoSlab-Thin.ttf" width="0" height="0"/>
+        <image name="Fonts/FontAwesome.ttf" width="0" height="0"/>
+        <image name="Fonts/Bh.ttf" width="0" height="0"/>
+        <image name="ccvLogo.png" width="57" height="28"/>
+        <image name="news_baptism_main.png" width="375" height="242"/>
+        <image name="news_learnmore_header.png" width="414" height="180"/>
+        <image name="news_learnmore_main.png" width="375" height="242"/>
+        <image name="news_startingpoint_header.png" width="1242" height="540"/>
+        <image name="news_startingpoint_main.png" width="375" height="242"/>
+        <image name="podcastThumbnailPlaceholder.png" width="590" height="332"/>
+        <image name="spot_mask.png" width="128" height="128"/>
+        <image name="news_baptism_header.png" width="414" height="180"/>
+        <image name="facebook_login.png" width="250" height="35"/>
+        <image name="connect_banner.jpg" width="595" height="335"/>
+    </resources>
 </document>

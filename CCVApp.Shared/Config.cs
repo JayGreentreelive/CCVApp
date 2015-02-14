@@ -443,6 +443,11 @@ namespace CCVApp
                 public const float GroupFinder_DefaultScale_Android = 9.25f;
 
                 public const string GroupFinder_SearchIcon = "";
+
+                /// <summary>
+                /// The color for the row of the group that's closest to the address searched
+                /// </summary>
+                public const int GroupFinder_ClosestGroupColor = 0x5B1013FF;
             }
 
             public class GiveConfig
@@ -487,6 +492,12 @@ namespace CCVApp
                 /// The background color for the layer that backs elements (like the strip behind First Name)
                 /// </summary>
                 public const uint BG_Layer_Color = 0x3E3E3EFF;
+
+                /// <summary>
+                /// The background color for a text layer that has invalid input. This lets the user know
+                /// there is something wrong with the particular field.
+                /// </summary>
+                public const uint BadInput_BG_Layer_Color = 0x5B1013FF;
 
                 /// <summary>
                 /// The border color for the layer that backs elements (like the strip behind First Name)

@@ -46,6 +46,8 @@ namespace Droid
     [Activity( Label = "CCV Mobile 2", Icon = "@drawable/icon", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize )]
     public class MainActivity : Activity
     {
+        Springboard Springboard { get; set; }
+
         protected override void OnCreate( Bundle bundle )
         {
             base.OnCreate( bundle );
@@ -72,8 +74,8 @@ namespace Droid
             Rock.Mobile.PlatformUI.PlatformBaseUI.Init( );
             MapsInitializer.Initialize( this );
 
-            Springboard springboard = FragmentManager.FindFragmentById(Resource.Id.springboard) as Springboard;
-            springboard.SetActiveTaskFrame( layout );
+            Springboard = FragmentManager.FindFragmentById(Resource.Id.springboard) as Springboard;
+            Springboard.SetActiveTaskFrame( layout );
         }
 
         protected override void OnNewIntent(Intent intent)
@@ -81,6 +83,15 @@ namespace Droid
             base.OnNewIntent(intent);
 
             Intent = intent;
+        }
+
+        public override void OnBackPressed()
+        {
+            // only allow Back if the springboard OKs it.
+            if ( Springboard.CanPressBack( ) )
+            {
+                base.OnBackPressed( );
+            }
         }
     }
 }

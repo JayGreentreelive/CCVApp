@@ -14,16 +14,8 @@ namespace iOS
 	[Register ("GroupFinderViewController")]
 	partial class GroupFinderViewController
 	{
-		[Outlet]
-		[GeneratedCode ("iOS Designer", "1.0")]
-		UITableView GroupFinderTableView { get; set; }
-
 		void ReleaseDesignerOutlets ()
 		{
-			if (GroupFinderTableView != null) {
-				GroupFinderTableView.Dispose ();
-				GroupFinderTableView = null;
-			}
 		}
 	}
 }

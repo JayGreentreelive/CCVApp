@@ -12,7 +12,7 @@
             android:layout_height="30dp" />
     <!--Name Fields-->
         <RelativeLayout
-            android:id="@+id/name_background"
+            android:id="@+id/first_name_background"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <View
@@ -37,11 +37,17 @@
                 android:inputType="textPersonName"
                 android:maxLength="16"
                 android:maxLines="1" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/last_name_background"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
             <View
-                android:id="@+id/middle_border"
-                android:layout_below="@+id/prayer_create_firstNameText"
+                android:id="@+id/bottom_border"
                 android:layout_width="match_parent"
-                android:layout_height="1dp" />
+                android:layout_height="1dp"
+                android:background="#FFFFFFFF"
+                android:layout_alignParentBottom="true" />
             <EditText
                 android:hint="Last Name"
                 android:textAppearance="?android:attr/textAppearanceMedium"

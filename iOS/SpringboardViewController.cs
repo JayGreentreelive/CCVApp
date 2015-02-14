@@ -113,6 +113,8 @@ namespace iOS
                 TextLabel.Layer.Position = new CGPoint( SpringboardConfig.Element_LabelOffsetX + ( TextLabel.Frame.Width / 2 ), BackingView.Frame.Height / 2 );
 
                 Seperator.Frame = new CGRect( 0, 0, Button.Frame.Width, 1.0f );
+
+                Deactivate( );
             }
 
             public void Activate( )
@@ -384,27 +386,35 @@ namespace iOS
 
             EditPictureButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
-                    if( RockMobileUser.Instance.LoggedIn == true )
+                    // don't allow launching a model view controller unless the springboard is open.
+                    if ( NavViewController.IsSpringboardOpen( ) )
                     {
-                        // they're logged in, so let them set their profile pic
-                        ManageProfilePic( );
-                    }
-                    else
-                    {
-                        //otherwise this button can double as a login button.
-                        PresentModelViewController( LoginViewController );
+                        if( RockMobileUser.Instance.LoggedIn == true )
+                        {
+                            // they're logged in, so let them set their profile pic
+                            ManageProfilePic( );
+                        }
+                        else
+                        {
+                            //otherwise this button can double as a login button.
+                            PresentModelViewController( LoginViewController );
+                        }
                     }
                 };
 
             ViewProfileButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
-                    if( RockMobileUser.Instance.LoggedIn == true )
+                    // don't allow launching a model view controller unless the springboard is open.
+                    if ( NavViewController.IsSpringboardOpen( ) )
                     {
-                        PresentModelViewController( ProfileViewController );
-                    }
-                    else
-                    {
-                        PresentModelViewController( LoginViewController );
+                        if( RockMobileUser.Instance.LoggedIn == true )
+                        {
+                            PresentModelViewController( ProfileViewController );
+                        }
+                        else
+                        {
+                            PresentModelViewController( LoginViewController );
+                        }
                     }
                 };
 
@@ -596,7 +606,7 @@ namespace iOS
         protected void ActivateElement( SpringboardElement activeElement )
         {
             // don't allow any navigation while the login controller is active
-            if( ModalControllerVisible == false )
+            if( ModalControllerVisible == false && NavViewController.IsSpringboardOpen() == true )
             {
                 // make sure we're allowed to switch activities
                 if( NavViewController.ActivateTask( activeElement.Task ) == true )
@@ -646,7 +656,11 @@ namespace iOS
                 // (this will only happen when the app is first launched)
                 if( NavViewController.CurrentTask == null )
                 {
-                    ActivateElement( Elements[0] );
+                    // don't use the ActivateElement method because
+                    // it verifies the springboard is closed, and we don't
+                    // care on first run.
+                    NavViewController.ActivateTask( Elements[ 0 ].Task );
+                    Elements[0].Activate( );
                 }
             }
         }

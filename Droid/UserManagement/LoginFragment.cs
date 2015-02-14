@@ -51,7 +51,11 @@ namespace Droid
         View LoginResultLayer { get; set; }
         TextView LoginResultLabel { get; set; }
 
+        WebLayout WebLayout { get; set; }
+
         Facebook.FacebookClient Session { get; set; }
+
+        bool BindingFacebook { get; set; }
 
         public override void OnCreate( Bundle savedInstanceState )
         {
@@ -125,6 +129,11 @@ namespace Droid
                 TryFacebookBind( );
             };
 
+            // invoke a webview
+            WebLayout = new WebLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+            WebLayout.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent );
+            WebLayout.SetBackgroundColor( Android.Graphics.Color.Black );
+
             return view;
         }
 
@@ -151,43 +160,34 @@ namespace Droid
 
         public void TryFacebookBind( )
         {
-            RockMobileUser.Instance.BindFacebookAccount( delegate(string fromUri, Facebook.FacebookClient session) 
-                {
-                    Session = session;
+            // if we aren't already trying to bind facebook
+            if ( BindingFacebook == false )
+            {
+                // go for it.
+                BindingFacebook = true;
 
-                    // invoke a webview
-                    WebLayout webLayout = new WebLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                RockMobileUser.Instance.BindFacebookAccount( delegate(string fromUri, Facebook.FacebookClient session )
+                    {
+                        Session = session;
 
-                    (View as RelativeLayout).AddView( webLayout, new ViewGroup.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent ) );
+                        ( View as RelativeLayout ).AddView( WebLayout );
 
-                    webLayout.Alpha = 0;
-                    SimpleAnimator_Float anim = new SimpleAnimator_Float( 0, 1.0f, .25f, 
-                        delegate(float percent, object value) 
-                        {
-                            webLayout.Alpha = (float)value;
-                        },
-                        delegate 
-                        {
-                            webLayout.LoadUrl( fromUri, 
-                                delegate( string url )
+                        WebLayout.LoadUrl( fromUri, 
+                            delegate( string url )
+                            {
+                                // either way, wait for a facebook response
+                                if ( RockMobileUser.Instance.HasFacebookResponse( url, Session ) )
                                 {
+                                    BindingFacebook = false;
+
                                     SetUIState( LoginState.Trying );
-
-                                    // wait for a facebook response
-                                    if ( RockMobileUser.Instance.HasFacebookResponse( url, Session ) )
-                                    {
-                                        ( View as RelativeLayout ).RemoveView( webLayout );
-
-                                        RockMobileUser.Instance.FacebookCredentialResult( url, Session, BindComplete );
-                                    }
-                                });
-                        } );
-
-                    anim.Start( );
-
-                    webLayout.SetBackgroundColor( Android.Graphics.Color.Black );
-                    //
-                });
+                                    ( View as RelativeLayout ).RemoveView( WebLayout );
+                                    RockMobileUser.Instance.FacebookCredentialResult( url, Session, BindComplete );
+                                }
+                            } );
+                        //
+                    } );
+            }
         }
 
         public void BindComplete( bool success )
@@ -254,7 +254,17 @@ namespace Droid
         {
             base.OnStop();
 
+            SpringboardParent.EnableBack = true;
             SpringboardParent.ModalFragmentClosed( this );
+
+            // remove the webview if it was left open
+            if ( WebLayout.Parent != null )
+            {
+                ( View as RelativeLayout ).RemoveView( WebLayout );
+            }
+
+            // we can safely flag facebook binding as false, because the callback will be ignored.
+            BindingFacebook = false;
         }
 
         public void ProfileComplete(System.Net.HttpStatusCode code, string desc, Rock.Client.Person model)
@@ -321,6 +331,10 @@ namespace Droid
                         // when the timer fires, notify the springboard we're done.
                         Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
                             {
+                                // now ok to go back again. (if this failed at any point, moving to the LogOut state
+                                // will also re-enable the back button.
+                                SpringboardParent.EnableBack = true;
+
                                 SpringboardParent.ModalFragmentDone( this, null );
                             } );
                     };
@@ -371,6 +385,9 @@ namespace Droid
             {
                 case LoginState.Out:
                 {
+                    // allow back when logged out
+                    SpringboardParent.EnableBack = true;
+
                     UsernameField.Text = "";
                     PasswordField.Text = "";
 
@@ -387,6 +404,9 @@ namespace Droid
 
                 case LoginState.Trying:
                 {
+                    // while trying a login, don't allow back
+                    SpringboardParent.EnableBack = false;
+
                     FadeLoginResult( false );
 
                     LoginActivityIndicator.Visibility = ViewStates.Visible;

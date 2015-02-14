@@ -19,6 +19,7 @@ using CCVApp.Shared.Config;
 using CCVApp.Shared.Strings;
 using CCVApp.Shared;
 using CCVApp.Shared.Analytics;
+using Rock.Mobile.PlatformSpecific.Android.Graphics;
 
 namespace Droid
 {
@@ -246,6 +247,17 @@ namespace Droid
                 bool IsActive { get; set; }
                 bool IsRequesting { get; set; }
 
+
+                public View StatusLayer { get; set; }
+                public TextView StatusText { get; set; }
+
+                public View ResultLayer { get; set; }
+                public TextView ResultSymbol { get; set; }
+                public TextView ResultText { get; set; }
+
+                public Button RetryButton { get; set; }
+
+
                 public override void OnCreate( Bundle savedInstanceState )
                 {
                     base.OnCreate( savedInstanceState );
@@ -265,7 +277,7 @@ namespace Droid
                     view.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
 
                     ActivityIndicator = (ProgressBar)view.FindViewById<ProgressBar>( Resource.Id.prayer_primary_activityIndicator );
-                    ActivityIndicator.Visibility = ViewStates.Gone;
+                    ActivityIndicator.Visibility = ViewStates.Invisible;
 
                     float viewRealHeight = this.Resources.DisplayMetrics.HeightPixels;
 
@@ -281,6 +293,34 @@ namespace Droid
                     PrayerRequests = new List<PrayerCard>();
 
                     Carousel = PlatformCardCarousel.Create( view, cardWidth, cardHeight, new RectangleF( 0, cardYOffset, this.Resources.DisplayMetrics.WidthPixels, viewRealHeight ), PrayerConfig.Card_AnimationDuration );
+
+
+
+                    // setup our error UI
+                    StatusLayer = view.FindViewById<View>( Resource.Id.status_background );
+                    ControlStyling.StyleBGLayer( StatusLayer );
+
+                    StatusText = StatusLayer.FindViewById<TextView>( Resource.Id.text );
+                    ControlStyling.StyleUILabel( StatusText, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+
+                    ResultLayer = view.FindViewById<View>( Resource.Id.result_background );
+                    ControlStyling.StyleBGLayer( ResultLayer );
+
+                    ResultSymbol = ResultLayer.FindViewById<TextView>( Resource.Id.resultSymbol );
+                    ResultSymbol.SetTypeface( FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary ), TypefaceStyle.Normal );
+                    ResultSymbol.SetTextSize( ComplexUnitType.Dip, PrayerConfig.PostPrayer_ResultSymbolSize );
+                    ResultSymbol.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
+
+                    ResultText = ResultLayer.FindViewById<TextView>( Resource.Id.text );
+                    ControlStyling.StyleUILabel( ResultText, ControlStylingConfig.Large_Font_Regular, ControlStylingConfig.Large_FontSize );
+
+                    RetryButton = view.FindViewById<Button>( Resource.Id.retryButton );
+                    ControlStyling.StyleButton( RetryButton, GeneralStrings.Retry, ControlStylingConfig.Large_Font_Regular, ControlStylingConfig.Large_FontSize );
+
+                    RetryButton.Click += (object sender, EventArgs e ) =>
+                        {
+                            DownloadPrayers( );
+                        };
 
                     return view;
                 }
@@ -306,14 +346,26 @@ namespace Droid
                         } );
                     ParentTask.NavbarFragment.NavToolbar.Reveal( true );
 
-                    ActivityIndicator.Visibility = ViewStates.Visible;
+                    DownloadPrayers( );
+                }
 
-                    ActivityIndicator.BringToFront( );
-
+                void DownloadPrayers( )
+                {
                     // protect against double requests
                     if ( IsRequesting == false )
                     {
                         IsRequesting = true;
+
+                        ActivityIndicator.Visibility = ViewStates.Visible;
+
+                        // let them know we're attempting to download the prayers
+                        StatusLayer.Visibility = ViewStates.Visible;
+                        StatusText.Text = PrayerStrings.ViewPrayer_StatusText_Retrieving;
+
+                        // when downloading prayers, make sure the result and retry are invisible
+                        // until we have a result.
+                        ResultLayer.Visibility = ViewStates.Invisible;
+                        RetryButton.Visibility = ViewStates.Invisible;
 
                         // request the prayers each time this appears
                         CCVApp.Shared.Network.RockApi.Instance.GetPrayers( delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.PrayerRequest> prayerRequests )
@@ -326,28 +378,34 @@ namespace Droid
                                 // only process this if the view is still active. It's possible this request came in after we left the view.
                                 if( IsActive == true )
                                 {
-                                    ActivityIndicator.Visibility = ViewStates.Gone;
+                                    ActivityIndicator.Visibility = ViewStates.Invisible;
 
-                                    if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
+                                    if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true && prayerRequests.Count > 0 )
                                     {
-                                        if ( prayerRequests.Count > 0 )
+                                        // success, so hide the status layer, we don't need it
+                                        StatusLayer.Visibility = ViewStates.Invisible;
+
+                                        // create our prayer request layouts
+                                        foreach ( Rock.Client.PrayerRequest request in prayerRequests )
                                         {
-                                            // create our prayer request layouts
-                                            foreach ( Rock.Client.PrayerRequest request in prayerRequests )
-                                            {
-                                                PrayerCard prayerCard = new PrayerCard( request, PrayerCardSize );
-                                                PrayerRequests.Add( prayerCard );
+                                            PrayerCard prayerCard = new PrayerCard( request, PrayerCardSize );
+                                            PrayerRequests.Add( prayerCard );
 
-                                                Carousel.AddCard( prayerCard.View );
-                                            }
-
-                                            // prayers received and are being viewed
-                                            PrayerAnalytic.Instance.Trigger( PrayerAnalytic.Read );
+                                            Carousel.AddCard( prayerCard.View );
                                         }
+
+                                        // prayers received and are being viewed
+                                        PrayerAnalytic.Instance.Trigger( PrayerAnalytic.Read );
                                     }
                                     else
                                     {
-                                        Springboard.DisplayError( PrayerStrings.Error_Title, PrayerStrings.Error_Retrieve_Message );
+                                        StatusLayer.Visibility = ViewStates.Visible;
+
+                                        ResultLayer.Visibility = ViewStates.Visible;
+                                        RetryButton.Visibility = ViewStates.Visible;
+
+                                        StatusText.Text = PrayerStrings.ViewPrayer_StatusText_Failed;
+                                        ResultText.Text = PrayerStrings.Error_Retrieve_Message;
                                     }
                                 }
                             } );

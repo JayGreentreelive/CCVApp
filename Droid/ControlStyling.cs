@@ -32,10 +32,16 @@ namespace Droid
             backgroundLayout.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
 
             View borderView = backgroundLayout.FindViewById<View>( Resource.Id.top_border );
-            borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+            if ( borderView != null )
+            {
+                borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+            }
 
             borderView = backgroundLayout.FindViewById<View>( Resource.Id.bottom_border );
-            borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+            if ( borderView != null )
+            {
+                borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+            }
         }
 
         public static void StyleTextField( EditText textField, string placeholderText, string font, uint size )

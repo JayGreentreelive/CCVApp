@@ -163,11 +163,11 @@ namespace iOS
             SubNavToolbar.ViewDidLayoutSubviews( );
         }
 
-        public void UpdateBackButton( )
+        public void UpdateBackButton( UIInterfaceOrientation toInterfaceOrientation )
         {
             // the back button is only allowed if there's a stack of VCs and 
             // we are in portrait or unknown mode.
-            if ( SubNavigationController.ViewControllers.Length > 1 && UIApplication.SharedApplication.StatusBarOrientation == UIInterfaceOrientation.Portrait/*(UIDevice.CurrentDevice.Orientation == UIDeviceOrientation.Portrait || UIDevice.CurrentDevice.Orientation == UIDeviceOrientation.Unknown)*/ )
+            if ( SubNavigationController.ViewControllers.Length > 1 && toInterfaceOrientation == UIInterfaceOrientation.Portrait )
             {
                 SubNavToolbar.SetBackButtonEnabled( true );
             }
@@ -186,7 +186,7 @@ namespace iOS
                 CurrentTask.WillShowViewController( viewController );
             }
 
-            UpdateBackButton( );
+            UpdateBackButton( UIApplication.SharedApplication.StatusBarOrientation );
         }
 
         public void NavDidShowViewController( UIViewController viewController )

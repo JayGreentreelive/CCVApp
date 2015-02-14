@@ -218,10 +218,10 @@ namespace iOS
             buttonContainer.AddSubview( EditButton );
             buttonContainer.AddSubview( CancelButton );
 
-            CancelButton.BackgroundColor = UIColor.Red;
+            CancelButton.BackgroundColor = UIColor.Clear;
             CancelButton.Frame = new CGRect( (CancelButton.Frame.Width / 2), 0, CancelButton.Frame.Width, CancelButton.Frame.Height );
 
-            EditButton.BackgroundColor = UIColor.Red;
+            EditButton.BackgroundColor = UIColor.Clear;
             EditButton.Frame = new CGRect( buttonContainer.Frame.Width - (EditButton.Frame.Width * 2.5f), 0, EditButton.Frame.Width, EditButton.Frame.Height );
 
             toolbar.SetItems( new UIBarButtonItem[] { new UIBarButtonItem( buttonContainer ) }, false );

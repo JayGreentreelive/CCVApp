@@ -31,10 +31,12 @@ namespace Droid
             public class GroupArrayAdapter : BaseAdapter
             {
                 GroupFinderFragment ParentFragment { get; set; }
+                public int SelectedIndex { get; set; }
 
                 public GroupArrayAdapter( GroupFinderFragment parentFragment )
                 {
                     ParentFragment = parentFragment;
+                    SelectedIndex = -1;
                 }
 
                 public override int Count 
@@ -62,20 +64,54 @@ namespace Droid
                         messageItem = new GroupListItem( ParentFragment.Activity.BaseContext );
                     }
 
+                    // the list is sorted, so we can safely assume the first entry is the closest group.
+                    // Color it uniquely
+                    if ( position == 0 )
+                    {
+                        messageItem.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ConnectConfig.GroupFinder_ClosestGroupColor ) );
+                    }
+                    else if ( SelectedIndex == position )
+                    {
+                        messageItem.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
+                    }
+                    else
+                    {
+                        messageItem.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+                    }
+
                     messageItem.ParentAdapter = this;
                     messageItem.Position = position;
 
                     messageItem.Title.Text = ParentFragment.GroupEntries[ position ].Title;
-                    messageItem.Address.Text = ParentFragment.GroupEntries[ position ].Address;
-                    messageItem.Neighborhood.Text = ParentFragment.GroupEntries[ position ].NeighborhoodArea;
-                    messageItem.Distance.Text = ParentFragment.GroupEntries[ position ].Distance;
+                    //messageItem.Address.Text = ParentFragment.GroupEntries[ position ].Address;
+                    messageItem.MeetingTime.Text = string.Format( ConnectStrings.GroupFinder_MeetingTime, ParentFragment.GroupEntries[ position ].Day, ParentFragment.GroupEntries[ position ].Time );
+
+                    // if this is the nearest group, add a label saying so
+                    messageItem.Distance.Text = string.Format( "{0:##.0} {1}", ParentFragment.GroupEntries[ position ].Distance, ConnectStrings.GroupFinder_MilesSuffix );
+                    if ( position == 0 )
+                    {
+                        messageItem.Distance.Text += " " + ConnectStrings.GroupFinder_ClosestTag;
+                    }
+
+                    messageItem.Neighborhood.Text = string.Format( ConnectStrings.GroupFinder_Neighborhood, ParentFragment.GroupEntries[ position ].NeighborhoodArea );
+
 
                     return messageItem;
                 }
 
                 public void OnClick( int position, int buttonIndex )
                 {
-                    ParentFragment.OnClick( position, buttonIndex );
+                    ParentFragment.OnClick( position );
+                }
+
+                public void SetSelectedRow( int position )
+                {
+                    // set the selection index
+                    SelectedIndex = position;
+
+                    // and, inefficiently, force the whole dumb list to redraw.
+                    // It's either this or manage all the list view items myself. Just..no.
+                    NotifyDataSetChanged( );
                 }
             }
 
@@ -83,9 +119,10 @@ namespace Droid
             {
                 public LinearLayout TitleLayout { get; set; }
                 public TextView Title { get; set; }
-                public TextView Address { get; set; }
-                public TextView Neighborhood { get; set; }
+                //public TextView Address { get; set; }
+                public TextView MeetingTime { get; set; }
                 public TextView Distance { get; set; }
+                public TextView Neighborhood { get; set; }
 
                 public GroupArrayAdapter ParentAdapter { get; set; }
                 public int Position { get; set; }
@@ -121,12 +158,26 @@ namespace Droid
                     Title.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
                     TitleLayout.AddView( Title );
 
-                    Address = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    /*Address = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     Address.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                     Address.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
                     Address.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
                     Address.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
-                    TitleLayout.AddView( Address );
+                    TitleLayout.AddView( Address );*/
+
+                    MeetingTime = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    MeetingTime.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                    MeetingTime.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
+                    MeetingTime.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
+                    MeetingTime.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
+                    TitleLayout.AddView( MeetingTime );
+
+                    Distance  = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    Distance.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                    Distance.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
+                    Distance.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
+                    Distance.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
+                    TitleLayout.AddView( Distance );
 
                     Neighborhood = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     Neighborhood.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
@@ -134,13 +185,6 @@ namespace Droid
                     Neighborhood.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
                     Neighborhood.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                     TitleLayout.AddView( Neighborhood );
-
-                    Distance  = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
-                    Distance.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-                    Distance.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
-                    Distance.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
-                    Distance.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
-                    TitleLayout.AddView( Distance );
 
                     // add our own custom seperator at the bottom
                     View seperator = new View( Rock.Mobile.PlatformSpecific.Android.Core.Context );
@@ -166,6 +210,7 @@ namespace Droid
                 public TextView SearchResult { get; set; }
                 View Seperator { get; set; }
                 public List<GroupFinder.GroupEntry> GroupEntries { get; set; }
+                public List<Android.Gms.Maps.Model.Marker> MarkerList { get; set; }
 
                 View StreetSeperator { get; set; }
                 View CitySeperator { get; set; }
@@ -177,6 +222,7 @@ namespace Droid
                     base.OnCreate( savedInstanceState );
 
                     GroupEntries = new List<GroupFinder.GroupEntry>();
+                    MarkerList = new List<Android.Gms.Maps.Model.Marker>();
 
                     AddressLayout = new LinearLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     AddressLayout.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
@@ -269,6 +315,7 @@ namespace Droid
                     Zip.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Large_FontSize );
                     Zip.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
                     Zip.SetSingleLine( );
+                    Zip.SetMaxLines( 1 );
                     Zip.Hint = ConnectStrings.GroupFinder_ZipPlaceholder;
                     Zip.SetOnEditorActionListener( this );
                     Zip.SetMinWidth( (int) (fixedWidth * 1.05f) );
@@ -302,7 +349,7 @@ namespace Droid
                     ListView.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent );
                     ListView.ItemClick += (object sender, AdapterView.ItemClickEventArgs e ) =>
                         {
-                            ParentTask.OnClick( this, e.Position );
+                            OnClick( e.Position );
                         };
                     ListView.SetOnTouchListener( this );
                     ListView.Adapter = new GroupArrayAdapter( this );
@@ -315,7 +362,7 @@ namespace Droid
                     {
                         GetGroups( );
                     }
-                    return false;
+                    return true;
                 }
 
                 public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -381,7 +428,50 @@ namespace Droid
 
                 public bool OnMarkerClick( Android.Gms.Maps.Model.Marker marker )
                 {
+                    // select the appropriate row
+                    int position = MapMarkerToRow( marker );
+
+                    ListView.SmoothScrollToPosition( position );
+                    ( ListView.Adapter as GroupArrayAdapter ).SetSelectedRow( position );
+
                     return false;
+                }
+
+                int MapMarkerToRow( Android.Gms.Maps.Model.Marker marker )
+                {
+                    // given a map marker, get the index of it in the row list
+                    for ( int i = 0; i < GroupEntries.Count; i++ )
+                    {
+                        double currLatitude = GroupEntries[ i ].Latitude;
+                        double currLongitude = GroupEntries[ i ].Longitude;
+
+                        if ( marker.Position.Latitude == currLatitude &&
+                             marker.Position.Longitude == currLongitude )
+                        {
+                            return i;
+                        }
+                    }
+
+                    return -1;
+                }
+
+                Android.Gms.Maps.Model.Marker RowToMapMarker( int row )
+                {
+                    // setup the row marker coordinates
+                    double rowLatitude = GroupEntries[ row ].Latitude;
+                    double rowLongitude = GroupEntries[ row ].Longitude;
+
+                    // go thru each marker and find the match, and then return it
+                    foreach ( Android.Gms.Maps.Model.Marker marker in MarkerList )
+                    {
+                        if ( marker.Position.Latitude == rowLatitude &&
+                             marker.Position.Longitude == rowLongitude )
+                        {
+                            return marker;
+                        }
+                    }
+
+                    return null;
                 }
 
                 public override void OnSaveInstanceState(Bundle outState)
@@ -413,8 +503,29 @@ namespace Droid
                     MapView.OnDestroy( );
                 }
 
-                public void OnClick( int position, int buttonIndex )
+                public void OnClick( int position )
                 {
+                    // select the row
+                    ( ListView.Adapter as GroupArrayAdapter ).SetSelectedRow( position );
+
+                    // scroll it into view
+                    ListView.SmoothScrollToPosition( position );
+
+                    // hide all other marker windows (if showing)
+                    // go thru each marker and find the match, and then return it
+                    foreach ( Android.Gms.Maps.Model.Marker currMarker in MarkerList )
+                    {
+                        currMarker.HideInfoWindow( );
+                    }
+
+                    // center that map marker
+                    Android.Gms.Maps.Model.Marker marker = RowToMapMarker( position );
+                    marker.ShowInfoWindow( );
+
+                    Android.Gms.Maps.Model.LatLng centerMarker = new Android.Gms.Maps.Model.LatLng( marker.Position.Latitude, marker.Position.Longitude );
+
+                    CameraUpdate camPos = CameraUpdateFactory.NewLatLngZoom( centerMarker, Map.CameraPosition.Zoom );
+                    Map.AnimateCamera( camPos, 250, null );
                 }
 
                 public override void OnPause()
@@ -422,6 +533,60 @@ namespace Droid
                     base.OnPause();
 
                     MapView.OnPause( );
+                }
+
+                void UpdateMap( )
+                {
+                    Map.Clear( );
+                    MarkerList.Clear( );
+
+                    Android.Gms.Maps.Model.LatLngBounds.Builder builder = new Android.Gms.Maps.Model.LatLngBounds.Builder();
+
+                    for ( int i = 0; i < GroupEntries.Count; i++ )
+                    {
+                        // add the positions to the map
+                        Android.Gms.Maps.Model.MarkerOptions markerOptions = new Android.Gms.Maps.Model.MarkerOptions();
+                        Android.Gms.Maps.Model.LatLng pos = new Android.Gms.Maps.Model.LatLng( GroupEntries[ i ].Latitude, GroupEntries[ i ].Longitude );
+                        markerOptions.SetPosition( pos );
+                        markerOptions.SetTitle( GroupEntries[ i ].Title );
+                        markerOptions.SetSnippet( string.Format( "{0:##.0} {1}", GroupEntries[ i ].Distance, ConnectStrings.GroupFinder_MilesSuffix ) );
+
+                        builder.Include( pos );
+
+                        Android.Gms.Maps.Model.Marker marker = Map.AddMarker( markerOptions );
+                        MarkerList.Add( marker );
+                    }
+
+                    string address = Street.Text + " " + City.Text + ", " + State.Text + ", " + Zip.Text;
+
+                    if ( GroupEntries.Count > 0 )
+                    {
+                        Android.Gms.Maps.Model.LatLngBounds bounds = builder.Build( );
+
+                        CameraUpdate camPos = CameraUpdateFactory.NewLatLngBounds( bounds, 200 );
+                        Map.AnimateCamera( camPos );
+
+                        // show the info window for the first (closest) group
+                        MarkerList[ 0 ].ShowInfoWindow( );
+
+                        SearchResult.Text = ConnectStrings.GroupFinder_GroupsFound;
+
+                        // record an analytic that they searched
+                        GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.Location, address );
+                        GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.Neighborhood, GroupEntries[ 0 ].NeighborhoodArea );
+                    }
+                    else
+                    {
+                        SearchResult.Text = ConnectStrings.GroupFinder_NoGroupsFound;
+
+                        // no groups found, so move the camera to the default position
+                        Android.Gms.Maps.Model.LatLng defaultPos = new Android.Gms.Maps.Model.LatLng( ConnectConfig.GroupFinder_DefaultLatitude, ConnectConfig.GroupFinder_DefaultLongitude );
+                        CameraUpdate camPos = CameraUpdateFactory.NewLatLngZoom( defaultPos,  ConnectConfig.GroupFinder_DefaultScale_Android );
+                        Map.AnimateCamera( camPos );
+
+                        // record that this address failed
+                        GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.OutOfBounds, address );
+                    }
                 }
 
                 void GetGroups( )
@@ -438,52 +603,18 @@ namespace Droid
 
                         ProgressBar.Visibility = ViewStates.Visible;
 
-                        CCVApp.Shared.GroupFinder.GetGroups( Street.Text, City.Text, State.Text, Zip.Text, delegate( List<GroupFinder.GroupEntry> groupEntry )
+                        CCVApp.Shared.GroupFinder.GetGroups( Street.Text, City.Text, State.Text, Zip.Text, delegate( List<GroupFinder.GroupEntry> groupEntries )
                             {
-                                Map.Clear( );
+                                groupEntries.Sort( delegate(GroupFinder.GroupEntry x, GroupFinder.GroupEntry y) 
+                                    {
+                                        return x.Distance < y.Distance ? -1 : 1;
+                                    });
 
-                                Android.Gms.Maps.Model.LatLngBounds.Builder builder = new Android.Gms.Maps.Model.LatLngBounds.Builder();
+                                GroupEntries = groupEntries;
 
-                                for ( int i = 0; i < groupEntry.Count; i++ )
-                                {
-                                    // add the positions to the map
-                                    Android.Gms.Maps.Model.MarkerOptions markerOptions = new Android.Gms.Maps.Model.MarkerOptions();
-                                    Android.Gms.Maps.Model.LatLng pos = new Android.Gms.Maps.Model.LatLng( double.Parse( groupEntry[ i ].Latitude ), double.Parse( groupEntry[ i ].Longitude ) );
-                                    markerOptions.SetPosition( pos );
-                                    markerOptions.SetTitle( groupEntry[ i ].Title );
-                                    markerOptions.SetSnippet( groupEntry[ i ].Distance );
+                                UpdateMap( );
 
-                                    builder.Include( pos );
-
-                                    Map.AddMarker( markerOptions );
-                                }
-
-                                string address = Street.Text + " " + City.Text + ", " + State.Text + ", " + Zip.Text;
-
-                                if ( groupEntry.Count > 0 )
-                                {
-                                    Android.Gms.Maps.Model.LatLngBounds bounds = builder.Build( );
-
-                                    CameraUpdate camPos = CameraUpdateFactory.NewLatLngBounds( bounds, 200 );
-                                    Map.AnimateCamera( camPos );
-
-                                    SearchResult.Text = ConnectStrings.GroupFinder_GroupsFound;
-
-                                    // record an analytic that they searched
-                                    GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.Location, address );
-
-                                    GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.Neighborhood, groupEntry[ 0 ].NeighborhoodArea );
-                                }
-                                else
-                                {
-                                    SearchResult.Text = ConnectStrings.GroupFinder_NoGroupsFound;
-
-                                    // record that this address failed
-                                    GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.OutOfBounds, address );
-                                }
-
-                                GroupEntries = groupEntry;
-                                ( ListView.Adapter as BaseAdapter ).NotifyDataSetChanged( );
+                                ( ListView.Adapter as GroupArrayAdapter ).SetSelectedRow( -1 );
 
                                 Street.Enabled = true;
                                 City.Enabled = true;

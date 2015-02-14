@@ -142,6 +142,12 @@ namespace Droid
         bool LaunchDataFinished { get; set; }
 
         /// <summary>
+        /// Allows fragments to control whether the device back button will work or not.
+        /// </summary>
+        /// <value><c>true</c> if enable back; otherwise, <c>false</c>.</value>
+        public bool EnableBack { get; set; }
+
+        /// <summary>
         /// Stores the time of the last rock sync.
         /// If the user has left our app running > 24 hours we'll redownload
         /// </summary>
@@ -151,6 +157,8 @@ namespace Droid
         public override void OnCreate( Bundle savedInstanceState )
         {
             base.OnCreate( savedInstanceState );
+
+            EnableBack = true;
 
             RetainInstance = true;
 
@@ -438,8 +446,8 @@ namespace Droid
 
         public void StartModalFragment( Fragment fragment )
         {
-            // don't allow multiple modal fragments
-            if ( DisplayingModalFragment == false )
+            // don't allow multiple modal fragments, or modal fragments when the springboard is closed.
+            if ( DisplayingModalFragment == false && NavbarFragment.ShouldSpringboardAllowInput( ) )
             {
                 // replace the entire screen with a modal fragment
                 var ft = FragmentManager.BeginTransaction( );
@@ -460,6 +468,41 @@ namespace Droid
         public void ModalFragmentClosed( Fragment fragment )
         {
             DisplayingModalFragment = false;
+        }
+
+        public bool CanPressBack( )
+        {
+            // if they press back while the springboard is open, close it.
+            if ( NavbarFragment.SpringboardRevealed == true && DisplayingModalFragment == false )
+            {
+                // otherwise, close the springboard
+                NavbarFragment.RevealSpringboard( false );
+                return false;
+            }
+            else
+            {
+                // if there's no further back entry
+                if ( FragmentManager.BackStackEntryCount == 0 )
+                {
+                    // take them to the first element. If they're there,
+                    // allow the app to exit.
+                    if ( Elements[ 0 ].Task != NavbarFragment.ActiveTask )
+                    {
+                        ActivateElement( Elements[ 0 ] );
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    // otherwise, let it be up to the discretion of
+                    // the current fragment, which can toggle this.
+                    return EnableBack;
+                }
+            }
         }
 
         public void ModalFragmentDone( Fragment fragment, object context )
@@ -514,7 +557,7 @@ namespace Droid
         void ManageProfilePic( )
         {
             // only allow picture taking if they're logged in
-            if( RockMobileUser.Instance.LoggedIn )
+            if( RockMobileUser.Instance.LoggedIn && NavbarFragment.ShouldSpringboardAllowInput( ) )
             {
                 // setup the chooser dialog so they can pick the photo source
                 AlertDialog.Builder builder = new AlertDialog.Builder( Activity );
@@ -754,36 +797,38 @@ namespace Droid
 
         public bool OnTouch( View v, MotionEvent e )
         {
-            switch( e.Action )
+            switch ( e.Action )
             {
                 case MotionEventActions.Up:
                 {
                     // only allow changing tasks via button press if the springboard is open 
                     // and we're not showing a modal fragment (like the Login screen)
-                    if( NavbarFragment.ShouldSpringboardAllowInput( ) == true && DisplayingModalFragment == false )
+                    if ( NavbarFragment.ShouldSpringboardAllowInput( ) == true && DisplayingModalFragment == false )
                     {
                         // no matter what, close the springboard
                         NavbarFragment.RevealSpringboard( false );
 
                         // did we tap a button?
-                        SpringboardElement element = Elements.Where( el => el.Button == v ).SingleOrDefault();
-                        if( element != null )
+                        SpringboardElement element = Elements.Where( el => el.Button == v ).SingleOrDefault( );
+                        if ( element != null )
                         {
                             // did we tap within the revealed springboard area?
                             float visibleButtonWidth = NavbarFragment.View.Width * PrimaryNavBarConfig.RevealPercentage;
-                            if( e.GetX() < visibleButtonWidth )
+                            if ( e.GetX( ) < visibleButtonWidth )
                             {
                                 // we did, so activate the element associated with that button
                                 ActiveElementIndex = Elements.IndexOf( element ); 
                                 ActivateElement( element );
-                                return true;
                             }
                         }
                     }
+
                     break;
                 }
             }
-            return false;
+
+            // by default, consume the event.
+            return true;
         }
 
         public void SetActiveTaskFrame( FrameLayout layout )

@@ -128,6 +128,12 @@ namespace CCVApp.Shared
 
             public const string GroupFinder_InvalidAddressHeader = "Invalid Address";
             public const string GroupFinder_InvalidAddressMsg = "Use the format 'street, city, state, zip' and try again.";
+
+            public const string GroupFinder_MeetingTime = "Meets on {0} at {1}";
+            public const string GroupFinder_MilesSuffix = "Miles";
+            public const string GroupFinder_ClosestTag = "(Closest group to you)";
+
+            public const string GroupFinder_Neighborhood = "Part of the {0} Neighborhood";
         }
 
         public class MessagesStrings

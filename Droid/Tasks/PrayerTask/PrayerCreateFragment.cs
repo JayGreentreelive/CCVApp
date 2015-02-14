@@ -18,6 +18,7 @@ using System.Drawing;
 using CCVApp.Shared.Strings;
 using CCVApp.Shared.Config;
 using CCVApp.Shared.Analytics;
+using Rock.Mobile.PlatformSpecific.Android.Animation;
 
 namespace Droid
 {
@@ -49,6 +50,19 @@ namespace Droid
 
             public class PrayerCreateFragment : TaskFragment
             {
+                EditText FirstNameText { get; set; }
+                RelativeLayout FirstNameBGLayer { get; set; }
+                uint FirstNameBGColor { get; set; }
+
+                EditText LastNameText { get; set; }
+
+                EditText RequestText { get; set; }
+                RelativeLayout RequestBGLayer { get; set; }
+                uint RequestBGColor { get; set; }
+
+                Switch AnonymousSwitch { get; set; }
+                Switch PublicSwitch { get; set; }
+
                 public override void OnCreate( Bundle savedInstanceState )
                 {
                     base.OnCreate( savedInstanceState );
@@ -67,21 +81,21 @@ namespace Droid
 
                     view.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
 
-                    // setup the name background
-                    RelativeLayout backgroundLayout = view.FindViewById<RelativeLayout>( Resource.Id.name_background );
-                    ControlStyling.StyleBGLayer( backgroundLayout );
-
-                    View borderView = backgroundLayout.FindViewById<View>( Resource.Id.middle_border );
-                    borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+                    // setup the first name background
+                    FirstNameBGLayer = view.FindViewById<RelativeLayout>( Resource.Id.first_name_background );
+                    ControlStyling.StyleBGLayer( FirstNameBGLayer );
                     //
 
+                    RelativeLayout lastNameBGLayer = view.FindViewById<RelativeLayout>( Resource.Id.last_name_background );
+                    ControlStyling.StyleBGLayer( lastNameBGLayer );
+
                     // setup the prayer request background
-                    backgroundLayout = view.FindViewById<RelativeLayout>( Resource.Id.prayerRequest_background );
-                    ControlStyling.StyleBGLayer( backgroundLayout );
+                    RequestBGLayer = view.FindViewById<RelativeLayout>( Resource.Id.prayerRequest_background );
+                    ControlStyling.StyleBGLayer( RequestBGLayer );
                     //
 
                     // setup the switch background
-                    backgroundLayout = view.FindViewById<RelativeLayout>( Resource.Id.switch_background );
+                    RelativeLayout backgroundLayout = view.FindViewById<RelativeLayout>( Resource.Id.switch_background );
                     ControlStyling.StyleBGLayer( backgroundLayout );
 
                     // setup the category background
@@ -89,40 +103,42 @@ namespace Droid
                     ControlStyling.StyleBGLayer( backgroundLayout );
 
                     // setup the text views
-                    EditText firstNameText = (EditText)view.FindViewById<EditText>( Resource.Id.prayer_create_firstNameText );
-                    ControlStyling.StyleTextField( firstNameText, PrayerStrings.CreatePrayer_FirstNamePlaceholderText, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+                    FirstNameText = (EditText)view.FindViewById<EditText>( Resource.Id.prayer_create_firstNameText );
+                    ControlStyling.StyleTextField( FirstNameText, PrayerStrings.CreatePrayer_FirstNamePlaceholderText, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+                    FirstNameBGColor = ControlStylingConfig.BG_Layer_Color;
 
-                    EditText lastNameText = (EditText)view.FindViewById<EditText>( Resource.Id.prayer_create_lastNameText );
-                    ControlStyling.StyleTextField( lastNameText, PrayerStrings.CreatePrayer_LastNamePlaceholderText, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+                    LastNameText = (EditText)view.FindViewById<EditText>( Resource.Id.prayer_create_lastNameText );
+                    ControlStyling.StyleTextField( LastNameText, PrayerStrings.CreatePrayer_LastNamePlaceholderText, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
 
-                    EditText requestText = (EditText)view.FindViewById<EditText>( Resource.Id.prayer_create_requestText );
-                    ControlStyling.StyleTextField( requestText, PrayerStrings.CreatePrayer_PrayerRequest, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+                    RequestText = (EditText)view.FindViewById<EditText>( Resource.Id.prayer_create_requestText );
+                    ControlStyling.StyleTextField( RequestText, PrayerStrings.CreatePrayer_PrayerRequest, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+                    RequestBGColor = ControlStylingConfig.BG_Layer_Color;
 
 
-                    Switch anonymousSwitch = (Switch)view.FindViewById<Switch>( Resource.Id.postAnonymousSwitch );
-                    anonymousSwitch.Checked = false;
-                    anonymousSwitch.CheckedChange += (object sender, CompoundButton.CheckedChangeEventArgs e ) =>
+                    AnonymousSwitch = (Switch)view.FindViewById<Switch>( Resource.Id.postAnonymousSwitch );
+                    AnonymousSwitch.Checked = false;
+                    AnonymousSwitch.CheckedChange += (object sender, CompoundButton.CheckedChangeEventArgs e ) =>
                     {
-                            if( anonymousSwitch.Checked == false )
+                            if( AnonymousSwitch.Checked == false )
                             {
-                                firstNameText.Enabled = true;
-                                lastNameText.Enabled = true;
+                                FirstNameText.Enabled = true;
+                                LastNameText.Enabled = true;
 
-                                firstNameText.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
-                                lastNameText.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
+                                FirstNameText.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
+                                LastNameText.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
                             }
                             else
                             {
-                                firstNameText.Enabled = false;
-                                lastNameText.Enabled = false;
+                                FirstNameText.Enabled = false;
+                                LastNameText.Enabled = false;
 
-                                firstNameText.SetTextColor( Android.Graphics.Color.DimGray );
-                                lastNameText.SetTextColor( Android.Graphics.Color.DimGray );
+                                FirstNameText.SetTextColor( Android.Graphics.Color.DimGray );
+                                LastNameText.SetTextColor( Android.Graphics.Color.DimGray );
                             }
                     };
 
-                    Switch publicSwitch = (Switch)view.FindViewById<Switch>( Resource.Id.makePublicSwitch );
-                    publicSwitch.Checked = true;
+                    PublicSwitch = (Switch)view.FindViewById<Switch>( Resource.Id.makePublicSwitch );
+                    PublicSwitch.Checked = true;
 
                     TextView postAnonymousLabel = view.FindViewById<TextView>( Resource.Id.postAnonymous );
                     ControlStyling.StyleUILabel( postAnonymousLabel, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
@@ -146,41 +162,87 @@ namespace Droid
                     ControlStyling.StyleButton( submitButton, PrayerStrings.CreatePrayer_SubmitButtonText, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
                     submitButton.Click += (object sender, EventArgs e ) =>
                     {
-                            if( (string.IsNullOrEmpty( firstNameText.Text ) == false || anonymousSwitch.Checked == true) &&
-                                string.IsNullOrEmpty( requestText.Text ) == false )
-                            {
-                                Rock.Client.PrayerRequest prayerRequest = new Rock.Client.PrayerRequest();
-
-                                firstNameText.Enabled = false;
-                                lastNameText.Enabled = false;
-                                requestText.Enabled = false;
-
-                                // respect their privacy settings
-                                if( anonymousSwitch.Checked == true )
-                                {
-                                    prayerRequest.FirstName = "Anonymous";
-                                    prayerRequest.LastName = "Anonymous";
-                                }
-                                else
-                                {
-                                    prayerRequest.FirstName = firstNameText.Text;
-                                    prayerRequest.LastName = lastNameText.Text;
-                                }
-
-                                prayerRequest.Text = requestText.Text;
-                                prayerRequest.EnteredDateTime = DateTime.Now;
-                                prayerRequest.ExpirationDate = DateTime.Now.AddYears( 1 );
-                                prayerRequest.CategoryId = 110; //todo: Let the end user set this.
-                                prayerRequest.IsActive = true;
-                                prayerRequest.IsPublic = publicSwitch.Checked;
-                                prayerRequest.IsApproved = false;
-
-
-                                ParentTask.OnClick( this, 0, prayerRequest );
-                            }
+                        SubmitPrayerRequest( );
                     };
 
                     return view;
+                }
+
+                void SubmitPrayerRequest( )
+                {
+                    if ( ( string.IsNullOrEmpty( FirstNameText.Text ) == false || AnonymousSwitch.Checked == true ) &&
+                        string.IsNullOrEmpty( RequestText.Text ) == false )
+                    {
+                        Rock.Client.PrayerRequest prayerRequest = new Rock.Client.PrayerRequest();
+
+                        FirstNameText.Enabled = false;
+                        LastNameText.Enabled = false;
+                        RequestText.Enabled = false;
+
+                        // respect their privacy settings
+                        if ( AnonymousSwitch.Checked == true )
+                        {
+                            prayerRequest.FirstName = "Anonymous";
+                            prayerRequest.LastName = "Anonymous";
+                        }
+                        else
+                        {
+                            prayerRequest.FirstName = FirstNameText.Text;
+                            prayerRequest.LastName = LastNameText.Text;
+                        }
+
+                        prayerRequest.Text = RequestText.Text;
+                        prayerRequest.EnteredDateTime = DateTime.Now;
+                        prayerRequest.ExpirationDate = DateTime.Now.AddYears( 1 );
+                        prayerRequest.CategoryId = 110; //todo: Let the end user set this.
+                        prayerRequest.IsActive = true;
+                        prayerRequest.IsPublic = PublicSwitch.Checked;
+                        prayerRequest.IsApproved = false;
+
+
+                        ParentTask.OnClick( this, 0, prayerRequest );
+                    }
+                    else
+                    {
+                        // they forgot to fill something in, so show them what it was.
+
+                        // Update the name background color
+                        uint currNameColor = FirstNameBGColor;
+
+                        // if they left the name field blank and didn't turn on Anonymous, flag the field.
+                        uint targetNameColor = ControlStylingConfig.BG_Layer_Color; 
+                        if( string.IsNullOrEmpty( FirstNameText.Text ) && AnonymousSwitch.Checked == false )
+                        {
+                            targetNameColor = ControlStylingConfig.BadInput_BG_Layer_Color;
+                        }
+
+                        SimpleAnimator_Color nameAnimator = new SimpleAnimator_Color( currNameColor, targetNameColor, .15f, delegate(float percent, object value )
+                            {
+                                FirstNameBGLayer.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( (uint)value ) );
+                            }
+                            ,
+                            delegate
+                            {
+                                FirstNameBGColor = targetNameColor;
+                            } );
+                        nameAnimator.Start( );
+
+
+                        // Update the prayer background color
+                        uint currPrayerColor = RequestBGColor;
+                        uint targetPrayerColor = string.IsNullOrEmpty( RequestText.Text ) ? ControlStylingConfig.BadInput_BG_Layer_Color : ControlStylingConfig.BG_Layer_Color;
+
+                        SimpleAnimator_Color prayerAnimator = new SimpleAnimator_Color( currPrayerColor, targetPrayerColor, .15f, delegate(float percent, object value )
+                            {
+                                RequestBGLayer.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( (uint)value ) );
+                            }
+                            ,
+                            delegate
+                            {
+                                RequestBGColor = targetPrayerColor;
+                            } );
+                        prayerAnimator.Start( );
+                    }
                 }
 
                 public override void OnResume()

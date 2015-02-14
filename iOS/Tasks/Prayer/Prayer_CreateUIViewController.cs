@@ -9,6 +9,7 @@ using CoreGraphics;
 using CCVApp.Shared.Config;
 using CCVApp.Shared.Network;
 using Rock.Mobile.PlatformSpecific.iOS.UI;
+using Rock.Mobile.PlatformSpecific.iOS.Animation;
 
 namespace iOS
 {
@@ -148,7 +149,6 @@ namespace iOS
             UIPickerView pickerView = new UIPickerView();
             pickerView.Model = new CategoryPickerModel() { Parent = this };
             PickerAdjustManager.SetPicker( pickerView );
-            ControlStyling.StyleBGLayer( PickerAdjustManager.Picker ); //although it's a derived class, it can still be skinned like a straight UIView
 
 
             CategoryButton.TouchUpInside += (object sender, EventArgs e ) =>
@@ -172,14 +172,14 @@ namespace iOS
         void SubmitPrayerRequest(object sender, EventArgs e)
         {
             // ensure they either put a first name or enabled anonymous, and ensure there's a prayer request
-            if( ( string.IsNullOrEmpty( FirstNameText.Text ) == false || UISwitchAnonymous.On == true) &&
-                  string.IsNullOrEmpty( PrayerRequest.Text ) == false )
+            if ( ( string.IsNullOrEmpty( FirstNameText.Text ) == false || UISwitchAnonymous.On == true ) &&
+                   string.IsNullOrEmpty( PrayerRequest.Text ) == false )
             {
                 Rock.Client.PrayerRequest prayerRequest = new Rock.Client.PrayerRequest();
 
                 EnableControls( false );
 
-                if( UISwitchAnonymous.On == true )
+                if ( UISwitchAnonymous.On == true )
                 {
                     prayerRequest.FirstName = "Anonymous";
                     prayerRequest.LastName = "Anonymous";
@@ -202,6 +202,43 @@ namespace iOS
                 Prayer_PostUIViewController postPrayerVC = Storyboard.InstantiateViewController( "Prayer_PostUIViewController" ) as Prayer_PostUIViewController;
                 postPrayerVC.PrayerRequest = prayerRequest;
                 Task.PerformSegue( this, postPrayerVC );
+            }
+            else
+            {
+                // Update the name background color
+                uint currNameColor = Rock.Mobile.PlatformUI.Util.UIColorToInt( FirstNameBackground.BackgroundColor );
+
+                // if they left the name field blank and didn't turn on Anonymous, flag the field.
+                uint targetNameColor = ControlStylingConfig.BG_Layer_Color; 
+                if( string.IsNullOrEmpty( FirstNameText.Text ) && UISwitchAnonymous.On == false )
+                {
+                    targetNameColor = ControlStylingConfig.BadInput_BG_Layer_Color;
+                }
+
+                SimpleAnimator_Color nameAnimator = new SimpleAnimator_Color( currNameColor, targetNameColor, .15f, delegate(float percent, object value )
+                    {
+                        FirstNameBackground.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( (uint)value );
+                    }
+                    ,
+                    delegate
+                    {
+                    } );
+                nameAnimator.Start( );
+
+
+                // Update the prayer background color
+                uint currPrayerColor = Rock.Mobile.PlatformUI.Util.UIColorToInt( PrayerRequestLayer.BackgroundColor );
+                uint targetPrayerColor = string.IsNullOrEmpty( PrayerRequest.Text ) ? ControlStylingConfig.BadInput_BG_Layer_Color : ControlStylingConfig.BG_Layer_Color;
+
+                SimpleAnimator_Color prayerAnimator = new SimpleAnimator_Color( currPrayerColor, targetPrayerColor, .15f, delegate(float percent, object value )
+                    {
+                        PrayerRequestLayer.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( (uint)value );
+                    }
+                    ,
+                    delegate
+                    {
+                    } );
+                prayerAnimator.Start( );
             }
         }
        

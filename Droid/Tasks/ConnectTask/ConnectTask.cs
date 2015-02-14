@@ -48,7 +48,10 @@ namespace Droid
                 {
                     base.OnUp( e );
 
-                    NavbarFragment.NavToolbar.RevealForTime( 3.00f );
+                    if ( GroupFinder.IsVisible == false )
+                    {
+                        NavbarFragment.NavToolbar.RevealForTime( 3.00f );
+                    }
                 }
 
                 public override void OnClick(Fragment source, int buttonId, object context)
