@@ -67,7 +67,16 @@ namespace CCVApp
                 /// End point for retrieving a Group Object
                 /// </summary>
                 const string GetFamiliesEndPoint = "api/Groups/GetFamilies/";
+
+                /// <summary>
+                /// End point for retrieving all groups near a given address.
+                /// </summary>
                 const string GetGroupsByLocationEndPoint = "api/Groups/ByLocation/{0}/{1}/{2}/{3}/{4}/{5}";
+
+                /// <summary>
+                /// End point for updating a user's primary group home campus
+                /// </summary>
+                const string PutHomeCampusEndPoint = "api/Groups/";
 
                 //const string PutGroupEndPoint = "api/Groups/GetFamilies/";
 
@@ -85,6 +94,11 @@ namespace CCVApp
                 /// End point for updating a Person object
                 /// </summary>
                 const string PutProfileEndPoint = "api/People/";
+
+                /// <summary>
+                /// End point for getting a list of campuses
+                /// </summary>
+                const string GetCampusesEndPoint = "api/Campuses/";
 
                 /// <summary>
                 /// The header key used for passing up the mobile app authorization token.
@@ -209,11 +223,37 @@ namespace CCVApp
 
                 public void UpdateProfile( Rock.Client.Person person, HttpRequest.RequestResult resultHandler )
                 {
-                    // request a profile by the username. If no username is specified, we'll use the logged in user's name.
+                    // update the profile by the personID
                     RestRequest request = GetRockRestRequest( Method.PUT );
                     request.AddBody( person );
 
                     Request.ExecuteAsync( BaseUrl + PutProfileEndPoint + person.Id, request, resultHandler);
+                }
+
+                public void UpdateHomeCampus( Rock.Client.Group primaryGroup, HttpRequest.RequestResult resultHandler )
+                {
+                    // To update their home campus, we'll actually update their primary groupID's campus, which will effectively update their campus,
+                    // but also the campus for anyone else in that group. (Which is fine)
+                    // update the profile by the personID
+                    Rock.Client.Group updatedGroup = new Rock.Client.Group();
+                    updatedGroup.Id = primaryGroup.Id;
+                    updatedGroup.IsSystem = false;
+                    updatedGroup.ParentGroupId = null;
+                    updatedGroup.GroupTypeId = primaryGroup.GroupTypeId;
+                    updatedGroup.CampusId = primaryGroup.CampusId;
+                    updatedGroup.ScheduleId = null;
+                    updatedGroup.Name = primaryGroup.Name;
+                    updatedGroup.Description = primaryGroup.Description;
+                    updatedGroup.IsSecurityRole = primaryGroup.IsSecurityRole;
+                    updatedGroup.IsActive = primaryGroup.IsActive;
+                    updatedGroup.Order = primaryGroup.Order;
+                    updatedGroup.AllowGuests = primaryGroup.AllowGuests;
+                    updatedGroup.GroupType = primaryGroup.GroupType;
+
+                    RestRequest request = GetRockRestRequest( Method.PUT );
+                    request.AddBody( updatedGroup );
+
+                    Request.ExecuteAsync( BaseUrl + PutHomeCampusEndPoint + updatedGroup.Id, request, resultHandler);
                 }
 
                 public void GetProfilePicture( string photoId, uint dimensionSize, HttpRequest.RequestResult<MemoryStream> resultHandler )
@@ -242,6 +282,16 @@ namespace CCVApp
 
                     ExecuteAsync( request, resultHandler);
                 }*/
+
+                public void GetCampuses( HttpRequest.RequestResult< List<Rock.Client.Campus> > resultHandler )
+                {
+                    // request a profile by the username. If no username is specified, we'll use the logged in user's name.
+                    RestRequest request = GetRockRestRequest( Method.GET );
+                    string requestUrl = BaseUrl + GetCampusesEndPoint;
+
+                    // get the raw response
+                    Request.ExecuteAsync< List<Rock.Client.Campus> >( requestUrl, request, resultHandler);
+                }
 
                 public void GetFamiliesOfPerson( int personId, HttpRequest.RequestResult< List<Rock.Client.Group> > resultHandler )
                 {

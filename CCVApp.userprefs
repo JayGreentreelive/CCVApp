@@ -1,23 +1,23 @@
 ﻿<Properties StartupItem="Droid/Droid.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.192.168.56.101:5555" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/UserManagement/LoginFragment.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.SelectDevice" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="CCVApp.Shared/RockApi/RockGeneralData.cs">
     <Files>
-      <File FileName="Droid/UserManagement/LoginFragment.cs" Line="10" Column="10" />
+      <File FileName="iOS/UserManagement/LoginViewController.cs" Line="61" Column="61" />
+      <File FileName="iOS/SpringboardViewController.cs" Line="49" Column="49" />
+      <File FileName="Droid/Springboard.cs" Line="116" Column="116" />
+      <File FileName="CCVApp.Shared/RockApi/RockGeneralData.cs" Line="35" Column="35" />
+      <File FileName="CCVApp.Shared/RockApi/RockMobileUser.cs" Line="17" Column="17" />
+      <File FileName="CCVApp.Shared/RockApi/RockApi.cs" Line="43" Column="43" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="CCVApp.Shared" expanded="True" />
-          <Node name="Droid" expanded="True">
-            <Node name="Resources" expanded="True">
-              <Node name="layout" expanded="True" />
-            </Node>
-            <Node name="Tasks" expanded="True">
-              <Node name="NotesTask" expanded="True" />
-            </Node>
-            <Node name="UserManagement" expanded="True">
-              <Node name="LoginFragment.cs" selected="True" />
-            </Node>
+          <Node name="CCVApp.Shared" expanded="True">
+            <Node name="RockApi" expanded="True" />
+          </Node>
+          <Node name="Droid" expanded="True" selected="True">
+            <Node name="Tasks" expanded="True" />
+            <Node name="UserManagement" expanded="True" />
           </Node>
           <Node name="iOS" expanded="True">
             <Node name="UserManagement" expanded="True" />
@@ -26,16 +26,7 @@
         </State>
       </Pad>
       <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State>
-          <Value>StartR</Value>
-          <Value>StartG</Value>
-          <Value>StartB</Value>
-          <Value>StartA</Value>
-          <Value>StartR + DeltaR</Value>
-          <Value>StartG + DeltaG</Value>
-          <Value>StartB + DeltaB</Value>
-          <Value>StartA + DeltaA</Value>
-        </State>
+        <State />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>

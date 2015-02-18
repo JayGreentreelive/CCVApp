@@ -174,15 +174,15 @@ namespace Droid
                     AlertDialog.Builder builder = new AlertDialog.Builder( Activity );
                     Java.Lang.ICharSequence [] strings = new Java.Lang.ICharSequence[]
                         {
-                            new Java.Lang.String( CCVApp.Shared.Network.RockGeneralData.Instance.Data.Genders[ 1 ] ),
-                            new Java.Lang.String( CCVApp.Shared.Network.RockGeneralData.Instance.Data.Genders[ 2 ] ),
+                            new Java.Lang.String( RockGeneralData.Instance.Data.Genders[ 1 ] ),
+                            new Java.Lang.String( RockGeneralData.Instance.Data.Genders[ 2 ] ),
                         };
 
                     builder.SetItems( strings, delegate(object s, DialogClickEventArgs clickArgs) 
                         {
                             Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
                                 {
-                                    GenderField.Text = CCVApp.Shared.Network.RockGeneralData.Instance.Data.Genders[ clickArgs.Which + 1 ];
+                                    GenderField.Text = RockGeneralData.Instance.Data.Genders[ clickArgs.Which + 1 ];
                                     Dirty = true;
                                 });
                         });
@@ -207,7 +207,7 @@ namespace Droid
                     Java.Lang.ICharSequence [] campusStrings = new Java.Lang.ICharSequence[ RockGeneralData.Instance.Data.Campuses.Count ];
                     for( int i = 0; i < RockGeneralData.Instance.Data.Campuses.Count; i++ )
                     {
-                        campusStrings[ i ] = new Java.Lang.String( CCVApp.Shared.Network.RockGeneralData.Instance.Data.Campuses[ i ] );
+                        campusStrings[ i ] = new Java.Lang.String( RockGeneralData.Instance.Data.Campuses[ i ].Name );
                     }
 
                     // launch the dialog, and on selection, update the viewing campus text.
@@ -215,9 +215,9 @@ namespace Droid
                         {
                             Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
                                 {
-                                    //RockMobileUser.Instance.ViewingCampus = clickArgs.Which;
                                     int campusIndex = clickArgs.Which;
-                                    CampusField.Text = string.Format( ProfileStrings.Viewing_Campus, RockGeneralData.Instance.Data.Campuses[ campusIndex ] );
+                                    CampusField.Text = RockGeneralData.Instance.Data.Campuses[ campusIndex ].Name;
+                                    Dirty = true;
                                 });
                         });
 
@@ -331,7 +331,7 @@ namespace Droid
             // gender
             if ( RockMobileUser.Instance.Person.Gender > 0 )
             {
-                GenderField.Text = CCVApp.Shared.Network.RockGeneralData.Instance.Data.Genders[ RockMobileUser.Instance.Person.Gender ];
+                GenderField.Text = RockGeneralData.Instance.Data.Genders[ RockMobileUser.Instance.Person.Gender ];
             }
             else
             {
@@ -346,6 +346,16 @@ namespace Droid
             else
             {
                 BirthdateField.Text = string.Empty;
+            }
+
+            // campus
+            if ( RockMobileUser.Instance.PrimaryFamily.CampusId.HasValue == true )
+            {
+                CampusField.Text = RockGeneralData.Instance.Data.CampusIdToName( RockMobileUser.Instance.PrimaryFamily.CampusId.Value );
+            }
+            else
+            {
+                CampusField.Text = string.Empty;
             }
 
             // clear the dirty flag AFTER setting all values so the initial setup
@@ -380,7 +390,7 @@ namespace Droid
             // Gender
             if ( string.IsNullOrEmpty( GenderField.Text ) == false )
             {
-                RockMobileUser.Instance.Person.Gender = CCVApp.Shared.Network.RockGeneralData.Instance.Data.Genders.IndexOf( GenderField.Text );
+                RockMobileUser.Instance.Person.Gender = RockGeneralData.Instance.Data.Genders.IndexOf( GenderField.Text );
             }
 
             // Birthdate
@@ -389,9 +399,17 @@ namespace Droid
                 RockMobileUser.Instance.Person.BirthDate = DateTime.Parse( BirthdateField.Text );
             }
 
+            // Campus
+            if ( string.IsNullOrEmpty( CampusField.Text ) == false )
+            {
+                RockMobileUser.Instance.PrimaryFamily.CampusId = RockGeneralData.Instance.Data.CampusNameToId( CampusField.Text );
+            }
+
             // request the person object be sync'd with the server. because we save the object locally,
             // if the sync fails, the profile will try again at the next login
             RockMobileUser.Instance.UpdateProfile( null );
+            RockMobileUser.Instance.UpdateAddress( null );
+            RockMobileUser.Instance.UpdateHomeCampus( null );
         }
 
     }

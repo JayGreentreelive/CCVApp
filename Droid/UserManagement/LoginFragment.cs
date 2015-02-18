@@ -287,7 +287,7 @@ namespace Droid
             {
                 case System.Net.HttpStatusCode.OK:
                 {
-                    RockMobileUser.Instance.GetAddress( AddressComplete );
+                    RockMobileUser.Instance.GetFamilyAndAddress( AddressComplete );
 
                     break;
                 }

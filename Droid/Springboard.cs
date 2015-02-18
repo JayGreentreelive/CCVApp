@@ -389,7 +389,7 @@ namespace Droid
             settingsIcon.Text = SpringboardConfig.SettingsSymbol;
 
             // set the campus text to whatever their profile has set for viewing.
-            campusText.Text = string.Format( SpringboardStrings.Viewing_Campus, RockGeneralData.Instance.Data.Campuses[ RockMobileUser.Instance.ViewingCampus ] );
+            campusText.Text = string.Format( SpringboardStrings.Viewing_Campus, RockGeneralData.Instance.Data.CampusIdToName( RockMobileUser.Instance.ViewingCampus ) );
 
             // setup the campus selection button.
             Button campusSelectionButton = campusContainer.FindViewById<Button>( Resource.Id.campus_selection_button );
@@ -400,7 +400,7 @@ namespace Droid
                     Java.Lang.ICharSequence [] campusStrings = new Java.Lang.ICharSequence[ RockGeneralData.Instance.Data.Campuses.Count ];
                     for( int i = 0; i < RockGeneralData.Instance.Data.Campuses.Count; i++ )
                     {
-                        campusStrings[ i ] = new Java.Lang.String( CCVApp.Shared.Network.RockGeneralData.Instance.Data.Campuses[ i ] );
+                        campusStrings[ i ] = new Java.Lang.String( CCVApp.Shared.Network.RockGeneralData.Instance.Data.Campuses[ i ].Name );
                     }
 
                     // launch the dialog, and on selection, update the viewing campus text.
@@ -408,8 +408,12 @@ namespace Droid
                         {
                             Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
                                 {
-                                    RockMobileUser.Instance.ViewingCampus = clickArgs.Which;
-                                    campusText.Text = string.Format( SpringboardStrings.Viewing_Campus, RockGeneralData.Instance.Data.Campuses[ RockMobileUser.Instance.ViewingCampus ] );
+                                    // get the ID for the campus they selected
+                                    string campusTitle = campusStrings[ clickArgs.Which ].ToString( );
+                                    RockMobileUser.Instance.ViewingCampus = RockGeneralData.Instance.Data.CampusNameToId( campusTitle );
+
+                                    // build a label showing what they picked
+                                    campusText.Text = string.Format( SpringboardStrings.Viewing_Campus, campusTitle );
                                 });
                         });
 

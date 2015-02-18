@@ -319,8 +319,6 @@ namespace iOS
             // setup the campus selector and settings button
             CampusSelectionText = new UILabel();
             ControlStyling.StyleUILabel( CampusSelectionText, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-            CampusSelectionText.Text = string.Format( SpringboardStrings.Viewing_Campus, RockGeneralData.Instance.Data.Campuses[ RockMobileUser.Instance.ViewingCampus ] );
-            CampusSelectionText.SizeToFit( );
             View.AddSubview( CampusSelectionText );
 
             CampusSelectionIcon = new UILabel();
@@ -341,11 +339,11 @@ namespace iOS
                     // that campus index to the user's viewing preference
                     for( int i = 0; i < RockGeneralData.Instance.Data.Campuses.Count; i++ )
                     {
-                        UIAlertAction campusAction = UIAlertAction.Create( RockGeneralData.Instance.Data.Campuses[ i ], UIAlertActionStyle.Default, delegate(UIAlertAction obj) 
+                        UIAlertAction campusAction = UIAlertAction.Create( RockGeneralData.Instance.Data.Campuses[ i ].Name, UIAlertActionStyle.Default, delegate(UIAlertAction obj) 
                             {
                                 //get the index of the campus based on the selection's title, and then set that campus title as the string
-                                RockMobileUser.Instance.ViewingCampus = RockGeneralData.Instance.Data.Campuses.IndexOf( obj.Title );
-                                CampusSelectionText.Text = string.Format( SpringboardStrings.Viewing_Campus, RockGeneralData.Instance.Data.Campuses[ RockMobileUser.Instance.ViewingCampus ] );
+                                RockMobileUser.Instance.ViewingCampus = RockGeneralData.Instance.Data.CampusNameToId( obj.Title );
+                                CampusSelectionText.Text = string.Format( SpringboardStrings.Viewing_Campus, obj.Title );
                                 UpdateCampusViews( );
                         } );
 
@@ -422,6 +420,10 @@ namespace iOS
             Console.WriteLine( "Loading objects from device." );
             RockApi.Instance.LoadObjectsFromDevice( );
             Console.WriteLine( "Loading objects done." );
+
+            // set the viewing campus now that their profile has loaded
+            CampusSelectionText.Text = string.Format( SpringboardStrings.Viewing_Campus, RockGeneralData.Instance.Data.CampusIdToName( RockMobileUser.Instance.ViewingCampus ) );
+            CampusSelectionText.SizeToFit( );
 
             // seed the last sync time with now, so that when OnActivated gets called we don't do it again.
             LastRockSync = DateTime.Now;

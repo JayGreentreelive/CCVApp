@@ -34,12 +34,12 @@ namespace CCVApp
 
                         // default values if there's no connection
                         // and this is never updated.
-                        Campuses = new List<string>( );
-                        Campuses.Add( "Peoria" );
-                        Campuses.Add( "Surprise" );
-                        Campuses.Add( "Scottsdale" );
-                        Campuses.Add( "East Valley" );
-                        Campuses.Add( "Anthem" );
+                        Campuses = new List<Rock.Client.Campus>( );
+                        Campuses.Add( new Rock.Client.Campus( ) { Name = "Peoria", Id = 1 } );
+                        Campuses.Add( new Rock.Client.Campus( ) { Name = "Surprise", Id = 5 } );
+                        Campuses.Add( new Rock.Client.Campus( ) { Name = "Scottsdale", Id = 6 } );
+                        Campuses.Add( new Rock.Client.Campus( ) { Name = "East Valley", Id = 7 } );
+                        Campuses.Add( new Rock.Client.Campus( ) { Name = "Anthem", Id = 8 } );
 
                         Genders = new List<string>( );
                         Genders.Add( "Unknown" );
@@ -58,9 +58,27 @@ namespace CCVApp
                     [JsonConstructor]
                     public GeneralData( object obj )
                     {
-                        Campuses = new List<string>( );
+                        Campuses = new List<Rock.Client.Campus>( );
                         Genders = new List<string>( );
                         PrayerCategories = new List<string>( );
+                    }
+
+                    /// <summary>
+                    /// Helper method for converting a campus' name to its ID
+                    /// </summary>
+                    /// <returns>The identifier to name.</returns>
+                    public string CampusIdToName( int campusId )
+                    {
+                        return Campuses.Find( c => c.Id == campusId ).Name;
+                    }
+
+                    /// <summary>
+                    /// Helper method for converting a campus' id to its name
+                    /// </summary>
+                    /// <returns>The name to identifier.</returns>
+                    public int CampusNameToId( string campusName )
+                    {
+                        return Campuses.Find( c => c.Name == campusName ).Id;
                     }
 
                     /// <summary>
@@ -74,7 +92,7 @@ namespace CCVApp
                     /// List of all available campuses to choose from.
                     /// </summary>
                     /// <value>The campuses.</value>
-                    public List<string> Campuses { get; set; }
+                    public List<Rock.Client.Campus> Campuses { get; set; }
 
                     /// <summary>
                     /// List of genders
@@ -98,7 +116,18 @@ namespace CCVApp
                 public void GetGeneralData( HttpRequest.RequestResult generalDataResult )
                 {
                     Console.WriteLine( "Get GeneralData" );
-                    RockApi.Instance.GetGeneralData(delegate(System.Net.HttpStatusCode statusCode, string statusDescription, GeneralData model)
+                    RockApi.Instance.GetCampuses( delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.Campus> campusList )
+                        {
+                            if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
+                            {
+                                Data.Campuses = campusList;
+
+                                // save!
+                                SaveToDevice( );
+                            }
+                        } );
+
+                    /*RockApi.Instance.GetGeneralData(delegate(System.Net.HttpStatusCode statusCode, string statusDescription, GeneralData model)
                         {
                             if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
                             {
@@ -115,7 +144,7 @@ namespace CCVApp
                             {
                                 generalDataResult( statusCode, statusDescription );
                             }
-                        });
+                        });*/
                 }
 
                 public void SaveToDevice( )

@@ -70,34 +70,39 @@ namespace CCVApp
                 public Person Person;
 
                 /// <summary>
+                /// The primary family associated with this person, which contains their home campus
+                /// </summary>
+                public Rock.Client.Group PrimaryFamily;
+
+                /// <summary>
                 /// GroupLocation representing the address of their primary residence
                 /// </summary>
-                public Rock.Client.GroupLocation Address;
+                public Rock.Client.GroupLocation PrimaryAddress;
 
                 // make the address getters methods, not properties, so json doesn't try to serialize them.
                 public string Street1( )
                 {
-                    return Address.Location != null ? Address.Location.Street1 : "";
+                    return PrimaryAddress.Location != null ? PrimaryAddress.Location.Street1 : "";
                 }
 
                 public string Street2( )
                 {
-                    return Address.Location != null ? Address.Location.Street2 : "";
+                    return PrimaryAddress.Location != null ? PrimaryAddress.Location.Street2 : "";
                 }
 
                 public string City( )
                 {
-                    return Address.Location != null ? Address.Location.City : "";
+                    return PrimaryAddress.Location != null ? PrimaryAddress.Location.City : "";
                 }
 
                 public string State( )
                 {
-                    return Address.Location != null ? Address.Location.State : "";
+                    return PrimaryAddress.Location != null ? PrimaryAddress.Location.State : "";
                 }
 
                 public string Zip( )
                 {
-                    return Address.Location != null ? Address.Location.PostalCode.Substring( 0, Address.Location.PostalCode.IndexOf( '-' ) ) : "";
+                    return PrimaryAddress.Location != null ? PrimaryAddress.Location.PostalCode.Substring( 0, PrimaryAddress.Location.PostalCode.IndexOf( '-' ) ) : "";
                 }
 
                 public bool HasFullAddress( )
@@ -150,12 +155,16 @@ namespace CCVApp
                 /// <value>The person json.</value>
                 public string LastSyncdPersonJson { get; set; }
 
+                public string LastSyncdFamilyJson { get; set; }
+
                 public string LastSyncdAddressJson { get; set; }
 
                 private RockMobileUser( )
                 {
                     Person = new Person();
-                    Address = new GroupLocation();
+                    PrimaryFamily = new Group();
+                    PrimaryAddress = new GroupLocation();
+                    ViewingCampus = RockGeneralData.Instance.Data.Campuses[ 0 ].Id;
                 }
 
                 public string PreferredName( )
@@ -402,8 +411,12 @@ namespace CCVApp
                 {
                     // clear the person and take a blank copy
                     Person = new Person();
-                    Address = new GroupLocation();
+                    PrimaryFamily = new Group();
+                    PrimaryAddress = new GroupLocation();
+
                     LastSyncdPersonJson = JsonConvert.SerializeObject( Person );
+                    LastSyncdFamilyJson = JsonConvert.SerializeObject( PrimaryFamily );
+                    LastSyncdAddressJson = JsonConvert.SerializeObject( PrimaryAddress );
 
                     LoggedIn = false;
                     AccountType = BoundAccountType.None;
@@ -469,28 +482,38 @@ namespace CCVApp
                         });
                 }
 
-                public void GetAddress( HttpRequest.RequestResult< List<Rock.Client.Group> > addressResult )
+                public void GetFamilyAndAddress( HttpRequest.RequestResult< List<Rock.Client.Group> > addressResult )
                 {
                     // for the address (which implicitly is their primary residence address), first get all group locations associated with them
-                    RockApi.Instance.GetFamiliesOfPerson( Person.Id, delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.Group> model)
+                    RockApi.Instance.GetFamiliesOfPerson( Person.Id, 
+
+                        delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.Group> model)
                         {
                             if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
                             {
-                                // find what we'll consider their primary address
+                                // find what we'll consider their primary address.
+
+                                // look thru each group (family)
                                 foreach( Rock.Client.Group personGroup in model )
                                 {
+                                    // look at each location within the family
                                     foreach( Rock.Client.GroupLocation groupLocation in personGroup.GroupLocations )
                                     {
+                                        // if we find one that has a primary residence, consider this the right address
                                         if( groupLocation.GroupLocationTypeValueId == CCVApp.Shared.Config.GeneralConfig.PrimaryResidenceLocationValueId )
                                         {
-                                            Address = groupLocation;
+                                            // additionally, consider this the person's family.
+                                            PrimaryFamily = personGroup;
+
+                                            PrimaryAddress = groupLocation;
                                             break;
                                         }
                                     }
                                 }
 
                                 // on retrieval, convert this version for dirty compares later
-                                LastSyncdAddressJson = JsonConvert.SerializeObject( Address );
+                                LastSyncdAddressJson = JsonConvert.SerializeObject( PrimaryAddress );
+                                LastSyncdFamilyJson = JsonConvert.SerializeObject( PrimaryFamily );
 
                                 // save!
                                 SaveToDevice( );
@@ -502,6 +525,30 @@ namespace CCVApp
                                 addressResult( statusCode, statusDescription, model );
                             }
                         });
+                }
+
+                public void UpdateHomeCampus( HttpRequest.RequestResult result )
+                {
+                    // unlike Profile and Address, it's possible they haven't selected a campus, in which
+                    // case we don't want to update it.
+                    RockApi.Instance.UpdateHomeCampus( PrimaryFamily, 
+
+                        delegate(System.Net.HttpStatusCode statusCode, string statusDescription )
+                        {
+                            if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
+                            {
+                                // if successful, update our json so we have a match and don't try to update again later.
+                                LastSyncdFamilyJson = JsonConvert.SerializeObject( PrimaryFamily );
+                            }
+
+                            // whether we succeeded in updating with the server or not, save to disk.
+                            SaveToDevice( );
+
+                            if ( result != null )
+                            {
+                                result( statusCode, statusDescription );
+                            }
+                        } );
                 }
 
                 public void UpdateAddress( HttpRequest.RequestResult addressResult )
@@ -626,20 +673,26 @@ namespace CCVApp
                     // created at a point when we know we were sync'd with the server
                     // no longer matches our object, we should update it.
                     string currPersonJson = JsonConvert.SerializeObject( Person );
-                    string currAddressJson = JsonConvert.SerializeObject( Address );
+                    string currFamilyJson = JsonConvert.SerializeObject( PrimaryFamily );
+                    string currAddressJson = JsonConvert.SerializeObject( PrimaryAddress );
 
                     if( string.Compare( LastSyncdPersonJson, currPersonJson ) != 0 || 
+                        string.Compare( LastSyncdFamilyJson, currFamilyJson ) != 0 ||
                         string.Compare( LastSyncdAddressJson, currAddressJson ) != 0 )
                     {
                         Console.WriteLine( "RockMobileUser: Syncing Profile" );
-                        UpdateProfile( delegate(System.Net.HttpStatusCode statusCode, string statusDescription)
+                        UpdateProfile( delegate
                             {
-                                UpdateAddress( delegate(System.Net.HttpStatusCode code, string description)
+                                UpdateAddress( delegate
                                     {
-                                        // If needed, make other calls here, chained, and finally
+                                        // update home campus
+                                        UpdateHomeCampus( delegate
+                                            {
+                                                // If needed, make other calls here, chained, and finally
 
-                                        // return finished.
-                                        resultCallback( statusCode, statusDescription );
+                                                // return finished. just tell them OK, because it really doesn't matter if it worked or not.
+                                                resultCallback( System.Net.HttpStatusCode.OK, "" );
+                                            });
                                     });
                             });
                     }

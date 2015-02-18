@@ -430,7 +430,7 @@ namespace iOS
                         case System.Net.HttpStatusCode.OK:
                         {
                             // get their address
-                            RockMobileUser.Instance.GetAddress( AddressComplete );
+                            RockMobileUser.Instance.GetFamilyAndAddress( AddressComplete );
 
                             break;
                         }

@@ -113,7 +113,7 @@ namespace iOS
                     // if they have a gender selected, default to that.
                     if( string.IsNullOrEmpty( GenderText.Text ) == false )
                     {
-                        ((UIPickerView)GenderPicker.Picker).Select( CCVApp.Shared.Network.RockGeneralData.Instance.Data.Genders.IndexOf( GenderText.Text ) - 1, 0, false );
+                        ((UIPickerView)GenderPicker.Picker).Select( RockGeneralData.Instance.Data.Genders.IndexOf( GenderText.Text ) - 1, 0, false );
                     }
 
                     GenderPicker.TogglePicker( true );
@@ -148,12 +148,11 @@ namespace iOS
                     // that campus index to the user's viewing preference
                     for( int i = 0; i < RockGeneralData.Instance.Data.Campuses.Count; i++ )
                     {
-                        UIAlertAction campusAction = UIAlertAction.Create( RockGeneralData.Instance.Data.Campuses[ i ], UIAlertActionStyle.Default, delegate(UIAlertAction obj) 
+                        UIAlertAction campusAction = UIAlertAction.Create( RockGeneralData.Instance.Data.Campuses[ i ].Name, UIAlertActionStyle.Default, delegate(UIAlertAction obj) 
                             {
-                                //get the index of the campus based on the selection's title, and then set that campus title as the string
-                                int campusIndex = RockGeneralData.Instance.Data.Campuses.IndexOf( obj.Title );
-                                //RockMobileUser.Instance.ViewingCampus = RockGeneralData.Instance.Data.Campuses.IndexOf( obj.Title );
-                                HomeCampusText.Text = string.Format( ProfileStrings.Viewing_Campus, RockGeneralData.Instance.Data.Campuses[ campusIndex ] );
+                                // update the home campus text and flag as dirty
+                                HomeCampusText.Text = obj.Title;
+                                Dirty = true;
                             } );
 
                         actionSheet.AddAction( campusAction );
@@ -322,7 +321,7 @@ namespace iOS
             // gender
             if ( RockMobileUser.Instance.Person.Gender > 0 )
             {
-                GenderText.Text = CCVApp.Shared.Network.RockGeneralData.Instance.Data.Genders[ RockMobileUser.Instance.Person.Gender ];
+                GenderText.Text = RockGeneralData.Instance.Data.Genders[ RockMobileUser.Instance.Person.Gender ];
             }
             else
             {
@@ -336,6 +335,15 @@ namespace iOS
             else
             {
                 BirthdateText.Text = string.Empty;
+            }
+
+            if ( RockMobileUser.Instance.PrimaryFamily.CampusId.HasValue )
+            {
+                HomeCampusText.Text = RockGeneralData.Instance.Data.CampusIdToName( RockMobileUser.Instance.PrimaryFamily.CampusId.Value );
+            }
+            else
+            {
+                HomeCampusText.Text = string.Empty;
             }
         }
 
@@ -383,7 +391,7 @@ namespace iOS
             // Gender
             if ( string.IsNullOrEmpty( GenderText.Text ) == false )
             {
-                RockMobileUser.Instance.Person.Gender = CCVApp.Shared.Network.RockGeneralData.Instance.Data.Genders.IndexOf( GenderText.Text );
+                RockMobileUser.Instance.Person.Gender = RockGeneralData.Instance.Data.Genders.IndexOf( GenderText.Text );
             }
 
             // Birthdate
@@ -392,9 +400,17 @@ namespace iOS
                 RockMobileUser.Instance.Person.BirthDate = DateTime.Parse( BirthdateText.Text );
             }
 
+            // Campus
+            if ( string.IsNullOrEmpty( HomeCampusText.Text ) == false )
+            {
+                RockMobileUser.Instance.PrimaryFamily.CampusId = RockGeneralData.Instance.Data.CampusNameToId( HomeCampusText.Text );
+            }
+
             // request the person object be sync'd with the server. because we save the object locally,
             // if the sync fails, the profile will try again at the next login
             RockMobileUser.Instance.UpdateProfile( null );
+            RockMobileUser.Instance.UpdateAddress( null );
+            RockMobileUser.Instance.UpdateHomeCampus( null );
         }
 
         public override void TouchesEnded(NSSet touches, UIEvent evt)
@@ -442,7 +458,7 @@ namespace iOS
         public void PickerSelected( int row, int component )
         {
             // set the button's text to be the item they selected. Note that we now change the color to Active from the original Placeholder
-            GenderText.Text = CCVApp.Shared.Network.RockGeneralData.Instance.Data.Genders[ row ];
+            GenderText.Text = RockGeneralData.Instance.Data.Genders[ row ];
             GenderText.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
         }
 
