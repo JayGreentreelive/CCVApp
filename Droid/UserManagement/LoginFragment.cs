@@ -144,6 +144,12 @@ namespace Droid
             SetUIState( LoginState.Out );
 
             SpringboardParent.ModalFragmentOpened( this );
+
+            // clear the input fields only on resuming. That way if they fail to
+            // login because of something like a wrong password, they won't
+            // have to retype everything in.
+            UsernameField.Text = "";
+            PasswordField.Text = "";
         }
 
         protected void TryRockBind()
@@ -387,9 +393,6 @@ namespace Droid
                 {
                     // allow back when logged out
                     SpringboardParent.EnableBack = true;
-
-                    UsernameField.Text = "";
-                    PasswordField.Text = "";
 
                     LoginActivityIndicator.Visibility = ViewStates.Gone;
                     UsernameField.Enabled = true;

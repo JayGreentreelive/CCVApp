@@ -136,11 +136,41 @@ namespace iOS
             ControlStyling.StyleTextField( BirthdateText, ProfileStrings.BirthdatePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( BirthdateLayer );
 
+
+            // setup the home campus chooser
+            HomeCampusButton.TouchUpInside += (object sender, EventArgs e ) =>
+                {
+                    UIAlertController actionSheet = UIAlertController.Create( ProfileStrings.SelectCampus_SourceTitle, 
+                                                                              ProfileStrings.SelectCampus_SourceDescription, 
+                                                                              UIAlertControllerStyle.ActionSheet );
+
+                    // for each campus, create an entry in the action sheet, and its callback will assign
+                    // that campus index to the user's viewing preference
+                    for( int i = 0; i < RockGeneralData.Instance.Data.Campuses.Count; i++ )
+                    {
+                        UIAlertAction campusAction = UIAlertAction.Create( RockGeneralData.Instance.Data.Campuses[ i ], UIAlertActionStyle.Default, delegate(UIAlertAction obj) 
+                            {
+                                //get the index of the campus based on the selection's title, and then set that campus title as the string
+                                int campusIndex = RockGeneralData.Instance.Data.Campuses.IndexOf( obj.Title );
+                                //RockMobileUser.Instance.ViewingCampus = RockGeneralData.Instance.Data.Campuses.IndexOf( obj.Title );
+                                HomeCampusText.Text = string.Format( ProfileStrings.Viewing_Campus, RockGeneralData.Instance.Data.Campuses[ campusIndex ] );
+                            } );
+
+                        actionSheet.AddAction( campusAction );
+                    }
+
+                    PresentViewController( actionSheet, true, null );
+                };
+
+            ControlStyling.StyleTextField( HomeCampusText, ProfileStrings.CampusPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleBGLayer( HomeCampusLayer );
+
+
             ControlStyling.StyleButton( DoneButton, ProfileStrings.DoneButtonTitle, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             ControlStyling.StyleButton( LogoutButton, ProfileStrings.LogoutButtonTitle, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
 
 
-            // setup the picker
+            // setup the pickers
             UILabel genderPickerLabel = new UILabel( );
             ControlStyling.StyleUILabel( genderPickerLabel, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             genderPickerLabel.Text = ProfileStrings.SelectGenderLabel;

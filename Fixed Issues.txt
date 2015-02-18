@@ -29,6 +29,10 @@ Both
 	Group Finder - Now displays day & time of the group instead of Address
 
 	Prayer Creation - Required fields will be colored red if you attempt to submit without filling them in.
+
+	Username and Password are no longer cleared when a login fails.
+
+	Added Home Campus selection to Profile
 	 
 iOS
 	Fixed a crash if cancel was pressed on a WebView before the URL started loading.

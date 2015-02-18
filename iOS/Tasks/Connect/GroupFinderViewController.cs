@@ -323,6 +323,22 @@ namespace iOS
             }
         }
 
+        /// <summary>
+        /// Simple class to inset the text of our text fields.
+        /// </summary>
+        public class UIInsetTextField : UITextField
+        {
+            public override CGRect TextRect(CGRect forBounds)
+            {
+                return new CGRect( forBounds.X + 5, forBounds.Y, forBounds.Width - 5, forBounds.Height );
+            }
+
+            public override CGRect EditingRect(CGRect forBounds)
+            {
+                return new CGRect( forBounds.X + 5, forBounds.Y, forBounds.Width - 5, forBounds.Height );
+            }
+        }
+
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
@@ -348,10 +364,10 @@ namespace iOS
             nfloat widthPerField = (View.Frame.Width - SearchButton.Frame.Width - 20) / 4;
 
             // Street
-            Street = new UITextField( );
+            Street = new UIInsetTextField( );
             Street.Layer.AnchorPoint = CGPoint.Empty;
             ControlStyling.StyleTextField( Street, ConnectStrings.GroupFinder_StreetPlaceholder, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-            Street.Frame = new CGRect( 5, 0, widthPerField * 1.5f, SearchButton.Frame.Height );
+            Street.Frame = new CGRect( 0, 0, widthPerField * 1.5f, SearchButton.Frame.Height );
             Street.ReturnKeyType = UIReturnKeyType.Search;
             Street.Delegate = new AddressDelegate( ) { Parent = this };
             View.AddSubview( Street );
@@ -365,10 +381,10 @@ namespace iOS
 
 
             // City
-            City = new UITextField( );
+            City = new UIInsetTextField( );
             City.Layer.AnchorPoint = CGPoint.Empty;
             ControlStyling.StyleTextField( City, ConnectStrings.GroupFinder_CityPlaceholder, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-            City.Frame = new CGRect( border.Frame.Right + 5, 0, widthPerField, SearchButton.Frame.Height );
+            City.Frame = new CGRect( border.Frame.Right, 0, widthPerField, SearchButton.Frame.Height );
             City.ReturnKeyType = UIReturnKeyType.Search;
             City.Delegate = new AddressDelegate( ) { Parent = this };
             View.AddSubview( City );
@@ -382,11 +398,11 @@ namespace iOS
 
 
             // State
-            State = new UITextField( );
+            State = new UIInsetTextField( );
             State.Layer.AnchorPoint = CGPoint.Empty;
             ControlStyling.StyleTextField( State, ConnectStrings.GroupFinder_StatePlaceholder, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             State.Text = ConnectStrings.GroupFinder_DefaultState;
-            State.Frame = new CGRect( border.Frame.Right + 5, 0, widthPerField / 2, SearchButton.Frame.Height );
+            State.Frame = new CGRect( border.Frame.Right, 0, widthPerField / 2, SearchButton.Frame.Height );
             State.ReturnKeyType = UIReturnKeyType.Search;
             State.Delegate = new AddressDelegate( ) { Parent = this };
             View.AddSubview( State );
@@ -400,10 +416,10 @@ namespace iOS
 
 
             // Zip
-            Zip = new UITextField( );
+            Zip = new UIInsetTextField( );
             Zip.Layer.AnchorPoint = CGPoint.Empty;
             ControlStyling.StyleTextField( Zip, ConnectStrings.GroupFinder_ZipPlaceholder, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-            Zip.Frame = new CGRect( border.Frame.Right + 5, 0, widthPerField, SearchButton.Frame.Height );
+            Zip.Frame = new CGRect( border.Frame.Right, 0, widthPerField, SearchButton.Frame.Height );
             Zip.ReturnKeyType = UIReturnKeyType.Search;
             Zip.Delegate = new AddressDelegate( ) { Parent = this };
             View.AddSubview( Zip );

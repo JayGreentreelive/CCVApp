@@ -94,6 +94,11 @@ namespace CCVApp.Shared
 
             public const string GenderPlaceholder = "Gender";
             public const string BirthdatePlaceholder = "Birthdate";
+            public const string CampusPlaceholder = "Campus";
+
+            public const string SelectCampus_SourceTitle = "Home Campus Selection";
+            public const string SelectCampus_SourceDescription = "Select your home campus.";
+            public const string Viewing_Campus = "{0} Campus"; 
 
             public const string DoneButtonTitle = "Done";
             public const string LogoutButtonTitle = "Logout";

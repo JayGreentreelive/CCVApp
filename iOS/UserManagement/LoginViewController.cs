@@ -160,6 +160,10 @@ namespace iOS
             base.ViewWillAppear(animated);
 
             LoginResultLayer.Layer.Opacity = 0.00f;
+
+            // clear these only on the appearance of the view. (As opposed to also 
+            // when the state becomes LogOut.) This way, if they do something like mess
+            // up their password, it won't force them to retype it all in.
             UsernameText.Text = "";
             PasswordText.Text = "";
         }
@@ -307,9 +311,6 @@ namespace iOS
             {
                 case LoginState.Out:
                 {
-                    UsernameText.Text = "";
-                    PasswordText.Text = "";
-
                     UsernameText.Enabled = true;
                     PasswordText.Enabled = true;
                     LoginButton.Enabled = true;

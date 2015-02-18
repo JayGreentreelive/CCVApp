@@ -72,6 +72,18 @@ namespace iOS
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
+		UIButton HomeCampusButton { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UIView HomeCampusLayer { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UITextField HomeCampusText { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
 		UIView LastNameLayer { get; set; }
 
 		[Outlet]
@@ -175,6 +187,18 @@ namespace iOS
 			if (HeaderView != null) {
 				HeaderView.Dispose ();
 				HeaderView = null;
+			}
+			if (HomeCampusButton != null) {
+				HomeCampusButton.Dispose ();
+				HomeCampusButton = null;
+			}
+			if (HomeCampusLayer != null) {
+				HomeCampusLayer.Dispose ();
+				HomeCampusLayer = null;
+			}
+			if (HomeCampusText != null) {
+				HomeCampusText.Dispose ();
+				HomeCampusText = null;
 			}
 			if (LastNameLayer != null) {
 				LastNameLayer.Dispose ();

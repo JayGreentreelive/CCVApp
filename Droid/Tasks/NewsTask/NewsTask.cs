@@ -35,20 +35,23 @@ namespace Droid
                     }
                     DetailsPage.ParentTask = this;
 
-                    // give the main page fragment a reference to OUR list.
+                    // setup a list we can use to cache the news, so should it update we don't use the wrong set.
                     News = new List<RockNews>();
-                    MainPage.News = News;
+                    MainPage.SourceNews = News;
                 }
 
                 public override void Activate( bool forResume )
                 {
                     base.Activate( forResume );
 
-                    // provide the news to the viewer by COPYING it.
-                    News.Clear( );
-                    foreach ( RockNews newsItem in RockLaunchData.Instance.Data.News )
+                    if ( forResume == false )
                     {
-                        News.Add( new RockNews( newsItem ) );
+                        // provide the news to the viewer by COPYING it.
+                        News.Clear( );
+                        foreach ( RockNews newsItem in RockLaunchData.Instance.Data.News )
+                        {
+                            News.Add( new RockNews( newsItem ) );
+                        }
                     }
                 }
 

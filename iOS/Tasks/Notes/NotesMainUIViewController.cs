@@ -627,12 +627,12 @@ namespace iOS
                     // something failed, so see what needs to be downloaded (could be both)
                     if ( entry.mBillboard == null )
                     {
-                        DownloadImageToCache( entry.Series.BillboardUrl, entry.Series.Name + "_bb" );
+                        FileCache.Instance.DownloadImageToCache( entry.Series.BillboardUrl, entry.Series.Name + "_bb", delegate{ SeriesImageDownloaded( ); } );
                     }
 
                     if ( entry.mThumbnail == null )
                     {
-                        DownloadImageToCache( entry.Series.ThumbnailUrl, entry.Series.Name + "_thumb" );
+                        FileCache.Instance.DownloadImageToCache( entry.Series.ThumbnailUrl, entry.Series.Name + "_thumb", delegate{ SeriesImageDownloaded( ); } );
                     }
                 }
             }
@@ -675,30 +675,6 @@ namespace iOS
             }
 
             return needImage;
-        }
-
-        void DownloadImageToCache( string downloadUrl, string cachedFilename )
-        {
-            if ( string.IsNullOrEmpty( downloadUrl ) == false )
-            {
-                // request the image for the series
-                HttpRequest webRequest = new HttpRequest();
-                RestRequest restRequest = new RestRequest( Method.GET );
-
-                webRequest.ExecuteAsync( downloadUrl, restRequest, 
-                    delegate(HttpStatusCode statusCode, string statusDescription, byte[] model )
-                    {
-                        if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
-                        {
-                            // write it to cache
-                            MemoryStream imageBuffer = new MemoryStream( model );
-                            FileCache.Instance.SaveFile( imageBuffer, cachedFilename );
-                            imageBuffer.Dispose( );
-
-                            SeriesImageDownloaded( );
-                        }
-                    } );
-            }
         }
 
         void SeriesImageDownloaded( )

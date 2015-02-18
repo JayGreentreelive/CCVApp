@@ -16,17 +16,23 @@ namespace CCVApp
                 public string Description { get; set; }
                 public string ReferenceURL { get; set; }
 
+                public string ImageURL { get; set; }
                 public string ImageName { get; set; }
+
+                public string HeaderImageURL { get; set; }
                 public string HeaderImageName { get; set; }
 
                 [JsonConstructor]
-                public RockNews( string title, string description, string referenceUrl, string imageName, string headerImageName )
+                public RockNews( string title, string description, string referenceUrl, string imageUrl, string imageName, string headerImageUrl, string headerImageName )
                 {
                     Title = title;
                     Description = description;
                     ReferenceURL = referenceUrl;
 
+                    ImageURL = imageUrl;
                     ImageName = imageName;
+
+                    HeaderImageURL = headerImageUrl;
                     HeaderImageName = headerImageName;
                 }
 
@@ -37,7 +43,10 @@ namespace CCVApp
                     Description = rhs.Description;
                     ReferenceURL = rhs.ReferenceURL;
 
+                    ImageURL = rhs.ImageURL;
                     ImageName = rhs.ImageName;
+
+                    HeaderImageURL = rhs.HeaderImageURL;
                     HeaderImageName = rhs.HeaderImageName;
                 }
             }

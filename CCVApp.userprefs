@@ -1,33 +1,28 @@
-﻿<Properties StartupItem="iOS/iOS.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|iPhone" PreferredExecutionTarget="Android.094c904b" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Tasks/PrayerTask/PrayerCreateFragment.cs">
+﻿<Properties StartupItem="Droid/Droid.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.192.168.56.101:5555" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/UserManagement/LoginFragment.cs">
     <Files>
-      <File FileName="iOS/Tasks/Prayer/Prayer_CreateUIViewController.cs" Line="41" Column="41" />
-      <File FileName="Droid/Tasks/PrayerTask/PrayerCreateFragment.cs" Line="53" Column="53" />
-      <File FileName="../Rock.Mobile/PlatformSpecific/iOS/Animation.cs" Line="42" Column="42" />
-      <File FileName="../Rock.Mobile/PlatformSpecific/Android/Animation.cs" Line="19" Column="19" />
-      <File FileName="../Rock.Mobile/PlatformUI/Util.cs" Line="15" Column="15" />
-      <File FileName="CCVApp.Shared/Config.cs" Line="49" Column="49" />
-      <File FileName="Droid/ControlStyling.cs" Line="14" Column="14" />
+      <File FileName="Droid/UserManagement/LoginFragment.cs" Line="10" Column="10" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
+          <Node name="CCVApp.Shared" expanded="True" />
           <Node name="Droid" expanded="True">
             <Node name="Resources" expanded="True">
-              <Node name="layout" expanded="True">
-                <Node name="Prayer_Create.axml" selected="True" />
-              </Node>
+              <Node name="layout" expanded="True" />
             </Node>
             <Node name="Tasks" expanded="True">
-              <Node name="PrayerTask" expanded="True" />
+              <Node name="NotesTask" expanded="True" />
+            </Node>
+            <Node name="UserManagement" expanded="True">
+              <Node name="LoginFragment.cs" selected="True" />
             </Node>
           </Node>
           <Node name="iOS" expanded="True">
-            <Node name="Tasks" expanded="True">
-              <Node name="Prayer" expanded="True" />
-            </Node>
+            <Node name="UserManagement" expanded="True" />
           </Node>
+          <Node name="Rock.Client.Models" expanded="True" />
         </State>
       </Pad>
       <Pad Id="MonoDevelop.Debugger.WatchPad">

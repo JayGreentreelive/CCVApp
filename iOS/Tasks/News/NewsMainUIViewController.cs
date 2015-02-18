@@ -18,20 +18,20 @@ namespace iOS
         {
             NewsMainUIViewController Parent { get; set; }
 
-            List<RockNews> News { get; set; }
-            List<UIImage> NewsImage { get; set; }
+            List<NewsEntry> News { get; set; }
+            UIImage ImagePlaceholder { get; set; }
 
             string cellIdentifier = "TableCell";
 
             nfloat PendingCellHeight { get; set; }
 
-            public TableSource (NewsMainUIViewController parent, List<RockNews> newsList, List<UIImage> newsImage )
+            public TableSource (NewsMainUIViewController parent, List<NewsEntry> newsList, UIImage imagePlaceholder)
             {
                 Parent = parent;
 
                 News = newsList;
 
-                NewsImage = newsImage;
+                ImagePlaceholder = imagePlaceholder;
             }
 
             public override nint RowsInSection (UITableView tableview, nint section)
@@ -71,10 +71,20 @@ namespace iOS
                 }
 
                 // set the image for the cell
-                cell.ContentView.Layer.Contents = NewsImage[ indexPath.Row ].CGImage;
+                if ( News[ indexPath.Row ].Image != null )
+                {
+                    cell.ContentView.Layer.Contents = News[ indexPath.Row ].Image.CGImage;
+                }
+                else
+                {
+                    cell.ContentView.Layer.Contents = ImagePlaceholder.CGImage;
+                }
 
                 // scale down the image to the width of the device
-                float aspectRatio = (float) (NewsImage[ indexPath.Row ].Size.Height / NewsImage[ indexPath.Row ].Size.Width);
+                float imageWidth = cell.ContentView.Layer.Contents.Width;
+                float imageHeight = cell.ContentView.Layer.Contents.Height;
+
+                float aspectRatio = (float) (imageHeight / imageWidth);
                 cell.Bounds = new CGRect( 0, 0, tableView.Bounds.Width, tableView.Bounds.Width * aspectRatio );
 
                 PendingCellHeight = cell.Bounds.Height;
@@ -82,48 +92,112 @@ namespace iOS
             }
         }
 
-        public List<RockNews> News { get; set; }
-        List<UIImage> NewsImage { get; set; }
+        public class NewsEntry
+        {
+            public RockNews News { get; set; }
+            public UIImage Image { get; set; }
+        }
+        List<NewsEntry> News { get; set; }
+
+        /// <summary>
+        /// Store the source news so that if they pick a news item to view,
+        /// when they return, it shows the same news instead of potentially newly downloaded news.
+        /// </summary>
+        /// <value>The source rock news.</value>
+        public List<RockNews> SourceRockNews { get; set; }
+
+        bool IsVisible { get; set; }
+        UIImage ImagePlaceholder { get; set; }
 
 		public NewsMainUIViewController (IntPtr handle) : base (handle)
 		{
-            News = new List<RockNews>( );
-            NewsImage = new List<UIImage>( );
+            News = new List<NewsEntry>( );
+            SourceRockNews = new List<RockNews>( );
+
+            string imagePath = NSBundle.MainBundle.BundlePath + "/" + "podcastThumbnailPlaceholder.png";
+            ImagePlaceholder = new UIImage( imagePath );
 		}
 
         public override void ViewWillAppear(bool animated)
         {
             base.ViewWillAppear(animated);
 
-            // load the news images for each item
-            NewsImage.Clear( );
+            IsVisible = true;
 
-            foreach( RockNews news in News )
-            {
-                UIImage image = null;
-
-                // we should always assume images are in cache. If they aren't, show a placeholder.
-                // It is not our job to download them.
-                MemoryStream imageStream = (MemoryStream)FileCache.Instance.LoadFile( news.ImageName );
-                if ( imageStream != null )
-                {
-                    NSData imageData = NSData.FromStream( imageStream );
-                    image = new UIImage( imageData, UIScreen.MainScreen.Scale );
-                    imageStream.Dispose( );
-                }
-                else
-                {
-                    image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + "podcastThumbnailPlaceholder.png" );
-                }
-                NewsImage.Add( image );
-            }
+            SetupNews( SourceRockNews );
 
             // populate our table
-            TableSource source = new TableSource( this, News, NewsImage );
+            TableSource source = new TableSource( this, News, ImagePlaceholder );
             NewsTableView.Source = source;
 
             NewsTableView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
             NewsTableView.SeparatorStyle = UITableViewCellSeparatorStyle.None;
+        }
+
+        public override void ViewWillDisappear(bool animated)
+        {
+            base.ViewWillDisappear(animated);
+
+            IsVisible = false;
+        }
+
+        void SetupNews( List<RockNews> rockNewsList )
+        {
+            News.Clear( );
+
+            foreach ( RockNews rockEntry in rockNewsList )
+            {
+                NewsEntry newsEntry = new NewsEntry();
+                News.Add( newsEntry );
+
+                newsEntry.News = rockEntry;
+
+                bool needImage = TryLoadCachedImage( newsEntry );
+                if ( needImage )
+                {
+                    FileCache.Instance.DownloadImageToCache( newsEntry.News.ImageURL, newsEntry.News.ImageName, delegate { SeriesImageDownloaded( ); } );
+                }
+            }
+        }
+
+        bool TryLoadCachedImage( NewsEntry entry )
+        {
+            bool needImage = false;
+
+            // check the billboard
+            if ( entry.Image == null )
+            {
+                MemoryStream imageStream = (MemoryStream)FileCache.Instance.LoadFile( entry.News.ImageName );
+                if ( imageStream != null )
+                {
+                    NSData imageData = NSData.FromStream( imageStream );
+                    entry.Image = new UIImage( imageData, UIScreen.MainScreen.Scale );
+                    imageStream.Dispose( );
+                }
+                else
+                {
+                    needImage = true;
+                }
+            }
+
+            return needImage;
+        }
+
+        void SeriesImageDownloaded( )
+        {
+            if ( IsVisible == true )
+            {
+                InvokeOnMainThread( delegate
+                    {
+                        // using only the cache, try to load any image that isn't loaded
+                        foreach ( NewsEntry entry in News )
+                        {
+                            TryLoadCachedImage( entry );
+                        }
+
+                        NewsTableView.ReloadData( );
+                    } );
+            }
         }
 
         public override void ViewDidLayoutSubviews()
@@ -139,7 +213,7 @@ namespace iOS
         public void RowClicked( int row )
         {
             NewsDetailsUIViewController viewController = Storyboard.InstantiateViewController( "NewsDetailsUIViewController" ) as NewsDetailsUIViewController;
-            viewController.NewsItem = News[ row ];
+            viewController.NewsItem = News[ row ].News;
 
             Task.PerformSegue( this, viewController );
         }

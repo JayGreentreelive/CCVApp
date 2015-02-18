@@ -42,8 +42,10 @@ namespace CCVApp
 
                             "http://www.ccvonline.com/Arena/default.aspx?page=17655",
 
+                            "",
                             "news_baptism_main",
 
+                            "",
                             "news_baptism_header" ) );
 
                         DefaultNews.Add( new RockNews( "Starting Point", "If you’re asking yourself, “Where do I begin at CCV?” — the answer is Starting Point. " +
@@ -52,8 +54,10 @@ namespace CCVApp
 
                             "http://www.ccvonline.com/Arena/default.aspx?page=17400",
 
+                            "",
                             "news_startingpoint_main", 
 
+                            "",
                             "news_startingpoint_header" ) );
 
 
@@ -61,8 +65,10 @@ namespace CCVApp
 
                             "https://www.ccvonline.com", 
 
+                            "",
                             "news_learnmore_main",
 
+                            "",
                             "news_learnmore_header" ) );
                     }
 
@@ -92,12 +98,14 @@ namespace CCVApp
                             TimeSpan timeSpan = new TimeSpan( 3650, 0, 0, 0 );
 
                             // cache the main image
-                            Stream stream = Rock.Mobile.Util.FileIO.AssetConvert.AssetToStream( mainImageName );
+                            MemoryStream stream = Rock.Mobile.Util.FileIO.AssetConvert.AssetToStream( mainImageName );
                             FileCache.Instance.SaveFile( stream, copiedNews.ImageName, timeSpan );
+                            stream.Dispose( );
 
                             // cache the header image
                             stream = Rock.Mobile.Util.FileIO.AssetConvert.AssetToStream( headerImageName );
                             FileCache.Instance.SaveFile( stream, copiedNews.HeaderImageName, timeSpan );
+                            stream.Dispose( );
                         }
                     }
 
@@ -189,7 +197,12 @@ namespace CCVApp
                                 Data.News.Clear( );
                                 foreach( Rock.Client.ContentChannelItem item in model )
                                 {
-                                    RockNews newsItem = new RockNews( item.Title, item.Content, "http://www.yahoo.com", "", "" );
+                                    //TODO: Once we have the attributes field, parse out the download URL and Details URL
+                                    string imageUrl = "http://rock.ccvonline.com/GetImage.ashx?Guid=39aca28b-77d2-4e17-b476-1257c64a1a4b";
+                                    string detailUrl = "http://www.yahoo.com";
+                                    string bannerUrl = "http://rock.ccvonline.com/GetImage.ashx?Guid=eedb5a03-5fc6-4b0d-ad35-91fb62b66fc3";
+
+                                    RockNews newsItem = new RockNews( item.Title, item.Content, detailUrl, imageUrl, item.Title + "_main.png", bannerUrl, item.Title + "_banner.png" );
                                     Data.News.Add( newsItem );
                                 }
                             }

@@ -21,6 +21,7 @@ using Android.Gms.Maps;
 using CCVApp.Shared;
 using CCVApp.Shared.Network;
 using CCVApp.Shared.Analytics;
+using Rock.Mobile.PlatformSpecific.Android.Animation;
 
 namespace Droid
 {
@@ -201,10 +202,19 @@ namespace Droid
 
                 LinearLayout AddressLayout { get; set; }
                 ProgressBar ProgressBar { get; set; }
+
                 public EditText Street { get; set; }
+                uint StreetBackgroundColor { get; set; }
+
                 public EditText City { get; set; }
+                uint CityBackgroundColor { get; set; }
+
                 public EditText State { get; set; }
+                uint StateBackgroundColor { get; set; }
+
                 public EditText Zip { get; set; }
+                uint ZipBackgroundColor { get; set; }
+
                 public Android.Gms.Maps.MapView MapView { get; set; }
                 public GoogleMap Map { get; set; }
                 public TextView SearchResult { get; set; }
@@ -245,17 +255,14 @@ namespace Droid
                     Street = new EditText( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     Street.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                     ( (LinearLayout.LayoutParams)Street.LayoutParameters ).Weight = 1;
-                    Street.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Large_Font_Bold ), TypefaceStyle.Normal );
-                    Street.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Large_FontSize );
-                    Street.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
+                    ControlStyling.StyleTextField( Street, ConnectStrings.GroupFinder_StreetPlaceholder, ControlStylingConfig.Large_Font_Bold, ControlStylingConfig.Large_FontSize );
                     Street.SetSingleLine( );
                     Street.SetHorizontallyScrolling( true );
                     Street.Ellipsize = Android.Text.TextUtils.TruncateAt.End;
-                    Street.Hint = ConnectStrings.GroupFinder_StreetPlaceholder;
                     Street.SetOnEditorActionListener( this );
                     Street.SetMinWidth( (int) (fixedWidth * 1.50f) );
                     Street.SetMaxWidth( (int) (fixedWidth * 1.50f) );
-                    Street.SetBackgroundDrawable( null );
+                    StreetBackgroundColor = ControlStylingConfig.BG_Layer_Color;
 
                     StreetSeperator = new View( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     StreetSeperator.LayoutParameters = new LinearLayout.LayoutParams( 0, ViewGroup.LayoutParams.MatchParent );
@@ -267,18 +274,15 @@ namespace Droid
                     City = new EditText( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     City.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                     ( (LinearLayout.LayoutParams)City.LayoutParameters ).Weight = 1;
-                    City.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Large_Font_Bold ), TypefaceStyle.Normal );
-                    City.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Large_FontSize );
-                    City.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
+                    ControlStyling.StyleTextField( City, ConnectStrings.GroupFinder_CityPlaceholder, ControlStylingConfig.Large_Font_Bold, ControlStylingConfig.Large_FontSize );
                     City.SetSingleLine( true );
                     City.SetHorizontallyScrolling( true );
                     City.SetMaxLines( 1 );
                     City.Ellipsize = Android.Text.TextUtils.TruncateAt.End;
-                    City.Hint = ConnectStrings.GroupFinder_CityPlaceholder;
                     City.SetOnEditorActionListener( this );
                     City.SetMinWidth( (int) (fixedWidth * 1.25f) );
                     City.SetMaxWidth( (int) (fixedWidth * 1.25f) );
-                    City.SetBackgroundDrawable( null );
+                    CityBackgroundColor = ControlStylingConfig.BG_Layer_Color;
 
                     CitySeperator = new View( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     CitySeperator.LayoutParameters = new LinearLayout.LayoutParams( 0, ViewGroup.LayoutParams.MatchParent );
@@ -290,16 +294,14 @@ namespace Droid
                     State = new EditText( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     State.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                     ( (LinearLayout.LayoutParams)State.LayoutParameters ).Weight = 1;
-                    State.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Large_Font_Bold ), TypefaceStyle.Normal );
-                    State.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Large_FontSize );
-                    State.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
+                    ControlStyling.StyleTextField( State, ConnectStrings.GroupFinder_StatePlaceholder, ControlStylingConfig.Large_Font_Bold, ControlStylingConfig.Large_FontSize );
                     State.SetSingleLine( );
                     State.Hint = ConnectStrings.GroupFinder_StatePlaceholder;
                     State.Text = ConnectStrings.GroupFinder_DefaultState;
                     State.SetOnEditorActionListener( this );
                     State.SetMinWidth( (int) (fixedWidth / 1.50f) );
                     State.SetMaxWidth( (int) (fixedWidth / 1.50f) );
-                    State.SetBackgroundDrawable( null );
+                    StateBackgroundColor = ControlStylingConfig.BG_Layer_Color;
 
                     StateSeperator = new View( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     StateSeperator.LayoutParameters = new LinearLayout.LayoutParams( 0, ViewGroup.LayoutParams.MatchParent );
@@ -311,9 +313,7 @@ namespace Droid
                     Zip = new EditText( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     Zip.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                     ( (LinearLayout.LayoutParams)Zip.LayoutParameters ).Weight = 1;
-                    Zip.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Large_Font_Bold ), TypefaceStyle.Normal );
-                    Zip.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Large_FontSize );
-                    Zip.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
+                    ControlStyling.StyleTextField( Zip, ConnectStrings.GroupFinder_ZipPlaceholder, ControlStylingConfig.Large_Font_Bold, ControlStylingConfig.Large_FontSize );
                     Zip.SetSingleLine( );
                     Zip.SetMaxLines( 1 );
                     Zip.Hint = ConnectStrings.GroupFinder_ZipPlaceholder;
@@ -321,7 +321,7 @@ namespace Droid
                     Zip.SetMinWidth( (int) (fixedWidth * 1.05f) );
                     Zip.SetMaxWidth( (int) (fixedWidth * 1.05f) );
                     Zip.InputType = Android.Text.InputTypes.ClassNumber;
-                    Zip.SetBackgroundDrawable( null );
+                    ZipBackgroundColor = ControlStylingConfig.BG_Layer_Color;
 
 
                     MapView = new Android.Gms.Maps.MapView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
@@ -589,40 +589,125 @@ namespace Droid
                     }
                 }
 
+                bool RetrievingGroups { get; set; }
+
                 void GetGroups( )
                 {
-                    if ( string.IsNullOrEmpty( Street.Text ) == false &&
-                         string.IsNullOrEmpty( City.Text ) == false &&
-                         string.IsNullOrEmpty( State.Text ) == false &&
-                         string.IsNullOrEmpty( Zip.Text ) == false )
+                    if ( RetrievingGroups == false )
                     {
-                        Street.Enabled = false;
-                        City.Enabled = false;
-                        State.Enabled = false;
-                        Zip.Enabled = false;
+                        RetrievingGroups = true;
 
-                        ProgressBar.Visibility = ViewStates.Visible;
+                        if ( string.IsNullOrEmpty( Street.Text ) == false &&
+                             string.IsNullOrEmpty( City.Text ) == false &&
+                             string.IsNullOrEmpty( State.Text ) == false &&
+                             string.IsNullOrEmpty( Zip.Text ) == false )
+                        {
+                            Street.Enabled = false;
+                            City.Enabled = false;
+                            State.Enabled = false;
+                            Zip.Enabled = false;
 
-                        CCVApp.Shared.GroupFinder.GetGroups( Street.Text, City.Text, State.Text, Zip.Text, delegate( List<GroupFinder.GroupEntry> groupEntries )
-                            {
-                                groupEntries.Sort( delegate(GroupFinder.GroupEntry x, GroupFinder.GroupEntry y) 
-                                    {
-                                        return x.Distance < y.Distance ? -1 : 1;
-                                    });
+                            ProgressBar.Visibility = ViewStates.Visible;
 
-                                GroupEntries = groupEntries;
+                            CCVApp.Shared.GroupFinder.GetGroups( Street.Text, City.Text, State.Text, Zip.Text, delegate( List<GroupFinder.GroupEntry> groupEntries )
+                                {
+                                    groupEntries.Sort( delegate(GroupFinder.GroupEntry x, GroupFinder.GroupEntry y )
+                                        {
+                                            return x.Distance < y.Distance ? -1 : 1;
+                                        } );
 
-                                UpdateMap( );
+                                    GroupEntries = groupEntries;
 
-                                ( ListView.Adapter as GroupArrayAdapter ).SetSelectedRow( -1 );
+                                    UpdateMap( );
 
-                                Street.Enabled = true;
-                                City.Enabled = true;
-                                State.Enabled = true;
-                                Zip.Enabled = true;
-                                ProgressBar.Visibility = ViewStates.Gone;
-                            } );
+                                    ( ListView.Adapter as GroupArrayAdapter ).SetSelectedRow( -1 );
+
+                                    Street.Enabled = true;
+                                    City.Enabled = true;
+                                    State.Enabled = true;
+                                    Zip.Enabled = true;
+                                    ProgressBar.Visibility = ViewStates.Gone;
+
+                                    RetrievingGroups = false;
+                                } );
+                        }
+                        else
+                        {
+                            ValidateTextFields( );
+                        }
                     }
+                }
+
+
+
+                void ValidateTextFields( )
+                {
+                    // this will color the invalid fields red so the user knows they need to fill them in.
+
+                    // Validate Street
+                    uint currStreetColor = StreetBackgroundColor;
+                    uint targetStreetColor = string.IsNullOrEmpty( Street.Text ) == true ? ControlStylingConfig.BadInput_BG_Layer_Color : ControlStylingConfig.BG_Layer_Color; 
+
+                    SimpleAnimator_Color streetAnimator = new SimpleAnimator_Color( currStreetColor, targetStreetColor, .15f, delegate(float percent, object value )
+                        {
+                            Street.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( (uint)value ) );
+                        }
+                        ,
+                        delegate
+                        {
+                            StreetBackgroundColor = targetStreetColor;
+                        } );
+                    streetAnimator.Start( );
+
+
+                    // Validate City
+                    uint currCityColor = CityBackgroundColor;
+                    uint targetCityColor = string.IsNullOrEmpty( City.Text ) == true ? ControlStylingConfig.BadInput_BG_Layer_Color : ControlStylingConfig.BG_Layer_Color; 
+
+                    SimpleAnimator_Color cityAnimator = new SimpleAnimator_Color( currCityColor, targetCityColor, .15f, delegate(float percent, object value )
+                        {
+                            City.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( (uint)value ) );
+                        }
+                        ,
+                        delegate
+                        {
+                            // doesn't matter which of these turns off retrieving grops, it's the same time
+                            CityBackgroundColor = targetCityColor;
+                            RetrievingGroups = false;
+                        } );
+                    cityAnimator.Start( );
+
+
+                    // Validate State
+                    uint currStateColor = StateBackgroundColor;
+                    uint targetStateColor = string.IsNullOrEmpty( State.Text ) == true ? ControlStylingConfig.BadInput_BG_Layer_Color : ControlStylingConfig.BG_Layer_Color; 
+
+                    SimpleAnimator_Color stateAnimator = new SimpleAnimator_Color( currStateColor, targetStateColor, .15f, delegate(float percent, object value )
+                        {
+                            State.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( (uint)value ) );
+                        }
+                        ,
+                        delegate
+                        {
+                            StateBackgroundColor = targetStateColor;
+                        } );
+                    stateAnimator.Start( );
+
+
+                    // Validate Zip
+                    uint currZipColor = ZipBackgroundColor;
+                    uint targetZipColor = string.IsNullOrEmpty( Zip.Text ) == true ? ControlStylingConfig.BadInput_BG_Layer_Color : ControlStylingConfig.BG_Layer_Color; 
+
+                    SimpleAnimator_Color zipAnimator = new SimpleAnimator_Color( currZipColor, targetZipColor, .15f, delegate(float percent, object value )
+                        {
+                            Zip.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( (uint)value ) );
+                        }
+                        ,
+                        delegate
+                        {
+                            ZipBackgroundColor = targetZipColor;
+                        } );
+                    zipAnimator.Start( );
                 }
             }
         }

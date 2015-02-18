@@ -40,6 +40,7 @@ namespace Droid
 
         EditText BirthdateField { get; set; }
         EditText GenderField { get; set; }
+        EditText CampusField { get; set; }
 
         Button DoneButton { get; set; }
         Button LogoutButton { get; set; }
@@ -188,6 +189,41 @@ namespace Droid
 
                     builder.Show( );
             };
+
+            borderView = backgroundView.FindViewById<View>( Resource.Id.campus_middle_border );
+            borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+
+            // Campus
+            CampusField = view.FindViewById<EditText>( Resource.Id.campusText );
+            ControlStyling.StyleTextField( CampusField, ProfileStrings.CampusPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            CampusField.FocusableInTouchMode = false;
+            CampusField.Focusable = false;
+            Button campusButton = backgroundView.FindViewById<Button>( Resource.Id.campusButton );
+            campusButton.Click += (object sender, EventArgs e ) =>
+                {
+                    // build an alert dialog containing all the campus choices
+                    AlertDialog.Builder builder = new AlertDialog.Builder( Activity );
+                    builder.SetTitle( ProfileStrings.SelectCampus_SourceTitle );
+                    Java.Lang.ICharSequence [] campusStrings = new Java.Lang.ICharSequence[ RockGeneralData.Instance.Data.Campuses.Count ];
+                    for( int i = 0; i < RockGeneralData.Instance.Data.Campuses.Count; i++ )
+                    {
+                        campusStrings[ i ] = new Java.Lang.String( CCVApp.Shared.Network.RockGeneralData.Instance.Data.Campuses[ i ] );
+                    }
+
+                    // launch the dialog, and on selection, update the viewing campus text.
+                    builder.SetItems( campusStrings, delegate(object s, DialogClickEventArgs clickArgs) 
+                        {
+                            Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                                {
+                                    //RockMobileUser.Instance.ViewingCampus = clickArgs.Which;
+                                    int campusIndex = clickArgs.Which;
+                                    CampusField.Text = string.Format( ProfileStrings.Viewing_Campus, RockGeneralData.Instance.Data.Campuses[ campusIndex ] );
+                                });
+                        });
+
+                    builder.Show( );
+                };
+
 
             // Done buttons
             DoneButton = view.FindViewById<Button>( Resource.Id.doneButton );

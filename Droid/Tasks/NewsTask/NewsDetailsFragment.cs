@@ -17,6 +17,7 @@ using CCVApp.Shared.Config;
 using CCVApp.Shared.Strings;
 using Android.Text.Method;
 using CCVApp.Shared;
+using System.IO;
 
 namespace Droid
 {
@@ -26,7 +27,12 @@ namespace Droid
         {
             public class NewsDetailsFragment : TaskFragment
             {
+                bool IsFragmentActive { get; set; }
+
                 public CCVApp.Shared.Network.RockNews NewsItem { get; set; }
+
+                Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView ImageBanner { get; set; }
+                Bitmap HeaderImage { get; set; }
 
                 public override void OnCreate( Bundle savedInstanceState )
                 {
@@ -46,22 +52,8 @@ namespace Droid
                     view.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
 
                     // set the banner
-                    Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView banner = new Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView( Activity );
-                    ( (LinearLayout)view ).AddView( banner, 0 );
-
-                    // attempt to load the image from cache. If that doesn't work, use a placeholder
-                    Bitmap imageBanner = null;
-
-                    System.IO.MemoryStream assetStream = (System.IO.MemoryStream)FileCache.Instance.LoadFile( NewsItem.HeaderImageName );
-                    if ( assetStream!= null )
-                    {
-                        imageBanner = BitmapFactory.DecodeByteArray( assetStream.GetBuffer( ), 0, (int)assetStream.Length );
-                    }
-                    else
-                    {
-                        imageBanner = BitmapFactory.DecodeResource( Rock.Mobile.PlatformSpecific.Android.Core.Context.Resources, Resource.Drawable.thumbnailPlaceholder );
-                    }
-                    banner.SetImageBitmap( imageBanner );
+                    ImageBanner = new Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView( Activity );
+                    ( (LinearLayout)view ).AddView( ImageBanner, 0 );
 
                     TextView title = view.FindViewById<TextView>( Resource.Id.news_details_title );
                     title.Text = NewsItem.Title;
@@ -75,7 +67,6 @@ namespace Droid
                     TextView description = view.FindViewById<TextView>( Resource.Id.news_details_details );
                     description.Text = NewsItem.Description;
                     description.MovementMethod = new ScrollingMovementMethod();
-                    //description.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
                     ControlStyling.StyleUILabel( description, ControlStylingConfig.Small_Font_Light, ControlStylingConfig.Small_FontSize );
 
                     Button launchUrlButton = view.FindViewById<Button>(Resource.Id.news_details_launch_url);
@@ -97,6 +88,66 @@ namespace Droid
                     ParentTask.NavbarFragment.NavToolbar.SetCreateButtonEnabled( false, null );
                     ParentTask.NavbarFragment.NavToolbar.SetShareButtonEnabled( false, null );
                     ParentTask.NavbarFragment.NavToolbar.RevealForTime( 3.00f );
+
+                    IsFragmentActive = true;
+
+
+                    // attempt to load the image from cache. If that doesn't work, use a placeholder
+                    HeaderImage = null;
+
+                    System.IO.MemoryStream assetStream = (System.IO.MemoryStream)FileCache.Instance.LoadFile( NewsItem.HeaderImageName );
+                    if ( assetStream!= null )
+                    {
+                        HeaderImage = BitmapFactory.DecodeStream( assetStream );
+                        assetStream.Dispose( );
+                    }
+                    else
+                    {
+                        // use the placeholder and request the image download
+                        HeaderImage = BitmapFactory.DecodeResource( Rock.Mobile.PlatformSpecific.Android.Core.Context.Resources, Resource.Drawable.thumbnailPlaceholder );
+
+                        FileCache.Instance.DownloadImageToCache( NewsItem.HeaderImageURL, NewsItem.HeaderImageName, delegate
+                            {
+                                NewsHeaderDownloaded( );
+                            } );
+                    }
+                    ImageBanner.SetImageBitmap( HeaderImage );
+                }
+
+                void NewsHeaderDownloaded( )
+                {
+                    // if they're still viewing this article
+                    if ( IsFragmentActive == true )
+                    {
+                        Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                            {
+                                MemoryStream imageStream = (System.IO.MemoryStream)FileCache.Instance.LoadFile( NewsItem.HeaderImageName );
+                                if ( imageStream != null )
+                                {
+                                    HeaderImage.Dispose( );
+                                    HeaderImage = BitmapFactory.DecodeStream( imageStream );
+
+                                    ImageBanner.Drawable.Dispose( );
+                                    ImageBanner.SetImageBitmap( HeaderImage );
+
+                                    imageStream.Dispose( );
+                                }
+                            });
+
+                    }
+                }
+
+                public override void OnPause()
+                {
+                    base.OnPause();
+
+                    IsFragmentActive = false;
+
+                    HeaderImage.Dispose( );
+                    HeaderImage = null;
+
+                    ImageBanner.Drawable.Dispose( );
+                    ImageBanner.SetImageBitmap( null );
                 }
             }
         }

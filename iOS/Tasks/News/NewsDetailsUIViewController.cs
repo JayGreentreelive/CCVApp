@@ -16,6 +16,8 @@ namespace iOS
 	{
         public RockNews NewsItem { get; set; }
 
+        bool IsVisible { get; set; }
+
 		public NewsDetailsUIViewController (IntPtr handle) : base (handle)
 		{
 		}
@@ -47,7 +49,13 @@ namespace iOS
             }
             else
             {
+                // otherwise use a placeholder and request the actual image
                 ImageBanner.Image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + "podcastThumbnailPlaceholder.png" );
+
+                FileCache.Instance.DownloadImageToCache( NewsItem.HeaderImageURL, NewsItem.HeaderImageName, delegate
+                    {
+                        NewsHeaderDownloaded( );
+                    } );
             }
 
             ImageBanner.BackgroundColor = UIColor.Green;
@@ -63,9 +71,38 @@ namespace iOS
             NewsTitle.Text = NewsItem.Title;
         }
 
-        public override void TouchesEnded(NSSet touches, UIEvent evt)
+        public override void ViewWillAppear(bool animated)
         {
-            base.TouchesEnded(touches, evt);
+            base.ViewWillAppear(animated);
+
+            IsVisible = true;
+        }
+
+        public override void ViewWillDisappear(bool animated)
+        {
+            base.ViewWillDisappear(animated);
+
+            IsVisible = false;
+        }
+
+        void NewsHeaderDownloaded( )
+        {
+            // if they're still viewing this article
+            if ( IsVisible == true )
+            {
+                Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                    {
+                        MemoryStream imageStream = (System.IO.MemoryStream)FileCache.Instance.LoadFile( NewsItem.HeaderImageName );
+                        if ( imageStream != null )
+                        {
+                            NSData imageData = NSData.FromStream( imageStream );
+                            ImageBanner.Image = new UIImage( imageData, UIScreen.MainScreen.Scale );
+
+                            imageStream.Dispose( );
+                        }
+                    });
+
+            }
         }
 
         public override void ViewDidLayoutSubviews()

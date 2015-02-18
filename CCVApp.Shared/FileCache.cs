@@ -4,6 +4,9 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections.Generic;
 using System.Collections;
+using Rock.Mobile.Network;
+using RestSharp;
+using System.Net;
 
 namespace CCVApp.Shared
 {
@@ -151,6 +154,8 @@ namespace CCVApp.Shared
                         StreamWriter mapStream = new StreamWriter( writer );
                         formatter.Serialize( mapStream.BaseStream, buffer );
 
+                        mapStream.Dispose( );
+
                         // store in our cachemap the filename and when we wrote it.
                         // Don't ever add it twice. If it exists, remove it
                         if( CacheMap.Contains( filename ) )
@@ -194,7 +199,10 @@ namespace CCVApp.Shared
                     StreamReader mapStream = new StreamReader( reader );
                     BinaryFormatter formatter = new BinaryFormatter( );
 
-                    return formatter.Deserialize( mapStream.BaseStream );
+                    object loadedObj = formatter.Deserialize( mapStream.BaseStream );
+                    mapStream.Dispose( );
+
+                    return loadedObj;
                 }
             }
             catch( Exception )
@@ -202,6 +210,33 @@ namespace CCVApp.Shared
             }
 
             return null;
+        }
+
+        public delegate void ImageDownloaded( string imageUrl, string cachedFilename );
+        public void DownloadImageToCache( string downloadUrl, string cachedFilename, ImageDownloaded callback )
+        {
+            //todo: This should probably use REST, but we can't right now because the Notes Images aren't stored on Rock.
+
+            if ( string.IsNullOrEmpty( downloadUrl ) == false )
+            {
+                // request the image for the series
+                HttpRequest webRequest = new HttpRequest();
+                RestRequest restRequest = new RestRequest( Method.GET );
+
+                webRequest.ExecuteAsync( downloadUrl, restRequest, 
+                    delegate(HttpStatusCode statusCode, string statusDescription, byte[] model )
+                    {
+                        if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
+                        {
+                            // write it to cache
+                            MemoryStream imageBuffer = new MemoryStream( model );
+                            FileCache.Instance.SaveFile( imageBuffer, cachedFilename );
+                            imageBuffer.Dispose( );
+
+                            callback( downloadUrl, cachedFilename );
+                        }
+                    } );
+            }
         }
     }
 }
