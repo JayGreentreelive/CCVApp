@@ -629,8 +629,8 @@ namespace iOS
             // see if there's an address for this person that we can automatically use.
             if ( RockMobileUser.Instance.HasFullAddress( ) == true )
             {
-                GetGroups( RockMobileUser.Instance.Street1( ), RockMobileUser.Instance.City( ), RockMobileUser.Instance.State( ), RockMobileUser.Instance.Zip( ) );
                 UpdateAddress( RockMobileUser.Instance.Street1( ), RockMobileUser.Instance.City( ), RockMobileUser.Instance.State( ), RockMobileUser.Instance.Zip( ) );
+                GetGroups( RockMobileUser.Instance.Street1( ), RockMobileUser.Instance.City( ), RockMobileUser.Instance.State( ), RockMobileUser.Instance.Zip( ) );
             }
         }
 
@@ -689,10 +689,8 @@ namespace iOS
                         } );
                 }
             }
-            else
-            {
-                ValidateTextFields( );
-            }
+
+            ValidateTextFields( );
         }
 
         void ValidateTextFields( )

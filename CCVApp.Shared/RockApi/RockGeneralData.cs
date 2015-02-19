@@ -69,7 +69,9 @@ namespace CCVApp
                     /// <returns>The identifier to name.</returns>
                     public string CampusIdToName( int campusId )
                     {
-                        return Campuses.Find( c => c.Id == campusId ).Name;
+                        // guard against old, bad values.
+                        Rock.Client.Campus campusObj = Campuses.Find( c => c.Id == campusId );
+                        return campusObj != null ? campusObj.Name : Campuses[ 0 ].Name;
                     }
 
                     /// <summary>
@@ -171,7 +173,15 @@ namespace CCVApp
                         using (StreamReader reader = new StreamReader(filePath))
                         {
                             string json = reader.ReadLine();
-                            Data = JsonConvert.DeserializeObject<GeneralData>( json ) as GeneralData;
+
+                            // catch a load exception and abort. Then we'll simply use default data.
+                            try
+                            {
+                                Data = JsonConvert.DeserializeObject<GeneralData>( json ) as GeneralData;
+                            }
+                            catch( Exception )
+                            {
+                            }
                         }
                     }
                 }

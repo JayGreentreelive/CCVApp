@@ -417,9 +417,9 @@ namespace CCVApp
             {
                 public static string[] WebViews = 
                     {
-                        "Baptisms", "http://www.ccvonline.com/Arena/default.aspx?page=17655",
-                        "Starting Point", "http://www.ccvonline.com/Arena/default.aspx?page=17400",
-                        "Foundations", "http://www.ccvonline.com/Arena/default.aspx?page=17659"
+                        "Baptisms", "http://www.ccvonline.com/Arena/default.aspx?page=17655&campus=1",
+                        "Starting Point", "http://www.ccvonline.com/Arena/default.aspx?page=17400&campus=1",
+                        "Foundations", "http://www.ccvonline.com/Arena/default.aspx?page=17659&campus=1"
                     };
 
                 /// <summary>
@@ -452,7 +452,7 @@ namespace CCVApp
 
             public class GiveConfig
             {
-                public const string GiveUrl = "https://www.ccvonline.com/Arena/default.aspx?page=18485";
+                public const string GiveUrl = "https://www.ccvonline.com/Arena/default.aspx?page=18485&campus=1";
             }
 
             public class ControlStylingConfig
@@ -611,7 +611,7 @@ namespace CCVApp
                 /// <summary>
                 /// The page to navigate to in the About's embedded webview.
                 /// </summary>
-                public const string Url = "http://www.ccvonline.com/Arena/default.aspx?page=17623";
+                public const string Url = "http://www.ccvonline.com/Arena/default.aspx?page=17623&campus=1";
             }
         }
     }

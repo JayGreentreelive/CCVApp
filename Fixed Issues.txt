@@ -1,3 +1,20 @@
+*If the build crashes at startup, delete and reinstall.
+
+Highlights
+	Notification Banner allows quick Note access.
+	
+	The latest CCV News directly from Rock!
+	
+	Group Finder fully functional (Except distance)
+
+	Analytics Integrated. I'll know when you're using the app....
+
+	Tons of bug fixes and polish.
+
+
+Changes
+-------
+
 Both
 	Added a Notification Banner system that allows quick access.
 		First (and probably only usage) is "Tap To Take Notes" on weekends.
@@ -33,6 +50,9 @@ Both
 	Username and Password are no longer cleared when a login fails.
 
 	Added Home Campus selection to Profile
+
+	Prayer Requests now require anonymous or a last name as well as first. 
+		-Fixes an issue causing prayer request submissiosn to always fail if a last name wasn't provided.
 	 
 iOS
 	Fixed a crash if cancel was pressed on a WebView before the URL started loading.
@@ -44,6 +64,8 @@ iOS
 	Fixed an issue causing the back button to be enabled while viewing Notes in landscape.
 
 	Fixed an issue causing animation interpolation percentages to run past 1.00 
+
+	Builds with 64bit support.
 
 Android
 	Polished the Login Page results to match that of iOS.

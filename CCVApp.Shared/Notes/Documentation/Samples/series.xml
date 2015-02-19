@@ -3,12 +3,21 @@
 	<!--Start Series-->
 	<Series>
 		<Message>
+			<Name>ACCEPT</Name>
+			<Speaker>Todd Clark</Speaker>
+			<Date>2/22/2015</Date>
+			<NoteUrl>http://www.jeredmcferron.com/ccv/message_2_21_2015.xml</NoteUrl>
+			<WatchUrl></WatchUrl>
+			<ShareUrl></ShareUrl>
+		</Message>
+
+		<Message>
 			<Name>PRAY</Name>
 			<Speaker>Dr. Mark Moore</Speaker>
 			<Date>2/15/2015</Date>
 			<NoteUrl>http://www.jeredmcferron.com/ccv/message_2_14_2015.xml</NoteUrl>
-			<WatchUrl></WatchUrl>
-			<ShareUrl></ShareUrl>
+			<WatchUrl>http://player.vimeo.com/external/119861057.m3u8?p=high,standard,mobile&amp;s=58b389f68a5c2dac8cd3206803e20efb</WatchUrl>
+			<ShareUrl>http://ccv.church/Arena/default.aspx?page=17529&amp;item=494</ShareUrl>
 		</Message>
 
 		<Name>LOVE DOES</Name>

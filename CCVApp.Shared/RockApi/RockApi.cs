@@ -51,6 +51,11 @@ namespace CCVApp
                 const string GetProfilePictureEndPoint = "GetImage.ashx?id={0}&width={1}&height={1}";
 
                 /// <summary>
+                /// End point for posting a profile picture
+                /// </summary>
+                const string PutProfilePictureEndPoint = "FileUploader.ashx?isBinaryFile=true&fileTypeGuid=03BD8476-8A9F-4078-B628-5B538F967AFC&isTemporary=false";
+
+                /// <summary>
                 /// End point for retrieving prayer requests
                 /// </summary>
                 /// 
@@ -61,7 +66,7 @@ namespace CCVApp
                 /// <summary>
                 /// End point for getting news items to be displayed in the news section
                 /// </summary>
-                const string GetNewsEndPoint = "api/ContentChannelItems?$filter=ContentChannel/Guid eq guid'EAE51F3E-C27B-4E7C-B9A0-16EB68129637'";// and Status eq 1";
+                const string GetNewsEndPoint = "api/ContentChannelItems?$filter=ContentChannel/Guid eq guid'EAE51F3E-C27B-4E7C-B9A0-16EB68129637'&LoadAttributes=True";// and Status eq 1";
 
                 /// <summary>
                 /// End point for retrieving a Group Object
@@ -237,7 +242,8 @@ namespace CCVApp
                     // update the profile by the personID
                     Rock.Client.Group updatedGroup = new Rock.Client.Group();
                     updatedGroup.Id = primaryGroup.Id;
-                    updatedGroup.IsSystem = false;
+                    updatedGroup.Guid = primaryGroup.Guid;
+                    updatedGroup.IsSystem = primaryGroup.IsSystem;
                     updatedGroup.ParentGroupId = null;
                     updatedGroup.GroupTypeId = primaryGroup.GroupTypeId;
                     updatedGroup.CampusId = primaryGroup.CampusId;
@@ -273,15 +279,36 @@ namespace CCVApp
                         });
                 }
 
-                /*public void UpdateProfilePicture( string photoId, int dimensionSize, MemoryStream image, RequestResult resultHandler )
+                public void UpdateProfilePicture( Rock.Client.Person person, MemoryStream image, HttpRequest.RequestResult resultHandler )
                 {
-                    // request a profile by the username. If no username is specified, we'll use the logged in user's name.
-                    RestRequest request = GetRockRestRequest( Method.PUT );
-                    request.Resource = string.Format( GetProfilePictureEndPoint, photoId, dimensionSize );
-                    request.AddBody( image );
+                    // send up the image for the user
+                    RestRequest request = GetRockRestRequest( Method.POST );
+                    request.AddFile( "file0", image.GetBuffer( ), "profilePic.jpg" );
 
-                    ExecuteAsync( request, resultHandler);
-                }*/
+                    string requestUrl = BaseUrl + PutProfilePictureEndPoint;
+
+                    Request.ExecuteAsync<RestSharp.RestResponse>( requestUrl, request, delegate(HttpStatusCode statusCode, string statusDescription, RestSharp.RestResponse responseObj )
+                        {
+                            if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
+                            {
+                                //todo: Verify this is working once we are authorized to hit this endpoint, and then
+                                // create a class that can parse out the ID in the response, and set that as the user's profile pic ID,
+                                //and finally upload the profile.
+                                Console.WriteLine( "Picture Response: {0}" );
+
+                                //person.PhotoId = responseObj.Id;
+                                UpdateProfile( person, delegate(HttpStatusCode profileUpdateStatusCode, string profileUpdateStatusDescription) 
+                                    {
+                                        // now call the final result
+                                        resultHandler( profileUpdateStatusCode, profileUpdateStatusDescription );
+                                    });
+                            }
+                            else
+                            {
+                                resultHandler( statusCode, statusDescription );
+                            }
+                        } );
+                }
 
                 public void GetCampuses( HttpRequest.RequestResult< List<Rock.Client.Campus> > resultHandler )
                 {

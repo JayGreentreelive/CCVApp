@@ -587,6 +587,10 @@ namespace CCVApp
                     // now we have a picture!
                     HasProfileImage = true;
 
+                    /*RockApi.Instance.UpdateProfilePicture( Person, imageStream, delegate
+                        {
+                        } );*/
+
                     SaveToDevice( );
 
                     //todo: send it on up to Rock, too!
@@ -732,7 +736,14 @@ namespace CCVApp
                             string json = reader.ReadLine();
                             if ( json != null )
                             {
-                                _Instance = JsonConvert.DeserializeObject<RockMobileUser>( json ) as RockMobileUser;
+                                try
+                                {
+                                    // guard against the mobile user model changing and the user having old data
+                                    _Instance = JsonConvert.DeserializeObject<RockMobileUser>( json ) as RockMobileUser;
+                                }
+                                catch( Exception )
+                                {
+                                }
                             }
                         }
                     }

@@ -77,6 +77,12 @@ namespace Droid
                         };
                     ControlStyling.StyleButton( launchUrlButton, NewsStrings.LearnMore, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
 
+                    // hide the button if there's no reference URL.
+                    if ( string.IsNullOrEmpty( NewsItem.ReferenceURL ) == true )
+                    {
+                        launchUrlButton.Visibility = ViewStates.Invisible;
+                    }
+
                     return view;
                 }
 

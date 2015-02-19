@@ -631,14 +631,10 @@ namespace Droid
                                     RetrievingGroups = false;
                                 } );
                         }
-                        else
-                        {
-                            ValidateTextFields( );
-                        }
+
+                        ValidateTextFields( );
                     }
                 }
-
-
 
                 void ValidateTextFields( )
                 {

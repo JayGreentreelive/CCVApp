@@ -12,7 +12,7 @@ namespace CCVApp.Shared
             {
                 get
                 {
-                    return "Alpha (Build 9)";
+                    return "Beta (Build 10)";
                 }
             }
         }
@@ -25,6 +25,17 @@ namespace CCVApp.Shared
             public const string Cancel = "Cancel";
             public const string Retry = "Retry";
             public const string Done = "Done";
+
+            public static string[ ] Days =
+            {
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday"
+            };
         }
 
         public class SpringboardStrings

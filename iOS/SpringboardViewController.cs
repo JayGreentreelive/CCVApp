@@ -695,7 +695,7 @@ namespace iOS
         {
             // should we advertise the notes?
             // yes, if it's a weekend and we're at CCV (that part will come later)
-            //if ( DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday )
+            if ( DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday )
             {
                 if ( RockLaunchData.Instance.Data.Series.Count > 0 )
                 {

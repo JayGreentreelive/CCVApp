@@ -172,8 +172,8 @@ namespace iOS
         void SubmitPrayerRequest(object sender, EventArgs e)
         {
             // ensure they either put a first name or enabled anonymous, and ensure there's a prayer request
-            if ( ( string.IsNullOrEmpty( FirstNameText.Text ) == false || UISwitchAnonymous.On == true ) &&
-                   string.IsNullOrEmpty( PrayerRequest.Text ) == false )
+            if ( ( (string.IsNullOrEmpty( FirstNameText.Text ) == false && string.IsNullOrEmpty( LastNameText.Text ) == false) || UISwitchAnonymous.On == true ) &&
+                    string.IsNullOrEmpty( PrayerRequest.Text ) == false )
             {
                 Rock.Client.PrayerRequest prayerRequest = new Rock.Client.PrayerRequest();
 
@@ -224,6 +224,27 @@ namespace iOS
                     {
                     } );
                 nameAnimator.Start( );
+
+
+                // Update the name background color
+                uint currLastNameColor = Rock.Mobile.PlatformUI.Util.UIColorToInt( LastNameBackground.BackgroundColor );
+
+                // if they left the name field blank and didn't turn on Anonymous, flag the field.
+                uint targetLastNameColor = ControlStylingConfig.BG_Layer_Color; 
+                if( string.IsNullOrEmpty( LastNameText.Text ) && UISwitchAnonymous.On == false )
+                {
+                    targetLastNameColor = ControlStylingConfig.BadInput_BG_Layer_Color;
+                }
+
+                SimpleAnimator_Color lastNameAnimator = new SimpleAnimator_Color( currLastNameColor, targetLastNameColor, .15f, delegate(float percent, object value )
+                    {
+                        LastNameBackground.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( (uint)value );
+                    }
+                    ,
+                    delegate
+                    {
+                    } );
+                lastNameAnimator.Start( );
 
 
                 // Update the prayer background color

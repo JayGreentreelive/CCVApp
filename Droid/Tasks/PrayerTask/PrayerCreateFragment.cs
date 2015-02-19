@@ -55,6 +55,8 @@ namespace Droid
                 uint FirstNameBGColor { get; set; }
 
                 EditText LastNameText { get; set; }
+                RelativeLayout LastNameBGLayer { get; set; }
+                uint LastNameBGColor { get; set; }
 
                 EditText RequestText { get; set; }
                 RelativeLayout RequestBGLayer { get; set; }
@@ -86,8 +88,8 @@ namespace Droid
                     ControlStyling.StyleBGLayer( FirstNameBGLayer );
                     //
 
-                    RelativeLayout lastNameBGLayer = view.FindViewById<RelativeLayout>( Resource.Id.last_name_background );
-                    ControlStyling.StyleBGLayer( lastNameBGLayer );
+                    LastNameBGLayer = view.FindViewById<RelativeLayout>( Resource.Id.last_name_background );
+                    ControlStyling.StyleBGLayer( LastNameBGLayer );
 
                     // setup the prayer request background
                     RequestBGLayer = view.FindViewById<RelativeLayout>( Resource.Id.prayerRequest_background );
@@ -109,6 +111,7 @@ namespace Droid
 
                     LastNameText = (EditText)view.FindViewById<EditText>( Resource.Id.prayer_create_lastNameText );
                     ControlStyling.StyleTextField( LastNameText, PrayerStrings.CreatePrayer_LastNamePlaceholderText, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+                    LastNameBGColor = ControlStylingConfig.BG_Layer_Color;
 
                     RequestText = (EditText)view.FindViewById<EditText>( Resource.Id.prayer_create_requestText );
                     ControlStyling.StyleTextField( RequestText, PrayerStrings.CreatePrayer_PrayerRequest, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
@@ -170,8 +173,10 @@ namespace Droid
 
                 void SubmitPrayerRequest( )
                 {
-                    if ( ( string.IsNullOrEmpty( FirstNameText.Text ) == false || AnonymousSwitch.Checked == true ) &&
-                        string.IsNullOrEmpty( RequestText.Text ) == false )
+                    // if first and last name are valid, OR anonymous is on
+                    // and if there's text in the request field.
+                    if ( ( ( string.IsNullOrEmpty( FirstNameText.Text ) == false && string.IsNullOrEmpty( LastNameText.Text ) == false ) || AnonymousSwitch.Checked == true ) &&
+                             string.IsNullOrEmpty( RequestText.Text ) == false )
                     {
                         Rock.Client.PrayerRequest prayerRequest = new Rock.Client.PrayerRequest();
 
@@ -226,6 +231,30 @@ namespace Droid
                                 FirstNameBGColor = targetNameColor;
                             } );
                         nameAnimator.Start( );
+
+
+
+                        // Update the name background color
+                        uint currLastNameColor = LastNameBGColor;
+
+                        // if they left the name field blank and didn't turn on Anonymous, flag the field.
+                        uint targetLastNameColor = ControlStylingConfig.BG_Layer_Color; 
+                        if( string.IsNullOrEmpty( LastNameText.Text ) && AnonymousSwitch.Checked == false )
+                        {
+                            targetLastNameColor = ControlStylingConfig.BadInput_BG_Layer_Color;
+                        }
+
+                        SimpleAnimator_Color lastNameAnimator = new SimpleAnimator_Color( currLastNameColor, targetLastNameColor, .15f, delegate(float percent, object value )
+                            {
+                                LastNameBGLayer.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( (uint)value ) );
+                            }
+                            ,
+                            delegate
+                            {
+                                LastNameBGColor = targetLastNameColor;
+                            } );
+                        lastNameAnimator.Start( );
+
 
 
                         // Update the prayer background color

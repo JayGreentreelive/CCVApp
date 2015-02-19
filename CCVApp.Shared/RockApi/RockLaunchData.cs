@@ -40,7 +40,7 @@ namespace CCVApp
                             "it's time to take the next step and make your decision known. Baptism is the best way to express your faith and " + 
                             "reflect your life change. Find out more about baptism through Starting Point, register online or contact your neighborhood pastor.",
 
-                            "http://www.ccvonline.com/Arena/default.aspx?page=17655",
+                            "http://www.ccvonline.com/Arena/default.aspx?page=17655&campus=1",
 
                             "",
                             "news_baptism_main",
@@ -52,7 +52,7 @@ namespace CCVApp
                             "In Starting Point you’ll find out what CCV is all about, take a deep look at the Christian " + 
                             "faith, and learn how you can get involved. Childcare is available for attending parents.",
 
-                            "http://www.ccvonline.com/Arena/default.aspx?page=17400",
+                            "http://www.ccvonline.com/Arena/default.aspx?page=17400&campus=1",
 
                             "",
                             "news_startingpoint_main", 
@@ -63,7 +63,7 @@ namespace CCVApp
 
                         DefaultNews.Add( new RockNews( "Learn More", "Wondering what else CCV is about? Check out our website.", 
 
-                            "https://www.ccvonline.com", 
+                            "http://ccv.church/Arena/default.aspx?page=17369&campus=1", 
 
                             "",
                             "news_learnmore_main",
@@ -197,10 +197,13 @@ namespace CCVApp
                                 Data.News.Clear( );
                                 foreach( Rock.Client.ContentChannelItem item in model )
                                 {
-                                    //TODO: Once we have the attributes field, parse out the download URL and Details URL
-                                    string imageUrl = "http://rock.ccvonline.com/GetImage.ashx?Guid=39aca28b-77d2-4e17-b476-1257c64a1a4b";
-                                    string detailUrl = "http://www.yahoo.com";
-                                    string bannerUrl = "http://rock.ccvonline.com/GetImage.ashx?Guid=eedb5a03-5fc6-4b0d-ad35-91fb62b66fc3";
+                                    string featuredGuid = item.AttributeValues[ "FeatureImage" ].Value;
+                                    string imageUrl = "http://rock.ccvonline.com/GetImage.ashx?Guid=" + featuredGuid;
+
+                                    string bannerGuid = item.AttributeValues[ "PromotionImage" ].Value;
+                                    string bannerUrl = "http://rock.ccvonline.com/GetImage.ashx?Guid=" + bannerGuid;
+
+                                    string detailUrl = item.AttributeValues[ "DetailsURL" ].Value;
 
                                     RockNews newsItem = new RockNews( item.Title, item.Content, detailUrl, imageUrl, item.Title + "_main.png", bannerUrl, item.Title + "_banner.png" );
                                     Data.News.Add( newsItem );
@@ -278,7 +281,15 @@ namespace CCVApp
                         using ( StreamReader reader = new StreamReader( filePath ) )
                         {
                             string json = reader.ReadLine( );
-                            Data = JsonConvert.DeserializeObject<LaunchData>( json ) as LaunchData;
+
+                            try
+                            {
+                                // guard against the LaunchData changing and the user having old data.
+                                Data = JsonConvert.DeserializeObject<LaunchData>( json ) as LaunchData;
+                            }
+                            catch( Exception )
+                            {
+                            }
                         }
                     }
 

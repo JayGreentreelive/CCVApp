@@ -43,7 +43,6 @@ namespace iOS
             {
                 NSData imageData = NSData.FromStream( imageStream );
                 ImageBanner.Image = new UIImage( imageData, UIScreen.MainScreen.Scale );
-                ImageBanner.ContentMode = UIViewContentMode.Center;
 
                 imageStream.Dispose( );
             }
@@ -64,6 +63,12 @@ namespace iOS
                 {
                     UIApplication.SharedApplication.OpenUrl( new NSUrl( NewsItem.ReferenceURL ) );
                 };
+
+            // if there's no URL associated with this news item, hide the learn more button.
+            if ( string.IsNullOrEmpty( NewsItem.ReferenceURL ) == true )
+            {
+                LearnMoreButton.Hidden = true;
+            }
 
             ControlStyling.StyleButton( LearnMoreButton, NewsStrings.LearnMore, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
 
