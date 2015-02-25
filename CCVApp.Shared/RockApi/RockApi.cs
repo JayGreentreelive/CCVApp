@@ -71,7 +71,9 @@ namespace CCVApp
                 /// <summary>
                 /// End point for retrieving a Group Object
                 /// </summary>
-                const string GetFamiliesEndPoint = "api/Groups/GetFamilies/";
+                //const string GetFamiliesEndPoint = "api/Groups/GetFamilies/{0}?$expand=GroupType,Campus,GroupLocations";
+                const string GetFamiliesEndPoint = "api/Groups/GetFamilies/{0}?$expand=GroupType,Campus,Members/GroupRole,GroupLocations/Location,GroupLocations/GroupLocationTypeValue,GroupLocations/Location/LocationTypeValue";
+
 
                 /// <summary>
                 /// End point for retrieving all groups near a given address.
@@ -83,7 +85,20 @@ namespace CCVApp
                 /// </summary>
                 const string PutHomeCampusEndPoint = "api/Groups/";
 
-                //const string PutGroupEndPoint = "api/Groups/GetFamilies/";
+                /// <summary>
+                /// End point for updating or creating an address.
+                /// </summary>
+                                                                          //GroupId/GroupLocationTypeValueId/Street1/City/State/Zip/CountryCode
+                const string PutAddressEndPoint = "api/Groups/SaveAddress/{0}/{1}/{2}/{3}/{4}/{5}/{6}";
+
+
+                const string ResolveDefinedValueEndPoint = "api/DefinedValues?$filter=";
+                const string ResolveDefinedValueSuffix = "Guid eq guid'{0}'";
+
+                /// <summary>
+                /// End point for updating a phone number
+                /// </summary>
+                const string PutPhoneNumberEndPoint = "api/PhoneNumbers/";
 
                 /// <summary>
                 /// End point for posting a prayer request
@@ -254,12 +269,71 @@ namespace CCVApp
                     updatedGroup.IsActive = primaryGroup.IsActive;
                     updatedGroup.Order = primaryGroup.Order;
                     updatedGroup.AllowGuests = primaryGroup.AllowGuests;
-                    updatedGroup.GroupType = primaryGroup.GroupType;
+                    updatedGroup.GroupType = null;
 
                     RestRequest request = GetRockRestRequest( Method.PUT );
                     request.AddBody( updatedGroup );
 
                     Request.ExecuteAsync( BaseUrl + PutHomeCampusEndPoint + updatedGroup.Id, request, resultHandler);
+                }
+
+                public void UpdateAddress( Rock.Client.Group family, Rock.Client.GroupLocation address, HttpRequest.RequestResult resultHandler )
+                {
+                    RestRequest request = GetRockRestRequest( Method.PUT );
+
+                    string requestUrl = string.Format( BaseUrl + PutAddressEndPoint, family.Id, 
+                                                                                     address.GroupLocationTypeValueId, 
+                                                                                     address.Location.Street1, 
+                                                                                     address.Location.City, 
+                                                                                     address.Location.State, 
+                                                                                     address.Location.PostalCode, 
+                                                                                     address.Location.Country );
+
+                    Request.ExecuteAsync( requestUrl, request, resultHandler );
+                }
+
+                public void GetDefinedValues( List<System.Guid> definedValueGuidList, HttpRequest.RequestResult<List<Rock.Client.DefinedValue>> resultHandler )
+                {
+                    RestRequest request = GetRockRestRequest( Method.GET );
+
+                    string requestUrl = BaseUrl + ResolveDefinedValueEndPoint;
+
+                    // append the first guid to the request URL
+                    requestUrl += string.Format( ResolveDefinedValueSuffix, definedValueGuidList[ 0 ] );
+
+                    // are there more?
+                    if ( definedValueGuidList.Count > 1 )
+                    {
+                        // go through the list, adding them in proper odata format.
+                        for ( int i = 1; i < definedValueGuidList.Count; i++ )
+                        {
+                            requestUrl += " or ";
+                            requestUrl += string.Format( ResolveDefinedValueSuffix, definedValueGuidList[ i ] );
+                        }
+
+                    }
+
+                    Request.ExecuteAsync<List<Rock.Client.DefinedValue>>( requestUrl, request, resultHandler );
+                }
+
+                public void UpdatePhoneNumber( Rock.Client.PhoneNumber phoneNumber, bool isNew, HttpRequest.RequestResult resultHandler )
+                {
+                    RestRequest request = null;
+                    string requestUrl = PutPhoneNumberEndPoint;
+                    if ( isNew )
+                    {
+                        request = GetRockRestRequest( Method.POST );
+                    }
+                    else
+                    {
+                        // if we're updating an existing number, put the ID
+                        request = GetRockRestRequest( Method.PUT );
+                        requestUrl += phoneNumber.Id;
+                    }
+                    request.AddBody( phoneNumber );
+
+                    // fire off the request
+                    Request.ExecuteAsync( BaseUrl + requestUrl, request, resultHandler);
                 }
 
                 public void GetProfilePicture( string photoId, uint dimensionSize, HttpRequest.RequestResult<MemoryStream> resultHandler )
@@ -324,7 +398,7 @@ namespace CCVApp
                 {
                     // request a profile by the username. If no username is specified, we'll use the logged in user's name.
                     RestRequest request = GetRockRestRequest( Method.GET );
-                    string requestUrl = BaseUrl + GetFamiliesEndPoint + personId.ToString( );
+                    string requestUrl = string.Format( BaseUrl + GetFamiliesEndPoint, personId.ToString( ) );
 
                     // get the raw response
                     Request.ExecuteAsync< List<Rock.Client.Group> >( requestUrl, request, resultHandler);

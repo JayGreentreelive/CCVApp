@@ -500,12 +500,20 @@ namespace CCVApp
                     // do not allow a new note within range of another's anchor.
                     bool allowNoteCreation = true;
 
-                    foreach( UserNote userNote in UserNoteControls )
+                    // don't let them get ridiculous with their notes
+                    if ( UserNoteControls.Count < 10 )
                     {
-                        if( userNote.TouchInAnchorRange( touch ) )
+                        foreach ( UserNote userNote in UserNoteControls )
                         {
-                            allowNoteCreation = false;
+                            if ( userNote.TouchInAnchorRange( touch ) )
+                            {
+                                allowNoteCreation = false;
+                            }
                         }
+                    }
+                    else
+                    {
+                        throw new Exception( CCVApp.Shared.Strings.MessagesStrings.TooManyNotes );
                     }
 
                     if( allowNoteCreation )

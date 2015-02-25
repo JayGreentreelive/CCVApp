@@ -49,6 +49,20 @@ namespace iOS
             }
         }
 
+        public override void PerformAction(string action)
+        {
+            base.PerformAction(action);
+
+            switch ( action )
+            {
+                case "Task.Init":
+                {
+                    MainPageVC.DownloadImages( );
+                    break;
+                }
+            }
+        }
+
         public override void TouchesEnded(TaskUIViewController taskUIViewController, NSSet touches, UIEvent evt)
         {
             base.TouchesEnded(taskUIViewController, touches, evt);

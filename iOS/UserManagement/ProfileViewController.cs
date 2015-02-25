@@ -309,7 +309,7 @@ namespace iOS
 
             // setup the phone number
             CellPhoneText.Delegate = new Rock.Mobile.PlatformSpecific.iOS.UI.PhoneNumberFormatterDelegate();
-            CellPhoneText.Text = RockMobileUser.Instance.TryGetPhoneNumber( CCVApp.Shared.Config.GeneralConfig.CellPhoneValueId ).Number;
+            CellPhoneText.Text = RockMobileUser.Instance.CellPhoneNumberDigits( );
             CellPhoneText.Delegate.ShouldChangeCharacters( CellPhoneText, new NSRange( CellPhoneText.Text.Length, 0 ), "" );
 
             // address
@@ -385,7 +385,7 @@ namespace iOS
             if ( string.IsNullOrEmpty( CellPhoneText.Text ) == false )
             {
                 // update the phone number
-                RockMobileUser.Instance.UpdateOrAddPhoneNumber( CellPhoneText.Text.AsNumeric( ), CCVApp.Shared.Config.GeneralConfig.CellPhoneValueId );
+                RockMobileUser.Instance.SetPhoneNumberDigits( CellPhoneText.Text.AsNumeric( ) );
             }
 
             // Gender
@@ -406,11 +406,15 @@ namespace iOS
                 RockMobileUser.Instance.PrimaryFamily.CampusId = RockGeneralData.Instance.Data.CampusNameToId( HomeCampusText.Text );
             }
 
+            // address
+            RockMobileUser.Instance.SetAddress( StreetText.Text, CityText.Text, StateText.Text, ZipText.Text );
+
             // request the person object be sync'd with the server. because we save the object locally,
             // if the sync fails, the profile will try again at the next login
             RockMobileUser.Instance.UpdateProfile( null );
             RockMobileUser.Instance.UpdateAddress( null );
             RockMobileUser.Instance.UpdateHomeCampus( null );
+            RockMobileUser.Instance.UpdateOrAddPhoneNumber( null );
         }
 
         public override void TouchesEnded(NSSet touches, UIEvent evt)

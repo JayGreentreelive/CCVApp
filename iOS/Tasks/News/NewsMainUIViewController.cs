@@ -152,12 +152,28 @@ namespace iOS
 
                 newsEntry.News = rockEntry;
 
-                bool needImage = TryLoadCachedImage( newsEntry );
-                if ( needImage )
+                // since we're in setup, go ahead and try loading any images we want.
+                // If thye don't exist, we'll use a placeholder until DownloadImages is called by our parent task.
+                TryLoadCachedImage( newsEntry );
+            }
+        }
+
+        public void DownloadImages( )
+        {
+            // this will be called by our parent task when we're clear to download images.
+            foreach ( NewsEntry newsItem in News )
+            {
+                // if no image is set, we couldn't load one, so download it.
+                if ( newsItem.Image == null )
                 {
-                    FileCache.Instance.DownloadImageToCache( newsEntry.News.ImageURL, newsEntry.News.ImageName, delegate { SeriesImageDownloaded( ); } );
+                    FileCache.Instance.DownloadImageToCache( newsItem.News.ImageURL, newsItem.News.ImageName, 
+                        delegate
+                        {
+                            SeriesImageDownloaded( );
+                        } );
                 }
             }
+
         }
 
         bool TryLoadCachedImage( NewsEntry entry )

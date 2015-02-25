@@ -528,7 +528,7 @@ namespace Droid
                     ParentTask.NavbarFragment.NavToolbar.Reveal( false );
 
                     // what's the state of the series xml?
-                    if ( RockLaunchData.Instance.RequestingSeries == false )
+                    if ( RockLaunchData.Instance.RequestingSeries == true )
                     {
                         ProgressBar.Visibility = ViewStates.Visible;
 
@@ -539,7 +539,7 @@ namespace Droid
 
                         while ( waitThread.IsAlive == false );
                     }
-                    else if ( RockLaunchData.Instance.Data.Series.Count == 0 )
+                    else if ( RockLaunchData.Instance.NeedSeriesDownload( ) == true )
                     {
                         ProgressBar.Visibility = ViewStates.Visible;
 

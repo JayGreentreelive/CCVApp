@@ -402,7 +402,15 @@ namespace Droid
                     // a double tap CAN create a user note. If it did,
                     // we want to know that so we suppress further input until we receive
                     // TouchUp
-                    DidGestureCreateNote = Note.DidDoubleTap( new PointF( e.GetX( ), e.GetY( ) ) );
+                    try
+                    {
+                        DidGestureCreateNote = Note.DidDoubleTap( new PointF( e.GetX( ), e.GetY( ) ) );
+                    }
+                    catch( Exception ex )
+                    {
+                        ReportException( "", ex );
+                        DidGestureCreateNote = false;
+                    }
 
                     return true;
                 }

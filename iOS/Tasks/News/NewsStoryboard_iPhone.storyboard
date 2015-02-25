@@ -62,14 +62,14 @@
                                     <constraint firstAttribute="height" constant="180" id="JFK-qV-0gN"/>
                                 </constraints>
                             </imageView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0OU-ck-jEY">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0OU-ck-jEY" misplaced="YES">
                                 <rect key="frame" x="16" y="206" width="288" height="267"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GBV-be-REA">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GBV-be-REA" misplaced="YES">
                                 <rect key="frame" x="16" y="185" width="42" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
@@ -103,10 +103,85 @@
             </objects>
             <point key="canvasLocation" x="188" y="-287"/>
         </scene>
+        <scene sceneID="169">
+            <objects>
+                <viewController id="170" sceneMemberID="viewController" customClass="NewsWebViewController" storyboardIdentifier="NewsWebViewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="167"/>
+                        <viewControllerLayoutGuide type="bottom" id="168"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="171">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="172" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="600" y="-286"/>
+        </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
+    <resources>
+        <image name="Fonts/Bevan.ttf" width="0" height="0"/>
+        <image name="Fonts/ChangaOne-Italic.ttf" width="0" height="0"/>
+        <image name="Fonts/ChangaOne-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/DroidSerif-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/DroidSerif-BoldItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/DroidSerif-Italic.ttf" width="0" height="0"/>
+        <image name="Fonts/DroidSerif.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-Black.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-BoldItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-HeavyItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-Italic.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-Light.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-LightItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/Montserrat-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/Montserrat-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-BoldItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-ExtraBold.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-ExtraBoldItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-Italic.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-Light.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-LightItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-Semibold.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-SemiboldItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/PassionOne-Black.ttf" width="0" height="0"/>
+        <image name="Fonts/PassionOne-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/PassionOne-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/Quicksand-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/Quicksand-Light.ttf" width="0" height="0"/>
+        <image name="Fonts/Quicksand-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoCondensed-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoCondensed-BoldItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoCondensed-Italic.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoCondensed-Light.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoCondensed-LightItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoCondensed-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoSlab-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoSlab-Light.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoSlab-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoSlab-Thin.ttf" width="0" height="0"/>
+        <image name="Fonts/FontAwesome.ttf" width="0" height="0"/>
+        <image name="Fonts/Bh.ttf" width="0" height="0"/>
+        <image name="ccvLogo.png" width="57" height="28"/>
+        <image name="news_baptism_main.png" width="375" height="242"/>
+        <image name="news_learnmore_header.png" width="414" height="180"/>
+        <image name="news_learnmore_main.png" width="375" height="242"/>
+        <image name="news_startingpoint_header.png" width="1242" height="540"/>
+        <image name="news_startingpoint_main.png" width="375" height="242"/>
+        <image name="podcastThumbnailPlaceholder.png" width="590" height="332"/>
+        <image name="spot_mask.png" width="128" height="128"/>
+        <image name="news_baptism_header.png" width="414" height="180"/>
+        <image name="facebook_login.png" width="250" height="35"/>
+        <image name="connect_banner.jpg" width="595" height="335"/>
+    </resources>
 </document>

@@ -112,6 +112,11 @@ namespace CCVApp
                     PlatformLabel.SizeToFit( );
                 }
 
+                public string GetText( )
+                {
+                    return PlatformLabel.Text;
+                }
+
                 public override void AddOffset( float xOffset, float yOffset )
                 {
                     base.AddOffset( xOffset, yOffset );

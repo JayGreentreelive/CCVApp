@@ -159,6 +159,7 @@ namespace CCVApp
                     }
 
                     bool removedLeadingWhitespace = false;
+                    bool lastControlWasReveal = false;
 
                     bool finishedReading = false;
                     while( finishedReading == false && reader.Read( ) )
@@ -170,10 +171,17 @@ namespace CCVApp
                                 IUIControl control = Parser.TryParseControl( new CreateParams( this, availableWidth, parentParams.Height, ref mStyle ), reader );
                                 if( control != null )
                                 {
-                                    // only allow RevealBoxes as children.
-                                    if( control as RevealBox == null && control as TextInput == null )
+                                    // if the last control was a reveal, then we have two in a row. So place a space between them!
+                                    if ( lastControlWasReveal )
                                     {
-                                        throw new Exception( String.Format("Paragraph only supports children of type <RevealBox> and <TextInput>. Found <{0}>", control.GetType()) );
+                                        NoteText textLabel = new NoteText( new CreateParams( this, availableWidth, parentParams.Height, ref mStyle ), " " );
+                                        ChildControls.Add( textLabel );
+                                    }
+
+                                    // only allow RevealBoxes as children.
+                                    if( control as RevealBox == null )
+                                    {
+                                        throw new Exception( String.Format("Paragraph only supports children of type <RevealBox>. Found <{0}>", control.GetType()) );
                                     }
                                     ChildControls.Add( control );
 
@@ -181,12 +189,19 @@ namespace CCVApp
                                     // this was the first control and we didn't want to, or
                                     // it was removed by the first text we created.
                                     removedLeadingWhitespace = true;
+
+                                    // flag that the last control placed was a reveal, so that
+                                    // should we come across another one immediately, we know to insert a space
+                                    // so they don't render concatenated.
+                                    lastControlWasReveal = true;
                                 }
                                 break;
                             }
 
                             case XmlNodeType.Text:
                             {
+                                lastControlWasReveal = false;
+
                                 // give the text a style that doesn't include things it shouldn't inherit
                                 Styles.Style textStyle = mStyle;
                                 textStyle.mBorderColor = null;
@@ -286,6 +301,12 @@ namespace CCVApp
                         // if there is NOT enough room on this row for the next control
                         if( rowRemainingWidth < controlFrame.Width )
                         {
+                            // since we're advancing to the next row, trim leading white space, which, if we weren't wrapping,
+                            // would be a space between words.
+                            // note: we can safely cast to a NoteText because that's the only child type we allow.
+                            string text = ( (NoteText)control ).GetText( ).TrimStart( ' ' );
+                            ( (NoteText)control ).SetText( text );
+
                             // advance to the next row
                             yOffset += lastControlHeight;
 

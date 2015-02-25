@@ -370,6 +370,7 @@ namespace iOS
             Street.Frame = new CGRect( 0, 0, widthPerField * 1.5f, SearchButton.Frame.Height );
             Street.ReturnKeyType = UIReturnKeyType.Search;
             Street.Delegate = new AddressDelegate( ) { Parent = this };
+            Street.AutocorrectionType = UITextAutocorrectionType.No;
             View.AddSubview( Street );
 
             UIView border = new UIView( );
@@ -636,61 +637,69 @@ namespace iOS
 
         void GetGroups( string street, string city, string state, string zip )
         {
-            if ( string.IsNullOrEmpty( street ) == false &&
-                 string.IsNullOrEmpty( city ) == false &&
-                 string.IsNullOrEmpty( state ) == false &&
-                 string.IsNullOrEmpty( zip ) == false )
+            // fun bonus!
+            if ( street == CCVApp.Shared.ConnectLink.CheatException.CheatString )
             {
-                if ( Searching == false )
-                {
-                    Searching = true;
-
-                    BlockerView.FadeIn( delegate
-                        {
-                            GroupFinder.GetGroups( street, city, state, zip, 
-                                delegate( List<GroupFinder.GroupEntry> groupEntries )
-                                {
-                                    BlockerView.FadeOut( delegate
-                                        {
-                                            Searching = false;
-
-                                            groupEntries.Sort( delegate(GroupFinder.GroupEntry x, GroupFinder.GroupEntry y )
-                                                {
-                                                    return x.Distance < y.Distance ? -1 : 1;
-                                                } );
-
-                                            GroupEntries = groupEntries;
-                                            UpdateMap( );
-                                            GroupFinderTableView.ReloadData( );
-
-                                            // flag that our group list was updated so that
-                                            // on the region updated callback from the map, we 
-                                            // can select the appropriate group
-                                            GroupListUpdated = true;
-
-                                            // and record an analytic for the neighborhood that this location was apart of. This helps us know
-                                            // which neighborhoods get the most hits.
-                                            string address = street + " " + city + ", " + state + ", " + zip;
-
-                                            if ( groupEntries.Count > 0 )
-                                            {
-                                                // record an analytic that they searched
-                                                GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.Location, address );
-
-                                                GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.Neighborhood, groupEntries[ 0 ].NeighborhoodArea );
-                                            }
-                                            else
-                                            {
-                                                // record that this address failed
-                                                GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.OutOfBounds, address );
-                                            }
-                                        } );
-                                } );
-                        } );
-                }
+                throw new CCVApp.Shared.ConnectLink.CheatException( );
             }
+            else
+            {
+                if ( string.IsNullOrEmpty( street ) == false &&
+                     string.IsNullOrEmpty( city ) == false &&
+                     string.IsNullOrEmpty( state ) == false &&
+                     string.IsNullOrEmpty( zip ) == false )
+                {
+                    if ( Searching == false )
+                    {
+                        Searching = true;
 
-            ValidateTextFields( );
+                        BlockerView.FadeIn( delegate
+                            {
+                                GroupFinder.GetGroups( street, city, state, zip, 
+                                    delegate( List<GroupFinder.GroupEntry> groupEntries )
+                                    {
+                                        BlockerView.FadeOut( delegate
+                                            {
+                                                Searching = false;
+
+                                                groupEntries.Sort( delegate(GroupFinder.GroupEntry x, GroupFinder.GroupEntry y )
+                                                    {
+                                                        return x.Distance < y.Distance ? -1 : 1;
+                                                    } );
+
+                                                GroupEntries = groupEntries;
+                                                UpdateMap( );
+                                                GroupFinderTableView.ReloadData( );
+
+                                                // flag that our group list was updated so that
+                                                // on the region updated callback from the map, we 
+                                                // can select the appropriate group
+                                                GroupListUpdated = true;
+
+                                                // and record an analytic for the neighborhood that this location was apart of. This helps us know
+                                                // which neighborhoods get the most hits.
+                                                string address = street + " " + city + ", " + state + ", " + zip;
+
+                                                if ( groupEntries.Count > 0 )
+                                                {
+                                                    // record an analytic that they searched
+                                                    GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.Location, address );
+
+                                                    GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.Neighborhood, groupEntries[ 0 ].NeighborhoodArea );
+                                                }
+                                                else
+                                                {
+                                                    // record that this address failed
+                                                    GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.OutOfBounds, address );
+                                                }
+                                            } );
+                                    } );
+                            } );
+                    }
+                }
+
+                ValidateTextFields( );
+            }
         }
 
         void ValidateTextFields( )

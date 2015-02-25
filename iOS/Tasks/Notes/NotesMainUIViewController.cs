@@ -533,7 +533,7 @@ namespace iOS
             IsVisible = true;
 
             // what's the state of the series xml?
-            if ( RockLaunchData.Instance.RequestingSeries == false )
+            if ( RockLaunchData.Instance.RequestingSeries == true )
             {
                 // it's in the process of downloading, so wait and poll.
                 View.AddSubview( ActivityIndicator );
@@ -547,7 +547,7 @@ namespace iOS
 
                 while ( waitThread.IsAlive == false );
             }
-            else if ( RockLaunchData.Instance.Data.Series.Count == 0 )
+            else if ( RockLaunchData.Instance.NeedSeriesDownload( ) == true )
             {
                 // it hasn't been downloaded, or failed, or something. Point is we
                 // don't have anything, so request it.

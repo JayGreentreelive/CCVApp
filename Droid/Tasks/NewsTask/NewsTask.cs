@@ -15,6 +15,7 @@ namespace Droid
             {
                 NewsPrimaryFragment MainPage { get; set; }
                 NewsDetailsFragment DetailsPage { get; set; }
+                NewsWebFragment WebPage { get; set; }
 
                 List<RockNews> News { get; set; }
 
@@ -34,6 +35,13 @@ namespace Droid
                         DetailsPage = new NewsDetailsFragment( );
                     }
                     DetailsPage.ParentTask = this;
+
+                    WebPage = (NewsWebFragment)NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.News.NewsWebFragment" );
+                    if ( WebPage == null )
+                    {
+                        WebPage = new NewsWebFragment( );
+                    }
+                    WebPage.ParentTask = this;
 
                     // setup a list we can use to cache the news, so should it update we don't use the wrong set.
                     News = new List<RockNews>();
@@ -60,6 +68,20 @@ namespace Droid
                     return MainPage;
                 }
 
+                public override void PerformTaskAction(string action)
+                {
+                    base.PerformTaskAction(action);
+
+                    switch ( action )
+                    {
+                        case "Task.Init":
+                        {
+                            //MainPage.DownloadImages( );
+                            break;
+                        }
+                    }
+                }
+
                 public override void OnClick(Android.App.Fragment source, int buttonId, object context = null )
                 {
                     // only handle input if the springboard is closed
@@ -75,8 +97,8 @@ namespace Droid
                         {
                             if ( buttonId == Resource.Id.news_details_launch_url )
                             {
-                                Intent browserIntent = new Intent( Intent.ActionView, Android.Net.Uri.Parse( DetailsPage.NewsItem.ReferenceURL ) );
-                                Rock.Mobile.PlatformSpecific.Android.Core.Context.StartActivity( browserIntent );
+                                WebPage.DisplayUrl( DetailsPage.NewsItem.ReferenceURL );
+                                PresentFragment( WebPage, true );
                             }
                         }
                     }

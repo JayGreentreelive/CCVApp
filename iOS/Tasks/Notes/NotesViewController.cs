@@ -523,7 +523,14 @@ namespace iOS
             {
                 if( tap.State == UIGestureRecognizerState.Ended )
                 {
-                    Note.DidDoubleTap( tap.LocationInView( UIScrollView ).ToPointF( ) );
+                    try
+                    {
+                        Note.DidDoubleTap( tap.LocationInView( UIScrollView ).ToPointF( ) );
+                    }
+                    catch( Exception e )
+                    {
+                        ReportException( "", e );
+                    }
                 }
             }
         }

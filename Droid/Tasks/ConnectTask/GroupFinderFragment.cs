@@ -262,6 +262,7 @@ namespace Droid
                     Street.SetOnEditorActionListener( this );
                     Street.SetMinWidth( (int) (fixedWidth * 1.50f) );
                     Street.SetMaxWidth( (int) (fixedWidth * 1.50f) );
+                    Street.InputType |= Android.Text.InputTypes.TextFlagNoSuggestions;
                     StreetBackgroundColor = ControlStylingConfig.BG_Layer_Color;
 
                     StreetSeperator = new View( Rock.Mobile.PlatformSpecific.Android.Core.Context );

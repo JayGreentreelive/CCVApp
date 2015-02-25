@@ -57,11 +57,14 @@ namespace iOS
                     } );
             }
 
-            ImageBanner.BackgroundColor = UIColor.Green;
+            ImageBanner.BackgroundColor = UIColor.Clear;
 
             LearnMoreButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
-                    UIApplication.SharedApplication.OpenUrl( new NSUrl( NewsItem.ReferenceURL ) );
+                    NewsWebViewController viewController = Storyboard.InstantiateViewController( "NewsWebViewController" ) as NewsWebViewController;
+                    viewController.DisplayUrl = NewsItem.ReferenceURL;
+
+                    Task.PerformSegue( this, viewController );
                 };
 
             // if there's no URL associated with this news item, hide the learn more button.

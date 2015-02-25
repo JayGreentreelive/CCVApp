@@ -132,6 +132,13 @@ namespace CCVApp
                     public List<Series> Series { get; set; }
 
                     /// <summary>
+                    /// The last time the series was downloaded. This helps us know whether to
+                    /// update it or not, in case the user hasn't quit the app in days.
+                    /// </summary>
+                    /// <value>The series time stamp.</value>
+                    public DateTime SeriesTimeStamp { get; set; }
+
+                    /// <summary>
                     /// Used on the app's first run, or there's no network connection
                     /// and no valid downloaded news to use.
                     /// </summary>
@@ -169,23 +176,21 @@ namespace CCVApp
                 {
                     Console.WriteLine( "Get LaunchData" );
 
-                    // request the initial news
+                    // now get the news.
                     GetNews( delegate 
                         {
-                            // whether it worked or not, now grab the series info. 
-                            GetSeries( delegate
-                                {
-                                    // notify the caller now that we're done
-                                    if( launchDataResult != null )
-                                    {
-                                        // send OK, because whether we failed or not, the caller doessn't need to care.
-                                        launchDataResult( System.Net.HttpStatusCode.OK, "" );
-                                    }
-                                });
-                        } );
+                            // chain any other required launch data actions here.
+
+                            // notify the caller now that we're done
+                            if( launchDataResult != null )
+                            {
+                                // send OK, because whether we failed or not, the caller doessn't need to care.
+                                launchDataResult( System.Net.HttpStatusCode.OK, "" );
+                            }
+                        });
                 }
 
-                public void GetNews( HttpRequest.RequestResult resultCallback )
+                void GetNews( HttpRequest.RequestResult resultCallback )
                 {
                     RockApi.Instance.GetNews( delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.ContentChannelItem> model )
                         {
@@ -236,6 +241,7 @@ namespace CCVApp
                             {
                                 Console.WriteLine( "Got series info." );
                                 Data.Series = seriesModel;
+                                Data.SeriesTimeStamp = DateTime.Now;
                             }
                             else if ( seriesModel == null )
                             {
@@ -255,6 +261,22 @@ namespace CCVApp
                                 resultCallback( statusCode, statusDescription );
                             }
                         } );
+                }
+
+                /// <summary>
+                /// Returns true if there ARE no series, or if the last time the series 
+                /// was downloaded was too long ago.
+                /// </summary>
+                public bool NeedSeriesDownload( )
+                {
+                    // if the series hasn't been downloaded yet, or it's older than a day, redownload it.
+                    TimeSpan seriesDelta = DateTime.Now - Data.SeriesTimeStamp;
+                    if ( Data.Series.Count == 0 || seriesDelta.TotalSeconds >= 30 )
+                    {
+                        return true;
+                    }
+
+                    return false;
                 }
 
                 public void SaveToDevice( )

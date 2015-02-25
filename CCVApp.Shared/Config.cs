@@ -19,9 +19,9 @@ namespace CCVApp
 
                 /// <summary>
                 /// The length of time a file should remain cached. After this, it will be deleted
-                /// from cache.
+                /// from cache. (30 days)
                 /// </summary>
-                public static TimeSpan CacheFileExpiration = new TimeSpan( 7, 0, 0 );
+                public static TimeSpan CacheFileExpiration = new TimeSpan( 30, 0, 0, 0 );
 
                 /// <summary>
                 /// The size (in pixels) of the profile image to download from Rock
@@ -38,6 +38,11 @@ namespace CCVApp
                 /// </summary>
                 public const string FBAppPermissions = "public_profile, user_friends, email";
 
+                /// <summary>
+                /// Used when creating new addresses that will be sent to Rock. If your app will run in another country,
+                /// set CountryCode to the ISO country code.
+                /// </summary>
+                public const string CountryCode = "US";
 
                 /// <summary>
                 /// Defined in Rock, this should NEVER change, and is the key the mobile app uses so Rock
@@ -46,15 +51,10 @@ namespace CCVApp
                 public const string RockMobileAppAuthorizationKey = "hWTaZ7buziBcJQH31KCm3Pzz";
 
                 /// <summary>
-                /// Todo: Get this from Rock, or SOMETHING. This is not ok.
+                /// Todo: Find out why it's ok to hardcode these IDs, but not IDs for
+                /// Group Types and Group Location Types.
                 /// </summary>
                 public const int CellPhoneValueId = 12;
-
-                /// <summary>
-                /// Todo: Get this from Rock, or SOMETHING. This is not ok.
-                /// </summary>
-                public const int PrimaryResidenceLocationValueId = 19;
-
                 public const int NeighborhoodGroupGeoFenceValueId = 48;
                 public const int NeighborhoodGroupValueId = 49;
 

@@ -137,9 +137,9 @@ namespace Droid
         NotificationBillboard Billboard { get; set; }
 
         /// <summary>
-        /// True when launch data is finished downloading
+        /// True when series info is downloaded and it's safe to start downloading other stuff.
         /// </summary>
-        bool LaunchDataFinished { get; set; }
+        bool SeriesInfoDownloaded { get; set; }
 
         /// <summary>
         /// Allows fragments to control whether the device back button will work or not.
@@ -230,13 +230,13 @@ namespace Droid
 
         void SyncRockData( )
         {
-            LaunchDataFinished = false;
+            SeriesInfoDownloaded = false;
 
-            CCVApp.Shared.Network.RockNetworkManager.Instance.SyncRockData( 
-                delegate(System.Net.HttpStatusCode statusCode, string statusDescription)
+            CCVApp.Shared.Network.RockNetworkManager.Instance.SyncRockData(
+                delegate
                 {
                     // here we know whether the initial handshake with Rock went ok or not
-                    LaunchDataFinished = true;
+                    SeriesInfoDownloaded = true;
 
                     // if the billboard has been added, show it.
                     // Otherwise, it'll be shown when the view is finished setting up.
@@ -245,6 +245,10 @@ namespace Droid
                         DisplaySeriesBillboard( );
                     }
 
+                    NavbarFragment.PerformTaskAction( "Task.Init" );
+                },
+                delegate(System.Net.HttpStatusCode statusCode, string statusDescription)
+                {
                     LastRockSync = DateTime.Now;
                 });
         }
@@ -437,6 +441,7 @@ namespace Droid
                         }
                     }
                 } );
+            Billboard.Hide( );
 
             return view;
         }
@@ -683,7 +688,7 @@ namespace Droid
                 ( (FrameLayout)NavbarFragment.ActiveTaskFrame ).AddView( Billboard );
 
                 // if we finished getting launch data, process the billboard
-                if ( LaunchDataFinished == true )
+                if ( SeriesInfoDownloaded == true )
                 {
                     DisplaySeriesBillboard( );
                 }            
@@ -697,7 +702,7 @@ namespace Droid
         {
             // should we advertise the notes?
             // yes, if it's a weekend and we're at CCV (that part will come later)
-            if ( DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday )
+            //if ( DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday )
             {
                 if ( RockLaunchData.Instance.Data.Series.Count > 0 )
                 {
@@ -705,7 +710,7 @@ namespace Droid
                     // don't want to do it the MOMENT the view appears.
                     System.Timers.Timer timer = new System.Timers.Timer();
                     timer.AutoReset = false;
-                    timer.Interval = 1000;
+                    timer.Interval = 1;
                     timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>
                         {
                             Rock.Mobile.Threading.Util.PerformOnUIThread( delegate

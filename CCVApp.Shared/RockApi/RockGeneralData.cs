@@ -53,6 +53,9 @@ namespace CCVApp
                         PrayerCategories.Add( "Treasure Vault" );
                         PrayerCategories.Add( "Ponies" );
                         PrayerCategories.Add( "Whimseydale" );
+
+                        DefinedValueList = new List<Rock.Client.DefinedValue>( );
+                        DefinedValueList.Add( new Rock.Client.DefinedValue( ) { Guid = new Guid( Rock.Client.SystemGuid.DefinedValue.GROUP_LOCATION_TYPE_HOME ), Id = 19 } );
                     }
 
                     [JsonConstructor]
@@ -107,6 +110,12 @@ namespace CCVApp
                     /// </summary>
                     /// <value>The prayer categories.</value>
                     public List<string> PrayerCategories { get; set; }
+
+                    /// <summary>
+                    /// List of defined values, which contain Guids and their matching DefinedTypeIDs
+                    /// </summary>
+                    /// <value>The defined value list.</value>
+                    public List<Rock.Client.DefinedValue> DefinedValueList { get; set; }
                 }
                 public GeneralData Data { get; set; }
 
@@ -117,17 +126,40 @@ namespace CCVApp
 
                 public void GetGeneralData( HttpRequest.RequestResult generalDataResult )
                 {
-                    Console.WriteLine( "Get GeneralData" );
-                    RockApi.Instance.GetCampuses( delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.Campus> campusList )
+                    // take only the guids we need to get the IDs for
+                    List<System.Guid> guidList = new List<Guid>();
+                    foreach ( Rock.Client.DefinedValue definedValue in Data.DefinedValueList )
+                    {
+                        guidList.Add( definedValue.Guid );
+                    }
+
+                    // get those defiend values.
+                    RockApi.Instance.GetDefinedValues( guidList, delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.DefinedValue> definedValues )
                         {
+                            // if we were successful, parse the defined values
                             if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
                             {
-                                Data.Campuses = campusList;
-
-                                // save!
-                                SaveToDevice( );
+                                Data.DefinedValueList = definedValues;
                             }
-                        } );
+
+                            // failure or not, now get our campuses.
+                            RockApi.Instance.GetCampuses( delegate(System.Net.HttpStatusCode campusStatusCode, string campusStatusDescription, List<Rock.Client.Campus> campusList )
+                                {
+                                    if( Rock.Mobile.Network.Util.StatusInSuccessRange( campusStatusCode ) == true )
+                                    {
+                                        Data.Campuses = campusList;
+                                    }
+
+                                    // save!
+                                    SaveToDevice( );
+
+                                    // notify the caller
+                                    if( generalDataResult != null )
+                                    {
+                                        generalDataResult( statusCode, statusDescription );
+                                    }
+                                } );
+                        });
 
                     /*RockApi.Instance.GetGeneralData(delegate(System.Net.HttpStatusCode statusCode, string statusDescription, GeneralData model)
                         {

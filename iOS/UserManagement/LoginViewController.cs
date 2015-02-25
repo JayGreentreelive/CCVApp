@@ -365,7 +365,7 @@ namespace iOS
                 // if we received No Content, we're logged in
                 case System.Net.HttpStatusCode.NoContent:
                 {
-                    RockMobileUser.Instance.GetProfile( ProfileComplete );
+                    RockMobileUser.Instance.GetProfileAndCellPhone( ProfileComplete );
                     break;
                 }
 

@@ -201,9 +201,9 @@ namespace iOS
         NotificationBillboard Billboard { get; set; }
 
         /// <summary>
-        /// True when launch data is finished downloading
+        /// True when the series info has been downloaded and it's safe to show the notification billboard.
         /// </summary>
-        bool LaunchDataFinished { get; set; }
+        bool SeriesInfoDownloaded { get; set; }
 
         /// <summary>
         /// Stores the time of the last rock sync.
@@ -443,7 +443,7 @@ namespace iOS
                     {
                         if ( element.Task as NotesTask != null )
                         {
-                            ActivateElement( element );
+                            ActivateElement( element, true );
                             NavViewController.PerformTaskAction( "Page.Read" );
                         }
                     }
@@ -451,17 +451,18 @@ namespace iOS
             );
 
             Billboard.Layer.Position = new CGPoint( Billboard.Layer.Position.X, NavViewController.NavigationBar.Frame.Height );
+            Billboard.Hide( );
         }
 
         void SyncRockData( )
         {
-            LaunchDataFinished = false;
+            SeriesInfoDownloaded = false;
 
             CCVApp.Shared.Network.RockNetworkManager.Instance.SyncRockData( 
-                delegate(System.Net.HttpStatusCode statusCode, string statusDescription)
+                // first delegate is for completion of the series download. At that point we can show the notification billboard.
+                delegate 
                 {
-                    // here we know whether the initial handshake with Rock went ok or not
-                    LaunchDataFinished = true;
+                    SeriesInfoDownloaded = true;
 
                     // if the billboard has been added, show it.
                     // Otherwise, it'll be shown when the view is finished setting up.
@@ -470,6 +471,12 @@ namespace iOS
                         DisplaySeriesBillboard( );
                     }
 
+                    // notify the controller that the active task can do whatever init'ing it wants to do.
+                    NavViewController.PerformTaskAction( "Task.Init" );
+                },
+                delegate(System.Net.HttpStatusCode statusCode, string statusDescription)
+                {
+                    // here we know whether the initial handshake with Rock went ok or not
                     LastRockSync = DateTime.Now;
                 });
         }
@@ -605,19 +612,20 @@ namespace iOS
             return UIStatusBarStyle.LightContent;
         }
 
-        protected void ActivateElement( SpringboardElement activeElement )
+        protected void ActivateElement( SpringboardElement activeElement, bool forceActivate = false )
         {
-            // don't allow any navigation while the login controller is active
-            if( ModalControllerVisible == false && NavViewController.IsSpringboardOpen() == true )
+            // don't allow any navigation while the login controller is active.
+            // If forceOpen is enabled, we'll allow it regardless.
+            if ( (ModalControllerVisible == false && NavViewController.IsSpringboardOpen( ) == true) || forceActivate == true )
             {
                 // make sure we're allowed to switch activities
-                if( NavViewController.ActivateTask( activeElement.Task ) == true )
+                if ( NavViewController.ActivateTask( activeElement.Task ) == true )
                 {
                     // first turn "off" the backingView selection for all but the element
                     // becoming active.
-                    foreach( SpringboardElement element in Elements )
+                    foreach ( SpringboardElement element in Elements )
                     {
-                        if( element != activeElement )
+                        if ( element != activeElement )
                         {
                             element.Deactivate( );
                         }
@@ -680,8 +688,8 @@ namespace iOS
             {
                 View.AddSubview( Billboard );
 
-                // if we finished getting launch data, process the billboard
-                if ( LaunchDataFinished == true )
+                // if the series info has downloaded, show the banner
+                if ( SeriesInfoDownloaded == true )
                 {
                     DisplaySeriesBillboard( );
                 }
@@ -695,24 +703,16 @@ namespace iOS
         {
             // should we advertise the notes?
             // yes, if it's a weekend and we're at CCV (that part will come later)
-            if ( DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday )
+            //if ( DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday )
             {
                 if ( RockLaunchData.Instance.Data.Series.Count > 0 )
                 {
-                    // kick off a timer to reveal the billboard, because we 
-                    // don't want to do it the MOMENT the view appears.
-                    System.Timers.Timer timer = new System.Timers.Timer();
-                    timer.AutoReset = false;
-                    timer.Interval = 1000;
-                    timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>
-                        {
-                            Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
-                                {
-                                    Billboard.Reveal( );
-                                    View.BringSubviewToFront( Billboard );
-                                } );
-                        };
-                    timer.Start( );
+                        Rock.Mobile.Threading.Util.PerformOnUIThread( 
+                            delegate
+                            {
+                                Billboard.Reveal( );
+                                View.BringSubviewToFront( Billboard );
+                            } );
                 }
             }
         }

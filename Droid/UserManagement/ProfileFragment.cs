@@ -320,7 +320,7 @@ namespace Droid
             EmailField.Text = RockMobileUser.Instance.Person.Email;
 
             // cellphone
-            CellPhoneField.Text = RockMobileUser.Instance.TryGetPhoneNumber( CCVApp.Shared.Config.GeneralConfig.CellPhoneValueId ).Number;
+            CellPhoneField.Text = RockMobileUser.Instance.CellPhoneNumberDigits( );
 
             // address
             StreetField.Text = RockMobileUser.Instance.Street1( );
@@ -384,7 +384,7 @@ namespace Droid
             if ( string.IsNullOrEmpty( CellPhoneField.Text ) == false )
             {
                 // update the phone number
-                RockMobileUser.Instance.UpdateOrAddPhoneNumber( CellPhoneField.Text.AsNumeric( ), CCVApp.Shared.Config.GeneralConfig.CellPhoneValueId );
+                RockMobileUser.Instance.SetPhoneNumberDigits( CellPhoneField.Text );
             }
 
             // Gender
@@ -405,11 +405,14 @@ namespace Droid
                 RockMobileUser.Instance.PrimaryFamily.CampusId = RockGeneralData.Instance.Data.CampusNameToId( CampusField.Text );
             }
 
+            RockMobileUser.Instance.SetAddress( StreetField.Text, CityField.Text, StateField.Text, ZipField.Text );
+
             // request the person object be sync'd with the server. because we save the object locally,
             // if the sync fails, the profile will try again at the next login
             RockMobileUser.Instance.UpdateProfile( null );
             RockMobileUser.Instance.UpdateAddress( null );
             RockMobileUser.Instance.UpdateHomeCampus( null );
+            RockMobileUser.Instance.UpdateOrAddPhoneNumber( null );
         }
 
     }

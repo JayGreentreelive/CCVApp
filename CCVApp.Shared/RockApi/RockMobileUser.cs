@@ -82,27 +82,48 @@ namespace CCVApp
                 // make the address getters methods, not properties, so json doesn't try to serialize them.
                 public string Street1( )
                 {
-                    return PrimaryAddress.Location != null ? PrimaryAddress.Location.Street1 : "";
+                    return string.IsNullOrEmpty( PrimaryAddress.Location.Street1 ) == true ? "" : PrimaryAddress.Location.Street1;
                 }
 
                 public string Street2( )
                 {
-                    return PrimaryAddress.Location != null ? PrimaryAddress.Location.Street2 : "";
+                    return string.IsNullOrEmpty( PrimaryAddress.Location.Street2 ) == true ? "" : PrimaryAddress.Location.Street2;
                 }
 
                 public string City( )
                 {
-                    return PrimaryAddress.Location != null ? PrimaryAddress.Location.City : "";
+                    return string.IsNullOrEmpty( PrimaryAddress.Location.City ) == true ? "" : PrimaryAddress.Location.City;
                 }
 
                 public string State( )
                 {
-                    return PrimaryAddress.Location != null ? PrimaryAddress.Location.State : "";
+                    return string.IsNullOrEmpty( PrimaryAddress.Location.State ) == true ? "" : PrimaryAddress.Location.State;
                 }
 
                 public string Zip( )
                 {
-                    return PrimaryAddress.Location != null ? PrimaryAddress.Location.PostalCode.Substring( 0, PrimaryAddress.Location.PostalCode.IndexOf( '-' ) ) : "";
+                    if ( string.IsNullOrEmpty( PrimaryAddress.Location.PostalCode ) == false )
+                    {
+                        // guard against there not being a postal code suffix
+                        int length = PrimaryAddress.Location.PostalCode.IndexOf( '-' );
+                        if ( length == -1 )
+                        {
+                            length = PrimaryAddress.Location.PostalCode.Length;
+                        }
+
+                        return PrimaryAddress.Location.PostalCode.Substring( 0, length );
+                    }
+
+                    return "";
+                }
+
+                public void SetAddress( string street, string city, string state, string zip )
+                {
+                    // make sure they DO have a location
+                    PrimaryAddress.Location.Street1 = street;
+                    PrimaryAddress.Location.City = city;
+                    PrimaryAddress.Location.State = state;
+                    PrimaryAddress.Location.PostalCode = zip;
                 }
 
                 public bool HasFullAddress( )
@@ -153,18 +174,55 @@ namespace CCVApp
                 /// know that we need to try again.
                 /// </summary>
                 /// <value>The person json.</value>
-                public string LastSyncdPersonJson { get; set; }
+                [JsonProperty]
+                string LastSyncdPersonJson { get; set; }
 
-                public string LastSyncdFamilyJson { get; set; }
+                [JsonProperty]
+                string LastSyncdFamilyJson { get; set; }
 
-                public string LastSyncdAddressJson { get; set; }
+                [JsonProperty]
+                string LastSyncdAddressJson { get; set; }
+
+                [JsonProperty]
+                string LastSyncdCellPhoneNumberJson { get; set; }
+
+                [JsonProperty]
+                Rock.Client.PhoneNumber _CellPhoneNumber = null;
+
+                public string CellPhoneNumberDigits( )
+                {
+                    return _CellPhoneNumber != null ? _CellPhoneNumber.Number : "";
+                }
+
+                public void SetPhoneNumberDigits( string digits )
+                { 
+                    if ( _CellPhoneNumber == null )
+                    {
+                        _CellPhoneNumber = new Rock.Client.PhoneNumber();
+                        _CellPhoneNumber.Number = digits;
+                        _CellPhoneNumber.NumberFormatted = digits.AsPhoneNumber( );
+                        _CellPhoneNumber.NumberTypeValueId = GeneralConfig.CellPhoneValueId;
+                        _CellPhoneNumber.PersonId = Person.Id;
+                        _CellPhoneNumber.Guid = Guid.NewGuid( );
+                    }
+                    else
+                    {
+                        _CellPhoneNumber.Number = digits;
+                        _CellPhoneNumber.NumberFormatted = digits.AsPhoneNumber( );
+                    }
+                }
 
                 private RockMobileUser( )
                 {
                     Person = new Person();
+
                     PrimaryFamily = new Group();
                     PrimaryAddress = new GroupLocation();
                     ViewingCampus = RockGeneralData.Instance.Data.Campuses[ 0 ].Id;
+
+                    // for the address location, default the country to the built in country code.
+                    PrimaryAddress.Location = new Location();
+                    PrimaryAddress.Location.Country = CCVApp.Shared.Config.GeneralConfig.CountryCode;
                 }
 
                 public string PreferredName( )
@@ -176,88 +234,6 @@ namespace CCVApp
                     else
                     {
                         return Person.FirstName;
-                    }
-                }
-
-                /// <summary>
-                /// Returns the phone number matching phoneTypeId, or an empty one if no match is found.
-                /// </summary>
-                /// <returns>The phone number.</returns>
-                /// <param name="phoneTypeId">Phone type identifier.</param>
-                public Rock.Client.PhoneNumber TryGetPhoneNumber( int phoneTypeId )
-                {
-                    Rock.Client.PhoneNumber requestedNumber = new Rock.Client.PhoneNumber( );
-
-                    // if the user has phone numbers
-                    if ( Person.PhoneNumbers != null )
-                    {
-                        // get an enumerator
-                        IEnumerator<Rock.Client.PhoneNumber> enumerator = Person.PhoneNumbers.GetEnumerator( );
-                        enumerator.MoveNext( );
-
-                        // search for the phone number type requested
-                        while ( enumerator.Current != null )
-                        {
-                            Rock.Client.PhoneNumber phoneNumber = enumerator.Current as Rock.Client.PhoneNumber;
-
-                            // is this the right type?
-                            if ( phoneNumber.NumberTypeValueId == phoneTypeId )
-                            {
-                                requestedNumber = phoneNumber;
-                                break;
-                            }
-                            enumerator.MoveNext( );
-                        }
-                    }
-
-                    return requestedNumber;
-                }
-
-                public void UpdateOrAddPhoneNumber( string phoneNumberDigits, int phoneTypeId )
-                {
-                    // begin by assuming we will need to add a new number
-                    bool addNewPhoneNumber = true;
-
-                    // do they have numbers?
-                    if ( Person.PhoneNumbers != null )
-                    {
-                        // search for a matching Id
-                        IEnumerator<Rock.Client.PhoneNumber> enumerator = Person.PhoneNumbers.GetEnumerator( );
-                        enumerator.MoveNext( );
-
-                        while ( enumerator.Current != null )
-                        {
-                            Rock.Client.PhoneNumber phoneNumber = enumerator.Current as Rock.Client.PhoneNumber;
-
-                            // is this the phone type?
-                            if ( phoneNumber.NumberTypeValueId == phoneTypeId )
-                            {
-                                // then set it, and we won't need to create one.
-                                addNewPhoneNumber = false;
-
-                                phoneNumber.Number = phoneNumberDigits;
-                                phoneNumber.NumberFormatted = phoneNumberDigits.AsPhoneNumber( );
-                                break;
-                            }
-                            enumerator.MoveNext( );
-                        }
-                    }
-
-                    // if this is true, we couldn't find a matching phone type,
-                    // so we'll add it as a new one.
-                    if ( addNewPhoneNumber == true )
-                    {
-                        Rock.Client.PhoneNumber phoneNumber = new Rock.Client.PhoneNumber();
-                        phoneNumber.Number = phoneNumberDigits;
-                        phoneNumber.NumberFormatted = phoneNumberDigits.AsPhoneNumber( );
-                        phoneNumber.NumberTypeValueId = phoneTypeId;
-
-                        // make sure they even HAVE a phone number set
-                        if ( Person.PhoneNumbers == null )
-                        {
-                            Person.PhoneNumbers = new List<PhoneNumber>();
-                        }
-                        Person.PhoneNumbers.Add( phoneNumber );
                     }
                 }
 
@@ -440,7 +416,7 @@ namespace CCVApp
                     Person.Email = FacebookManager.Instance.GetEmail( infoObj );
                 }
 
-                public void GetProfile( HttpRequest.RequestResult<Rock.Client.Person> profileResult )
+                public void GetProfileAndCellPhone( HttpRequest.RequestResult<Rock.Client.Person> profileResult )
                 {
                     RockApi.Instance.GetProfile( UserID, delegate(System.Net.HttpStatusCode statusCode, string statusDescription, Rock.Client.Person model)
                         {
@@ -448,6 +424,13 @@ namespace CCVApp
                             {
                                 // on retrieval, convert this version for dirty compares later
                                 Person = model;
+
+                                // store their contact phone number seperately so we don't
+                                // get conflicts with syncing.
+                                _CellPhoneNumber = TryGetPhoneNumber( GeneralConfig.CellPhoneValueId );
+                                Person.PhoneNumbers = null;
+
+                                LastSyncdCellPhoneNumberJson = _CellPhoneNumber != null ? JsonConvert.SerializeObject( _CellPhoneNumber ) : "";
                                 LastSyncdPersonJson = JsonConvert.SerializeObject( Person );
 
                                 // save!
@@ -482,6 +465,67 @@ namespace CCVApp
                         });
                 }
 
+                /// <summary>
+                /// Returns the phone number matching phoneTypeId, or an empty one if no match is found.
+                /// </summary>
+                /// <returns>The phone number.</returns>
+                /// <param name="phoneTypeId">Phone type identifier.</param>
+                Rock.Client.PhoneNumber TryGetPhoneNumber( int phoneTypeId )
+                {
+                    Rock.Client.PhoneNumber requestedNumber = null;
+
+                    // if the user has phone numbers
+                    if ( Person.PhoneNumbers != null )
+                    {
+                        // get an enumerator
+                        IEnumerator<Rock.Client.PhoneNumber> enumerator = Person.PhoneNumbers.GetEnumerator( );
+                        enumerator.MoveNext( );
+
+                        // search for the phone number type requested
+                        while ( enumerator.Current != null )
+                        {
+                            Rock.Client.PhoneNumber phoneNumber = enumerator.Current as Rock.Client.PhoneNumber;
+
+                            // is this the right type?
+                            if ( phoneNumber.NumberTypeValueId == phoneTypeId )
+                            {
+                                requestedNumber = phoneNumber;
+                                break;
+                            }
+                            enumerator.MoveNext( );
+                        }
+                    }
+
+                    return requestedNumber;
+                }
+
+                public void UpdateOrAddPhoneNumber( HttpRequest.RequestResult phoneResult )
+                {
+                    // we know if it's a new phone number based on whether our sync'd cell number is blank or not.
+                    bool addNewPhoneNumber = string.IsNullOrEmpty( LastSyncdCellPhoneNumberJson ) ? true : false;
+
+                    // send it to the server
+                    RockApi.Instance.UpdatePhoneNumber( _CellPhoneNumber, addNewPhoneNumber, 
+
+                        delegate(System.Net.HttpStatusCode statusCode, string statusDescription)
+                        {
+                            if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
+                            {
+                                // since the phone number is tied to the person, if this was successful, consider our 
+                                LastSyncdCellPhoneNumberJson = JsonConvert.SerializeObject( _CellPhoneNumber );
+                            }
+
+                            // save either way!
+                            SaveToDevice( );
+
+                            if( phoneResult != null )
+                            {
+                                phoneResult( statusCode, statusDescription );
+                            }
+
+                        } );
+                }
+
                 public void GetFamilyAndAddress( HttpRequest.RequestResult< List<Rock.Client.Group> > addressResult )
                 {
                     // for the address (which implicitly is their primary residence address), first get all group locations associated with them
@@ -496,17 +540,20 @@ namespace CCVApp
                                 // look thru each group (family)
                                 foreach( Rock.Client.Group personGroup in model )
                                 {
-                                    // look at each location within the family
-                                    foreach( Rock.Client.GroupLocation groupLocation in personGroup.GroupLocations )
+                                    // If we find a groupType of family, that should be their primary family.
+                                    if( personGroup.GroupType.Guid.ToString( ).ToLower( ) == Rock.Client.SystemGuid.GroupType.GROUPTYPE_FAMILY.ToLower( ) )
                                     {
-                                        // if we find one that has a primary residence, consider this the right address
-                                        if( groupLocation.GroupLocationTypeValueId == CCVApp.Shared.Config.GeneralConfig.PrimaryResidenceLocationValueId )
-                                        {
-                                            // additionally, consider this the person's family.
-                                            PrimaryFamily = personGroup;
+                                        PrimaryFamily = personGroup;
 
-                                            PrimaryAddress = groupLocation;
-                                            break;
+                                        // look at each location within the family
+                                        foreach( Rock.Client.GroupLocation groupLocation in personGroup.GroupLocations )
+                                        {
+                                            // find their "Home Location" within the family group type.
+                                            if( groupLocation.GroupLocationTypeValue.Guid.ToString( ).ToLower( ) == Rock.Client.SystemGuid.DefinedValue.GROUP_LOCATION_TYPE_HOME.ToLower( ) )
+                                            {
+                                                PrimaryAddress = groupLocation;
+                                                break;
+                                            }
                                         }
                                     }
                                 }
@@ -553,12 +600,18 @@ namespace CCVApp
 
                 public void UpdateAddress( HttpRequest.RequestResult addressResult )
                 {
-                    /*RockApi.Instance.UpdateGroupLocation( Person.Id, Address, delegate(System.Net.HttpStatusCode statusCode, string statusDescription)
+                    // before updating the address, ensure that the address has the correct groupLocationTypeValueId, which lets Rock know
+                    // this should be their "Home Address"
+                    Guid homeLocationGuid = new Guid( Rock.Client.SystemGuid.DefinedValue.GROUP_LOCATION_TYPE_HOME );
+                    PrimaryAddress.GroupLocationTypeValueId = CCVApp.Shared.Network.RockGeneralData.Instance.Data.DefinedValueList.Find( d => d.Guid == homeLocationGuid ).Id;
+
+                    // fire it off
+                    RockApi.Instance.UpdateAddress( PrimaryFamily, PrimaryAddress, delegate(System.Net.HttpStatusCode statusCode, string statusDescription)
                         {
                             if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
                             {
                                 // if successful, update our json so we have a match and don't try to update again later.
-                                LastSyncdAddressJson = JsonConvert.SerializeObject( Address );
+                                LastSyncdAddressJson = JsonConvert.SerializeObject( PrimaryAddress );
                             }
 
                             // whether we succeeded in updating with the server or not, save to disk.
@@ -568,13 +621,9 @@ namespace CCVApp
                             {
                                 addressResult( statusCode, statusDescription );
                             }
-                        });*/
-
-                    if( addressResult != null )
-                    {
-                        addressResult( System.Net.HttpStatusCode.OK, "" );
-                    }
+                        });
                 }
+
 
                 public void SetProfilePicture( MemoryStream imageStream )
                 {
@@ -677,27 +726,32 @@ namespace CCVApp
                     // created at a point when we know we were sync'd with the server
                     // no longer matches our object, we should update it.
                     string currPersonJson = JsonConvert.SerializeObject( Person );
+                    string currPhoneNumbersJson = _CellPhoneNumber != null ? JsonConvert.SerializeObject( _CellPhoneNumber ) : "";
                     string currFamilyJson = JsonConvert.SerializeObject( PrimaryFamily );
                     string currAddressJson = JsonConvert.SerializeObject( PrimaryAddress );
 
                     if( string.Compare( LastSyncdPersonJson, currPersonJson ) != 0 || 
+                        string.Compare( LastSyncdCellPhoneNumberJson, currPhoneNumbersJson ) != 0 ||
                         string.Compare( LastSyncdFamilyJson, currFamilyJson ) != 0 ||
                         string.Compare( LastSyncdAddressJson, currAddressJson ) != 0 )
                     {
                         Console.WriteLine( "RockMobileUser: Syncing Profile" );
                         UpdateProfile( delegate
                             {
-                                UpdateAddress( delegate
-                                    {
-                                        // update home campus
-                                        UpdateHomeCampus( delegate
-                                            {
-                                                // If needed, make other calls here, chained, and finally
+                                UpdateOrAddPhoneNumber( delegate
+                                {
+                                    UpdateAddress( delegate
+                                        {
+                                            // update home campus
+                                            UpdateHomeCampus( delegate
+                                                {
+                                                    // If needed, make other calls here, chained, and finally
 
-                                                // return finished. just tell them OK, because it really doesn't matter if it worked or not.
-                                                resultCallback( System.Net.HttpStatusCode.OK, "" );
-                                            });
-                                    });
+                                                    // return finished. just tell them OK, because it really doesn't matter if it worked or not.
+                                                    resultCallback( System.Net.HttpStatusCode.OK, "" );
+                                                });
+                                        });
+                                });
                             });
                     }
                     else

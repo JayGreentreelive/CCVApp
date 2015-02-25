@@ -195,6 +195,8 @@ namespace CCVApp.Shared
 
             public const string Read_Share_Notes = "Message - {0}";
 
+            public const string TooManyNotes = "Are you really taking notes, or are you just goofing off?\nPay attention to the service!";
+
         }
 
         public class PrayerStrings

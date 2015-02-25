@@ -1,95 +1,31 @@
 *If the build crashes at startup, delete and reinstall.
 
 Highlights
-	Notification Banner allows quick Note access.
-	
-	The latest CCV News directly from Rock!
-	
-	Group Finder fully functional (Except distance)
-
-	Analytics Integrated. I'll know when you're using the app....
-
-	Tons of bug fixes and polish.
-
 
 Changes
 -------
 
 Both
-	Added a Notification Banner system that allows quick access.
-		First (and probably only usage) is "Tap To Take Notes" on weekends.
+	General - Fixed an issue causing the "Notes" billboard to sometimes not appear immediately at startup.
 
-	News is now downloaded from Rock at startup.
+	News - Learn More now displays within the app rather than taking you out of it.
 
-	Notes are now downloaded at startup (reduces the delay when tapping "Messages")
+	Notes - Fixed an issue where the main page would not wait for the series to finish downloading.
+	Notes - Fixed an issue causing the list of series to be out of date if the app wasn't closed / reopened.
+	Notes - Fixed an issue causing text on newlines to sometimes be indented by a space.
+	Notes - Fixed an issue causing there to be no space between consecutive Reveal Boxes in a row. 
+	Notes - User Notes are limited to 20 per Note. Try to go above, and see what happens :)
 
-	Added analytic usage tracking.
+	Profile - Updating phone number now works.
+	Profile - Updating home campus when the user had no family/home campus now works.
+	Profile - Updating and creating your home address now works.
 
-	Fixed an issue causing the Title of a news article to bleed off the right edge.
+	FileCache - Fixed an issue causing cached files to expire after 7 hours instead of 7 days. Also upped the default expiration time from 7 days to 30.
 
-	If a news title is too long, ellipses will now be added.
-
-	Reworked the Nav Toolbar reveal in Notes. It now reveals when near the top, and hides when scrolled.
-
-	Updated the Image Cropper button icons.
-
-	Added expirations to cached images (so they can be updated and don't eternally build up)
-
-	When not logged in, the Profile Image button will act as a login button.
-
-	Fixed an issue causing the Nav Toolbar to sometimes hide and not come back on a particular page.
-
-	Group Finder - The selected group is now highlighted in the group list, centered on the map, and the tooltip window is opened up.
-
-	Group Finder - The nearest group is now colored red and denoted with an extra label.
-
-	Group Finder - Now displays day & time of the group instead of Address
-
-	Prayer Creation - Required fields will be colored red if you attempt to submit without filling them in.
-
-	Username and Password are no longer cleared when a login fails.
-
-	Added Home Campus selection to Profile
-
-	Prayer Requests now require anonymous or a last name as well as first. 
-		-Fixes an issue causing prayer request submissiosn to always fail if a last name wasn't provided.
-	 
 iOS
-	Fixed a crash if cancel was pressed on a WebView before the URL started loading.
+	General - Fixed an issue causing the "Notes" billboard to sometimes show up off screen when viewing Notes landscape.
 
-	Fixed various weird issues if you spammed the Facebook and Login Cancel buttons.
-
-	Fixed an issue causing task "warping" if multi-touch was used on iOS.
-
-	Fixed an issue causing the back button to be enabled while viewing Notes in landscape.
-
-	Fixed an issue causing animation interpolation percentages to run past 1.00 
-
-	Builds with 64bit support.
-
-Android
-	Polished the Login Page results to match that of iOS.
+	News - Fixed an issue causing the background of some images to be Lime Green
 	
-	Fixed an issue causing the group finder map to be tiny on certain devices.
-
-	Fixed an issue causing the Image Cropper buttons to be, ironically, cropped.
-
-	Fixed an issue causing profile images taken with the camera to be the wrong orientation on some devices.
-
-	Fixed an issue causing some disabled buttons to have the wrong "Disabled" color.
-
-	Fixed an issue preventing the login screen from automatically dismissing after logging in.
-
-	Fixed a crash when logging in with Facebook on certain Android devices.
-
-	When Prayer Request retrieval fails, the error handling is now done via a UI instead of Message Box.
-
-	Updated Prayer Requests to display a status and progress bar while downloading prayers.
-
-	Fixed an issue causing performance issues / crashing when rapidly tapping Facebook / Cancel / Back
-
-	Improved Back Button usage to avoid unexpected app exiting.
-
-	Fixed an issue preventing the springboard from closing when a dead area of the springboard was tapped.
-
-	Majorly improved gesture recognition for panning the Springboard.
+Android
+	

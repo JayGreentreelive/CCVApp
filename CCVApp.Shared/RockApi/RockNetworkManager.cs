@@ -13,34 +13,45 @@ namespace CCVApp
                 private static RockNetworkManager _Instance = new RockNetworkManager( );
                 public static RockNetworkManager Instance { get { return _Instance; } }
 
+                /// <summary>
+                /// Callback used to let the system know the series info has been downloaded.
+                /// </summary>
+                public delegate void SeriesDownloaded( );
+
                 HttpRequest.RequestResult ResultCallback;
 
                 public RockNetworkManager( )
                 {
                 }
 
-                public void SyncRockData( HttpRequest.RequestResult resultCallback )
+                public void SyncRockData( SeriesDownloaded seriesCallback, HttpRequest.RequestResult resultCallback )
                 {
                     ResultCallback = resultCallback;
 
-                    // if we're logged in, sync any changes we've made with the server.
-                    if( RockMobileUser.Instance.LoggedIn == true )
-                    {
-                        Console.WriteLine( "Logged in. Syncing out-of-sync data." );
+                    // have the launch data request the series before it does anything else.
+                    RockLaunchData.Instance.GetSeries( delegate
+                        {
+                            seriesCallback( );
 
-                        //( this includes notes, profile changes, etc.)
-                        RockApi.Instance.SyncWithServer( delegate 
+                            // if we're logged in, sync any changes we've made with the server.
+                            if( RockMobileUser.Instance.LoggedIn == true )
                             {
-                                // failure or not, server syncing is finished, so let's go ahead and 
-                                // get launch data.
+                                Console.WriteLine( "Logged in. Syncing out-of-sync data." );
+
+                                //( this includes notes, profile changes, etc.)
+                                RockApi.Instance.SyncWithServer( delegate 
+                                    {
+                                        // failure or not, server syncing is finished, so let's go ahead and 
+                                        // get launch data.
+                                        RockLaunchData.Instance.GetLaunchData( LaunchDataReceived );
+                                    });
+                            }
+                            else
+                            {
+                                Console.WriteLine( "Not Logged In. Skipping sync." );
                                 RockLaunchData.Instance.GetLaunchData( LaunchDataReceived );
-                            });
-                    }
-                    else
-                    {
-                        Console.WriteLine( "Not Logged In. Skipping sync." );
-                        RockLaunchData.Instance.GetLaunchData( LaunchDataReceived );
-                    }
+                            }
+                        } );
                 }
 
                 void LaunchDataReceived(System.Net.HttpStatusCode statusCode, string statusDescription)
@@ -50,15 +61,16 @@ namespace CCVApp
                     // the GeneralData version number isn't LESS than what we stored in LaunchData.
 
                     // if there's a newer General Data, grab it.
-                    if( RockGeneralData.Instance.Data.Version < RockLaunchData.Instance.Data.GeneralDataVersion )
+                    //TODO: we'll always want to do this the first time we run.
+                    //if( RockGeneralData.Instance.Data.Version < RockLaunchData.Instance.Data.GeneralDataVersion )
                     {
                         RockGeneralData.Instance.GetGeneralData( GeneralDataReceived );
                     }
-                    else
+                    /*else
                     {
                         // May not have anything else to do here
-                        ResultCallback( statusCode, statusDescription );
-                    }
+                        GeneralDataReceived( statusCode, statusDescription );
+                    }*/
                 }
 
                 void GeneralDataReceived(System.Net.HttpStatusCode statusCode, string statusDescription)
