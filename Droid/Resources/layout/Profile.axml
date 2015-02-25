@@ -51,7 +51,6 @@
                     android:layout_below="@+id/top_border"
                     android:id="@+id/nickNameText"
                     android:inputType="textPersonName"
-                    android:maxLength="16"
                     android:maxLines="1" />
                 <View
                     android:id="@+id/middle_border"
@@ -66,7 +65,6 @@
                     android:layout_below="@+id/middle_border"
                     android:id="@+id/lastNameText"
                     android:inputType="textPersonName"
-                    android:maxLength="12"
                     android:maxLines="1" />
             </RelativeLayout>
             <Space
@@ -140,8 +138,6 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/top_border"
                     android:id="@+id/streetAddressText"
-                    android:inputType="textPersonName"
-                    android:maxLength="16"
                     android:maxLines="1" />
                 <View
                     android:id="@+id/street_border"
@@ -155,8 +151,6 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/street_border"
                     android:id="@+id/cityAddressText"
-                    android:inputType="textPersonName"
-                    android:maxLength="12"
                     android:maxLines="1" />
                 <View
                     android:id="@+id/city_border"
@@ -170,8 +164,6 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/city_border"
                     android:id="@+id/stateAddressText"
-                    android:inputType="textPersonName"
-                    android:maxLength="12"
                     android:maxLines="1" />
                 <View
                     android:id="@+id/state_border"
@@ -186,7 +178,6 @@
                     android:layout_below="@+id/state_border"
                     android:id="@+id/zipAddressText"
                     android:inputType="number"
-                    android:maxLength="12"
                     android:maxLines="1" />
             </RelativeLayout>
             <Space

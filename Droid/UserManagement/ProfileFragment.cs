@@ -76,6 +76,7 @@ namespace Droid
             NickNameField = backgroundView.FindViewById<EditText>( Resource.Id.nickNameText );
             ControlStyling.StyleTextField( NickNameField, ProfileStrings.NickNamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             NickNameField.AfterTextChanged += (sender, e) => { Dirty = true; };
+            NickNameField.InputType |= InputTypes.TextFlagCapWords;
 
             View borderView = backgroundView.FindViewById<View>( Resource.Id.middle_border );
             borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
@@ -83,6 +84,7 @@ namespace Droid
             LastNameField = backgroundView.FindViewById<EditText>( Resource.Id.lastNameText );
             ControlStyling.StyleTextField( LastNameField, ProfileStrings.LastNamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             LastNameField.AfterTextChanged += (sender, e) => { Dirty = true; };
+            LastNameField.InputType |= InputTypes.TextFlagCapWords;
 
 
             // setup the contact section
@@ -396,7 +398,7 @@ namespace Droid
             // Birthdate
             if ( string.IsNullOrEmpty( BirthdateField.Text ) == false )
             {
-                RockMobileUser.Instance.Person.BirthDate = DateTime.Parse( BirthdateField.Text );
+                RockMobileUser.Instance.SetBirthday( DateTime.Parse( BirthdateField.Text ) );
             }
 
             // Campus
@@ -405,7 +407,13 @@ namespace Droid
                 RockMobileUser.Instance.PrimaryFamily.CampusId = RockGeneralData.Instance.Data.CampusNameToId( CampusField.Text );
             }
 
-            RockMobileUser.Instance.SetAddress( StreetField.Text, CityField.Text, StateField.Text, ZipField.Text );
+            if ( string.IsNullOrEmpty( StreetField.Text ) == false &&
+                 string.IsNullOrEmpty( CityField.Text ) == false &&
+                 string.IsNullOrEmpty( StateField.Text ) == false &&
+                 string.IsNullOrEmpty( ZipField.Text ) == false )
+            {
+                RockMobileUser.Instance.SetAddress( StreetField.Text, CityField.Text, StateField.Text, ZipField.Text );
+            }
 
             // request the person object be sync'd with the server. because we save the object locally,
             // if the sync fails, the profile will try again at the next login

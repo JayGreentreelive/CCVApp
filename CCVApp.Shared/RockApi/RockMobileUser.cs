@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using Facebook;
 using RestSharp;
 using Rock.Mobile.Util.Strings;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace CCVApp
 {
@@ -69,6 +70,8 @@ namespace CCVApp
                 /// <value>The person.</value>
                 public Person Person;
 
+                public bool ProfileImageDirty { get; set; }
+
                 /// <summary>
                 /// The primary family associated with this person, which contains their home campus
                 /// </summary>
@@ -124,6 +127,17 @@ namespace CCVApp
                     PrimaryAddress.Location.City = city;
                     PrimaryAddress.Location.State = state;
                     PrimaryAddress.Location.PostalCode = zip;
+                }
+
+                public void SetBirthday( DateTime birthday )
+                {
+                    // update the birthdate field
+                    Person.BirthDate = birthday;
+
+                    // and the day/month/year fields.
+                    Person.BirthDay = Person.BirthDate.Value.Day;
+                    Person.BirthMonth = Person.BirthDate.Value.Month;
+                    Person.BirthYear = Person.BirthDate.Value.Year;
                 }
 
                 public bool HasFullAddress( )
@@ -624,40 +638,60 @@ namespace CCVApp
                         });
                 }
 
-
-                public void SetProfilePicture( MemoryStream imageStream )
+                public void UploadSavedProfilePicture( HttpRequest.RequestResult result )
                 {
-                    // write the file out
-                    using (FileStream writer = new FileStream(ProfilePicturePath, FileMode.Create))
-                    {
-                        imageStream.WriteTo( writer );
-                    }
+                    // if upload is called, the profile image implicitely becomes dirty.
+                    // that way if it fails, we can know to sync it on next run.
+                    ProfileImageDirty = true;
+
+                    // first open the image
+                    MemoryStream imageStream = (MemoryStream) FileCache.Instance.LoadFile( SpringboardConfig.ProfilePic );
+
+                    // attempt to upload it
+                    RockApi.Instance.UpdateProfilePicture( imageStream, 
+
+                        delegate( System.Net.HttpStatusCode statusCode, string statusDesc, int photoId )
+                        {
+                            // free the stream
+                            imageStream.Dispose( );
+
+
+                            // if the upload went ok
+                            if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
+                            {
+                                // the image isn't dirty
+                                ProfileImageDirty = false;
+
+                                // now update the profile
+                                Person.PhotoId = photoId;
+
+                                // attempt to sync the profile
+                                UpdateProfile( delegate ( System.Net.HttpStatusCode profileCode, string profileDesc )
+                                    {
+                                        if ( result != null )
+                                        {
+                                            result( profileCode, profileDesc );
+                                        }
+                                    });
+                            }
+                            else
+                            {
+                                if ( result != null )
+                                {
+                                    result( statusCode, statusDesc );
+                                }
+                            }
+                        } );
+                }
+
+                public void SaveProfilePicture( MemoryStream imageStream )
+                {
+                    FileCache.Instance.SaveFile( imageStream, SpringboardConfig.ProfilePic, new TimeSpan( 3000, 0, 0, 0 ) );
 
                     // now we have a picture!
                     HasProfileImage = true;
 
-                    /*RockApi.Instance.UpdateProfilePicture( Person, imageStream, delegate
-                        {
-                        } );*/
-
                     SaveToDevice( );
-
-                    //todo: send it on up to Rock, too!
-                }
-
-                public string ProfilePicturePath
-                {
-                    get 
-                    {
-                        // get the path based on the platform
-                        #if __IOS__
-                        string jpgFilename = System.IO.Path.Combine ( Environment.GetFolderPath(Environment.SpecialFolder.Personal), SpringboardConfig.ProfilePic );
-                        #else
-                        string jpgFilename = Rock.Mobile.PlatformSpecific.Android.Core.Context.GetExternalFilesDir( null ).ToString( ) + SpringboardConfig.ProfilePic;
-                        #endif
-
-                        return jpgFilename;
-                    }
                 }
 
                 public void TryDownloadProfilePicture( uint dimensionSize, HttpRequest.RequestResult profilePictureResult )
@@ -682,7 +716,7 @@ namespace CCVApp
                                     if ( Util.StatusInSuccessRange( statusCode ) == true )
                                     {
                                         MemoryStream imageStream = new MemoryStream( model );
-                                        SetProfilePicture( imageStream );
+                                        SaveProfilePicture( imageStream );
                                         imageStream.Dispose( );
                                     }
 
@@ -705,7 +739,7 @@ namespace CCVApp
                                         if ( Util.StatusInSuccessRange( statusCode ) == true )
                                         {
                                             // if successful, update the file on disk.
-                                            SetProfilePicture( imageStream );
+                                            SaveProfilePicture( imageStream );
                                         }
 
                                         // notify the caller
@@ -733,7 +767,8 @@ namespace CCVApp
                     if( string.Compare( LastSyncdPersonJson, currPersonJson ) != 0 || 
                         string.Compare( LastSyncdCellPhoneNumberJson, currPhoneNumbersJson ) != 0 ||
                         string.Compare( LastSyncdFamilyJson, currFamilyJson ) != 0 ||
-                        string.Compare( LastSyncdAddressJson, currAddressJson ) != 0 )
+                        string.Compare( LastSyncdAddressJson, currAddressJson ) != 0 ||
+                        ProfileImageDirty == true )
                     {
                         Console.WriteLine( "RockMobileUser: Syncing Profile" );
                         UpdateProfile( delegate
@@ -742,13 +777,29 @@ namespace CCVApp
                                 {
                                     UpdateAddress( delegate
                                         {
-                                            // update home campus
                                             UpdateHomeCampus( delegate
                                                 {
-                                                    // If needed, make other calls here, chained, and finally
+                                                    // If needed, make other calls here, chained, and finally.
 
-                                                    // return finished. just tell them OK, because it really doesn't matter if it worked or not.
-                                                    resultCallback( System.Net.HttpStatusCode.OK, "" );
+
+                                                    // PROFILE PICTURE SYNCING SHOULD ALWAYS BE LAST.
+                                                    // add a sanity check for profile image. it's too large to simply send up
+                                                    // just because the rest of the stuff needs updating.
+                                                    if ( ProfileImageDirty == true )
+                                                    {
+                                                            UploadSavedProfilePicture( 
+                                                                delegate( System.Net.HttpStatusCode statusCode, string statusDesc )
+                                                                {
+                                                                    // return finished. just tell them OK, because it really doesn't matter if it worked or not.
+                                                                    resultCallback( System.Net.HttpStatusCode.OK, "" );
+                                                                } );
+                                                        
+                                                    }
+                                                    else
+                                                    {
+                                                        // return finished. just tell them OK, because it really doesn't matter if it worked or not.
+                                                        resultCallback( System.Net.HttpStatusCode.OK, "" );
+                                                    }
                                                 });
                                         });
                                 });

@@ -541,7 +541,10 @@ namespace Droid
                     // compress the image into our memory stream
                     if( croppedImage.Compress( Bitmap.CompressFormat.Jpeg, 100, memStream ) )
                     {
-                        RockMobileUser.Instance.SetProfilePicture( memStream );
+                        memStream.Position = 0;
+
+                        RockMobileUser.Instance.SaveProfilePicture( memStream );
+                        RockMobileUser.Instance.UploadSavedProfilePicture( null );
                         success = true;
 
                         SetProfileImage( );
@@ -761,40 +764,41 @@ namespace Droid
             // the image depends on the user's status.
             if( RockMobileUser.Instance.LoggedIn )
             {
+                // default to displaying the "No Photo" icon
+                ProfileImageButton.Text = SpringboardConfig.NoPhotoSymbol;
+
                 // if they have an profile pic
                 if( RockMobileUser.Instance.HasProfileImage == true )
                 {
                     // Load the profile pic
-                    Bitmap image = BitmapFactory.DecodeFile( RockMobileUser.Instance.ProfilePicturePath );
+                    Bitmap image = BitmapFactory.DecodeStream( (MemoryStream) FileCache.Instance.LoadFile( SpringboardConfig.ProfilePic ) );
 
-                    // scale the image to the size of the mask
-                    Bitmap scaledImage = Bitmap.CreateScaledBitmap( image, ProfileMask.Width, ProfileMask.Height, false );
-
-                    // dump the source image
-                    image.Dispose( );
-                    image = null;
-
-                    // if we already have a final image, dispose of it
-                    if( ProfileMaskedImage != null )
+                    if ( image != null )
                     {
-                        ProfileMaskedImage.Dispose( );
-                        ProfileMaskedImage = null;
+                        // scale the image to the size of the mask
+                        Bitmap scaledImage = Bitmap.CreateScaledBitmap( image, ProfileMask.Width, ProfileMask.Height, false );
+
+                        // dump the source image
+                        image.Dispose( );
+                        image = null;
+
+                        // if we already have a final image, dispose of it
+                        if( ProfileMaskedImage != null )
+                        {
+                            ProfileMaskedImage.Dispose( );
+                            ProfileMaskedImage = null;
+                        }
+
+                        // generate the masked image
+                        ProfileMaskedImage = Rock.Mobile.PlatformSpecific.Android.Graphics.Util.ApplyMaskToBitmap( scaledImage, ProfileMask, 0, 0 );
+
+                        scaledImage.Dispose( );
+                        scaledImage = null;
+
+                        // set the final result
+                        ProfileImageButton.Text = "";
+                        ProfileImageButton.SetBackgroundDrawable( new BitmapDrawable( ProfileMaskedImage ) );
                     }
-
-                    // generate the masked image
-                    ProfileMaskedImage = Rock.Mobile.PlatformSpecific.Android.Graphics.Util.ApplyMaskToBitmap( scaledImage, ProfileMask, 0, 0 );
-
-                    scaledImage.Dispose( );
-                    scaledImage = null;
-
-                    // set the final result
-                    ProfileImageButton.Text = "";
-                    ProfileImageButton.SetBackgroundDrawable( new BitmapDrawable( ProfileMaskedImage ) );
-                }
-                else
-                {
-                    // display the "No Photo" icon
-                    ProfileImageButton.Text = SpringboardConfig.NoPhotoSymbol;
                 }
             }
             else

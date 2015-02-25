@@ -1,6 +1,8 @@
 *If the build crashes at startup, delete and reinstall.
 
 Highlights
+Profile Pictures now upload to Rock's Production Server. Be careful!
+
 
 Changes
 -------
@@ -16,9 +18,11 @@ Both
 	Notes - Fixed an issue causing there to be no space between consecutive Reveal Boxes in a row. 
 	Notes - User Notes are limited to 20 per Note. Try to go above, and see what happens :)
 
+	Profile - Profile pictures are now uploaded to Rock!
 	Profile - Updating phone number now works.
 	Profile - Updating home campus when the user had no family/home campus now works.
 	Profile - Updating and creating your home address now works.
+	Profile - First and Last name first letters are automatically capitalized.
 
 	FileCache - Fixed an issue causing cached files to expire after 7 hours instead of 7 days. Also upped the default expiration time from 7 days to 30.
 
@@ -28,4 +32,4 @@ iOS
 	News - Fixed an issue causing the background of some images to be Lime Green
 	
 Android
-	
+	Profile - Fixed an limiting the length of text in the text fields.

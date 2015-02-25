@@ -583,7 +583,10 @@ namespace iOS
                         Stream nsDataStream = croppedImageData.AsStream( );
 
                         nsDataStream.CopyTo( memStream );
-                        RockMobileUser.Instance.SetProfilePicture( memStream );
+                        memStream.Position = 0;
+
+                        RockMobileUser.Instance.SaveProfilePicture( memStream );
+                        RockMobileUser.Instance.UploadSavedProfilePicture( null ); // we don't care about the response. just do it.
 
                         nsDataStream.Dispose( );
                     }
@@ -829,7 +832,11 @@ namespace iOS
                     // because the profile picture is dynamic, make sure it loads correctly.
                     try
                     {
-                        UIImage image = new UIImage( RockMobileUser.Instance.ProfilePicturePath );
+                        MemoryStream imageStream = (MemoryStream) FileCache.Instance.LoadFile( SpringboardConfig.ProfilePic );
+
+                        NSData imageData = NSData.FromStream( imageStream );
+                        UIImage image = new UIImage( imageData );
+
                         ProfileImageView.Image = image;
 
                         useNoPhotoImage = false;

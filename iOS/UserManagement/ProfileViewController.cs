@@ -397,7 +397,7 @@ namespace iOS
             // Birthdate
             if ( string.IsNullOrEmpty( BirthdateText.Text ) == false )
             {
-                RockMobileUser.Instance.Person.BirthDate = DateTime.Parse( BirthdateText.Text );
+                RockMobileUser.Instance.SetBirthday( DateTime.Parse( BirthdateText.Text ) );
             }
 
             // Campus
@@ -406,8 +406,14 @@ namespace iOS
                 RockMobileUser.Instance.PrimaryFamily.CampusId = RockGeneralData.Instance.Data.CampusNameToId( HomeCampusText.Text );
             }
 
-            // address
-            RockMobileUser.Instance.SetAddress( StreetText.Text, CityText.Text, StateText.Text, ZipText.Text );
+            // address (make sure that all fields are set)
+            if ( string.IsNullOrEmpty( StreetText.Text ) == false &&
+                 string.IsNullOrEmpty( CityText.Text ) == false &&
+                 string.IsNullOrEmpty( StateText.Text ) == false &&
+                 string.IsNullOrEmpty( ZipText.Text ) == false )
+            {
+                RockMobileUser.Instance.SetAddress( StreetText.Text, CityText.Text, StateText.Text, ZipText.Text );
+            }
 
             // request the person object be sync'd with the server. because we save the object locally,
             // if the sync fails, the profile will try again at the next login

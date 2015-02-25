@@ -353,7 +353,13 @@ namespace CCVApp
                         });
                 }
 
-                public void UpdateProfilePicture( Rock.Client.Person person, MemoryStream image, HttpRequest.RequestResult resultHandler )
+                public class ImageResponse
+                {
+                    public string Id { get; set; }
+                    public string FileName { get; set; }
+                }
+
+                public void UpdateProfilePicture( MemoryStream image, HttpRequest.RequestResult<int> resultHandler )
                 {
                     // send up the image for the user
                     RestRequest request = GetRockRestRequest( Method.POST );
@@ -361,25 +367,19 @@ namespace CCVApp
 
                     string requestUrl = BaseUrl + PutProfilePictureEndPoint;
 
-                    Request.ExecuteAsync<RestSharp.RestResponse>( requestUrl, request, delegate(HttpStatusCode statusCode, string statusDescription, RestSharp.RestResponse responseObj )
+                    Request.ExecuteAsync( requestUrl, request, delegate(HttpStatusCode statusCode, string statusDescription, byte[] responseBytes )
                         {
                             if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
                             {
-                                //todo: Verify this is working once we are authorized to hit this endpoint, and then
-                                // create a class that can parse out the ID in the response, and set that as the user's profile pic ID,
-                                //and finally upload the profile.
-                                Console.WriteLine( "Picture Response: {0}" );
+                                // deserialize the raw response into our wrapper class
+                                ImageResponse imageResponse = JsonConvert.DeserializeObject<ImageResponse>( System.Text.Encoding.ASCII.GetString( responseBytes ) );
 
-                                //person.PhotoId = responseObj.Id;
-                                UpdateProfile( person, delegate(HttpStatusCode profileUpdateStatusCode, string profileUpdateStatusDescription) 
-                                    {
-                                        // now call the final result
-                                        resultHandler( profileUpdateStatusCode, profileUpdateStatusDescription );
-                                    });
+                                // now call the final result
+                                resultHandler( statusCode, statusDescription, int.Parse( imageResponse.Id ) );
                             }
                             else
                             {
-                                resultHandler( statusCode, statusDescription );
+                                resultHandler( statusCode, statusDescription, 0 );
                             }
                         } );
                 }
