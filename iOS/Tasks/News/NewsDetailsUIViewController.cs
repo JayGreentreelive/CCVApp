@@ -41,9 +41,16 @@ namespace iOS
             MemoryStream imageStream = (MemoryStream)FileCache.Instance.LoadFile( NewsItem.HeaderImageName );
             if ( imageStream != null )
             {
-                NSData imageData = NSData.FromStream( imageStream );
-                ImageBanner.Image = new UIImage( imageData, UIScreen.MainScreen.Scale );
-
+                try
+                {
+                    NSData imageData = NSData.FromStream( imageStream );
+                    ImageBanner.Image = new UIImage( imageData, UIScreen.MainScreen.Scale );
+                }
+                catch( Exception )
+                {
+                    FileCache.Instance.RemoveFile( NewsItem.HeaderImageName );
+                    Console.WriteLine( "Image {0} is corrupt. Removing.", NewsItem.HeaderImageName );
+                }
                 imageStream.Dispose( );
             }
             else
@@ -103,8 +110,16 @@ namespace iOS
                         MemoryStream imageStream = (System.IO.MemoryStream)FileCache.Instance.LoadFile( NewsItem.HeaderImageName );
                         if ( imageStream != null )
                         {
-                            NSData imageData = NSData.FromStream( imageStream );
-                            ImageBanner.Image = new UIImage( imageData, UIScreen.MainScreen.Scale );
+                            try
+                            {
+                                NSData imageData = NSData.FromStream( imageStream );
+                                ImageBanner.Image = new UIImage( imageData, UIScreen.MainScreen.Scale );
+                            }
+                            catch( Exception )
+                            {
+                                FileCache.Instance.RemoveFile( NewsItem.HeaderImageName );
+                                Console.WriteLine( "Image {0} is corrupt. Removing.", NewsItem.HeaderImageName );
+                            }
 
                             imageStream.Dispose( );
                         }

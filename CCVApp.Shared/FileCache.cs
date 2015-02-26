@@ -170,7 +170,7 @@ namespace CCVApp.Shared
 
                         if( expirationTime.HasValue == false )
                         {
-                            expirationTime = GeneralConfig.CacheFileExpiration;
+                            expirationTime = GeneralConfig.CacheFileDefaultExpiration;
                         }
 
                         // and now it'll be added a second time.
@@ -212,11 +212,16 @@ namespace CCVApp.Shared
             return null;
         }
 
+        public void RemoveFile( string filename )
+        {
+            // delete the entry
+            File.Delete( CachePath + "/" + filename );
+            CacheMap.Remove( filename );
+        }
+
         public delegate void ImageDownloaded( string imageUrl, string cachedFilename );
         public void DownloadImageToCache( string downloadUrl, string cachedFilename, ImageDownloaded callback )
         {
-            //todo: This should probably use REST, but we can't right now because the Notes Images aren't stored on Rock.
-
             if ( string.IsNullOrEmpty( downloadUrl ) == false )
             {
                 // request the image for the series
@@ -230,6 +235,7 @@ namespace CCVApp.Shared
                         {
                             // write it to cache
                             MemoryStream imageBuffer = new MemoryStream( model );
+                            imageBuffer.Position = 0;
                             FileCache.Instance.SaveFile( imageBuffer, cachedFilename );
                             imageBuffer.Dispose( );
 

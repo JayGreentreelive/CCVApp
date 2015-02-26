@@ -193,9 +193,10 @@ namespace iOS
                 prayerRequest.Text = PrayerRequest.Text;
                 prayerRequest.EnteredDateTime = DateTime.Now;
                 prayerRequest.ExpirationDate = DateTime.Now.AddYears( 1 );
-                prayerRequest.CategoryId = 110; //todo: Let the end user set this.
+                prayerRequest.CategoryId = RockGeneralData.Instance.Data.PrayerCategoryToId( CategoryButton.Title( UIControlState.Normal ) );
                 prayerRequest.IsActive = true;
                 prayerRequest.IsPublic = UIPublicSwitch.On; // use the public switch's state to determine whether it's a public prayer or not.
+                prayerRequest.Guid = Guid.NewGuid( );
                 prayerRequest.IsApproved = false;
 
                 // launch the post view controller
@@ -285,7 +286,7 @@ namespace iOS
         {
             // set the category's text to be the item they selected. Note that we now change the color to Active from the original Placeholder
             CategoryButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ), UIControlState.Normal );
-            CategoryButton.SetTitle( RockGeneralData.Instance.Data.PrayerCategories[ row ], UIControlState.Normal );
+            CategoryButton.SetTitle( RockGeneralData.Instance.Data.PrayerCategories[ row ].Name, UIControlState.Normal );
         }
 
         /// <summary>
@@ -307,7 +308,7 @@ namespace iOS
 
             public override string GetTitle(UIPickerView picker, nint row, nint component)
             {
-                return RockGeneralData.Instance.Data.PrayerCategories[ (int)row ];
+                return RockGeneralData.Instance.Data.PrayerCategories[ (int)row ].Name;
             }
 
             public override void Selected(UIPickerView picker, nint row, nint component)
@@ -322,7 +323,7 @@ namespace iOS
                 {
                     label = new UILabel();
                     label.TextColor = UIColor.White;
-                    label.Text = RockGeneralData.Instance.Data.PrayerCategories[ (int)row ];
+                    label.Text = RockGeneralData.Instance.Data.PrayerCategories[ (int)row ].Name;
                     label.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
                     label.SizeToFit( );
                 }
@@ -374,6 +375,13 @@ namespace iOS
             UIPublicSwitch.SetState( true, false );
 
             TogglePlaceholderText( );
+
+            // prepopulate the name fields if we have them
+            if ( RockMobileUser.Instance.LoggedIn == true )
+            {
+                FirstNameText.Text = RockMobileUser.Instance.Person.NickName;
+                LastNameText.Text = RockMobileUser.Instance.Person.LastName;
+            }
         }
 
         public override void ViewDidLayoutSubviews()

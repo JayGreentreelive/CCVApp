@@ -186,8 +186,16 @@ namespace iOS
                 MemoryStream imageStream = (MemoryStream)FileCache.Instance.LoadFile( entry.News.ImageName );
                 if ( imageStream != null )
                 {
-                    NSData imageData = NSData.FromStream( imageStream );
-                    entry.Image = new UIImage( imageData, UIScreen.MainScreen.Scale );
+                    try
+                    {
+                        NSData imageData = NSData.FromStream( imageStream );
+                        entry.Image = new UIImage( imageData, UIScreen.MainScreen.Scale );
+                    }
+                    catch( Exception )
+                    {
+                        FileCache.Instance.RemoveFile( entry.News.ImageName );
+                        Console.WriteLine( "Image {0} is corrupt. Removing.", entry.News.ImageName );
+                    }
                     imageStream.Dispose( );
                 }
                 else

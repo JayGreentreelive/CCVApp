@@ -21,7 +21,12 @@ namespace CCVApp
                 /// The length of time a file should remain cached. After this, it will be deleted
                 /// from cache. (30 days)
                 /// </summary>
-                public static TimeSpan CacheFileExpiration = new TimeSpan( 30, 0, 0, 0 );
+                public static TimeSpan CacheFileDefaultExpiration = new TimeSpan( 30, 0, 0, 0 );
+
+                /// <summary>
+                /// Ok, it's not technically NONE, but it's 10 years. Come on...
+                /// </summary>
+                public static TimeSpan CacheFileNoExpiration = new TimeSpan( 3650, 0, 0, 0 );
 
                 /// <summary>
                 /// The size (in pixels) of the profile image to download from Rock
@@ -51,12 +56,14 @@ namespace CCVApp
                 public const string RockMobileAppAuthorizationKey = "hWTaZ7buziBcJQH31KCm3Pzz";
 
                 /// <summary>
-                /// Todo: Find out why it's ok to hardcode these IDs, but not IDs for
-                /// Group Types and Group Location Types.
+                /// These are values that, while generated when the Rock database is created,
+                /// are extremely unlikely to ever change. If they do change, simply update them here to match
+                /// Rock.
                 /// </summary>
                 public const int CellPhoneValueId = 12;
                 public const int NeighborhoodGroupGeoFenceValueId = 48;
                 public const int NeighborhoodGroupValueId = 49;
+                public const int GroupLocationTypeHomeValueId = 19;
 
                 /// <summary>
                 /// iOS only, this controls what style of keyboard is used for PLATFORM textFields.

@@ -9,6 +9,7 @@ using Rock.Mobile.PlatformUI;
 using CCVApp.Shared.Config;
 using CCVApp.Shared.Strings;
 using CCVApp.Shared.Analytics;
+using CCVApp.Shared.Network;
 
 namespace iOS
 {
@@ -155,7 +156,7 @@ namespace iOS
             Name.SizeToFit( );
             Name.Frame = new CGRect( ViewPadding, ViewPadding, View.Bounds.Width - (ViewPadding * 2), Name.Bounds.Height );
 
-            Category.Text = prayer.Category != null ? prayer.Category.Name : "";
+            Category.Text = PrayerRequest.CategoryId.HasValue ? RockGeneralData.Instance.Data.PrayerIdToCategory( PrayerRequest.CategoryId.Value ) : RockGeneralData.Instance.Data.PrayerCategories[ 0 ].Name;
             Category.SizeToFit( );
             Category.Layer.Position = new CGPoint( ViewPadding, Name.Frame.Bottom );
 

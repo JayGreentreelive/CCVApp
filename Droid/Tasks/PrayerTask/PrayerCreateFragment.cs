@@ -65,6 +65,8 @@ namespace Droid
                 Switch AnonymousSwitch { get; set; }
                 Switch PublicSwitch { get; set; }
 
+                Spinner Spinner { get; set; }
+
                 public override void OnCreate( Bundle savedInstanceState )
                 {
                     base.OnCreate( savedInstanceState );
@@ -108,14 +110,17 @@ namespace Droid
                     FirstNameText = (EditText)view.FindViewById<EditText>( Resource.Id.prayer_create_firstNameText );
                     ControlStyling.StyleTextField( FirstNameText, PrayerStrings.CreatePrayer_FirstNamePlaceholderText, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
                     FirstNameBGColor = ControlStylingConfig.BG_Layer_Color;
+                    FirstNameText.InputType |= Android.Text.InputTypes.TextFlagCapWords;
 
                     LastNameText = (EditText)view.FindViewById<EditText>( Resource.Id.prayer_create_lastNameText );
                     ControlStyling.StyleTextField( LastNameText, PrayerStrings.CreatePrayer_LastNamePlaceholderText, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
                     LastNameBGColor = ControlStylingConfig.BG_Layer_Color;
+                    LastNameText.InputType |= Android.Text.InputTypes.TextFlagCapWords;
 
                     RequestText = (EditText)view.FindViewById<EditText>( Resource.Id.prayer_create_requestText );
                     ControlStyling.StyleTextField( RequestText, PrayerStrings.CreatePrayer_PrayerRequest, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
                     RequestBGColor = ControlStylingConfig.BG_Layer_Color;
+                    RequestText.InputType |= Android.Text.InputTypes.TextFlagCapSentences;
 
 
                     AnonymousSwitch = (Switch)view.FindViewById<Switch>( Resource.Id.postAnonymousSwitch );
@@ -150,15 +155,15 @@ namespace Droid
                     ControlStyling.StyleUILabel( publicLabel, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
 
                     // setup our category spinner
-                    Spinner spinner = (Spinner)view.FindViewById<Spinner>( Resource.Id.categorySpinner );
+                    Spinner = (Spinner)view.FindViewById<Spinner>( Resource.Id.categorySpinner );
                     ArrayAdapter adapter = new SpinnerArrayAdapter( Rock.Mobile.PlatformSpecific.Android.Core.Context, Android.Resource.Layout.SimpleListItem1 );
                     adapter.SetDropDownViewResource( Android.Resource.Layout.SimpleSpinnerDropDownItem );
-                    spinner.Adapter = adapter;
+                    Spinner.Adapter = adapter;
 
                     // populate the category
-                    foreach ( string category in CCVApp.Shared.Network.RockGeneralData.Instance.Data.PrayerCategories )
+                    foreach ( Rock.Client.Category category in CCVApp.Shared.Network.RockGeneralData.Instance.Data.PrayerCategories )
                     {
-                        adapter.Add( category );
+                        adapter.Add( category.Name );
                     }
 
                     Button submitButton = (Button)view.FindViewById<Button>( Resource.Id.prayer_create_submitButton );
@@ -199,8 +204,9 @@ namespace Droid
                         prayerRequest.Text = RequestText.Text;
                         prayerRequest.EnteredDateTime = DateTime.Now;
                         prayerRequest.ExpirationDate = DateTime.Now.AddYears( 1 );
-                        prayerRequest.CategoryId = 110; //todo: Let the end user set this.
+                        prayerRequest.CategoryId = CCVApp.Shared.Network.RockGeneralData.Instance.Data.PrayerCategoryToId( Spinner.SelectedItem.ToString( ) );
                         prayerRequest.IsActive = true;
+                        prayerRequest.Guid = Guid.NewGuid( );
                         prayerRequest.IsPublic = PublicSwitch.Checked;
                         prayerRequest.IsApproved = false;
 
@@ -282,6 +288,13 @@ namespace Droid
                     ParentTask.NavbarFragment.NavToolbar.SetShareButtonEnabled( false, null );
                     ParentTask.NavbarFragment.NavToolbar.SetCreateButtonEnabled( false, null );
                     ParentTask.NavbarFragment.NavToolbar.RevealForTime( 3.0f );
+
+                    // if they're logged in, pre-populate the name fields
+                    if ( RockMobileUser.Instance.LoggedIn == true )
+                    {
+                        FirstNameText.Text = RockMobileUser.Instance.Person.NickName;
+                        LastNameText.Text = RockMobileUser.Instance.Person.LastName;
+                    }
                 }
             }
         }

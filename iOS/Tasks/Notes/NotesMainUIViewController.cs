@@ -648,8 +648,16 @@ namespace iOS
                 MemoryStream imageStream = (MemoryStream)FileCache.Instance.LoadFile( entry.Series.Name + "_bb" );
                 if ( imageStream != null )
                 {
-                    NSData imageData = NSData.FromStream( imageStream );
-                    entry.mBillboard = new UIImage( imageData, UIScreen.MainScreen.Scale );
+                    try
+                    {
+                        NSData imageData = NSData.FromStream( imageStream );
+                        entry.mBillboard = new UIImage( imageData, UIScreen.MainScreen.Scale );
+                    }
+                    catch( Exception )
+                    {
+                        FileCache.Instance.RemoveFile( entry.Series.Name + "_bb" );
+                        Console.WriteLine( "Image {0} was corrupt. Removing.", entry.Series.Name + "_bb" );
+                    }
                     imageStream.Dispose( );
                 }
                 else
@@ -664,8 +672,16 @@ namespace iOS
                 MemoryStream imageStream = (MemoryStream)FileCache.Instance.LoadFile( entry.Series.Name + "_thumb" );
                 if ( imageStream != null )
                 {
-                    NSData imageData = NSData.FromStream( imageStream );
-                    entry.mThumbnail = new UIImage( imageData, UIScreen.MainScreen.Scale );
+                    try
+                    {
+                        NSData imageData = NSData.FromStream( imageStream );
+                        entry.mThumbnail = new UIImage( imageData, UIScreen.MainScreen.Scale );
+                    }
+                    catch( Exception )
+                    {
+                        FileCache.Instance.RemoveFile( entry.Series.Name + "_thumb" );
+                        Console.WriteLine( "Image {0} was corrupt. Removing.", entry.Series.Name + "_thumb" );
+                    }
                     imageStream.Dispose( );
                 }
                 else

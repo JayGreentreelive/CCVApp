@@ -104,7 +104,15 @@ namespace Droid
                     System.IO.MemoryStream assetStream = (System.IO.MemoryStream)FileCache.Instance.LoadFile( NewsItem.HeaderImageName );
                     if ( assetStream!= null )
                     {
-                        HeaderImage = BitmapFactory.DecodeStream( assetStream );
+                        try
+                        {
+                            HeaderImage = BitmapFactory.DecodeStream( assetStream );
+                        }
+                        catch( Exception )
+                        {
+                            FileCache.Instance.RemoveFile( NewsItem.HeaderImageName );
+                            Console.WriteLine( "Image {0} was corrupt. Removing.", NewsItem.HeaderImageName );
+                        }
                         assetStream.Dispose( );
                     }
                     else
@@ -130,11 +138,22 @@ namespace Droid
                                 MemoryStream imageStream = (System.IO.MemoryStream)FileCache.Instance.LoadFile( NewsItem.HeaderImageName );
                                 if ( imageStream != null )
                                 {
-                                    HeaderImage.Dispose( );
-                                    HeaderImage = BitmapFactory.DecodeStream( imageStream );
+                                    try
+                                    {
+                                        HeaderImage.Dispose( );
+                                        HeaderImage = BitmapFactory.DecodeStream( imageStream );
 
-                                    ImageBanner.Drawable.Dispose( );
-                                    ImageBanner.SetImageBitmap( HeaderImage );
+                                        ImageBanner.Drawable.Dispose( );
+                                        ImageBanner.SetImageBitmap( HeaderImage );
+                                    }
+                                    catch( Exception )
+                                    {
+                                        FileCache.Instance.RemoveFile( NewsItem.HeaderImageName );
+                                        Console.WriteLine( "Image {0} was corrupt. Removing.", NewsItem.HeaderImageName );
+
+                                        ImageBanner.Drawable.Dispose( );
+                                        ImageBanner.SetImageBitmap( null );
+                                    }
 
                                     imageStream.Dispose( );
                                 }

@@ -94,17 +94,16 @@ namespace CCVApp
                             string headerImageName = copiedNews.HeaderImageName + ".png";
                             #endif
 
-                            // give the default news item imagess an expiration of 10 years. We should have a new version out by then, right?
-                            TimeSpan timeSpan = new TimeSpan( 3650, 0, 0, 0 );
-
                             // cache the main image
                             MemoryStream stream = Rock.Mobile.Util.FileIO.AssetConvert.AssetToStream( mainImageName );
-                            FileCache.Instance.SaveFile( stream, copiedNews.ImageName, timeSpan );
+                            stream.Position = 0;
+                            FileCache.Instance.SaveFile( stream, copiedNews.ImageName, GeneralConfig.CacheFileNoExpiration );
                             stream.Dispose( );
 
                             // cache the header image
                             stream = Rock.Mobile.Util.FileIO.AssetConvert.AssetToStream( headerImageName );
-                            FileCache.Instance.SaveFile( stream, copiedNews.HeaderImageName, timeSpan );
+                            stream.Position = 0;
+                            FileCache.Instance.SaveFile( stream, copiedNews.HeaderImageName, GeneralConfig.CacheFileNoExpiration );
                             stream.Dispose( );
                         }
                     }
@@ -271,7 +270,7 @@ namespace CCVApp
                 {
                     // if the series hasn't been downloaded yet, or it's older than a day, redownload it.
                     TimeSpan seriesDelta = DateTime.Now - Data.SeriesTimeStamp;
-                    if ( Data.Series.Count == 0 || seriesDelta.TotalSeconds >= 30 )
+                    if ( Data.Series.Count == 0 || seriesDelta.TotalDays >= 1 )
                     {
                         return true;
                     }

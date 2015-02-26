@@ -41,6 +41,11 @@ namespace CCVApp
 
                 const string MOBILEUSER_DATA_FILENAME = "mobileuser.dat";
 
+                // versioning to protect against old data. Since everything is stored in Rock,
+                // we're ok to wipe it if data is old. This must be incremented if
+                // the mobile user is changed.
+                int Version = 0;
+
                 /// <summary>
                 /// Account - The ID representing the user. If they logged in via a Rock Account, it's a Username. If a social service,
                 /// it might be their social service account ID.
@@ -228,15 +233,27 @@ namespace CCVApp
 
                 private RockMobileUser( )
                 {
+                    SetDefaultValues( );
+                }
+
+                void SetDefaultValues( )
+                {
                     Person = new Person();
 
                     PrimaryFamily = new Group();
+
                     PrimaryAddress = new GroupLocation();
+                    PrimaryAddress.GroupLocationTypeValueId = GeneralConfig.GroupLocationTypeHomeValueId;
+
                     ViewingCampus = RockGeneralData.Instance.Data.Campuses[ 0 ].Id;
 
                     // for the address location, default the country to the built in country code.
                     PrimaryAddress.Location = new Location();
                     PrimaryAddress.Location.Country = CCVApp.Shared.Config.GeneralConfig.CountryCode;
+
+                    LastSyncdPersonJson = JsonConvert.SerializeObject( Person );
+                    LastSyncdFamilyJson = JsonConvert.SerializeObject( PrimaryFamily );
+                    LastSyncdAddressJson = JsonConvert.SerializeObject( PrimaryAddress );
                 }
 
                 public string PreferredName( )
@@ -260,9 +277,6 @@ namespace CCVApp
                     {
                         case BoundAccountType.Rock:
                         {
-                            //todo: we could put a rock validation end point here, but
-                            // it's not necessary. Our cookie will eventually just expire
-                            // and we'll relogin.
                             LoggedIn = true;
 
                             loginResult( System.Net.HttpStatusCode.NoContent, "" );
@@ -271,9 +285,6 @@ namespace CCVApp
 
                         case BoundAccountType.Facebook:
                         {
-                            //todo: we could put a rock validation end point here, but
-                            // it's not necessary. Our cookie will eventually just expire
-                            // and we'll relogin.
                             LoggedIn = true;
 
                             loginResult( System.Net.HttpStatusCode.NoContent, "" );
@@ -400,13 +411,7 @@ namespace CCVApp
                 public void LogoutAndUnbind( )
                 {
                     // clear the person and take a blank copy
-                    Person = new Person();
-                    PrimaryFamily = new Group();
-                    PrimaryAddress = new GroupLocation();
-
-                    LastSyncdPersonJson = JsonConvert.SerializeObject( Person );
-                    LastSyncdFamilyJson = JsonConvert.SerializeObject( PrimaryFamily );
-                    LastSyncdAddressJson = JsonConvert.SerializeObject( PrimaryAddress );
+                    SetDefaultValues( );
 
                     LoggedIn = false;
                     AccountType = BoundAccountType.None;
@@ -415,7 +420,6 @@ namespace CCVApp
                     RockPassword = "";
                     AccessToken = "";
 
-                    //FacebookManager.Instance.Logout( );
                     RockApi.Instance.Logout( );
 
                     // save!
@@ -614,11 +618,6 @@ namespace CCVApp
 
                 public void UpdateAddress( HttpRequest.RequestResult addressResult )
                 {
-                    // before updating the address, ensure that the address has the correct groupLocationTypeValueId, which lets Rock know
-                    // this should be their "Home Address"
-                    Guid homeLocationGuid = new Guid( Rock.Client.SystemGuid.DefinedValue.GROUP_LOCATION_TYPE_HOME );
-                    PrimaryAddress.GroupLocationTypeValueId = CCVApp.Shared.Network.RockGeneralData.Instance.Data.DefinedValueList.Find( d => d.Guid == homeLocationGuid ).Id;
-
                     // fire it off
                     RockApi.Instance.UpdateAddress( PrimaryFamily, PrimaryAddress, delegate(System.Net.HttpStatusCode statusCode, string statusDescription)
                         {
@@ -686,7 +685,7 @@ namespace CCVApp
 
                 public void SaveProfilePicture( MemoryStream imageStream )
                 {
-                    FileCache.Instance.SaveFile( imageStream, SpringboardConfig.ProfilePic, new TimeSpan( 3000, 0, 0, 0 ) );
+                    FileCache.Instance.SaveFile( imageStream, SpringboardConfig.ProfilePic, GeneralConfig.CacheFileNoExpiration );
 
                     // now we have a picture!
                     HasProfileImage = true;
@@ -696,9 +695,6 @@ namespace CCVApp
 
                 public void TryDownloadProfilePicture( uint dimensionSize, HttpRequest.RequestResult profilePictureResult )
                 {
-                    // todo: Do we want to always get the profile pic for the bound account, or
-                    // do we want to ask them, or do we want to pull down facebook's once and upload it to rock? Sigh,
-                    // so many options
                     switch ( AccountType )
                     {
                         case BoundAccountType.Facebook:
@@ -844,10 +840,15 @@ namespace CCVApp
                                 try
                                 {
                                     // guard against the mobile user model changing and the user having old data
-                                    _Instance = JsonConvert.DeserializeObject<RockMobileUser>( json ) as RockMobileUser;
+                                    RockMobileUser loadedInstance = JsonConvert.DeserializeObject<RockMobileUser>( json ) as RockMobileUser;
+                                    if( _Instance.Version == loadedInstance.Version )
+                                    {
+                                        _Instance = loadedInstance;
+                                    }
                                 }
-                                catch( Exception )
+                                catch( Exception e )
                                 {
+                                    Console.WriteLine( string.Format( "{0}", e ) );
                                 }
                             }
                         }

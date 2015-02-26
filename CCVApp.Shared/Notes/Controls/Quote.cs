@@ -314,7 +314,6 @@ namespace CCVApp
 
                 public override void BuildHTMLContent( ref string htmlStream, List<IUIControl> userNotes )
                 {
-                    // todo: any markup we want here
                     htmlStream += "<q>" + QuoteLabel.Text + "&nbsp; - " + Citation.Text + "</q>";
 
                     // handle user notes

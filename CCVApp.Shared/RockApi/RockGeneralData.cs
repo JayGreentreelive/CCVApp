@@ -24,12 +24,10 @@ namespace CCVApp
 
                 const string GENERIC_DATA_FILENAME = "mobilegenericdata.dat";
 
-                //Todo: This will actually exist in Rock.Client.Models
                 public class GeneralData
                 {
                     public GeneralData( )
                     {
-                        //todo: we need to ship the app with updated versions of this data
                         Version = 0;
 
                         // default values if there's no connection
@@ -46,16 +44,12 @@ namespace CCVApp
                         Genders.Add( "Male" );
                         Genders.Add( "Female" );
 
-                        PrayerCategories = new List<string>( );
-                        PrayerCategories.Add( "Legendary Gems" );
-                        PrayerCategories.Add( "Trophies" );
-                        PrayerCategories.Add( "Treasure Goblins" );
-                        PrayerCategories.Add( "Treasure Vault" );
-                        PrayerCategories.Add( "Ponies" );
-                        PrayerCategories.Add( "Whimseydale" );
-
-                        DefinedValueList = new List<Rock.Client.DefinedValue>( );
-                        DefinedValueList.Add( new Rock.Client.DefinedValue( ) { Guid = new Guid( Rock.Client.SystemGuid.DefinedValue.GROUP_LOCATION_TYPE_HOME ), Id = 19 } );
+                        PrayerCategories = new List< Rock.Client.Category >( );
+                        PrayerCategories.Add( new Rock.Client.Category( ) { Name = "Addictive Behavior", Id = 109 } );
+                        PrayerCategories.Add( new Rock.Client.Category( ) { Name = "Comfort/Grief", Id = 110 } );
+                        PrayerCategories.Add( new Rock.Client.Category( ) { Name = "Current Events", Id = 111 } );
+                        PrayerCategories.Add( new Rock.Client.Category( ) { Name = "Depression/Anxiety", Id = 112 } );
+                        PrayerCategories.Add( new Rock.Client.Category( ) { Name = "Family Issues", Id = 113 } );
                     }
 
                     [JsonConstructor]
@@ -63,11 +57,12 @@ namespace CCVApp
                     {
                         Campuses = new List<Rock.Client.Campus>( );
                         Genders = new List<string>( );
-                        PrayerCategories = new List<string>( );
+
+                        PrayerCategories = new List< Rock.Client.Category >( );
                     }
 
                     /// <summary>
-                    /// Helper method for converting a campus' name to its ID
+                    /// Helper method for converting a campus' id to its name
                     /// </summary>
                     /// <returns>The identifier to name.</returns>
                     public string CampusIdToName( int campusId )
@@ -78,12 +73,32 @@ namespace CCVApp
                     }
 
                     /// <summary>
-                    /// Helper method for converting a campus' id to its name
+                    /// Helper method for converting a campus' name to its ID
                     /// </summary>
                     /// <returns>The name to identifier.</returns>
                     public int CampusNameToId( string campusName )
                     {
-                        return Campuses.Find( c => c.Name == campusName ).Id;
+                        Rock.Client.Campus campusObj = Campuses.Find( c => c.Name == campusName );
+                        return campusObj != null ? campusObj.Id : 0;
+                    }
+
+                    /// <summary>
+                    /// Helper method for converting a prayer category ID to its name
+                    /// </summary>
+                    public string PrayerIdToCategory( int categoryId )
+                    {
+                        // guard against old, bad values.
+                        Rock.Client.Category categoryObj = PrayerCategories.Find( c => c.Id == categoryId );
+                        return categoryObj != null ? categoryObj.Name : PrayerCategories[ 0 ].Name;
+                    }
+
+                    /// <summary>
+                    /// Helper method for converting a prayer category name to its ID
+                    /// </summary>
+                    public int PrayerCategoryToId( string categoryName )
+                    {
+                        Rock.Client.Category categoryObj = PrayerCategories.Find( c => c.Name == categoryName );
+                        return categoryObj != null ? categoryObj.Id : 0;
                     }
 
                     /// <summary>
@@ -109,13 +124,7 @@ namespace CCVApp
                     /// Default list of prayer categories supported
                     /// </summary>
                     /// <value>The prayer categories.</value>
-                    public List<string> PrayerCategories { get; set; }
-
-                    /// <summary>
-                    /// List of defined values, which contain Guids and their matching DefinedTypeIDs
-                    /// </summary>
-                    /// <value>The defined value list.</value>
-                    public List<Rock.Client.DefinedValue> DefinedValueList { get; set; }
+                    public List<Rock.Client.Category> PrayerCategories { get; set; }
                 }
                 public GeneralData Data { get; set; }
 
@@ -126,28 +135,21 @@ namespace CCVApp
 
                 public void GetGeneralData( HttpRequest.RequestResult generalDataResult )
                 {
-                    // take only the guids we need to get the IDs for
-                    List<System.Guid> guidList = new List<Guid>();
-                    foreach ( Rock.Client.DefinedValue definedValue in Data.DefinedValueList )
-                    {
-                        guidList.Add( definedValue.Guid );
-                    }
-
-                    // get those defiend values.
-                    RockApi.Instance.GetDefinedValues( guidList, delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.DefinedValue> definedValues )
+                    // now get our campuses.
+                    RockApi.Instance.GetCampuses( delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.Campus> campusList )
                         {
-                            // if we were successful, parse the defined values
                             if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
                             {
-                                Data.DefinedValueList = definedValues;
+                                Data.Campuses = campusList;
                             }
 
-                            // failure or not, now get our campuses.
-                            RockApi.Instance.GetCampuses( delegate(System.Net.HttpStatusCode campusStatusCode, string campusStatusDescription, List<Rock.Client.Campus> campusList )
+                            // Chain other things here as needed
+                            RockApi.Instance.GetPrayerCategories( 
+                                delegate( System.Net.HttpStatusCode prayerStatusCode, string prayerStatusDescription, List<Rock.Client.Category> categoryList )
                                 {
-                                    if( Rock.Mobile.Network.Util.StatusInSuccessRange( campusStatusCode ) == true )
+                                    if ( Rock.Mobile.Network.Util.StatusInSuccessRange( prayerStatusCode ) == true )
                                     {
-                                        Data.Campuses = campusList;
+                                        Data.PrayerCategories = categoryList;
                                     }
 
                                     // save!
@@ -156,29 +158,10 @@ namespace CCVApp
                                     // notify the caller
                                     if( generalDataResult != null )
                                     {
-                                        generalDataResult( statusCode, statusDescription );
+                                        generalDataResult( prayerStatusCode, prayerStatusDescription );
                                     }
-                                } );
-                        });
-
-                    /*RockApi.Instance.GetGeneralData(delegate(System.Net.HttpStatusCode statusCode, string statusDescription, GeneralData model)
-                        {
-                            if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
-                            {
-                                Data = model;
-
-                                // save!
-                                SaveToDevice( );
-                            }
-
-                            Console.WriteLine( "GeneralData Received With Status {0}", statusCode );
-
-                            // notify the caller
-                            if( generalDataResult != null )
-                            {
-                                generalDataResult( statusCode, statusDescription );
-                            }
-                        });*/
+                                });
+                        } );
                 }
 
                 public void SaveToDevice( )
@@ -209,10 +192,16 @@ namespace CCVApp
                             // catch a load exception and abort. Then we'll simply use default data.
                             try
                             {
-                                Data = JsonConvert.DeserializeObject<GeneralData>( json ) as GeneralData;
+                                // only take the general data if our version matches. Otherwise, make them start fresh.
+                                GeneralData loadedData = JsonConvert.DeserializeObject<GeneralData>( json ) as GeneralData;
+                                if( Data.Version == loadedData.Version )
+                                {
+                                    Data = loadedData;
+                                }
                             }
-                            catch( Exception )
+                            catch( Exception e )
                             {
+                                Console.WriteLine( string.Format( "{0}", e) );
                             }
                         }
                     }

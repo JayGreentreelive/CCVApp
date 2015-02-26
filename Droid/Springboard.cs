@@ -705,7 +705,7 @@ namespace Droid
         {
             // should we advertise the notes?
             // yes, if it's a weekend and we're at CCV (that part will come later)
-            //if ( DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday )
+            if ( DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday )
             {
                 if ( RockLaunchData.Instance.Data.Series.Count > 0 )
                 {
@@ -771,33 +771,46 @@ namespace Droid
                 if( RockMobileUser.Instance.HasProfileImage == true )
                 {
                     // Load the profile pic
-                    Bitmap image = BitmapFactory.DecodeStream( (MemoryStream) FileCache.Instance.LoadFile( SpringboardConfig.ProfilePic ) );
-
-                    if ( image != null )
+                    MemoryStream profileStream = (MemoryStream)FileCache.Instance.LoadFile( SpringboardConfig.ProfilePic );
+                    if ( profileStream != null )
                     {
-                        // scale the image to the size of the mask
-                        Bitmap scaledImage = Bitmap.CreateScaledBitmap( image, ProfileMask.Width, ProfileMask.Height, false );
-
-                        // dump the source image
-                        image.Dispose( );
-                        image = null;
-
-                        // if we already have a final image, dispose of it
-                        if( ProfileMaskedImage != null )
+                        try
                         {
-                            ProfileMaskedImage.Dispose( );
-                            ProfileMaskedImage = null;
+                            Bitmap image = BitmapFactory.DecodeStream( profileStream );
+                            if ( image != null )
+                            {
+                                // scale the image to the size of the mask
+                                Bitmap scaledImage = Bitmap.CreateScaledBitmap( image, ProfileMask.Width, ProfileMask.Height, false );
+
+                                // dump the source image
+                                image.Dispose( );
+                                image = null;
+
+                                // if we already have a final image, dispose of it
+                                if ( ProfileMaskedImage != null )
+                                {
+                                    ProfileMaskedImage.Dispose( );
+                                    ProfileMaskedImage = null;
+                                }
+
+                                // generate the masked image
+                                ProfileMaskedImage = Rock.Mobile.PlatformSpecific.Android.Graphics.Util.ApplyMaskToBitmap( scaledImage, ProfileMask, 0, 0 );
+
+                                scaledImage.Dispose( );
+                                scaledImage = null;
+
+                                // set the final result
+                                ProfileImageButton.Text = "";
+                                ProfileImageButton.SetBackgroundDrawable( new BitmapDrawable( ProfileMaskedImage ) );
+                            }
+                        }
+                        catch( Exception )
+                        {
+                            FileCache.Instance.RemoveFile( SpringboardConfig.ProfilePic );
+                            System.Console.WriteLine( "Image {0} is corrupt. Removing.", SpringboardConfig.ProfilePic );
                         }
 
-                        // generate the masked image
-                        ProfileMaskedImage = Rock.Mobile.PlatformSpecific.Android.Graphics.Util.ApplyMaskToBitmap( scaledImage, ProfileMask, 0, 0 );
-
-                        scaledImage.Dispose( );
-                        scaledImage = null;
-
-                        // set the final result
-                        ProfileImageButton.Text = "";
-                        ProfileImageButton.SetBackgroundDrawable( new BitmapDrawable( ProfileMaskedImage ) );
+                        profileStream.Dispose( );
                     }
                 }
             }

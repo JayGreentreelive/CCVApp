@@ -636,7 +636,16 @@ namespace Droid
                         MemoryStream imageStream = (MemoryStream)FileCache.Instance.LoadFile( entry.Series.Name + "_bb" );
                         if ( imageStream != null )
                         {
-                            entry.Billboard = BitmapFactory.DecodeStream( imageStream );
+                            try
+                            {
+                                entry.Billboard = BitmapFactory.DecodeStream( imageStream );
+                            }
+                            catch( Exception )
+                            {
+                                FileCache.Instance.RemoveFile( entry.Series.Name + "_bb" );
+                                System.Console.WriteLine( "Image {0} is corrupt. Removing.", entry.Series.Name + "_bb" );
+                            }
+
                             imageStream.Dispose( );
                         }
                         else
@@ -651,7 +660,15 @@ namespace Droid
                         MemoryStream imageStream = (MemoryStream)FileCache.Instance.LoadFile( entry.Series.Name + "_thumb" );
                         if ( imageStream != null )
                         {
-                            entry.Thumbnail = BitmapFactory.DecodeStream( imageStream );
+                            try
+                            {
+                                entry.Thumbnail = BitmapFactory.DecodeStream( imageStream );
+                            }
+                            catch( Exception )
+                            {
+                                FileCache.Instance.RemoveFile( entry.Series.Name + "_thumb" );
+                                System.Console.WriteLine( "Image {0} is corrupt. Removing.", entry.Series.Name + "_thumb" );
+                            }
                             imageStream.Dispose( );
                         }
                         else

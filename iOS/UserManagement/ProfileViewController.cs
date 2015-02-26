@@ -110,28 +110,36 @@ namespace iOS
 
             GenderButton.TouchUpInside += (object sender, EventArgs e ) =>
                 {
-                    // if they have a gender selected, default to that.
-                    if( string.IsNullOrEmpty( GenderText.Text ) == false )
+                    // don't allow multiple pickers
+                    if( GenderPicker.Revealed == false && BirthdatePicker.Revealed == false )
                     {
-                        ((UIPickerView)GenderPicker.Picker).Select( RockGeneralData.Instance.Data.Genders.IndexOf( GenderText.Text ) - 1, 0, false );
-                    }
+                        // if they have a gender selected, default to that.
+                        if( string.IsNullOrEmpty( GenderText.Text ) == false )
+                        {
+                            ((UIPickerView)GenderPicker.Picker).Select( RockGeneralData.Instance.Data.Genders.IndexOf( GenderText.Text ) - 1, 0, false );
+                        }
 
-                    GenderPicker.TogglePicker( true );
+                        GenderPicker.TogglePicker( true );
+                    }
                 };
             ControlStyling.StyleTextField( GenderText, ProfileStrings.GenderPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( GenderLayer );
 
             BirthdayButton.TouchUpInside += (object sender, EventArgs e ) =>
                 {
-                    // setup the default date time to display
-                    DateTime initialDate = DateTime.Now;
-                    if( string.IsNullOrEmpty( BirthdateText.Text ) == false )
+                    // don't allow multiple pickers
+                    if( GenderPicker.Revealed == false && BirthdatePicker.Revealed == false )
                     {
-                        initialDate = DateTime.Parse( BirthdateText.Text );
-                    }
+                        // setup the default date time to display
+                        DateTime initialDate = DateTime.Now;
+                        if( string.IsNullOrEmpty( BirthdateText.Text ) == false )
+                        {
+                            initialDate = DateTime.Parse( BirthdateText.Text );
+                        }
 
-                    ((UIDatePicker)BirthdatePicker.Picker).Date = initialDate.DateTimeToNSDate( );
-                    BirthdatePicker.TogglePicker( true );
+                        ((UIDatePicker)BirthdatePicker.Picker).Date = initialDate.DateTimeToNSDate( );
+                        BirthdatePicker.TogglePicker( true );
+                    }
                 };
             ControlStyling.StyleTextField( BirthdateText, ProfileStrings.BirthdatePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( BirthdateLayer );

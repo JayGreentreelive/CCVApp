@@ -168,7 +168,15 @@ namespace Droid
                         MemoryStream imageStream = (MemoryStream)FileCache.Instance.LoadFile( entry.News.ImageName );
                         if ( imageStream != null )
                         {
-                            entry.Image = BitmapFactory.DecodeStream( imageStream );
+                            try
+                            {
+                                entry.Image = BitmapFactory.DecodeStream( imageStream );
+                            }
+                            catch( Exception )
+                            {
+                                FileCache.Instance.RemoveFile( entry.News.ImageName );
+                                Console.WriteLine( "Image {0} was corrupt. Removing.", entry.News.ImageName );
+                            }
 
                             imageStream.Dispose( );
                             imageStream = null;

@@ -9,6 +9,7 @@ Changes
 
 Both
 	General - Fixed an issue causing the "Notes" billboard to sometimes not appear immediately at startup.
+	General - Moving forward, upgrading versions should no longer cause crashing due to out of sync data.
 
 	News - Learn More now displays within the app rather than taking you out of it.
 
@@ -23,13 +24,24 @@ Both
 	Profile - Updating home campus when the user had no family/home campus now works.
 	Profile - Updating and creating your home address now works.
 	Profile - First and Last name first letters are automatically capitalized.
+	Profile - Fixed an issue causing birthdays to not update.
 
 	FileCache - Fixed an issue causing cached files to expire after 7 hours instead of 7 days. Also upped the default expiration time from 7 days to 30.
+
+	Prayer - Fixed an issue preventing prayer request submissions.
+	Prayer - First & Last name are now pre-populated in the Create screen if you're logged in.
 
 iOS
 	General - Fixed an issue causing the "Notes" billboard to sometimes show up off screen when viewing Notes landscape.
 
 	News - Fixed an issue causing the background of some images to be Lime Green
+
+	Prayer - Fixed an issue causing visual overlap with the Prayer Category and Submit button on iPhone 4s devices.
+
+	Profile - Fixed an issue allowing both the Gender and Birthday pickers to display at the same time.
 	
 Android
 	Profile - Fixed an limiting the length of text in the text fields.
+
+	Prayer - Names are capitalized when typing into the name fields.
+	Prayer - Sentences are capitalized in the request field.

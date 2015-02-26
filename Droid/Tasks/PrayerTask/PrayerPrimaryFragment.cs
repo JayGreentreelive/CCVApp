@@ -75,7 +75,7 @@ namespace Droid
                             Category.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                             Category.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
                             Category.SetTextSize( ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
-                            Category.Text = "Category";
+                            Category.Text = prayer.CategoryId.HasValue ? RockGeneralData.Instance.Data.PrayerIdToCategory( prayer.CategoryId.Value ) : RockGeneralData.Instance.Data.PrayerCategories[ 0 ].Name;
                             detailsLayout.AddView( Category );
 
                             // add a dummy view that will force the date over to the right

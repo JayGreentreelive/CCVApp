@@ -58,10 +58,12 @@ namespace CCVApp
                 /// <summary>
                 /// End point for retrieving prayer requests
                 /// </summary>
-                /// 
-                //const string GetPrayerRequestsEndPoint = "api/prayerrequests";
-                //const string GetPrayerRequestsEndPoint = "api/prayerrequests?$filter=(IsApproved eq true) and (IsPublic eq true) and (IsActive eq true) and ( (ExpirationDate ge datetime'{0:yyyy-MM-dd}') or (ExpirationDate eq null) )&$expand=Category";
                 const string GetPrayerRequestsEndPoint = "api/prayerrequests/public";
+
+                /// <summary>
+                /// End point for grabbing the categories for prayer
+                /// </summary>
+                const string GetPrayerCategoriesEndPoint = "api/categories/getChildren/1";
 
                 /// <summary>
                 /// End point for getting news items to be displayed in the news section
@@ -384,6 +386,15 @@ namespace CCVApp
                         } );
                 }
 
+                public void GetPrayerCategories( HttpRequest.RequestResult<List<Rock.Client.Category>> resultHandler )
+                {
+                    RestRequest request = GetRockRestRequest( Method.GET );
+                    string requestUrl = BaseUrl + GetPrayerCategoriesEndPoint;
+
+                    // get the resonse
+                    Request.ExecuteAsync< List<Rock.Client.Category> >( requestUrl, request, resultHandler );
+                }
+
                 public void GetCampuses( HttpRequest.RequestResult< List<Rock.Client.Campus> > resultHandler )
                 {
                     // request a profile by the username. If no username is specified, we'll use the logged in user's name.
@@ -422,12 +433,6 @@ namespace CCVApp
 
                     // get the raw response
                     Request.ExecuteAsync< List<Rock.Client.ContentChannelItem> >( requestUrl, request, resultHandler );
-                }
-
-                public void GetGeneralData( HttpRequest.RequestResult<RockGeneralData.GeneralData> resultHandler )
-                {
-                    // todo: add a "get GeneralData" end point.
-                    resultHandler( HttpStatusCode.OK, "Success", RockGeneralData.Instance.Data );
                 }
 
                 /// <summary>
