@@ -94,7 +94,7 @@ namespace Droid
                         messageItem.Distance.Text += " " + ConnectStrings.GroupFinder_ClosestTag;
                     }
 
-                    messageItem.Neighborhood.Text = string.Format( ConnectStrings.GroupFinder_Neighborhood, ParentFragment.GroupEntries[ position ].NeighborhoodArea );
+                    //messageItem.Neighborhood.Text = string.Format( ConnectStrings.GroupFinder_Neighborhood, ParentFragment.GroupEntries[ position ].NeighborhoodArea );
 
 
                     return messageItem;
@@ -102,7 +102,7 @@ namespace Droid
 
                 public void OnClick( int position, int buttonIndex )
                 {
-                    ParentFragment.OnClick( position );
+                    ParentFragment.OnClick( position, buttonIndex );
                 }
 
                 public void SetSelectedRow( int position )
@@ -123,7 +123,9 @@ namespace Droid
                 //public TextView Address { get; set; }
                 public TextView MeetingTime { get; set; }
                 public TextView Distance { get; set; }
-                public TextView Neighborhood { get; set; }
+
+                public Button JoinButton { get; set; }
+                //public TextView Neighborhood { get; set; }
 
                 public GroupArrayAdapter ParentAdapter { get; set; }
                 public int Position { get; set; }
@@ -152,7 +154,7 @@ namespace Droid
 
                     Title = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     Title.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-                    Title.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Medium_Font_Regular ), TypefaceStyle.Normal );
+                    Title.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Medium_Font_Bold ), TypefaceStyle.Normal );
                     Title.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Medium_FontSize );
                     Title.SetSingleLine( );
                     Title.Ellipsize = Android.Text.TextUtils.TruncateAt.End;
@@ -166,26 +168,45 @@ namespace Droid
                     Address.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                     TitleLayout.AddView( Address );*/
 
+                    Typeface buttonFontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
+
+                    JoinButton = new Button( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    JoinButton.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                    ( (LinearLayout.LayoutParams)JoinButton.LayoutParameters ).Weight = 0;
+                    ( (LinearLayout.LayoutParams)JoinButton.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
+                    JoinButton.SetTypeface( buttonFontFace, TypefaceStyle.Normal );
+                    JoinButton.SetTextSize( Android.Util.ComplexUnitType.Dip, ConnectConfig.GroupFinder_Join_IconSize );
+                    JoinButton.Text = ConnectConfig.GroupFinder_JoinIcon;
+                    JoinButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    JoinButton.SetBackgroundDrawable( null );
+                    contentLayout.AddView( JoinButton );
+
+                    JoinButton.Click += (object sender, EventArgs e ) =>
+                        {
+                            ParentAdapter.OnClick( Position, 1 );
+                        };
+
+
                     MeetingTime = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     MeetingTime.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-                    MeetingTime.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
+                    MeetingTime.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Light ), TypefaceStyle.Normal );
                     MeetingTime.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
                     MeetingTime.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
                     TitleLayout.AddView( MeetingTime );
 
                     Distance  = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     Distance.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-                    Distance.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
+                    Distance.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Light ), TypefaceStyle.Normal );
                     Distance.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
                     Distance.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
                     TitleLayout.AddView( Distance );
 
-                    Neighborhood = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    /*Neighborhood = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     Neighborhood.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-                    Neighborhood.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
+                    Neighborhood.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Light ), TypefaceStyle.Normal );
                     Neighborhood.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
                     Neighborhood.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
-                    TitleLayout.AddView( Neighborhood );
+                    TitleLayout.AddView( Neighborhood );*/
 
                     // add our own custom seperator at the bottom
                     View seperator = new View( Rock.Mobile.PlatformSpecific.Android.Core.Context );
@@ -218,6 +239,11 @@ namespace Droid
                 public Android.Gms.Maps.MapView MapView { get; set; }
                 public GoogleMap Map { get; set; }
                 public TextView SearchResult { get; set; }
+
+                public LinearLayout FooterLayout { get; set; }
+                public TextView FooterDetailsText { get; set; }
+                public TextView FooterJoinText { get; set; }
+
                 View Seperator { get; set; }
                 public List<GroupFinder.GroupEntry> GroupEntries { get; set; }
                 public List<Android.Gms.Maps.Model.Marker> MarkerList { get; set; }
@@ -262,7 +288,7 @@ namespace Droid
                     Street.SetOnEditorActionListener( this );
                     Street.SetMinWidth( (int) (fixedWidth * 1.50f) );
                     Street.SetMaxWidth( (int) (fixedWidth * 1.50f) );
-                    Street.InputType |= Android.Text.InputTypes.TextFlagNoSuggestions;
+                    Street.InputType |= Android.Text.InputTypes.TextFlagNoSuggestions | Android.Text.InputTypes.TextFlagCapWords;
                     StreetBackgroundColor = ControlStylingConfig.BG_Layer_Color;
 
                     StreetSeperator = new View( Rock.Mobile.PlatformSpecific.Android.Core.Context );
@@ -280,6 +306,7 @@ namespace Droid
                     City.SetHorizontallyScrolling( true );
                     City.SetMaxLines( 1 );
                     City.Ellipsize = Android.Text.TextUtils.TruncateAt.End;
+                    City.InputType |= Android.Text.InputTypes.TextFlagCapWords;
                     City.SetOnEditorActionListener( this );
                     City.SetMinWidth( (int) (fixedWidth * 1.25f) );
                     City.SetMaxWidth( (int) (fixedWidth * 1.25f) );
@@ -299,6 +326,7 @@ namespace Droid
                     State.SetSingleLine( );
                     State.Hint = ConnectStrings.GroupFinder_StatePlaceholder;
                     State.Text = ConnectStrings.GroupFinder_DefaultState;
+                    State.InputType |= Android.Text.InputTypes.TextFlagCapWords;
                     State.SetOnEditorActionListener( this );
                     State.SetMinWidth( (int) (fixedWidth / 1.50f) );
                     State.SetMaxWidth( (int) (fixedWidth / 1.50f) );
@@ -341,6 +369,32 @@ namespace Droid
                     SearchResult.Text = ConnectStrings.GroupFinder_BeforeSearch;
                     SearchResult.Gravity = GravityFlags.Center;
 
+
+                    FooterLayout = new LinearLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    FooterLayout.Orientation = Android.Widget.Orientation.Horizontal;
+                    FooterLayout.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                    ( (LinearLayout.LayoutParams)FooterLayout.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
+                    ( (LinearLayout.LayoutParams)FooterLayout.LayoutParameters ).LeftMargin = 25;
+
+                    FooterDetailsText  = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    FooterDetailsText.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
+                    FooterDetailsText.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
+                    FooterDetailsText.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
+                    FooterDetailsText.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    FooterDetailsText.Text = "Details";
+                    FooterDetailsText.Gravity = GravityFlags.Center;
+
+                    FooterJoinText  = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    FooterJoinText.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
+                    ( (LinearLayout.LayoutParams)FooterJoinText.LayoutParameters ).Gravity = GravityFlags.Right;
+                    ( (LinearLayout.LayoutParams)FooterJoinText.LayoutParameters ).RightMargin = 25;
+                    FooterJoinText.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
+                    FooterJoinText.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
+                    FooterJoinText.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    FooterJoinText.Text = "Join";
+                    FooterJoinText.Gravity = GravityFlags.Center;
+
+
                     Seperator = new View( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     Seperator.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, 0 );
                     Seperator.LayoutParameters.Height = 2;
@@ -350,7 +404,7 @@ namespace Droid
                     ListView.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent );
                     ListView.ItemClick += (object sender, AdapterView.ItemClickEventArgs e ) =>
                         {
-                            OnClick( e.Position );
+                            OnClick( e.Position, 0 );
                         };
                     ListView.SetOnTouchListener( this );
                     ListView.Adapter = new GroupArrayAdapter( this );
@@ -394,6 +448,18 @@ namespace Droid
 
                     ((LinearLayout)view).AddView( MapView );
                     ((LinearLayout)view).AddView( SearchResult );
+                    ((LinearLayout)view).AddView( FooterLayout );
+
+                    FooterLayout.AddView( FooterDetailsText );
+
+                    // fill the remaining space with a dummy view, and that will align our speaker to the right
+                    View dummyView = new View( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    dummyView.LayoutParameters = new LinearLayout.LayoutParams( 0, 0 );
+                    ( (LinearLayout.LayoutParams)dummyView.LayoutParameters ).Weight = 1;
+                    FooterLayout.AddView( dummyView );
+
+                    FooterLayout.AddView( FooterJoinText );
+
                     ((LinearLayout)view).AddView( Seperator );
                     ((LinearLayout)view).AddView( ProgressBar );
                     ((LinearLayout)view).AddView( ListView );
@@ -504,29 +570,37 @@ namespace Droid
                     MapView.OnDestroy( );
                 }
 
-                public void OnClick( int position )
+                public void OnClick( int position, int buttonIndex )
                 {
-                    // select the row
-                    ( ListView.Adapter as GroupArrayAdapter ).SetSelectedRow( position );
-
-                    // scroll it into view
-                    ListView.SmoothScrollToPosition( position );
-
-                    // hide all other marker windows (if showing)
-                    // go thru each marker and find the match, and then return it
-                    foreach ( Android.Gms.Maps.Model.Marker currMarker in MarkerList )
+                    if ( buttonIndex == 0 )
                     {
-                        currMarker.HideInfoWindow( );
+                        // select the row
+                        ( ListView.Adapter as GroupArrayAdapter ).SetSelectedRow( position );
+
+                        // scroll it into view
+                        ListView.SmoothScrollToPosition( position );
+
+                        // hide all other marker windows (if showing)
+                        // go thru each marker and find the match, and then return it
+                        foreach ( Android.Gms.Maps.Model.Marker currMarker in MarkerList )
+                        {
+                            currMarker.HideInfoWindow( );
+                        }
+
+                        // center that map marker
+                        Android.Gms.Maps.Model.Marker marker = RowToMapMarker( position );
+                        marker.ShowInfoWindow( );
+
+                        Android.Gms.Maps.Model.LatLng centerMarker = new Android.Gms.Maps.Model.LatLng( marker.Position.Latitude, marker.Position.Longitude );
+
+                        CameraUpdate camPos = CameraUpdateFactory.NewLatLngZoom( centerMarker, Map.CameraPosition.Zoom );
+                        Map.AnimateCamera( camPos, 250, null );
                     }
-
-                    // center that map marker
-                    Android.Gms.Maps.Model.Marker marker = RowToMapMarker( position );
-                    marker.ShowInfoWindow( );
-
-                    Android.Gms.Maps.Model.LatLng centerMarker = new Android.Gms.Maps.Model.LatLng( marker.Position.Latitude, marker.Position.Longitude );
-
-                    CameraUpdate camPos = CameraUpdateFactory.NewLatLngZoom( centerMarker, Map.CameraPosition.Zoom );
-                    Map.AnimateCamera( camPos, 250, null );
+                    else if ( buttonIndex == 1 )
+                    {
+                        // todo: launch the join group fragment
+                        Console.WriteLine( "Join neighborhood group in row {0}", position );
+                    }
                 }
 
                 public override void OnPause()
@@ -570,7 +644,8 @@ namespace Droid
                         // show the info window for the first (closest) group
                         MarkerList[ 0 ].ShowInfoWindow( );
 
-                        SearchResult.Text = ConnectStrings.GroupFinder_GroupsFound;
+                        //SearchResult.Text = ConnectStrings.GroupFinder_GroupsFound;
+                        SearchResult.Text = string.Format( ConnectStrings.GroupFinder_Neighborhood, GroupEntries[ 0 ].NeighborhoodArea );
 
                         // record an analytic that they searched
                         GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.Location, address );

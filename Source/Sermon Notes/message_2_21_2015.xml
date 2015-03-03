@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Note StyleSheet="http://www.jeredmcferron.com/ccv/sample_style.xml">    
-    <Header MarginBottom="5%">
+<Note StyleSheet="http://www.jeredmcferron.com/ccv/default_style.xml">    
+    <Header>
         <Title>ACCEPT</Title>
         <Speaker>Todd Clark</Speaker>
         <Date>February 21st &amp; 22nd, 2015</Date>

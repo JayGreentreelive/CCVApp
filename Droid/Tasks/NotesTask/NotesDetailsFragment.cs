@@ -113,6 +113,15 @@ namespace Droid
                     messageItem.Date.Text = Messages[ position ].Message.Date;
                     messageItem.Speaker.Text = Messages[ position ].Message.Speaker;
 
+                    if ( string.IsNullOrEmpty( Messages[ position ].Message.AudioUrl ) == true )
+                    {
+                        messageItem.ToggleListenButton( false );
+                    }
+                    else
+                    {
+                        messageItem.ToggleListenButton( true );
+                    }
+
                     if ( string.IsNullOrEmpty( Messages[ position ].Message.WatchUrl ) == true )
                     {
                         messageItem.ToggleWatchButton( false );
@@ -201,7 +210,8 @@ namespace Droid
                 public TextView Speaker { get; set; }
 
                 RelativeLayout ButtonFrameLayout { get; set; }
-                public Button WatchButton { get; set; }
+                Button ListenButton { get; set; }
+                Button WatchButton { get; set; }
                 Button TakeNotesButton { get; set; }
 
                 public NotesDetailsArrayAdapter ParentAdapter { get; set; }
@@ -231,7 +241,7 @@ namespace Droid
 
                     Title = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     Title.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-                    Title.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Medium_Font_Regular ), TypefaceStyle.Normal );
+                    Title.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Medium_Font_Bold ), TypefaceStyle.Normal );
                     Title.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Medium_FontSize );
                     Title.SetSingleLine( );
                     Title.Ellipsize = Android.Text.TextUtils.TruncateAt.End;
@@ -263,6 +273,17 @@ namespace Droid
                     // setup the buttons
                     Typeface buttonFontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
 
+                    ListenButton = new Button( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    ListenButton.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                    ( (LinearLayout.LayoutParams)ListenButton.LayoutParameters ).Weight = 0;
+                    ( (LinearLayout.LayoutParams)ListenButton.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
+                    ListenButton.SetTypeface( buttonFontFace, TypefaceStyle.Normal );
+                    ListenButton.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Details_Table_IconSize );
+                    ListenButton.Text = NoteConfig.Series_Table_Listen_Icon;
+                    ListenButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
+                    ListenButton.SetBackgroundDrawable( null );
+                    contentLayout.AddView( ListenButton );
+
                     WatchButton = new Button( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     WatchButton.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                     ( (LinearLayout.LayoutParams)WatchButton.LayoutParameters ).Weight = 0;
@@ -285,15 +306,36 @@ namespace Droid
                     TakeNotesButton.SetBackgroundDrawable( null );
                     contentLayout.AddView( TakeNotesButton );
 
-                    WatchButton.Click += (object sender, EventArgs e ) =>
+                    ListenButton.Click += (object sender, EventArgs e ) =>
                         {
                             ParentAdapter.OnClick( Position, 0 );
                         };
 
-                    TakeNotesButton.Click += (object sender, EventArgs e ) =>
+                    WatchButton.Click += (object sender, EventArgs e ) =>
                         {
                             ParentAdapter.OnClick( Position, 1 );
                         };
+
+                    TakeNotesButton.Click += (object sender, EventArgs e ) =>
+                        {
+                            ParentAdapter.OnClick( Position, 2 );
+                        };
+                }
+
+                public void ToggleListenButton( bool enabled )
+                {
+                    if ( enabled == true )
+                    {
+                        ListenButton.Enabled = true;
+                        ListenButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
+                    }
+                    else
+                    {
+                        ListenButton.Enabled = false;
+
+                        uint disabledColor = Rock.Mobile.Graphics.Util.ScaleRGBAColor( ControlStylingConfig.TextField_PlaceholderTextColor, 2, false );
+                        ListenButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( disabledColor ) );
+                    }
                 }
 
                 public void ToggleWatchButton( bool enabled )

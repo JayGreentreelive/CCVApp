@@ -32,6 +32,12 @@ namespace CCVApp
                 protected PlatformLabel Citation { get; set; }
 
                 /// <summary>
+                /// The symbol used to denote the citation can be tapped to view an associated URL
+                /// </summary>
+                /// <value>The URL glyph.</value>
+                protected PlatformLabel UrlGlyph { get; set; }
+
+                /// <summary>
                 /// The view representing any surrounding border for the quote.
                 /// </summary>
                 /// <value>The border view.</value>
@@ -54,6 +60,7 @@ namespace CCVApp
 
                     QuoteLabel = PlatformLabel.Create( );
                     Citation = PlatformLabel.Create( );
+                    UrlGlyph = PlatformLabel.Create( );
                     BorderView = PlatformView.Create( );
 
                     ActiveUrl = string.Empty;
@@ -91,6 +98,12 @@ namespace CCVApp
 
                     Citation.BackgroundColor = 0;
                     QuoteLabel.BackgroundColor = 0;
+
+
+                    UrlGlyph.Text = NoteConfig.CitationUrl_Icon;
+                    UrlGlyph.TextColor = NoteConfig.CitationUrl_IconColor;
+                    UrlGlyph.SetFont( ControlStylingConfig.Icon_Font_Secondary, NoteConfig.CitationUrl_IconSize );
+                    UrlGlyph.BackgroundColor = 0;
 
 
                     // check for border styling
@@ -144,7 +157,9 @@ namespace CCVApp
                     ActiveUrl = reader.GetAttribute( "Url" );
                     if ( string.IsNullOrEmpty( ActiveUrl ) == false )
                     {
-                        Citation.AddUnderline( );
+                        UrlGlyph.Text = NoteConfig.CitationUrl_Icon;
+                        UrlGlyph.Bounds = new RectangleF( Citation.Frame.Right, Citation.Frame.Top, (availableWidth - Citation.Frame.Right), 0 );
+                        UrlGlyph.SizeToFit( );
                     }
 
                     bool finishedScripture = false;
@@ -221,13 +236,21 @@ namespace CCVApp
                                                          Citation.Frame.Width,
                                                          Citation.Frame.Height );
 
+                        UrlGlyph.Frame = new RectangleF( Citation.Frame.Right,
+                            Citation.Frame.Top - ( (UrlGlyph.Frame.Height - Citation.Frame.Height) / 2),
+                                                         UrlGlyph.Frame.Width,
+                                                         UrlGlyph.Frame.Height );
+
+                        RectangleF citationGlyphFrame = Parser.CalcBoundingFrame( Citation.Frame, UrlGlyph.Frame );
+
                         // get a bounding frame for the quote and citation
-                        frame = Parser.CalcBoundingFrame( QuoteLabel.Frame, Citation.Frame );
+                        frame = Parser.CalcBoundingFrame( QuoteLabel.Frame, citationGlyphFrame );
 
                         // now right-adjust it IF it's smaller than the quote
-                        if ( Citation.Frame.Width < QuoteLabel.Frame.Width )
+                        if ( citationGlyphFrame.Width < QuoteLabel.Frame.Width )
                         {
-                            Citation.Position = new PointF( QuoteLabel.Frame.Right - Citation.Frame.Width, Citation.Position.Y );
+                            Citation.Position = new PointF( QuoteLabel.Frame.Right - citationGlyphFrame.Width, Citation.Position.Y );
+                            UrlGlyph.Position = new PointF( Citation.Frame.Right, UrlGlyph.Frame.Top );
                         }
                     }
                     else
@@ -237,8 +260,13 @@ namespace CCVApp
                                                          Citation.Frame.Width,
                                                          Citation.Frame.Height );
 
+                        UrlGlyph.Frame = new RectangleF( Citation.Frame.Right,
+                            Citation.Frame.Top - ( (UrlGlyph.Frame.Height - Citation.Frame.Height) / 2),
+                                                         UrlGlyph.Frame.Width,
+                                                         UrlGlyph.Frame.Height );
+
                         // get a bounding frame for the quote and citation
-                        frame = Citation.Frame;
+                        frame = Parser.CalcBoundingFrame( Citation.Frame, UrlGlyph.Frame );
                     }
 
                     Citation.TextAlignment = TextAlignment.Right;
@@ -271,6 +299,9 @@ namespace CCVApp
                     Citation.Position = new PointF( Citation.Position.X + xOffset, 
                         Citation.Position.Y + yOffset );
 
+                    UrlGlyph.Position = new PointF( UrlGlyph.Position.X + xOffset,
+                        UrlGlyph.Position.Y + yOffset );
+
                     BorderView.Position = new PointF( BorderView.Position.X + xOffset,
                         BorderView.Position.Y + yOffset );
 
@@ -283,6 +314,7 @@ namespace CCVApp
                     BorderView.AddAsSubview( obj );
                     QuoteLabel.AddAsSubview( obj );
                     Citation.AddAsSubview( obj );
+                    UrlGlyph.AddAsSubview( obj );
 
                     TryAddDebugLayer( obj );
                 }
@@ -292,6 +324,7 @@ namespace CCVApp
                     BorderView.RemoveAsSubview( obj );
                     QuoteLabel.RemoveAsSubview( obj );
                     Citation.RemoveAsSubview( obj );
+                    UrlGlyph.RemoveAsSubview( obj );
 
                     TryRemoveDebugLayer( obj );
                 }
@@ -299,7 +332,7 @@ namespace CCVApp
                 public override IUIControl TouchesEnded( PointF touch )
                 {
                     // if we have an active URL and they're tapping within us, consume.
-                    if ( string.IsNullOrEmpty( ActiveUrl ) == false && Citation.Frame.Contains( touch ) )
+                    if ( string.IsNullOrEmpty( ActiveUrl ) == false && (Citation.Frame.Contains( touch ) || UrlGlyph.Frame.Contains( touch )) )
                     {
                         return this;
                     }

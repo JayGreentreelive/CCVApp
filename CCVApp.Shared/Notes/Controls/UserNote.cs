@@ -184,7 +184,7 @@ namespace CCVApp
                     TextField.TextColor = mStyle.mFont.mColor.Value;
                     TextField.Placeholder = MessagesStrings.UserNote_Placeholder;
                     TextField.PlaceholderTextColor = ControlStylingConfig.TextField_PlaceholderTextColor;
-                    TextField.KeyboardAppearance = CCVApp.Shared.Config.GeneralConfig.iOSPlatformUIKeyboardAppearance;
+                    TextField.KeyboardAppearance = GeneralConfig.iOSPlatformUIKeyboardAppearance;
                      
                     // check for border styling
                     if ( mStyle.mBorderColor.HasValue )

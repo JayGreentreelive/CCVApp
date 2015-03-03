@@ -78,7 +78,7 @@
                 <RelativeLayout
                     android:id="@+id/springboard_news_frame"
                     android:layout_marginTop="40dp"
-                    android:layout_height="40dp"
+                    android:layout_height="45dp"
                     android:layout_width="match_parent">
                     <Button
                         android:layout_width="match_parent"
@@ -112,7 +112,7 @@
                 <RelativeLayout
                     android:layout_below="@id/springboard_news_frame"
                     android:id="@+id/springboard_connect_frame"
-                    android:layout_height="40dp"
+                    android:layout_height="45dp"
                     android:layout_width="match_parent">
                     <Button
                         android:layout_width="match_parent"
@@ -146,7 +146,7 @@
                 <RelativeLayout
                     android:layout_below="@id/springboard_connect_frame"
                     android:id="@+id/springboard_notes_frame"
-                    android:layout_height="40dp"
+                    android:layout_height="45dp"
                     android:layout_width="match_parent">
                     <Button
                         android:layout_width="match_parent"
@@ -180,7 +180,7 @@
                 <RelativeLayout
                     android:layout_below="@id/springboard_notes_frame"
                     android:id="@+id/springboard_prayer_frame"
-                    android:layout_height="40dp"
+                    android:layout_height="45dp"
                     android:layout_width="match_parent">
                     <Button
                         android:layout_width="match_parent"
@@ -214,7 +214,7 @@
                 <RelativeLayout
                     android:layout_below="@id/springboard_prayer_frame"
                     android:id="@+id/springboard_give_frame"
-                    android:layout_height="40dp"
+                    android:layout_height="45dp"
                     android:layout_width="match_parent">
                     <Button
                         android:layout_width="match_parent"
@@ -248,7 +248,7 @@
                 <RelativeLayout
                     android:layout_below="@id/springboard_give_frame"
                     android:id="@+id/springboard_about_frame"
-                    android:layout_height="40dp"
+                    android:layout_height="45dp"
                     android:layout_width="match_parent">
                     <Button
                         android:layout_width="match_parent"
@@ -286,7 +286,7 @@
                     android:background="#FFF00FFF" />
                 <Space
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="45dp"
                     android:background="#FFF00FFF" />
             </LinearLayout>
         </RelativeLayout>
@@ -311,16 +311,17 @@
             android:background="@android:color/transparent"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:gravity="top"
+            android:gravity="center"
             android:layout_gravity="center_vertical" />
         <TextView
             android:id="@+id/campus_selection_icon"
+            android:background="@android:color/transparent"
             android:layout_marginLeft="10dp"
             android:text="S"
             android:layout_toRightOf="@+id/campus_selection_text"
-            android:background="@android:color/transparent"
+            android:gravity="center"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
-            android:gravity="top" />
+            android:layout_gravity="center_vertical" />
     </RelativeLayout>
 </RelativeLayout>

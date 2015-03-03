@@ -412,6 +412,7 @@ namespace iOS
             if ( string.IsNullOrEmpty( HomeCampusText.Text ) == false )
             {
                 RockMobileUser.Instance.PrimaryFamily.CampusId = RockGeneralData.Instance.Data.CampusNameToId( HomeCampusText.Text );
+                RockMobileUser.Instance.ViewingCampus = RockMobileUser.Instance.PrimaryFamily.CampusId.Value;
             }
 
             // address (make sure that all fields are set)

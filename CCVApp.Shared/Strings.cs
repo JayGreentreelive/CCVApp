@@ -105,7 +105,7 @@ namespace CCVApp.Shared
 
             public const string GenderPlaceholder = "Gender";
             public const string BirthdatePlaceholder = "Birthdate";
-            public const string CampusPlaceholder = "Campus";
+            public const string CampusPlaceholder = "My CCV Campus";
 
             public const string SelectCampus_SourceTitle = "Home Campus Selection";
             public const string SelectCampus_SourceDescription = "Select your home campus.";
@@ -149,7 +149,10 @@ namespace CCVApp.Shared
             public const string GroupFinder_MilesSuffix = "Miles";
             public const string GroupFinder_ClosestTag = "(Closest group to you)";
 
-            public const string GroupFinder_Neighborhood = "Part of the {0} Neighborhood";
+            public const string GroupFinder_Neighborhood = "Your neighborhood is {0}";
+
+            public const string Main_Connect_Header = "Group Finder";
+            public const string Main_Connect_OtherWays = "Other ways to connect";
         }
 
         public class MessagesStrings

@@ -394,7 +394,7 @@ namespace Droid
                     AddView( contentLayout );
 
                     Thumbnail = new Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
-                    Thumbnail.LayoutParameters = new LinearLayout.LayoutParams( (int)Rock.Mobile.Graphics.Util.UnitToPx( 75 ), (int)Rock.Mobile.Graphics.Util.UnitToPx( 75 ) );
+                    Thumbnail.LayoutParameters = new LinearLayout.LayoutParams( (int)Rock.Mobile.Graphics.Util.UnitToPx( NoteConfig.Series_Main_CellImageWidth ), (int)Rock.Mobile.Graphics.Util.UnitToPx( NoteConfig.Series_Main_CellImageHeight ) );
                     ( (LinearLayout.LayoutParams)Thumbnail.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
                     Thumbnail.SetScaleType( ImageView.ScaleType.CenterCrop );
                     contentLayout.AddView( Thumbnail );

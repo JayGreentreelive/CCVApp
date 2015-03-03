@@ -6,6 +6,7 @@ using CoreGraphics;
 using CCVApp.Shared.Config;
 using System.Collections.Generic;
 using CCVApp.Shared;
+using CCVApp.Shared.Strings;
 
 namespace iOS
 {
@@ -22,7 +23,7 @@ namespace iOS
 
                 public UIImageView Image { get; set; }
                 public TableSource TableSource { get; set; }
-                public UIButton Button { get; set; }
+                public UILabel Title { get; set; }
                 public UILabel BottomBanner { get; set; }
 
                 public PrimaryCell( CGSize parentSize, UITableViewCellStyle style, string cellIdentifier ) : base( style, cellIdentifier )
@@ -35,32 +36,37 @@ namespace iOS
                     AddSubview( Image );
 
                     // Banner Image
-                    Image.Image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + "connect_banner.jpg" );
+                    Image.Image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + ConnectConfig.MainPageHeaderImage );
                     Image.SizeToFit( );
 
                     // resize the image to fit the width of the device
                     nfloat imageAspect = Image.Bounds.Height / Image.Bounds.Width;
                     Image.Frame = new CGRect( 0, 0, parentSize.Width, parentSize.Width * imageAspect );
 
-                    Button = UIButton.FromType( UIButtonType.System );
-                    ControlStyling.StyleButton( Button, "Group Finder", ControlStylingConfig.Icon_Font_Secondary, 32 );
-                    Button.BackgroundColor = UIColor.Clear;
-                    Button.SizeToFit( );
-                    Button.Frame = new CGRect( (parentSize.Width - Button.Frame.Width ) / 2, Image.Frame.Bottom - Button.Frame.Height, Button.Frame.Width, Button.Frame.Height );
-                    Button.TouchUpInside += (object sender, EventArgs e) => 
-                        {
-                            TableSource.RowClicked( -1 );
-                        };
-                    AddSubview( Button );
+
+                    Title = new UILabel( );
+                    Title.Text = ConnectStrings.Main_Connect_Header;
+                    Title.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Large_Font_Bold, ControlStylingConfig.Large_FontSize );
+                    Title.Layer.AnchorPoint = CGPoint.Empty;
+                    Title.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
+                    Title.BackgroundColor = UIColor.Clear;
+                    Title.LineBreakMode = UILineBreakMode.TailTruncation;
+                    Title.SizeToFit( );
+                    Title.Frame = new CGRect( 5, Image.Frame.Bottom + 5, Frame.Width - 10, Title.Frame.Height + 5 );
+                    AddSubview( Title );
+
 
                     BottomBanner = new UILabel( );
                     BottomBanner.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-                    BottomBanner.Text = "Other Ways to Connect";
-                    BottomBanner.SizeToFit( );
-                    BottomBanner.Frame = new CGRect( 0, Button.Frame.Bottom, parentSize.Width, BottomBanner.Frame.Height );
+                    BottomBanner.Layer.AnchorPoint = new CGPoint( 0, 0 );
+                    BottomBanner.Text = ConnectStrings.Main_Connect_OtherWays;
                     BottomBanner.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
                     BottomBanner.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Table_Footer_Color );
                     BottomBanner.TextAlignment = UITextAlignment.Center;
+
+                    BottomBanner.SizeToFit( );
+                    BottomBanner.Bounds = new CGRect( 0, 0, Bounds.Width, BottomBanner.Bounds.Height + 10 );
+                    BottomBanner.Layer.Position = new CGPoint( 0, Title.Frame.Bottom + 5 );
                     AddSubview( BottomBanner );
                 }
             }
@@ -68,27 +74,39 @@ namespace iOS
             /// <summary>
             /// Definition for each cell in this table
             /// </summary>
-            class StandardCell : UITableViewCell
+            class SeriesCell : UITableViewCell
             {
-                public static string Identifier = "StandardCell";
+                public static string Identifier = "SeriesCell";
 
-                public TableSource TableSource { get; set; }
+                public TableSource Parent { get; set; }
 
-                public UIButton Button { get; set; }
+                public UIImageView Image { get; set; }
+                public UILabel Title { get; set; }
+                public UILabel Chevron { get; set; }
 
                 public UIView Seperator { get; set; }
 
-                public int RowIndex { get; set; }
-
-                public StandardCell( UITableViewCellStyle style, string cellIdentifier ) : base( style, cellIdentifier )
+                public SeriesCell( UITableViewCellStyle style, string cellIdentifier ) : base( style, cellIdentifier )
                 {
-                    Button = UIButton.FromType( UIButtonType.System );
-                    Button.TouchUpInside += (object sender, EventArgs e ) =>
-                        {
-                            TableSource.RowClicked( RowIndex );
-                        };
+                    Image = new UIImageView( );
+                    Image.ContentMode = UIViewContentMode.ScaleAspectFit;
+                    Image.Layer.AnchorPoint = CGPoint.Empty;
+                    AddSubview( Image );
 
-                    AddSubview( Button );
+                    Title = new UILabel( );
+                    Title.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+                    Title.Layer.AnchorPoint = CGPoint.Empty;
+                    Title.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
+                    Title.BackgroundColor = UIColor.Clear;
+                    Title.LineBreakMode = UILineBreakMode.TailTruncation;
+                    AddSubview( Title );
+
+                    Chevron = new UILabel( );
+                    AddSubview( Chevron );
+                    Chevron.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, ConnectConfig.MainPage_Table_IconSize );
+                    Chevron.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+                    Chevron.Text = ConnectConfig.MainPage_Table_Navigate_Icon;
+                    Chevron.SizeToFit( );
 
                     Seperator = new UIView( );
                     AddSubview( Seperator );
@@ -96,7 +114,6 @@ namespace iOS
                     Seperator.Layer.BorderColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ).CGColor;
                 }
             }
-
             ConnectMainPageViewController Parent { get; set; }
 
             nfloat PendingPrimaryCellHeight { get; set; }
@@ -179,13 +196,13 @@ namespace iOS
 
             UITableViewCell GetStandardCell( UITableView tableView, int row )
             {
-                StandardCell cell = tableView.DequeueReusableCell( StandardCell.Identifier ) as StandardCell;
+                SeriesCell cell = tableView.DequeueReusableCell( SeriesCell.Identifier ) as SeriesCell;
 
                 // if there are no cells to reuse, create a new one
                 if (cell == null)
                 {
-                    cell = new StandardCell( UITableViewCellStyle.Default, StandardCell.Identifier );
-                    cell.TableSource = this;
+                    cell = new SeriesCell( UITableViewCellStyle.Default, SeriesCell.Identifier );
+                    cell.Parent = this;
 
                     // take the parent table's width so we inherit its width constraint
                     cell.Bounds = new CGRect( cell.Bounds.X, cell.Bounds.Y, tableView.Bounds.Width, cell.Bounds.Height );
@@ -195,13 +212,33 @@ namespace iOS
                     cell.SelectionStyle = UITableViewCellSelectionStyle.None;
                 }
 
-                cell.RowIndex = row;
-                cell.Button.SetTitle( Parent.LinkEntries[ row ].Title, UIControlState.Normal );
-                cell.Button.SizeToFit( );
-                cell.Button.Frame = new CGRect( (cell.Bounds.Width - cell.Button.Bounds.Width) / 2, 0, cell.Button.Bounds.Width, cell.Button.Bounds.Height );
-                cell.Seperator.Frame = new CGRect( 0, cell.Button.Frame.Bottom - 1, cell.Bounds.Width, 1 );
+                // Thumbnail Image
+                cell.Image.Image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + Parent.LinkEntries[ row ].ImageName );
+                cell.Image.SizeToFit( );
 
-                PendingCellHeight = cell.Button.Frame.Bottom;
+                // force the image to be sized according to the height of the cell
+                cell.Image.Frame = new CGRect( 0, 
+                    10, 
+                    ConnectConfig.MainPage_ThumbnailDimension, 
+                    ConnectConfig.MainPage_ThumbnailDimension );
+
+                nfloat availableTextWidth = cell.Bounds.Width - cell.Chevron.Bounds.Width - cell.Image.Bounds.Width - 10;
+
+                // Chevron
+                cell.Chevron.Layer.Position = new CGPoint( cell.Bounds.Width - (cell.Chevron.Bounds.Width / 2) - 5, (ConnectConfig.MainPage_ThumbnailDimension) / 2 );
+
+                // Create the title
+                cell.Title.Text = Parent.LinkEntries[ row ].Title;
+                cell.Title.SizeToFit( );
+
+                // Position the Title & Date in the center to the right of the image
+                nfloat totalTextHeight = cell.Title.Bounds.Height - 1;
+                cell.Title.Frame = new CGRect( cell.Image.Frame.Right + 10, (ConnectConfig.MainPage_ThumbnailDimension - totalTextHeight) / 2, availableTextWidth - 5, cell.Title.Frame.Height );
+
+                // add the seperator to the bottom
+                cell.Seperator.Frame = new CGRect( 0, cell.Image.Frame.Bottom + 10, cell.Bounds.Width, 1 );
+
+                PendingCellHeight = cell.Seperator.Frame.Bottom;
 
                 return cell;
             }
@@ -237,6 +274,13 @@ namespace iOS
             ConnectTableView.SeparatorStyle = UITableViewCellSeparatorStyle.None;
             ConnectTableView.Source = new TableSource( this );
             ConnectTableView.ReloadData( );
+        }
+
+        public override void ViewDidLayoutSubviews()
+        {
+            base.ViewDidLayoutSubviews();
+
+            ConnectTableView.Frame = new CGRect( 0, 0, View.Bounds.Width, View.Bounds.Height );
         }
 
         public void RowClicked( int rowIndex )

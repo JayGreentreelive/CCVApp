@@ -115,20 +115,20 @@ namespace iOS
             Name = new UILabel( );
             Name.Layer.AnchorPoint = new CGPoint( 0, 0 );
             Name.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
-            Name.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            Name.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
 
             // setup the date field
             Date = new UILabel( );
             Date.Layer.AnchorPoint = new CGPoint( 0, 0 );
             Date.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
-            Date.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            Date.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Light, ControlStylingConfig.Small_FontSize );
 
 
             // setup the category field
             Category = new UILabel( );
             Category.Layer.AnchorPoint = new CGPoint( 0, 0 );
             Category.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
-            Category.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            Category.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Light, ControlStylingConfig.Small_FontSize );
 
 
             // add the controls
@@ -145,7 +145,7 @@ namespace iOS
             SetPrayer( prayer );
         }
 
-        const int ViewPadding = 5;
+        const int ViewPadding = 10;
         void SetPrayer( Rock.Client.PrayerRequest prayer )
         {
             PrayerRequest = prayer;
@@ -192,6 +192,8 @@ namespace iOS
 
         CGRect CardSize { get; set; }
 
+        DateTime LastDownload { get; set; }
+
         Rock.Mobile.PlatformSpecific.iOS.UI.BlockerView BlockerView { get; set; }
 
 		public PrayerMainUIViewController (IntPtr handle) : base (handle)
@@ -236,8 +238,13 @@ namespace iOS
             ControlStyling.StyleButton( RetryButton, GeneralStrings.Retry, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             RetryButton.TouchUpInside += (object sender, EventArgs e ) =>
             {
-                RetrievePrayerRequests( );
+                if( RequestingPrayers == false )
+                {
+                    RetrievePrayerRequests( );
+                }
             };
+
+            LastDownload = DateTime.MinValue;
         }
 
         public override void ViewWillAppear(bool animated)
@@ -247,22 +254,44 @@ namespace iOS
             ViewActive = true;
             Carousel.Hidden = false;
 
-            Task.NavToolbar.SetCreateButtonEnabled( false );
-
-            View.BringSubviewToFront( RetrievingPrayersView );
-            View.BringSubviewToFront( BlockerView );
-
             // this will prevent double requests in the case that we leave and return to the prayer
             // page before the initial request completes
             if ( RequestingPrayers == false )
             {
-                RetrievePrayerRequests( );
+                TimeSpan deltaTime = DateTime.Now - LastDownload;
+                if ( deltaTime.TotalHours > PrayerConfig.PrayerDownloadFrequency.TotalHours )
+                {
+                    View.BringSubviewToFront( RetrievingPrayersView );
+                    View.BringSubviewToFront( BlockerView );
+
+                    Console.WriteLine( "Grabbing Prayers" );
+                    RetrievePrayerRequests( );
+                }
+                else
+                {
+                    Console.WriteLine( "Not getting prayers." );
+
+                    // add a read analytic
+                    PrayerAnalytic.Instance.Trigger( PrayerAnalytic.Read );
+                }
             }
         }
 
-        public override void ViewWillDisappear(bool animated)
+        public override void ViewDidAppear(bool animated)
         {
-            base.ViewWillDisappear(animated);
+            base.ViewDidAppear(animated);
+
+            Task.NavToolbar.SetCreateButtonEnabled( true, delegate
+                {
+                    // now disable the button so they can't spam it
+                    Task.NavToolbar.SetCreateButtonEnabled( false );
+
+                    Prayer_CreateUIViewController viewController = Storyboard.InstantiateViewController( "Prayer_CreateUIViewController" ) as Prayer_CreateUIViewController;
+                    Task.PerformSegue( this, viewController );
+
+                    Console.WriteLine( "pushing" );
+                }
+            );
         }
 
         void RetrievePrayerRequests( )
@@ -276,18 +305,6 @@ namespace iOS
             BlockerView.FadeIn( delegate
                 {
                     RequestingPrayers = true;
-
-                    Task.NavToolbar.SetCreateButtonEnabled( true, delegate
-                        {
-                            // now disable the button so they can't spam it
-                            Task.NavToolbar.SetCreateButtonEnabled( false );
-
-                            Prayer_CreateUIViewController viewController = Storyboard.InstantiateViewController( "Prayer_CreateUIViewController" ) as Prayer_CreateUIViewController;
-                            Task.PerformSegue( this, viewController );
-
-                            Console.WriteLine( "pushing" );
-                        }
-                    );
 
                     // request the prayers each time this appears
                     CCVApp.Shared.Network.RockApi.Instance.GetPrayers( delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.PrayerRequest> prayerRequests )
@@ -310,6 +327,9 @@ namespace iOS
                                         {
                                             if ( prayerRequests.Count > 0 )
                                             {
+                                                // update our timestamp since this was successful
+                                                LastDownload = DateTime.Now;
+
                                                 RetrievingPrayersView.Layer.Opacity = 0.00f;
 
                                                 // setup the card positions to be to the offscreen to the left, centered on screen, and offscreen to the right

@@ -134,6 +134,8 @@ namespace Droid
 
         TextView ProfilePrefix { get; set; }
 
+        TextView CampusText { get; set; }
+
         NotificationBillboard Billboard { get; set; }
 
         /// <summary>
@@ -379,12 +381,12 @@ namespace Droid
 
 
             // setup the bottom campus / settings selector
-            TextView campusText = campusContainer.FindViewById<TextView>( Resource.Id.campus_selection_text );
-            campusText.Ellipsize = Android.Text.TextUtils.TruncateAt.End;
-            campusText.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
-            campusText.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
-            campusText.SetTextSize(Android.Util.ComplexUnitType.Dip,  ControlStylingConfig.Small_FontSize );
-            campusText.SetSingleLine( );
+            CampusText = campusContainer.FindViewById<TextView>( Resource.Id.campus_selection_text );
+            CampusText.Ellipsize = Android.Text.TextUtils.TruncateAt.End;
+            CampusText.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+            CampusText.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
+            CampusText.SetTextSize(Android.Util.ComplexUnitType.Dip,  ControlStylingConfig.Small_FontSize );
+            CampusText.SetSingleLine( );
 
             TextView settingsIcon = campusContainer.FindViewById<TextView>( Resource.Id.campus_selection_icon );
             settingsIcon.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary ), TypefaceStyle.Normal );
@@ -393,7 +395,7 @@ namespace Droid
             settingsIcon.Text = SpringboardConfig.SettingsSymbol;
 
             // set the campus text to whatever their profile has set for viewing.
-            campusText.Text = string.Format( SpringboardStrings.Viewing_Campus, RockGeneralData.Instance.Data.CampusIdToName( RockMobileUser.Instance.ViewingCampus ) );
+            CampusText.Text = string.Format( SpringboardStrings.Viewing_Campus, RockGeneralData.Instance.Data.CampusIdToName( RockMobileUser.Instance.ViewingCampus ) );
 
             // setup the campus selection button.
             Button campusSelectionButton = campusContainer.FindViewById<Button>( Resource.Id.campus_selection_button );
@@ -417,7 +419,7 @@ namespace Droid
                                     RockMobileUser.Instance.ViewingCampus = RockGeneralData.Instance.Data.CampusNameToId( campusTitle );
 
                                     // build a label showing what they picked
-                                    campusText.Text = string.Format( SpringboardStrings.Viewing_Campus, campusTitle );
+                                    CampusText.Text = string.Format( SpringboardStrings.Viewing_Campus, campusTitle );
                                 });
                         });
 
@@ -680,6 +682,10 @@ namespace Droid
                 SyncRockData( );
             }
 
+            // refresh the viewing campus
+            CampusText.Text = string.Format( SpringboardStrings.Viewing_Campus, 
+                RockGeneralData.Instance.Data.CampusIdToName( RockMobileUser.Instance.ViewingCampus ) );
+
             UpdateLoginState( );
 
             // Manage the notification billboard.
@@ -746,6 +752,9 @@ namespace Droid
                 ProfilePrefix.Text = SpringboardStrings.LoggedIn_Prefix;
                 ProfileName.Text = RockMobileUser.Instance.PreferredName( );
                 ViewProfileLabel.Text = SpringboardStrings.ViewProfile;
+
+                // refresh the viewing campus
+                CampusText.Text = string.Format( SpringboardStrings.Viewing_Campus, RockGeneralData.Instance.Data.CampusIdToName( RockMobileUser.Instance.ViewingCampus ) );
             }
             else
             {

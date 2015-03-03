@@ -325,6 +325,21 @@ namespace CCVApp
                 public const int BorderPadding = 2;
 
                 /// <summary>
+                /// The icon to use for displaying the citation icon.
+                /// </summary>
+                public const string CitationUrl_Icon = "";
+
+                /// <summary>
+                /// The size of the font/icon when displaying the citation icon.
+                /// </summary>
+                public const int CitationUrl_IconSize = 24;
+
+                /// <summary>
+                /// The color of the font/icon when displaying the citation icon.
+                /// </summary>
+                public const uint CitationUrl_IconColor = 0x878686BB;
+
+                /// <summary>
                 /// The icon to use for displaying the user note icon.
                 /// </summary>
                 public const string UserNote_Icon = "";
@@ -359,6 +374,11 @@ namespace CCVApp
                 /// </summary>
                 /// 
                 public const int UserNote_DeleteIconSize = 46;
+
+                /// <summary>
+                /// The icon to use representing "Listen to this Message"
+                /// </summary>
+                public const string Series_Table_Listen_Icon = "";
 
                 /// <summary>
                 /// The icon to use representing "Watch this Message"
@@ -400,6 +420,12 @@ namespace CCVApp
             public class PrayerConfig
             {
                 /// <summary>
+                /// The interval to download prayer requests. (Between this time they will be cached in memory)
+                /// They WILL be redownloaded if the app is quit and re-run.
+                /// </summary>
+                public static TimeSpan PrayerDownloadFrequency = new TimeSpan( 1, 0, 0 );
+
+                /// <summary>
                 /// The length of the animation when a prayer card is animating.
                 /// </summary>
                 public const float Card_AnimationDuration = .25f;
@@ -424,10 +450,27 @@ namespace CCVApp
             {
                 public static string[] WebViews = 
                     {
-                        "Baptisms", "http://www.ccvonline.com/Arena/default.aspx?page=17655&campus=1",
-                        "Starting Point", "http://www.ccvonline.com/Arena/default.aspx?page=17400&campus=1",
-                        "Foundations", "http://www.ccvonline.com/Arena/default.aspx?page=17659&campus=1"
+                        "Baptisms", "http://www.ccvonline.com/Arena/default.aspx?page=17655&campus=1", "baptism_thumb.png",
+                        "Starting Point", "http://www.ccvonline.com/Arena/default.aspx?page=17400&campus=1", "starting_point_thumb.png",
+                        "Foundations", "http://www.ccvonline.com/Arena/default.aspx?page=17659&campus=1", "foundations_thumb.png"
                     };
+
+                public const string MainPageHeaderImage = "connect_banner.jpg";
+
+                /// <summary>
+                /// The width/height of the image used as a thumbnail for each entry in the "Other ways to connect"
+                /// </summary>
+                public const float MainPage_ThumbnailDimension = 70;
+
+                /// <summary>
+                /// The icon to use representing that tapping the element will take you to a new page. (Like a > symbol)
+                /// </summary>
+                public const string MainPage_Table_Navigate_Icon = "";
+
+                /// <summary>
+                /// The size of icons navigate icon in each row.
+                /// </summary>
+                public const uint MainPage_Table_IconSize = 36;
 
                 /// <summary>
                 /// The default latitude the group finder map will be positioned to before a search is performed.
@@ -449,7 +492,17 @@ namespace CCVApp
                 /// </summary>
                 public const float GroupFinder_DefaultScale_Android = 9.25f;
 
+                /// <summary>
+                /// The icon to use representing the search button
+                /// </summary>
                 public const string GroupFinder_SearchIcon = "";
+
+                /// <summary>
+                /// The icon to use representing the join button.
+                /// </summary>
+                public const string GroupFinder_JoinIcon = "";
+
+                public const uint GroupFinder_Join_IconSize = 64;
 
                 /// <summary>
                 /// The color for the row of the group that's closest to the address searched

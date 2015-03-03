@@ -23,12 +23,13 @@ namespace CCVApp.Shared
                 }
 
                 [JsonConstructor]
-                public Message( string name, string speaker, string date, string noteUrl, string watchUrl, string shareUrl )
+                public Message( string name, string speaker, string date, string noteUrl, string audioUrl, string watchUrl, string shareUrl )
                 {
                     Name = name;
                     Speaker = speaker;
                     Date = date;
                     NoteUrl = noteUrl;
+                    AudioUrl = audioUrl;
                     WatchUrl = watchUrl;
                     ShareUrl = shareUrl;
                 }
@@ -99,6 +100,23 @@ namespace CCVApp.Shared
                     protected set
                     {
                         _NoteUrl = value == null ? "" : value.Trim( Series.TrimChars );
+                    }
+                }
+
+                /// <summary>
+                /// Url where the video can be found for listening
+                /// </summary>
+                string _AudioUrl;
+                public string AudioUrl
+                {
+                    get
+                    {
+                        return _AudioUrl;
+                    }
+
+                    protected set
+                    {
+                        _AudioUrl = value == null ? "" : value.Trim( Series.TrimChars );
                     }
                 }
 

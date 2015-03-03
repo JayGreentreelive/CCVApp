@@ -84,6 +84,7 @@ namespace iOS
                 public UILabel Title { get; set; }
                 public UILabel Date { get; set; }
                 public UILabel Speaker { get; set; }
+                public UIButton ListenButton { get; set; }
                 public UIButton WatchButton { get; set; }
                 public UIButton TakeNotesButton { get; set; }
 
@@ -94,7 +95,7 @@ namespace iOS
                 public SeriesCell( UITableViewCellStyle style, string cellIdentifier ) : base( style, cellIdentifier )
                 {
                     Title = new UILabel( );
-                    Title.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+                    Title.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Medium_Font_Bold, ControlStylingConfig.Medium_FontSize );
 
                     Title.Layer.AnchorPoint = CGPoint.Empty;
                     Title.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
@@ -118,8 +119,17 @@ namespace iOS
                     Speaker.LineBreakMode = UILineBreakMode.TailTruncation;
                     AddSubview( Speaker );
 
+                    ListenButton = new UIButton( UIButtonType.Custom );
+                    ListenButton.TouchUpInside += (object sender, EventArgs e) => { Parent.RowButtonClicked( RowIndex, 0 ); };
+                    ListenButton.Layer.AnchorPoint = CGPoint.Empty;
+                    ListenButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, NoteConfig.Details_Table_IconSize );
+                    ListenButton.SetTitle( NoteConfig.Series_Table_Listen_Icon, UIControlState.Normal );
+                    ListenButton.BackgroundColor = UIColor.Clear;
+                    ListenButton.SizeToFit( );
+                    AddSubview( ListenButton );
+
                     WatchButton = new UIButton( UIButtonType.Custom );
-                    WatchButton.TouchUpInside += (object sender, EventArgs e) => { Parent.RowButtonClicked( RowIndex, 0 ); };
+                    WatchButton.TouchUpInside += (object sender, EventArgs e) => { Parent.RowButtonClicked( RowIndex, 1 ); };
                     WatchButton.Layer.AnchorPoint = CGPoint.Empty;
                     WatchButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, NoteConfig.Details_Table_IconSize );
                     WatchButton.SetTitle( NoteConfig.Series_Table_Watch_Icon, UIControlState.Normal );
@@ -128,7 +138,7 @@ namespace iOS
                     AddSubview( WatchButton );
 
                     TakeNotesButton = new UIButton( UIButtonType.Custom );
-                    TakeNotesButton.TouchUpInside += (object sender, EventArgs e) => { Parent.RowButtonClicked( RowIndex, 1 ); };
+                    TakeNotesButton.TouchUpInside += (object sender, EventArgs e) => { Parent.RowButtonClicked( RowIndex, 2 ); };
                     TakeNotesButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, NoteConfig.Details_Table_IconSize );
                     TakeNotesButton.SetTitle( NoteConfig.Series_Table_TakeNotes_Icon, UIControlState.Normal );
                     TakeNotesButton.Layer.AnchorPoint = CGPoint.Empty;
@@ -140,6 +150,20 @@ namespace iOS
                     AddSubview( Seperator );
                     Seperator.Layer.BorderWidth = 1;
                     Seperator.Layer.BorderColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ).CGColor;
+                }
+
+                public void ToggleListenButton( bool enabled )
+                {
+                    if ( enabled == true )
+                    {
+                        ListenButton.Enabled = true;
+                        ListenButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ), UIControlState.Normal );
+                    }
+                    else
+                    {
+                        ListenButton.Enabled = false;
+                        ListenButton.SetTitleColor( UIColor.DarkGray, UIControlState.Normal );
+                    }
                 }
 
                 public void ToggleWatchButton( bool enabled )
@@ -333,7 +357,22 @@ namespace iOS
                                                          cell.WatchButton.Bounds.Width, 
                                                          cell.WatchButton.Bounds.Height );
 
-                nfloat availableWidth = cell.Bounds.Width - cell.WatchButton.Bounds.Width - cell.TakeNotesButton.Bounds.Width - 5 - 20;
+                cell.ListenButton.Frame = new CGRect( cell.WatchButton.Frame.Left - cell.ListenButton.Bounds.Width - 20, 
+                    (rowHeight - cell.ListenButton.Bounds.Height) / 2, 
+                    cell.ListenButton.Bounds.Width, 
+                    cell.ListenButton.Bounds.Height );
+
+                nfloat availableWidth = cell.Bounds.Width - cell.ListenButton.Bounds.Width - cell.WatchButton.Bounds.Width - cell.TakeNotesButton.Bounds.Width - 5 - 20;
+
+                // disable the button if there's no listen URL
+                if ( string.IsNullOrEmpty( Series.Messages[ row ].AudioUrl ) )
+                {
+                    cell.ToggleListenButton( false );
+                }
+                else
+                {
+                    cell.ToggleListenButton( true );
+                }
 
                 // disable the button if there's no watch URL
                 if ( string.IsNullOrEmpty( Series.Messages[ row ].WatchUrl ) )
@@ -367,9 +406,9 @@ namespace iOS
                 cell.Speaker.SizeToFit( );
 
                 // Position the Title & Date in the center to the right of the image
-                nfloat totalTextHeight = cell.Title.Bounds.Height + cell.Date.Bounds.Height + cell.Speaker.Bounds.Height + 20;
+                nfloat totalTextHeight = cell.Title.Bounds.Height + cell.Date.Bounds.Height + cell.Speaker.Bounds.Height + 15;
 
-                cell.Title.Frame = new CGRect( 5, (rowHeight - totalTextHeight) / 2, availableWidth, cell.Title.Frame.Height + 15);
+                cell.Title.Frame = new CGRect( 5, (rowHeight - totalTextHeight) / 2, availableWidth, cell.Title.Frame.Height + 10);
                 cell.Date.Frame = new CGRect( cell.Title.Frame.Left, cell.Title.Frame.Bottom - 5, availableWidth, cell.Date.Frame.Height );
                 cell.Speaker.Frame = new CGRect( cell.Title.Frame.Left, cell.Date.Frame.Bottom - 5, availableWidth, cell.Speaker.Frame.Height + 5 );
 
@@ -511,18 +550,28 @@ namespace iOS
             {
                 Task.NavToolbar.RevealForTime( 3.0f );
             }
-            // 0 would be the first button, which is Watch
+            // 0 would be the audio button
             else if ( buttonIndex == 0 )
             {
                 NotesWatchUIViewController viewController = Storyboard.InstantiateViewController( "NotesWatchUIViewController" ) as NotesWatchUIViewController;
-                viewController.WatchUrl = Series.Messages[ row ].WatchUrl;
+                viewController.MediaUrl = Series.Messages[ row ].AudioUrl;
+                viewController.ShareUrl = Series.Messages[ row ].ShareUrl;
+                viewController.Name = Series.Messages[ row ].Name;
+
+                Task.PerformSegue( this, viewController );
+            }
+            // 1 would be the watch button
+            else if ( buttonIndex == 1 )
+            {
+                NotesWatchUIViewController viewController = Storyboard.InstantiateViewController( "NotesWatchUIViewController" ) as NotesWatchUIViewController;
+                viewController.MediaUrl = Series.Messages[ row ].WatchUrl;
                 viewController.ShareUrl = Series.Messages[ row ].ShareUrl;
                 viewController.Name = Series.Messages[ row ].Name;
 
                 Task.PerformSegue( this, viewController );
             }
             // and 1 would be the second button, which is Notes
-            else if ( buttonIndex == 1 )
+            else if ( buttonIndex == 2 )
             {
                 // maybe technically a hack...we know our parent is a NoteTask,
                 // so cast it so we can use the existing NotesViewController.

@@ -159,11 +159,11 @@ namespace CCVApp
                 }
 
                 /// <summary>
-                /// The URL of the last video streamed, used so we can know whether
+                /// The URL of the last media streamed, used so we can know whether
                 /// to resume it or not.
                 /// </summary>
-                /// <value>The last streaming video URL.</value>
-                public string LastStreamingVideoUrl { get; set; }
+                /// <value>The last streaming mediaURL.</value>
+                public string LastStreamingMediaUrl { get; set; }
 
                 /// <summary>
                 /// The left off position of the last streaming video, so we can
@@ -561,7 +561,12 @@ namespace CCVApp
                                     // If we find a groupType of family, that should be their primary family.
                                     if( personGroup.GroupType.Guid.ToString( ).ToLower( ) == Rock.Client.SystemGuid.GroupType.GROUPTYPE_FAMILY.ToLower( ) )
                                     {
+                                        // store the family, and if they have a campus set, default the viewing campus to that.
                                         PrimaryFamily = personGroup;
+                                        if( PrimaryFamily.CampusId.HasValue == true )
+                                        {
+                                            ViewingCampus = PrimaryFamily.CampusId.Value;
+                                        }
 
                                         // look at each location within the family
                                         foreach( Rock.Client.GroupLocation groupLocation in personGroup.GroupLocations )

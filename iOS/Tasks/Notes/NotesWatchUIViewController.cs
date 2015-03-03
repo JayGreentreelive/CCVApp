@@ -13,7 +13,7 @@ namespace iOS
 {
 	partial class NotesWatchUIViewController : TaskUIViewController
 	{
-        public string WatchUrl { get; set; }
+        public string MediaUrl { get; set; }
         public string ShareUrl { get; set; }
         public string Name { get; set; }
 
@@ -38,9 +38,9 @@ namespace iOS
             if ( ExitingFullscreen == false )
             {
                 // don't allow anything if there isn't a watchUrl set
-                if ( WatchUrl == null )
+                if ( MediaUrl == null )
                 {
-                    throw new Exception( "WatchUrl must not be null!" );
+                    throw new Exception( "MediaUrl must not be null!" );
                 }
 
                 // setup our activity indicator
@@ -50,7 +50,7 @@ namespace iOS
                 ActivityIndicator.StartAnimating( );
 
                 // create the movie player control
-                MoviePlayer = new MPMoviePlayerController( new NSUrl( WatchUrl ) );
+                MoviePlayer = new MPMoviePlayerController( new NSUrl( MediaUrl ) );
                 View.AddSubview( MoviePlayer.View );
 
                 View.AddSubview( ActivityIndicator );
@@ -124,7 +124,7 @@ namespace iOS
                 DidDisplayError = false;
 
                 // if we're watching the same video we last watched, resume
-                if ( WatchUrl == CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingVideoUrl )
+                if ( MediaUrl == CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaUrl )
                 {
                     MoviePlayer.InitialPlaybackTime = CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingVideoPos;
                 }
@@ -212,7 +212,7 @@ namespace iOS
             if ( MoviePlayer.PlaybackState != MPMoviePlaybackState.Playing )
             {
                 // store the last video we watched.
-                CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingVideoUrl = WatchUrl;
+                CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaUrl = MediaUrl;
 
                 // see where we are in playback. If it's > 10 and < 90, we'll save the time.
                 if ( MoviePlayer.Duration > 0.00f )

@@ -23,13 +23,17 @@ namespace Droid
     {
         namespace Notes
         {
+            //todo:
+            // either split the videoView and mediaPlayer out, and use this same class for audio or video.
+            // alternatively, create a seperate NotesListenFragment, and use a mediaPlayer as service and more basic UI
+
             public class NotesWatchFragment : TaskFragment, Android.Media.MediaPlayer.IOnPreparedListener, Android.Media.MediaPlayer.IOnErrorListener, Android.Media.MediaPlayer.IOnSeekCompleteListener
             {
                 VideoView VideoPlayer { get; set; }
                 MediaController MediaController { get; set; }
                 ProgressBar ProgressBar { get; set; }
 
-                public string VideoUrl { get; set; }
+                public string MediaUrl { get; set; }
                 public string ShareUrl { get; set; }
                 public string Name { get; set; }
 
@@ -88,9 +92,9 @@ namespace Droid
                     MessageAnalytic.Instance.Trigger( MessageAnalytic.Watch, Name );
 
                     // if this is a new video, store the URL
-                    if ( CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingVideoUrl != VideoUrl )
+                    if ( CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaUrl != MediaUrl )
                     {
-                        CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingVideoUrl = VideoUrl;
+                        CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaUrl = MediaUrl;
                         VideoPlayer.Start( );
                     }
                     else
@@ -144,14 +148,14 @@ namespace Droid
                             StartActivity( sendIntent );
                         });
 
-                    if ( string.IsNullOrEmpty( VideoUrl ) )
+                    if ( string.IsNullOrEmpty( MediaUrl ) == true )
                     {
-                        throw new Exception( "VideoUrl must not be null." );
+                        throw new Exception( "MediaUrl must be valid." );
                     }
 
                     ProgressBar.Visibility = ViewStates.Visible;
 
-                    VideoPlayer.SetVideoURI( Android.Net.Uri.Parse( VideoUrl ) );
+                    VideoPlayer.SetVideoURI( Android.Net.Uri.Parse( MediaUrl ) );
                     VideoPlayer.Pause( );
                 }
 

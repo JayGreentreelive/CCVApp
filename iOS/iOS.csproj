@@ -336,6 +336,15 @@
     <BundleResource Include="..\Assets\connect_banner%403x.jpg">
       <Link>Resources\connect_banner%403x.jpg</Link>
     </BundleResource>
+    <BundleResource Include="..\Assets\baptism_thumb.png">
+      <Link>Resources\baptism_thumb.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\foundations_thumb.png">
+      <Link>Resources\foundations_thumb.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\starting_point_thumb.png">
+      <Link>Resources\starting_point_thumb.png</Link>
+    </BundleResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />

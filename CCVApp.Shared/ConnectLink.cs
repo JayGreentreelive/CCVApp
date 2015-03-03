@@ -7,6 +7,7 @@ namespace CCVApp.Shared
     {
         public string Title { get; set; }
         public string Url { get; set; }
+        public string ImageName { get; set; }
 
         public ConnectLink( )
         {
@@ -17,12 +18,13 @@ namespace CCVApp.Shared
             List<ConnectLink> linkEntries = new List<ConnectLink>();
 
             // parse the config and see how many additional links we need.
-            for ( int i = 0; i < CCVApp.Shared.Config.ConnectConfig.WebViews.Length; i += 2 )
+            for ( int i = 0; i < CCVApp.Shared.Config.ConnectConfig.WebViews.Length; i += 3 )
             {
                 ConnectLink link = new ConnectLink();
                 linkEntries.Add( link );
                 link.Title = CCVApp.Shared.Config.ConnectConfig.WebViews[ i ];
                 link.Url = CCVApp.Shared.Config.ConnectConfig.WebViews[ i + 1 ];
+                link.ImageName = CCVApp.Shared.Config.ConnectConfig.WebViews[ i + 2 ];
             }
 
             return linkEntries;

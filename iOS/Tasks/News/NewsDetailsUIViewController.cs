@@ -29,6 +29,7 @@ namespace iOS
             View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             // populate the details view with this news item.
+            //NewsDescription.Layer.AnchorPoint = CGPoint.Empty;
             NewsDescription.Text = NewsItem.Description;
             NewsDescription.BackgroundColor = UIColor.Clear;
             NewsDescription.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
@@ -44,7 +45,7 @@ namespace iOS
                 try
                 {
                     NSData imageData = NSData.FromStream( imageStream );
-                    ImageBanner.Image = new UIImage( imageData, UIScreen.MainScreen.Scale );
+                    ImageBanner.Image = new UIImage( imageData );
                 }
                 catch( Exception )
                 {
@@ -64,7 +65,9 @@ namespace iOS
                     } );
             }
 
-            ImageBanner.BackgroundColor = UIColor.Clear;
+            // scale the image down to fit the contents of the window, but allow cropping.
+            ImageBanner.BackgroundColor = UIColor.Green;
+            ImageBanner.ContentMode = UIViewContentMode.ScaleAspectFill;
 
             LearnMoreButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
@@ -142,10 +145,14 @@ namespace iOS
                 NewsDescription.UserInteractionEnabled = false;
             }
 
+            //nfloat imageBase = ( ImageBanner.Frame.Top + ImageBanner.Image.Size.Height );
+
             // adjust the news title to have padding on the left and right.
             NewsTitle.Layer.AnchorPoint = CGPoint.Empty;
             NewsTitle.SizeToFit( );
-            NewsTitle.Frame = new CGRect( NewsDescription.Frame.Left, ImageBanner.Frame.Bottom + 10, View.Bounds.Width - 30, NewsTitle.Bounds.Height );
+            NewsTitle.Frame = new CGRect( NewsDescription.Frame.Left, ImageBanner.Frame.Bottom + (40 - NewsTitle.Frame.Height) / 2, View.Bounds.Width - 30, NewsTitle.Bounds.Height );
+
+            NewsDescription.Frame = new CGRect( NewsDescription.Frame.Left, ImageBanner.Frame.Bottom + 40, NewsDescription.Frame.Width, NewsDescription.Frame.Height );
         }
 	}
 }

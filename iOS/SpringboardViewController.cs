@@ -567,7 +567,7 @@ namespace iOS
         public void ResignModelViewController( UIViewController modelViewController, object context )
         {
             // if the image cropper is resigning
-            if( modelViewController == ImageCropViewController )
+            if ( modelViewController == ImageCropViewController )
             {
                 // if croppedImage is null, they simply cancelled
                 UIImage croppedImage = (UIImage)context;
@@ -651,6 +651,17 @@ namespace iOS
             }
         }
 
+        //todo apon return: Make this this is working on Android, then move on.
+
+        public override void ViewWillAppear( bool animated )
+        {
+            base.ViewWillAppear( animated );
+
+            // refresh the viewing campus
+            CampusSelectionText.Text = string.Format( SpringboardStrings.Viewing_Campus, 
+                                                      RockGeneralData.Instance.Data.CampusIdToName( RockMobileUser.Instance.ViewingCampus ) );
+        }
+
         public override void ViewDidAppear(bool animated)
         {
             base.ViewDidAppear(animated);
@@ -706,7 +717,7 @@ namespace iOS
         {
             // should we advertise the notes?
             // yes, if it's a weekend and we're at CCV (that part will come later)
-            //if ( DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday )
+            if ( DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday )
             {
                 if ( RockLaunchData.Instance.Data.Series.Count > 0 )
                 {
@@ -760,9 +771,12 @@ namespace iOS
         void UpdateCampusViews( )
         {
             CampusSelectionText.SizeToFit( ); 
+            CampusSelectionIcon.SizeToFit( );
 
             CampusSelectionIcon.Layer.AnchorPoint = CGPoint.Empty;
-            CampusSelectionIcon.Layer.Position = new CGPoint( CampusSelectionText.Frame.Right + 4, CampusSelectionText.Frame.Top );
+
+            nfloat halfPoint = ( CampusSelectionText.Frame.Height / 2 ) - ( CampusSelectionIcon.Frame.Height / 2 );
+            CampusSelectionIcon.Layer.Position = new CGPoint( CampusSelectionText.Frame.Right + 4, CampusSelectionText.Frame.Top + halfPoint );
 
             // overlay the button across the campus text and icon
             CampusSelectionButton.Frame = new CGRect( CampusSelectionText.Frame.Left, CampusSelectionText.Frame.Top, CampusSelectionIcon.Frame.Right, CampusSelectionText.Frame.Height );

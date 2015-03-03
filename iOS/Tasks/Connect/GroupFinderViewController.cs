@@ -39,8 +39,9 @@ namespace iOS
                 //public UILabel Address { get; set; }
                 public UILabel MeetingTime { get; set; }
                 //public UILabel Time { get; set; }
-                public UILabel Neighborhood { get; set; }
+                //public UILabel Neighborhood { get; set; }
                 public UILabel Distance { get; set; }
+                public UIButton JoinButton { get; set; }
 
                 public UIView Seperator { get; set; }
 
@@ -49,7 +50,7 @@ namespace iOS
                 public GroupCell( UITableViewCellStyle style, string cellIdentifier ) : base( style, cellIdentifier )
                 {
                     Title = new UILabel( );
-                    Title.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+                    Title.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Medium_Font_Bold, ControlStylingConfig.Medium_FontSize );
                     Title.Layer.AnchorPoint = CGPoint.Empty;
                     Title.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
                     Title.BackgroundColor = UIColor.Clear;
@@ -66,7 +67,7 @@ namespace iOS
                     AddSubview( Address );*/
 
                     MeetingTime = new UILabel( );
-                    MeetingTime.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+                    MeetingTime.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Light, ControlStylingConfig.Small_FontSize );
                     MeetingTime.Layer.AnchorPoint = CGPoint.Empty;
                     MeetingTime.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
                     MeetingTime.BackgroundColor = UIColor.Clear;
@@ -80,19 +81,29 @@ namespace iOS
                     AddSubview( Time );*/
 
                     Distance = new UILabel( );
-                    Distance.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+                    Distance.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Light, ControlStylingConfig.Small_FontSize );
                     Distance.Layer.AnchorPoint = CGPoint.Empty;
                     Distance.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
                     Distance.BackgroundColor = UIColor.Clear;
                     AddSubview( Distance );
 
-                    Neighborhood = new UILabel( );
+                    /*Neighborhood = new UILabel( );
                     Neighborhood.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
                     Neighborhood.Layer.AnchorPoint = CGPoint.Empty;
                     Neighborhood.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
                     Neighborhood.BackgroundColor = UIColor.Clear;
                     Neighborhood.LineBreakMode = UILineBreakMode.TailTruncation;
-                    AddSubview( Neighborhood );
+                    AddSubview( Neighborhood );*/
+
+                    JoinButton = UIButton.FromType( UIButtonType.Custom );
+                    JoinButton.TouchUpInside += (object sender, EventArgs e) => { TableSource.RowButtonClicked( RowIndex ); };
+                    JoinButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, ConnectConfig.GroupFinder_Join_IconSize );
+                    JoinButton.SetTitle( ConnectConfig.GroupFinder_JoinIcon, UIControlState.Normal );
+                    JoinButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
+                    JoinButton.Layer.AnchorPoint = CGPoint.Empty;
+                    JoinButton.BackgroundColor = UIColor.Clear;
+                    JoinButton.SizeToFit( );
+                    AddSubview( JoinButton );
 
                     Seperator = new UIView( );
                     AddSubview( Seperator );
@@ -191,8 +202,8 @@ namespace iOS
                 //cell.Time.SizeToFit( );
 
                 // Neighborhood
-                cell.Neighborhood.Text = string.Format( ConnectStrings.GroupFinder_Neighborhood, Parent.GroupEntries[ indexPath.Row ].NeighborhoodArea );
-                cell.Neighborhood.SizeToFit( );
+                //cell.Neighborhood.Text = string.Format( ConnectStrings.GroupFinder_Neighborhood, Parent.GroupEntries[ indexPath.Row ].NeighborhoodArea );
+                //cell.Neighborhood.SizeToFit( );
 
                 // Distance
                 cell.Distance.Text = string.Format( "{0:##.0} {1}", Parent.GroupEntries[ indexPath.Row ].Distance, ConnectStrings.GroupFinder_MilesSuffix );
@@ -203,19 +214,29 @@ namespace iOS
                 cell.Distance.SizeToFit( );
 
                 // Position the Title & Address in the center to the right of the image
-                cell.Title.Frame = new CGRect( 10, 0, cell.Frame.Width - 5, cell.Title.Frame.Height );
+                cell.Title.Frame = new CGRect( 10, 5, cell.Frame.Width - 5, cell.Title.Frame.Height );
                 //cell.Address.Frame = new CGRect( 10, cell.Title.Frame.Bottom - 6, cell.Frame.Width - 5, cell.Address.Frame.Height + 5 );
-                cell.MeetingTime.Frame = new CGRect( 10, cell.Title.Frame.Bottom - 6, cell.Frame.Width - 5, cell.MeetingTime.Frame.Height + 5 );
+                cell.MeetingTime.Frame = new CGRect( 10, cell.Title.Frame.Bottom + 2, cell.Frame.Width - 5, cell.MeetingTime.Frame.Height + 5 );
                 //cell.Time.Frame = new CGRect( 10, cell.Day.Frame.Bottom - 6, cell.Frame.Width - 5, cell.Time.Frame.Height + 5 );
                 cell.Distance.Frame = new CGRect( 10, cell.MeetingTime.Frame.Bottom - 6, cell.Frame.Width - 5, cell.Distance.Frame.Height + 5 );
-                cell.Neighborhood.Frame = new CGRect( 10, cell.Distance.Frame.Bottom - 6, cell.Frame.Width - 5, cell.Neighborhood.Frame.Height + 5 );
+                //cell.Neighborhood.Frame = new CGRect( 10, cell.Distance.Frame.Bottom - 6, cell.Frame.Width - 5, cell.Neighborhood.Frame.Height + 5 );
 
                 // add the seperator to the bottom
-                cell.Seperator.Frame = new CGRect( 0, cell.Neighborhood.Frame.Bottom - 1, cell.Bounds.Width, 1 );
+                cell.Seperator.Frame = new CGRect( 0, cell.Distance.Frame.Bottom + 5, cell.Bounds.Width, 1 );
 
                 PendingCellHeight = cell.Seperator.Frame.Bottom;
 
+                cell.JoinButton.Frame = new CGRect( cell.Bounds.Width - cell.JoinButton.Bounds.Width, 
+                    (PendingCellHeight - cell.JoinButton.Bounds.Height) / 2, 
+                    cell.JoinButton.Bounds.Width, 
+                    cell.JoinButton.Bounds.Height );
+
                 return cell;
+            }
+
+            public void RowButtonClicked( int row )
+            {
+                Parent.RowButtonClicked( row );
             }
 
             public override void RowSelected (UITableView tableView, NSIndexPath indexPath)
@@ -275,6 +296,8 @@ namespace iOS
         public MKMapView MapView { get; set; }
 
         public UILabel SearchResultsBanner { get; set; }
+        public UILabel DetailsFooter { get; set; }
+        public UILabel JoinFooter { get; set; }
         //public UILabel NeighborhoodBanner { get; set; }
         public UIView Seperator { get; set; }
 
@@ -369,6 +392,7 @@ namespace iOS
             ControlStyling.StyleTextField( Street, ConnectStrings.GroupFinder_StreetPlaceholder, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             Street.Frame = new CGRect( 0, 0, widthPerField * 1.5f, SearchButton.Frame.Height );
             Street.ReturnKeyType = UIReturnKeyType.Search;
+            Street.AutocapitalizationType = UITextAutocapitalizationType.Words;
             Street.Delegate = new AddressDelegate( ) { Parent = this };
             Street.AutocorrectionType = UITextAutocorrectionType.No;
             View.AddSubview( Street );
@@ -387,6 +411,7 @@ namespace iOS
             ControlStyling.StyleTextField( City, ConnectStrings.GroupFinder_CityPlaceholder, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             City.Frame = new CGRect( border.Frame.Right, 0, widthPerField, SearchButton.Frame.Height );
             City.ReturnKeyType = UIReturnKeyType.Search;
+            City.AutocapitalizationType = UITextAutocapitalizationType.Words;
             City.Delegate = new AddressDelegate( ) { Parent = this };
             View.AddSubview( City );
 
@@ -406,6 +431,7 @@ namespace iOS
             State.Frame = new CGRect( border.Frame.Right, 0, widthPerField / 2, SearchButton.Frame.Height );
             State.ReturnKeyType = UIReturnKeyType.Search;
             State.Delegate = new AddressDelegate( ) { Parent = this };
+            State.AutocapitalizationType = UITextAutocapitalizationType.Words;
             View.AddSubview( State );
 
             border = new UIView( );
@@ -450,9 +476,32 @@ namespace iOS
             SearchResultsBanner.SizeToFit( );
             SearchResultsBanner.Frame = new CGRect( 0, MapView.Frame.Bottom, View.Frame.Width, SearchResultsBanner.Frame.Height );
             SearchResultsBanner.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
-            SearchResultsBanner.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Table_Footer_Color );
+            SearchResultsBanner.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
             SearchResultsBanner.TextAlignment = UITextAlignment.Center;
             View.AddSubview( SearchResultsBanner );
+
+            // Details / Join Banners
+            DetailsFooter = new UILabel( );
+            DetailsFooter.Layer.AnchorPoint = new CGPoint( 0, 0 );
+            DetailsFooter.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            DetailsFooter.Text = "Details";
+            DetailsFooter.SizeToFit( );
+            DetailsFooter.Frame = new CGRect( 10, SearchResultsBanner.Frame.Bottom, DetailsFooter.Frame.Width, SearchResultsBanner.Frame.Height );
+            DetailsFooter.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+            DetailsFooter.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
+            DetailsFooter.TextAlignment = UITextAlignment.Left;
+            View.AddSubview( DetailsFooter );
+
+            JoinFooter = new UILabel( );
+            JoinFooter.Layer.AnchorPoint = new CGPoint( 0, 0 );
+            JoinFooter.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            JoinFooter.Text = "Join";
+            JoinFooter.SizeToFit( );
+            JoinFooter.Frame = new CGRect( View.Frame.Width - JoinFooter.Frame.Width - 10, SearchResultsBanner.Frame.Bottom, JoinFooter.Frame.Width, SearchResultsBanner.Frame.Height );
+            JoinFooter.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+            JoinFooter.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
+            JoinFooter.TextAlignment = UITextAlignment.Left;
+            View.AddSubview( JoinFooter );
 
             /*NeighborhoodBanner = new UILabel( );
                     NeighborhoodBanner.Layer.AnchorPoint = new System.Drawing.PointF( 0, 0 );
@@ -469,15 +518,15 @@ namespace iOS
             Seperator = new UIView( );
             View.AddSubview( Seperator );
             Seperator.Layer.BorderWidth = 1;
-            Seperator.Layer.BorderColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ).CGColor;
-            Seperator.Frame = new CGRect( 0, SearchResultsBanner.Frame.Bottom - 1, View.Bounds.Width, 1 );
+            Seperator.Layer.BorderColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ).CGColor;
+            Seperator.Frame = new CGRect( 0, DetailsFooter.Frame.Bottom - 1, View.Bounds.Width, 1 );
 
             // add the table view and source
             GroupTableSource = new GroupFinderViewController.TableSource( this );
 
             GroupFinderTableView = new UITableView();
             View.AddSubview( GroupFinderTableView );
-            GroupFinderTableView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( CCVApp.Shared.Config.ControlStylingConfig.BG_Layer_Color );
+            GroupFinderTableView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( CCVApp.Shared.Config.ControlStylingConfig.Table_Footer_Color );
             GroupFinderTableView.Source = GroupTableSource;
             GroupFinderTableView.SeparatorStyle = UITableViewCellSeparatorStyle.None;
 
@@ -495,7 +544,7 @@ namespace iOS
             // set the search results banner appropriately
             if ( GroupEntries.Count > 0 )
             {
-                SearchResultsBanner.Text = ConnectStrings.GroupFinder_GroupsFound;
+                SearchResultsBanner.Text = string.Format( ConnectStrings.GroupFinder_Neighborhood, GroupEntries[ 0 ].NeighborhoodArea );
 
                 // add an annotation for each position found in the group
                 List<IMKAnnotation> annotations = new List<IMKAnnotation>();
@@ -529,6 +578,12 @@ namespace iOS
             City.Text = city;
             State.Text = state;
             Zip.Text = zip;
+        }
+
+        public void RowButtonClicked( int row )
+        {
+            // todo: launch the group finder join page
+            Console.WriteLine( "Join group in row {0}", row );
         }
 
         public void RowClicked( int row )
@@ -637,6 +692,11 @@ namespace iOS
 
         void GetGroups( string street, string city, string state, string zip )
         {
+            Street.ResignFirstResponder( );
+            City.ResignFirstResponder( );
+            State.ResignFirstResponder( );
+            Zip.ResignFirstResponder( );
+
             // fun bonus!
             if ( street == CCVApp.Shared.ConnectLink.CheatException.CheatString )
             {

@@ -347,6 +347,15 @@
     <AndroidAsset Include="..\Assets\connect_banner%403x.jpg">
       <Link>Assets\connect_banner.jpg</Link>
     </AndroidAsset>
+    <AndroidAsset Include="..\Assets\baptism_thumb.png">
+      <Link>Assets\baptism_thumb.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\foundations_thumb.png">
+      <Link>Assets\foundations_thumb.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\starting_point_thumb.png">
+      <Link>Assets\starting_point_thumb.png</Link>
+    </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
     <XamarinComponentReference Include="json.net">

@@ -76,8 +76,6 @@ namespace Droid
                     primaryItem.Billboard.SetImageBitmap( ParentFragment.Billboard );
                     primaryItem.Billboard.SetScaleType( ImageView.ScaleType.CenterCrop );
 
-                    primaryItem.Title.Text = "Group Finder";
-
                     return primaryItem;
                 }
 
@@ -89,6 +87,9 @@ namespace Droid
                         seriesItem = new ListItem( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     }
 
+                    seriesItem.Thumbnail.SetImageBitmap( ParentFragment.LinkBillboards[ position ] );
+                    seriesItem.Thumbnail.SetScaleType( ImageView.ScaleType.CenterCrop );
+
                     seriesItem.Title.Text = ParentFragment.LinkEntries[ position ].Title;
                     return seriesItem;
                 }
@@ -97,9 +98,15 @@ namespace Droid
             public class PrimaryListItem : LinearLayout
             {
                 public ArrayAdapter ParentAdapter { get; set; }
+                LinearLayout DetailsLayout { get; set; }
 
-                public AspectScaledImageView Billboard { get; set; }
+                // stuff that will be set by data
+                public Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView Billboard { get; set; }
                 public TextView Title { get; set; }
+                //
+
+                LinearLayout ButtonLayout { get; set; }
+
                 TextView Footer { get; set; }
 
                 public PrimaryListItem( Context context ) : base( context )
@@ -108,25 +115,40 @@ namespace Droid
 
                     Orientation = Android.Widget.Orientation.Vertical;
 
-                    Billboard = new AspectScaledImageView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    Billboard = new Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     Billboard.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
                     Billboard.SetScaleType( ImageView.ScaleType.CenterCrop );
                     AddView( Billboard );
-
 
                     Title = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     Title.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                     Title.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Large_Font_Bold ), TypefaceStyle.Normal );
                     Title.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Large_FontSize );
                     Title.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
+                    Title.Text = ConnectStrings.Main_Connect_Header;
                     ( (LinearLayout.LayoutParams)Title.LayoutParameters ).TopMargin = 25;
                     ( (LinearLayout.LayoutParams)Title.LayoutParameters ).LeftMargin = 25;
                     AddView( Title );
 
+                    DetailsLayout = new LinearLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    DetailsLayout.Orientation = Android.Widget.Orientation.Horizontal;
+                    DetailsLayout.LayoutParameters = new LinearLayout.LayoutParams( LayoutParams.WrapContent, LayoutParams.WrapContent );
+                    ( (LinearLayout.LayoutParams)DetailsLayout.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
+                    ( (LinearLayout.LayoutParams)DetailsLayout.LayoutParameters ).LeftMargin = 25;
+                    ( (LinearLayout.LayoutParams)DetailsLayout.LayoutParameters ).RightMargin = 25;
+                    ( (LinearLayout.LayoutParams)DetailsLayout.LayoutParameters ).BottomMargin = 50;
+                    AddView( DetailsLayout );
+
+                    // fill the remaining space with a dummy view, and that will align our speaker to the right
+                    View dummyView = new View( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    dummyView.LayoutParameters = new LinearLayout.LayoutParams( 0, 0 );
+                    ( (LinearLayout.LayoutParams)dummyView.LayoutParameters ).Weight = 1;
+                    DetailsLayout.AddView( dummyView );
+
                     Footer = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     Footer.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
                     ( (LinearLayout.LayoutParams)Footer.LayoutParameters ).TopMargin = -5;
-                    Footer.Text = "More Ways to Connect";
+                    Footer.Text = ConnectStrings.Main_Connect_OtherWays;
                     Footer.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
                     Footer.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
                     Footer.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
@@ -138,8 +160,11 @@ namespace Droid
 
             public class ListItem : LinearLayout
             {
+                public Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView Thumbnail { get; set; }
+
                 public LinearLayout TitleLayout { get; set; }
                 public TextView Title { get; set; }
+                public TextView Chevron { get; set; }
                 public View Seperator { get; set; }
 
                 public ListItem( Context context ) : base( context )
@@ -153,13 +178,19 @@ namespace Droid
                     contentLayout.LayoutParameters = new LinearLayout.LayoutParams( LayoutParams.WrapContent, LayoutParams.WrapContent );
                     AddView( contentLayout );
 
+                    Thumbnail = new Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    Thumbnail.LayoutParameters = new LinearLayout.LayoutParams( (int)Rock.Mobile.Graphics.Util.UnitToPx( ConnectConfig.MainPage_ThumbnailDimension ), (int)Rock.Mobile.Graphics.Util.UnitToPx( ConnectConfig.MainPage_ThumbnailDimension ) );
+                    ( (LinearLayout.LayoutParams)Thumbnail.LayoutParameters ).TopMargin = 25;
+                    ( (LinearLayout.LayoutParams)Thumbnail.LayoutParameters ).BottomMargin = 25;
+                    ( (LinearLayout.LayoutParams)Thumbnail.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
+                    Thumbnail.SetScaleType( ImageView.ScaleType.CenterCrop );
+                    contentLayout.AddView( Thumbnail );
+
                     TitleLayout = new LinearLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     TitleLayout.Orientation = Android.Widget.Orientation.Vertical;
                     TitleLayout.LayoutParameters = new LinearLayout.LayoutParams( LayoutParams.WrapContent, LayoutParams.WrapContent );
                     ( (LinearLayout.LayoutParams)TitleLayout.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
                     ( (LinearLayout.LayoutParams)TitleLayout.LayoutParameters ).LeftMargin = 25;
-                    ( (LinearLayout.LayoutParams)TitleLayout.LayoutParameters ).TopMargin = 50;
-                    ( (LinearLayout.LayoutParams)TitleLayout.LayoutParameters ).BottomMargin = 50;
                     contentLayout.AddView( TitleLayout );
 
                     Title = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
@@ -170,6 +201,22 @@ namespace Droid
                     Title.SetSingleLine( );
                     Title.Ellipsize = Android.Text.TextUtils.TruncateAt.End;
                     TitleLayout.AddView( Title );
+
+                    // fill the remaining space with a dummy view, and that will align our chevron to the right
+                    View dummyView = new View( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    dummyView.LayoutParameters = new LinearLayout.LayoutParams( 0, 0 );
+                    ( (LinearLayout.LayoutParams)dummyView.LayoutParameters ).Weight = 1;
+                    contentLayout.AddView( dummyView );
+
+                    Chevron = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    Chevron.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                    ( (LinearLayout.LayoutParams)Chevron.LayoutParameters ).Gravity = GravityFlags.CenterVertical | GravityFlags.Right;
+                    Typeface fontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
+                    Chevron.SetTypeface(  fontFace, TypefaceStyle.Normal );
+                    Chevron.SetTextSize( Android.Util.ComplexUnitType.Dip, ConnectConfig.MainPage_Table_IconSize );
+                    Chevron.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    Chevron.Text = ConnectConfig.MainPage_Table_Navigate_Icon;
+                    contentLayout.AddView( Chevron );
 
                     // add our own custom seperator at the bottom
                     Seperator = new View( Rock.Mobile.PlatformSpecific.Android.Core.Context );
@@ -188,6 +235,12 @@ namespace Droid
                 public Bitmap Billboard { get; set; }
 
                 public List<ConnectLink> LinkEntries { get; set; }
+                public List<Bitmap> LinkBillboards { get; set; }
+
+                public ConnectPrimaryFragment( )
+                {
+                    LinkBillboards = new List<Bitmap>( );
+                }
 
                 public override void OnCreate( Bundle savedInstanceState )
                 {
@@ -203,8 +256,15 @@ namespace Droid
                     }
 
                     LinkEntries = ConnectLink.BuildList( );
+                    foreach ( ConnectLink link in LinkEntries )
+                    {
+                        // load each entry's thumbnail image
+                        System.IO.Stream thumbnailStream = Activity.BaseContext.Assets.Open( link.ImageName );
+                        LinkBillboards.Add( BitmapFactory.DecodeStream( thumbnailStream ) );
+                    }
 
-                    System.IO.Stream assetStream = Activity.BaseContext.Assets.Open( "connect_banner.jpg" );
+                    // setup the main image billboard
+                    System.IO.Stream assetStream = Activity.BaseContext.Assets.Open( ConnectConfig.MainPageHeaderImage );
                     Billboard = BitmapFactory.DecodeStream( assetStream );
 
                     View view = inflater.Inflate(Resource.Layout.Connect_Primary, container, false);
@@ -248,6 +308,20 @@ namespace Droid
                     base.OnPause( );
 
                     FragmentActive = false;
+                }
+
+                public override void OnDestroyView()
+                {
+                    base.OnDestroyView();
+
+                    // free bmp resources
+                    Billboard.Dispose( );
+                    foreach ( Bitmap image in LinkBillboards )
+                    {
+                        image.Dispose( );
+                    }
+
+                    LinkBillboards.Clear( );
                 }
             }
         }

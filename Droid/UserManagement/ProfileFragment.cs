@@ -405,6 +405,7 @@ namespace Droid
             if ( string.IsNullOrEmpty( CampusField.Text ) == false )
             {
                 RockMobileUser.Instance.PrimaryFamily.CampusId = RockGeneralData.Instance.Data.CampusNameToId( CampusField.Text );
+                RockMobileUser.Instance.ViewingCampus = RockMobileUser.Instance.PrimaryFamily.CampusId.Value;
             }
 
             if ( string.IsNullOrEmpty( StreetField.Text ) == false &&

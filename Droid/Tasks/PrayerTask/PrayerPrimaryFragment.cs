@@ -46,16 +46,17 @@ namespace Droid
                             // Create the core layout that stores the prayer
                             LinearLayout = new LinearLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                             //LinearLayout.SetBackgroundColor( Android.Graphics.Color.Green );
-                            LinearLayout.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                            LinearLayout.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                             LinearLayout.Orientation = Orientation.Vertical;
 
 
                             // add the name
                             Name = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                             Name.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-                            ((LinearLayout.LayoutParams)Name.LayoutParameters).LeftMargin = 10;
+                            ((LinearLayout.LayoutParams)Name.LayoutParameters).TopMargin = 20;
+                            ((LinearLayout.LayoutParams)Name.LayoutParameters).LeftMargin = 20;
                             Name.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
-                            Name.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
+                            Name.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Medium_Font_Regular ), TypefaceStyle.Normal );
                             Name.SetTextSize( ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
                             Name.Text = prayer.FirstName;
                             LinearLayout.AddView( Name );
@@ -71,9 +72,10 @@ namespace Droid
                             // category
                             Category = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                             Category.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-                            ((LinearLayout.LayoutParams)Category.LayoutParameters).LeftMargin = 10;
+                            ((LinearLayout.LayoutParams)Category.LayoutParameters).TopMargin = 10;
+                            ((LinearLayout.LayoutParams)Category.LayoutParameters).LeftMargin = 20;
                             Category.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
-                            Category.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
+                            Category.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Light ), TypefaceStyle.Normal );
                             Category.SetTextSize( ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
                             Category.Text = prayer.CategoryId.HasValue ? RockGeneralData.Instance.Data.PrayerIdToCategory( prayer.CategoryId.Value ) : RockGeneralData.Instance.Data.PrayerCategories[ 0 ].Name;
                             detailsLayout.AddView( Category );
@@ -87,9 +89,10 @@ namespace Droid
                             // date
                             Date = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                             Date.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-                            ((LinearLayout.LayoutParams)Date.LayoutParameters).RightMargin = 10;
+                            ((LinearLayout.LayoutParams)Date.LayoutParameters).TopMargin = 10;
+                            ((LinearLayout.LayoutParams)Date.LayoutParameters).RightMargin = 20;
                             Date.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
-                            Date.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
+                            Date.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Light ), TypefaceStyle.Normal );
                             Date.SetTextSize( ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
                             Date.Text = string.Format( "{0:MM/dd/yy}", prayer.CreatedDateTime );
                             detailsLayout.AddView( Date );
@@ -97,10 +100,12 @@ namespace Droid
                             // actual prayer
                             Prayer = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                             Prayer.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-                            //((LinearLayout.LayoutParams)Prayer.LayoutParameters).LeftMargin = 10;
-                            //((LinearLayout.LayoutParams)Prayer.LayoutParameters).RightMargin = 10;
-                            //Prayer.SetMinWidth( (int)bounds.Width );
-                            //Prayer.SetMaxWidth( (int)bounds.Width );
+                            ((LinearLayout.LayoutParams)Prayer.LayoutParameters).TopMargin = 30;
+                            ((LinearLayout.LayoutParams)Prayer.LayoutParameters).LeftMargin = 20;
+                            ((LinearLayout.LayoutParams)Prayer.LayoutParameters).RightMargin = 20;
+                            ((LinearLayout.LayoutParams)Prayer.LayoutParameters).BottomMargin = 80;
+                            Prayer.SetMinWidth( (int)bounds.Width - 40 );
+                            Prayer.SetMaxWidth( (int)bounds.Width - 40 );
                             Prayer.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                             Prayer.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Medium_Font_Regular ), TypefaceStyle.Normal );
                             Prayer.SetTextSize( ComplexUnitType.Dip, ControlStylingConfig.Medium_FontSize );
@@ -177,7 +182,6 @@ namespace Droid
 
                         // Layout for the text and circle
                         LinearLayout prayedLayout = new LinearLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
-                        //prayedLayout.SetBackgroundColor( Android.Graphics.Color.Bisque );
                         prayedLayout.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                         ( (RelativeLayout.LayoutParams)prayedLayout.LayoutParameters ).AddRule( LayoutRules.AlignParentRight );
                         prayedLayout.Orientation = Orientation.Horizontal;
@@ -187,7 +191,6 @@ namespace Droid
 
                         // Setup the "I Prayed" label
                         TextView prayedLabel = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
-                        //prayedLabel.SetBackgroundColor( Android.Graphics.Color.Green );
                         prayedLabel.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.MatchParent );
                         prayedLabel.Text = PrayerStrings.Prayer_Confirm;
                         prayedLabel.Gravity = GravityFlags.Center;
@@ -196,11 +199,9 @@ namespace Droid
 
                         Rock.Mobile.PlatformSpecific.Android.Graphics.CircleView tappedCircle = new Rock.Mobile.PlatformSpecific.Android.Graphics.CircleView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                         tappedCircle.LayoutParameters = new LinearLayout.LayoutParams( 75, ViewGroup.LayoutParams.MatchParent );
-                        //tappedCircle.SetBackgroundColor( Android.Graphics.Color.Purple );
                         tappedCircle.Color = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor );
                         tappedCircle.Radius = 8;
                         tappedCircle.StrokeWidth = 1;
-                        //tappedCircle.Style = Android.Graphics.Paint.Style.FillAndStroke;
                         prayedLayout.AddView( tappedCircle );
 
                         Pray.Click += (object sender, EventArgs e) => 
@@ -241,6 +242,8 @@ namespace Droid
 
                 PlatformCardCarousel Carousel { get; set; }
 
+                DateTime LastDownloadTime { get; set; }
+
                 RectangleF PrayerCardSize { get; set; }
                 ProgressBar ActivityIndicator { get; set; }
 
@@ -257,6 +260,11 @@ namespace Droid
 
                 public Button RetryButton { get; set; }
 
+                public PrayerPrimaryFragment( )
+                {
+                    LastDownloadTime = DateTime.MinValue;
+                    PrayerRequests = new List<PrayerCard>();
+                }
 
                 public override void OnCreate( Bundle savedInstanceState )
                 {
@@ -290,10 +298,7 @@ namespace Droid
 
                     PrayerCardSize = new RectangleF( 0, 0, cardWidth, cardHeight );
 
-                    PrayerRequests = new List<PrayerCard>();
-
                     Carousel = PlatformCardCarousel.Create( view, cardWidth, cardHeight, new RectangleF( 0, cardYOffset, this.Resources.DisplayMetrics.WidthPixels, viewRealHeight ), PrayerConfig.Card_AnimationDuration );
-
 
 
                     // setup our error UI
@@ -319,7 +324,10 @@ namespace Droid
 
                     RetryButton.Click += (object sender, EventArgs e ) =>
                         {
-                            DownloadPrayers( );
+                            if( IsRequesting == false )
+                            {
+                                DownloadPrayers( );
+                            }
                         };
 
                     return view;
@@ -330,6 +338,8 @@ namespace Droid
                     base.OnPause();
 
                     IsActive = false;
+
+                    Carousel.Clear( );
                 }
 
                 public override void OnResume()
@@ -346,70 +356,95 @@ namespace Droid
                         } );
                     ParentTask.NavbarFragment.NavToolbar.Reveal( true );
 
-                    DownloadPrayers( );
+                    if ( IsRequesting == false )
+                    {
+                        TimeSpan deltaTime = DateTime.Now - LastDownloadTime;
+                        if ( deltaTime.TotalHours > PrayerConfig.PrayerDownloadFrequency.TotalHours )
+                        {
+                            Console.WriteLine( "Downloading Prayers" );
+                            DownloadPrayers( );
+                        }
+                        else
+                        {
+                            Console.WriteLine( "Not downloading prayers" );
+
+                            // We already have cached prayers, so simply restore them.
+                            StatusLayer.Visibility = ViewStates.Invisible;
+                            ResultLayer.Visibility = ViewStates.Invisible;
+                            RetryButton.Visibility = ViewStates.Invisible;
+
+                            // setup the carousel again
+                            Carousel.Clear( );
+                            foreach ( PrayerCard prayerCard in PrayerRequests )
+                            {
+                                Carousel.AddCard( prayerCard.View );
+                            }
+
+                            // prayers received and are being viewed
+                            PrayerAnalytic.Instance.Trigger( PrayerAnalytic.Read );
+                        }
+                    }
                 }
 
                 void DownloadPrayers( )
                 {
                     // protect against double requests
-                    if ( IsRequesting == false )
-                    {
-                        IsRequesting = true;
+                    IsRequesting = true;
 
-                        ActivityIndicator.Visibility = ViewStates.Visible;
+                    ActivityIndicator.Visibility = ViewStates.Visible;
 
-                        // let them know we're attempting to download the prayers
-                        StatusLayer.Visibility = ViewStates.Visible;
-                        StatusText.Text = PrayerStrings.ViewPrayer_StatusText_Retrieving;
+                    // let them know we're attempting to download the prayers
+                    StatusLayer.Visibility = ViewStates.Visible;
+                    StatusText.Text = PrayerStrings.ViewPrayer_StatusText_Retrieving;
 
-                        // when downloading prayers, make sure the result and retry are invisible
-                        // until we have a result.
-                        ResultLayer.Visibility = ViewStates.Invisible;
-                        RetryButton.Visibility = ViewStates.Invisible;
+                    // when downloading prayers, make sure the result and retry are invisible
+                    // until we have a result.
+                    ResultLayer.Visibility = ViewStates.Invisible;
+                    RetryButton.Visibility = ViewStates.Invisible;
 
-                        // request the prayers each time this appears
-                        CCVApp.Shared.Network.RockApi.Instance.GetPrayers( delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.PrayerRequest> prayerRequests )
+                    // request the prayers each time this appears
+                    CCVApp.Shared.Network.RockApi.Instance.GetPrayers( delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.PrayerRequest> prayerRequests )
+                        {
+                            IsRequesting = false;
+
+                            PrayerRequests.Clear( );
+
+                            // only process this if the view is still active. It's possible this request came in after we left the view.
+                            if( IsActive == true )
                             {
-                                IsRequesting = false;
+                                ActivityIndicator.Visibility = ViewStates.Invisible;
 
-                                PrayerRequests.Clear( );
-                                Carousel.Clear( );
-
-                                // only process this if the view is still active. It's possible this request came in after we left the view.
-                                if( IsActive == true )
+                                if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true && prayerRequests.Count > 0 )
                                 {
-                                    ActivityIndicator.Visibility = ViewStates.Invisible;
+                                    LastDownloadTime = DateTime.Now;
 
-                                    if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true && prayerRequests.Count > 0 )
+                                    // success, so hide the status layer, we don't need it
+                                    StatusLayer.Visibility = ViewStates.Invisible;
+
+                                    // create our prayer request layouts
+                                    foreach ( Rock.Client.PrayerRequest request in prayerRequests )
                                     {
-                                        // success, so hide the status layer, we don't need it
-                                        StatusLayer.Visibility = ViewStates.Invisible;
+                                        PrayerCard prayerCard = new PrayerCard( request, PrayerCardSize );
+                                        PrayerRequests.Add( prayerCard );
 
-                                        // create our prayer request layouts
-                                        foreach ( Rock.Client.PrayerRequest request in prayerRequests )
-                                        {
-                                            PrayerCard prayerCard = new PrayerCard( request, PrayerCardSize );
-                                            PrayerRequests.Add( prayerCard );
-
-                                            Carousel.AddCard( prayerCard.View );
-                                        }
-
-                                        // prayers received and are being viewed
-                                        PrayerAnalytic.Instance.Trigger( PrayerAnalytic.Read );
+                                        Carousel.AddCard( prayerCard.View );
                                     }
-                                    else
-                                    {
-                                        StatusLayer.Visibility = ViewStates.Visible;
 
-                                        ResultLayer.Visibility = ViewStates.Visible;
-                                        RetryButton.Visibility = ViewStates.Visible;
-
-                                        StatusText.Text = PrayerStrings.ViewPrayer_StatusText_Failed;
-                                        ResultText.Text = PrayerStrings.Error_Retrieve_Message;
-                                    }
+                                    // prayers received and are being viewed
+                                    PrayerAnalytic.Instance.Trigger( PrayerAnalytic.Read );
                                 }
-                            } );
-                    }
+                                else
+                                {
+                                    StatusLayer.Visibility = ViewStates.Visible;
+
+                                    ResultLayer.Visibility = ViewStates.Visible;
+                                    RetryButton.Visibility = ViewStates.Visible;
+
+                                    StatusText.Text = PrayerStrings.ViewPrayer_StatusText_Failed;
+                                    ResultText.Text = PrayerStrings.Error_Retrieve_Message;
+                                }
+                            }
+                        } );
                 }
 
                 // forward these to the carousel

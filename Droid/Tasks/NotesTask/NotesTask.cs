@@ -149,15 +149,24 @@ namespace Droid
                                 // the context is the button they clicked (watch or take notes)
                                 int buttonChoice = (int)context;
 
-                                // 0 is watch
+                                // 0 is listen
                                 if ( buttonChoice == 0 )
                                 {
-                                    WatchPage.VideoUrl = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].WatchUrl;
+                                    WatchPage.MediaUrl = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].AudioUrl;
                                     WatchPage.ShareUrl = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].ShareUrl;
                                     WatchPage.Name = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].Name;
                                     PresentFragment( WatchPage, true );
                                 }
+                                // 1 is watch
                                 else if ( buttonChoice == 1 )
+                                {
+                                    WatchPage.MediaUrl = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].WatchUrl;
+                                    WatchPage.ShareUrl = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].ShareUrl;
+                                    WatchPage.Name = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].Name;
+                                    PresentFragment( WatchPage, true );
+                                }
+                                // 2 is read
+                                else if ( buttonChoice == 2 )
                                 {
                                     NotesPage.NoteUrl = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].NoteUrl;
                                     NotesPage.NoteName = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].Name;
@@ -177,13 +186,24 @@ namespace Droid
                             // the context is the button they clicked (watch or take notes)
                             int buttonChoice = (int)context;
 
+                            // 0 is listen
                             if ( buttonChoice == 0 )
                             {
-                                WatchPage.VideoUrl = DetailsPage.Messages[ buttonId ].Message.WatchUrl;
-                                WatchPage.ShareUrl = DetailsPage.Messages[ buttonId ].Message.ShareUrl;
+                                WatchPage.MediaUrl = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].AudioUrl;
+                                WatchPage.ShareUrl = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].ShareUrl;
+                                WatchPage.Name = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].Name;
                                 PresentFragment( WatchPage, true );
                             }
+                            // 1 is watch
                             else if ( buttonChoice == 1 )
+                            {
+                                WatchPage.MediaUrl = DetailsPage.Messages[ buttonId ].Message.WatchUrl;
+                                WatchPage.ShareUrl = DetailsPage.Messages[ buttonId ].Message.ShareUrl;
+                                WatchPage.Name = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].Name;
+                                PresentFragment( WatchPage, true );
+                            }
+                            // 2 is read
+                            else if ( buttonChoice == 2 )
                             {
                                 NotesPage.NoteUrl = DetailsPage.Messages[ buttonId ].Message.NoteUrl;
                                 NotesPage.NoteName = DetailsPage.Messages[ buttonId ].Message.Name;
