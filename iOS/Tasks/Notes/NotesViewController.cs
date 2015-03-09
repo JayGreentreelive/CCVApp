@@ -145,6 +145,11 @@ namespace iOS
         public string NoteUrl { get; set; }
 
         /// <summary>
+        /// If the style sheet URLs aren't absolute, this is the domain to prefix.
+        /// </summary>
+        public string StyleSheetDefaultHostDomain { get; set; }
+
+        /// <summary>
         /// A presentable name for the note. Used for things like email subjects
         /// </summary>
         /// <value>The name of the note presentable.</value>
@@ -257,8 +262,8 @@ namespace iOS
 				CreateNotes (CachedNoteXml, CachedStyleXml);
 			}
 
-            // don't let the back button work when in landscape mode.
-            //Task.NavToolbar.SetBackButtonEnabled( UIDevice.CurrentDevice.Orientation == UIDeviceOrientation.Portrait ? true : false );
+            UIApplication.SharedApplication.IdleTimerDisabled = true;
+            Console.WriteLine( "Turning idle timer OFF" );
         }
 
         public override void ViewDidLoad( )
@@ -326,7 +331,6 @@ namespace iOS
         public override void ViewDidAppear(bool animated)
         {
             base.ViewDidAppear(animated);
-            UIApplication.SharedApplication.IdleTimerDisabled = true;
 
             // monitor for text field being edited, and keyboard show/hide notitications
             NSObject handle = NSNotificationCenter.DefaultCenter.AddObserver( Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager.TextFieldDidBeginEditingNotification, KeyboardAdjustManager.OnTextFieldDidBeginEditing);
@@ -340,6 +344,9 @@ namespace iOS
 
             handle = NSNotificationCenter.DefaultCenter.AddObserver (UIKeyboard.WillShowNotification, KeyboardAdjustManager.OnKeyboardNotification);
             ObserverHandles.Add( handle );
+
+            UIApplication.SharedApplication.IdleTimerDisabled = true;
+            Console.WriteLine( "Turning idle timer OFF" );
         }
 
         public override void ViewDidDisappear(bool animated)
@@ -361,13 +368,47 @@ namespace iOS
             ViewResigning( );
         }
 
+        public override void OnActivated()
+        {
+            base.OnActivated();
+
+            // yet another place to drop in an idle timer disable
+            UIApplication.SharedApplication.IdleTimerDisabled = true;
+            Console.WriteLine( "Turning idle timer OFF" );
+        }
+
+        public override void WillEnterForeground( )
+        {
+            base.WillEnterForeground( );
+
+            // yet another place to drop in an idle timer disable
+            UIApplication.SharedApplication.IdleTimerDisabled = true;
+            Console.WriteLine( "Turning idle timer OFF" );
+        }
+
+        public override void AppOnResignActive()
+        {
+            base.AppOnResignActive();
+
+            ViewResigning( );
+        }
+
+        public override void AppWillTerminate()
+        {
+            base.AppWillTerminate();
+
+            ViewResigning( );
+        }
+
         /// <summary>
         /// Called when the view will dissapear, or when the task sees that the app is going into the background.
         /// </summary>
         public void ViewResigning()
         {
             SaveNoteState( );
+
             UIApplication.SharedApplication.IdleTimerDisabled = false;
+            Console.WriteLine( "Turning idle timer ON" );
         }
 
         public void DidScroll( )
@@ -512,8 +553,6 @@ namespace iOS
             {
                 Task.NavToolbar.Reveal( false );
             }
-
-            Console.WriteLine( "Scroll Perc: {0}", scrollPerc );
         }
 
         [Foundation.Export("DoubleTapSelector:")]
@@ -599,7 +638,7 @@ namespace iOS
         {
             try
             {
-                Note.HandlePreReqs( noteXml, styleXml, OnPreReqsComplete );
+                Note.HandlePreReqs( noteXml, styleXml, StyleSheetDefaultHostDomain, OnPreReqsComplete );
             } 
             catch( Exception e )
             {

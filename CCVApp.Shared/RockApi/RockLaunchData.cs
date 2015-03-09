@@ -32,7 +32,7 @@ namespace CCVApp
                         GeneralDataVersion = 0;
 
                         News = new List<RockNews>( );
-                        Series = new List<Series>( );
+                        NoteDB = new NoteDB( );
 
                         // for the hardcoded news, leave OFF the image extensions, so that we can add them with scaling for iOS.
                         DefaultNews = new List<RockNews>( );
@@ -122,20 +122,15 @@ namespace CCVApp
                     public List<RockNews> News { get; set; }
 
                     /// <summary>
-                    /// The list of sermon series and messages. This goes here so that
-                    /// we can shortcut the user to the latest message from the main page if they want.
-                    /// It also allows us to store them so they don't need to be downloaded every time they
-                    /// visit the Messages page.
+                    /// The core object that stores info about the sermon notes.
                     /// </summary>
-                    /// <value>The series.</value>
-                    public List<Series> Series { get; set; }
+                    public NoteDB NoteDB { get; set; }
 
                     /// <summary>
-                    /// The last time the series was downloaded. This helps us know whether to
+                    /// The last time the noteDB was downloaded. This helps us know whether to
                     /// update it or not, in case the user hasn't quit the app in days.
                     /// </summary>
-                    /// <value>The series time stamp.</value>
-                    public DateTime SeriesTimeStamp { get; set; }
+                    public DateTime NoteDBTimeStamp { get; set; }
 
                     /// <summary>
                     /// Used on the app's first run, or there's no network connection
@@ -147,11 +142,10 @@ namespace CCVApp
                 public LaunchData Data { get; set; }
 
                 /// <summary>
-                /// True if the series.xml is in the process of being downloaded. This is so that
+                /// True if the notedb.xml is in the process of being downloaded. This is so that
                 /// if the user visits Messages WHILE we're downloading, we can wait instead of requesting it.
                 /// </summary>
-                /// <value><c>true</c> if requesting series; otherwise, <c>false</c>.</value>
-                public bool RequestingSeries { get; private set; }
+                public bool RequestingNoteDB { get; private set; }
 
                 public RockLaunchData( )
                 {
@@ -168,7 +162,7 @@ namespace CCVApp
                 /// <summary>
                 /// Wrapper function for getting the basic things we need at launch (news, notes, etc.)
                 /// If for some reason one of these fails, they will be called independantly by the appropriate systems
-                /// (So if series fails, GetSeries will be called by Messages when the user taps on it)
+                /// (So if NoteDB fails, GetNoteDB will be called by Messages when the user taps on it)
                 /// </summary>
                 /// <param name="launchDataResult">Launch data result.</param>
                 public void GetLaunchData( HttpRequest.RequestResult launchDataResult )
@@ -225,35 +219,36 @@ namespace CCVApp
                         } );
                 }
 
-                public void GetSeries( HttpRequest.RequestResult resultCallback )
+                public void GetNoteDB( HttpRequest.RequestResult resultCallback )
                 {
-                    RequestingSeries = true;
+                    RequestingNoteDB = true;
 
                     Rock.Mobile.Network.HttpRequest request = new HttpRequest();
                     RestRequest restRequest = new RestRequest( Method.GET );
                     restRequest.RequestFormat = DataFormat.Xml;
 
-                    request.ExecuteAsync<List<Series>>( NoteConfig.BaseURL + "series.xml", restRequest, 
-                        delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Series> seriesModel )
+                    request.ExecuteAsync<NoteDB>( NoteConfig.BaseURL + "note_db.xml", restRequest, 
+                        delegate(System.Net.HttpStatusCode statusCode, string statusDescription, NoteDB noteModel )
                         {
-                            if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true && seriesModel != null )
+                            if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true && noteModel != null )
                             {
-                                Console.WriteLine( "Got series info." );
-                                Data.Series = seriesModel;
-                                Data.SeriesTimeStamp = DateTime.Now;
+                                Console.WriteLine( "Got NoteDB info." );
+                                Data.NoteDB = noteModel;
+                                Data.NoteDB.MakeURLsAbsolute( );
+                                Data.NoteDBTimeStamp = DateTime.Now;
                             }
-                            else if ( seriesModel == null )
+                            else if ( noteModel == null )
                             {
-                                statusDescription = "Series downloaded but failed parsing.";
+                                statusDescription = "NoteDB downloaded but failed parsing.";
                                 statusCode = System.Net.HttpStatusCode.BadRequest;
                                 Console.WriteLine( statusDescription );
                             }
                             else
                             {
-                                Console.WriteLine( "Series request failed." );
+                                Console.WriteLine( "NoteDB request failed." );
                             }
 
-                            RequestingSeries = false;
+                            RequestingNoteDB = false;
 
                             if ( resultCallback != null )
                             {
@@ -263,14 +258,14 @@ namespace CCVApp
                 }
 
                 /// <summary>
-                /// Returns true if there ARE no series, or if the last time the series 
+                /// Returns true if there ARE no series in the note DB, or if the last time the noteDB
                 /// was downloaded was too long ago.
                 /// </summary>
                 public bool NeedSeriesDownload( )
                 {
                     // if the series hasn't been downloaded yet, or it's older than a day, redownload it.
-                    TimeSpan seriesDelta = DateTime.Now - Data.SeriesTimeStamp;
-                    if ( Data.Series.Count == 0 || seriesDelta.TotalDays >= 1 )
+                    TimeSpan seriesDelta = DateTime.Now - Data.NoteDBTimeStamp;
+                    if ( Data.NoteDB.SeriesList.Count == 0 || seriesDelta.TotalDays >= 1 )
                     {
                         return true;
                     }

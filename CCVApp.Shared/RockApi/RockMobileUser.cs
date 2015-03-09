@@ -77,6 +77,8 @@ namespace CCVApp
 
                 public bool ProfileImageDirty { get; set; }
 
+                public bool ProfileImageGroupDirty { get; set; }
+
                 /// <summary>
                 /// The primary family associated with this person, which contains their home campus
                 /// </summary>
@@ -166,11 +168,11 @@ namespace CCVApp
                 public string LastStreamingMediaUrl { get; set; }
 
                 /// <summary>
-                /// The left off position of the last streaming video, so we can
+                /// The left off position of the last streaming media, so we can
                 /// resume if desired.
                 /// </summary>
                 /// <value>The last streaming video position.</value>
-                public double LastStreamingVideoPos { get; set; }
+                public double LastStreamingMediaPos { get; set; }
 
                 /// <summary>
                 /// If true they have a profile image, so we should look for it in our defined spot.
@@ -644,6 +646,11 @@ namespace CCVApp
 
                 public void UploadSavedProfilePicture( HttpRequest.RequestResult result )
                 {
+                    // this is a big process. The profile picture being updated also requires the user's
+                    // profile be updated AND they need to be placed into a special group.
+                    // So, until ALL THOSE succeed in order, we will not consider the profile image "clean"
+
+
                     // if upload is called, the profile image implicitely becomes dirty.
                     // that way if it fails, we can know to sync it on next run.
                     ProfileImageDirty = true;
@@ -659,22 +666,41 @@ namespace CCVApp
                             // free the stream
                             imageStream.Dispose( );
 
-
                             // if the upload went ok
                             if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
                             {
-                                // the image isn't dirty
-                                ProfileImageDirty = false;
-
                                 // now update the profile
                                 Person.PhotoId = photoId;
 
                                 // attempt to sync the profile
-                                UpdateProfile( delegate ( System.Net.HttpStatusCode profileCode, string profileDesc )
+                                UpdateProfile( 
+                                    delegate ( System.Net.HttpStatusCode profileStatusCode, string profileStatusDesc )
                                     {
-                                        if ( result != null )
+                                        if( Rock.Mobile.Network.Util.StatusInSuccessRange( profileStatusCode ) == true )
                                         {
-                                            result( profileCode, profileDesc );
+                                            // now (and only now) that we know the profile was updated correctly,
+                                            // we can update the image group.
+                                            RockApi.Instance.UpdateProfileImageGroup( Person, delegate ( System.Net.HttpStatusCode resultCode, string resultDesc )
+                                                {
+                                                    // now we know that the profile image group was updated correctly, and that's the last step
+                                                    if( Rock.Mobile.Network.Util.StatusInSuccessRange( resultCode ) == true )
+                                                    {
+                                                        // so now we can finally flag everything as good
+                                                        ProfileImageDirty = false;
+                                                    }
+
+                                                    if ( result != null )
+                                                    {
+                                                        result( statusCode, statusDesc );
+                                                    }
+                                                });
+                                        }
+                                        else
+                                        {
+                                            if ( result != null )
+                                            {
+                                                result( statusCode, statusDesc );
+                                            }
                                         }
                                     });
                             }

@@ -17,8 +17,8 @@ using Android.Graphics.Drawables.Shapes;
 using Java.IO;
 using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
-using Rock.Mobile.PlatformSpecific.Android.Animation;
 using Rock.Mobile.PlatformSpecific.Android.Graphics;
+using Rock.Mobile.Animation;
 
 namespace Droid
 {

@@ -1,60 +1,26 @@
-*If the build crashes at startup, delete and reinstall.
+*DELETE YOUR EXISTING INSTALLATION BEFORE UPDATING*
 
 Highlights
-Profile Pictures now upload to Rock's Production Server. Be careful!
+iOS Users please verify the phone does not goto sleep when using Sermon Notes.
 
 
 Changes
 -------
 
 Both
-	General - Fixed an issue causing the "Notes" billboard to sometimes not appear immediately at startup.
-	General - Moving forward, upgrading versions should no longer cause crashing due to out of sync data.
+	General - Fixed an issue causing the "Notes" billboard to sometimes not appear immediately at startup. (This time for realsies)
 
-	Springboard - Increased the height of elements
-	Springboard - Adjusted the position of the campus caret symbol
-
-	News - Learn More now displays within the app rather than taking you out of it.
-
-	Notes - Fixed an issue where the main page would not wait for the series to finish downloading.
-	Notes - Fixed an issue causing the list of series to be out of date if the app wasn't closed / reopened.
-	Notes - Fixed an issue causing text on newlines to sometimes be indented by a space.
-	Notes - Fixed an issue causing there to be no space between consecutive Reveal Boxes in a row. 
-	Notes - User Notes are limited to 10 per Note. Try to go above, and see what happens :)
-	Notes - Adjusted layout and fonts on certain pages.
-	Notes - Citations that are links now use a ">" icon rather than being underlined.
-
-	Profile - Profile pictures are now uploaded to Rock!
-	Profile - Updating phone number now works.
-	Profile - Updating home campus when the user had no family/home campus now works.
-	Profile - Updating and creating your home address now works.
-	Profile - First and Last name first letters are automatically capitalized.
-	Profile - Fixed an issue causing birthdays to not update.
-
-	FileCache - Fixed an issue causing cached files to expire after 7 hours instead of 7 days. Also upped the default expiration time from 7 days to 30.
-
-	Prayer - Fixed an issue preventing prayer request submissions.
-	Prayer - First & Last name are now pre-populated in the Create screen if you're logged in.
-	Prayer - Prayers will now be cached for an hour or until the app is killed and re-run.
-	Prayer - Improved the layout of the Prayer cards.
-	Prayer - Fixed an issue causing the "I Prayed" flags to be reset when leaving / returning to the Prayer screen.
-	Prayer - Made swiping prayer cards much easier.
+	Notes - Fixed an issue allowing the device to sleep when viewing a quote URL.
+	
 
 iOS
-	General - Fixed an issue causing the "Notes" billboard to sometimes show up off screen when viewing Notes landscape.
+	General - Fixed an issue causing the back button to remain disabled when going from Landscape to Portrait
 
-	News - Fixed an issue causing the background of some images to be Lime Green
-	News - Fixed spacing issues and banner sizing on the details page.
+	Prayer - Fixed an issue causing the keyboard to cover the Category spinner.
 
-	Prayer - Fixed an issue causing visual overlap with the Prayer Category and Submit button on iPhone 4s devices.
-
-	Profile - Fixed an issue allowing both the Gender and Birthday pickers to display at the same time.
-
-	Group Finder - Fixed an issue causing the keyboard to stay up if you used the "Search" button.
+	Notes - Fixed the last of the issues causing the phone to goto sleep when using Sermon Notes.
 	
 Android
-	Profile - Fixed an limiting the length of text in the text fields.
+	Messages - Fixed crashing and other misc issues when picking a Podcast to listen to or watch.
 
-	Prayer - Names are capitalized when typing into the name fields.
-	Prayer - Sentences are capitalized in the request field.
-	Prayer - Fixed an issue causing long prayers to overlap the "I Prayed" button.
+	Give - Fixed an endless death loop when tapping Give

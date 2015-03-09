@@ -16,9 +16,12 @@ namespace iOS
         public string MediaUrl { get; set; }
         public string ShareUrl { get; set; }
         public string Name { get; set; }
+        public bool AudioOnly { get; set; }
 
         MPMoviePlayerController MoviePlayer  { get; set; }
         UIActivityIndicatorView ActivityIndicator { get; set; }
+
+        bool PreloadFinished { get; set; }
 
         bool DidDisplayError { get; set; }
 
@@ -49,8 +52,10 @@ namespace iOS
                 ActivityIndicator.SizeToFit( );
                 ActivityIndicator.StartAnimating( );
 
+                PreloadFinished = false;
+
                 // create the movie player control
-                MoviePlayer = new MPMoviePlayerController( new NSUrl( MediaUrl ) );
+                MoviePlayer = new MPMoviePlayerController( );
                 View.AddSubview( MoviePlayer.View );
 
                 View.AddSubview( ActivityIndicator );
@@ -97,6 +102,11 @@ namespace iOS
             if ( UIApplication.SharedApplication.StatusBarOrientation == UIInterfaceOrientation.Portrait )
             {
                 MoviePlayer.View.Frame = new CGRect( 0, ( View.Frame.Height - View.Frame.Width ) / 2, View.Frame.Width, View.Frame.Width );
+                MoviePlayer.SetFullscreen( false, true );
+
+                // force the back button to be enabled. We shouldn't have to, but iOS isn't
+                // giving us a WillRotate from landscape to portrait because the movie player is fullscreen.
+                Task.NavToolbar.SetBackButtonEnabled( true );
             }
             else
             {
@@ -104,7 +114,6 @@ namespace iOS
                 if ( MoviePlayer.Fullscreen != true )
                 {
                     MoviePlayer.SetFullscreen( true, true );
-                    //MoviePlayer.View.Frame = View.Frame;
                 }
             }
 
@@ -118,7 +127,6 @@ namespace iOS
             // don't do anything if we're simply exiting fullscreen
             if ( ExitingFullscreen == false )
             {
-                // when the view appears start the movie by default
                 ActivityIndicator.Hidden = false;
 
                 DidDisplayError = false;
@@ -126,10 +134,11 @@ namespace iOS
                 // if we're watching the same video we last watched, resume
                 if ( MediaUrl == CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaUrl )
                 {
-                    MoviePlayer.InitialPlaybackTime = CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingVideoPos;
+                    MoviePlayer.InitialPlaybackTime = CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaPos;
                 }
 
-                MoviePlayer.Play( );
+                MoviePlayer.ContentUrl = new NSUrl( MediaUrl );
+                MoviePlayer.PrepareToPlay( );
             }
         }
 
@@ -182,7 +191,16 @@ namespace iOS
             // once the movie is ready, hide the spinner
             ActivityIndicator.Hidden = true;
 
-            MessageAnalytic.Instance.Trigger( MessageAnalytic.Watch, Name );
+            MoviePlayer.Play( );
+
+            if ( AudioOnly )
+            {
+                MessageAnalytic.Instance.Trigger( MessageAnalytic.Listen, Name );
+            }
+            else
+            {
+                MessageAnalytic.Instance.Trigger( MessageAnalytic.Watch, Name );
+            }
         }
 
         void WillEnterFullscreen( NSNotification obj )
@@ -220,11 +238,11 @@ namespace iOS
                     double playbackPerc = MoviePlayer.CurrentPlaybackTime / MoviePlayer.Duration;
                     if ( playbackPerc > .10f && playbackPerc < .95f )
                     {
-                        CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingVideoPos = MoviePlayer.CurrentPlaybackTime;
+                        CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaPos = MoviePlayer.CurrentPlaybackTime;
                     }
                     else
                     {
-                        CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingVideoPos = 0;
+                        CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaPos = 0;
                     }
                 }
             }

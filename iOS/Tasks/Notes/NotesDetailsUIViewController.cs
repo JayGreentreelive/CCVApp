@@ -10,6 +10,7 @@ using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
 using System.IO;
 using CCVApp.Shared.Analytics;
+using CCVApp.Shared.Network;
 
 namespace iOS
 {
@@ -352,17 +353,17 @@ namespace iOS
                                                              cell.TakeNotesButton.Bounds.Width, 
                                                              cell.TakeNotesButton.Bounds.Height );
 
-                cell.WatchButton.Frame = new CGRect( cell.TakeNotesButton.Frame.Left - cell.WatchButton.Bounds.Width - 20, 
+                cell.WatchButton.Frame = new CGRect( cell.TakeNotesButton.Frame.Left - cell.WatchButton.Bounds.Width - 10, 
                     (rowHeight - cell.WatchButton.Bounds.Height) / 2, 
                                                          cell.WatchButton.Bounds.Width, 
                                                          cell.WatchButton.Bounds.Height );
 
-                cell.ListenButton.Frame = new CGRect( cell.WatchButton.Frame.Left - cell.ListenButton.Bounds.Width - 20, 
+                cell.ListenButton.Frame = new CGRect( cell.WatchButton.Frame.Left - cell.ListenButton.Bounds.Width - 10, 
                     (rowHeight - cell.ListenButton.Bounds.Height) / 2, 
                     cell.ListenButton.Bounds.Width, 
                     cell.ListenButton.Bounds.Height );
 
-                nfloat availableWidth = cell.Bounds.Width - cell.ListenButton.Bounds.Width - cell.WatchButton.Bounds.Width - cell.TakeNotesButton.Bounds.Width - 5 - 20;
+                nfloat availableWidth = cell.Bounds.Width - cell.ListenButton.Bounds.Width - cell.WatchButton.Bounds.Width - cell.TakeNotesButton.Bounds.Width - 5 - 10;
 
                 // disable the button if there's no listen URL
                 if ( string.IsNullOrEmpty( Series.Messages[ row ].AudioUrl ) )
@@ -557,6 +558,7 @@ namespace iOS
                 viewController.MediaUrl = Series.Messages[ row ].AudioUrl;
                 viewController.ShareUrl = Series.Messages[ row ].ShareUrl;
                 viewController.Name = Series.Messages[ row ].Name;
+                viewController.AudioOnly = true;
 
                 Task.PerformSegue( this, viewController );
             }
@@ -567,6 +569,7 @@ namespace iOS
                 viewController.MediaUrl = Series.Messages[ row ].WatchUrl;
                 viewController.ShareUrl = Series.Messages[ row ].ShareUrl;
                 viewController.Name = Series.Messages[ row ].Name;
+                viewController.AudioOnly = false;
 
                 Task.PerformSegue( this, viewController );
             }
@@ -580,6 +583,7 @@ namespace iOS
                 {
                     noteTask.NoteController.NoteName = Series.Messages[ row ].Name;
                     noteTask.NoteController.NoteUrl = Series.Messages[ row ].NoteUrl;
+                    noteTask.NoteController.StyleSheetDefaultHostDomain = RockLaunchData.Instance.Data.NoteDB.HostDomain;
 
                     Task.PerformSegue( this, noteTask.NoteController );
                 }

@@ -533,7 +533,7 @@ namespace iOS
             IsVisible = true;
 
             // what's the state of the series xml?
-            if ( RockLaunchData.Instance.RequestingSeries == true )
+            if ( RockLaunchData.Instance.RequestingNoteDB == true )
             {
                 // it's in the process of downloading, so wait and poll.
                 View.AddSubview( ActivityIndicator );
@@ -555,7 +555,7 @@ namespace iOS
                 View.BringSubviewToFront( ActivityIndicator );
                 ActivityIndicator.Hidden = false;
 
-                RockLaunchData.Instance.GetSeries( delegate
+                RockLaunchData.Instance.GetNoteDB( delegate
                     {
                         // don't worry about the result. The point is we tried,
                         // and now will either use downloaded data, saved data, or throw an error to the user.
@@ -572,7 +572,7 @@ namespace iOS
         void WaitAsync( )
         {
             // while we're still requesting the series, simply wait
-            while ( CCVApp.Shared.Network.RockLaunchData.Instance.RequestingSeries == true );
+            while ( CCVApp.Shared.Network.RockLaunchData.Instance.RequestingNoteDB == true );
 
             // now that tis' finished, update the notes.
             SeriesReady( );
@@ -587,10 +587,10 @@ namespace iOS
                     ActivityIndicator.RemoveFromSuperview( );
 
                     // if there are now series entries, we're good
-                    if ( RockLaunchData.Instance.Data.Series.Count > 0 )
+                    if ( RockLaunchData.Instance.Data.NoteDB.SeriesList.Count > 0 )
                     {
                         // setup each series entry in our table
-                        SetupSeriesEntries( RockLaunchData.Instance.Data.Series );
+                        SetupSeriesEntries( RockLaunchData.Instance.Data.NoteDB.SeriesList );
 
                         // only update the table if we're still visible
                         if ( IsVisible == true )
@@ -734,6 +734,7 @@ namespace iOS
             {
                 noteTask.NoteController.NoteName = string.Format( "Message - {0}", SeriesEntries[ 0 ].Series.Messages[ 0 ].Name );
                 noteTask.NoteController.NoteUrl = SeriesEntries[ 0 ].Series.Messages[ 0 ].NoteUrl;
+                noteTask.NoteController.StyleSheetDefaultHostDomain = RockLaunchData.Instance.Data.NoteDB.HostDomain;
 
                 Task.PerformSegue( this, noteTask.NoteController );
             }

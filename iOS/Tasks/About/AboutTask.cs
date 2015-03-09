@@ -53,9 +53,39 @@ namespace iOS
             base.MakeInActive( );
         }
 
+        public override void OnActivated( )
+        {
+            base.OnActivated( );
+
+            MainPageVC.OnActivated( );
+        }
+
+        public override void WillEnterForeground()
+        {
+            base.WillEnterForeground();
+
+            MainPageVC.WillEnterForeground( );
+        }
+
         public override void AppOnResignActive( )
         {
             base.AppOnResignActive( );
+
+            MainPageVC.AppOnResignActive( );
+        }
+
+        public override void AppDidEnterBackground()
+        {
+            base.AppDidEnterBackground();
+
+            MainPageVC.AppDidEnterBackground( );
+        }
+
+        public override void AppWillTerminate()
+        {
+            base.AppWillTerminate( );
+
+            MainPageVC.AppWillTerminate( );
         }
     }
 }

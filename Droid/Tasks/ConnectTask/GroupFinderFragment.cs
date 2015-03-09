@@ -21,7 +21,7 @@ using Android.Gms.Maps;
 using CCVApp.Shared;
 using CCVApp.Shared.Network;
 using CCVApp.Shared.Analytics;
-using Rock.Mobile.PlatformSpecific.Android.Animation;
+using Rock.Mobile.Animation;
 
 namespace Droid
 {

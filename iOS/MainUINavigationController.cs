@@ -6,7 +6,6 @@ using CoreGraphics;
 using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
 using Rock.Mobile.PlatformSpecific.iOS.Graphics;
-using Rock.Mobile.PlatformSpecific.iOS.Animation;
 
 namespace iOS
 {
@@ -334,11 +333,12 @@ namespace iOS
 
         public void OnActivated( )
         {
+            Container.OnActivated( );
         }
 
         public void WillEnterForeground( )
         {
-
+            Container.WillEnterForeground( );
         }
 
         public void OnResignActive( )

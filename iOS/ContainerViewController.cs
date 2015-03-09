@@ -221,6 +221,22 @@ namespace iOS
             }
         }
 
+        public void OnActivated( )
+        {
+            if( CurrentTask != null )
+            {
+                CurrentTask.OnActivated( );
+            }
+        }
+
+        public void WillEnterForeground( )
+        {
+            if( CurrentTask != null )
+            {
+                CurrentTask.WillEnterForeground( );
+            }
+        }
+
         public void OnResignActive()
         {
             if( CurrentTask != null )

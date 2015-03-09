@@ -27,5 +27,25 @@ namespace iOS
 
             Task.TouchesEnded( this, touches, evt );
         }
+
+        public virtual void OnActivated( )
+        {
+        }
+
+        public virtual void WillEnterForeground( )
+        {
+        }
+
+        public virtual void AppOnResignActive( )
+        {
+        }
+
+        public virtual void AppDidEnterBackground( )
+        {
+        }
+
+        public virtual void AppWillTerminate( )
+        {
+        }
 	}
 }

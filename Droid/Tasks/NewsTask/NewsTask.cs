@@ -76,7 +76,7 @@ namespace Droid
                     {
                         case "Task.Init":
                         {
-                            //MainPage.DownloadImages( );
+                            MainPage.DownloadImages( );
                             break;
                         }
                     }

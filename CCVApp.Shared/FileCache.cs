@@ -227,6 +227,7 @@ namespace CCVApp.Shared
                 // request the image for the series
                 HttpRequest webRequest = new HttpRequest();
                 RestRequest restRequest = new RestRequest( Method.GET );
+                restRequest.AddHeader( "Accept", "image/png" );
 
                 webRequest.ExecuteAsync( downloadUrl, restRequest, 
                     delegate(HttpStatusCode statusCode, string statusDescription, byte[] model )

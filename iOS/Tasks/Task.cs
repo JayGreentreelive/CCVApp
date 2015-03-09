@@ -124,6 +124,24 @@ namespace iOS
         }
 
         /// <summary>
+        /// Called when the app is coming active, like from the Task Switcher. This
+        /// can be called without WillEnterForeground being called, if the Task Switcher is 
+        /// invoked while the app is active, and the app is picked.
+        /// This is probably the more important of the two.
+        /// </summary>
+        public virtual void OnActivated( )
+        {
+        }
+
+        /// <summary>
+        /// Called then when app comes back from being backgrounded. Good opportunity
+        /// to re-init things like Idle Timer disabling.
+        /// </summary>
+        public virtual void WillEnterForeground( )
+        {
+        }
+
+        /// <summary>
         /// Called when the application will go into the background.
         /// This is NOT called when the task goes into the background.
         /// </summary>

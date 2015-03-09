@@ -10,11 +10,14 @@ namespace iOS
     public class NewsTask : Task
     {
         NewsMainUIViewController MainPageVC { get; set; }
+        TaskUIViewController ActiveViewController { get; set; }
 
         public NewsTask( string storyboardName ) : base( storyboardName )
         {
             MainPageVC = Storyboard.InstantiateViewController( "MainPageViewController" ) as NewsMainUIViewController;
             MainPageVC.Task = this;
+
+            ActiveViewController = MainPageVC;
         }
 
         public override void MakeActive( TaskUINavigationController parentViewController, NavToolbar navToolbar )
@@ -34,6 +37,8 @@ namespace iOS
 
         public override void WillShowViewController(UIViewController viewController)
         {
+            ActiveViewController = (TaskUIViewController) viewController;
+
             // turn off the share & create buttons
             NavToolbar.SetShareButtonEnabled( false, null );
             NavToolbar.SetCreateButtonEnabled( false, null );
@@ -76,9 +81,39 @@ namespace iOS
             base.MakeInActive( );
         }
 
-        public override void AppOnResignActive( )
+        public override void OnActivated( )
+        {
+            base.OnActivated( );
+
+            ActiveViewController.OnActivated( );
+        }
+
+        public override void WillEnterForeground()
+        {
+            base.WillEnterForeground();
+
+            ActiveViewController.WillEnterForeground( );
+        }
+
+        public override void AppOnResignActive()
         {
             base.AppOnResignActive( );
+
+            ActiveViewController.AppOnResignActive( );
+        }
+
+        public override void AppDidEnterBackground()
+        {
+            base.AppDidEnterBackground();
+
+            ActiveViewController.AppDidEnterBackground( );
+        }
+
+        public override void AppWillTerminate()
+        {
+            base.AppWillTerminate( );
+
+            ActiveViewController.AppWillTerminate( );
         }
     }
 }

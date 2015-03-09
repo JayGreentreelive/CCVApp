@@ -433,7 +433,11 @@ namespace iOS
             // setup the Notification Banner for Taking Notes
             Billboard = new NotificationBillboard( View.Bounds.Width, View.Bounds.Height );
             Billboard.SetLabel( SpringboardStrings.TakeNotesNotificationIcon, 
+                                ControlStylingConfig.Icon_Font_Primary,
+                                ControlStylingConfig.Small_FontSize,
                                 SpringboardStrings.TakeNotesNotificationLabel, 
+                                ControlStylingConfig.Small_Font_Light,
+                                ControlStylingConfig.Small_FontSize,
                                 ControlStylingConfig.TextField_ActiveTextColor, 
                                 SpringboardConfig.Element_SelectedColor, 
                 delegate 
@@ -451,7 +455,6 @@ namespace iOS
             );
 
             Billboard.Layer.Position = new CGPoint( Billboard.Layer.Position.X, NavViewController.NavigationBar.Frame.Height );
-            Billboard.Hide( );
         }
 
         void SyncRockData( )
@@ -719,14 +722,22 @@ namespace iOS
             // yes, if it's a weekend and we're at CCV (that part will come later)
             if ( DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday )
             {
-                if ( RockLaunchData.Instance.Data.Series.Count > 0 )
+                if ( RockLaunchData.Instance.Data.NoteDB.SeriesList.Count > 0 )
                 {
-                        Rock.Mobile.Threading.Util.PerformOnUIThread( 
-                            delegate
-                            {
-                                Billboard.Reveal( );
-                                View.BringSubviewToFront( Billboard );
-                            } );
+                    // kick off a timer to reveal the billboard, because we 
+                    // don't want to do it the MOMENT the view appears.
+                    System.Timers.Timer timer = new System.Timers.Timer();
+                    timer.AutoReset = false;
+                    timer.Interval = 1;
+                    timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>
+                        {
+                            Rock.Mobile.Threading.Util.PerformOnUIThread( 
+                                delegate
+                                {
+                                    Billboard.Reveal( );
+                                } );
+                        };
+                    timer.Start( );
                 }
             }
         }
@@ -893,7 +904,7 @@ namespace iOS
             NavViewController.OnActivated( );
 
             // if it's been longer than N hours, resync rock.
-            if ( DateTime.Now.Subtract( LastRockSync ).Hours > SpringboardConfig.SyncRockHoursFrequency )
+            if ( DateTime.Now.Subtract( LastRockSync ).TotalHours > SpringboardConfig.SyncRockHoursFrequency )
             {
                 SyncRockData( );
             }

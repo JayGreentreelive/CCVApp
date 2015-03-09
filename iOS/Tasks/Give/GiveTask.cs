@@ -8,11 +8,14 @@ namespace iOS
     public class GiveTask : Task
     {
         TaskUIViewController MainPageVC { get; set; }
+        TaskUIViewController ActiveViewController { get; set; }
 
         public GiveTask( string storyboardName ) : base( storyboardName )
         {
             MainPageVC = Storyboard.InstantiateViewController( "MainPageViewController" ) as TaskUIViewController;
             MainPageVC.Task = this;
+
+            ActiveViewController = MainPageVC;
         }
 
         public override void MakeActive( TaskUINavigationController parentViewController, NavToolbar navToolbar )
@@ -30,6 +33,8 @@ namespace iOS
 
         public override void WillShowViewController(UIViewController viewController)
         {
+            ActiveViewController = (TaskUIViewController)viewController;
+
             // turn off the share & create buttons
             NavToolbar.SetShareButtonEnabled( false, null );
             NavToolbar.SetCreateButtonEnabled( false, null );
@@ -51,6 +56,41 @@ namespace iOS
 
             // if they touched a dead area, reveal the nav toolbar again.
             NavToolbar.RevealForTime( 3.0f );
+        }
+
+        public override void OnActivated( )
+        {
+            base.OnActivated( );
+
+            ActiveViewController.OnActivated( );
+        }
+
+        public override void WillEnterForeground()
+        {
+            base.WillEnterForeground();
+
+            ActiveViewController.WillEnterForeground( );
+        }
+
+        public override void AppOnResignActive()
+        {
+            base.AppOnResignActive( );
+
+            ActiveViewController.AppOnResignActive( );
+        }
+
+        public override void AppDidEnterBackground()
+        {
+            base.AppDidEnterBackground();
+
+            ActiveViewController.AppDidEnterBackground( );
+        }
+
+        public override void AppWillTerminate()
+        {
+            base.AppWillTerminate( );
+
+            ActiveViewController.AppWillTerminate( );
         }
     }
 }

@@ -54,13 +54,18 @@ namespace Droid
 
                     giveButton.Click += (object sender, EventArgs e ) =>
                     {
-                            // when give is clicked, launch the browser
-                        var uri = Android.Net.Uri.Parse( GiveConfig.GiveUrl );
-                        var intent = new Intent(Intent.ActionView, uri); 
-                        StartActivity(intent);
+                        LaunchGive( );
                     };
 
                     return view;
+                }
+
+                public void LaunchGive( )
+                {
+                    // when give is clicked, launch the browser
+                    var uri = Android.Net.Uri.Parse( GiveConfig.GiveUrl );
+                    var intent = new Intent( Intent.ActionView, uri ); 
+                    ((Activity)Rock.Mobile.PlatformSpecific.Android.Core.Context).StartActivity( intent );
                 }
 
                 public void OnPrepared( MediaPlayer mp )

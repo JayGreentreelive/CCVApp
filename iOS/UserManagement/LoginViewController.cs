@@ -11,8 +11,8 @@ using CCVApp.Shared.Strings;
 using CCVApp.Shared;
 using Rock.Mobile.Threading;
 using Rock.Mobile.PlatformSpecific.iOS.UI;
-using Rock.Mobile.PlatformSpecific.iOS.Animation;
 using System.Collections.Generic;
+using Rock.Mobile.Animation;
 
 namespace iOS
 {

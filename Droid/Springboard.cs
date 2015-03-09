@@ -311,10 +311,9 @@ namespace Droid
             RelativeLayout layout = view.FindViewById<RelativeLayout>( Resource.Id.springboard_profile_image_layout );
             layout.SetBackgroundColor( Color.Transparent );
 
-            Rock.Mobile.PlatformSpecific.Android.Graphics.CircleView circle = new Rock.Mobile.PlatformSpecific.Android.Graphics.CircleView( Activity.BaseContext );
+            CircleView circle = new Rock.Mobile.PlatformSpecific.Android.Graphics.CircleView( Activity.BaseContext );
 
             //note: these are converted from dp to pixels, so don't do it here.
-            circle.Radius = 70;
             circle.StrokeWidth = 4;
 
             circle.Color = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
@@ -428,7 +427,11 @@ namespace Droid
 
             Billboard = new NotificationBillboard( displayWidth, Rock.Mobile.PlatformSpecific.Android.Core.Context );
             Billboard.SetLabel( SpringboardStrings.TakeNotesNotificationIcon, 
+                                ControlStylingConfig.Icon_Font_Primary,
+                                ControlStylingConfig.Small_FontSize,
                                 SpringboardStrings.TakeNotesNotificationLabel, 
+                                ControlStylingConfig.Small_Font_Light,
+                                ControlStylingConfig.Small_FontSize,
                                 ControlStylingConfig.TextField_ActiveTextColor, 
                                 SpringboardConfig.Element_SelectedColor, 
                 delegate
@@ -677,7 +680,7 @@ namespace Droid
             System.Console.WriteLine( "Springboard OnResume()" );
 
             // if it's been longer than N hours, resync rock.
-            if ( DateTime.Now.Subtract( LastRockSync ).Hours > SpringboardConfig.SyncRockHoursFrequency )
+            if ( DateTime.Now.Subtract( LastRockSync ).TotalHours > SpringboardConfig.SyncRockHoursFrequency )
             {
                 SyncRockData( );
             }
@@ -713,7 +716,7 @@ namespace Droid
             // yes, if it's a weekend and we're at CCV (that part will come later)
             if ( DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday )
             {
-                if ( RockLaunchData.Instance.Data.Series.Count > 0 )
+                if ( RockLaunchData.Instance.Data.NoteDB.SeriesList.Count > 0 )
                 {
                     // kick off a timer to reveal the billboard, because we 
                     // don't want to do it the MOMENT the view appears.

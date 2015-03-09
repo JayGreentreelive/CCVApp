@@ -164,6 +164,11 @@ namespace Droid
                 public string NoteName { get; set; }
 
                 /// <summary>
+                /// If the style sheet URLs aren't absolute, this is the domain to prefix.
+                /// </summary>
+                public string StyleSheetDefaultHostDomain { get; set; }
+
+                /// <summary>
                 /// True when a user note is being moved. Used to know whether to allow 
                 /// panning for the springboard or not
                 /// </summary>
@@ -573,7 +578,7 @@ namespace Droid
                 {
                     try
                     {
-                        Note.HandlePreReqs( noteXml, styleXml, OnPreReqsComplete );
+                        Note.HandlePreReqs( noteXml, styleXml, StyleSheetDefaultHostDomain, OnPreReqsComplete );
                     } 
                     catch( Exception e )
                     {

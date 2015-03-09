@@ -6,6 +6,47 @@ namespace CCVApp.Shared
 {
     namespace Notes.Model
     {
+        public class NoteDB
+        {
+            public NoteDB( )
+            {
+                HostDomain = "";
+                SeriesList = new List<Series>( );
+            }
+
+            /// <summary>
+            /// Should be called after a successful creation / download, 
+            /// </summary>
+            public void MakeURLsAbsolute( )
+            {
+                foreach ( Series singleSeries in SeriesList )
+                {
+                    foreach ( Series.Message message in singleSeries.Messages )
+                    {
+                        message.MakeURLsAbsolute( HostDomain );
+                    }
+
+                    singleSeries.MakeURLsAbsolute( HostDomain );
+                }
+            }
+
+            /// <summary>
+            /// The root server that the series are stored on, allowing the series themselves
+            /// to define locations in relative terms, rather than absolute
+            /// </summary>
+            public string HostDomain { get; set; }
+
+
+            /// <summary>
+            /// The list of sermon series and messages. This goes here so that
+            /// we can shortcut the user to the latest message from the main page if they want.
+            /// It also allows us to store them so they don't need to be downloaded every time they
+            /// visit the Messages page.
+            /// </summary>
+            /// <value>The series.</value>
+            public List<Series> SeriesList { get; set; }
+        }
+
         /// <summary>
         /// Represents a "series" of weekly messages, like "At The Movies", "White Christmas", or "Wisdom"
         /// </summary>
@@ -32,6 +73,30 @@ namespace CCVApp.Shared
                     AudioUrl = audioUrl;
                     WatchUrl = watchUrl;
                     ShareUrl = shareUrl;
+                }
+
+                public void MakeURLsAbsolute( string hostDomain )
+                {
+                    // for any URL that isn't absolute, prefix the host domain
+                    if ( _AudioUrl != null && _AudioUrl.Contains( "http://" ) == false )
+                    {
+                        _AudioUrl = _AudioUrl.Insert( 0, hostDomain );
+                    }
+
+                    if ( _NoteUrl != null && _NoteUrl.Contains( "http://" ) == false )
+                    {
+                        _NoteUrl = _NoteUrl.Insert( 0, hostDomain );
+                    }
+
+                    if ( _WatchUrl != null && _WatchUrl.Contains( "http://" ) == false )
+                    {
+                        _WatchUrl = _WatchUrl.Insert( 0, hostDomain );
+                    }
+
+                    if ( _ShareUrl != null && _ShareUrl.Contains( "http://" ) == false )
+                    {
+                        _ShareUrl = _ShareUrl.Insert( 0, hostDomain );
+                    }
                 }
 
                 /// <summary>
@@ -170,6 +235,19 @@ namespace CCVApp.Shared
                 DateRanges = dateRanges;
 
                 Messages = messages;
+            }
+
+            public void MakeURLsAbsolute( string hostDomain )
+            {
+                if ( _BillboardUrl != null && _BillboardUrl.Contains( "http://" ) == false )
+                {
+                    _BillboardUrl = _BillboardUrl.Insert( 0, hostDomain );
+                }
+
+                if ( _ThumbnailUrl != null && _ThumbnailUrl.Contains( "http://" ) == false )
+                {
+                    _ThumbnailUrl = _ThumbnailUrl.Insert( 0, hostDomain );
+                }
             }
 
             /// <summary>

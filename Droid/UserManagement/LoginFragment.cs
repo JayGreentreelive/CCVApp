@@ -17,9 +17,9 @@ using CCVApp.Shared.Strings;
 using Rock.Mobile.PlatformUI;
 using Android.Webkit;
 using Rock.Mobile.Threading;
-using Rock.Mobile.PlatformSpecific.Android.Animation;
 using Android.Views.InputMethods;
 using Rock.Mobile.PlatformSpecific.Android.UI;
+using Rock.Mobile.Animation;
 
 namespace Droid
 {

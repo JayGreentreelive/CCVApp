@@ -106,6 +106,7 @@
     <Compile Include="Tasks\ConnectTask\GroupFinderFragment.cs" />
     <Compile Include="Tasks\PrayerTask\PrayerPostFragment.cs" />
     <Compile Include="Tasks\NewsTask\NewsWebFragment.cs" />
+    <Compile Include="Tasks\NotesTask\NotesListenFragment.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />

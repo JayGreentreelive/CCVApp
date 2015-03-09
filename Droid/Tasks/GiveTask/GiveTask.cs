@@ -1,6 +1,7 @@
 ﻿using System;
 using Android.App;
 using Android.Views;
+using CCVApp.Shared.Config;
 
 namespace Droid
 {
@@ -33,6 +34,17 @@ namespace Droid
                     base.OnUp( e );
 
                     NavbarFragment.NavToolbar.RevealForTime( 3.00f );
+                }
+
+                public override void Activate(bool forResume)
+                {
+                    base.Activate(forResume);
+
+                    if ( forResume == false )
+                    {
+                        // temp hack to see if we like Give auto launching or not
+                        MainPage.LaunchGive( );
+                    }
                 }
             }
         }

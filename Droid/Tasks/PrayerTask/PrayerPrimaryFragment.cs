@@ -197,10 +197,11 @@ namespace Droid
                         prayedLabel.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                         prayedLayout.AddView( prayedLabel );
 
-                        Rock.Mobile.PlatformSpecific.Android.Graphics.CircleView tappedCircle = new Rock.Mobile.PlatformSpecific.Android.Graphics.CircleView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
-                        tappedCircle.LayoutParameters = new LinearLayout.LayoutParams( 75, ViewGroup.LayoutParams.MatchParent );
+                        CircleView tappedCircle = new Rock.Mobile.PlatformSpecific.Android.Graphics.CircleView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                        tappedCircle.LayoutParameters = new LinearLayout.LayoutParams( 30, ViewGroup.LayoutParams.MatchParent );
+                        ((LinearLayout.LayoutParams)tappedCircle.LayoutParameters).LeftMargin = 20;
+                        ((LinearLayout.LayoutParams)tappedCircle.LayoutParameters).RightMargin = 20;
                         tappedCircle.Color = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor );
-                        tappedCircle.Radius = 8;
                         tappedCircle.StrokeWidth = 1;
                         prayedLayout.AddView( tappedCircle );
 

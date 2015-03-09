@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using CCVApp.Shared.Config;
 using CCVApp.Shared.Strings;
 using System.Drawing;
+using Rock.Mobile.Animation;
 
 namespace CCVApp
 {
@@ -28,7 +29,8 @@ namespace CCVApp
                 /// <summary>
                 /// The view representing the note's "Anchor"
                 /// </summary>
-                protected PlatformLabel Anchor { get; set; }
+                protected PlatformCircleView Anchor { get; set; }
+                protected PlatformLabel NoteIcon { get; set; }
                 protected RectangleF AnchorFrame { get; set; }
 
                 /// <summary>
@@ -115,12 +117,17 @@ namespace CCVApp
                 /// <value>The position scalar.</value>
                 PointF PositionTransform { get; set; }
 
+                SizeF NoteIconOpenSize { get; set; }
+                SizeF NoteIconClosedSize { get; set; }
+
+
                 protected override void Initialize( )
                 {
                     base.Initialize( );
 
                     TextField = PlatformTextField.Create( );
-                    Anchor = PlatformLabel.Create( );
+                    Anchor = PlatformCircleView.Create( );
+                    NoteIcon = PlatformLabel.Create( );
                     DeleteButton = PlatformLabel.Create( );
                 }
 
@@ -214,19 +221,28 @@ namespace CCVApp
                         }
                     }
 
+                    // Setup the anchor BG
+                    int area = (int) Rock.Mobile.Graphics.Util.UnitToPx( 50 );
+                    Anchor.BackgroundColor = NoteConfig.UserNote_AnchorColor;
+                    Anchor.Bounds = new RectangleF( 0, 0, area, area );
+
                     // Setup the anchor color
-                    Anchor.Text = NoteConfig.UserNote_Icon;
-                    Anchor.TextColor = NoteConfig.UserNote_IconColor;
-                    Anchor.SetFont( ControlStylingConfig.Icon_Font_Primary, NoteConfig.UserNote_IconSize );
-                    Anchor.SizeToFit();
-                    if( mStyle.mBackgroundColor.HasValue )
-                    {
-                        Anchor.BackgroundColor = mStyle.mBackgroundColor.Value;
-                    }
-                    else
-                    {
-                        Anchor.BackgroundColor = 0;
-                    }
+                    NoteIcon.Text = NoteConfig.UserNote_Icon;
+                    NoteIcon.TextColor = NoteConfig.UserNote_IconColor;
+
+                    // get the small and large sizes for the note icon, so we can animate correctly
+                    NoteIcon.SetFont( ControlStylingConfig.Icon_Font_Secondary, NoteConfig.UserNote_IconOpenSize );
+                    NoteIcon.Bounds = new RectangleF( 0, 0, area, 0 );
+                    NoteIcon.SizeToFit();
+                    NoteIconOpenSize = NoteIcon.Bounds.Size;
+
+                    NoteIcon.SetFont( ControlStylingConfig.Icon_Font_Secondary, NoteConfig.UserNote_IconClosedSize );
+                    NoteIcon.Bounds = new RectangleF( 0, 0, area, 0 );
+                    NoteIcon.SizeToFit( );
+                    NoteIconClosedSize = NoteIcon.Bounds.Size;
+
+                    //NoteIcon.BackgroundColor = 0xFFFF00FF;
+
 
                     // store the width of the screen so we know
                     // what the remaining width is when moving the note around.
@@ -238,10 +254,10 @@ namespace CCVApp
 
                     // Dont let the note be any wider than the screen - twice the min width. This allows a little
                     // free play so it doesn't feel like the note is always attached to the right edge.
-                    MaxNoteWidth = Math.Min( ScreenWidth - (MinNoteWidth * 2), (MinNoteWidth * 6) );
+                    MaxNoteWidth = Math.Min( ScreenWidth - MinNoteWidth, (MinNoteWidth * 6) );
 
                     // set the allowed X/Y so we don't let the user move the note off-screen.
-                    MaxAllowedX = ( ScreenWidth - MinNoteWidth );
+                    MaxAllowedX = ( ScreenWidth - MinNoteWidth - (Anchor.Bounds.Width / 2) );
                     MaxAllowedY = ( parentParams.Height - Anchor.Bounds.Height );
 
                     float width = Math.Max( MinNoteWidth, Math.Min( MaxNoteWidth, MaxAllowedX - startPos.X ) );
@@ -254,14 +270,7 @@ namespace CCVApp
                     DeleteButton.SetFont( ControlStylingConfig.Icon_Font_Primary, NoteConfig.UserNote_DeleteIconSize );
                     DeleteButton.Hidden = true;
                     DeleteButton.SizeToFit( );
-                    if( mStyle.mBackgroundColor.HasValue )
-                    {
-                        DeleteButton.BackgroundColor = mStyle.mBackgroundColor.Value;
-                    }
-                    else
-                    {
-                        DeleteButton.BackgroundColor = 0;
-                    }
+                    DeleteButton.BackgroundColor = 0;
 
 
 
@@ -269,20 +278,23 @@ namespace CCVApp
                     Anchor.Position = startPos;
                     AnchorFrame = Anchor.Frame;
 
-                    AnchorTouchMaxDist = AnchorFrame.Width;
+                    AnchorTouchMaxDist = AnchorFrame.Width / 2;
                     AnchorTouchMaxDist *= AnchorTouchMaxDist;
 
 
                     // validate its bounds
                     ValidateBounds( );
 
+                    NoteIcon.Position = new PointF( Anchor.Frame.Left + (Anchor.Frame.Width - NoteIconClosedSize.Width) / 2, 
+                                                    Anchor.Frame.Top + (Anchor.Frame.Height - NoteIconClosedSize.Height) / 2 );
+
                     // set the position for the delete button
                     DeleteButton.Position = new PointF( AnchorFrame.Left - DeleteButton.Bounds.Width / 2, 
                                                         AnchorFrame.Top - DeleteButton.Bounds.Height / 2 );
 
                     // set the actual note textfield relative to the anchor
-                    TextField.Position = new PointF( AnchorFrame.Left, 
-                                                     AnchorFrame.Bottom );
+                    TextField.Position = new PointF( AnchorFrame.Left + AnchorFrame.Width / 2, 
+                                                     AnchorFrame.Top + AnchorFrame.Height / 2 );
 
                     // set the starting text if it was provided
                     if( startingText != null )
@@ -471,9 +483,24 @@ namespace CCVApp
                     if ( TouchInAnchorRange( TrackingLastPos ) && State == TouchState.Hold )
                     {
                         // reveal the delete button
-                        Rock.Mobile.Threading.Util.PerformOnUIThread( delegate {  DeleteButton.Hidden = false; } );
+                        Rock.Mobile.Threading.Util.PerformOnUIThread( delegate {  ShowDeleteUI( ); } );
                         DeleteEnabled = true;
                     }
+                }
+
+                void ShowDeleteUI( )
+                {
+                    DeleteButton.Hidden = false;
+
+                    SimpleAnimator_Color colorAnimator = new SimpleAnimator_Color( NoteConfig.UserNote_AnchorColor, NoteConfig.UserNote_DeleteAnchorColor, .15f, delegate(float percent, object value )
+                        {
+                            Anchor.BackgroundColor = (uint)value;
+                        }
+                        ,
+                        delegate
+                        {
+                        } );
+                    colorAnimator.Start( );
                 }
 
                 public void Dispose( object masterView )
@@ -499,6 +526,16 @@ namespace CCVApp
                         Console.WriteLine( "Clearing Delete Mode" );
 
                         DeleteButton.Hidden = true;
+
+                        SimpleAnimator_Color colorAnimator = new SimpleAnimator_Color( NoteConfig.UserNote_DeleteAnchorColor, NoteConfig.UserNote_AnchorColor, .15f, delegate(float percent, object value )
+                            {
+                                Anchor.BackgroundColor = (uint)value;
+                            }
+                            ,
+                            delegate
+                            {
+                            } );
+                        colorAnimator.Start( );
                     }
                 }
 
@@ -532,9 +569,11 @@ namespace CCVApp
                     TextField.Position = new PointF( TextField.Position.X + xOffset, 
                                                      TextField.Position.Y + yOffset );
 
-
                     Anchor.Position = new PointF( Anchor.Position.X + xOffset,
                                                   Anchor.Position.Y + yOffset );
+
+                    NoteIcon.Position = new PointF( NoteIcon.Position.X + xOffset,
+                                                    NoteIcon.Position.Y + yOffset );
 
                     DeleteButton.Position = new PointF( DeleteButton.Position.X + xOffset,
                                                         DeleteButton.Position.Y + yOffset );
@@ -543,7 +582,7 @@ namespace CCVApp
 
 
                     // Scale the textfield to no larger than the remaining width of the screen 
-                    float width = Math.Max( MinNoteWidth, Math.Min( MaxNoteWidth, ScreenWidth - AnchorFrame.X ) );
+                    float width = Math.Max( MinNoteWidth, Math.Min( MaxNoteWidth, ScreenWidth - (AnchorFrame.X + (AnchorFrame.Width / 2)) ) );
                     TextField.Bounds = new RectangleF( 0, 0, width, TextField.Bounds.Height);
                 }
 
@@ -558,14 +597,15 @@ namespace CCVApp
                     AnchorFrame = Anchor.Frame;
 
                     // Scale the textfield to no larger than the remaining width of the screen 
-                    float width = Math.Max( MinNoteWidth, Math.Min( MaxNoteWidth, ScreenWidth - AnchorFrame.X ) );
+                    float width = Math.Max( MinNoteWidth, Math.Min( MaxNoteWidth, ScreenWidth - (AnchorFrame.X + (AnchorFrame.Width / 2)) ) );
                     TextField.Bounds = new RectangleF( 0, 0, width, TextField.Bounds.Height);
                 }
 
                 public override void AddToView( object obj )
                 {
-                    TextField.AddAsSubview( obj );
                     Anchor.AddAsSubview( obj );
+                    TextField.AddAsSubview( obj );
+                    NoteIcon.AddAsSubview( obj );
                     DeleteButton.AddAsSubview( obj );
 
                     TryAddDebugLayer( obj );
@@ -573,23 +613,120 @@ namespace CCVApp
 
                 public override void RemoveFromView( object obj )
                 {
-                    TextField.RemoveAsSubview( obj );
                     Anchor.RemoveAsSubview( obj );
+                    TextField.RemoveAsSubview( obj );
+                    NoteIcon.RemoveAsSubview( obj );
                     DeleteButton.RemoveAsSubview( obj );
 
                     TryRemoveDebugLayer( obj );
                 }
 
+                bool Animating { get; set; }
                 public void OpenNote()
                 {
+                    AnimateNoteIcon( true );
+
+                    // open the text field
                     TextField.AnimateOpen( );
                     Console.WriteLine( "Opening Note" );
                 }
 
                 public void CloseNote()
                 {
+                    AnimateNoteIcon( false );
+
+                    // close the text field
                     TextField.AnimateClosed( );
                     Console.WriteLine( "Closing Note" );
+                }
+
+                PointF GetNoteIconPos( bool open )
+                {
+                    if ( open == true )
+                    {
+                        // the / 4 is a bit of a hack. We don't actually resize the icon, so knowing that it's smaller, this
+                        // correctly positions it within the anchor. It'll have to change if the sizing of the icons change.
+                        //return new PointF( Anchor.Frame.Left + ( Anchor.Frame.Width - NoteIconOpenSize.Width ) / 5, 
+                          //  Anchor.Frame.Top - NoteIconOpenSize.Height / 4 );
+
+                        return new PointF( Anchor.Frame.Left + ( Anchor.Frame.Width - NoteIconOpenSize.Width ) / 2, 
+                                          Anchor.Frame.Top );
+                    }
+                    else
+                    {
+                        return new PointF( Anchor.Frame.Left + (Anchor.Frame.Width - NoteIconClosedSize.Width) / 2, 
+                            Anchor.Frame.Top + (Anchor.Frame.Height - NoteIconClosedSize.Height) / 2 );
+                    }
+                }
+
+                void AnimateNoteIcon( bool open )
+                {
+                    if ( Animating == false )
+                    {
+                        Animating = true;
+
+                        SizeF startSize = NoteIcon.Bounds.Size;
+                        SizeF endSize;
+
+                        PointF startPos = NoteIcon.Position;
+                        PointF endPos = GetNoteIconPos( open );
+
+                        float startTypeSize;
+                        float endTypeSize;
+
+                        float animTime = .2f;
+
+                        // the text must always be smaller than the bounding box,
+                        // so we'll scale the typeSize anim time to be FASTER when opening 
+                        // and SLOWER when closing.
+                        float sizeAnimTimeScalar;
+
+                        // setup the target values based on whether we're opening or closing
+                        if ( open == true )
+                        {
+                            endSize = NoteIconOpenSize;
+
+                            startTypeSize = NoteConfig.UserNote_IconClosedSize;
+                            endTypeSize = NoteConfig.UserNote_IconOpenSize;
+
+                            sizeAnimTimeScalar = .95f;
+                        }
+                        else
+                        {
+                            endSize = NoteIconClosedSize;
+
+                            startTypeSize = NoteConfig.UserNote_IconOpenSize;
+                            endTypeSize = NoteConfig.UserNote_IconClosedSize;
+
+                            sizeAnimTimeScalar = 1.05f;
+                        }
+
+                        // size...
+                        SimpleAnimator_SizeF sizeAnimator = new SimpleAnimator_SizeF( startSize, endSize, animTime, 
+                                                                delegate(float percent, object value )
+                            {
+                                SizeF currSize = (SizeF)value;
+                                NoteIcon.Bounds = new RectangleF( 0, 0, currSize.Width, currSize.Height );
+                            }, null );
+
+                        sizeAnimator.Start( );
+
+                        // pos...
+                        SimpleAnimator_PointF posAnimator = new SimpleAnimator_PointF( startPos, endPos, animTime, 
+                                                                delegate(float percent, object value )
+                            {
+                                NoteIcon.Position = (PointF)value;
+                            }, null );
+                        posAnimator.Start( );
+
+                        // font typesize...
+                        SimpleAnimator_Float floatAnimator = new SimpleAnimator_Float( startTypeSize, endTypeSize, animTime * sizeAnimTimeScalar, 
+                                                                 delegate(float percent, object value )
+                            {
+                                NoteIcon.SetFont( ControlStylingConfig.Icon_Font_Secondary, (float)value );
+                            }, delegate { Animating = false; } );
+                        floatAnimator.Start( );
+                    }
                 }
 
                 public override RectangleF GetFrame( )
@@ -599,7 +736,10 @@ namespace CCVApp
 
                 public override void BuildHTMLContent( ref string htmlStream, List<IUIControl> userNotes )
                 {
-                    htmlStream += "<br><p><b>User Note - " + TextField.Text + "</b></p>";
+                    if ( string.IsNullOrEmpty( TextField.Text ) == false )
+                    {
+                        htmlStream += "<br><p><b>User Note - " + TextField.Text + "</b></p>";
+                    }
                 }
 
                 public Notes.Model.NoteState.UserNoteContent GetContent( )

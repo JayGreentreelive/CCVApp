@@ -65,7 +65,7 @@ namespace iOS
                     BottomBanner.TextAlignment = UITextAlignment.Center;
 
                     BottomBanner.SizeToFit( );
-                    BottomBanner.Bounds = new CGRect( 0, 0, Bounds.Width, BottomBanner.Bounds.Height + 10 );
+                    BottomBanner.Bounds = new CGRect( 0, 0, parentSize.Width, BottomBanner.Bounds.Height + 10 );
                     BottomBanner.Layer.Position = new CGPoint( 0, Title.Frame.Bottom + 5 );
                     AddSubview( BottomBanner );
                 }

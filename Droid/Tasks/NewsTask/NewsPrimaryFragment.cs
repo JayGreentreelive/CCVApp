@@ -148,14 +148,21 @@ namespace Droid
 
                         newsEntry.News = rockEntry;
 
-                        bool needImage = TryLoadCachedImage( newsEntry );
-                        if ( needImage )
+                        TryLoadCachedImage( newsEntry );
+                    }
+
+                    ListView.Adapter = new NewsArrayAdapter( this, News, Placeholder );
+                }
+
+                public void DownloadImages( )
+                {
+                    foreach ( NewsEntry newsEntry in News )
+                    {
+                        if ( newsEntry.News.ImageName == null )
                         {
                             FileCache.Instance.DownloadImageToCache( newsEntry.News.ImageURL, newsEntry.News.ImageName, delegate { SeriesImageDownloaded( ); } );
                         }
                     }
-
-                    ListView.Adapter = new NewsArrayAdapter( this, News, Placeholder );
                 }
 
                 bool TryLoadCachedImage( NewsEntry entry )

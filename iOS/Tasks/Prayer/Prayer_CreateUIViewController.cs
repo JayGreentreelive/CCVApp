@@ -9,7 +9,7 @@ using CoreGraphics;
 using CCVApp.Shared.Config;
 using CCVApp.Shared.Network;
 using Rock.Mobile.PlatformSpecific.iOS.UI;
-using Rock.Mobile.PlatformSpecific.iOS.Animation;
+using Rock.Mobile.Animation;
 
 namespace iOS
 {
@@ -274,6 +274,11 @@ namespace iOS
             {
                 // we're going to show it, so hide the nav bar
                 Task.NavToolbar.Reveal( false );
+
+                // force the keyboard to hide.
+                PrayerRequest.ResignFirstResponder( );
+                FirstNameText.ResignFirstResponder( );
+                LastNameText.ResignFirstResponder( );
             }
 
             PickerAdjustManager.TogglePicker( enabled );

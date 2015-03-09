@@ -14,7 +14,7 @@ using CCVApp.Shared;
 using Rock.Mobile.PlatformSpecific.iOS.UI;
 using CCVApp.Shared.Strings;
 using CCVApp.Shared.Analytics;
-using Rock.Mobile.PlatformSpecific.iOS.Animation;
+using Rock.Mobile.Animation;
 
 namespace iOS
 {

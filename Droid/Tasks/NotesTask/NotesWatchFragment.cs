@@ -100,7 +100,7 @@ namespace Droid
                     else
                     {
                         // otherwise, resume where we left off
-                        mp.SeekTo( (int)CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingVideoPos );
+                        mp.SeekTo( (int)CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaPos );
                     }
                 }
 
@@ -173,12 +173,12 @@ namespace Droid
                         float playbackPerc = (float)VideoPlayer.CurrentPosition / (float)VideoPlayer.Duration;
                         if ( playbackPerc > .10f && playbackPerc < .95f )
                         {
-                            CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingVideoPos = VideoPlayer.CurrentPosition;
+                            CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaPos = VideoPlayer.CurrentPosition;
                         }
                         else
                         {
                             // otherwise plan on starting from the beginning
-                            CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingVideoPos = 0;
+                            CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaPos = 0;
                         }
                     }
 

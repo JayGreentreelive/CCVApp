@@ -101,6 +101,7 @@ namespace CCVApp.Shared
             public const string BrowseSeries = "Browse Series";
             public const string Read = "Read";
             public const string Watch = "Watch";
+            public const string Listen = "Listen";
 
             protected MessageAnalytic( ) : base( )
             {
@@ -109,6 +110,7 @@ namespace CCVApp.Shared
                 Categories.Add( new Category( BrowseSeries, true ) );
                 Categories.Add( new Category( Read, true ) );
                 Categories.Add( new Category( Watch, true ) );
+                Categories.Add( new Category( Listen, true ) );
             }
 
             public static MessageAnalytic Instance = new MessageAnalytic( );

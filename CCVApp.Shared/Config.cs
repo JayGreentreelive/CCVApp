@@ -64,6 +64,9 @@ namespace CCVApp
                 public const int NeighborhoodGroupGeoFenceValueId = 48;
                 public const int NeighborhoodGroupValueId = 49;
                 public const int GroupLocationTypeHomeValueId = 19;
+                public const int GroupMemberStatus_Pending_ValueId = 2;
+                public const int ApplicationGroup_PhotoRequest_ValueId = 1207885;
+                public const int GroupMemberRole_Member_ValueId = 59;
 
                 /// <summary>
                 /// iOS only, this controls what style of keyboard is used for PLATFORM textFields.
@@ -316,7 +319,7 @@ namespace CCVApp
                 /// <summary>
                 /// The base URL to look for Notes. (this may be removed in a future version)
                 /// </summary>
-                public const string BaseURL = "http://www.jeredmcferron.com/ccv/";
+                public const string BaseURL = "http://ccv.church/ccvmobile/";
 
                 /// <summary>
                 /// The space between the border of a view and the contents.
@@ -342,12 +345,16 @@ namespace CCVApp
                 /// <summary>
                 /// The icon to use for displaying the user note icon.
                 /// </summary>
-                public const string UserNote_Icon = "";
+                public const string UserNote_Icon = "";
+
+                public const uint UserNote_AnchorColor = 0x77777777;
+                public const uint UserNote_DeleteAnchorColor = 0xFF0000FF;
 
                 /// <summary>
                 /// The size of the font/icon when displaying the user note icon.
                 /// </summary>
-                public const int UserNote_IconSize = 46;
+                public const int UserNote_IconOpenSize = 30;
+                public const int UserNote_IconClosedSize = 46;
 
                 /// <summary>
                 /// The max height of a user note.
@@ -357,23 +364,23 @@ namespace CCVApp
                 /// <summary>
                 /// The color of the font/icon when displaying the user note icon.
                 /// </summary>
-                public const uint UserNote_IconColor = 0x7a1315FF;
+                public const uint UserNote_IconColor = 0x8c8c8cFF;
 
                 /// <summary>
                 /// The icon to use for displaying the delete icon on user notes.
                 /// </summary>
-                public const string UserNote_DeleteIcon = "";
+                public const string UserNote_DeleteIcon = "X";//"";
 
                 /// <summary>
                 /// The color of the font/icon when displaying the delete icon on user notes.
                 /// </summary>
-                public const uint UserNote_DeleteIconColor = 0x444444FF;
+                public const uint UserNote_DeleteIconColor = 0xFFFFFFFF;
 
                 /// <summary>
                 /// The size of the font/icon when displaying the delete icon on user notes.
                 /// </summary>
                 /// 
-                public const int UserNote_DeleteIconSize = 46;
+                public const int UserNote_DeleteIconSize = 32;
 
                 /// <summary>
                 /// The icon to use representing "Listen to this Message"
@@ -413,7 +420,7 @@ namespace CCVApp
                 /// <summary>
                 /// Make Private
                 /// </summary>
-                public const uint Details_Table_IconSize = 64;
+                public const uint Details_Table_IconSize = 62;
                 public const uint Details_Table_IconColor = 0xc43535FF;
             }
 

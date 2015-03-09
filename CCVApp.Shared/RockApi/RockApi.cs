@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System.Net;
 using System.Collections.Generic;
 using Rock.Mobile.Network;
+using CCVApp.Shared.Config;
 
 namespace CCVApp
 {
@@ -56,6 +57,12 @@ namespace CCVApp
                 const string PutProfilePictureEndPoint = "FileUploader.ashx?isBinaryFile=true&fileTypeGuid=03BD8476-8A9F-4078-B628-5B538F967AFC&isTemporary=false";
 
                 /// <summary>
+                /// End point for placing the user in a group of "people who's profile picture needs evaluation"
+                /// Required after they update their profile picture
+                /// </summary>
+                const string GetProfileImageMemberEndPoint = "api/groupmembers/";
+
+                /// <summary>
                 /// End point for retrieving prayer requests
                 /// </summary>
                 const string GetPrayerRequestsEndPoint = "api/prayerrequests/public";
@@ -68,14 +75,15 @@ namespace CCVApp
                 /// <summary>
                 /// End point for getting news items to be displayed in the news section
                 /// </summary>
-                const string GetNewsEndPoint = "api/ContentChannelItems?$filter=ContentChannel/Guid eq guid'EAE51F3E-C27B-4E7C-B9A0-16EB68129637'&LoadAttributes=True";// and Status eq 1";
+                //const string GetNewsEndPoint = "/api/ContentChannelItems?$filter=ContentChannel/Guid eq guid'EAE51F3E-C27B-4E7C-B9A0-16EB68129637' and Status eq '2' and (StartDateTime ge DateTime'2000-02-03' or StartDateTime eq null) and (ExpireDateTime le DateTime'2020-03-30' or ExpireDateTime eq null)&LoadAttributes=True";
+                const string GetNewsEndPoint = "/api/ContentChannelItems?$filter=ContentChannel/Guid eq guid'EAE51F3E-C27B-4E7C-B9A0-16EB68129637' and Status eq '2' and (StartDateTime le DateTime'{0}' or StartDateTime eq null) and (ExpireDateTime ge DateTime'{1}' or ExpireDateTime eq null)&LoadAttributes=True";
 
                 /// <summary>
                 /// End point for retrieving a Group Object
                 /// </summary>
                 //const string GetFamiliesEndPoint = "api/Groups/GetFamilies/{0}?$expand=GroupType,Campus,GroupLocations";
                 const string GetFamiliesEndPoint = "api/Groups/GetFamilies/{0}?$expand=GroupType,Campus,Members/GroupRole,GroupLocations/Location,GroupLocations/GroupLocationTypeValue,GroupLocations/Location/LocationTypeValue";
-
+                //
 
                 /// <summary>
                 /// End point for retrieving all groups near a given address.
@@ -386,6 +394,80 @@ namespace CCVApp
                         } );
                 }
 
+                public class ProfileImageResponse
+                {
+                    public ProfileImageResponse( )
+                    {
+                    }
+
+                    public string Message { get; set; }
+                }
+
+                public void UpdateProfileImageGroup( Rock.Client.Person person, HttpRequest.RequestResult resultHandler )
+                {
+                    // first see if the user is already a member of this group (which is true if they've EVER attempted to update their profile picture.
+                    RestRequest request = GetRockRestRequest( Method.GET );
+                    string requestUrl = BaseUrl + GetProfileImageMemberEndPoint + string.Format( "?$filter=PersonId eq {0} and GroupId eq {1}", person.Id, GeneralConfig.ApplicationGroup_PhotoRequest_ValueId );
+                    Request.ExecuteAsync< List<Rock.Client.GroupMember> >( requestUrl, request, 
+                        delegate(HttpStatusCode statusCode, string statusDescription, List<Rock.Client.GroupMember> model )
+                        {
+                            if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
+                            {
+                                // if it's null, they are NOT in the group and we should POST. if it's valid,
+                                // we can simply update the existing.
+                                if( model.Count == 0 )
+                                {
+                                    request = GetRockRestRequest( Method.POST );
+
+                                    Rock.Client.GroupMember groupMember = new Rock.Client.GroupMember();
+                                    groupMember.Guid = Guid.NewGuid( );
+                                    groupMember.PersonId = person.Id;
+                                    groupMember.GroupMemberStatus = GeneralConfig.GroupMemberStatus_Pending_ValueId;
+                                    groupMember.GroupId = GeneralConfig.ApplicationGroup_PhotoRequest_ValueId;
+                                    groupMember.GroupRoleId = GeneralConfig.GroupMemberRole_Member_ValueId;
+                                    request.AddBody( groupMember );
+
+                                    requestUrl = BaseUrl + GetProfileImageMemberEndPoint;
+
+                                    // send off the request and let the original caller have the result
+                                    Request.ExecuteAsync( requestUrl, request, resultHandler );
+                                }
+                                else
+                                {
+                                    // otherwise, we'll do a PUT
+                                    request = GetRockRestRequest( Method.PUT );
+
+                                    Rock.Client.GroupMember groupMember = new Rock.Client.GroupMember();
+
+                                    // set the status to pending
+                                    groupMember.GroupMemberStatus = GeneralConfig.GroupMemberStatus_Pending_ValueId;
+
+                                    // and copy over all the other data
+                                    groupMember.PersonId = model[ 0 ].PersonId;
+                                    groupMember.Guid = model[ 0 ].Guid;
+                                    groupMember.GroupId = model[ 0 ].GroupId;
+                                    groupMember.GroupRoleId = model[ 0 ].GroupRoleId;
+                                    groupMember.Id = model[ 0 ].Id;
+                                    groupMember.IsSystem = model[ 0 ].IsSystem;
+
+                                    request.AddBody( groupMember );
+
+
+                                    requestUrl = BaseUrl + GetProfileImageMemberEndPoint + string.Format( "{0}", groupMember.Id );
+
+                                    // send off the request and let the original caller have the result
+                                    Request.ExecuteAsync( requestUrl, request, resultHandler );
+                                }
+                            }
+                            else
+                            {
+                                // fail...
+                                resultHandler( statusCode, statusDescription );
+                            }
+                            
+                        } );
+                }
+
                 public void GetPrayerCategories( HttpRequest.RequestResult<List<Rock.Client.Category>> resultHandler )
                 {
                     RestRequest request = GetRockRestRequest( Method.GET );
@@ -429,7 +511,8 @@ namespace CCVApp
                 {
                     // request a profile by the username. If no username is specified, we'll use the logged in user's name.
                     RestRequest request = GetRockRestRequest( Method.GET );
-                    string requestUrl = BaseUrl + GetNewsEndPoint;
+                    string requestUrl = string.Format( BaseUrl + GetNewsEndPoint, DateTime.Now.ToString( "s" ), DateTime.Now.ToString( "s" ) );
+
 
                     // get the raw response
                     Request.ExecuteAsync< List<Rock.Client.ContentChannelItem> >( requestUrl, request, resultHandler );

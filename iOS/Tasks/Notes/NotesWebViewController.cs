@@ -45,6 +45,57 @@ namespace iOS
 
             WebView.Frame = View.Frame;
             Indicator.Layer.Position = new CoreGraphics.CGPoint( View.Frame.Width / 2, View.Frame.Height / 2 );
+
+            UIApplication.SharedApplication.IdleTimerDisabled = true;
+            Console.WriteLine( "Turning idle timer OFF" );
+        }
+
+        public override void ViewDidAppear(bool animated)
+        {
+            base.ViewDidAppear(animated);
+
+            UIApplication.SharedApplication.IdleTimerDisabled = true;
+            Console.WriteLine( "Turning idle timer OFF" );
+        }
+
+        public override void ViewWillDisappear(bool animated)
+        {
+            base.ViewWillDisappear(animated);
+
+            UIApplication.SharedApplication.IdleTimerDisabled = false;
+            Console.WriteLine( "Turning idle timer ON" );
+        }
+
+        public override void OnActivated()
+        {
+            base.OnActivated();
+
+            UIApplication.SharedApplication.IdleTimerDisabled = true;
+            Console.WriteLine( "Turning idle timer OFF" );
+        }
+
+        public override void WillEnterForeground()
+        {
+            base.WillEnterForeground();
+
+            UIApplication.SharedApplication.IdleTimerDisabled = true;
+            Console.WriteLine( "Turning idle timer OFF" );
+        }
+
+        public override void AppOnResignActive()
+        {
+            base.AppOnResignActive( );
+
+            UIApplication.SharedApplication.IdleTimerDisabled = false;
+            Console.WriteLine( "Turning idle timer ON" );
+        }
+
+        public override void AppWillTerminate()
+        {
+            base.AppWillTerminate( );
+
+            UIApplication.SharedApplication.IdleTimerDisabled = false;
+            Console.WriteLine( "Turning idle timer ON" );
         }
 	}
 }

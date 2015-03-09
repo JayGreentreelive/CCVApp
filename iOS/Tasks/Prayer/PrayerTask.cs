@@ -8,12 +8,14 @@ namespace iOS
     public class PrayerTask : Task
     {
         PrayerMainUIViewController MainPage { get; set; }
-        UIViewController CurrentPage { get; set; }
+        TaskUIViewController ActiveViewController { get; set; }
 
         public PrayerTask( string storyboardName ) : base( storyboardName )
         {
             MainPage = Storyboard.InstantiateViewController( "PrayerMainUIViewController" ) as PrayerMainUIViewController;
             MainPage.Task = this;
+
+            ActiveViewController = MainPage;
         }
 
         public override void MakeActive( TaskUINavigationController parentViewController, NavToolbar navToolbar )
@@ -26,7 +28,7 @@ namespace iOS
 
         public override void WillShowViewController(UIViewController viewController)
         {
-            CurrentPage = viewController;
+            ActiveViewController = (TaskUIViewController)viewController;
 
             // if it's the main page, disable the back button on the toolbar
             if ( viewController == MainPage )
@@ -54,21 +56,46 @@ namespace iOS
         {
             base.TouchesEnded(taskUIViewController, touches, evt);
 
-            if ( CurrentPage != MainPage )
+            if ( ActiveViewController != MainPage )
             {
                 // if they touched a dead area, reveal the nav toolbar again.
                 NavToolbar.RevealForTime( 3.0f );
             }
         }
 
-        public override void MakeInActive( )
+        public override void OnActivated( )
         {
-            base.MakeInActive( );
+            base.OnActivated( );
+
+            ActiveViewController.OnActivated( );
         }
 
-        public override void AppOnResignActive( )
+        public override void WillEnterForeground()
+        {
+            base.WillEnterForeground();
+
+            ActiveViewController.WillEnterForeground( );
+        }
+
+        public override void AppOnResignActive()
         {
             base.AppOnResignActive( );
+
+            ActiveViewController.AppOnResignActive( );
+        }
+
+        public override void AppDidEnterBackground( )
+        {
+            base.AppDidEnterBackground( );
+
+            ActiveViewController.AppDidEnterBackground( );
+        }
+
+        public override void AppWillTerminate()
+        {
+            base.AppWillTerminate( );
+
+            ActiveViewController.AppWillTerminate( );
         }
     }
 }

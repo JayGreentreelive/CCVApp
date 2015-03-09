@@ -14,6 +14,7 @@ namespace Droid
                 NotesPrimaryFragment MainPage { get; set; }
                 NotesDetailsFragment DetailsPage { get; set; }
                 NotesWatchFragment WatchPage { get; set; }
+                NotesListenFragment ListenPage { get; set; }
                 NotesWebViewFragment WebViewPage { get; set; }
 
                 public NotesTask( NavbarFragment navFragment ) : base( navFragment )
@@ -43,6 +44,12 @@ namespace Droid
                         WatchPage = new NotesWatchFragment( );
                     }
 
+                    ListenPage = (NotesListenFragment)NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.Notes.NotesListenFragment" );
+                    if ( ListenPage == null )
+                    {
+                        ListenPage = new NotesListenFragment( );
+                    }
+
                     WebViewPage = (NotesWebViewFragment)NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.Notes.NotesWebViewFragment" );
                     if ( WebViewPage == null )
                     {
@@ -53,6 +60,7 @@ namespace Droid
                     DetailsPage.ParentTask = this;
                     NotesPage.ParentTask = this;
                     WatchPage.ParentTask = this;
+                    ListenPage.ParentTask = this;
                     WebViewPage.ParentTask = this;
                 }
 
@@ -79,10 +87,11 @@ namespace Droid
                     {
                         case "Page.Read":
                         {
-                            if ( RockLaunchData.Instance.Data.Series.Count > 0 )
+                            if ( RockLaunchData.Instance.Data.NoteDB.SeriesList.Count > 0 )
                             {
-                                NotesPage.NoteName = RockLaunchData.Instance.Data.Series[ 0 ].Messages[ 0 ].Name;
-                                NotesPage.NoteUrl = RockLaunchData.Instance.Data.Series[ 0 ].Messages[ 0 ].NoteUrl;
+                                NotesPage.NoteName = RockLaunchData.Instance.Data.NoteDB.SeriesList[ 0 ].Messages[ 0 ].Name;
+                                NotesPage.NoteUrl = RockLaunchData.Instance.Data.NoteDB.SeriesList[ 0 ].Messages[ 0 ].NoteUrl;
+                                NotesPage.StyleSheetDefaultHostDomain = RockLaunchData.Instance.Data.NoteDB.HostDomain;
 
                                 PresentFragment( NotesPage, true );
                             }
@@ -152,10 +161,10 @@ namespace Droid
                                 // 0 is listen
                                 if ( buttonChoice == 0 )
                                 {
-                                    WatchPage.MediaUrl = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].AudioUrl;
-                                    WatchPage.ShareUrl = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].ShareUrl;
-                                    WatchPage.Name = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].Name;
-                                    PresentFragment( WatchPage, true );
+                                    ListenPage.MediaUrl = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].AudioUrl;
+                                    ListenPage.ShareUrl = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].ShareUrl;
+                                    ListenPage.Name = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].Name;
+                                    PresentFragment( ListenPage, true );
                                 }
                                 // 1 is watch
                                 else if ( buttonChoice == 1 )
@@ -170,6 +179,7 @@ namespace Droid
                                 {
                                     NotesPage.NoteUrl = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].NoteUrl;
                                     NotesPage.NoteName = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].Name;
+                                    NotesPage.StyleSheetDefaultHostDomain = RockLaunchData.Instance.Data.NoteDB.HostDomain;
 
                                     PresentFragment( NotesPage, true );
                                 }
@@ -189,17 +199,17 @@ namespace Droid
                             // 0 is listen
                             if ( buttonChoice == 0 )
                             {
-                                WatchPage.MediaUrl = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].AudioUrl;
-                                WatchPage.ShareUrl = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].ShareUrl;
-                                WatchPage.Name = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].Name;
-                                PresentFragment( WatchPage, true );
+                                ListenPage.MediaUrl = MainPage.SeriesEntries[ 0 ].Series.Messages[ buttonId ].AudioUrl;
+                                ListenPage.ShareUrl = MainPage.SeriesEntries[ 0 ].Series.Messages[ buttonId ].ShareUrl;
+                                ListenPage.Name = MainPage.SeriesEntries[ 0 ].Series.Messages[ buttonId ].Name;
+                                PresentFragment( ListenPage, true );
                             }
                             // 1 is watch
                             else if ( buttonChoice == 1 )
                             {
                                 WatchPage.MediaUrl = DetailsPage.Messages[ buttonId ].Message.WatchUrl;
                                 WatchPage.ShareUrl = DetailsPage.Messages[ buttonId ].Message.ShareUrl;
-                                WatchPage.Name = MainPage.SeriesEntries[ 0 ].Series.Messages[ 0 ].Name;
+                                WatchPage.Name = MainPage.SeriesEntries[ 0 ].Series.Messages[ buttonId ].Name;
                                 PresentFragment( WatchPage, true );
                             }
                             // 2 is read
@@ -207,6 +217,7 @@ namespace Droid
                             {
                                 NotesPage.NoteUrl = DetailsPage.Messages[ buttonId ].Message.NoteUrl;
                                 NotesPage.NoteName = DetailsPage.Messages[ buttonId ].Message.Name;
+                                NotesPage.StyleSheetDefaultHostDomain = RockLaunchData.Instance.Data.NoteDB.HostDomain;
 
                                 PresentFragment( NotesPage, true );
                             }

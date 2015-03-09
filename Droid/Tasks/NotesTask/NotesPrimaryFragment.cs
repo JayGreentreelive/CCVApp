@@ -506,13 +506,13 @@ namespace Droid
                 public void WatchButtonClicked( )
                 {
                     // notify the task that the Watch button was clicked
-                    ParentTask.OnClick( this, -1, 0 );
+                    ParentTask.OnClick( this, -1, 1 );
                 }
 
                 public void TakeNotesButtonClicked( )
                 {
                     // notify the task that the Take Notes button was clicked
-                    ParentTask.OnClick( this, -1, 1 );
+                    ParentTask.OnClick( this, -1, 2 );
                 }
 
                 public override void OnResume()
@@ -528,7 +528,7 @@ namespace Droid
                     ParentTask.NavbarFragment.NavToolbar.Reveal( false );
 
                     // what's the state of the series xml?
-                    if ( RockLaunchData.Instance.RequestingSeries == true )
+                    if ( RockLaunchData.Instance.RequestingNoteDB == true )
                     {
                         ProgressBar.Visibility = ViewStates.Visible;
 
@@ -543,7 +543,7 @@ namespace Droid
                     {
                         ProgressBar.Visibility = ViewStates.Visible;
 
-                        RockLaunchData.Instance.GetSeries( delegate
+                        RockLaunchData.Instance.GetNoteDB( delegate
                             {
                                 // don't worry about the result. The point is we tried,
                                 // and now will either use downloaded data, saved data, or throw an error to the user.
@@ -560,7 +560,7 @@ namespace Droid
                 void WaitAsync( )
                 {
                     // while we're still requesting the series, simply wait
-                    while ( CCVApp.Shared.Network.RockLaunchData.Instance.RequestingSeries == true );
+                    while ( CCVApp.Shared.Network.RockLaunchData.Instance.RequestingNoteDB == true );
 
                     // now that tis' finished, update the notes.
                     SeriesReady( );
@@ -574,7 +574,7 @@ namespace Droid
                             ProgressBar.Visibility = ViewStates.Gone;
 
                             // if there are now series entries, we're good
-                            if ( RockLaunchData.Instance.Data.Series.Count > 0 )
+                            if ( RockLaunchData.Instance.Data.NoteDB.SeriesList.Count > 0 )
                             {
                                 if( FragmentActive == true )
                                 {
@@ -582,7 +582,7 @@ namespace Droid
                                 }
 
                                 // setup the series entries either way, because that doesn't require the fragment to be active
-                                SetupSeriesEntries( RockLaunchData.Instance.Data.Series );
+                                SetupSeriesEntries( RockLaunchData.Instance.Data.NoteDB.SeriesList );
                             }
                             else
                             {

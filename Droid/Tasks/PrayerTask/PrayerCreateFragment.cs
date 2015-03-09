@@ -18,7 +18,7 @@ using System.Drawing;
 using CCVApp.Shared.Strings;
 using CCVApp.Shared.Config;
 using CCVApp.Shared.Analytics;
-using Rock.Mobile.PlatformSpecific.Android.Animation;
+using Rock.Mobile.Animation;
 
 namespace Droid
 {

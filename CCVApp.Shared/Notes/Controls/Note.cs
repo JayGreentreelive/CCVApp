@@ -95,7 +95,7 @@ namespace CCVApp
                 /// <value>The load state timer.</value>
                 protected System.Timers.Timer LoadStateTimer { get; set; }
 
-                public static void HandlePreReqs( string noteXml, string styleXml, OnPreReqsComplete onPreReqsComplete )
+                public static void HandlePreReqs( string noteXml, string styleXml, string styleSheetDefaultHostDomain, OnPreReqsComplete onPreReqsComplete )
                 {
                     // now use a reader to get each element
                     XmlReader reader = XmlReader.Create( new StringReader( noteXml ) );
@@ -116,6 +116,17 @@ namespace CCVApp
                                     if( styleSheetUrl == null )
                                     {
                                         throw new Exception( "Could not find attribute 'StyleSheet'. This should be a URL pointing to the style to use." );
+                                    }
+
+                                    // if the style sheet URL is relative, add the default domain (which comes from the note DB) to make it absolute
+                                    if ( styleSheetUrl.Contains( "http://" ) == false )
+                                    {
+                                        if ( string.IsNullOrEmpty( styleSheetDefaultHostDomain ) == true )
+                                        {
+                                            throw new Exception( "StyleSheet URL is relative, but no absolute domain was provided." );
+                                        }
+
+                                        styleSheetUrl = styleSheetUrl.Insert( 0, styleSheetDefaultHostDomain );
                                     }
                                 }
                                 else

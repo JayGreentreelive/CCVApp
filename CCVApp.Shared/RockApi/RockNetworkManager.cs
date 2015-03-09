@@ -29,7 +29,7 @@ namespace CCVApp
                     ResultCallback = resultCallback;
 
                     // have the launch data request the series before it does anything else.
-                    RockLaunchData.Instance.GetSeries( delegate
+                    RockLaunchData.Instance.GetNoteDB( delegate
                         {
                             seriesCallback( );
 

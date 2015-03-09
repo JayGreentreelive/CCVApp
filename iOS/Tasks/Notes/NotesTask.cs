@@ -3,12 +3,13 @@ using UIKit;
 using CoreGraphics;
 using Foundation;
 using CCVApp.Shared.Config;
+using CCVApp.Shared.Network;
 
 namespace iOS
 {
     public class NotesTask : Task
     {
-        UIViewController ActiveViewController { get; set; }
+        TaskUIViewController ActiveViewController { get; set; }
         NotesMainUIViewController MainViewController { get; set; }
         public NotesViewController NoteController { get; set; }
 
@@ -38,14 +39,15 @@ namespace iOS
             {
                 case "Page.Read":
                 {
-                    if ( CCVApp.Shared.Network.RockLaunchData.Instance.Data.Series.Count > 0 )
+                    if ( CCVApp.Shared.Network.RockLaunchData.Instance.Data.NoteDB.SeriesList.Count > 0 )
                     {
                         // since we're switching to the read notes VC, pop to the main page root and 
                         // remove it, because we dont' want back history (where would they go back to?)
                         ParentViewController.ClearViewControllerStack( );
 
-                        NoteController.NoteName = CCVApp.Shared.Network.RockLaunchData.Instance.Data.Series[ 0 ].Messages[ 0 ].Name;
-                        NoteController.NoteUrl = CCVApp.Shared.Network.RockLaunchData.Instance.Data.Series[ 0 ].Messages[ 0 ].NoteUrl;
+                        NoteController.NoteName = RockLaunchData.Instance.Data.NoteDB.SeriesList[ 0 ].Messages[ 0 ].Name;
+                        NoteController.NoteUrl = RockLaunchData.Instance.Data.NoteDB.SeriesList[ 0 ].Messages[ 0 ].NoteUrl;
+                        NoteController.StyleSheetDefaultHostDomain = RockLaunchData.Instance.Data.NoteDB.HostDomain;
 
                         ParentViewController.PushViewController( NoteController, false );
                     }
@@ -63,7 +65,7 @@ namespace iOS
         {
             // if we're coming from WebView or Notes and going to something else,
             // force the device back to portrait
-            ActiveViewController = viewController;
+            ActiveViewController = (TaskUIViewController)viewController;
 
             // if the notes are active, make sure the share button gets turned on
             if ( ( viewController as NotesViewController ) != null )
@@ -145,14 +147,39 @@ namespace iOS
             return true;
         }
 
+        public override void OnActivated( )
+        {
+            base.OnActivated( );
+
+            ActiveViewController.OnActivated( );
+        }
+
+        public override void WillEnterForeground()
+        {
+            base.WillEnterForeground();
+
+            ActiveViewController.WillEnterForeground( );
+        }
+
         public override void AppOnResignActive()
         {
-            // if the notes are active and the app is being backgrounded, let the notes know so they can save.
-            NotesViewController notesVC = ActiveViewController as NotesViewController;
-            if ( notesVC != null )
-            {
-                notesVC.ViewResigning( );
-            }
+            base.AppOnResignActive( );
+
+            ActiveViewController.AppOnResignActive( );
+        }
+
+        public override void AppDidEnterBackground( )
+        {
+            base.AppDidEnterBackground( );
+
+            ActiveViewController.AppDidEnterBackground( );
+        }
+
+        public override void AppWillTerminate()
+        {
+            base.AppWillTerminate( );
+
+            ActiveViewController.AppWillTerminate( );
         }
 
         public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations()
@@ -167,16 +194,6 @@ namespace iOS
             else
             {
                 return base.GetSupportedInterfaceOrientations( );
-            }
-        }
-
-        public override void AppWillTerminate()
-        {
-            // if the notes are active and the app is being killed, let the notes know so they can save.
-            NotesViewController notesVC = ActiveViewController as NotesViewController;
-            if ( notesVC != null )
-            {
-                notesVC.ViewResigning( );
             }
         }
     }
