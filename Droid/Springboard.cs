@@ -246,13 +246,24 @@ namespace Droid
                     {
                         DisplaySeriesBillboard( );
                     }
-
-                    NavbarFragment.PerformTaskAction( "Task.Init" );
                 },
                 delegate(System.Net.HttpStatusCode statusCode, string statusDescription)
                 {
                     LastRockSync = DateTime.Now;
+
+                    // All launch data is obtained. We now have the latest news, 
+                    // so let the news manager update the news items and download
+                    // whatever it needs.
+                    PerformTaskAction( "News.Reload" );
                 });
+        }
+
+        void PerformTaskAction( string action )
+        {
+            foreach( SpringboardElement element in Elements )
+            {
+                element.Task.PerformTaskAction( action );
+            }
         }
 
         public override void OnSaveInstanceState( Bundle outState )
@@ -419,6 +430,8 @@ namespace Droid
 
                                     // build a label showing what they picked
                                     CampusText.Text = string.Format( SpringboardStrings.Viewing_Campus, campusTitle );
+
+                                    PerformTaskAction( "News.Reload" );
                                 });
                         });
 
@@ -442,7 +455,7 @@ namespace Droid
                         if ( element.Task as Droid.Tasks.Notes.NotesTask != null )
                         {
                             ActivateElement( element );
-                            NavbarFragment.PerformTaskAction( "Page.Read" );
+                            PerformTaskAction( "Page.Read" );
                         }
                     }
                 } );

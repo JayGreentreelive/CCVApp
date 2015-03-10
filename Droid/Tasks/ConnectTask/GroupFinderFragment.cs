@@ -88,11 +88,10 @@ namespace Droid
                     //messageItem.Address.Text = ParentFragment.GroupEntries[ position ].Address;
 
                     // if there's a meeting time set, display it. Otherwise we won't display that row
-                    if ( string.IsNullOrEmpty( ParentFragment.GroupEntries[ position ].Day ) == false &&
-                         string.IsNullOrEmpty( ParentFragment.GroupEntries[ position ].Time ) == false )
+                    if ( string.IsNullOrEmpty( ParentFragment.GroupEntries[ position ].MeetingTime ) == false )
                     {
                         messageItem.MeetingTime.Visibility = ViewStates.Visible;
-                        messageItem.MeetingTime.Text = string.Format( ConnectStrings.GroupFinder_MeetingTime, ParentFragment.GroupEntries[ position ].Day, ParentFragment.GroupEntries[ position ].Time );
+                        messageItem.MeetingTime.Text = ParentFragment.GroupEntries[ position ].MeetingTime;
                     }
                     else
                     {

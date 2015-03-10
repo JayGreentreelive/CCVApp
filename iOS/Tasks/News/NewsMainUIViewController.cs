@@ -112,7 +112,6 @@ namespace iOS
 		public NewsMainUIViewController (IntPtr handle) : base (handle)
 		{
             News = new List<NewsEntry>( );
-            SourceRockNews = new List<RockNews>( );
 
             string imagePath = NSBundle.MainBundle.BundlePath + "/" + GeneralConfig.NewsMainPlaceholder;
             ImagePlaceholder = new UIImage( imagePath );
@@ -124,7 +123,7 @@ namespace iOS
 
             IsVisible = true;
 
-            SetupNews( SourceRockNews );
+            ReloadNews( );
 
             // populate our table
             TableSource source = new TableSource( this, News, ImagePlaceholder );
@@ -141,11 +140,11 @@ namespace iOS
             IsVisible = false;
         }
 
-        void SetupNews( List<RockNews> rockNewsList )
+        public void ReloadNews( )
         {
             News.Clear( );
 
-            foreach ( RockNews rockEntry in rockNewsList )
+            foreach ( RockNews rockEntry in SourceRockNews )
             {
                 NewsEntry newsEntry = new NewsEntry();
                 News.Add( newsEntry );
@@ -156,6 +155,8 @@ namespace iOS
                 // If thye don't exist, we'll use a placeholder until DownloadImages is called by our parent task.
                 TryLoadCachedImage( newsEntry );
             }
+
+            NewsTableView.ReloadData( );
         }
 
         public void DownloadImages( )

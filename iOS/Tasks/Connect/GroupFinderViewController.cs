@@ -194,10 +194,9 @@ namespace iOS
                 //cell.Address.SizeToFit( );
 
                 // Meeting time - If it isn't set, just blank it out and we wont' show anything for that row.
-                if ( string.IsNullOrEmpty( Parent.GroupEntries[ indexPath.Row ].Day ) == false &&
-                     string.IsNullOrEmpty( Parent.GroupEntries[ indexPath.Row ].Time ) == false )
+                if ( string.IsNullOrEmpty( Parent.GroupEntries[ indexPath.Row ].MeetingTime ) == false )
                 {
-                    cell.MeetingTime.Text = string.Format( ConnectStrings.GroupFinder_MeetingTime, Parent.GroupEntries[ indexPath.Row ].Day, Parent.GroupEntries[ indexPath.Row ].Time );
+                    cell.MeetingTime.Text = Parent.GroupEntries[ indexPath.Row ].MeetingTime;
                 }
                 else
                 {

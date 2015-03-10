@@ -1,34 +1,9 @@
-﻿<Properties StartupItem="Droid/Droid.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.192.168.56.101:5555" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Tasks/ConnectTask/GroupFinderFragment.cs">
+﻿<Properties StartupItem="iOS/iOS.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhone4s.8.2" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Tasks/NewsTask/NewsTask.cs">
     <Files>
-      <File FileName="Droid/Tasks/ConnectTask/GroupFinderFragment.cs" Line="30" Column="30" />
+      <File FileName="Droid/Tasks/NewsTask/NewsTask.cs" Line="32" Column="32" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="CCVApp.Shared" expanded="True" />
-          <Node name="Droid" expanded="True">
-            <Node name="Tasks" expanded="True">
-              <Node name="ConnectTask" expanded="True">
-                <Node name="GroupFinderFragment.cs" selected="True" />
-              </Node>
-              <Node name="NotesTask" expanded="True" />
-            </Node>
-          </Node>
-          <Node name="iOS" expanded="True">
-            <Node name="Tasks" expanded="True">
-              <Node name="Connect" expanded="True" />
-              <Node name="News" expanded="True" />
-              <Node name="Notes" expanded="True" />
-            </Node>
-          </Node>
-        </State>
-      </Pad>
-      <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />

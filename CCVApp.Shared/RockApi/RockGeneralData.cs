@@ -28,7 +28,11 @@ namespace CCVApp
                 {
                     public GeneralData( )
                     {
-                        Version = 0;
+                        //ALWAYS INCREMENT THIS IF UPDATING THE MODEL
+                        ClientModelVersion = 0;
+                        //
+
+                        ServerTime = DateTime.MinValue;
 
                         // default values if there's no connection
                         // and this is never updated.
@@ -59,6 +63,11 @@ namespace CCVApp
                         Genders = new List<string>( );
 
                         PrayerCategories = new List< Rock.Client.Category >( );
+                    }
+
+                    public Rock.Client.Campus CampusFromId( int campusId )
+                    {
+                        return Campuses.Find( c => c.Id == campusId );
                     }
 
                     /// <summary>
@@ -102,11 +111,16 @@ namespace CCVApp
                     }
 
                     /// <summary>
-                    /// Current version of the General Data. If Rock tells us there's a version
-                    /// with a greater value than this, we will update.
+                    /// The DateTime that this General Data was created. If ever Rock has a newer one,
+                    /// we will know to download it
                     /// </summary>
-                    /// <value>The version.</value>
-                    public int Version { get; set; }
+                    public DateTime ServerTime { get; set; }
+
+                    /// <summary>
+                    /// Private to the client, this should be updated if the model
+                    /// changes at all, so that we don't attempt to load an older one when upgrading the app.
+                    /// </summary>
+                    public int ClientModelVersion { get; protected set; }
 
                     /// <summary>
                     /// List of all available campuses to choose from.
@@ -133,27 +147,51 @@ namespace CCVApp
                     Data = new GeneralData( );
                 }
 
-                public void GetGeneralData( HttpRequest.RequestResult generalDataResult )
+                public void GetGeneralData( DateTime newServerTime, HttpRequest.RequestResult generalDataResult )
                 {
+                    Console.WriteLine( "Get GeneralData" );
+
+                    // assume we're going to get everything
+                    bool generalDataReceived = true;
+
                     // now get our campuses.
                     RockApi.Instance.GetCampuses( delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.Campus> campusList )
                         {
-                            if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
+                            // check for failure, and although we'll keep going (for code simplicity),
+                            // we will not be storing any of this data.
+                            if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == false )
                             {
-                                Data.Campuses = campusList;
+                                generalDataReceived = false;
                             }
 
                             // Chain other things here as needed
                             RockApi.Instance.GetPrayerCategories( 
                                 delegate( System.Net.HttpStatusCode prayerStatusCode, string prayerStatusDescription, List<Rock.Client.Category> categoryList )
                                 {
-                                    if ( Rock.Mobile.Network.Util.StatusInSuccessRange( prayerStatusCode ) == true )
+                                    if ( Rock.Mobile.Network.Util.StatusInSuccessRange( prayerStatusCode ) == false )
                                     {
-                                        Data.PrayerCategories = categoryList;
+                                        generalDataReceived = false;
                                     }
 
-                                    // save!
-                                    SaveToDevice( );
+                                    // if all general data made it down ok, take the values, the new time, and save to the device.
+                                    // If anything FAILED, we won't store anything, and that wa on next run we can try again.
+                                    if( generalDataReceived == true )
+                                    {
+                                        Data.Campuses = campusList;
+                                        Data.PrayerCategories = categoryList;
+
+                                        // stamp the time for this new data
+                                        Data.ServerTime = newServerTime;
+
+                                        // save!
+                                        SaveToDevice( );
+
+                                        Console.WriteLine( "Get GeneralData SUCCESS" );
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine( "Get GeneralData FAILED" );
+                                    }
 
                                     // notify the caller
                                     if( generalDataResult != null )
@@ -194,7 +232,7 @@ namespace CCVApp
                             {
                                 // only take the general data if our version matches. Otherwise, make them start fresh.
                                 GeneralData loadedData = JsonConvert.DeserializeObject<GeneralData>( json ) as GeneralData;
-                                if( Data.Version == loadedData.Version )
+                                if( Data.ClientModelVersion == loadedData.ClientModelVersion )
                                 {
                                     Data = loadedData;
                                 }

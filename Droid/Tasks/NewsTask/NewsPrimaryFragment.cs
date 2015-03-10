@@ -95,9 +95,17 @@ namespace Droid
 
                 bool FragmentActive { get; set; }
 
+                /// <summary>
+                /// Used so that in our first OnResume we initialize the news ONCE
+                /// so we have something to show while the real news is being downloaded.
+                /// </summary>
+                bool DidInitNews { get; set; }
+
                 public NewsPrimaryFragment( ) : base( )
                 {
                     News = new List<NewsEntry>();
+
+                    DidInitNews = false;
                 }
 
                 public override void OnCreate( Bundle savedInstanceState )
@@ -140,7 +148,28 @@ namespace Droid
 
                     FragmentActive = true;
 
-                    // set the news up on Resume
+                    if ( DidInitNews == false )
+                    {
+                        ReloadNews( );
+                        DidInitNews = true;
+                    }
+
+                    ListView.Adapter = new NewsArrayAdapter( this, News, Placeholder );
+                }
+
+                public void ReloadNews( )
+                {
+                    // be sure to dump the existing news images so
+                    // Dalvik knows it can use the memory
+                    foreach ( NewsEntry newsEntry in News )
+                    {
+                        if ( newsEntry.Image != null )
+                        {
+                            newsEntry.Image.Dispose( );
+                            newsEntry.Image = null;
+                        }
+                    }
+
                     News.Clear( );
 
                     foreach ( RockNews rockEntry in SourceNews )
@@ -153,14 +182,18 @@ namespace Droid
                         TryLoadCachedImage( newsEntry );
                     }
 
-                    ListView.Adapter = new NewsArrayAdapter( this, News, Placeholder );
+                    // if we've already created the list source, refresh it
+                    if ( ListView.Adapter != null )
+                    {
+                        ( ListView.Adapter as NewsArrayAdapter ).NotifyDataSetChanged( );
+                    }
                 }
 
                 public void DownloadImages( )
                 {
                     foreach ( NewsEntry newsEntry in News )
                     {
-                        if ( newsEntry.News.ImageName == null )
+                        if ( newsEntry.Image == null )
                         {
                             FileCache.Instance.DownloadImageToCache( newsEntry.News.ImageURL, newsEntry.News.ImageName, delegate { SeriesImageDownloaded( ); } );
                         }
@@ -201,19 +234,19 @@ namespace Droid
 
                 void SeriesImageDownloaded( )
                 {
-                    if ( FragmentActive == true )
-                    {
-                        Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                    Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                        {
+                            // using only the cache, try to load any image that isn't loaded
+                            foreach ( NewsEntry entry in News )
                             {
-                                // using only the cache, try to load any image that isn't loaded
-                                foreach ( NewsEntry entry in News )
-                                {
-                                    TryLoadCachedImage( entry );
-                                }
+                                TryLoadCachedImage( entry );
+                            }
 
+                            if ( FragmentActive == true )
+                            {
                                 ( ListView.Adapter as NewsArrayAdapter ).NotifyDataSetChanged( );
-                            } );
-                    }
+                            }
+                        } );
                 }
 
                 public override void OnPause()

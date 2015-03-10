@@ -22,8 +22,10 @@ namespace CCVApp
                 public string HeaderImageURL { get; set; }
                 public string HeaderImageName { get; set; }
 
+                public Guid CampusGuid { get; set; }
+
                 [JsonConstructor]
-                public RockNews( string title, string description, string referenceUrl, string imageUrl, string imageName, string headerImageUrl, string headerImageName )
+                public RockNews( string title, string description, string referenceUrl, string imageUrl, string imageName, string headerImageUrl, string headerImageName, Guid campusGuid )
                 {
                     Title = title;
                     Description = description;
@@ -34,6 +36,8 @@ namespace CCVApp
 
                     HeaderImageURL = headerImageUrl;
                     HeaderImageName = headerImageName;
+
+                    CampusGuid = campusGuid;
                 }
 
                 // create a copy constructor
@@ -48,6 +52,8 @@ namespace CCVApp
 
                     HeaderImageURL = rhs.HeaderImageURL;
                     HeaderImageName = rhs.HeaderImageName;
+
+                    CampusGuid = rhs.CampusGuid;
                 }
             }
         }

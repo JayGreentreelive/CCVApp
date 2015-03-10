@@ -29,7 +29,11 @@ namespace CCVApp
                 {
                     public LaunchData( )
                     {
-                        GeneralDataVersion = 0;
+                        //ALWAYS INCREMENT THIS IF UPDATING THE MODEL
+                        ClientModelVersion = 0;
+                        //
+
+                        GeneralDataServerTime = DateTime.MinValue;
 
                         News = new List<RockNews>( );
                         NoteDB = new NoteDB( );
@@ -46,7 +50,9 @@ namespace CCVApp
                             "news_baptism_main",
 
                             "",
-                            "news_baptism_header" ) );
+                            "news_baptism_header",
+
+                            System.Guid.Empty ) );
 
                         DefaultNews.Add( new RockNews( "Starting Point", "If you’re asking yourself, “Where do I begin at CCV?” — the answer is Starting Point. " +
                             "In Starting Point you’ll find out what CCV is all about, take a deep look at the Christian " + 
@@ -58,7 +64,9 @@ namespace CCVApp
                             "news_startingpoint_main", 
 
                             "",
-                            "news_startingpoint_header" ) );
+                            "news_startingpoint_header",
+                        
+                            System.Guid.Empty ) );
 
 
                         DefaultNews.Add( new RockNews( "Learn More", "Wondering what else CCV is about? Check out our website.", 
@@ -69,7 +77,9 @@ namespace CCVApp
                             "news_learnmore_main",
 
                             "",
-                            "news_learnmore_header" ) );
+                            "news_learnmore_header",
+                        
+                            System.Guid.Empty ) );
                     }
 
                     /// <summary>
@@ -109,11 +119,12 @@ namespace CCVApp
                     }
 
                     /// <summary>
-                    /// Current version of the General Data. If Rock tells us there's a version
-                    /// with a greater value than this, we will update.
+                    /// The last time that GeneralData was updated by the server. Each time we run,
+                    /// we'll check with the server to see if there's a newer server time. If there is,
+                    /// we need to download GeneralData again.
                     /// </summary>
                     /// <value>The version.</value>
-                    public int GeneralDataVersion { get; set; }
+                    public DateTime GeneralDataServerTime { get; set; }
 
                     /// <summary>
                     /// Default news to display when there's no connection available
@@ -138,6 +149,12 @@ namespace CCVApp
                     /// </summary>
                     /// <value>The default news.</value>
                     List<RockNews> DefaultNews { get; set; }
+
+                    /// <summary>
+                    /// Private to the client, this should be updated if the model
+                    /// changes at all, so that we don't attempt to load an older one when upgrading the app.
+                    /// </summary>
+                    public int ClientModelVersion { get; protected set; }
                 }
                 public LaunchData Data { get; set; }
 
@@ -169,18 +186,32 @@ namespace CCVApp
                 {
                     Console.WriteLine( "Get LaunchData" );
 
-                    // now get the news.
-                    GetNews( delegate 
-                        {
-                            // chain any other required launch data actions here.
-
-                            // notify the caller now that we're done
-                            if( launchDataResult != null )
+                    // first get the general data server time, so that we know whether we should update the
+                    // general data or not.
+                    RockApi.Instance.GetGeneralDataTime( delegate(System.Net.HttpStatusCode statusCode, string statusDescription, DateTime generalDataTime )
                             {
-                                // send OK, because whether we failed or not, the caller doessn't need to care.
-                                launchDataResult( System.Net.HttpStatusCode.OK, "" );
-                            }
-                        });
+                                if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) )
+                                {
+                                    if( generalDataTime != DateTime.MinValue )
+                                    {
+                                        Data.GeneralDataServerTime = generalDataTime;
+                                    }
+                                }
+
+                                // now get the news.
+                                GetNews( delegate 
+                                    {
+                                        // chain any other required launch data actions here.
+                                        Console.WriteLine( "Get LaunchData DONE" );
+
+                                        // notify the caller now that we're done
+                                        if( launchDataResult != null )
+                                        {
+                                            // send OK, because whether we failed or not, the caller doessn't need to care.
+                                            launchDataResult( System.Net.HttpStatusCode.OK, "" );
+                                        }
+                                    });
+                            } );
                 }
 
                 void GetNews( HttpRequest.RequestResult resultCallback )
@@ -203,7 +234,11 @@ namespace CCVApp
 
                                     string detailUrl = item.AttributeValues[ "DetailsURL" ].Value;
 
-                                    RockNews newsItem = new RockNews( item.Title, item.Content, detailUrl, imageUrl, item.Title + "_main.png", bannerUrl, item.Title + "_banner.png" );
+                                    // take either the campus guid or empty, if there is no campus assigned (meaning the news should be displayed for ALL campuses)
+                                    string guidStr = item.AttributeValues[ "Campus" ].Value;
+                                    Guid campusGuid = string.IsNullOrEmpty( guidStr ) == false ? new Guid( guidStr ) : Guid.Empty;
+
+                                    RockNews newsItem = new RockNews( item.Title, item.Content, detailUrl, imageUrl, item.Title + "_main.png", bannerUrl, item.Title + "_banner.png", campusGuid );
                                     Data.News.Add( newsItem );
                                 }
                             }
@@ -301,7 +336,11 @@ namespace CCVApp
                             try
                             {
                                 // guard against the LaunchData changing and the user having old data.
-                                Data = JsonConvert.DeserializeObject<LaunchData>( json ) as LaunchData;
+                                LaunchData loadedData = JsonConvert.DeserializeObject<LaunchData>( json ) as LaunchData;
+                                if( loadedData.ClientModelVersion == Data.ClientModelVersion )
+                                {
+                                    Data = loadedData;
+                                }
                             }
                             catch( Exception )
                             {

@@ -18,8 +18,10 @@ namespace CCVApp.Shared
             public string Title { get; set; }
             public string Address { get; set; }
 
-            public string Day { get; set; }
-            public string Time { get; set; }
+            //public string Day { get; set; }
+            //public string Time { get; set; }
+
+            public string MeetingTime { get; set; }
 
             public string NeighborhoodArea { get; set; }
 
@@ -79,8 +81,9 @@ namespace CCVApp.Shared
                                             // get the meeting schedule if it's available
                                             if ( smallGroup.Schedule != null )
                                             {
+                                                entry.MeetingTime = smallGroup.Schedule.FriendlyScheduleText;
                                                 // get the day of week
-                                                if( smallGroup.Schedule.WeeklyDayOfWeek.HasValue == true )
+                                                /*if( smallGroup.Schedule.WeeklyDayOfWeek.HasValue == true )
                                                 {
                                                     entry.Day = GeneralStrings.Days[ smallGroup.Schedule.WeeklyDayOfWeek.Value ];
                                                 }
@@ -92,7 +95,7 @@ namespace CCVApp.Shared
                                                                                                                                  smallGroup.Schedule.WeeklyTimeOfDay.Value.Minutes,
                                                                                                                                  smallGroup.Schedule.WeeklyTimeOfDay.Value.Seconds) );
                                                     entry.Time = time_24.ToString( "t" );
-                                                }
+                                                }*/
                                             }
 
                                             entry.Latitude = location.Latitude.Value;

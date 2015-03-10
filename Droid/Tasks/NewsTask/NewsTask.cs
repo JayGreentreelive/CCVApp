@@ -54,13 +54,31 @@ namespace Droid
 
                     if ( forResume == false )
                     {
-                        // provide the news to the viewer by COPYING it.
-                        News.Clear( );
-                        foreach ( RockNews newsItem in RockLaunchData.Instance.Data.News )
-                        {
-                            News.Add( new RockNews( newsItem ) );
-                        }
+                        ReloadNews( );
                     }
+                }
+
+                /// <summary>
+                /// Takes the news from LaunchData and populates the NewsPrimaryFragment with it.
+                /// </summary>
+                void ReloadNews( )
+                {
+                    Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                        {
+                            Rock.Client.Campus campus = RockGeneralData.Instance.Data.CampusFromId( RockMobileUser.Instance.ViewingCampus );
+                            Guid viewingCampusGuid = campus != null ? campus.Guid : Guid.Empty;
+
+                            // provide the news to the viewer by COPYING it.
+                            News.Clear( );
+                            foreach ( RockNews newsItem in RockLaunchData.Instance.Data.News )
+                            {
+                                // only add news for "all campuses" and their selected campus.
+                                if ( newsItem.CampusGuid == Guid.Empty || newsItem.CampusGuid == viewingCampusGuid )
+                                {
+                                    News.Add( new RockNews( newsItem ) );
+                                }
+                            }
+                        } );
                 }
 
                 public override TaskFragment StartingFragment()
@@ -74,9 +92,17 @@ namespace Droid
 
                     switch ( action )
                     {
-                        case "Task.Init":
+                        case "News.Reload":
                         {
+                            // for this action, we want to reload our news,
+                            ReloadNews( );
+
+                            // tell the news page to reload (in case it's visible now)
+                            MainPage.ReloadNews( );
+
+                            // and download any images it wants
                             MainPage.DownloadImages( );
+
                             break;
                         }
                     }

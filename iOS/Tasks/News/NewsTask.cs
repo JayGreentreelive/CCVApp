@@ -12,27 +12,50 @@ namespace iOS
         NewsMainUIViewController MainPageVC { get; set; }
         TaskUIViewController ActiveViewController { get; set; }
 
+        List<RockNews> News { get; set; }
+
         public NewsTask( string storyboardName ) : base( storyboardName )
         {
             MainPageVC = Storyboard.InstantiateViewController( "MainPageViewController" ) as NewsMainUIViewController;
             MainPageVC.Task = this;
 
             ActiveViewController = MainPageVC;
+
+            News = new List<RockNews>( );
+            MainPageVC.SourceRockNews = News;
         }
 
         public override void MakeActive( TaskUINavigationController parentViewController, NavToolbar navToolbar )
         {
             base.MakeActive( parentViewController, navToolbar );
 
-            // provide the news to the viewer by COPYING it.
-            MainPageVC.SourceRockNews.Clear( );
-            foreach ( RockNews newsItem in RockLaunchData.Instance.Data.News )
-            {
-                MainPageVC.SourceRockNews.Add( new RockNews( newsItem ) );
-            }
+            ReloadNews( );
 
             // set our current page as root
             parentViewController.PushViewController(MainPageVC, false);
+        }
+
+        /// <summary>
+        /// Takes the news from LaunchData and populates the NewsPrimaryFragment with it.
+        /// </summary>
+        void ReloadNews( )
+        {
+            Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                {
+                    Rock.Client.Campus campus = RockGeneralData.Instance.Data.CampusFromId( RockMobileUser.Instance.ViewingCampus );
+                    Guid viewingCampusGuid = campus != null ? campus.Guid : Guid.Empty;
+
+                    // provide the news to the viewer by COPYING it.
+                    News.Clear( );
+                    foreach ( RockNews newsItem in RockLaunchData.Instance.Data.News )
+                    {
+                        // only add news for "all campuses" and their selected campus.
+                        if ( newsItem.CampusGuid == Guid.Empty || newsItem.CampusGuid == viewingCampusGuid )
+                        {
+                            News.Add( new RockNews( newsItem ) );
+                        }
+                    }
+                } );
         }
 
         public override void WillShowViewController(UIViewController viewController)
@@ -60,8 +83,12 @@ namespace iOS
 
             switch ( action )
             {
-                case "Task.Init":
+                case "News.Reload":
                 {
+                    ReloadNews( );
+
+                    MainPageVC.ReloadNews( );
+
                     MainPageVC.DownloadImages( );
                     break;
                 }

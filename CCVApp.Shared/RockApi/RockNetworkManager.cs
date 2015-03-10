@@ -56,21 +56,24 @@ namespace CCVApp
 
                 void LaunchDataReceived(System.Net.HttpStatusCode statusCode, string statusDescription)
                 {
-                    // At this point we're finished. Whether we succeeded or failed, we should now validate
-                    // the version number. If getting launch data failed, that's ok, that will guarantee that
-                    // the GeneralData version number isn't LESS than what we stored in LaunchData.
+                    // launch data is done. Now see if we should update general data.
 
-                    // if there's a newer General Data, grab it.
-                    //TODO: we'll always want to do this the first time we run.
-                    //if( RockGeneralData.Instance.Data.Version < RockLaunchData.Instance.Data.GeneralDataVersion )
+                    // first, take the latest delta of GeneralDataServerTime and what we have for ServerTime
+                    TimeSpan deltaTime = RockLaunchData.Instance.Data.GeneralDataServerTime - RockGeneralData.Instance.Data.ServerTime;
+
+                    // if that is > 0, it means the server has newer general data than us, so we should update.
+
+                    // Alternatively, if GeneralData's serverTime is min value, we should update, because for whatever reason
+                    // launch data isn't getting a time from Rock, so we want to ensure we have latest.
+                    if( deltaTime > TimeSpan.Zero || RockGeneralData.Instance.Data.ServerTime == DateTime.MinValue )
                     {
-                        RockGeneralData.Instance.GetGeneralData( GeneralDataReceived );
+                        RockGeneralData.Instance.GetGeneralData( RockLaunchData.Instance.Data.GeneralDataServerTime, GeneralDataReceived );
                     }
-                    /*else
+                    else
                     {
-                        // May not have anything else to do here
+                        // there was no need to update general data, so just report done.
                         GeneralDataReceived( statusCode, statusDescription );
-                    }*/
+                    }
                 }
 
                 void GeneralDataReceived(System.Net.HttpStatusCode statusCode, string statusDescription)

@@ -79,6 +79,12 @@ namespace CCVApp
                 const string GetNewsEndPoint = "/api/ContentChannelItems?$filter=ContentChannel/Guid eq guid'EAE51F3E-C27B-4E7C-B9A0-16EB68129637' and Status eq '2' and (StartDateTime le DateTime'{0}' or StartDateTime eq null) and (ExpireDateTime ge DateTime'{1}' or ExpireDateTime eq null)&LoadAttributes=True";
 
                 /// <summary>
+                /// End point for getting the last time General Data was updated. If newer,
+                /// we'll know we need to update GeneralData.
+                /// </summary>
+                const string GetGeneralDataTimeEndPoint = "/api/AttributeValues?$filter=AttributeId eq {0}";
+
+                /// <summary>
                 /// End point for retrieving a Group Object
                 /// </summary>
                 //const string GetFamiliesEndPoint = "api/Groups/GetFamilies/{0}?$expand=GroupType,Campus,GroupLocations";
@@ -529,6 +535,17 @@ namespace CCVApp
 
                     // get the raw response
                     Request.ExecuteAsync< List<Rock.Client.ContentChannelItem> >( requestUrl, request, resultHandler );
+                }
+
+                public void GetGeneralDataTime( HttpRequest.RequestResult<DateTime> resultHandler )
+                {
+                    // request a profile by the username. If no username is specified, we'll use the logged in user's name.
+                    RestRequest request = GetRockRestRequest( Method.GET );
+                    string requestUrl = string.Format( BaseUrl + GetGeneralDataTimeEndPoint, 2623 );
+
+
+                    // get the raw response
+                    Request.ExecuteAsync< DateTime >( requestUrl, request, resultHandler );
                 }
 
                 /// <summary>

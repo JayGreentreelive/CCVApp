@@ -3,6 +3,8 @@
 Highlights
 iOS Users please verify the phone does not goto sleep when using Sermon Notes.
 
+News items now update live, and are based on the Viewing Campus chosen.
+
 
 Changes
 -------
@@ -11,10 +13,15 @@ Both
 	General - Fixed an issue causing the "Notes" billboard to sometimes not appear immediately at startup. (This time for realsies)
 	General - Added final placeholder images. (Thanks Nick!)
 
+	General - General Data is now only updated when there's newer data available on Rock.
+
 	Notes - Fixed an issue allowing the device to sleep when viewing a quote URL.
 
 	GroupFinder - Your location is now shown in green.
 	GroupFinder - Distance is now accurate.
+
+	News - News is now updated without having to leave / reactivate the News element.
+	News - News is now filtered by the selected Viewing Campus
 
 
 iOS

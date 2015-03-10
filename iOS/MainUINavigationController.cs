@@ -312,14 +312,6 @@ namespace iOS
             return false;
         }
 
-        public void PerformTaskAction( string action )
-        {
-            if ( CurrentTask != null )
-            {
-                CurrentTask.PerformAction( action );
-            }
-        }
-
         public override void ViewWillAppear(bool animated)
         {
             base.ViewWillAppear(animated);

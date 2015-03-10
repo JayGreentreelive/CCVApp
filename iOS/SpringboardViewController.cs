@@ -345,6 +345,9 @@ namespace iOS
                                 RockMobileUser.Instance.ViewingCampus = RockGeneralData.Instance.Data.CampusNameToId( obj.Title );
                                 CampusSelectionText.Text = string.Format( SpringboardStrings.Viewing_Campus, obj.Title );
                                 UpdateCampusViews( );
+
+                                // let the news know it should reload
+                                PerformTaskAction( "News.Reload" );
                         } );
 
                         actionSheet.AddAction( campusAction );
@@ -448,7 +451,7 @@ namespace iOS
                         if ( element.Task as NotesTask != null )
                         {
                             ActivateElement( element, true );
-                            NavViewController.PerformTaskAction( "Page.Read" );
+                            PerformTaskAction( "Page.Read" );
                         }
                     }
                 } 
@@ -473,15 +476,25 @@ namespace iOS
                     {
                         DisplaySeriesBillboard( );
                     }
-
-                    // notify the controller that the active task can do whatever init'ing it wants to do.
-                    NavViewController.PerformTaskAction( "Task.Init" );
                 },
                 delegate(System.Net.HttpStatusCode statusCode, string statusDescription)
                 {
                     // here we know whether the initial handshake with Rock went ok or not
                     LastRockSync = DateTime.Now;
+
+                    // we now have the latest news and all initial downloading.
+                    // Tell the news it's safe to reload.
+                    PerformTaskAction( "News.Reload" );
                 });
+        }
+
+        void PerformTaskAction( string action )
+        {
+            // notify all elements
+            foreach ( SpringboardElement element in Elements )
+            {
+                element.Task.PerformAction( action );
+            }
         }
 
         void ManageProfilePic( )
