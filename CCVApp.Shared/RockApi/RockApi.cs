@@ -88,7 +88,10 @@ namespace CCVApp
                 /// <summary>
                 /// End point for retrieving all groups near a given address.
                 /// </summary>
-                const string GetGroupsByLocationEndPoint = "api/Groups/ByLocation/{0}/{1}/{2}/{3}/{4}/{5}";
+                //const string GetGroupsByLocationEndPoint = "api/Groups/ByLocation/{0}/{1}/{2}/{3}/{4}/{5}";
+                const string GetLocationFromAddressEndPoint = "api/locations/{0}/{1}/{2}/{3}";
+                const string GetGroupsByLocationEndPoint = "api/Groups/ByLocation/{0}/{1}/{2}";
+
 
                 /// <summary>
                 /// End point for updating a user's primary group home campus
@@ -394,15 +397,6 @@ namespace CCVApp
                         } );
                 }
 
-                public class ProfileImageResponse
-                {
-                    public ProfileImageResponse( )
-                    {
-                    }
-
-                    public string Message { get; set; }
-                }
-
                 public void UpdateProfileImageGroup( Rock.Client.Person person, HttpRequest.RequestResult resultHandler )
                 {
                     // first see if the user is already a member of this group (which is true if they've EVER attempted to update their profile picture.
@@ -497,7 +491,7 @@ namespace CCVApp
                     Request.ExecuteAsync< List<Rock.Client.Group> >( requestUrl, request, resultHandler);
                 }
 
-                public void GetGroupsByLocation( int geoFenceGroupTypeId, int groupTypeId, string street, string city, string state, string zip, HttpRequest.RequestResult< List<Rock.Client.Group> > resultHandler )
+                /*public void GetGroupsByLocation( int geoFenceGroupTypeId, int groupTypeId, string street, string city, string state, string zip, HttpRequest.RequestResult< List<Rock.Client.Group> > resultHandler )
                 {
                     // request a profile by the username. If no username is specified, we'll use the logged in user's name.
                     RestRequest request = GetRockRestRequest( Method.GET );
@@ -505,6 +499,25 @@ namespace CCVApp
 
                     // get the raw response
                     Request.ExecuteAsync< List<Rock.Client.Group> >( requestUrl, request, resultHandler);
+                }*/
+
+                public void GetLocationFromAddress( string street, string city, string state, string zip, HttpRequest.RequestResult<Rock.Client.Location> resultHandler )
+                {
+                    // request a profile by the username. If no username is specified, we'll use the logged in user's name.
+                    RestRequest request = GetRockRestRequest( Method.GET );
+                    string requestUrl = BaseUrl + string.Format( GetLocationFromAddressEndPoint, street, city, state, zip );
+
+                    // first get the location based on the info passed up
+                    Request.ExecuteAsync<Rock.Client.Location>( requestUrl, request, resultHandler );
+                }
+
+                public void GetGroupsByLocation( int geoFenceGroupTypeId, int groupTypeId, int locationId, HttpRequest.RequestResult< List<Rock.Client.Group> > resultHandler )
+                {
+                    // request a profile by the username. If no username is specified, we'll use the logged in user's name.
+                    RestRequest request = GetRockRestRequest( Method.GET );
+                    string requestUrl = BaseUrl + string.Format( GetGroupsByLocationEndPoint, geoFenceGroupTypeId, groupTypeId, locationId );
+
+                    Request.ExecuteAsync< List<Rock.Client.Group> >( requestUrl, request, resultHandler );
                 }
 
                 public void GetNews( HttpRequest.RequestResult< List<Rock.Client.ContentChannelItem> > resultHandler )

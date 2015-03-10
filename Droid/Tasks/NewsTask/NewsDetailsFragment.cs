@@ -118,7 +118,8 @@ namespace Droid
                     else
                     {
                         // use the placeholder and request the image download
-                        HeaderImage = BitmapFactory.DecodeResource( Rock.Mobile.PlatformSpecific.Android.Core.Context.Resources, Resource.Drawable.thumbnailPlaceholder );
+                        System.IO.Stream thumbnailStream = Activity.BaseContext.Assets.Open( GeneralConfig.NewsDetailsPlaceholder );
+                        HeaderImage = BitmapFactory.DecodeStream( thumbnailStream );
 
                         FileCache.Instance.DownloadImageToCache( NewsItem.HeaderImageURL, NewsItem.HeaderImageName, delegate
                             {

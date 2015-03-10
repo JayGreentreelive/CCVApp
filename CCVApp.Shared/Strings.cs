@@ -28,13 +28,13 @@ namespace CCVApp.Shared
 
             public static string[ ] Days =
             {
+                "Sunday",
                 "Monday",
                 "Tuesday",
                 "Wednesday",
                 "Thursday",
                 "Friday",
-                "Saturday",
-                "Sunday"
+                "Saturday"
             };
         }
 

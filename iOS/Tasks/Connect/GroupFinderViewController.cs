@@ -193,8 +193,16 @@ namespace iOS
                 //cell.Address.Text = Parent.GroupEntries[ indexPath.Row ].Address;
                 //cell.Address.SizeToFit( );
 
-                // Day
-                cell.MeetingTime.Text = string.Format( ConnectStrings.GroupFinder_MeetingTime,  Parent.GroupEntries[ indexPath.Row ].Day, Parent.GroupEntries[ indexPath.Row ].Time );
+                // Meeting time - If it isn't set, just blank it out and we wont' show anything for that row.
+                if ( string.IsNullOrEmpty( Parent.GroupEntries[ indexPath.Row ].Day ) == false &&
+                     string.IsNullOrEmpty( Parent.GroupEntries[ indexPath.Row ].Time ) == false )
+                {
+                    cell.MeetingTime.Text = string.Format( ConnectStrings.GroupFinder_MeetingTime, Parent.GroupEntries[ indexPath.Row ].Day, Parent.GroupEntries[ indexPath.Row ].Time );
+                }
+                else
+                {
+                    cell.MeetingTime.Text = "";
+                }
                 cell.MeetingTime.SizeToFit( );
 
                 // Time
@@ -282,6 +290,9 @@ namespace iOS
         }
 
         List<GroupFinder.GroupEntry> GroupEntries { get; set; }
+        GroupFinder.GroupEntry SourceLocation { get; set; }
+
+        public bool GroupListUpdated { get; set; }
 
         UITableView GroupFinderTableView { get; set; }
         GroupFinderViewController.TableSource GroupTableSource { get; set; }
@@ -312,6 +323,30 @@ namespace iOS
             public override void DidSelectAnnotationView(MKMapView mapView, MKAnnotationView view)
             {
                 Parent.AnnotationSelected( view );
+            }
+
+            static string AnnotationID = "pinID";
+            public override MKAnnotationView GetViewForAnnotation(MKMapView mapView, IMKAnnotation annotation)
+            {
+                MKPinAnnotationView pinView = (MKPinAnnotationView) mapView.DequeueReusableAnnotation( AnnotationID );
+                if ( pinView == null )
+                {
+                    pinView = new MKPinAnnotationView( annotation, AnnotationID );
+                    pinView.CanShowCallout = true;
+                }
+
+                // are we rendering the source location?
+                if ( annotation.Coordinate.Latitude == Parent.SourceLocation.Latitude &&
+                     annotation.Coordinate.Longitude == Parent.SourceLocation.Longitude )
+                {
+                    pinView.PinColor = MKPinAnnotationColor.Green;
+                }
+                else
+                {
+                    pinView.PinColor = MKPinAnnotationColor.Red;
+                }
+
+                return pinView;
             }
 
             public override void DidAddAnnotationViews(MKMapView mapView, MKAnnotationView[] views)
@@ -368,6 +403,7 @@ namespace iOS
 
             View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( CCVApp.Shared.Config.ControlStylingConfig.BG_Layer_Color );
 
+            SourceLocation = null;
             GroupEntries = new List<GroupFinder.GroupEntry>();
 
             // setup the top area with the map
@@ -548,6 +584,14 @@ namespace iOS
 
                 // add an annotation for each position found in the group
                 List<IMKAnnotation> annotations = new List<IMKAnnotation>();
+
+                // add an annotation for the source
+                MKPointAnnotation sourceAnnotation = new MKPointAnnotation();
+                sourceAnnotation.SetCoordinate( new CLLocationCoordinate2D( SourceLocation.Latitude, SourceLocation.Longitude ) );
+                sourceAnnotation.Title = "";
+                sourceAnnotation.Subtitle = "";
+                annotations.Add( sourceAnnotation );
+
                 foreach ( GroupFinder.GroupEntry entry in GroupEntries )
                 {
                     MKPointAnnotation annotation = new MKPointAnnotation();
@@ -652,8 +696,6 @@ namespace iOS
             GroupTableSource.SetSelectedRow( GroupFinderTableView, rowIndex );
         }
 
-        public bool GroupListUpdated { get; set; }
-
         public void RegionChanged( )
         {
             // called when we're done focusing on a new area
@@ -716,7 +758,7 @@ namespace iOS
                         BlockerView.FadeIn( delegate
                             {
                                 GroupFinder.GetGroups( street, city, state, zip, 
-                                    delegate( List<GroupFinder.GroupEntry> groupEntries )
+                                    delegate( GroupFinder.GroupEntry sourceLocation, List<GroupFinder.GroupEntry> groupEntries )
                                     {
                                         BlockerView.FadeOut( delegate
                                             {
@@ -727,6 +769,7 @@ namespace iOS
                                                         return x.Distance < y.Distance ? -1 : 1;
                                                     } );
 
+                                                SourceLocation = sourceLocation;
                                                 GroupEntries = groupEntries;
                                                 UpdateMap( );
                                                 GroupFinderTableView.ReloadData( );

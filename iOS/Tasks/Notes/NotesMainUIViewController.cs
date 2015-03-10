@@ -227,16 +227,18 @@ namespace iOS
 
             NotesMainUIViewController Parent { get; set; }
             List<SeriesEntry> SeriesEntries { get; set; }
-            UIImage ImagePlaceholder { get; set; }
+            UIImage ImageMainPlaceholder { get; set; }
+            UIImage ImageThumbPlaceholder { get; set; }
 
             nfloat PendingPrimaryCellHeight { get; set; }
             nfloat PendingCellHeight { get; set; }
 
-            public TableSource (NotesMainUIViewController parent, List<SeriesEntry> series, UIImage imagePlaceholder )
+            public TableSource (NotesMainUIViewController parent, List<SeriesEntry> series, UIImage imageMainPlaceholder, UIImage imageThumbPlaceholder )
             {
                 Parent = parent;
                 SeriesEntries = series;
-                ImagePlaceholder = imagePlaceholder;
+                ImageMainPlaceholder = imageMainPlaceholder;
+                ImageThumbPlaceholder = imageThumbPlaceholder;
             }
 
             public override nint RowsInSection (UITableView tableview, nint section)
@@ -327,7 +329,7 @@ namespace iOS
                 }
 
                 // Banner Image
-                cell.Image.Image = SeriesEntries[ 0 ].mBillboard != null ? SeriesEntries[ 0 ].mBillboard : ImagePlaceholder;
+                cell.Image.Image = SeriesEntries[ 0 ].mBillboard != null ? SeriesEntries[ 0 ].mBillboard : ImageMainPlaceholder;
                 cell.Image.SizeToFit( );
 
                 // resize the image to fit the width of the device
@@ -421,7 +423,7 @@ namespace iOS
                 }
 
                 // Thumbnail Image
-                cell.Image.Image = SeriesEntries[ row ].mThumbnail != null ? SeriesEntries[ row ].mThumbnail : ImagePlaceholder;
+                cell.Image.Image = SeriesEntries[ row ].mThumbnail != null ? SeriesEntries[ row ].mThumbnail : ImageThumbPlaceholder;
                 cell.Image.SizeToFit( );
 
                 // force the image to be sized according to the height of the cell
@@ -477,7 +479,8 @@ namespace iOS
             public UIImage mThumbnail;
         }
         List<SeriesEntry> SeriesEntries { get; set; }
-        UIImage ImagePlaceholder{ get; set; }
+        UIImage ImageMainPlaceholder{ get; set; }
+        UIImage ImageThumbPlaceholder{ get; set; }
 
         UIActivityIndicatorView ActivityIndicator { get; set; }
 
@@ -489,8 +492,12 @@ namespace iOS
         {
             SeriesEntries = new List<SeriesEntry>();
 
-            string imagePath = NSBundle.MainBundle.BundlePath + "/" + "podcastThumbnailPlaceholder.png";
-            ImagePlaceholder = new UIImage( imagePath );
+            string imagePath = NSBundle.MainBundle.BundlePath + "/" + GeneralConfig.NotesMainPlaceholder;
+            ImageMainPlaceholder = new UIImage( imagePath );
+
+
+            imagePath = NSBundle.MainBundle.BundlePath + "/" + GeneralConfig.NotesThumbPlaceholder;
+            ImageThumbPlaceholder = new UIImage( imagePath );
         }
 
         public override void ViewDidLoad()
@@ -595,7 +602,7 @@ namespace iOS
                         // only update the table if we're still visible
                         if ( IsVisible == true )
                         {
-                            TableSource source = new TableSource( this, SeriesEntries, ImagePlaceholder );
+                            TableSource source = new TableSource( this, SeriesEntries, ImageMainPlaceholder, ImageThumbPlaceholder );
                             NotesTableView.Source = source;
                             NotesTableView.ReloadData( );
                         }
@@ -744,7 +751,7 @@ namespace iOS
         {
             DetailsViewController = Storyboard.InstantiateViewController( "NotesDetailsUIViewController" ) as NotesDetailsUIViewController;
             DetailsViewController.Series = SeriesEntries[ row ].Series;
-            DetailsViewController.SeriesBillboard = SeriesEntries[ row ].mBillboard != null ? SeriesEntries[ row ].mBillboard : ImagePlaceholder;
+            DetailsViewController.SeriesBillboard = SeriesEntries[ row ].mBillboard != null ? SeriesEntries[ row ].mBillboard : ImageMainPlaceholder;
 
             // Note - if they are fast enough, they will end up going to the details of a series before
             // the series banner comes down, resulting in them seeing the generic image placeholder.

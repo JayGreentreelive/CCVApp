@@ -57,7 +57,7 @@ namespace iOS
             else
             {
                 // otherwise use a placeholder and request the actual image
-                ImageBanner.Image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + "podcastThumbnailPlaceholder.png" );
+                ImageBanner.Image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + GeneralConfig.NewsDetailsPlaceholder );
 
                 FileCache.Instance.DownloadImageToCache( NewsItem.HeaderImageURL, NewsItem.HeaderImageName, delegate
                     {

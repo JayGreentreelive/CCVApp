@@ -120,9 +120,6 @@
     <AndroidResource Include="..\Assets\androidPhotoMask%402x.png">
       <Link>Resources\drawable-hdpi\androidPhotoMask.png</Link>
     </AndroidResource>
-    <AndroidResource Include="..\Assets\podcastThumbnailPlaceholder%402x.png">
-      <Link>Resources\drawable-hdpi\thumbnailPlaceholder.png</Link>
-    </AndroidResource>
     <AndroidResource Include="Resources\drawable-hdpi\shadow.9.png" />
     <AndroidResource Include="Resources\drawable-mdpi\shadow.9.png" />
     <AndroidResource Include="..\Assets\Icons\Icon%402x.png">
@@ -356,6 +353,18 @@
     </AndroidAsset>
     <AndroidAsset Include="..\Assets\starting_point_thumb.png">
       <Link>Assets\starting_point_thumb.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\placeholder_news_details.png">
+      <Link>Assets\placeholder_news_details.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\placeholder_news_main.png">
+      <Link>Assets\placeholder_news_main.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\placeholder_notes_main.png">
+      <Link>Assets\placeholder_notes_main.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\placeholder_notes_thumb.png">
+      <Link>Assets\placeholder_notes_thumb.png</Link>
     </AndroidAsset>
   </ItemGroup>
   <ItemGroup>

@@ -187,7 +187,7 @@ namespace Droid
                             else
                             {
                                 DetailsPage.Series = MainPage.SeriesEntries[ buttonId ].Series;
-                                DetailsPage.SeriesBillboard = MainPage.SeriesEntries[ buttonId ].Billboard;
+                                DetailsPage.SeriesBillboard = MainPage.GetSeriesBillboard( buttonId );
                                 PresentFragment( DetailsPage, true );
                             }
                         }

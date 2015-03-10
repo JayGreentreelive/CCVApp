@@ -16,6 +16,7 @@ using Android.Graphics;
 using CCVApp.Shared;
 using System.IO;
 using Rock.Mobile.PlatformSpecific.Android.Graphics;
+using CCVApp.Shared.Config;
 
 namespace Droid
 {
@@ -103,7 +104,8 @@ namespace Droid
                 {
                     base.OnCreate( savedInstanceState );
 
-                    Placeholder = BitmapFactory.DecodeResource( Rock.Mobile.PlatformSpecific.Android.Core.Context.Resources, Resource.Drawable.thumbnailPlaceholder );
+                    System.IO.Stream thumbnailStream = Activity.BaseContext.Assets.Open( GeneralConfig.NewsMainPlaceholder );
+                    Placeholder = BitmapFactory.DecodeStream( thumbnailStream );
                 }
 
                 public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)

@@ -114,7 +114,7 @@ namespace iOS
             News = new List<NewsEntry>( );
             SourceRockNews = new List<RockNews>( );
 
-            string imagePath = NSBundle.MainBundle.BundlePath + "/" + "podcastThumbnailPlaceholder.png";
+            string imagePath = NSBundle.MainBundle.BundlePath + "/" + GeneralConfig.NewsMainPlaceholder;
             ImagePlaceholder = new UIImage( imagePath );
 		}
 

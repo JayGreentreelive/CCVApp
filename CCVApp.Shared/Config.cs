@@ -75,6 +75,12 @@ namespace CCVApp
                 /// Although this is an int, it should match the KeyboardAppearance enum.
                 /// </summary>
                 public const int iOSPlatformUIKeyboardAppearance = 1;
+
+                public const string NewsMainPlaceholder = "placeholder_news_main.png";
+                public const string NewsDetailsPlaceholder = "placeholder_news_details.png";
+
+                public const string NotesMainPlaceholder = "placeholder_notes_main.png";
+                public const string NotesThumbPlaceholder = "placeholder_notes_thumb.png";
             }
 
             public class SpringboardConfig

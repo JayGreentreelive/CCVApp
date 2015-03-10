@@ -35,15 +35,17 @@ namespace Droid
             {
                 List<SeriesEntry> SeriesEntries { get; set; }
                 NotesPrimaryFragment ParentFragment { get; set; }
-                Bitmap ImagePlaceholder { get; set; }
+                Bitmap ImageMainPlaceholder { get; set; }
+                Bitmap ImageThumbPlaceholder { get; set; }
 
-                public NotesArrayAdapter( NotesPrimaryFragment parentFragment, List<SeriesEntry> series, Bitmap imagePlaceholder )
+                public NotesArrayAdapter( NotesPrimaryFragment parentFragment, List<SeriesEntry> series, Bitmap imageMainPlaceholder, Bitmap imageThumbPlaceholder )
                 {
                     ParentFragment = parentFragment;
 
                     SeriesEntries = series;
 
-                    ImagePlaceholder = imagePlaceholder;
+                    ImageMainPlaceholder = imageMainPlaceholder;
+                    ImageThumbPlaceholder = imageThumbPlaceholder;
                 }
 
                 public override int Count 
@@ -85,7 +87,7 @@ namespace Droid
 
                     primaryItem.ParentAdapter = this;
 
-                    primaryItem.Billboard.SetImageBitmap( SeriesEntries[ 0 ].Billboard != null ? SeriesEntries[ 0 ].Billboard : ImagePlaceholder );
+                    primaryItem.Billboard.SetImageBitmap( SeriesEntries[ 0 ].Billboard != null ? SeriesEntries[ 0 ].Billboard : ImageMainPlaceholder );
                     primaryItem.Billboard.SetScaleType( ImageView.ScaleType.CenterCrop );
 
                     primaryItem.Title.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Name;
@@ -123,7 +125,7 @@ namespace Droid
                         seriesItem = new SeriesListItem( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     }
 
-                    seriesItem.Thumbnail.SetImageBitmap( SeriesEntries[ position ].Thumbnail != null ? SeriesEntries[ position ].Thumbnail : ImagePlaceholder );
+                    seriesItem.Thumbnail.SetImageBitmap( SeriesEntries[ position ].Thumbnail != null ? SeriesEntries[ position ].Thumbnail : ImageThumbPlaceholder );
                     seriesItem.Thumbnail.SetScaleType( ImageView.ScaleType.CenterCrop );
 
                     seriesItem.Title.Text = SeriesEntries[ position ].Series.Name;
@@ -466,14 +468,25 @@ namespace Droid
                 ProgressBar ProgressBar { get; set; }
                 ListView ListView { get; set; }
 
-                Bitmap ImagePlaceholder { get; set; }
+                Bitmap ImageMainPlaceholder { get; set; }
+                Bitmap ImageThumbPlaceholder { get; set; }
 
                 bool FragmentActive { get; set; }
 
                 public NotesPrimaryFragment( ) : base( )
                 {
                     SeriesEntries = new List<SeriesEntry>();
-                    ImagePlaceholder = BitmapFactory.DecodeResource( Rock.Mobile.PlatformSpecific.Android.Core.Context.Resources, Resource.Drawable.thumbnailPlaceholder );
+                }
+
+                public override void OnCreate(Bundle savedInstanceState)
+                {
+                    base.OnCreate(savedInstanceState);
+
+                    System.IO.Stream thumbnailStream = Activity.BaseContext.Assets.Open( GeneralConfig.NotesThumbPlaceholder );
+                    ImageThumbPlaceholder = BitmapFactory.DecodeStream( thumbnailStream );
+
+                    System.IO.Stream mainImageStream = Activity.BaseContext.Assets.Open( GeneralConfig.NotesMainPlaceholder );
+                    ImageMainPlaceholder = BitmapFactory.DecodeStream( mainImageStream );
                 }
 
                 public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -513,6 +526,11 @@ namespace Droid
                 {
                     // notify the task that the Take Notes button was clicked
                     ParentTask.OnClick( this, -1, 2 );
+                }
+
+                public Bitmap GetSeriesBillboard( int index )
+                {
+                    return SeriesEntries[ index ].Billboard != null ? SeriesEntries[ index ].Billboard : ImageMainPlaceholder;
                 }
 
                 public override void OnResume()
@@ -578,7 +596,7 @@ namespace Droid
                             {
                                 if( FragmentActive == true )
                                 {
-                                    ListView.Adapter = new NotesArrayAdapter( this, SeriesEntries, ImagePlaceholder );
+                                    ListView.Adapter = new NotesArrayAdapter( this, SeriesEntries, ImageMainPlaceholder, ImageThumbPlaceholder );
                                 }
 
                                 // setup the series entries either way, because that doesn't require the fragment to be active

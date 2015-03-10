@@ -9,9 +9,13 @@ Changes
 
 Both
 	General - Fixed an issue causing the "Notes" billboard to sometimes not appear immediately at startup. (This time for realsies)
+	General - Added final placeholder images. (Thanks Nick!)
 
 	Notes - Fixed an issue allowing the device to sleep when viewing a quote URL.
-	
+
+	GroupFinder - Your location is now shown in green.
+	GroupFinder - Distance is now accurate.
+
 
 iOS
 	General - Fixed an issue causing the back button to remain disabled when going from Landscape to Portrait
@@ -20,7 +24,10 @@ iOS
 
 	Notes - Fixed the last of the issues causing the phone to goto sleep when using Sermon Notes.
 	
+
 Android
 	Messages - Fixed crashing and other misc issues when picking a Podcast to listen to or watch.
 
 	Give - Fixed an endless death loop when tapping Give
+
+	GroupFinder - Fixed an issue causing row taps to be ignored.

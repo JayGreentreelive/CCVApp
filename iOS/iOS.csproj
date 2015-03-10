@@ -288,9 +288,6 @@
     <BundleResource Include="..\Assets\news_startingpoint_main%403x.png">
       <Link>Resources\news_startingpoint_main%403x.png</Link>
     </BundleResource>
-    <BundleResource Include="..\Assets\podcastThumbnailPlaceholder%402x.png">
-      <Link>Resources\podcastThumbnailPlaceholder%402x.png</Link>
-    </BundleResource>
     <BundleResource Include="..\Assets\spot_mask.png">
       <Link>Resources\spot_mask.png</Link>
     </BundleResource>
@@ -344,6 +341,18 @@
     </BundleResource>
     <BundleResource Include="..\Assets\starting_point_thumb.png">
       <Link>Resources\starting_point_thumb.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\placeholder_news_details.png">
+      <Link>Resources\placeholder_news_details.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\placeholder_news_main.png">
+      <Link>Resources\placeholder_news_main.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\placeholder_notes_main.png">
+      <Link>Resources\placeholder_notes_main.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\placeholder_notes_thumb.png">
+      <Link>Resources\placeholder_notes_thumb.png</Link>
     </BundleResource>
   </ItemGroup>
   <ItemGroup>

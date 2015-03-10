@@ -22,6 +22,7 @@ using CCVApp.Shared;
 using CCVApp.Shared.Network;
 using CCVApp.Shared.Analytics;
 using Rock.Mobile.Animation;
+using Android.Gms.Maps.Model;
 
 namespace Droid
 {
@@ -85,7 +86,19 @@ namespace Droid
 
                     messageItem.Title.Text = ParentFragment.GroupEntries[ position ].Title;
                     //messageItem.Address.Text = ParentFragment.GroupEntries[ position ].Address;
-                    messageItem.MeetingTime.Text = string.Format( ConnectStrings.GroupFinder_MeetingTime, ParentFragment.GroupEntries[ position ].Day, ParentFragment.GroupEntries[ position ].Time );
+
+                    // if there's a meeting time set, display it. Otherwise we won't display that row
+                    if ( string.IsNullOrEmpty( ParentFragment.GroupEntries[ position ].Day ) == false &&
+                         string.IsNullOrEmpty( ParentFragment.GroupEntries[ position ].Time ) == false )
+                    {
+                        messageItem.MeetingTime.Visibility = ViewStates.Visible;
+                        messageItem.MeetingTime.Text = string.Format( ConnectStrings.GroupFinder_MeetingTime, ParentFragment.GroupEntries[ position ].Day, ParentFragment.GroupEntries[ position ].Time );
+                    }
+                    else
+                    {
+                        messageItem.MeetingTime.Visibility = ViewStates.Gone;
+                        messageItem.MeetingTime.Text = "";
+                    }
 
                     // if this is the nearest group, add a label saying so
                     messageItem.Distance.Text = string.Format( "{0:##.0} {1}", ParentFragment.GroupEntries[ position ].Distance, ConnectStrings.GroupFinder_MilesSuffix );
@@ -179,6 +192,9 @@ namespace Droid
                     JoinButton.Text = ConnectConfig.GroupFinder_JoinIcon;
                     JoinButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                     JoinButton.SetBackgroundDrawable( null );
+                    JoinButton.SetBackgroundColor( Color.Green );
+                    JoinButton.FocusableInTouchMode = false;
+                    JoinButton.Focusable = false;
                     contentLayout.AddView( JoinButton );
 
                     JoinButton.Click += (object sender, EventArgs e ) =>
@@ -247,6 +263,7 @@ namespace Droid
                 View Seperator { get; set; }
                 public List<GroupFinder.GroupEntry> GroupEntries { get; set; }
                 public List<Android.Gms.Maps.Model.Marker> MarkerList { get; set; }
+                public GroupFinder.GroupEntry SourceLocation { get; set; }
 
                 View StreetSeperator { get; set; }
                 View CitySeperator { get; set; }
@@ -259,6 +276,7 @@ namespace Droid
 
                     GroupEntries = new List<GroupFinder.GroupEntry>();
                     MarkerList = new List<Android.Gms.Maps.Model.Marker>();
+                    SourceLocation = new GroupFinder.GroupEntry();
 
                     AddressLayout = new LinearLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     AddressLayout.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
@@ -615,27 +633,37 @@ namespace Droid
                     Map.Clear( );
                     MarkerList.Clear( );
 
-                    Android.Gms.Maps.Model.LatLngBounds.Builder builder = new Android.Gms.Maps.Model.LatLngBounds.Builder();
-
-                    for ( int i = 0; i < GroupEntries.Count; i++ )
-                    {
-                        // add the positions to the map
-                        Android.Gms.Maps.Model.MarkerOptions markerOptions = new Android.Gms.Maps.Model.MarkerOptions();
-                        Android.Gms.Maps.Model.LatLng pos = new Android.Gms.Maps.Model.LatLng( GroupEntries[ i ].Latitude, GroupEntries[ i ].Longitude );
-                        markerOptions.SetPosition( pos );
-                        markerOptions.SetTitle( GroupEntries[ i ].Title );
-                        markerOptions.SetSnippet( string.Format( "{0:##.0} {1}", GroupEntries[ i ].Distance, ConnectStrings.GroupFinder_MilesSuffix ) );
-
-                        builder.Include( pos );
-
-                        Android.Gms.Maps.Model.Marker marker = Map.AddMarker( markerOptions );
-                        MarkerList.Add( marker );
-                    }
-
                     string address = Street.Text + " " + City.Text + ", " + State.Text + ", " + Zip.Text;
 
                     if ( GroupEntries.Count > 0 )
                     {
+                        Android.Gms.Maps.Model.LatLngBounds.Builder builder = new Android.Gms.Maps.Model.LatLngBounds.Builder();
+
+                        // add the source position
+                        Android.Gms.Maps.Model.MarkerOptions markerOptions = new Android.Gms.Maps.Model.MarkerOptions();
+                        Android.Gms.Maps.Model.LatLng pos = new Android.Gms.Maps.Model.LatLng( SourceLocation.Latitude, SourceLocation.Longitude );
+                        markerOptions.SetPosition( pos );
+                        markerOptions.InvokeIcon( BitmapDescriptorFactory.DefaultMarker( BitmapDescriptorFactory.HueGreen ) );
+                        builder.Include( pos );
+
+                        Android.Gms.Maps.Model.Marker marker = Map.AddMarker( markerOptions );
+                        MarkerList.Add( marker );
+
+                        for ( int i = 0; i < GroupEntries.Count; i++ )
+                        {
+                            // add the positions to the map
+                            markerOptions = new Android.Gms.Maps.Model.MarkerOptions();
+                            pos = new Android.Gms.Maps.Model.LatLng( GroupEntries[ i ].Latitude, GroupEntries[ i ].Longitude );
+                            markerOptions.SetPosition( pos );
+                            markerOptions.SetTitle( GroupEntries[ i ].Title );
+                            markerOptions.SetSnippet( string.Format( "{0:##.0} {1}", GroupEntries[ i ].Distance, ConnectStrings.GroupFinder_MilesSuffix ) );
+
+                            builder.Include( pos );
+
+                            marker = Map.AddMarker( markerOptions );
+                            MarkerList.Add( marker );
+                        }
+
                         Android.Gms.Maps.Model.LatLngBounds bounds = builder.Build( );
 
                         CameraUpdate camPos = CameraUpdateFactory.NewLatLngBounds( bounds, 200 );
@@ -685,8 +713,10 @@ namespace Droid
 
                             ProgressBar.Visibility = ViewStates.Visible;
 
-                            CCVApp.Shared.GroupFinder.GetGroups( Street.Text, City.Text, State.Text, Zip.Text, delegate( List<GroupFinder.GroupEntry> groupEntries )
+                            CCVApp.Shared.GroupFinder.GetGroups( Street.Text, City.Text, State.Text, Zip.Text, delegate( GroupFinder.GroupEntry sourceLocation, List<GroupFinder.GroupEntry> groupEntries )
                                 {
+                                    SourceLocation = sourceLocation;
+
                                     groupEntries.Sort( delegate(GroupFinder.GroupEntry x, GroupFinder.GroupEntry y )
                                         {
                                             return x.Distance < y.Distance ? -1 : 1;
