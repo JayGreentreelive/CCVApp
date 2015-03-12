@@ -67,6 +67,8 @@ namespace CCVApp
                 public const int GroupMemberStatus_Pending_ValueId = 2;
                 public const int ApplicationGroup_PhotoRequest_ValueId = 1207885;
                 public const int GroupMemberRole_Member_ValueId = 59;
+                public const int GeneralDataTimeValueId = 2623;
+                public const int UserLoginEntityTypeId = 27;
 
                 /// <summary>
                 /// iOS only, this controls what style of keyboard is used for PLATFORM textFields.

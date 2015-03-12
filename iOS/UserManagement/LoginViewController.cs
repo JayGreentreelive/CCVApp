@@ -13,6 +13,7 @@ using Rock.Mobile.Threading;
 using Rock.Mobile.PlatformSpecific.iOS.UI;
 using System.Collections.Generic;
 using Rock.Mobile.Animation;
+using CoreGraphics;
 
 namespace iOS
 {
@@ -54,6 +55,20 @@ namespace iOS
 
         UIImageView FBImageView { get; set; }
 
+        StyledTextField UserNameField { get; set; }
+
+        StyledTextField PasswordField { get; set; }
+
+        UIButton LoginButton { get; set; }
+        UIButton RegisterButton { get; set; }
+
+        UIButton FacebookLogin { get; set; }
+        UIButton CancelButton { get; set; }
+
+        StyledTextField LoginResult { get; set; }
+
+        UIView HeaderView { get; set; }
+
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
@@ -63,11 +78,12 @@ namespace iOS
 
             View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
-            // Allow the return on username and password to start
-            // the login process
-            ControlStyling.StyleTextField( UsernameText, LoginStrings.UsernamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
-            ControlStyling.StyleBGLayer( UsernameLayer );
-            UsernameText.ShouldReturn += (textField) => 
+            UserNameField = new StyledTextField();
+            View.AddSubview( UserNameField.Background );
+            UserNameField.SetFrame( new CGRect( -10, View.Frame.Height * .25f, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+            ControlStyling.StyleTextField( UserNameField.Field, LoginStrings.UsernamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleBGLayer( UserNameField.Background );
+            UserNameField.Field.ShouldReturn += (textField) => 
                 {
                     textField.ResignFirstResponder();
 
@@ -75,9 +91,12 @@ namespace iOS
                     return true;
                 };
 
-            ControlStyling.StyleTextField( PasswordText, LoginStrings.PasswordPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
-            ControlStyling.StyleBGLayer( PasswordLayer );
-            PasswordText.ShouldReturn += (textField) => 
+            PasswordField = new StyledTextField();
+            View.AddSubview( PasswordField.Background );
+            PasswordField.SetFrame( new CGRect( UserNameField.Background.Frame.Left, UserNameField.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+            ControlStyling.StyleTextField( PasswordField.Field, LoginStrings.PasswordPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleBGLayer( PasswordField.Background );
+            PasswordField.Field.ShouldReturn += (textField) => 
                 {
                     textField.ResignFirstResponder();
 
@@ -86,7 +105,11 @@ namespace iOS
                 };
 
             // obviously attempt a login if login is pressed
+            LoginButton = UIButton.FromType( UIButtonType.System );
+            View.AddSubview( LoginButton );
             ControlStyling.StyleButton( LoginButton, LoginStrings.LoginButton, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            LoginButton.SizeToFit( );
+            LoginButton.Frame = new CGRect( View.Frame.Left + 8, PasswordField.Background.Frame.Bottom + 20, ControlStyling.ButtonWidth, ControlStyling.ButtonHeight );
             LoginButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
                     if( RockMobileUser.Instance.LoggedIn == true )
@@ -101,9 +124,29 @@ namespace iOS
                     }
                 };
 
+            RegisterButton = UIButton.FromType( UIButtonType.System );
+            View.AddSubview( RegisterButton );
             ControlStyling.StyleButton( RegisterButton, LoginStrings.RegisterButton, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            RegisterButton.SizeToFit( );
+            RegisterButton.Frame = new CGRect( View.Frame.Right - ControlStyling.ButtonWidth - 8, PasswordField.Background.Frame.Bottom + 20, ControlStyling.ButtonWidth, ControlStyling.ButtonHeight );
+            RegisterButton.TouchUpInside += (object sender, EventArgs e ) =>
+                {
+                    Springboard.RegisterNewUser( );
+                };
+
+            // setup the result
+            LoginResult = new StyledTextField( );
+            View.AddSubview( LoginResult.Background );
+            LoginResult.SetFrame( new CGRect( UserNameField.Background.Frame.Left, LoginButton.Frame.Bottom + 20, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+            ControlStyling.StyleTextField( LoginResult.Field, "", ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            ControlStyling.StyleBGLayer( LoginResult.Background );
+            LoginResult.Field.UserInteractionEnabled = false;
+            LoginResult.Field.TextAlignment = UITextAlignment.Center;
 
             // setup the facebook button
+            FacebookLogin = new UIButton( );
+            View.AddSubview( FacebookLogin );
+            FacebookLogin.Frame = new CGRect( -2, LoginResult.Background.Frame.Bottom + 20, View.Frame.Width + 4, ControlStyling.ButtonHeight );
             string imagePath = NSBundle.MainBundle.BundlePath + "/" + "facebook_login.png";
             FBImageView = new UIImageView( new UIImage( imagePath ) );
 
@@ -116,7 +159,12 @@ namespace iOS
                 };
 
             // If cancel is pressed, notify the springboard we're done.
+            CancelButton = UIButton.FromType( UIButtonType.System );
+            View.AddSubview( CancelButton );
             CancelButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
+            CancelButton.SetTitle( GeneralStrings.Cancel, UIControlState.Normal );
+            CancelButton.SizeToFit( );
+            CancelButton.Frame = new CGRect( ( View.Frame.Width - CancelButton.Frame.Width ) / 2, FacebookLogin.Frame.Bottom + 20, CancelButton.Frame.Width, CancelButton.Frame.Height );
             CancelButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
                     // don't allow canceling while we wait for a web request.
@@ -125,13 +173,11 @@ namespace iOS
                         Springboard.ResignModelViewController( this, null );
                     }
                 };
-
-            // setup the result
-            ControlStyling.StyleUILabel( LoginResultLabel, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-            ControlStyling.StyleBGLayer( LoginResultLayer );
-            LoginResultLayer.Layer.Opacity = 0.00f;
-
+            
             // setup the fake header
+            HeaderView = new UIView( );
+            View.AddSubview( HeaderView );
+            HeaderView.Frame = new CGRect( View.Frame.Left, View.Frame.Top, View.Frame.Width, StyledTextField.StyledFieldHeight );
             HeaderView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             imagePath = NSBundle.MainBundle.BundlePath + "/" + PrimaryNavBarConfig.LogoFile;
@@ -159,13 +205,13 @@ namespace iOS
         {
             base.ViewWillAppear(animated);
 
-            LoginResultLayer.Layer.Opacity = 0.00f;
+            LoginResult.Background.Layer.Opacity = 0.00f;
 
             // clear these only on the appearance of the view. (As opposed to also 
             // when the state becomes LogOut.) This way, if they do something like mess
             // up their password, it won't force them to retype it all in.
-            UsernameText.Text = "";
-            PasswordText.Text = "";
+            UserNameField.Field.Text = string.Empty;
+            PasswordField.Field.Text = string.Empty;
         }
 
         public override void ViewDidAppear(bool animated)
@@ -181,8 +227,8 @@ namespace iOS
             if( RockMobileUser.Instance.LoggedIn )
             {
                 // populate them with the user's info
-                UsernameText.Text = RockMobileUser.Instance.UserID;
-                PasswordText.Text = RockMobileUser.Instance.RockPassword;
+                UserNameField.Field.Text = RockMobileUser.Instance.UserID;
+                PasswordField.Field.Text = RockMobileUser.Instance.RockPassword;
 
                 SetUIState( LoginState.In );
             }
@@ -198,8 +244,8 @@ namespace iOS
 
             // if they tap somewhere outside of the text fields, 
             // hide the keyboard
-            UsernameText.ResignFirstResponder( );
-            PasswordText.ResignFirstResponder( );
+            UserNameField.Field.ResignFirstResponder( );
+            PasswordField.Field.ResignFirstResponder( );
         }
 
         public override bool ShouldAutorotate()
@@ -225,12 +271,12 @@ namespace iOS
         public void TryRockBind()
         {
             // if both fields are valid, attempt a login!
-            if( string.IsNullOrEmpty( UsernameText.Text ) == false &&
-                string.IsNullOrEmpty( PasswordText.Text ) == false )
+            if( string.IsNullOrEmpty( UserNameField.Field.Text ) == false &&
+                string.IsNullOrEmpty( PasswordField.Field.Text ) == false )
             {
                 SetUIState( LoginState.Trying );
 
-                RockMobileUser.Instance.BindRockAccount( UsernameText.Text, PasswordText.Text, BindComplete );
+                RockMobileUser.Instance.BindRockAccount( UserNameField.Field.Text, PasswordField.Field.Text, BindComplete );
             }
         }
 
@@ -305,14 +351,14 @@ namespace iOS
         protected void SetUIState( LoginState state )
         {
             // reset the result label
-            LoginResultLabel.Text = "";
+            LoginResult.Field.Text = "";
 
             switch( state )
             {
                 case LoginState.Out:
                 {
-                    UsernameText.Enabled = true;
-                    PasswordText.Enabled = true;
+                    UserNameField.Field.Enabled = true;
+                    PasswordField.Field.Enabled = true;
                     LoginButton.Enabled = true;
                     CancelButton.Enabled = true;
                     RegisterButton.Hidden = false;
@@ -328,8 +374,8 @@ namespace iOS
                     FadeLoginResult( false );
                     BlockerView.FadeIn( null );
 
-                    UsernameText.Enabled = false;
-                    PasswordText.Enabled = false;
+                    UserNameField.Field.Enabled = false;
+                    PasswordField.Field.Enabled = false;
                     LoginButton.Enabled = false;
                     CancelButton.Enabled = false;
                     RegisterButton.Enabled = false;
@@ -342,8 +388,8 @@ namespace iOS
                 // Deprecated state
                 case LoginState.In:
                 {
-                    UsernameText.Enabled = false;
-                    PasswordText.Enabled = false;
+                    UserNameField.Field.Enabled = false;
+                    PasswordField.Field.Enabled = false;
                     LoginButton.Enabled = true;
                     CancelButton.Enabled = true;
                     RegisterButton.Hidden = true;
@@ -378,7 +424,7 @@ namespace iOS
 
                             // wrong user name / password
                             FadeLoginResult( true );
-                            LoginResultLabel.Text = LoginStrings.Error_Credentials;
+                            LoginResult.Field.Text = LoginStrings.Error_Credentials;
                         } );
                     break;
                 }
@@ -391,7 +437,7 @@ namespace iOS
                             // allow them to attempt logging in again
                             SetUIState( LoginState.Out );
 
-                            LoginResultLabel.Text = "";
+                            LoginResult.Field.Text = "";
                         } );
 
                     break;
@@ -406,7 +452,7 @@ namespace iOS
 
                             // failed to login for some reason
                             FadeLoginResult( true );
-                            LoginResultLabel.Text = LoginStrings.Error_Unknown;
+                            LoginResult.Field.Text = LoginStrings.Error_Unknown;
                         } );
                     break;
                 }
@@ -442,7 +488,7 @@ namespace iOS
 
                             // failed to login for some reason
                             FadeLoginResult( true );
-                            LoginResultLabel.Text = LoginStrings.Error_Unknown;
+                            LoginResult.Field.Text = LoginStrings.Error_Unknown;
 
                             RockMobileUser.Instance.LogoutAndUnbind( );
                             break;
@@ -472,7 +518,7 @@ namespace iOS
 
                             // update the UI
                             FadeLoginResult( true );
-                            LoginResultLabel.Text = string.Format( LoginStrings.Success, RockMobileUser.Instance.PreferredName( ) );
+                            LoginResult.Field.Text = string.Format( LoginStrings.Success, RockMobileUser.Instance.PreferredName( ) );
 
                             // start the timer, which will notify the springboard we're logged in when it ticks.
                             LoginSuccessfulTimer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>
@@ -496,7 +542,7 @@ namespace iOS
 
                             // failed to login for some reason
                             FadeLoginResult( true );
-                            LoginResultLabel.Text = LoginStrings.Error_Unknown;
+                            LoginResult.Field.Text = LoginStrings.Error_Unknown;
 
                             RockMobileUser.Instance.LogoutAndUnbind( );
                             break;
@@ -530,7 +576,7 @@ namespace iOS
                 new Action( 
                     delegate 
                     { 
-                        LoginResultLayer.Layer.Opacity = fadeIn == true ? 1.00f : 0.00f;
+                        LoginResult.Background.Layer.Opacity = fadeIn == true ? 1.00f : 0.00f;
                     })
 
                 , new Action(

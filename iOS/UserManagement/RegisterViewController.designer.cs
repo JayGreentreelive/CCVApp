@@ -11,8 +11,8 @@ using UIKit;
 
 namespace iOS
 {
-	[Register ("LoginViewController")]
-	partial class LoginViewController
+	[Register ("RegisterViewController")]
+	partial class RegisterViewController
 	{
 		void ReleaseDesignerOutlets ()
 		{

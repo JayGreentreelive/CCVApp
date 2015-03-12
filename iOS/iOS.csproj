@@ -459,6 +459,10 @@
     <Compile Include="Tasks\News\NewsWebViewController.designer.cs">
       <DependentUpon>NewsWebViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserManagement\RegisterViewController.cs" />
+    <Compile Include="UserManagement\RegisterViewController.designer.cs">
+      <DependentUpon>RegisterViewController.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="..\..\Rock\Rock.Client\Rock.Client.Models.projitems" Label="Shared" Condition="Exists('..\..\Rock\Rock.Client\Rock.Client.Models.projitems')" />
   <Import Project="..\..\Rock.Mobile\Rock.Mobile.projitems" Label="Shared" Condition="Exists('..\..\Rock.Mobile\Rock.Mobile.projitems')" />

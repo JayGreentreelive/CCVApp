@@ -87,6 +87,31 @@ namespace CCVApp.Shared
             public const string Success = "Welcome back, {0}.";
         }
 
+        public class RegisterStrings
+        {
+            public const string RegisterButton = "Register";
+            public const string ConfirmCancelReg = "Cancel Registration?";
+
+            public const string UsernamePlaceholder = "Username";
+            public const string PasswordPlaceholder = "Password";
+            public const string ConfirmPasswordPlaceholder = "Confirm Password";
+
+            public const string NickNamePlaceholder = "First Name";
+            public const string LastNamePlaceholder = "Last Name";
+
+            public const string CellPhonePlaceholder = "Cell Phone";
+            public const string EmailPlaceholder = "Email";
+
+            public const string RegisterStatus_Success = "Registration Successful";
+            public const string RegisterStatus_Failed = "Small Issue";
+
+            public const string RegisterResult_Symbol_Success = "";
+            public const string RegisterResult_Symbol_Failed = "";
+
+            public const string RegisterResult_Success = "All set! You're now registered with CCV.";
+            public const string RegisterResult_Failed = "Looks like there was a problem registering. Make sure you're connected to the internet and try again.";
+        }
+
         public class ProfileStrings
         {
             public const string SubmitChangesTitle = "Submit Changes?";

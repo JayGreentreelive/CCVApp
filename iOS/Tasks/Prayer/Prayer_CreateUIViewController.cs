@@ -102,10 +102,10 @@ namespace iOS
                     if( UISwitchAnonymous.On == true )
                     {
                         FirstNameText.Enabled = false;
-                        FirstNameText.TextColor = UIColor.DarkGray;
+                        FirstNameText.Text = string.Empty;
 
                         LastNameText.Enabled = false;
-                        LastNameText.TextColor = UIColor.DarkGray;
+                        LastNameText.Text = string.Empty;
                     }
                     else
                     {
@@ -206,61 +206,29 @@ namespace iOS
             }
             else
             {
-                // Update the name background color
-                uint currNameColor = Rock.Mobile.PlatformUI.Util.UIColorToInt( FirstNameBackground.BackgroundColor );
-
+                // Update the first name background color
                 // if they left the name field blank and didn't turn on Anonymous, flag the field.
                 uint targetNameColor = ControlStylingConfig.BG_Layer_Color; 
                 if( string.IsNullOrEmpty( FirstNameText.Text ) && UISwitchAnonymous.On == false )
                 {
                     targetNameColor = ControlStylingConfig.BadInput_BG_Layer_Color;
                 }
-
-                SimpleAnimator_Color nameAnimator = new SimpleAnimator_Color( currNameColor, targetNameColor, .15f, delegate(float percent, object value )
-                    {
-                        FirstNameBackground.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( (uint)value );
-                    }
-                    ,
-                    delegate
-                    {
-                    } );
-                nameAnimator.Start( );
+                Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetNameColor, FirstNameBackground );
 
 
-                // Update the name background color
-                uint currLastNameColor = Rock.Mobile.PlatformUI.Util.UIColorToInt( LastNameBackground.BackgroundColor );
-
+                // Update the LAST name background color
                 // if they left the name field blank and didn't turn on Anonymous, flag the field.
                 uint targetLastNameColor = ControlStylingConfig.BG_Layer_Color; 
                 if( string.IsNullOrEmpty( LastNameText.Text ) && UISwitchAnonymous.On == false )
                 {
                     targetLastNameColor = ControlStylingConfig.BadInput_BG_Layer_Color;
                 }
-
-                SimpleAnimator_Color lastNameAnimator = new SimpleAnimator_Color( currLastNameColor, targetLastNameColor, .15f, delegate(float percent, object value )
-                    {
-                        LastNameBackground.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( (uint)value );
-                    }
-                    ,
-                    delegate
-                    {
-                    } );
-                lastNameAnimator.Start( );
+                Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetLastNameColor, LastNameBackground );
 
 
                 // Update the prayer background color
-                uint currPrayerColor = Rock.Mobile.PlatformUI.Util.UIColorToInt( PrayerRequestLayer.BackgroundColor );
                 uint targetPrayerColor = string.IsNullOrEmpty( PrayerRequest.Text ) ? ControlStylingConfig.BadInput_BG_Layer_Color : ControlStylingConfig.BG_Layer_Color;
-
-                SimpleAnimator_Color prayerAnimator = new SimpleAnimator_Color( currPrayerColor, targetPrayerColor, .15f, delegate(float percent, object value )
-                    {
-                        PrayerRequestLayer.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( (uint)value );
-                    }
-                    ,
-                    delegate
-                    {
-                    } );
-                prayerAnimator.Start( );
+                Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetPrayerColor, PrayerRequestLayer );
             }
         }
        

@@ -45,6 +45,12 @@ namespace CCVApp
                 /// End point for retrieving a Person object
                 /// </summary>
                 const string GetProfileEndPoint = "api/People/GetByUserName/";
+                const string GetProfileByGuidEndPoint = "api/People?$filter=Guid eq guid'{0}'";
+
+                /// <summary>
+                /// End point for posting a new login that will be associated with a user
+                /// </summary>
+                const string PutLoginInfoEndPoint = "api/UserLogins";
 
                 /// <summary>
                 /// End point for retrieving a profile picture with a specific SQUARE size.
@@ -132,7 +138,7 @@ namespace CCVApp
                 /// <summary>
                 /// End point for updating a Person object
                 /// </summary>
-                const string PutProfileEndPoint = "api/People/";
+                const string PutPostProfileEndPoint = "api/People/";
 
                 /// <summary>
                 /// End point for getting a list of campuses
@@ -266,7 +272,148 @@ namespace CCVApp
                     RestRequest request = GetRockRestRequest( Method.PUT );
                     request.AddBody( person );
 
-                    Request.ExecuteAsync( BaseUrl + PutProfileEndPoint + person.Id, request, resultHandler);
+                    Request.ExecuteAsync( BaseUrl + PutPostProfileEndPoint + person.Id, request, resultHandler);
+                }
+
+                public void RegisterNewUser( Rock.Client.Person person, Rock.Client.PhoneNumber phoneNumber, string username, string password, HttpRequest.RequestResult resultHandler )
+                {
+                    //JHM 3-11-15 ALMOST FRIDAY THE 13th SIX YEARS LATER YAAAHH!!!!!
+                    //Until we release, or at least are nearly done testing, do not allow actual user registrations.
+                    resultHandler( HttpStatusCode.OK, "" );
+                    return;
+                    
+                    // this is a complex end point. To register a user is a multiple step process.
+                    //1. Create a new Person on Rock
+                    //2. Request that Person back
+                    //3. Create a new Login for that person
+                    //4. Post the location, phone number and home campus
+                    person.Guid = Guid.NewGuid( );
+
+                    CreateProfile( person, 
+                        delegate(System.Net.HttpStatusCode statusCode, string statusDescription )
+                        {
+                            if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) )
+                            {
+                                GetProfileByGuid( person.Guid,
+                                    delegate(System.Net.HttpStatusCode personStatusCode, string personStatusDescription, Rock.Client.Person model) 
+                                    {
+                                        if ( Rock.Mobile.Network.Util.StatusInSuccessRange( personStatusCode ) )
+                                        {
+                                            // it worked. now put their login info. Waiting for mike to give me a handy model. yay.
+                                            CreateLogin( model.Id, username, password, 
+                                                delegate(System.Net.HttpStatusCode loginStatusCode, string loginStatusDescription) 
+                                                {
+                                                    // if this worked, we are home free
+                                                    if ( Rock.Mobile.Network.Util.StatusInSuccessRange( loginStatusCode ) )
+                                                    {
+                                                        // now update their phone number, if valid
+                                                        if( phoneNumber != null )
+                                                        {
+                                                            phoneNumber.PersonId = model.Id;
+                                                            phoneNumber.Guid = Guid.NewGuid( );
+
+                                                            UpdatePhoneNumber( phoneNumber, true, 
+                                                                delegate(HttpStatusCode phoneStatusCode, string phoneStatusDescription) 
+                                                                {
+                                                                    if( resultHandler != null )
+                                                                    {
+                                                                        resultHandler( phoneStatusCode, phoneStatusDescription );
+                                                                    }
+                                                                });
+                                                        }
+                                                        else
+                                                        {
+                                                            // phone number not provided, go with the result of the login creation
+                                                            if( resultHandler != null )
+                                                            {
+                                                                resultHandler( loginStatusCode, loginStatusDescription );
+                                                            }
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        // Failed
+                                                        if( resultHandler != null )
+                                                        {
+                                                            resultHandler( loginStatusCode, loginStatusDescription );
+                                                        }
+                                                    }
+                                                });
+                                        }
+                                        else
+                                        {
+                                            // Failed
+                                            if( resultHandler != null )
+                                            {
+                                                resultHandler( personStatusCode, personStatusDescription );
+                                            }
+                                        }
+                                    });
+                            }
+                            else
+                            {
+                                // Failed
+                                if( resultHandler != null )
+                                {
+                                    resultHandler( statusCode, statusDescription );
+                                }
+                            }
+                        } );
+                }
+
+                void CreateProfile( Rock.Client.Person person, HttpRequest.RequestResult resultHandler )
+                {
+                    // create a person object that can go up to rock, and copy the relavant data from the passed in arg
+                    Rock.Client.Person newPerson = new Rock.Client.Person( );
+                    newPerson.Guid = person.Guid;
+                    newPerson.BirthDate = person.BirthDate;
+                    newPerson.BirthDay = person.BirthDay;
+                    newPerson.BirthMonth = person.BirthMonth;
+                    newPerson.BirthYear = person.BirthYear;
+                    newPerson.Email = person.Email;
+                    newPerson.FirstName = person.FirstName;
+                    newPerson.LastName = person.LastName;
+                    newPerson.Gender = person.Gender;
+
+                    RestRequest request = GetRockRestRequest( Method.POST );
+                    request.AddBody( person );
+
+                    Request.ExecuteAsync( BaseUrl + PutPostProfileEndPoint, request, resultHandler);
+                }
+
+                void CreateLogin( int personId, string username, string password, HttpRequest.RequestResult resultHandler )
+                {
+                    Rock.Client.UserLoginWithPlainTextPassword newLogin = new Rock.Client.UserLoginWithPlainTextPassword();
+                    newLogin.UserName = username;
+                    newLogin.PlainTextPassword = password;
+                    newLogin.PersonId = personId;
+                    newLogin.Guid = Guid.NewGuid( );
+                    newLogin.EntityTypeId = GeneralConfig.UserLoginEntityTypeId;
+
+                    RestRequest request = GetRockRestRequest( Method.POST );
+                    request.AddBody( newLogin );
+
+                    Request.ExecuteAsync( BaseUrl + PutLoginInfoEndPoint, request, resultHandler);
+                }
+
+                void GetProfileByGuid( Guid guid, HttpRequest.RequestResult<Rock.Client.Person> resultHandler )
+                {
+                    // request a profile by the username. If no username is specified, we'll use the logged in user's name.
+                    RestRequest request = GetRockRestRequest( Method.GET );
+
+                    string requestUrl = string.Format( BaseUrl + GetProfileByGuidEndPoint, guid.ToString( ) );
+                    Request.ExecuteAsync< List<Rock.Client.Person> >( requestUrl, request, 
+                        delegate(HttpStatusCode statusCode, string statusDescription, List<Rock.Client.Person> modelList) 
+                        {
+                            Rock.Client.Person returnPerson = null;
+
+                            if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
+                            {
+                                returnPerson = modelList[ 0 ];
+                            }
+
+                            resultHandler( statusCode, statusDescription, returnPerson );
+                        });
                 }
 
                 public void UpdateHomeCampus( Rock.Client.Group primaryGroup, HttpRequest.RequestResult resultHandler )
@@ -541,7 +688,7 @@ namespace CCVApp
                 {
                     // request a profile by the username. If no username is specified, we'll use the logged in user's name.
                     RestRequest request = GetRockRestRequest( Method.GET );
-                    string requestUrl = string.Format( BaseUrl + GetGeneralDataTimeEndPoint, 2623 );
+                    string requestUrl = string.Format( BaseUrl + GetGeneralDataTimeEndPoint, GeneralConfig.GeneralDataTimeValueId );
 
 
                     // get the raw response

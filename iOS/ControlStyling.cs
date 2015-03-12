@@ -3,11 +3,15 @@ using UIKit;
 using Rock.Mobile.PlatformUI;
 using CCVApp.Shared.Config;
 using Foundation;
+using CoreGraphics;
 
 namespace iOS
 {
     public class ControlStyling
     {
+        public static float ButtonWidth = 122;
+        public static float ButtonHeight = 44;
+
         public static void StyleButton( UIButton button, string text, string font, uint size )
         {
             button.SetTitle( text, UIControlState.Normal );
@@ -43,6 +47,31 @@ namespace iOS
 
             textField.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( font, size );
         }  
+    }
+
+    public class StyledTextField
+    {
+        public const float StyledFieldHeight = 44;
+
+        public UIView Background { get; set; }
+        public UITextField Field { get; set; }
+
+        public StyledTextField( )
+        {
+            Background = new UIView( );
+            Field = new UITextField( );
+
+            Background.Layer.AnchorPoint = CGPoint.Empty;
+            Field.Layer.AnchorPoint = CGPoint.Empty;
+
+            Background.AddSubview( Field );
+        }
+
+        public void SetFrame( CGRect frame )
+        {
+            Background.Frame = frame;
+            Field.Frame = new CGRect( 12, 2, Background.Frame.Width - 24, frame.Height * .90f );
+        }
     }
 }
 

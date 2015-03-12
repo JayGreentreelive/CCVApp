@@ -247,6 +247,8 @@ namespace CCVApp
                     PrimaryAddress = new GroupLocation();
                     PrimaryAddress.GroupLocationTypeValueId = GeneralConfig.GroupLocationTypeHomeValueId;
 
+                    _CellPhoneNumber = null;
+
                     ViewingCampus = RockGeneralData.Instance.Data.Campuses[ 0 ].Id;
 
                     // for the address location, default the country to the built in country code.
@@ -256,6 +258,7 @@ namespace CCVApp
                     LastSyncdPersonJson = JsonConvert.SerializeObject( Person );
                     LastSyncdFamilyJson = JsonConvert.SerializeObject( PrimaryFamily );
                     LastSyncdAddressJson = JsonConvert.SerializeObject( PrimaryAddress );
+                    LastSyncdCellPhoneNumberJson = "";
                 }
 
                 public string PreferredName( )

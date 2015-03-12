@@ -809,63 +809,22 @@ namespace iOS
             // this will color the invalid fields red so the user knows they need to fill them in.
 
             // Validate Street
-            uint currNameColor = Rock.Mobile.PlatformUI.Util.UIColorToInt( Street.BackgroundColor );
-            uint targetNameColor = string.IsNullOrEmpty( Street.Text ) == true ? ControlStylingConfig.BadInput_BG_Layer_Color : ControlStylingConfig.BG_Layer_Color; 
-
-            SimpleAnimator_Color nameAnimator = new SimpleAnimator_Color( currNameColor, targetNameColor, .15f, delegate(float percent, object value )
-                {
-                    Street.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( (uint)value );
-                }
-                ,
-                delegate
-                {
-                } );
-            nameAnimator.Start( );
+            uint targetStreetColor = string.IsNullOrEmpty( Street.Text ) == true ? ControlStylingConfig.BadInput_BG_Layer_Color : ControlStylingConfig.BG_Layer_Color; 
+            Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetStreetColor, Street );
 
 
             // Validate City
-            uint currCityColor = Rock.Mobile.PlatformUI.Util.UIColorToInt( City.BackgroundColor );
             uint targetCityColor = string.IsNullOrEmpty( City.Text ) == true ? ControlStylingConfig.BadInput_BG_Layer_Color : ControlStylingConfig.BG_Layer_Color; 
-
-            SimpleAnimator_Color cityAnimator = new SimpleAnimator_Color( currCityColor, targetCityColor, .15f, delegate(float percent, object value )
-                {
-                    City.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( (uint)value );
-                }
-                ,
-                delegate
-                {
-                } );
-            cityAnimator.Start( );
-
+            Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetCityColor, City );
 
             // Validate State
-            uint currStateColor = Rock.Mobile.PlatformUI.Util.UIColorToInt( State.BackgroundColor );
             uint targetStateColor = string.IsNullOrEmpty( State.Text ) == true ? ControlStylingConfig.BadInput_BG_Layer_Color : ControlStylingConfig.BG_Layer_Color; 
-
-            SimpleAnimator_Color stateAnimator = new SimpleAnimator_Color( currStateColor, targetStateColor, .15f, delegate(float percent, object value )
-                {
-                    State.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( (uint)value );
-                }
-                ,
-                delegate
-                {
-                } );
-            stateAnimator.Start( );
+            Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetStateColor, State );
 
 
             // Validate Zip
-            uint currZipColor = Rock.Mobile.PlatformUI.Util.UIColorToInt( Zip.BackgroundColor );
             uint targetZipColor = string.IsNullOrEmpty( Zip.Text ) == true ? ControlStylingConfig.BadInput_BG_Layer_Color : ControlStylingConfig.BG_Layer_Color; 
-
-            SimpleAnimator_Color zipAnimator = new SimpleAnimator_Color( currZipColor, targetZipColor, .15f, delegate(float percent, object value )
-                {
-                    Zip.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( (uint)value );
-                }
-                ,
-                delegate
-                {
-                } );
-            zipAnimator.Start( );
+            Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetZipColor, Zip );
         }
 	}
 }

@@ -157,6 +157,12 @@ namespace iOS
         protected LoginViewController LoginViewController { get; set; }
 
         /// <summary>
+        /// Controller for managing user registration
+        /// </summary>
+        /// <value>The register view controller.</value>
+        protected RegisterViewController RegisterViewController { get; set; }
+
+        /// <summary>
         /// Controller managing the user's profile. Lets a user view or edit their profile.
         /// </summary>
         /// <value>The profile view controller.</value>
@@ -291,6 +297,9 @@ namespace iOS
 
             ImageCropViewController = UserManagementStoryboard.InstantiateViewController( "ImageCropViewController" ) as ImageCropViewController;
             ImageCropViewController.Springboard = this;
+
+            RegisterViewController = UserManagementStoryboard.InstantiateViewController( "RegisterViewController" ) as RegisterViewController;
+            RegisterViewController.Springboard = this;
 
             // Instantiate all activities
             Elements.Add( new SpringboardElement( this, new NewsTask( "NewsStoryboard_iPhone" )      , NewsElement    , SpringboardConfig.Element_News_Icon    , SpringboardStrings.Element_News_Title ) );
@@ -616,6 +625,11 @@ namespace iOS
 
             modelViewController.DismissViewController( true, null );
             ModalControllerVisible = false;
+        }
+
+        public void RegisterNewUser( )
+        {
+            LoginViewController.PresentViewController( RegisterViewController, true, null );
         }
 
         public override bool PrefersStatusBarHidden()
