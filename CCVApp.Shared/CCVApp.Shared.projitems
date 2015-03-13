@@ -45,5 +45,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)GroupFinder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Analytics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UIJoinGroup.cs" />
   </ItemGroup>
 </Project>

@@ -21,10 +21,9 @@ namespace CCVApp
             public class UserNote : BaseControl
             {
                 /// <summary>
-                /// Actual textfield object.
+                /// Actual TextView object.
                 /// </summary>
-                /// <value>The text field.</value>
-                protected PlatformTextField TextField { get; set; }
+                protected PlatformTextView TextView { get; set; }
 
                 /// <summary>
                 /// The view representing the note's "Anchor"
@@ -125,7 +124,7 @@ namespace CCVApp
                 {
                     base.Initialize( );
 
-                    TextField = PlatformTextField.Create( );
+                    TextView = PlatformTextView.Create( );
                     Anchor = PlatformCircleView.Create( );
                     NoteIcon = PlatformLabel.Create( );
                     DeleteButton = PlatformLabel.Create( );
@@ -148,9 +147,9 @@ namespace CCVApp
                     // since we're restoring an existing user note,
                     // we want to turn off scaling so we can adjust the height 
                     // for all the text
-                    TextField.ScaleHeightForText = false;
+                    TextView.ScaleHeightForText = false;
 
-                    TextField.SizeToFit( );
+                    TextView.SizeToFit( );
 
                     // a small hack, but calling SizeToFit breaks
                     // the note width, so this will restore it.
@@ -158,7 +157,7 @@ namespace CCVApp
 
                     // now we can turn it back on so that if they continue to edit,
                     // it will grow.
-                    TextField.ScaleHeightForText = true;
+                    TextView.ScaleHeightForText = true;
                 }
 
                 public UserNote( CreateParams parentParams, float deviceHeight, PointF startPos )
@@ -183,41 +182,41 @@ namespace CCVApp
                     Styles.Style.MergeStyleAttributesWithDefaults( ref mStyle, ref ControlStyles.mUserNote );
 
                     // flag that we want this text field to grow as more text is added
-                    TextField.ScaleHeightForText = true;
-                    TextField.DynamicTextMaxHeight = NoteConfig.UserNote_MaxHeight;
+                    TextView.ScaleHeightForText = true;
+                    TextView.DynamicTextMaxHeight = NoteConfig.UserNote_MaxHeight;
 
                     // Setup the font
-                    TextField.SetFont( mStyle.mFont.mName, mStyle.mFont.mSize.Value );
-                    TextField.TextColor = mStyle.mFont.mColor.Value;
-                    TextField.Placeholder = MessagesStrings.UserNote_Placeholder;
-                    TextField.PlaceholderTextColor = ControlStylingConfig.TextField_PlaceholderTextColor;
-                    TextField.KeyboardAppearance = GeneralConfig.iOSPlatformUIKeyboardAppearance;
+                    TextView.SetFont( mStyle.mFont.mName, mStyle.mFont.mSize.Value );
+                    TextView.TextColor = mStyle.mFont.mColor.Value;
+                    TextView.Placeholder = MessagesStrings.UserNote_Placeholder;
+                    TextView.PlaceholderTextColor = ControlStylingConfig.TextField_PlaceholderTextColor;
+                    TextView.KeyboardAppearance = GeneralConfig.iOSPlatformUIKeyboardAppearance;
                      
                     // check for border styling
                     if ( mStyle.mBorderColor.HasValue )
                     {
-                        TextField.BorderColor = mStyle.mBorderColor.Value;
+                        TextView.BorderColor = mStyle.mBorderColor.Value;
                     }
 
                     if( mStyle.mBorderRadius.HasValue )
                     {
-                        TextField.CornerRadius = mStyle.mBorderRadius.Value;
+                        TextView.CornerRadius = mStyle.mBorderRadius.Value;
                     }
 
                     if( mStyle.mBorderWidth.HasValue )
                     {
-                        TextField.BorderWidth = mStyle.mBorderWidth.Value;
+                        TextView.BorderWidth = mStyle.mBorderWidth.Value;
                     }
 
                     if( mStyle.mTextInputBackgroundColor.HasValue )
                     {
-                        TextField.BackgroundColor = mStyle.mTextInputBackgroundColor.Value;
+                        TextView.BackgroundColor = mStyle.mTextInputBackgroundColor.Value;
                     }
                     else
                     {
                         if( mStyle.mBackgroundColor.HasValue )
                         {
-                            TextField.BackgroundColor = mStyle.mBackgroundColor.Value;
+                            TextView.BackgroundColor = mStyle.mBackgroundColor.Value;
                         }
                     }
 
@@ -261,7 +260,7 @@ namespace CCVApp
                     MaxAllowedY = ( parentParams.Height - Anchor.Bounds.Height );
 
                     float width = Math.Max( MinNoteWidth, Math.Min( MaxNoteWidth, MaxAllowedX - startPos.X ) );
-                    TextField.Bounds = new RectangleF( 0, 0, width, 0 );
+                    TextView.Bounds = new RectangleF( 0, 0, width, 0 );
 
 
                     // setup the delete button
@@ -292,19 +291,19 @@ namespace CCVApp
                     DeleteButton.Position = new PointF( AnchorFrame.Left - DeleteButton.Bounds.Width / 2, 
                                                         AnchorFrame.Top - DeleteButton.Bounds.Height / 2 );
 
-                    // set the actual note textfield relative to the anchor
-                    TextField.Position = new PointF( AnchorFrame.Left + AnchorFrame.Width / 2, 
+                    // set the actual note TextView relative to the anchor
+                    TextView.Position = new PointF( AnchorFrame.Left + AnchorFrame.Width / 2, 
                                                      AnchorFrame.Top + AnchorFrame.Height / 2 );
 
                     // set the starting text if it was provided
                     if( startingText != null )
                     {
-                        TextField.Text = startingText;
+                        TextView.Text = startingText;
                     }
 
-                    TextField.Hidden = true;
+                    TextView.Hidden = true;
 
-                    SetDebugFrame( TextField.Frame );
+                    SetDebugFrame( TextView.Frame );
                 }
 
                 public bool TouchInDeleteButtonRange( PointF touch )
@@ -452,7 +451,7 @@ namespace CCVApp
                             if( DeleteEnabled == false )
                             {
                                 // if it's open and they tapped in the note anchor, close it.
-                                if( TextField.Hidden == false )
+                                if( TextView.Hidden == false )
                                 {
                                     CloseNote();
                                 }
@@ -518,7 +517,7 @@ namespace CCVApp
 
                     // This is important because to exit delete mode, hide a keyboard, etc.,
                     // we only want to do that when no other note is touched.
-                    TextField.ResignFirstResponder( );
+                    TextView.ResignFirstResponder( );
 
                     if( DeleteEnabled == true )
                     {
@@ -566,8 +565,8 @@ namespace CCVApp
                     // Now that offsets have been clamped, reposition the note
                     base.AddOffset( xOffset, yOffset );
 
-                    TextField.Position = new PointF( TextField.Position.X + xOffset, 
-                                                     TextField.Position.Y + yOffset );
+                    TextView.Position = new PointF( TextView.Position.X + xOffset, 
+                        TextView.Position.Y + yOffset );
 
                     Anchor.Position = new PointF( Anchor.Position.X + xOffset,
                                                   Anchor.Position.Y + yOffset );
@@ -581,9 +580,9 @@ namespace CCVApp
                     AnchorFrame = Anchor.Frame;
 
 
-                    // Scale the textfield to no larger than the remaining width of the screen 
+                    // Scale the TextView to no larger than the remaining width of the screen 
                     float width = Math.Max( MinNoteWidth, Math.Min( MaxNoteWidth, ScreenWidth - (AnchorFrame.X + (AnchorFrame.Width / 2)) ) );
-                    TextField.Bounds = new RectangleF( 0, 0, width, TextField.Bounds.Height);
+                    TextView.Bounds = new RectangleF( 0, 0, width, TextView.Bounds.Height);
                 }
 
                 void ValidateBounds()
@@ -596,15 +595,15 @@ namespace CCVApp
                     Anchor.Position = new PointF( xPos, yPos );
                     AnchorFrame = Anchor.Frame;
 
-                    // Scale the textfield to no larger than the remaining width of the screen 
+                    // Scale the TextView to no larger than the remaining width of the screen 
                     float width = Math.Max( MinNoteWidth, Math.Min( MaxNoteWidth, ScreenWidth - (AnchorFrame.X + (AnchorFrame.Width / 2)) ) );
-                    TextField.Bounds = new RectangleF( 0, 0, width, TextField.Bounds.Height);
+                    TextView.Bounds = new RectangleF( 0, 0, width, TextView.Bounds.Height);
                 }
 
                 public override void AddToView( object obj )
                 {
                     Anchor.AddAsSubview( obj );
-                    TextField.AddAsSubview( obj );
+                    TextView.AddAsSubview( obj );
                     NoteIcon.AddAsSubview( obj );
                     DeleteButton.AddAsSubview( obj );
 
@@ -614,7 +613,7 @@ namespace CCVApp
                 public override void RemoveFromView( object obj )
                 {
                     Anchor.RemoveAsSubview( obj );
-                    TextField.RemoveAsSubview( obj );
+                    TextView.RemoveAsSubview( obj );
                     NoteIcon.RemoveAsSubview( obj );
                     DeleteButton.RemoveAsSubview( obj );
 
@@ -627,7 +626,7 @@ namespace CCVApp
                     AnimateNoteIcon( true );
 
                     // open the text field
-                    TextField.AnimateOpen( );
+                    TextView.AnimateOpen( );
                     Console.WriteLine( "Opening Note" );
                 }
 
@@ -636,7 +635,7 @@ namespace CCVApp
                     AnimateNoteIcon( false );
 
                     // close the text field
-                    TextField.AnimateClosed( );
+                    TextView.AnimateClosed( );
                     Console.WriteLine( "Closing Note" );
                 }
 
@@ -731,20 +730,20 @@ namespace CCVApp
 
                 public override RectangleF GetFrame( )
                 {
-                    return TextField.Frame;
+                    return TextView.Frame;
                 }
 
                 public override void BuildHTMLContent( ref string htmlStream, List<IUIControl> userNotes )
                 {
-                    if ( string.IsNullOrEmpty( TextField.Text ) == false )
+                    if ( string.IsNullOrEmpty( TextView.Text ) == false )
                     {
-                        htmlStream += "<br><p><b>User Note - " + TextField.Text + "</b></p>";
+                        htmlStream += "<br><p><b>User Note - " + TextView.Text + "</b></p>";
                     }
                 }
 
                 public Notes.Model.NoteState.UserNoteContent GetContent( )
                 {
-                    return new Notes.Model.NoteState.UserNoteContent( AnchorFrame.X / PositionTransform.X, AnchorFrame.Y / PositionTransform.Y, TextField.Text, !TextField.Hidden );
+                    return new Notes.Model.NoteState.UserNoteContent( AnchorFrame.X / PositionTransform.X, AnchorFrame.Y / PositionTransform.Y, TextView.Text, !TextView.Hidden );
                 }
             }
         }

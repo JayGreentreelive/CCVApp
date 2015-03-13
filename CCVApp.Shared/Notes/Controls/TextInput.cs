@@ -21,13 +21,13 @@ namespace CCVApp
                 /// Actual textfield object.
                 /// </summary>
                 /// <value>The text field.</value>
-                protected PlatformTextField TextField { get; set; }
+                protected PlatformTextView TextView { get; set; }
 
                 protected override void Initialize( )
                 {
                     base.Initialize( );
 
-                    TextField = PlatformTextField.Create( );
+                    TextView = PlatformTextView.Create( );
                 }
 
                 public TextInput( CreateParams parentParams, XmlReader reader )
@@ -53,48 +53,48 @@ namespace CCVApp
                     Margin = margin;
 
                     // create the font that either we or our parent defined
-                    TextField.SetFont( mStyle.mFont.mName, mStyle.mFont.mSize.Value );
-                    TextField.TextColor = mStyle.mFont.mColor.Value;
-                    TextField.KeyboardAppearance = CCVApp.Shared.Config.GeneralConfig.iOSPlatformUIKeyboardAppearance;
+                    TextView.SetFont( mStyle.mFont.mName, mStyle.mFont.mSize.Value );
+                    TextView.TextColor = mStyle.mFont.mColor.Value;
+                    TextView.KeyboardAppearance = CCVApp.Shared.Config.GeneralConfig.iOSPlatformUIKeyboardAppearance;
 
                     // check for border styling
                     if ( mStyle.mBorderColor.HasValue )
                     {
-                        TextField.BorderColor = mStyle.mBorderColor.Value;
+                        TextView.BorderColor = mStyle.mBorderColor.Value;
                     }
 
                     if( mStyle.mBorderRadius.HasValue )
                     {
-                        TextField.CornerRadius = mStyle.mBorderRadius.Value;
+                        TextView.CornerRadius = mStyle.mBorderRadius.Value;
                     }
 
                     if( mStyle.mBorderWidth.HasValue )
                     {
-                        TextField.BorderWidth = mStyle.mBorderWidth.Value;
+                        TextView.BorderWidth = mStyle.mBorderWidth.Value;
                     }
 
                     if( mStyle.mTextInputBackgroundColor.HasValue )
                     {
-                        TextField.BackgroundColor = mStyle.mTextInputBackgroundColor.Value;
+                        TextView.BackgroundColor = mStyle.mTextInputBackgroundColor.Value;
                     }
                     else
                     {
                         if( mStyle.mBackgroundColor.HasValue )
                         {
-                            TextField.BackgroundColor = mStyle.mBackgroundColor.Value;
+                            TextView.BackgroundColor = mStyle.mBackgroundColor.Value;
                         }
                     }
 
                    
                     // set the dimensions and position
-                    TextField.Bounds = bounds;
-                    TextField.Placeholder = " ";
+                    TextView.Bounds = bounds;
+                    TextView.Placeholder = " ";
 
                     // get the hint text if it's as an attribute
                     string result = reader.GetAttribute( "PlaceHolder" );
                     if( string.IsNullOrEmpty( result ) == false )
                     {
-                        TextField.Placeholder = result;
+                        TextView.Placeholder = result;
                     }
 
                     // parse the rest of the stream
@@ -111,7 +111,7 @@ namespace CCVApp
                                     {
                                         case "PlaceHolder":
                                         {
-                                            TextField.Placeholder = reader.ReadElementContentAsString( );
+                                            TextView.Placeholder = reader.ReadElementContentAsString( );
                                             break;
                                         }
                                     }
@@ -137,29 +137,29 @@ namespace CCVApp
                     {
                         case Styles.TextCase.Upper:
                         {
-                            TextField.Placeholder = TextField.Placeholder.ToUpper( );
+                            TextView.Placeholder = TextView.Placeholder.ToUpper( );
                             break;
                         }
 
                         case Styles.TextCase.Lower:
                         {
-                            TextField.Placeholder = TextField.Placeholder.ToLower( );
+                            TextView.Placeholder = TextView.Placeholder.ToLower( );
                             break;
                         }
                     }
 
                     // size to fit to calculate the height, then reset our width with that height.
-                    TextField.SizeToFit( );
-                    TextField.Frame = new RectangleF( bounds.X, bounds.Y, bounds.Width, TextField.Bounds.Height );
+                    TextView.SizeToFit( );
+                    TextView.Frame = new RectangleF( bounds.X, bounds.Y, bounds.Width, TextView.Bounds.Height );
 
                     // set the color of the hint text
-                    TextField.PlaceholderTextColor = mStyle.mFont.mColor.Value;
+                    TextView.PlaceholderTextColor = mStyle.mFont.mColor.Value;
                 }
 
                 public override IUIControl TouchesEnded( PointF touch )
                 {
                     // hide the keyboard
-                    TextField.ResignFirstResponder( );
+                    TextView.ResignFirstResponder( );
 
                     return null;
                 }
@@ -168,46 +168,46 @@ namespace CCVApp
                 {
                     base.AddOffset( xOffset, yOffset );
 
-                    TextField.Position = new PointF( TextField.Position.X + xOffset, 
-                        TextField.Position.Y + yOffset );
+                    TextView.Position = new PointF( TextView.Position.X + xOffset, 
+                        TextView.Position.Y + yOffset );
                 }
 
                 public override void AddToView( object obj )
                 {
-                    TextField.AddAsSubview( obj );
+                    TextView.AddAsSubview( obj );
 
                     TryAddDebugLayer( obj );
                 }
 
                 public override void RemoveFromView( object obj )
                 {
-                    TextField.RemoveAsSubview( obj );
+                    TextView.RemoveAsSubview( obj );
 
                     TryRemoveDebugLayer( obj );
                 }
 
                 public override void BuildHTMLContent( ref string htmlStream, List<IUIControl> userNotes )
                 {
-                    htmlStream += TextField.Text;
+                    htmlStream += TextView.Text;
                 }
                 public override PlatformBaseUI GetPlatformControl()
                 {
-                    return TextField;
+                    return TextView;
                 }
 
                 public void SetText( string text )
                 {
-                    TextField.Text = text;
+                    TextView.Text = text;
                 }
 
                 public override RectangleF GetFrame( )
                 {
-                    return TextField.Frame;
+                    return TextView.Frame;
                 }
 
                 public NoteState.TextInputState GetState()
                 {
-                    return new NoteState.TextInputState( TextField.Text );
+                    return new NoteState.TextInputState( TextView.Text );
                 }
             }
         }

@@ -627,6 +627,23 @@ namespace iOS
         {
             // todo: launch the group finder join page
             Console.WriteLine( "Join group in row {0}", row );
+
+            // create the view controller
+            GroupFinderJoinViewController joinController = new GroupFinderJoinViewController();
+
+            // set the group info
+            GroupFinder.GroupEntry currGroup = GroupEntries[ row ];
+            joinController.GroupTitle = currGroup.Title;
+            joinController.MeetingTime = currGroup.MeetingTime;
+
+            joinController.Distance = string.Format( "{0:##.0} {1}", currGroup.Distance, ConnectStrings.GroupFinder_MilesSuffix );
+            if ( row == 0 )
+            {
+                joinController.Distance += " " + ConnectStrings.GroupFinder_ClosestTag;
+            }
+
+            // launch the view
+            Task.PerformSegue( this, joinController );
         }
 
         public void RowClicked( int row )

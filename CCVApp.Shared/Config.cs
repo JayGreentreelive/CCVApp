@@ -561,7 +561,11 @@ namespace CCVApp
                 /// <summary>
                 /// The corner roundedness for buttons (0 is no curvature)
                 /// </summary>
+                #if __IOS__
                 public const uint Button_CornerRadius = 3;
+                #else
+                public const uint Button_CornerRadius = 0;
+                #endif
 
                 /// <summary>
                 /// The background color for the layer that backs elements (like the strip behind First Name)
