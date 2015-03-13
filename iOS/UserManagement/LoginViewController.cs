@@ -93,6 +93,7 @@ namespace iOS
 
             PasswordField = new StyledTextField();
             View.AddSubview( PasswordField.Background );
+            PasswordField.Field.SecureTextEntry = true;
             PasswordField.SetFrame( new CGRect( UserNameField.Background.Frame.Left, UserNameField.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
             ControlStyling.StyleTextField( PasswordField.Field, LoginStrings.PasswordPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( PasswordField.Background );

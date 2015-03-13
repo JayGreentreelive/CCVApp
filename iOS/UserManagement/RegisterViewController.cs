@@ -113,17 +113,6 @@ namespace iOS
             BlockerView = new BlockerView( View.Frame );
             View.AddSubview( BlockerView );
 
-            ResultView = new PlatformResultView( ScrollView, View.Frame.ToRectF( ), OnResultViewDone );
-
-            ResultView.SetStyle( ControlStylingConfig.Medium_Font_Light, 
-                                 ControlStylingConfig.Icon_Font_Secondary, 
-                                 ControlStylingConfig.BackgroundColor,
-                                 ControlStylingConfig.BG_Layer_Color, 
-                                 ControlStylingConfig.BG_Layer_BorderColor, 
-                                 ControlStylingConfig.TextField_PlaceholderTextColor,
-                                 ControlStylingConfig.Button_BGColor, 
-                                 ControlStylingConfig.Button_TextColor );
-
             //setup styles
             View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
@@ -136,12 +125,14 @@ namespace iOS
             PasswordText = new StyledTextField();
             ScrollView.AddSubview( PasswordText.Background );
             PasswordText.SetFrame( new CGRect( -10, UserNameText.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+            PasswordText.Field.SecureTextEntry = true;
             ControlStyling.StyleTextField( PasswordText.Field, RegisterStrings.PasswordPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( PasswordText.Background );
 
             ConfirmPasswordText = new StyledTextField();
             ScrollView.AddSubview( ConfirmPasswordText.Background );
             ConfirmPasswordText.SetFrame( new CGRect( -10, PasswordText.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+            ConfirmPasswordText.Field.SecureTextEntry = true;
             ControlStyling.StyleTextField( ConfirmPasswordText.Field, RegisterStrings.ConfirmPasswordPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( ConfirmPasswordText.Background );
 
@@ -208,13 +199,21 @@ namespace iOS
                         {
                             if( ev.ButtonIndex == actionSheet.DestructiveButtonIndex )
                             {
-                                // then log them out.
-                                RockMobileUser.Instance.LogoutAndUnbind( );
-
                                 Springboard.ResignModelViewController( this, null );
                             }
                         };
                 };
+
+            ResultView = new PlatformResultView( ScrollView, View.Frame.ToRectF( ), OnResultViewDone );
+
+            ResultView.SetStyle( ControlStylingConfig.Medium_Font_Light, 
+                ControlStylingConfig.Icon_Font_Secondary, 
+                ControlStylingConfig.BackgroundColor,
+                ControlStylingConfig.BG_Layer_Color, 
+                ControlStylingConfig.BG_Layer_BorderColor, 
+                ControlStylingConfig.TextField_PlaceholderTextColor,
+                ControlStylingConfig.Button_BGColor, 
+                ControlStylingConfig.Button_TextColor );
         }
 
         public override void ViewDidLayoutSubviews()
@@ -288,71 +287,54 @@ namespace iOS
             bool result = true;
 
             // validate there's text in all required fields
+            uint targetColor = ControlStylingConfig.BG_Layer_Color;
             if ( string.IsNullOrEmpty( UserNameText.Field.Text ) == true )
             {
-                Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( ControlStylingConfig.BadInput_BG_Layer_Color, UserNameText.Background );
+                targetColor = ControlStylingConfig.BadInput_BG_Layer_Color;
                 result = false;
             }
-            else
-            {
-                Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( ControlStylingConfig.BG_Layer_Color, UserNameText.Background );
-            }
+            Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetColor, UserNameText.Background );
 
-            // for the password, if EITHER field is blank, that's not ok
-            if ( string.IsNullOrEmpty( PasswordText.Field.Text ) == true || string.IsNullOrEmpty( ConfirmPasswordText.Field.Text ) == true )
+
+            // for the password, if EITHER field is blank, that's not ok, OR if the passwords don't match, also not ok.
+            targetColor = ControlStylingConfig.BG_Layer_Color;
+            if ( (string.IsNullOrEmpty( PasswordText.Field.Text ) == true || string.IsNullOrEmpty( ConfirmPasswordText.Field.Text ) == true) ||
+                ( PasswordText.Field.Text != ConfirmPasswordText.Field.Text ) )
             {
-                Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( ControlStylingConfig.BadInput_BG_Layer_Color, PasswordText.Background );
-                Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( ControlStylingConfig.BadInput_BG_Layer_Color, ConfirmPasswordText.Background );
+                targetColor = ControlStylingConfig.BadInput_BG_Layer_Color;
                 result = false;
             }
-            else
-            {
-                // since both password fields have something, ensure it matches
-                if ( PasswordText.Field.Text != ConfirmPasswordText.Field.Text )
-                {
-                    // since they don't match, color both.
-                    Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( ControlStylingConfig.BadInput_BG_Layer_Color, PasswordText.Background );
-                    Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( ControlStylingConfig.BadInput_BG_Layer_Color, ConfirmPasswordText.Background );
-                    result = false;
-                }
-                else
-                {
-                    Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( ControlStylingConfig.BG_Layer_Color, PasswordText.Background );
-                    Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( ControlStylingConfig.BG_Layer_Color, ConfirmPasswordText.Background );
-                }
-            }
+            Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetColor, PasswordText.Background );
+            Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetColor, ConfirmPasswordText.Background );
 
+
+            targetColor = ControlStylingConfig.BG_Layer_Color;
             if ( string.IsNullOrEmpty( NickNameText.Field.Text ) == true )
             {
-                Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( ControlStylingConfig.BadInput_BG_Layer_Color, NickNameText.Background );
+                targetColor = ControlStylingConfig.BadInput_BG_Layer_Color;
                 result = false;
             }
-            else
-            {
-                Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( ControlStylingConfig.BG_Layer_Color, NickNameText.Background );
-            }
+            Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetColor, NickNameText.Background );
 
+
+            targetColor = ControlStylingConfig.BG_Layer_Color;
             if ( string.IsNullOrEmpty( LastNameText.Field.Text ) == true )
             {
-                Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( ControlStylingConfig.BadInput_BG_Layer_Color, LastNameText.Background );
+                targetColor = ControlStylingConfig.BadInput_BG_Layer_Color;
                 result = false;
             }
-            else
-            {
-                Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( ControlStylingConfig.BG_Layer_Color, LastNameText.Background );
-            }
+            Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetColor, LastNameText.Background );
+
 
             // cell phone OR email is fine
+            targetColor = ControlStylingConfig.BG_Layer_Color;
             if ( string.IsNullOrEmpty( EmailText.Field.Text ) == true && string.IsNullOrEmpty( CellPhoneText.Field.Text ) == true )
             {
                 // if failure, only color email
-                Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( ControlStylingConfig.BadInput_BG_Layer_Color, EmailText.Background );
+                targetColor = ControlStylingConfig.BadInput_BG_Layer_Color;
                 result = false;
             }
-            else
-            {
-                Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( ControlStylingConfig.BG_Layer_Color, EmailText.Background );
-            }
+            Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetColor, EmailText.Background );
 
             return result;
         }
@@ -400,7 +382,7 @@ namespace iOS
                                     {
                                         State = RegisterState.Success;
                                         ResultView.Display( RegisterStrings.RegisterStatus_Success, 
-                                            RegisterStrings.RegisterResult_Symbol_Success, 
+                                            ControlStylingConfig.Result_Symbol_Success, 
                                             RegisterStrings.RegisterResult_Success,
                                             GeneralStrings.Done );
                                     }
@@ -408,7 +390,7 @@ namespace iOS
                                     {
                                         State = RegisterState.Fail;
                                         ResultView.Display( RegisterStrings.RegisterStatus_Failed, 
-                                            RegisterStrings.RegisterResult_Symbol_Failed, 
+                                            ControlStylingConfig.Result_Symbol_Failed, 
                                             RegisterStrings.RegisterResult_Failed,
                                             GeneralStrings.Done );
                                     }

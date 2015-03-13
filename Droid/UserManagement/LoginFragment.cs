@@ -108,6 +108,10 @@ namespace Droid
 
             RegisterButton = view.FindViewById<Button>( Resource.Id.registerButton );
             ControlStyling.StyleButton( RegisterButton, LoginStrings.RegisterButton, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            RegisterButton.Click += (object sender, EventArgs e ) =>
+                {
+                    SpringboardParent.RegisterNewUser( );
+                };
 
             UsernameField = view.FindViewById<EditText>( Resource.Id.usernameText );
             ControlStyling.StyleTextField( UsernameField, LoginStrings.UsernamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );

@@ -108,6 +108,7 @@ namespace Droid
         protected NavbarFragment NavbarFragment { get; set; }
         protected LoginFragment LoginFragment { get; set; }
         protected ProfileFragment ProfileFragment { get; set; }
+        protected RegisterFragment RegisterFragment { get; set; }
         protected ImageCropFragment ImageCropFragment { get; set; }
 
 
@@ -184,6 +185,13 @@ namespace Droid
             {
                 ProfileFragment = new ProfileFragment( );
                 ProfileFragment.SpringboardParent = this;
+            }
+
+            RegisterFragment = FragmentManager.FindFragmentByTag( "Droid.RegisterFragment" ) as RegisterFragment;
+            if( RegisterFragment == null )
+            {
+                RegisterFragment = new RegisterFragment( );
+                RegisterFragment.SpringboardParent = this;
             }
 
             ImageCropFragment = FragmentManager.FindFragmentByTag( "Droid.ImageCropFragment" ) as ImageCropFragment;
@@ -264,6 +272,13 @@ namespace Droid
             {
                 element.Task.PerformTaskAction( action );
             }
+        }
+
+        public void RegisterNewUser( )
+        {
+            // we want to specially allow the registration to appear while Login is showing,
+            // so pass true for 'forceShow'
+            StartModalFragment( RegisterFragment, true );
         }
 
         public override void OnSaveInstanceState( Bundle outState )
@@ -471,10 +486,10 @@ namespace Droid
             Billboard.Hide( );
         }
 
-        public void StartModalFragment( Fragment fragment )
+        public void StartModalFragment( Fragment fragment, bool forceShow = false )
         {
             // don't allow multiple modal fragments, or modal fragments when the springboard is closed.
-            if ( DisplayingModalFragment == false && NavbarFragment.ShouldSpringboardAllowInput( ) )
+            if (forceShow == true || ( DisplayingModalFragment == false && NavbarFragment.ShouldSpringboardAllowInput( ) ) )
             {
                 // replace the entire screen with a modal fragment
                 var ft = FragmentManager.BeginTransaction( );
@@ -537,7 +552,7 @@ namespace Droid
             // called by modal (full screen) fragments that Springboard launches
             // when the fragments are done and ok to be closed.
             // (Login, Profile Editing, Image Cropping, etc.)
-            if( LoginFragment == fragment )
+            if ( LoginFragment == fragment )
             {
                 Activity.OnBackPressed( );
                 UpdateLoginState( );
@@ -546,6 +561,10 @@ namespace Droid
             {
                 Activity.OnBackPressed( );
                 UpdateLoginState( );
+            }
+            else if ( RegisterFragment == fragment )
+            {
+                Activity.OnBackPressed( );
             }
             else if ( ImageCropFragment == fragment )
             {

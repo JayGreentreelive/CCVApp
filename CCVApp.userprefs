@@ -1,29 +1,44 @@
 ﻿<Properties StartupItem="iOS/iOS.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhone6.8.2" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/UserManagement/RegisterViewController.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhone4s.8.2" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="../Rock.Mobile/PlatformUI/Droid/DroidView.cs">
     <Files>
-      <File FileName="iOS/UserManagement/ProfileViewController.cs" Line="81" Column="32" />
-      <File FileName="iOS/UserManagement/RegisterViewController.cs" Line="51" Column="58" />
+      <File FileName="../Rock.Mobile/PlatformUI/Droid/DroidView.cs" Line="107" Column="39" />
+      <File FileName="CCVApp.Shared/RockApi/RockApi.cs" Line="275" Column="49" />
+      <File FileName="iOS/UserManagement/RegisterViewController.cs" Line="216" Column="57" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
+          <Node name="CCVApp.Shared" expanded="True" />
+          <Node name="Droid" expanded="True">
+            <Node name="Tasks" expanded="True">
+              <Node name="NotesTask" expanded="True" />
+              <Node name="PrayerTask" expanded="True" />
+            </Node>
+            <Node name="UserManagement" expanded="True" />
+          </Node>
           <Node name="iOS" expanded="True">
             <Node name="Tasks" expanded="True">
+              <Node name="Connect" expanded="True" />
               <Node name="Notes" expanded="True" />
             </Node>
-            <Node name="UserManagement" expanded="True">
-              <Node name="RegisterViewController.cs" selected="True" />
-            </Node>
+            <Node name="UserManagement" expanded="True" />
           </Node>
           <Node name="Rock.Mobile" expanded="True">
             <Node name="PlatformSpecific" expanded="True">
-              <Node name="iOS" expanded="True">
-                <Node name="UIScrollViewWrapper.cs" expanded="True" />
+              <Node name="Android" expanded="True" />
+              <Node name="iOS" expanded="True" />
+            </Node>
+            <Node name="PlatformUI" expanded="True">
+              <Node name="Droid" expanded="True">
+                <Node name="DroidView.cs" selected="True" />
               </Node>
             </Node>
           </Node>
         </State>
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
@@ -36,5 +51,5 @@
     <Watch file="Droid/Tasks/NotesTask/NotesDetailsFragment.cs" line="215" offsetX="1268" offsetY="3210" expression="ThumbnailPlaceholder" liveUpdate="False" />
     <Watch file="../Rock.Mobile/PlatformUI/Droid/DroidLabel.cs" line="78" offsetX="733" offsetY="1155" expression="transparentColor" liveUpdate="False" />
   </MonoDevelop.Ide.DebuggingService.PinnedWatches>
-  <MonoDevelop.Ide.ItemProperties.Droid MonoForAntroid.PreferredDevice="Nexus 4" />
+  <MonoDevelop.Ide.ItemProperties.Droid MonoForAntroid.PreferredDevice="Nexus 4" AndroidDesignerPreferredDevice="Nexus 4" />
 </Properties>

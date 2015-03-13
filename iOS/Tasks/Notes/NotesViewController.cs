@@ -18,6 +18,8 @@ using Rock.Mobile.PlatformSpecific.Util;
 using LocalyticsBinding;
 using CCVApp.Shared;
 using CCVApp.Shared.Analytics;
+using RockMobile;
+using CCVApp.Shared.Strings;
 
 namespace iOS
 {
@@ -210,6 +212,11 @@ namespace iOS
         /// <value>The note download retries.</value>
         int NoteDownloadRetries { get; set; }
 
+        /// <summary>
+        /// The view to use for displaying a download error
+        /// </summary>
+        PlatformResultView ResultView { get; set; }
+
         public NotesViewController( ) : base( )
         {
             ObserverHandles = new List<NSObject>();
@@ -307,6 +314,24 @@ namespace iOS
             #if DEBUG
             View.AddSubview( RefreshButton );
             #endif
+
+            ResultView = new PlatformResultView( UIScrollView, View.Frame.ToRectF( ), OnResultViewDone );
+
+            ResultView.SetStyle( ControlStylingConfig.Medium_Font_Light, 
+                                 ControlStylingConfig.Icon_Font_Secondary, 
+                                 ControlStylingConfig.BackgroundColor,
+                                 ControlStylingConfig.BG_Layer_Color, 
+                                 ControlStylingConfig.BG_Layer_BorderColor, 
+                                 ControlStylingConfig.TextField_PlaceholderTextColor,
+                                 ControlStylingConfig.Button_BGColor, 
+                                 ControlStylingConfig.Button_TextColor );
+            ResultView.Hide( );
+        }
+
+        void OnResultViewDone( )
+        {
+            // if they tap "Retry", well, retry!
+            CreateNotes( null, null );
         }
 
         public override void ViewWillAppear(bool animated)
@@ -587,6 +612,8 @@ namespace iOS
         {
             if( RefreshingNotes == false )
             {
+                ResultView.Hide( );
+
                 // if we're recreating the notes, reset our scrollview.
                 UIScrollView.ContentOffset = CGPoint.Empty;
 
@@ -725,12 +752,10 @@ namespace iOS
                             errorMsg += "\n" + e.Message;
                         }
 
-                        // explain that we couldn't generate notes
-                        UIAlertView alert = new UIAlertView( );
-                        alert.Title = "Note Error";
-                        alert.Message = errorMsg;
-                        alert.AddButton( "Ok" );
-                        alert.Show( );
+                        ResultView.Display( MessagesStrings.Error_Title, 
+                                            ControlStylingConfig.Result_Symbol_Failed, 
+                                            MessagesStrings.Error_Message, 
+                                            GeneralStrings.Retry );
                     }
                 } );
         }

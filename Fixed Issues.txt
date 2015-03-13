@@ -5,6 +5,8 @@ iOS Users please verify the phone does not goto sleep when using Sermon Notes.
 
 News items now update live, and are based on the Viewing Campus chosen.
 
+New User Registration added.
+
 
 Changes
 -------
@@ -16,6 +18,7 @@ Both
 	General - General Data is now only updated when there's newer data available on Rock.
 
 	Notes - Fixed an issue allowing the device to sleep when viewing a quote URL.
+	Notes - Replaced the "Message Box" style error with a nice error screen with retry button.
 
 	GroupFinder - Your location is now shown in green.
 	GroupFinder - Distance is now accurate.

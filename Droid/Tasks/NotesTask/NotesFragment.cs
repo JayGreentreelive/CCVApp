@@ -20,6 +20,7 @@ using Rock.Mobile.PlatformUI;
 using CCVApp.Shared;
 using CCVApp.Shared.Strings;
 using CCVApp.Shared.Analytics;
+using RockMobile;
 
 namespace Droid
 {
@@ -189,6 +190,11 @@ namespace Droid
                 bool DidGestureCreateNote { get; set; }
 
                 /// <summary>
+                /// The view to use for displaying a download error
+                /// </summary>
+                PlatformResultView ResultView { get; set; }
+
+                /// <summary>
                 /// The amount of times to try downloading the note before
                 /// reporting an error to the user (which should be our last resort)
                 /// We set it to 0 in debug because that means we WANT the error, as
@@ -269,7 +275,25 @@ namespace Droid
                         CachedStyleSheetXml = savedInstanceState.GetString( XML_STYLE_KEY );
                     }
 
+                    ResultView = new PlatformResultView( layout, new System.Drawing.RectangleF( 0, 0, this.Resources.DisplayMetrics.WidthPixels, this.Resources.DisplayMetrics.HeightPixels ), OnResultViewDone );
+
+                    ResultView.SetStyle( ControlStylingConfig.Medium_Font_Light, 
+                        ControlStylingConfig.Icon_Font_Secondary, 
+                        ControlStylingConfig.BackgroundColor,
+                        ControlStylingConfig.BG_Layer_Color, 
+                        ControlStylingConfig.BG_Layer_BorderColor, 
+                        ControlStylingConfig.TextField_PlaceholderTextColor,
+                        ControlStylingConfig.Button_BGColor, 
+                        ControlStylingConfig.Button_TextColor );
+                    ResultView.Hide( );
+
                     return layout;
+                }
+
+                void OnResultViewDone( )
+                {
+                    // if they tap "retry", redownload the notes.
+                    CreateNotes( null, null );
                 }
 
                 public override void OnConfigurationChanged(Android.Content.Res.Configuration newConfig)
@@ -535,6 +559,8 @@ namespace Droid
                 {
                     if( RefreshingNotes == false )
                     {
+                        ResultView.Hide( );
+
                         RefreshingNotes = true;
 
                         ShutdownNotes( null );
@@ -657,7 +683,7 @@ namespace Droid
                             {
                                 NoteDownloadRetries--;
 
-                                CreateNotes( CachedNoteXml, CachedStyleSheetXml );
+                                CreateNotes( null, null );
                             }
                             else
                             {
@@ -665,8 +691,13 @@ namespace Droid
                                 {
                                     errorMsg += e.Message;
                                 }
+                                //Springboard.DisplayError( "Note Error", errorMsg );
 
-                                Springboard.DisplayError( "Note Error", errorMsg );
+                                ResultView.Display( MessagesStrings.Error_Title, 
+                                    ControlStylingConfig.Result_Symbol_Failed, 
+                                    MessagesStrings.Error_Message, 
+                                    GeneralStrings.Retry );
+                                
                             }
                         } );
                 }

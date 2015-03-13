@@ -616,6 +616,16 @@ namespace CCVApp
                 public const string Icon_Font_Secondary = "Bh";
 
                 /// <summary>
+                /// The symbol to use for a result that was successful.
+                /// </summary>
+                public const string Result_Symbol_Success = "";
+
+                /// <summary>
+                /// The symbol to use for a result that failed.
+                /// </summary>
+                public const string Result_Symbol_Failed = "";
+
+                /// <summary>
                 /// The color for the footers of primary table cells. (Like the footer in the Messages->Series primary cell that says "Previous Messages")
                 /// </summary>
                 public const uint Table_Footer_Color = 0x262626FF;

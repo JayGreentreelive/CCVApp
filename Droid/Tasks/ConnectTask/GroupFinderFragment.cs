@@ -745,70 +745,26 @@ namespace Droid
                 {
                     // this will color the invalid fields red so the user knows they need to fill them in.
 
-                    // Validate Street
-                    uint currStreetColor = StreetBackgroundColor;
-                    uint targetStreetColor = string.IsNullOrEmpty( Street.Text ) == true ? ControlStylingConfig.BadInput_BG_Layer_Color : ControlStylingConfig.BG_Layer_Color; 
+                    // Also, with the animation complete, set RetrievingGroups to false
 
-                    SimpleAnimator_Color streetAnimator = new SimpleAnimator_Color( currStreetColor, targetStreetColor, .15f, delegate(float percent, object value )
-                        {
-                            Street.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( (uint)value ) );
-                        }
-                        ,
-                        delegate
-                        {
-                            StreetBackgroundColor = targetStreetColor;
-                        } );
-                    streetAnimator.Start( );
+                    // Validate Street
+                    uint targetStreetColor = string.IsNullOrEmpty( Street.Text ) == true ? ControlStylingConfig.BadInput_BG_Layer_Color : ControlStylingConfig.BG_Layer_Color; 
+                    Rock.Mobile.PlatformSpecific.Android.UI.Util.AnimateViewColor( StreetBackgroundColor, targetStreetColor, Street, delegate { StreetBackgroundColor = targetStreetColor; RetrievingGroups = false; } );
 
 
                     // Validate City
-                    uint currCityColor = CityBackgroundColor;
                     uint targetCityColor = string.IsNullOrEmpty( City.Text ) == true ? ControlStylingConfig.BadInput_BG_Layer_Color : ControlStylingConfig.BG_Layer_Color; 
-
-                    SimpleAnimator_Color cityAnimator = new SimpleAnimator_Color( currCityColor, targetCityColor, .15f, delegate(float percent, object value )
-                        {
-                            City.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( (uint)value ) );
-                        }
-                        ,
-                        delegate
-                        {
-                            // doesn't matter which of these turns off retrieving grops, it's the same time
-                            CityBackgroundColor = targetCityColor;
-                            RetrievingGroups = false;
-                        } );
-                    cityAnimator.Start( );
+                    Rock.Mobile.PlatformSpecific.Android.UI.Util.AnimateViewColor( CityBackgroundColor, targetCityColor, City, delegate { CityBackgroundColor = targetCityColor; } );
 
 
                     // Validate State
-                    uint currStateColor = StateBackgroundColor;
                     uint targetStateColor = string.IsNullOrEmpty( State.Text ) == true ? ControlStylingConfig.BadInput_BG_Layer_Color : ControlStylingConfig.BG_Layer_Color; 
-
-                    SimpleAnimator_Color stateAnimator = new SimpleAnimator_Color( currStateColor, targetStateColor, .15f, delegate(float percent, object value )
-                        {
-                            State.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( (uint)value ) );
-                        }
-                        ,
-                        delegate
-                        {
-                            StateBackgroundColor = targetStateColor;
-                        } );
-                    stateAnimator.Start( );
+                    Rock.Mobile.PlatformSpecific.Android.UI.Util.AnimateViewColor( StateBackgroundColor, targetStateColor, State, delegate { StateBackgroundColor = targetStateColor; } );
 
 
                     // Validate Zip
-                    uint currZipColor = ZipBackgroundColor;
                     uint targetZipColor = string.IsNullOrEmpty( Zip.Text ) == true ? ControlStylingConfig.BadInput_BG_Layer_Color : ControlStylingConfig.BG_Layer_Color; 
-
-                    SimpleAnimator_Color zipAnimator = new SimpleAnimator_Color( currZipColor, targetZipColor, .15f, delegate(float percent, object value )
-                        {
-                            Zip.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( (uint)value ) );
-                        }
-                        ,
-                        delegate
-                        {
-                            ZipBackgroundColor = targetZipColor;
-                        } );
-                    zipAnimator.Start( );
+                    Rock.Mobile.PlatformSpecific.Android.UI.Util.AnimateViewColor( ZipBackgroundColor, targetZipColor, Zip, delegate { ZipBackgroundColor = targetZipColor; } );
                 }
             }
         }

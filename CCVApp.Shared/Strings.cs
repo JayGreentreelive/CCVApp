@@ -105,9 +105,6 @@ namespace CCVApp.Shared
             public const string RegisterStatus_Success = "Registration Successful";
             public const string RegisterStatus_Failed = "Small Issue";
 
-            public const string RegisterResult_Symbol_Success = "";
-            public const string RegisterResult_Symbol_Failed = "";
-
             public const string RegisterResult_Success = "All set! You're now registered with CCV.";
             public const string RegisterResult_Failed = "Looks like there was a problem registering. Make sure you're connected to the internet and try again.";
         }
@@ -183,7 +180,7 @@ namespace CCVApp.Shared
         public class MessagesStrings
         {
             public const string Error_Title = "Messages";
-            public const string Error_Message = "There was a problem downloading the messages. Please try again.";
+            public const string Error_Message = "There was a problem downloading the message. Check your network settings and try again.";
 
             public const string Error_Watch_Playback = "There was a problem playing this video. Check your network settings and try again.";
 

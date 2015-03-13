@@ -218,30 +218,13 @@ namespace Droid
                         // they forgot to fill something in, so show them what it was.
 
                         // Update the name background color
-                        uint currNameColor = FirstNameBGColor;
-
-                        // if they left the name field blank and didn't turn on Anonymous, flag the field.
                         uint targetNameColor = ControlStylingConfig.BG_Layer_Color; 
                         if( string.IsNullOrEmpty( FirstNameText.Text ) && AnonymousSwitch.Checked == false )
                         {
                             targetNameColor = ControlStylingConfig.BadInput_BG_Layer_Color;
                         }
+                        Rock.Mobile.PlatformSpecific.Android.UI.Util.AnimateViewColor( FirstNameBGColor, targetNameColor, FirstNameBGLayer, delegate { FirstNameBGColor = targetNameColor; } );
 
-                        SimpleAnimator_Color nameAnimator = new SimpleAnimator_Color( currNameColor, targetNameColor, .15f, delegate(float percent, object value )
-                            {
-                                FirstNameBGLayer.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( (uint)value ) );
-                            }
-                            ,
-                            delegate
-                            {
-                                FirstNameBGColor = targetNameColor;
-                            } );
-                        nameAnimator.Start( );
-
-
-
-                        // Update the name background color
-                        uint currLastNameColor = LastNameBGColor;
 
                         // if they left the name field blank and didn't turn on Anonymous, flag the field.
                         uint targetLastNameColor = ControlStylingConfig.BG_Layer_Color; 
@@ -249,34 +232,13 @@ namespace Droid
                         {
                             targetLastNameColor = ControlStylingConfig.BadInput_BG_Layer_Color;
                         }
-
-                        SimpleAnimator_Color lastNameAnimator = new SimpleAnimator_Color( currLastNameColor, targetLastNameColor, .15f, delegate(float percent, object value )
-                            {
-                                LastNameBGLayer.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( (uint)value ) );
-                            }
-                            ,
-                            delegate
-                            {
-                                LastNameBGColor = targetLastNameColor;
-                            } );
-                        lastNameAnimator.Start( );
-
+                        Rock.Mobile.PlatformSpecific.Android.UI.Util.AnimateViewColor( LastNameBGColor, targetLastNameColor, LastNameBGLayer, delegate { LastNameBGColor = targetLastNameColor; } );
 
 
                         // Update the prayer background color
                         uint currPrayerColor = RequestBGColor;
                         uint targetPrayerColor = string.IsNullOrEmpty( RequestText.Text ) ? ControlStylingConfig.BadInput_BG_Layer_Color : ControlStylingConfig.BG_Layer_Color;
-
-                        SimpleAnimator_Color prayerAnimator = new SimpleAnimator_Color( currPrayerColor, targetPrayerColor, .15f, delegate(float percent, object value )
-                            {
-                                RequestBGLayer.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( (uint)value ) );
-                            }
-                            ,
-                            delegate
-                            {
-                                RequestBGColor = targetPrayerColor;
-                            } );
-                        prayerAnimator.Start( );
+                        Rock.Mobile.PlatformSpecific.Android.UI.Util.AnimateViewColor( RequestBGColor, targetPrayerColor, RequestBGLayer, delegate { RequestBGColor = targetPrayerColor; } );
                     }
                 }
 
