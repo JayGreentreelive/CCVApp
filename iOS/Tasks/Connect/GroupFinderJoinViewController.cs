@@ -4,6 +4,7 @@ using Rock.Mobile.PlatformSpecific.Util;
 using CCVApp.Shared.Config;
 using UIKit;
 using Foundation;
+using CCVApp.Shared.UI;
 
 namespace iOS
 {
@@ -17,6 +18,7 @@ namespace iOS
         UIJoinGroup JoinGroupView { get; set; }
 
         UIScrollViewWrapper ScrollView { get; set; }
+        UITextField CellPhoneTextField { get; set; }
         
         public GroupFinderJoinViewController( )
         {
@@ -39,10 +41,8 @@ namespace iOS
 
             // since we're using the platform UI, we need to manually hook up the phone formatting delegate,
             // because that isn't implemented in platform abstracted code.
-            UITextView cellPhoneTextField = (UITextView)JoinGroupView.CellPhone.PlatformNativeObject;
-
-            cellPhoneTextField.Delegate = new Rock.Mobile.PlatformSpecific.iOS.UI.PhoneNumberFormatterDelegate();
-            cellPhoneTextField.Delegate.ShouldChangeCharacters( cellPhoneTextField, new NSRange( cellPhoneTextField.Text.Length, 0 ), "" );
+            CellPhoneTextField = (UITextField)JoinGroupView.CellPhone.PlatformNativeObject;
+            CellPhoneTextField.Delegate = new Rock.Mobile.PlatformSpecific.iOS.UI.PhoneNumberFormatterDelegate();
         }
 
         public override void ViewWillAppear(bool animated)
@@ -50,6 +50,9 @@ namespace iOS
             base.ViewWillAppear(animated);
 
             JoinGroupView.DisplayView( GroupTitle, Distance, MeetingTime, GroupID );
+
+            // force the cell phone field to update itself so it contains proper formatting
+            CellPhoneTextField.Delegate.ShouldChangeCharacters( CellPhoneTextField, new NSRange( CellPhoneTextField.Text.Length, 0 ), "" );
         }
 
         public override void ViewDidLayoutSubviews()

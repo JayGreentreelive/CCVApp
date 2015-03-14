@@ -191,7 +191,6 @@ namespace Droid
                     JoinButton.Text = ConnectConfig.GroupFinder_JoinIcon;
                     JoinButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                     JoinButton.SetBackgroundDrawable( null );
-                    JoinButton.SetBackgroundColor( Color.Green );
                     JoinButton.FocusableInTouchMode = false;
                     JoinButton.Focusable = false;
                     contentLayout.AddView( JoinButton );
@@ -398,7 +397,7 @@ namespace Droid
                     FooterDetailsText.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
                     FooterDetailsText.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
                     FooterDetailsText.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
-                    FooterDetailsText.Text = "Details";
+                    FooterDetailsText.Text = ConnectStrings.GroupFinder_DetailsLabel;
                     FooterDetailsText.Gravity = GravityFlags.Center;
 
                     FooterJoinText  = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
@@ -408,7 +407,7 @@ namespace Droid
                     FooterJoinText.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
                     FooterJoinText.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
                     FooterJoinText.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
-                    FooterJoinText.Text = "Join";
+                    FooterJoinText.Text = ConnectStrings.GroupFinder_JoinLabel;
                     FooterJoinText.Gravity = GravityFlags.Center;
 
 
@@ -615,7 +614,9 @@ namespace Droid
                     }
                     else if ( buttonIndex == 1 )
                     {
-                        // todo: launch the join group fragment
+                        // Ok! notify the parent they tapped Join, and it will launch the
+                        // join group fragment! It's MARCH, FRIDAY THE 13th!!!! OH NOOOO!!!!
+                        ParentTask.OnClick( this, position, GroupEntries[ position ] );
                         Console.WriteLine( "Join neighborhood group in row {0}", position );
                     }
                 }

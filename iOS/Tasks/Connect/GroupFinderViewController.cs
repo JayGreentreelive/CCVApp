@@ -519,7 +519,7 @@ namespace iOS
             DetailsFooter = new UILabel( );
             DetailsFooter.Layer.AnchorPoint = new CGPoint( 0, 0 );
             DetailsFooter.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-            DetailsFooter.Text = "Details";
+            DetailsFooter.Text = ConnectStrings.GroupFinder_DetailsLabel;
             DetailsFooter.SizeToFit( );
             DetailsFooter.Frame = new CGRect( 10, SearchResultsBanner.Frame.Bottom, DetailsFooter.Frame.Width, SearchResultsBanner.Frame.Height );
             DetailsFooter.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
@@ -530,7 +530,7 @@ namespace iOS
             JoinFooter = new UILabel( );
             JoinFooter.Layer.AnchorPoint = new CGPoint( 0, 0 );
             JoinFooter.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-            JoinFooter.Text = "Join";
+            JoinFooter.Text = ConnectStrings.GroupFinder_JoinLabel;
             JoinFooter.SizeToFit( );
             JoinFooter.Frame = new CGRect( View.Frame.Width - JoinFooter.Frame.Width - 10, SearchResultsBanner.Frame.Bottom, JoinFooter.Frame.Width, SearchResultsBanner.Frame.Height );
             JoinFooter.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
@@ -625,16 +625,14 @@ namespace iOS
 
         public void RowButtonClicked( int row )
         {
-            // todo: launch the group finder join page
-            Console.WriteLine( "Join group in row {0}", row );
-
             // create the view controller
             GroupFinderJoinViewController joinController = new GroupFinderJoinViewController();
 
             // set the group info
             GroupFinder.GroupEntry currGroup = GroupEntries[ row ];
             joinController.GroupTitle = currGroup.Title;
-            joinController.MeetingTime = currGroup.MeetingTime;
+            joinController.MeetingTime = string.IsNullOrEmpty( currGroup.MeetingTime ) == false ? currGroup.MeetingTime : ConnectStrings.GroupFinder_ContactForTime;
+            joinController.GroupID = currGroup.Id;
 
             joinController.Distance = string.Format( "{0:##.0} {1}", currGroup.Distance, ConnectStrings.GroupFinder_MilesSuffix );
             if ( row == 0 )

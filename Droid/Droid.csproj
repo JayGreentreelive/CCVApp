@@ -108,6 +108,7 @@
     <Compile Include="Tasks\NewsTask\NewsWebFragment.cs" />
     <Compile Include="Tasks\NotesTask\NotesListenFragment.cs" />
     <Compile Include="UserManagement\RegisterFragment.cs" />
+    <Compile Include="Tasks\ConnectTask\JoinGroupFragment.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
@@ -163,6 +164,7 @@
     <AndroidResource Include="Resources\layout\Prayer_Post.axml" />
     <AndroidResource Include="Resources\layout\News_Web.axml" />
     <AndroidResource Include="Resources\layout\Register.axml" />
+    <AndroidResource Include="Resources\layout\JoinGroup.axml" />
   </ItemGroup>
   <Import Project="..\..\Rock.Mobile\Rock.Mobile.projitems" Label="Shared" Condition="Exists('..\..\Rock.Mobile\Rock.Mobile.projitems')" />
   <Import Project="..\..\Rock\Rock.Client\Rock.Client.Models.projitems" Label="Shared" Condition="Exists('..\..\Rock\Rock.Client\Rock.Client.Models.projitems')" />

@@ -1,6 +1,7 @@
 ﻿using System;
 using Android.App;
 using Android.Views;
+using CCVApp.Shared.Strings;
 
 namespace Droid
 {
@@ -12,6 +13,7 @@ namespace Droid
             {
                 ConnectPrimaryFragment MainPage { get; set; }
                 GroupFinderFragment GroupFinder { get; set; }
+                JoinGroupFragment JoinGroup { get; set; }
                 ConnectWebFragment WebPage { get; set; }
 
                 public ConnectTask( NavbarFragment navFragment ) : base( navFragment )
@@ -30,6 +32,13 @@ namespace Droid
                         GroupFinder = new GroupFinderFragment( );
                     }
                     GroupFinder.ParentTask = this;
+
+                    JoinGroup = (JoinGroupFragment)NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.Connect.JoinGroup" );
+                    if ( JoinGroup == null )
+                    {
+                        JoinGroup = new JoinGroupFragment( );
+                    }
+                    JoinGroup.ParentTask = this;
 
                     WebPage = (ConnectWebFragment) NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.Connect.ConnectWebFragment" );
                     if( WebPage == null )
@@ -79,6 +88,17 @@ namespace Droid
                         else if ( source == WebPage )
                         {
                             NavbarFragment.NavToolbar.RevealForTime( 3.00f );
+                        }
+                        else if ( source == GroupFinder )
+                        {
+                            CCVApp.Shared.GroupFinder.GroupEntry entry = (CCVApp.Shared.GroupFinder.GroupEntry)context;
+
+                            JoinGroup.GroupTitle = entry.Title;
+                            JoinGroup.Distance = string.Format( "{0:##.0} {1}", entry.Distance, ConnectStrings.GroupFinder_MilesSuffix );
+                            JoinGroup.GroupID = entry.Id;
+                            JoinGroup.MeetingTime = entry.MeetingTime;
+
+                            PresentFragment( JoinGroup, true );
                         }
                     }
                 }

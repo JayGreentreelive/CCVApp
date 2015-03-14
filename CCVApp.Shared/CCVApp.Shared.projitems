@@ -11,6 +11,7 @@
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)RockApi\" />
     <Folder Include="$(MSBuildThisFileDirectory)Notes\" />
+    <Folder Include="$(MSBuildThisFileDirectory)UI\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)RockApi\RockApi.cs" />
@@ -45,6 +46,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)GroupFinder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Analytics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileCache.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)UIJoinGroup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\UIJoinGroup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\UIResultView.cs" />
   </ItemGroup>
 </Project>

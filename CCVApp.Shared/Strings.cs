@@ -170,11 +170,21 @@ namespace CCVApp.Shared
             public const string GroupFinder_MeetingTime = "Meets on {0} at {1}";
             public const string GroupFinder_MilesSuffix = "Miles";
             public const string GroupFinder_ClosestTag = "(Closest group to you)";
+            public const string GroupFinder_ContactForTime = "Contact for Meeting Time";
 
             public const string GroupFinder_Neighborhood = "Your neighborhood is {0}";
+            public const string GroupFinder_JoinLabel = "Join";
+            public const string GroupFinder_DetailsLabel = "Details";
 
             public const string Main_Connect_Header = "Group Finder";
             public const string Main_Connect_OtherWays = "Other ways to connect";
+
+            public const string JoinGroup_FirstNamePlaceholder = "First Name";
+            public const string JoinGroup_LastNamePlaceholder = "Last Name";
+            public const string JoinGroup_SpouseNamePlaceholder = "Spouse Name";
+            public const string JoinGroup_EmailPlaceholder = "Email";
+            public const string JoinGroup_CellPhonePlaceholder = "Cell Phone";
+            public const string JoinGroup_JoinButtonLabel = "Join Group";
         }
 
         public class MessagesStrings

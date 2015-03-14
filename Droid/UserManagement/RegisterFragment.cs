@@ -20,7 +20,7 @@ using Rock.Mobile.PlatformUI;
 using Android.Telephony;
 using Rock.Mobile.Util.Strings;
 using Java.Lang.Reflect;
-using RockMobile;
+using CCVApp.Shared.UI;
 
 namespace Droid
 {
@@ -61,7 +61,7 @@ namespace Droid
 
         RegisterState State { get; set; }
 
-        PlatformResultView ResultView { get; set; }
+        UIResultView ResultView { get; set; }
 
         RelativeLayout ProgressBarBlocker { get; set; }
 
@@ -91,7 +91,7 @@ namespace Droid
             ProgressBarBlocker.LayoutParameters.Width = this.Resources.DisplayMetrics.WidthPixels;
             ProgressBarBlocker.LayoutParameters.Height = this.Resources.DisplayMetrics.HeightPixels;
 
-            ResultView = new PlatformResultView( layoutView, new System.Drawing.RectangleF( 0, 0, this.Resources.DisplayMetrics.WidthPixels, this.Resources.DisplayMetrics.HeightPixels ), OnResultViewDone );
+            ResultView = new UIResultView( layoutView, new System.Drawing.RectangleF( 0, 0, this.Resources.DisplayMetrics.WidthPixels, this.Resources.DisplayMetrics.HeightPixels ), OnResultViewDone );
 
             ResultView.SetStyle( ControlStylingConfig.Medium_Font_Light, 
                 ControlStylingConfig.Icon_Font_Secondary, 

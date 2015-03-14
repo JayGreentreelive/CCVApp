@@ -13,8 +13,8 @@ using System.Collections.Generic;
 using Rock.Mobile.Util.Strings;
 using Rock.Mobile.PlatformSpecific.iOS.UI;
 using Rock.Mobile.PlatformSpecific.Util;
-using RockMobile;
 using Rock.Mobile.Animation;
+using CCVApp.Shared.UI;
 
 namespace iOS
 {
@@ -44,7 +44,7 @@ namespace iOS
 
         BlockerView BlockerView { get; set; }
 
-        PlatformResultView ResultView { get; set; }
+        UIResultView ResultView { get; set; }
 
         StyledTextField UserNameText { get; set; }
         StyledTextField PasswordText { get; set; }
@@ -204,7 +204,7 @@ namespace iOS
                         };
                 };
 
-            ResultView = new PlatformResultView( ScrollView, View.Frame.ToRectF( ), OnResultViewDone );
+            ResultView = new UIResultView( ScrollView, View.Frame.ToRectF( ), OnResultViewDone );
 
             ResultView.SetStyle( ControlStylingConfig.Medium_Font_Light, 
                 ControlStylingConfig.Icon_Font_Secondary, 

@@ -28,6 +28,8 @@ namespace CCVApp.Shared
             public double Distance { get; set; }
             public double Latitude { get; set; }
             public double Longitude { get; set; }
+
+            public int Id { get; set; }
         }
 
         public delegate void GetGroupsComplete( GroupEntry sourceLocation, List<GroupEntry> groupEntry );
@@ -74,6 +76,7 @@ namespace CCVApp.Shared
                                             entry.Title = smallGroup.Name;
                                             entry.Address = location.Street1 + "\n" + location.City + ", " + location.State + " " + location.PostalCode.Substring( 0, Math.Max( 0, location.PostalCode.IndexOf( '-' ) ) );
                                             entry.NeighborhoodArea = areaGroup.Name;
+                                            entry.Id = smallGroup.Id;
 
                                             // get the distance 
                                             entry.Distance = location.Distance;
