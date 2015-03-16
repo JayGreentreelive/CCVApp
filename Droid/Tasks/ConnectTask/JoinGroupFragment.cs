@@ -24,6 +24,7 @@ using CCVApp.Shared.Analytics;
 using Rock.Mobile.Animation;
 using Android.Gms.Maps.Model;
 using CCVApp.Shared.UI;
+using Android.Telephony;
 
 namespace Droid
 {
@@ -63,6 +64,11 @@ namespace Droid
                     RelativeLayout backgroundView = view.FindViewById<RelativeLayout>( Resource.Id.view_background );
 
                     JoinGroupView.Create( backgroundView, new System.Drawing.RectangleF( 0, 0, this.Resources.DisplayMetrics.WidthPixels, this.Resources.DisplayMetrics.HeightPixels ) );
+
+
+                    // get the native object types so we can hook in necessary support pointers
+                    ((View)JoinGroupView.View.PlatformNativeObject).SetOnTouchListener( this );
+                    ((EditText)JoinGroupView.CellPhone.PlatformNativeObject).AddTextChangedListener(new PhoneNumberFormattingTextWatcher());
 
                     return view;
                 }

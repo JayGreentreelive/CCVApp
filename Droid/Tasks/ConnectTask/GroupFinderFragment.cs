@@ -267,10 +267,23 @@ namespace Droid
                 View CitySeperator { get; set; }
                 View StateSeperator { get; set; }
 
-
-                public override void OnCreate( Bundle savedInstanceState )
+                public bool OnEditorAction(TextView v, Android.Views.InputMethods.ImeAction actionId, KeyEvent keyEvent)
                 {
-                    base.OnCreate( savedInstanceState );
+                    // don't allow searching until the map is valid (which it should be by now)
+                    if ( Map != null )
+                    {
+                        GetGroups( );
+                    }
+                    return true;
+                }
+
+                public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+                {
+                    if (container == null)
+                    {
+                        // Currently in a layout without a container, so no reason to create our view.
+                        return null;
+                    }
 
                     GroupEntries = new List<GroupFinder.GroupEntry>();
                     MarkerList = new List<Android.Gms.Maps.Model.Marker>();
@@ -424,25 +437,6 @@ namespace Droid
                         };
                     ListView.SetOnTouchListener( this );
                     ListView.Adapter = new GroupArrayAdapter( this );
-                }
-
-                public bool OnEditorAction(TextView v, Android.Views.InputMethods.ImeAction actionId, KeyEvent keyEvent)
-                {
-                    // don't allow searching until the map is valid (which it should be by now)
-                    if ( Map != null )
-                    {
-                        GetGroups( );
-                    }
-                    return true;
-                }
-
-                public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-                {
-                    if (container == null)
-                    {
-                        // Currently in a layout without a container, so no reason to create our view.
-                        return null;
-                    }
 
                     View view = inflater.Inflate(Resource.Layout.Connect_GroupFinder, container, false);
                     view.SetOnTouchListener( this );

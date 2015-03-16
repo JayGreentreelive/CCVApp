@@ -9,7 +9,7 @@ namespace CCVApp.Shared.UI
 {
     public class UIJoinGroup
     {
-        PlatformView View { get; set; }
+        public PlatformView View { get; set; }
 
         PlatformLabel GroupTitle { get; set; }
 
@@ -35,6 +35,8 @@ namespace CCVApp.Shared.UI
         PlatformButton JoinButton { get; set; }
 
         UIResultView ResultView { get; set; }
+
+        UIBlockerView BlockerView { get; set; }
 
         public UIJoinGroup( )
         {
@@ -63,7 +65,6 @@ namespace CCVApp.Shared.UI
             GroupDetails.AddAsSubview( masterView );
             GroupDetails.SetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             GroupDetails.TextColor = ControlStylingConfig.TextField_ActiveTextColor;
-
 
 
             // Name Info
@@ -148,6 +149,9 @@ namespace CCVApp.Shared.UI
             JoinButton.Text = ConnectStrings.JoinGroup_JoinButtonLabel;
             JoinButton.SizeToFit( );
 
+
+            // Create our blocker view
+            BlockerView = new UIBlockerView( masterView, View.Frame );
 
             // Create our results view overlay
             ResultView = new UIResultView( masterView, View.Frame, OnResultViewDone );
@@ -255,13 +259,15 @@ namespace CCVApp.Shared.UI
         {
             if ( ValidateInput( ) )
             {
-                //todo: Use some type of busy indicator. Best thing to do
-                // is probably create a PlatformBusyIndicator. Also,
-                // we should take the iOS BlockerView and abstract that for use on both platforms.
-                ResultView.Display( RegisterStrings.RegisterStatus_Success, 
+                //BlockerView.Show( );
+
+                //TODO: Call an end point to send off the join email
+                //BlockerView.Hide( );
+
+                /*ResultView.Display( RegisterStrings.RegisterStatus_Success, 
                     ControlStylingConfig.Result_Symbol_Success, 
                     RegisterStrings.RegisterResult_Success,
-                    GeneralStrings.Done );
+                    GeneralStrings.Done );*/
             }
         }
     }

@@ -684,6 +684,10 @@ namespace CCVApp
                     Request.ExecuteAsync< List<Rock.Client.ContentChannelItem> >( requestUrl, request, resultHandler );
                 }
 
+                public class DateTimeModel
+                {
+                    public string ValueAsDateTime { get; set; }
+                }
                 public void GetGeneralDataTime( HttpRequest.RequestResult<DateTime> resultHandler )
                 {
                     // request a profile by the username. If no username is specified, we'll use the logged in user's name.
@@ -692,7 +696,16 @@ namespace CCVApp
 
 
                     // get the raw response
-                    Request.ExecuteAsync< DateTime >( requestUrl, request, resultHandler );
+                    Request.ExecuteAsync< List<DateTimeModel> >( requestUrl, request, delegate(HttpStatusCode statusCode, string statusDescription, List<DateTimeModel> model) 
+                        {
+                            DateTime dateTime = DateTime.MinValue;
+                            if( model != null )
+                            {
+                                dateTime = DateTime.Parse( model[ 0 ].ValueAsDateTime );
+                            }
+
+                            resultHandler( statusCode, statusDescription, dateTime );
+                        } );
                 }
 
                 /// <summary>

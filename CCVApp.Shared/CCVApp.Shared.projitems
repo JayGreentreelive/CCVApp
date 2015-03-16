@@ -48,5 +48,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)FileCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\UIJoinGroup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\UIResultView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\UIBlockerView.cs" />
   </ItemGroup>
 </Project>
