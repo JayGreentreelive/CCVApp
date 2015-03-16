@@ -320,6 +320,11 @@ namespace CCVApp
             public class NoteConfig
             {
                 /// <summary>
+                /// The image to display for the tutorial screen.
+                /// </summary>
+                public const string TutorialOverlayImage = "note_tutorial.png";
+
+                /// <summary>
                 /// The suffix to use for the user note filename.
                 /// </summary>
                 public const string UserNoteSuffix = "_user_note.dat";

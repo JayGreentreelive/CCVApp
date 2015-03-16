@@ -1,34 +1,18 @@
-﻿<Properties StartupItem="Droid/Droid.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.192.168.56.101:5555" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Tasks/ConnectTask/JoinGroupFragment.cs">
+﻿<Properties StartupItem="iOS/iOS.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhone4s.8.2" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Tasks/ConnectTask/GroupFinderFragment.cs">
     <Files>
-      <File FileName="iOS/Tasks/Connect/GroupFinderJoinViewController.cs" Line="21" Column="25" />
-      <File FileName="CCVApp.Shared/UI/UIJoinGroup.cs" Line="12" Column="16" />
-      <File FileName="CCVApp.Shared/UI/UIBlockerView.cs" Line="9" Column="19" />
-      <File FileName="Droid/Tasks/ConnectTask/JoinGroupFragment.cs" Line="70" Column="67" />
-      <File FileName="Droid/UserManagement/ProfileFragment.cs" Line="97" Column="28" />
-      <File FileName="Droid/Tasks/ConnectTask/GroupFinderFragment.cs" Line="442" Column="21" />
+      <File FileName="Droid/Tasks/ConnectTask/GroupFinderFragment.cs" Line="402" Column="50" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="CCVApp.Shared" expanded="True">
-            <Node name="RockApi" expanded="True" />
-            <Node name="UI" expanded="True" />
-          </Node>
-          <Node name="Droid" expanded="True">
+          <Node name="iOS" expanded="True" selected="True">
             <Node name="Tasks" expanded="True">
-              <Node name="ConnectTask" expanded="True">
-                <Node name="JoinGroupFragment.cs" selected="True" />
-              </Node>
+              <Node name="Connect" expanded="True" />
+              <Node name="Notes" expanded="True" />
             </Node>
             <Node name="UserManagement" expanded="True" />
-          </Node>
-          <Node name="Rock.Mobile" expanded="True">
-            <Node name="Network" expanded="True" />
-            <Node name="PlatformUI" expanded="True">
-              <Node name="Droid" expanded="True" />
-            </Node>
           </Node>
         </State>
       </Pad>

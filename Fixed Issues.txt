@@ -7,6 +7,10 @@ News items now update live, and are based on the Viewing Campus chosen.
 
 New User Registration added.
 
+Join Neighborhood Group screen added.
+
+Tutorial overlay added to messages, which teaches you how to create / delete your own notes.
+
 
 Changes
 -------
@@ -19,12 +23,16 @@ Both
 
 	Notes - Fixed an issue allowing the device to sleep when viewing a quote URL.
 	Notes - Replaced the "Message Box" style error with a nice error screen with retry button.
+	Notes - Added tutorial screen
 
 	GroupFinder - Your location is now shown in green.
 	GroupFinder - Distance is now accurate.
+	GroupFinder - Added Join screen
 
 	News - News is now updated without having to leave / reactivate the News element.
 	News - News is now filtered by the selected Viewing Campus
+
+
 
 
 iOS

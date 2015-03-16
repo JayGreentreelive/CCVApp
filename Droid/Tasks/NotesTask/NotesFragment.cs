@@ -21,6 +21,7 @@ using CCVApp.Shared;
 using CCVApp.Shared.Strings;
 using CCVApp.Shared.Analytics;
 using CCVApp.Shared.UI;
+using Rock.Mobile.Animation;
 
 namespace Droid
 {
@@ -207,6 +208,17 @@ namespace Droid
                 #endif
 
                 /// <summary>
+                /// The overlay displayed the first time the user enters Notes
+                /// </summary>
+                Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView TutorialOverlay { get; set; }
+
+                /// <summary>
+                /// True if the tutorial is fading in or out
+                /// </summary>
+                /// <value><c>true</c> if animating tutorial; otherwise, <c>false</c>.</value>
+                bool AnimatingTutorial { get; set; }
+
+                /// <summary>
                 /// The amount of times we've attempted to download the current note.
                 /// When it hits 0, we'll just fail out and tell the user to check their network settings.
                 /// </summary>
@@ -286,6 +298,18 @@ namespace Droid
                         ControlStylingConfig.Button_BGColor, 
                         ControlStylingConfig.Button_TextColor );
                     ResultView.Hide( );
+
+                    // setup the tutorial overlay
+                    AnimatingTutorial = false;
+                    TutorialOverlay = new Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    TutorialOverlay.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent );
+                    TutorialOverlay.Alpha = 0;
+                    TutorialOverlay.SetScaleType( ImageView.ScaleType.CenterCrop );
+                    layout.AddView( TutorialOverlay );
+
+                    System.IO.Stream tutorialStream = Activity.BaseContext.Assets.Open( NoteConfig.TutorialOverlayImage );
+                    TutorialOverlay.SetImageBitmap( Android.Graphics.BitmapFactory.DecodeStream( tutorialStream ) );
+
 
                     return layout;
                 }
@@ -507,6 +531,8 @@ namespace Droid
                             {
                                 if ( Note != null )
                                 {
+                                    AnimateTutorialScreen( false );
+
                                     string activeUrl = Note.TouchesEnded( new PointF( e.GetX( ), e.GetY( ) ) );
 
                                     // again, only process this if we didn't create a note. We don't want to treat a double tap
@@ -654,6 +680,15 @@ namespace Droid
                                     CachedNoteUrl = NoteUrl;
 
                                     FinishNotesCreation( );
+
+                                    // display the tutorial
+                                    // if the user has never seen it, show them the tutorial screen
+                                    if( CCVApp.Shared.Network.RockMobileUser.Instance.NoteTutorialShown == false )
+                                    {
+                                        CCVApp.Shared.Network.RockMobileUser.Instance.NoteTutorialShown = true;
+
+                                        AnimateTutorialScreen( true );
+                                    }
                                 } 
                                 catch( Exception ex )
                                 {
@@ -669,6 +704,32 @@ namespace Droid
 
                     // flag that we're clear to refresh again
                     RefreshingNotes = false;
+                }
+
+                void AnimateTutorialScreen( bool fadeIn )
+                {
+                    // handles fading in / out the tutorial screen
+                    float startVal = fadeIn ? 0.00f : 1.00f;
+                    float endVal = fadeIn ? 1.00f : 0.00f;
+
+                    // dont do it if the tutorial screen is already in the state we're requesting
+                    if ( endVal != TutorialOverlay.Alpha )
+                    {
+                        if ( AnimatingTutorial == false )
+                        {
+                            AnimatingTutorial = true;
+
+                            SimpleAnimator_Float tutorialAnim = new SimpleAnimator_Float( startVal, endVal, .15f, delegate(float percent, object value )
+                                {
+                                    TutorialOverlay.Alpha = (float)value;
+                                }, 
+                                delegate
+                                {
+                                    AnimatingTutorial = false;
+                                } );
+                            tutorialAnim.Start( );
+                        }
+                    }
                 }
 
                 protected void ReportException( string errorMsg, Exception e )

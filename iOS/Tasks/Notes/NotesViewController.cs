@@ -20,6 +20,7 @@ using CCVApp.Shared;
 using CCVApp.Shared.Analytics;
 using CCVApp.Shared.Strings;
 using CCVApp.Shared.UI;
+using Rock.Mobile.Animation;
 
 namespace iOS
 {
@@ -169,6 +170,17 @@ namespace iOS
         /// </summary>
         /// <value>The observer handles.</value>
         List<NSObject> ObserverHandles { get; set; }
+
+        /// <summary>
+        /// The overlay displayed the first time the user enters Notes
+        /// </summary>
+        UIImageView TutorialOverlay { get; set; }
+
+        /// <summary>
+        /// True if the tutorial is fading in or out
+        /// </summary>
+        /// <value><c>true</c> if animating tutorial; otherwise, <c>false</c>.</value>
+        bool AnimatingTutorial { get; set; }
 
         /// <summary>
         /// The manager that ensures views being edited are visible when the keyboard comes up.
@@ -326,6 +338,14 @@ namespace iOS
                                  ControlStylingConfig.Button_BGColor, 
                                  ControlStylingConfig.Button_TextColor );
             ResultView.Hide( );
+
+            // setup the tutorial overlay
+            AnimatingTutorial = false;
+            TutorialOverlay = new UIImageView( View.Frame );
+            TutorialOverlay.ContentMode = UIViewContentMode.ScaleAspectFill;
+            TutorialOverlay.Image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + NoteConfig.TutorialOverlayImage );
+            TutorialOverlay.Alpha = 0.00f;
+            View.AddSubview( TutorialOverlay );
         }
 
         void OnResultViewDone( )
@@ -544,6 +564,8 @@ namespace iOS
 
             Console.WriteLine( "Touches Ended" );
 
+            AnimateTutorialScreen( false );
+
             UITouch touch = touches.AnyObject as UITouch;
             if( touch != null )
             {
@@ -713,6 +735,14 @@ namespace iOS
                             CachedNoteXml = Note.NoteXml;
                             CachedStyleXml = ControlStyles.StyleSheetXml;
                             CachedNoteUrl = NoteUrl;
+
+                            // if the user has never seen it, show them the tutorial screen
+                            if( CCVApp.Shared.Network.RockMobileUser.Instance.NoteTutorialShown == false )
+                            {
+                                CCVApp.Shared.Network.RockMobileUser.Instance.NoteTutorialShown = true;
+
+                                AnimateTutorialScreen( true );
+                            }
                         }
                         catch( Exception ex )
                         {
@@ -728,6 +758,32 @@ namespace iOS
 
             // flag that we're clear to refresh again
             RefreshingNotes = false;
+        }
+
+        void AnimateTutorialScreen( bool fadeIn )
+        {
+            // handles fading in / out the tutorial screen
+            float startVal = fadeIn ? 0.00f : 1.00f;
+            float endVal = fadeIn ? 1.00f : 0.00f;
+
+            // dont do it if the tutorial screen is already in the state we're requesting
+            if ( endVal != TutorialOverlay.Alpha )
+            {
+                if ( AnimatingTutorial == false )
+                {
+                    AnimatingTutorial = true;
+
+                    SimpleAnimator_Float tutorialAnim = new SimpleAnimator_Float( startVal, endVal, .15f, delegate(float percent, object value )
+                        {
+                            TutorialOverlay.Alpha = (float)value;
+                        }, 
+                                                            delegate
+                        {
+                            AnimatingTutorial = false;
+                        } );
+                    tutorialAnim.Start( );
+                }
+            }
         }
 
         protected void ReportException( string errorMsg, Exception e )

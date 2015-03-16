@@ -370,6 +370,9 @@
     <AndroidAsset Include="..\Assets\placeholder_notes_thumb.png">
       <Link>Assets\placeholder_notes_thumb.png</Link>
     </AndroidAsset>
+    <AndroidAsset Include="..\Assets\note_tutorial.png">
+      <Link>Assets\note_tutorial.png</Link>
+    </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
     <XamarinComponentReference Include="json.net">

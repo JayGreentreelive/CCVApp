@@ -75,9 +75,17 @@ namespace CCVApp
                 /// <value>The person.</value>
                 public Person Person;
 
-                public bool ProfileImageDirty { get; set; }
+                /// <summary>
+                /// If true, they've already seen the note tutorial and don't need to see it again.
+                /// </summary>
+                /// <value><c>true</c> if note tutorial shown; otherwise, <c>false</c>.</value>
+                public bool NoteTutorialShown { get; set; }
 
-                public bool ProfileImageGroupDirty { get; set; }
+                /// <summary>
+                /// Used to know whether we need to sync the profile image or not.
+                /// </summary>
+                /// <value><c>true</c> if profile image dirty; otherwise, <c>false</c>.</value>
+                public bool ProfileImageDirty { get; set; }
 
                 /// <summary>
                 /// The primary family associated with this person, which contains their home campus
