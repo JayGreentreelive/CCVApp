@@ -109,6 +109,7 @@
     <Compile Include="Tasks\NotesTask\NotesListenFragment.cs" />
     <Compile Include="UserManagement\RegisterFragment.cs" />
     <Compile Include="Tasks\ConnectTask\JoinGroupFragment.cs" />
+    <Compile Include="UserManagement\OOBEFragment.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
@@ -165,6 +166,7 @@
     <AndroidResource Include="Resources\layout\News_Web.axml" />
     <AndroidResource Include="Resources\layout\Register.axml" />
     <AndroidResource Include="Resources\layout\JoinGroup.axml" />
+    <AndroidResource Include="Resources\layout\OOBEView.axml" />
   </ItemGroup>
   <Import Project="..\..\Rock.Mobile\Rock.Mobile.projitems" Label="Shared" Condition="Exists('..\..\Rock.Mobile\Rock.Mobile.projitems')" />
   <Import Project="..\..\Rock\Rock.Client\Rock.Client.Models.projitems" Label="Shared" Condition="Exists('..\..\Rock\Rock.Client\Rock.Client.Models.projitems')" />
@@ -372,6 +374,12 @@
     </AndroidAsset>
     <AndroidAsset Include="..\Assets\note_tutorial.png">
       <Link>Assets\note_tutorial.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\oobe_ccv_logo%403x.png">
+      <Link>Assets\oobe_ccv_logo.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\oobe_splash_bg.png">
+      <Link>Assets\oobe_splash_bg.png</Link>
     </AndroidAsset>
   </ItemGroup>
   <ItemGroup>

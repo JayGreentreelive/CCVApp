@@ -15,6 +15,7 @@ using Rock.Mobile.PlatformUI;
 using Rock.Mobile.PlatformSpecific.iOS.Graphics;
 using Rock.Mobile.PlatformSpecific.iOS.UI;
 using CCVApp.Shared;
+using Rock.Mobile.Animation;
 
 namespace iOS
 {
@@ -175,6 +176,19 @@ namespace iOS
         protected ImageCropViewController ImageCropViewController { get; set; }
 
         /// <summary>
+        /// The out of box experience view controller, used for first time setup.
+        /// </summary>
+        /// <value>The OOBE view controller.</value>
+        protected OOBEViewController OOBEViewController { get; set; }
+
+        /// <summary>
+        /// True while the user is still being guided through the OOBE. This includes
+        /// the view controllers the OOBE launches, like Login and Register
+        /// </summary>
+        /// <value><c>true</c> if this instance is OOBE running; otherwise, <c>false</c>.</value>
+        bool IsOOBERunning { get; set; }
+
+        /// <summary>
         /// When true, we are doing something else, like logging in, editing the profile, etc.
         /// </summary>
         /// <value><c>true</c> if modal controller visible; otherwise, <c>false</c>.</value>
@@ -301,6 +315,9 @@ namespace iOS
             RegisterViewController = UserManagementStoryboard.InstantiateViewController( "RegisterViewController" ) as RegisterViewController;
             RegisterViewController.Springboard = this;
 
+            OOBEViewController = new OOBEViewController( );
+            OOBEViewController.Springboard = this;
+
             // Instantiate all activities
             Elements.Add( new SpringboardElement( this, new NewsTask( "NewsStoryboard_iPhone" )      , NewsElement    , SpringboardConfig.Element_News_Icon    , SpringboardStrings.Element_News_Title ) );
             Elements.Add( new SpringboardElement( this, new ConnectTask( "ConnectStoryboard_iPhone" ), ConnectElement , SpringboardConfig.Element_Connect_Icon , SpringboardStrings.Element_Connect_Title ) );
@@ -407,7 +424,7 @@ namespace iOS
                         else
                         {
                             //otherwise this button can double as a login button.
-                            PresentModelViewController( LoginViewController );
+                            PresentModalViewController( LoginViewController );
                         }
                     }
                 };
@@ -419,11 +436,11 @@ namespace iOS
                     {
                         if( RockMobileUser.Instance.LoggedIn == true )
                         {
-                            PresentModelViewController( ProfileViewController );
+                            PresentModalViewController( ProfileViewController );
                         }
                         else
                         {
-                            PresentModelViewController( LoginViewController );
+                            PresentModalViewController( LoginViewController );
                         }
                     }
                 };
@@ -467,6 +484,72 @@ namespace iOS
             );
 
             Billboard.Layer.Position = new CGPoint( Billboard.Layer.Position.X, NavViewController.NavigationBar.Frame.Height );
+
+
+            // only do the OOBE if the user hasn't seen it yet
+            if ( RockMobileUser.Instance.OOBEComplete == false )
+            //if( RanOOBE == false )
+            {
+                // sanity check for testers that didn't listen to me and delete / reinstall.
+                // This will force them to be logged out so they experience the OOBE properly.
+                RockMobileUser.Instance.LogoutAndUnbind( );
+                
+                //RanOOBE = true;
+                IsOOBERunning = true;
+                AddChildViewController( OOBEViewController );
+                View.AddSubview( OOBEViewController.View );
+            }
+        }
+        static bool RanOOBE = false;
+
+        public void OOBEOnClick( int index )
+        {
+            // fade out the OOBE
+            SimpleAnimator_Float oobeFadeOutAnim = new SimpleAnimator_Float( 1.00f, 0.00f, .33f, delegate(float percent, object value )
+                {
+                    OOBEViewController.View.Layer.Opacity = (float)value;
+                },
+                delegate
+                {
+                    // if they chose register, present it
+                    if ( index == 0 )
+                    {
+                        PresentModalViewController( RegisterViewController );
+                    }
+                    // if they chose login, present it!
+                    else if ( index == 1 )
+                    {
+                        PresentModalViewController( LoginViewController );
+                    }
+                    else
+                    {
+                        // don't present anything. Instead, just wrap up the OOBE.
+                        CompleteOOBE( );
+                    }
+
+                    OOBEViewController.RemoveFromParentViewController( );
+                    OOBEViewController.View.RemoveFromSuperview( );
+                } );
+            oobeFadeOutAnim.Start( );
+        }
+
+        void CompleteOOBE( )
+        {
+            // kick off a timer to allow the user to see the news before revealing the springboard.
+            System.Timers.Timer timer = new System.Timers.Timer();
+            timer.AutoReset = false;
+            timer.Interval = 1000;
+            timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>
+                {
+                    Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                        {
+                            // then reveal the springboard
+                            NavViewController.RevealSpringboard( true );
+                            IsOOBERunning = false;
+                            RockMobileUser.Instance.OOBEComplete = true;
+                        } );
+                };
+            timer.Start( );
         }
 
         void SyncRockData( )
@@ -583,7 +666,7 @@ namespace iOS
             PresentViewController( actionSheet, true, null );
         }
 
-        void PresentModelViewController( UIViewController modelViewController )
+        void PresentModalViewController( UIViewController modelViewController )
         {
             PresentViewController( modelViewController, true, null );
             ModalControllerVisible = true;
@@ -625,6 +708,13 @@ namespace iOS
 
             modelViewController.DismissViewController( true, null );
             ModalControllerVisible = false;
+
+            // if this resign is while the OOBE is running, it was the register or login finishing up, 
+            // so wrap up the OOBE
+            if ( IsOOBERunning == true )
+            {
+                CompleteOOBE( );
+            }
         }
 
         public void RegisterNewUser( )
@@ -681,8 +771,6 @@ namespace iOS
             }
         }
 
-        //todo apon return: Make this this is working on Android, then move on.
-
         public override void ViewWillAppear( bool animated )
         {
             base.ViewWillAppear( animated );
@@ -700,7 +788,7 @@ namespace iOS
             if( ImageCropperPendingImage != null )
             {
                 ImageCropViewController.Begin( ImageCropperPendingImage, 1.0f );
-                PresentModelViewController( ImageCropViewController );
+                PresentModalViewController( ImageCropViewController );
 
                 ImageCropperPendingImage = null;
             }
@@ -738,6 +826,8 @@ namespace iOS
                     DisplaySeriesBillboard( );
                 }
             }
+
+
         }
 
         /// <summary>

@@ -1,6 +1,5 @@
 *DELETE YOUR EXISTING INSTALLATION BEFORE UPDATING*
 
-Highlights
 iOS Users please verify the phone does not goto sleep when using Sermon Notes.
 
 News items now update live, and are based on the Viewing Campus chosen.
@@ -10,6 +9,8 @@ New User Registration added.
 Join Neighborhood Group screen added.
 
 Tutorial overlay added to messages, which teaches you how to create / delete your own notes.
+
+Added an OOB Experience
 
 
 Changes
@@ -32,7 +33,7 @@ Both
 	News - News is now updated without having to leave / reactivate the News element.
 	News - News is now filtered by the selected Viewing Campus
 
-
+	OOBE - Added new OOB Experience
 
 
 iOS

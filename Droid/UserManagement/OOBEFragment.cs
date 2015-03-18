@@ -1,0 +1,94 @@
+﻿
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+using Android.App;
+using Android.Content;
+using Android.OS;
+using Android.Runtime;
+using Android.Util;
+using Android.Views;
+using Android.Text;
+using Android.Widget;
+using CCVApp.Shared.Network;
+using Android.Views.InputMethods;
+using CCVApp.Shared.Strings;
+using CCVApp.Shared.Config;
+using Rock.Mobile.PlatformUI;
+using Android.Telephony;
+using Rock.Mobile.Util.Strings;
+using Java.Lang.Reflect;
+using CCVApp.Shared.UI;
+using Rock.Mobile.Animation;
+
+namespace Droid
+{
+    public class OOBEFragment : Fragment, View.IOnTouchListener
+    {
+        public Springboard SpringboardParent { get; set; }
+
+        UIOOBE OOBEView { get; set; }
+
+        public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+        {
+            if (container == null)
+            {
+                // Currently in a layout without a container, so no reason to create our view.
+                return null;
+            }
+
+            OOBEView = new UIOOBE( );
+
+            RelativeLayout view = inflater.Inflate(Resource.Layout.OOBEView, container, false) as RelativeLayout;
+
+            view.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
+
+            view.SetOnTouchListener( this );
+
+            string imageName = "oobe_ccv_logo.png";
+
+            OOBEView.Create( view, "oobe_splash_bg.png", imageName, new System.Drawing.RectangleF( 0, 0, this.Resources.DisplayMetrics.WidthPixels, this.Resources.DisplayMetrics.HeightPixels ), 
+
+                delegate(int index) 
+                {
+                    SpringboardParent.OOBEUserClick( index );
+                } );
+
+            return view;
+        }
+
+        public bool OnTouch( View v, MotionEvent e )
+        {
+            // consume all input so things tasks underneath don't respond
+            return true;
+        }
+
+        public override void OnResume()
+        {
+            base.OnResume();
+            
+            System.Timers.Timer timer = new System.Timers.Timer();
+            timer.Interval = 750;
+            timer.AutoReset = false;
+            timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>
+                {
+                    Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                        {
+                            OOBEView.PerformStartup( );
+                        } );
+                };
+            timer.Start( );
+
+            SpringboardParent.ModalFragmentOpened( this );
+        }
+
+        public override void OnStop()
+        {
+            base.OnStop( );
+            OOBEView.Destroy( );
+        }
+    }
+}
+

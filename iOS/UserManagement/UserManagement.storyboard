@@ -157,5 +157,6 @@
         <image name="placeholder_news_main.png" width="1242" height="801"/>
         <image name="placeholder_notes_main.png" width="750" height="422"/>
         <image name="placeholder_notes_thumb.png" width="210" height="210"/>
+        <image name="note_tutorial.png" width="1242" height="2208"/>
     </resources>
 </document>

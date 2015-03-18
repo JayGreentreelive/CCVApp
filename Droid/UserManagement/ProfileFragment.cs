@@ -255,8 +255,8 @@ namespace Droid
                                     {
                                         switch( clickArgs.Which )
                                         {
-                                            case 0: SubmitChanges( ); SpringboardParent.ModalFragmentDone( this, null ); break;
-                                            case 1: SpringboardParent.ModalFragmentDone( this, null ); break;
+                                            case 0: SubmitChanges( ); SpringboardParent.ModalFragmentDone( null ); break;
+                                            case 1: SpringboardParent.ModalFragmentDone( null ); break;
                                             case 2: break;
                                         }
                                     });
@@ -266,7 +266,7 @@ namespace Droid
                     }
                     else
                     {
-                        SpringboardParent.ModalFragmentDone( this, null );
+                        SpringboardParent.ModalFragmentDone( null );
                     }
                 };
 
@@ -288,7 +288,7 @@ namespace Droid
                                 {
                                     switch( clickArgs.Which )
                                     {
-                                        case 0: RockMobileUser.Instance.LogoutAndUnbind( ); SpringboardParent.ModalFragmentDone( this, null ); break;
+                                        case 0: RockMobileUser.Instance.LogoutAndUnbind( ); SpringboardParent.ModalFragmentDone( null ); break;
                                         case 1: break;
                                     }
                                 });
@@ -371,7 +371,7 @@ namespace Droid
         {
             base.OnStop();
 
-            SpringboardParent.ModalFragmentClosed( this );
+            SpringboardParent.ModalFragmentDone( null );
         }
 
         void SubmitChanges()
@@ -423,7 +423,6 @@ namespace Droid
             RockMobileUser.Instance.UpdateHomeCampus( null );
             RockMobileUser.Instance.UpdateOrAddPhoneNumber( null );
         }
-
     }
 }
 

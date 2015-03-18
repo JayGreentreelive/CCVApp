@@ -49,5 +49,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)UI\UIJoinGroup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\UIResultView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\UIBlockerView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\UIOOBE.cs" />
   </ItemGroup>
 </Project>

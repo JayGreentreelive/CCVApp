@@ -23,6 +23,7 @@ using Rock.Mobile.PlatformUI;
 using Android.Graphics.Drawables;
 using Rock.Mobile.PlatformSpecific.Android.Graphics;
 using Rock.Mobile.PlatformSpecific.Android.UI;
+using Rock.Mobile.Animation;
 
 
 namespace Droid
@@ -110,7 +111,7 @@ namespace Droid
         protected ProfileFragment ProfileFragment { get; set; }
         protected RegisterFragment RegisterFragment { get; set; }
         protected ImageCropFragment ImageCropFragment { get; set; }
-
+        protected OOBEFragment OOBEFragment { get; set; }
 
         protected Button ProfileImageButton { get; set; }
 
@@ -120,7 +121,14 @@ namespace Droid
 
         protected int ActiveElementIndex { get; set; }
 
-        bool DisplayingModalFragment { get; set; }
+        //bool DisplayingModalFragment { get; set; }
+        Fragment VisibleModalFragment { get; set; }
+
+        /// <summary>
+        /// Get a pointer to the Fullscreen layout so we can hide it when a modal fragment isn't displaying
+        /// </summary>
+        /// <value>The full screen layout.</value>
+        protected FrameLayout FullScreenLayout { get; set; }
 
         /// <summary>
         /// When true, we need to launch the image cropper. We have to wait
@@ -192,6 +200,13 @@ namespace Droid
             {
                 RegisterFragment = new RegisterFragment( );
                 RegisterFragment.SpringboardParent = this;
+            }
+
+            OOBEFragment = FragmentManager.FindFragmentByTag( "Droid.OOBEFragment" ) as OOBEFragment;
+            if( OOBEFragment == null )
+            {
+                OOBEFragment = new OOBEFragment( );
+                OOBEFragment.SpringboardParent = this;
             }
 
             ImageCropFragment = FragmentManager.FindFragmentByTag( "Droid.ImageCropFragment" ) as ImageCropFragment;
@@ -288,6 +303,8 @@ namespace Droid
             // store the last activity we were in
             outState.PutInt( "LastActiveElement", ActiveElementIndex );
         }
+
+
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
@@ -489,33 +506,48 @@ namespace Droid
         public void StartModalFragment( Fragment fragment, bool forceShow = false )
         {
             // don't allow multiple modal fragments, or modal fragments when the springboard is closed.
-            if (forceShow == true || ( DisplayingModalFragment == false && NavbarFragment.ShouldSpringboardAllowInput( ) ) )
+            if (forceShow == true || ( VisibleModalFragment == null && NavbarFragment.ShouldSpringboardAllowInput( ) ) )
             {
+                FullScreenLayout.Visibility = ViewStates.Visible;
+
                 // replace the entire screen with a modal fragment
                 var ft = FragmentManager.BeginTransaction( );
                 ft.SetTransition( FragmentTransit.FragmentFade );
 
                 ft.Replace( Resource.Id.fullscreen, fragment );
-                ft.AddToBackStack( fragment.ToString( ) );
 
                 ft.Commit( );
             }
         }
 
+        /// <summary>
+        /// Called by the fragment launched by StartModalFragment.
+        /// Needed so that we don't take a pointer to it until any current fragment
+        /// is closed.
+        /// </summary>
         public void ModalFragmentOpened( Fragment fragment )
         {
-            DisplayingModalFragment = true;
-        }
-
-        public void ModalFragmentClosed( Fragment fragment )
-        {
-            DisplayingModalFragment = false;
+            VisibleModalFragment = fragment;
         }
 
         public bool CanPressBack( )
         {
+            // if a modal fragment is visible, end it.
+            if ( VisibleModalFragment != null )
+            {
+                // the OOBE is special. If they hit back, ignore them.
+                if ( VisibleModalFragment == OOBEFragment )
+                {
+                    return false;
+                }
+                else
+                {
+                    ModalFragmentDone( null );
+                    return false;
+                }
+            }
             // if they press back while the springboard is open, close it.
-            if ( NavbarFragment.SpringboardRevealed == true && DisplayingModalFragment == false )
+            else if ( NavbarFragment.SpringboardRevealed == true )
             {
                 // otherwise, close the springboard
                 NavbarFragment.RevealSpringboard( false );
@@ -547,58 +579,72 @@ namespace Droid
             }
         }
 
-        public void ModalFragmentDone( Fragment fragment, object context )
+        public void ModalFragmentDone( object context )
         {
-            // called by modal (full screen) fragments that Springboard launches
-            // when the fragments are done and ok to be closed.
-            // (Login, Profile Editing, Image Cropping, etc.)
-            if ( LoginFragment == fragment )
+            if ( VisibleModalFragment != null )
             {
-                Activity.OnBackPressed( );
-                UpdateLoginState( );
-            }
-            else if ( ProfileFragment == fragment )
-            {
-                Activity.OnBackPressed( );
-                UpdateLoginState( );
-            }
-            else if ( RegisterFragment == fragment )
-            {
-                Activity.OnBackPressed( );
-            }
-            else if ( ImageCropFragment == fragment )
-            {
-                // take the newly cropped image and write it to disk
-                Bitmap croppedImage = (Bitmap)context;
+                // remove the modal fragment
+                FragmentTransaction ft = FragmentManager.BeginTransaction( );
+                ft.SetTransition( FragmentTransit.FragmentFade );
+                ft.Remove( VisibleModalFragment );
+                ft.Commit( );
 
-                bool success = false;
-                MemoryStream memStream = new MemoryStream( );
-                try
+
+                // if login or profile are ending, update the login state
+                if ( LoginFragment == VisibleModalFragment || ProfileFragment == VisibleModalFragment )
                 {
-                    // compress the image into our memory stream
-                    if( croppedImage.Compress( Bitmap.CompressFormat.Jpeg, 100, memStream ) )
+                    UpdateLoginState( );
+                }
+                // for the image cropper, store the picture
+                else if ( ImageCropFragment == VisibleModalFragment )
+                {
+                    // take the newly cropped image and write it to disk
+                    if ( context != null )
                     {
-                        memStream.Position = 0;
+                        Bitmap croppedImage = (Bitmap)context;
 
-                        RockMobileUser.Instance.SaveProfilePicture( memStream );
-                        RockMobileUser.Instance.UploadSavedProfilePicture( null );
-                        success = true;
+                        bool success = false;
+                        MemoryStream memStream = new MemoryStream();
+                        try
+                        {
+                            // compress the image into our memory stream
+                            if ( croppedImage.Compress( Bitmap.CompressFormat.Jpeg, 100, memStream ) )
+                            {
+                                memStream.Position = 0;
 
-                        SetProfileImage( );
+                                RockMobileUser.Instance.SaveProfilePicture( memStream );
+                                RockMobileUser.Instance.UploadSavedProfilePicture( null );
+                                success = true;
+
+                                SetProfileImage( );
+                            }
+                        }
+                        catch ( Exception )
+                        {
+                        }
+
+                        if ( memStream != null )
+                        {
+                            memStream.Dispose( );
+                        }
+
+                        if ( success == false )
+                        {
+                            DisplayError( SpringboardStrings.ProfilePicture_Error_Title, SpringboardStrings.ProfilePicture_Error_Message );
+                        }
                     }
                 }
-                catch( Exception )
-                {
-                }
 
-                if( memStream != null )
-                {
-                    memStream.Dispose( );
-                }
+                // hide the full screen layout and clear our modal fragment pointer
+                FullScreenLayout.Visibility = ViewStates.Gone;
+                VisibleModalFragment = null;
 
-                if( success == false )
+                // OOBE Check - If the OOBE is running, this will be the last step. 
+                // We either launched the Register or Login dialog,
+                // and now those are closing, so we want to show them the springboard.
+                if ( IsOOBERunning == true )
                 {
-                    DisplayError( SpringboardStrings.ProfilePicture_Error_Title, SpringboardStrings.ProfilePicture_Error_Message );
+                    CompleteOOBE( );
                 }
             }
         }
@@ -705,6 +751,8 @@ namespace Droid
             System.Console.WriteLine( "Springboard OnPause()" );
         }
 
+        bool IsOOBERunning { get; set; }
+        static bool oobeRan = false;
         public override void OnResume()
         {
             base.OnResume();
@@ -737,6 +785,73 @@ namespace Droid
                     DisplaySeriesBillboard( );
                 }            
             }
+
+            // if we haven't yet, get the fullscreen layout
+            if ( FullScreenLayout == null )
+            {
+                FullScreenLayout = ( (Activity)Rock.Mobile.PlatformSpecific.Android.Core.Context ).FindViewById<FrameLayout>( Resource.Id.fullscreen ) as FrameLayout;
+                FullScreenLayout.Visibility = ViewStates.Gone;
+                FullScreenLayout.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+            }
+
+            // only do the OOBE if the user hasn't seen it yet
+            if ( RockMobileUser.Instance.OOBEComplete == false && IsOOBERunning == false )
+            //if( oobeRan == false && IsOOBERunning == false )
+            {
+                oobeRan = true;
+                IsOOBERunning = true;
+                StartModalFragment( OOBEFragment, true );
+            }
+        }
+
+        public void OOBEUserClick( int index )
+        {
+            if ( index == 0 )
+            {
+                StartModalFragment( RegisterFragment, true );
+            }
+            else if ( index == 1 )
+            {
+                StartModalFragment( LoginFragment, true );
+            }
+            else
+            {
+                // fade the OOBE out
+                SimpleAnimator_Float viewAlphaAnim = new SimpleAnimator_Float( FullScreenLayout.Alpha, 0.00f, .13f, delegate(float percent, object value )
+                {
+                    FullScreenLayout.Alpha = (float)value;
+                },
+                delegate
+                {
+                       
+                    // and launch the appropriate screen
+                    ModalFragmentDone( null );
+
+                    FullScreenLayout.Alpha = 1.0f;
+
+                    CompleteOOBE( );
+                } );
+                viewAlphaAnim.Start( );
+            }
+        }
+
+        void CompleteOOBE( )
+        {
+            // kick off a timer to allow the user to see the news before revealing the springboard.
+            System.Timers.Timer timer = new System.Timers.Timer();
+            timer.AutoReset = false;
+            timer.Interval = 500;
+            timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>
+                {
+                    Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                        {
+                            // then reveal the springboard
+                            NavbarFragment.RevealSpringboard( true );
+                            IsOOBERunning = false;
+                            RockMobileUser.Instance.OOBEComplete = true;
+                        } );
+                };
+            timer.Start( );
         }
 
         /// <summary>
@@ -873,7 +988,7 @@ namespace Droid
                 {
                     // only allow changing tasks via button press if the springboard is open 
                     // and we're not showing a modal fragment (like the Login screen)
-                    if ( NavbarFragment.ShouldSpringboardAllowInput( ) == true && DisplayingModalFragment == false )
+                    if ( NavbarFragment.ShouldSpringboardAllowInput( ) == true && VisibleModalFragment == null )
                     {
                         // no matter what, close the springboard
                         NavbarFragment.RevealSpringboard( false );

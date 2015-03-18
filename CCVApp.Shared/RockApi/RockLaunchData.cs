@@ -97,8 +97,19 @@ namespace CCVApp
 
                             // also cache the compiled in main and header images so the News system can get them transparently
                             #if __IOS__
-                            string mainImageName = string.Format( "{0}/{1}@{2}x.png", Foundation.NSBundle.MainBundle.BundlePath, copiedNews.ImageName, UIKit.UIScreen.MainScreen.Scale );
-                            string headerImageName = string.Format( "{0}/{1}@{2}x.png", Foundation.NSBundle.MainBundle.BundlePath, copiedNews.HeaderImageName, UIKit.UIScreen.MainScreen.Scale );
+                            string mainImageName;
+                            string headerImageName;
+                            if( UIKit.UIScreen.MainScreen.Scale > 1 )
+                            {
+                                mainImageName = string.Format( "{0}/{1}@{2}x.png", Foundation.NSBundle.MainBundle.BundlePath, copiedNews.ImageName, UIKit.UIScreen.MainScreen.Scale );
+                                headerImageName = string.Format( "{0}/{1}@{2}x.png", Foundation.NSBundle.MainBundle.BundlePath, copiedNews.HeaderImageName, UIKit.UIScreen.MainScreen.Scale );
+                            }
+                            else
+                            {
+                                mainImageName = string.Format( "{0}/{1}.png", Foundation.NSBundle.MainBundle.BundlePath, copiedNews.ImageName, UIKit.UIScreen.MainScreen.Scale );
+                                headerImageName = string.Format( "{0}/{1}.png", Foundation.NSBundle.MainBundle.BundlePath, copiedNews.HeaderImageName, UIKit.UIScreen.MainScreen.Scale );
+                            }
+
                             #elif __ANDROID__
                             string mainImageName = copiedNews.ImageName + ".png";
                             string headerImageName = copiedNews.HeaderImageName + ".png";

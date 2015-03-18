@@ -44,8 +44,6 @@ namespace Droid
                 public override void OnCreate( Bundle savedInstanceState )
                 {
                     base.OnCreate( savedInstanceState );
-
-                    JoinGroupView = new UIJoinGroup();
                 }
 
                 public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -55,6 +53,8 @@ namespace Droid
                         // Currently in a layout without a container, so no reason to create our view.
                         return null;
                     }
+
+                    JoinGroupView = new UIJoinGroup();
 
                     View view = inflater.Inflate(Resource.Layout.JoinGroup, container, false);
                     view.SetOnTouchListener( this );

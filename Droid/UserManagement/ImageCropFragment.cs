@@ -305,10 +305,7 @@ namespace Droid
                         else
                         {
                             // notify the caller
-                            SpringboardParent.ModalFragmentDone( this, CroppedImage );
-
-                            // now free our resources, cause we're done.
-                            Activity.OnBackPressed( );
+                            SpringboardParent.ModalFragmentDone( CroppedImage );
                         }
                     }
                 };
@@ -337,7 +334,7 @@ namespace Droid
         {
             base.OnStop();
 
-            SpringboardParent.ModalFragmentClosed( this );
+            SpringboardParent.ModalFragmentDone( null );
         }
 
         public override void OnDestroy()

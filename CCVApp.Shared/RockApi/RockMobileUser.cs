@@ -82,6 +82,12 @@ namespace CCVApp
                 public bool NoteTutorialShown { get; set; }
 
                 /// <summary>
+                /// True if this is the first time the user has run the app
+                /// </summary>
+                /// <value><c>true</c> if this instance is first run; otherwise, <c>false</c>.</value>
+                public bool OOBEComplete { get; set; }
+
+                /// <summary>
                 /// Used to know whether we need to sync the profile image or not.
                 /// </summary>
                 /// <value><c>true</c> if profile image dirty; otherwise, <c>false</c>.</value>
@@ -243,10 +249,14 @@ namespace CCVApp
 
                 private RockMobileUser( )
                 {
-                    SetDefaultValues( );
+                    SetDefaultPersonValues( );
                 }
 
-                void SetDefaultValues( )
+                /// <summary>
+                /// Resets all the values related to the Person, but won't reset things like
+                /// IsFirstRun
+                /// </summary>
+                void SetDefaultPersonValues( )
                 {
                     Person = new Person();
 
@@ -424,7 +434,7 @@ namespace CCVApp
                 public void LogoutAndUnbind( )
                 {
                     // clear the person and take a blank copy
-                    SetDefaultValues( );
+                    SetDefaultPersonValues( );
 
                     LoggedIn = false;
                     AccountType = BoundAccountType.None;

@@ -24,7 +24,7 @@ using CCVApp.Shared.UI;
 
 namespace Droid
 {
-    public class RegisterFragment : Fragment
+    public class RegisterFragment : Fragment, View.IOnTouchListener
     {
         public Springboard SpringboardParent { get; set; }
 
@@ -82,6 +82,7 @@ namespace Droid
 
             View view = inflater.Inflate(Resource.Layout.Register, container, false);
             view.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+            view.SetOnTouchListener( this );
 
             RelativeLayout layoutView = view.FindViewById<RelativeLayout>( Resource.Id.scroll_linear_background );
 
@@ -197,7 +198,7 @@ namespace Droid
                                 {
                                     switch( clickArgs.Which )
                                     {
-                                        case 0: SpringboardParent.ModalFragmentDone( this, null ); break;
+                                        case 0: SpringboardParent.ModalFragmentDone( null ); break;
                                         case 1: break;
                                     }
                                 });
@@ -214,7 +215,7 @@ namespace Droid
             base.OnResume();
 
             // logged in sanity check.
-            if( RockMobileUser.Instance.LoggedIn == true ) throw new Exception("A user cannot be logged in when registering. How did you do this?" );
+            //if( RockMobileUser.Instance.LoggedIn == true ) throw new Exception("A user cannot be logged in when registering. How did you do this?" );
 
             UserNameText.Text = string.Empty;
             PasswordText.Text = string.Empty;
@@ -233,9 +234,15 @@ namespace Droid
         {
             base.OnStop();
 
-            SpringboardParent.ModalFragmentClosed( this );
+            SpringboardParent.ModalFragmentDone( null );
 
             State = RegisterState.None;
+        }
+
+        public bool OnTouch( View v, MotionEvent e )
+        {
+            // consume all input so things tasks underneath don't respond
+            return true;
         }
 
         void ToggleControls( bool enabled )
@@ -377,7 +384,7 @@ namespace Droid
             {
                 case RegisterState.Success:
                 {
-                    SpringboardParent.ModalFragmentDone( this, null );
+                    SpringboardParent.ModalFragmentDone( null );
                     State = RegisterState.None;
                     break;
                 }

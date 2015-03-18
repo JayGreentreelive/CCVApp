@@ -60,6 +60,7 @@ namespace iOS
         {
             Background = new UIView( );
             Field = new UITextField( );
+            Field.KeyboardAppearance = UIKeyboardAppearance.Dark;
 
             Background.Layer.AnchorPoint = CGPoint.Empty;
             Field.Layer.AnchorPoint = CGPoint.Empty;

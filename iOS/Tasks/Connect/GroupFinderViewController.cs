@@ -36,10 +36,7 @@ namespace iOS
                 public TableSource TableSource { get; set; }
 
                 public UILabel Title { get; set; }
-                //public UILabel Address { get; set; }
                 public UILabel MeetingTime { get; set; }
-                //public UILabel Time { get; set; }
-                //public UILabel Neighborhood { get; set; }
                 public UILabel Distance { get; set; }
                 public UIButton JoinButton { get; set; }
 
@@ -57,15 +54,6 @@ namespace iOS
                     Title.LineBreakMode = UILineBreakMode.TailTruncation;
                     AddSubview( Title );
 
-                    /*Address = new UILabel( );
-                    Address.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-                    Address.Layer.AnchorPoint = CGPoint.Empty;
-                    Address.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
-                    Address.BackgroundColor = UIColor.Clear;
-                    Address.LineBreakMode = UILineBreakMode.TailTruncation;
-                    Address.Lines = 99;
-                    AddSubview( Address );*/
-
                     MeetingTime = new UILabel( );
                     MeetingTime.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Light, ControlStylingConfig.Small_FontSize );
                     MeetingTime.Layer.AnchorPoint = CGPoint.Empty;
@@ -73,27 +61,12 @@ namespace iOS
                     MeetingTime.BackgroundColor = UIColor.Clear;
                     AddSubview( MeetingTime );
 
-                    /*Time = new UILabel( );
-                    Time.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-                    Time.Layer.AnchorPoint = CGPoint.Empty;
-                    Time.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
-                    Time.BackgroundColor = UIColor.Clear;
-                    AddSubview( Time );*/
-
                     Distance = new UILabel( );
                     Distance.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Light, ControlStylingConfig.Small_FontSize );
                     Distance.Layer.AnchorPoint = CGPoint.Empty;
                     Distance.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
                     Distance.BackgroundColor = UIColor.Clear;
                     AddSubview( Distance );
-
-                    /*Neighborhood = new UILabel( );
-                    Neighborhood.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-                    Neighborhood.Layer.AnchorPoint = CGPoint.Empty;
-                    Neighborhood.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
-                    Neighborhood.BackgroundColor = UIColor.Clear;
-                    Neighborhood.LineBreakMode = UILineBreakMode.TailTruncation;
-                    AddSubview( Neighborhood );*/
 
                     JoinButton = UIButton.FromType( UIButtonType.Custom );
                     JoinButton.TouchUpInside += (object sender, EventArgs e) => { TableSource.RowButtonClicked( RowIndex ); };
@@ -189,10 +162,6 @@ namespace iOS
                 cell.Title.Text = Parent.GroupEntries[ indexPath.Row ].Title;
                 cell.Title.SizeToFit( );
 
-                // Address
-                //cell.Address.Text = Parent.GroupEntries[ indexPath.Row ].Address;
-                //cell.Address.SizeToFit( );
-
                 // Meeting time - If it isn't set, just blank it out and we wont' show anything for that row.
                 if ( string.IsNullOrEmpty( Parent.GroupEntries[ indexPath.Row ].MeetingTime ) == false )
                 {
@@ -200,17 +169,9 @@ namespace iOS
                 }
                 else
                 {
-                    cell.MeetingTime.Text = "";
+                    cell.MeetingTime.Text = ConnectStrings.GroupFinder_ContactForTime;
                 }
                 cell.MeetingTime.SizeToFit( );
-
-                // Time
-                //cell.Time.Text = Parent.GroupEntries[ indexPath.Row ].Time;
-                //cell.Time.SizeToFit( );
-
-                // Neighborhood
-                //cell.Neighborhood.Text = string.Format( ConnectStrings.GroupFinder_Neighborhood, Parent.GroupEntries[ indexPath.Row ].NeighborhoodArea );
-                //cell.Neighborhood.SizeToFit( );
 
                 // Distance
                 cell.Distance.Text = string.Format( "{0:##.0} {1}", Parent.GroupEntries[ indexPath.Row ].Distance, ConnectStrings.GroupFinder_MilesSuffix );
@@ -222,11 +183,8 @@ namespace iOS
 
                 // Position the Title & Address in the center to the right of the image
                 cell.Title.Frame = new CGRect( 10, 5, cell.Frame.Width - 5, cell.Title.Frame.Height );
-                //cell.Address.Frame = new CGRect( 10, cell.Title.Frame.Bottom - 6, cell.Frame.Width - 5, cell.Address.Frame.Height + 5 );
                 cell.MeetingTime.Frame = new CGRect( 10, cell.Title.Frame.Bottom + 2, cell.Frame.Width - 5, cell.MeetingTime.Frame.Height + 5 );
-                //cell.Time.Frame = new CGRect( 10, cell.Day.Frame.Bottom - 6, cell.Frame.Width - 5, cell.Time.Frame.Height + 5 );
                 cell.Distance.Frame = new CGRect( 10, cell.MeetingTime.Frame.Bottom - 6, cell.Frame.Width - 5, cell.Distance.Frame.Height + 5 );
-                //cell.Neighborhood.Frame = new CGRect( 10, cell.Distance.Frame.Bottom - 6, cell.Frame.Width - 5, cell.Neighborhood.Frame.Height + 5 );
 
                 // add the seperator to the bottom
                 cell.Seperator.Frame = new CGRect( 0, cell.Distance.Frame.Bottom + 5, cell.Bounds.Width, 1 );
@@ -427,6 +385,7 @@ namespace iOS
             ControlStyling.StyleTextField( Street, ConnectStrings.GroupFinder_StreetPlaceholder, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             Street.Frame = new CGRect( 0, 0, widthPerField * 1.5f, SearchButton.Frame.Height );
             Street.ReturnKeyType = UIReturnKeyType.Search;
+            Street.KeyboardAppearance = UIKeyboardAppearance.Dark;
             Street.AutocapitalizationType = UITextAutocapitalizationType.Words;
             Street.Delegate = new AddressDelegate( ) { Parent = this };
             Street.AutocorrectionType = UITextAutocorrectionType.No;
@@ -446,7 +405,9 @@ namespace iOS
             ControlStyling.StyleTextField( City, ConnectStrings.GroupFinder_CityPlaceholder, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             City.Frame = new CGRect( border.Frame.Right, 0, widthPerField, SearchButton.Frame.Height );
             City.ReturnKeyType = UIReturnKeyType.Search;
+            City.KeyboardAppearance = UIKeyboardAppearance.Dark;
             City.AutocapitalizationType = UITextAutocapitalizationType.Words;
+            City.AutocorrectionType = UITextAutocorrectionType.No;
             City.Delegate = new AddressDelegate( ) { Parent = this };
             View.AddSubview( City );
 
@@ -466,7 +427,9 @@ namespace iOS
             State.Frame = new CGRect( border.Frame.Right, 0, widthPerField / 2, SearchButton.Frame.Height );
             State.ReturnKeyType = UIReturnKeyType.Search;
             State.Delegate = new AddressDelegate( ) { Parent = this };
+            State.KeyboardAppearance = UIKeyboardAppearance.Dark;
             State.AutocapitalizationType = UITextAutocapitalizationType.Words;
+            State.AutocorrectionType = UITextAutocorrectionType.No;
             View.AddSubview( State );
 
             border = new UIView( );
@@ -482,7 +445,9 @@ namespace iOS
             Zip.Layer.AnchorPoint = CGPoint.Empty;
             ControlStyling.StyleTextField( Zip, ConnectStrings.GroupFinder_ZipPlaceholder, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             Zip.Frame = new CGRect( border.Frame.Right, 0, widthPerField, SearchButton.Frame.Height );
+            Zip.KeyboardAppearance = UIKeyboardAppearance.Dark;
             Zip.ReturnKeyType = UIReturnKeyType.Search;
+            Zip.AutocorrectionType = UITextAutocorrectionType.No;
             Zip.Delegate = new AddressDelegate( ) { Parent = this };
             View.AddSubview( Zip );
 

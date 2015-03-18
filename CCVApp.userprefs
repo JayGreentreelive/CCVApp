@@ -1,25 +1,13 @@
-﻿<Properties StartupItem="iOS/iOS.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhone4s.8.2" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Tasks/ConnectTask/GroupFinderFragment.cs">
+﻿<Properties StartupItem="Droid/Droid.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.192.168.56.101:5555" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="CCVApp.Shared/UI/UIOOBE.cs">
     <Files>
-      <File FileName="Droid/Tasks/ConnectTask/GroupFinderFragment.cs" Line="402" Column="50" />
+      <File FileName="iOS/UserManagement/OOBEViewController.cs" Line="1" Column="1" />
+      <File FileName="CCVApp.Shared/UI/UIOOBE.cs" Line="61" Column="13" />
+      <File FileName="iOS/SpringboardViewController.cs" Line="469" Column="69" />
+      <File FileName="iOS/UserManagement/RegisterViewController.cs" Line="1" Column="1" />
+      <File FileName="Droid/Springboard.cs" Line="1" Column="1" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="iOS" expanded="True" selected="True">
-            <Node name="Tasks" expanded="True">
-              <Node name="Connect" expanded="True" />
-              <Node name="Notes" expanded="True" />
-            </Node>
-            <Node name="UserManagement" expanded="True" />
-          </Node>
-        </State>
-      </Pad>
-      <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />

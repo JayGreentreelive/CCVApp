@@ -81,6 +81,7 @@ namespace iOS
             UserNameField = new StyledTextField();
             View.AddSubview( UserNameField.Background );
             UserNameField.SetFrame( new CGRect( -10, View.Frame.Height * .25f, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+            UserNameField.Field.AutocorrectionType = UITextAutocorrectionType.No;
             ControlStyling.StyleTextField( UserNameField.Field, LoginStrings.UsernamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( UserNameField.Background );
             UserNameField.Field.ShouldReturn += (textField) => 
@@ -93,6 +94,7 @@ namespace iOS
 
             PasswordField = new StyledTextField();
             View.AddSubview( PasswordField.Background );
+            PasswordField.Field.AutocorrectionType = UITextAutocorrectionType.No;
             PasswordField.Field.SecureTextEntry = true;
             PasswordField.SetFrame( new CGRect( UserNameField.Background.Frame.Left, UserNameField.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
             ControlStyling.StyleTextField( PasswordField.Field, LoginStrings.PasswordPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );

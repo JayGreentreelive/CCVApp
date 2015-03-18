@@ -26,7 +26,7 @@ namespace Droid
             SetContentView( Resource.Layout.Splash );
 
             System.Timers.Timer splashTimer = new System.Timers.Timer();
-            splashTimer.Interval = 1000;
+            splashTimer.Interval = 500;
             splashTimer.AutoReset = false;
             splashTimer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e) => 
                 {
@@ -76,6 +76,13 @@ namespace Droid
 
             Springboard = FragmentManager.FindFragmentById(Resource.Id.springboard) as Springboard;
             Springboard.SetActiveTaskFrame( layout );
+        }
+
+        protected override void OnResume()
+        {
+            base.OnResume();
+
+            OverridePendingTransition( Resource.Animation.abc_fade_in, Resource.Animation.abc_fade_out );
         }
 
         protected override void OnNewIntent(Intent intent)

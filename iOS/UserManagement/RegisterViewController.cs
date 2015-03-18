@@ -108,7 +108,7 @@ namespace iOS
             ScrollView.Parent = this;
 
             // logged in sanity check.
-            if( RockMobileUser.Instance.LoggedIn == true ) throw new Exception("A user cannot be logged in when registering. How did you do this?" );
+            //if( RockMobileUser.Instance.LoggedIn == true ) throw new Exception("A user cannot be logged in when registering. How did you do this?" );
 
             BlockerView = new BlockerView( View.Frame );
             View.AddSubview( BlockerView );
@@ -118,6 +118,8 @@ namespace iOS
 
             UserNameText = new StyledTextField();
             ScrollView.AddSubview( UserNameText.Background );
+            UserNameText.Field.AutocapitalizationType = UITextAutocapitalizationType.None;
+            UserNameText.Field.AutocorrectionType = UITextAutocorrectionType.No;
             UserNameText.SetFrame( new CGRect( -10, View.Frame.Height * .05f, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
             ControlStyling.StyleTextField( UserNameText.Field, RegisterStrings.UsernamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( UserNameText.Background );
@@ -125,6 +127,8 @@ namespace iOS
             PasswordText = new StyledTextField();
             ScrollView.AddSubview( PasswordText.Background );
             PasswordText.SetFrame( new CGRect( -10, UserNameText.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+            PasswordText.Field.AutocapitalizationType = UITextAutocapitalizationType.None;
+            PasswordText.Field.AutocorrectionType = UITextAutocorrectionType.No;
             PasswordText.Field.SecureTextEntry = true;
             ControlStyling.StyleTextField( PasswordText.Field, RegisterStrings.PasswordPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( PasswordText.Background );
@@ -138,24 +142,32 @@ namespace iOS
 
             NickNameText = new StyledTextField();
             ScrollView.AddSubview( NickNameText.Background );
+            NickNameText.Field.AutocapitalizationType = UITextAutocapitalizationType.Words;
+            NickNameText.Field.AutocorrectionType = UITextAutocorrectionType.No;
             NickNameText.SetFrame( new CGRect( -10, ConfirmPasswordText.Background.Frame.Bottom + 40, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
             ControlStyling.StyleTextField( NickNameText.Field, RegisterStrings.NickNamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( NickNameText.Background );
 
             LastNameText = new StyledTextField();
             ScrollView.AddSubview( LastNameText.Background );
+            LastNameText.Field.AutocapitalizationType = UITextAutocapitalizationType.Words;
+            LastNameText.Field.AutocorrectionType = UITextAutocorrectionType.No;
             LastNameText.SetFrame( new CGRect( -10, NickNameText.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
             ControlStyling.StyleTextField( LastNameText.Field, RegisterStrings.LastNamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( LastNameText.Background );
 
             EmailText = new StyledTextField();
             ScrollView.AddSubview( EmailText.Background );
+            EmailText.Field.AutocapitalizationType = UITextAutocapitalizationType.None;
+            EmailText.Field.AutocorrectionType = UITextAutocorrectionType.No;
             EmailText.SetFrame( new CGRect( -10, LastNameText.Background.Frame.Bottom + 40, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
             ControlStyling.StyleTextField( EmailText.Field, RegisterStrings.EmailPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( EmailText.Background );
 
             CellPhoneText = new StyledTextField();
             ScrollView.AddSubview( CellPhoneText.Background );
+            CellPhoneText.Field.AutocapitalizationType = UITextAutocapitalizationType.None;
+            CellPhoneText.Field.AutocorrectionType = UITextAutocorrectionType.No;
             CellPhoneText.SetFrame( new CGRect( -10, EmailText.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
             ControlStyling.StyleTextField( CellPhoneText.Field, RegisterStrings.CellPhonePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( CellPhoneText.Background );
@@ -437,6 +449,10 @@ namespace iOS
 
             // if they tap somewhere outside of the text fields, 
             // hide the keyboard
+            TextFieldShouldReturn( UserNameText.Field );
+            TextFieldShouldReturn( PasswordText.Field );
+            TextFieldShouldReturn( ConfirmPasswordText.Field );
+
             TextFieldShouldReturn( NickNameText.Field );
             TextFieldShouldReturn( LastNameText.Field );
 

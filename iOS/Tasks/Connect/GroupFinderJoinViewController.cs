@@ -61,6 +61,13 @@ namespace iOS
 
             ScrollView.ContentSize = new CoreGraphics.CGSize( View.Frame.Width, View.Frame.Height * 1.25f );
         }
+
+        public override void TouchesEnded(NSSet touches, UIEvent evt)
+        {
+            base.TouchesEnded(touches, evt);
+
+            JoinGroupView.TouchesEnded( );
+        }
     }
 }
 

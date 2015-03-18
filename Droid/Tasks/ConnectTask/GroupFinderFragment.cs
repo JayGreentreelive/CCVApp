@@ -88,15 +88,14 @@ namespace Droid
                     //messageItem.Address.Text = ParentFragment.GroupEntries[ position ].Address;
 
                     // if there's a meeting time set, display it. Otherwise we won't display that row
+                    messageItem.MeetingTime.Visibility = ViewStates.Visible;
                     if ( string.IsNullOrEmpty( ParentFragment.GroupEntries[ position ].MeetingTime ) == false )
                     {
-                        messageItem.MeetingTime.Visibility = ViewStates.Visible;
                         messageItem.MeetingTime.Text = ParentFragment.GroupEntries[ position ].MeetingTime;
                     }
                     else
                     {
-                        messageItem.MeetingTime.Visibility = ViewStates.Gone;
-                        messageItem.MeetingTime.Text = "";
+                        messageItem.MeetingTime.Text = ConnectStrings.GroupFinder_ContactForTime;
                     }
 
                     // if this is the nearest group, add a label saying so

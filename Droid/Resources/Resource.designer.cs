@@ -2267,28 +2267,31 @@ namespace Droid
 			public const int Notes_WebView = 2130903083;
 			
 			// aapt resource value: 0x7f03002c
-			public const int Prayer_Create = 2130903084;
+			public const int OOBEView = 2130903084;
 			
 			// aapt resource value: 0x7f03002d
-			public const int Prayer_Post = 2130903085;
+			public const int Prayer_Create = 2130903085;
 			
 			// aapt resource value: 0x7f03002e
-			public const int Prayer_Primary = 2130903086;
+			public const int Prayer_Post = 2130903086;
 			
 			// aapt resource value: 0x7f03002f
-			public const int Profile = 2130903087;
+			public const int Prayer_Primary = 2130903087;
 			
 			// aapt resource value: 0x7f030030
-			public const int Register = 2130903088;
+			public const int Profile = 2130903088;
 			
 			// aapt resource value: 0x7f030031
-			public const int Splash = 2130903089;
+			public const int Register = 2130903089;
 			
 			// aapt resource value: 0x7f030032
-			public const int Springboard = 2130903090;
+			public const int Splash = 2130903090;
 			
 			// aapt resource value: 0x7f030033
-			public const int support_simple_spinner_dropdown_item = 2130903091;
+			public const int Springboard = 2130903091;
+			
+			// aapt resource value: 0x7f030034
+			public const int support_simple_spinner_dropdown_item = 2130903092;
 			
 			static Layout()
 			{

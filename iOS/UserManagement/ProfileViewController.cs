@@ -119,17 +119,23 @@ namespace iOS
             NickName.SetFrame( new CGRect( -10, View.Frame.Height * .05f, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
             ControlStyling.StyleTextField( NickName.Field, ProfileStrings.NickNamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( NickName.Background );
+            NickName.Field.AutocapitalizationType = UITextAutocapitalizationType.Words;
+            NickName.Field.AutocorrectionType = UITextAutocorrectionType.No;
             NickName.Field.EditingDidBegin += (sender, e) => { Dirty = true; };
 
             LastName = new StyledTextField();
             ScrollView.AddSubview( LastName.Background );
             LastName.SetFrame( new CGRect( -10, NickName.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+            LastName.Field.AutocapitalizationType = UITextAutocapitalizationType.Words;
+            LastName.Field.AutocorrectionType = UITextAutocorrectionType.No;
             ControlStyling.StyleTextField( LastName.Field, ProfileStrings.LastNamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( LastName.Background );
             LastName.Field.EditingDidBegin += (sender, e) => { Dirty = true; };
 
             Email = new StyledTextField();
             ScrollView.AddSubview( Email.Background );
+            Email.Field.AutocapitalizationType = UITextAutocapitalizationType.None;
+            Email.Field.AutocorrectionType = UITextAutocorrectionType.No;
             Email.SetFrame( new CGRect( -10, LastName.Background.Frame.Bottom + 20, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
             ControlStyling.StyleTextField( Email.Field, ProfileStrings.EmailPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( Email.Background );
@@ -137,6 +143,8 @@ namespace iOS
 
             CellPhone = new StyledTextField();
             ScrollView.AddSubview( CellPhone.Background );
+            CellPhone.Field.AutocapitalizationType = UITextAutocapitalizationType.None;
+            CellPhone.Field.AutocorrectionType = UITextAutocorrectionType.No;
             CellPhone.SetFrame( new CGRect( -10, Email.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
             ControlStyling.StyleTextField( CellPhone.Field, ProfileStrings.CellPhonePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( CellPhone.Background );
@@ -146,6 +154,8 @@ namespace iOS
             Street = new StyledTextField();
             ScrollView.AddSubview( Street.Background );
             Street.SetFrame( new CGRect( -10, CellPhone.Background.Frame.Bottom + 20, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+            Street.Field.AutocapitalizationType = UITextAutocapitalizationType.Words;
+            Street.Field.AutocorrectionType = UITextAutocorrectionType.No;
             ControlStyling.StyleTextField( Street.Field, ProfileStrings.StreetPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( Street.Background );
             Street.Field.EditingDidBegin += (sender, e) => { Dirty = true; };
@@ -153,6 +163,8 @@ namespace iOS
             City = new StyledTextField();
             ScrollView.AddSubview( City.Background );
             City.SetFrame( new CGRect( -10, Street.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+            City.Field.AutocapitalizationType = UITextAutocapitalizationType.Words;
+            City.Field.AutocorrectionType = UITextAutocorrectionType.No;
             ControlStyling.StyleTextField( City.Field, ProfileStrings.CityPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( City.Background );
             City.Field.EditingDidBegin += (sender, e) => { Dirty = true; };
@@ -160,6 +172,8 @@ namespace iOS
             State = new StyledTextField();
             ScrollView.AddSubview( State.Background );
             State.SetFrame( new CGRect( -10, City.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+            State.Field.AutocapitalizationType = UITextAutocapitalizationType.Words;
+            State.Field.AutocorrectionType = UITextAutocorrectionType.No;
             ControlStyling.StyleTextField( State.Field, ProfileStrings.StatePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( State.Background );
             State.Field.EditingDidBegin += (sender, e) => { Dirty = true; };
@@ -167,6 +181,8 @@ namespace iOS
             Zip = new StyledTextField();
             ScrollView.AddSubview( Zip.Background );
             Zip.SetFrame( new CGRect( -10, State.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+            Zip.Field.AutocapitalizationType = UITextAutocapitalizationType.None;
+            Zip.Field.AutocorrectionType = UITextAutocorrectionType.No;
             ControlStyling.StyleTextField( Zip.Field, ProfileStrings.ZipPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( Zip.Background );
             Zip.Field.EditingDidBegin += (sender, e) => { Dirty = true; };

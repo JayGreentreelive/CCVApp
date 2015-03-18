@@ -15,7 +15,6 @@ using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
 using System.Drawing;
 using Rock.Mobile.PlatformSpecific.Util;
-using LocalyticsBinding;
 using CCVApp.Shared;
 using CCVApp.Shared.Analytics;
 using CCVApp.Shared.Strings;

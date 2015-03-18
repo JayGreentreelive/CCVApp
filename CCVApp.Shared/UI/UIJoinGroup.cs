@@ -80,6 +80,9 @@ namespace CCVApp.Shared.UI
             FirstName.PlaceholderTextColor = ControlStylingConfig.TextField_PlaceholderTextColor;
             FirstName.Placeholder = ConnectStrings.JoinGroup_FirstNamePlaceholder;
             FirstName.TextColor = ControlStylingConfig.TextField_ActiveTextColor;
+            FirstName.KeyboardAppearance = KeyboardAppearanceStyle.Dark;
+            FirstName.AutoCapitalizationType = AutoCapitalizationType.Words;
+            FirstName.AutoCorrectionType = AutoCorrectionType.No;
 
 
             LastNameLayer = PlatformView.Create( );
@@ -94,7 +97,9 @@ namespace CCVApp.Shared.UI
             LastName.PlaceholderTextColor = ControlStylingConfig.TextField_PlaceholderTextColor;
             LastName.Placeholder = ConnectStrings.JoinGroup_LastNamePlaceholder;
             LastName.TextColor = ControlStylingConfig.TextField_ActiveTextColor;
-
+            LastName.KeyboardAppearance = KeyboardAppearanceStyle.Dark;
+            LastName.AutoCapitalizationType = AutoCapitalizationType.Words;
+            LastName.AutoCorrectionType = AutoCorrectionType.No;
 
             SpouseNameLayer = PlatformView.Create( );
             SpouseNameLayer.AddAsSubview( masterView );
@@ -108,7 +113,9 @@ namespace CCVApp.Shared.UI
             SpouseName.PlaceholderTextColor = ControlStylingConfig.TextField_PlaceholderTextColor;
             SpouseName.Placeholder = ConnectStrings.JoinGroup_SpouseNamePlaceholder;
             SpouseName.TextColor = ControlStylingConfig.TextField_ActiveTextColor;
-
+            SpouseName.KeyboardAppearance = KeyboardAppearanceStyle.Dark;
+            SpouseName.AutoCapitalizationType = AutoCapitalizationType.Words;
+            SpouseName.AutoCorrectionType = AutoCorrectionType.No;
 
             // Contact Info
             EmailLayer = PlatformView.Create( );
@@ -123,7 +130,9 @@ namespace CCVApp.Shared.UI
             Email.PlaceholderTextColor = ControlStylingConfig.TextField_PlaceholderTextColor;
             Email.Placeholder = ConnectStrings.JoinGroup_EmailPlaceholder;
             Email.TextColor = ControlStylingConfig.TextField_ActiveTextColor;
-
+            Email.KeyboardAppearance = KeyboardAppearanceStyle.Dark;
+            Email.AutoCapitalizationType = AutoCapitalizationType.None;
+            Email.AutoCorrectionType = AutoCorrectionType.No;
 
             CellPhoneLayer = PlatformView.Create( );
             CellPhoneLayer.AddAsSubview( masterView );
@@ -137,6 +146,9 @@ namespace CCVApp.Shared.UI
             CellPhone.PlaceholderTextColor = ControlStylingConfig.TextField_PlaceholderTextColor;
             CellPhone.Placeholder = ConnectStrings.JoinGroup_CellPhonePlaceholder;
             CellPhone.TextColor = ControlStylingConfig.TextField_ActiveTextColor;
+            CellPhone.KeyboardAppearance = KeyboardAppearanceStyle.Dark;
+            CellPhone.AutoCapitalizationType = AutoCapitalizationType.None;
+            CellPhone.AutoCorrectionType = AutoCorrectionType.No;
 
 
             // Join Button
@@ -253,6 +265,15 @@ namespace CCVApp.Shared.UI
             Util.AnimateBackgroundColor( EmailLayer, targetColor );
 
             return result;
+        }
+
+        public void TouchesEnded( )
+        {
+            FirstName.ResignFirstResponder( );
+            LastName.ResignFirstResponder( );
+            SpouseName.ResignFirstResponder( );
+            Email.ResignFirstResponder( );
+            CellPhone.ResignFirstResponder( );
         }
 
         void JoinClicked( PlatformButton button )

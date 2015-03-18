@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using Rock.Mobile.PlatformUI;
 
 namespace CCVApp
 {
@@ -10,8 +11,26 @@ namespace CCVApp
         /// </summary>
         namespace Config
         {
+            public class OOBEConfig
+            {
+                public const string Welcome = "Welcome";
+                public const string HaveAccount = "I have a {0} Account";
+                public const string WantAccount = "Create a {0} Account";
+                public const string SkipAccount = "Do this Later";
+            }
+
             public class GeneralConfig
             {
+                /// <summary>
+                /// The full name of your organization
+                /// </summary>
+                public const string OrganizationName = "Christ's Church of the Valley";
+
+                /// <summary>
+                /// The abbreviated name of your organization. (You can set this to OrganizationName if desired)
+                /// </summary>
+                public const string OrganizationShortName = "CCV";
+                
                 /// <summary>
                 /// The subfolder where cached files should be stored
                 /// </summary>
@@ -76,7 +95,7 @@ namespace CCVApp
                 /// Any normal iOS text field needs to have its style explicitely set.
                 /// Although this is an int, it should match the KeyboardAppearance enum.
                 /// </summary>
-                public const int iOSPlatformUIKeyboardAppearance = 1;
+                public const KeyboardAppearanceStyle iOSPlatformUIKeyboardAppearance = KeyboardAppearanceStyle.Dark;
 
                 public const string NewsMainPlaceholder = "placeholder_news_main.png";
                 public const string NewsDetailsPlaceholder = "placeholder_news_details.png";

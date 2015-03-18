@@ -23,7 +23,7 @@ using Rock.Mobile.Animation;
 
 namespace Droid
 {
-    public class LoginFragment : Fragment
+    public class LoginFragment : Fragment, View.IOnTouchListener
     {
         /// <summary>
         /// Timer to allow a small delay before returning to the springboard after a successful login.
@@ -77,6 +77,7 @@ namespace Droid
 
             View view = inflater.Inflate(Resource.Layout.Login, container, false);
             view.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+            view.SetOnTouchListener( this );
 
             RelativeLayout navBar = view.FindViewById<RelativeLayout>( Resource.Id.navbar_relative_layout );
             navBar.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
@@ -103,13 +104,14 @@ namespace Droid
             CancelButton.SetBackgroundDrawable( null );
             CancelButton.Click += (object sender, EventArgs e) => 
                 {
-                    SpringboardParent.ModalFragmentDone( this, null );
+                    SpringboardParent.ModalFragmentDone( null );
                 };
 
             RegisterButton = view.FindViewById<Button>( Resource.Id.registerButton );
             ControlStyling.StyleButton( RegisterButton, LoginStrings.RegisterButton, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             RegisterButton.Click += (object sender, EventArgs e ) =>
                 {
+                    SpringboardParent.ModalFragmentDone( null );
                     SpringboardParent.RegisterNewUser( );
                 };
 
@@ -154,6 +156,12 @@ namespace Droid
             // have to retype everything in.
             UsernameField.Text = "";
             PasswordField.Text = "";
+        }
+
+        public bool OnTouch( View v, MotionEvent e )
+        {
+            // consume all input so things tasks underneath don't respond
+            return true;
         }
 
         protected void TryRockBind()
@@ -265,7 +273,7 @@ namespace Droid
             base.OnStop();
 
             SpringboardParent.EnableBack = true;
-            SpringboardParent.ModalFragmentClosed( this );
+            SpringboardParent.ModalFragmentDone( null );
 
             // remove the webview if it was left open
             if ( WebLayout.Parent != null )
@@ -345,7 +353,7 @@ namespace Droid
                                 // will also re-enable the back button.
                                 SpringboardParent.EnableBack = true;
 
-                                SpringboardParent.ModalFragmentDone( this, null );
+                                    SpringboardParent.ModalFragmentDone( null );
                             } );
                     };
 
