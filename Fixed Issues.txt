@@ -1,52 +1,29 @@
-*DELETE YOUR EXISTING INSTALLATION BEFORE UPDATING*
-
-iOS Users please verify the phone does not goto sleep when using Sermon Notes.
-
-News items now update live, and are based on the Viewing Campus chosen.
-
-New User Registration added.
-
-Join Neighborhood Group screen added.
-
-Tutorial overlay added to messages, which teaches you how to create / delete your own notes.
-
-Added an OOB Experience
-
-
 Changes
 -------
 
 Both
-	General - Fixed an issue causing the "Notes" billboard to sometimes not appear immediately at startup. (This time for realsies)
-	General - Added final placeholder images. (Thanks Nick!)
+	Various UI tweaks
+	
+	OOBE - Fixed an issue causing the notification banner to appear during the OOBE.
 
-	General - General Data is now only updated when there's newer data available on Rock.
+	Notes - Notes are now cached, requiring they only be downloaded once.
 
-	Notes - Fixed an issue allowing the device to sleep when viewing a quote URL.
-	Notes - Replaced the "Message Box" style error with a nice error screen with retry button.
-	Notes - Added tutorial screen
-
-	GroupFinder - Your location is now shown in green.
-	GroupFinder - Distance is now accurate.
-	GroupFinder - Added Join screen
-
-	News - News is now updated without having to leave / reactivate the News element.
-	News - News is now filtered by the selected Viewing Campus
-
-	OOBE - Added new OOB Experience
-
+	Notes - Improved the download speed of the latest Note to be nearly instant.
 
 iOS
-	General - Fixed an issue causing the back button to remain disabled when going from Landscape to Portrait
+	Group Finder - Fixed an issue causing a gray space between Zip and Search when the zip code was invalid.
 
-	Prayer - Fixed an issue causing the keyboard to cover the Category spinner.
+	OOBE - Fixed an issue causing the "Springboard Reveal" to not always work.
 
-	Notes - Fixed the last of the issues causing the phone to goto sleep when using Sermon Notes.
+	Prayers - Fixed an issue allowing a prayer request to be submitted with no category.
+
+	Profile - Fixed an issue causing the news to be for the wrong campus after changing your profile's home campus
 	
 
 Android
-	Messages - Fixed crashing and other misc issues when picking a Podcast to listen to or watch.
+	Login - Fixed an issue causing the tappable space of Username to be too small
 
-	Give - Fixed an endless death loop when tapping Give
+	Join Group - Fixed an issue causing the meeting time to be blank in certain cases.
 
-	GroupFinder - Fixed an issue causing row taps to be ignored.
+	Group Finder - Fixed an issue causing preventing the nearest group to be auto selected after a search.
+

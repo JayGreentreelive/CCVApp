@@ -369,11 +369,8 @@ namespace iOS
                             {
                                 //get the index of the campus based on the selection's title, and then set that campus title as the string
                                 RockMobileUser.Instance.ViewingCampus = RockGeneralData.Instance.Data.CampusNameToId( obj.Title );
-                                CampusSelectionText.Text = string.Format( SpringboardStrings.Viewing_Campus, obj.Title );
-                                UpdateCampusViews( );
 
-                                // let the news know it should reload
-                                PerformTaskAction( "News.Reload" );
+                                RefreshCampusSelection( );
                         } );
 
                         actionSheet.AddAction( campusAction );
@@ -538,7 +535,7 @@ namespace iOS
             // kick off a timer to allow the user to see the news before revealing the springboard.
             System.Timers.Timer timer = new System.Timers.Timer();
             timer.AutoReset = false;
-            timer.Interval = 1000;
+            timer.Interval = 500;
             timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>
                 {
                     Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
@@ -547,6 +544,8 @@ namespace iOS
                             NavViewController.RevealSpringboard( true );
                             IsOOBERunning = false;
                             RockMobileUser.Instance.OOBEComplete = true;
+
+                            TryDisplaySeriesBillboard( );
                         } );
                 };
             timer.Start( );
@@ -562,12 +561,7 @@ namespace iOS
                 {
                     SeriesInfoDownloaded = true;
 
-                    // if the billboard has been added, show it.
-                    // Otherwise, it'll be shown when the view is finished setting up.
-                    if( Billboard.Superview != null )
-                    {
-                        DisplaySeriesBillboard( );
-                    }
+                    TryDisplaySeriesBillboard( );
                 },
                 delegate(System.Net.HttpStatusCode statusCode, string statusDescription)
                 {
@@ -706,15 +700,17 @@ namespace iOS
                 }
             }
 
-            modelViewController.DismissViewController( true, null );
-            ModalControllerVisible = false;
+            modelViewController.DismissViewController( true, delegate 
+                {
+                    // if this resign is while the OOBE is running, it was the register or login finishing up, 
+                    // so wrap up the OOBE
+                    if ( IsOOBERunning == true )
+                    {
+                        CompleteOOBE( );
+                    }
+                    ModalControllerVisible = false;
 
-            // if this resign is while the OOBE is running, it was the register or login finishing up, 
-            // so wrap up the OOBE
-            if ( IsOOBERunning == true )
-            {
-                CompleteOOBE( );
-            }
+                } );
         }
 
         public void RegisterNewUser( )
@@ -776,8 +772,23 @@ namespace iOS
             base.ViewWillAppear( animated );
 
             // refresh the viewing campus
-            CampusSelectionText.Text = string.Format( SpringboardStrings.Viewing_Campus, 
-                                                      RockGeneralData.Instance.Data.CampusIdToName( RockMobileUser.Instance.ViewingCampus ) );
+            RefreshCampusSelection( );
+        }
+
+        void RefreshCampusSelection( )
+        {
+            string newCampusText = string.Format( SpringboardStrings.Viewing_Campus, 
+                                                  RockGeneralData.Instance.Data.CampusIdToName( RockMobileUser.Instance.ViewingCampus ) );
+
+            if ( CampusSelectionText.Text != newCampusText )
+            {
+                CampusSelectionText.Text = newCampusText;
+
+                UpdateCampusViews( );
+
+                // let the news know it should reload
+                PerformTaskAction( "News.Reload" );
+            }
         }
 
         public override void ViewDidAppear(bool animated)
@@ -815,38 +826,35 @@ namespace iOS
 
             UpdateLoginState( );
 
-            // if we haven't yet added and processed the billboard, do that now.
+            // add the billboard now that we're ready
             if ( Billboard.Superview == null )
             {
                 View.AddSubview( Billboard );
 
-                // if the series info has downloaded, show the banner
-                if ( SeriesInfoDownloaded == true )
-                {
-                    DisplaySeriesBillboard( );
-                }
+                TryDisplaySeriesBillboard( );
             }
-
-
         }
 
         /// <summary>
         /// Displays the "Tap to take notes" series billboard
         /// </summary>
-        void DisplaySeriesBillboard( )
+        void TryDisplaySeriesBillboard( )
         {
-            // should we advertise the notes?
-            // yes, if it's a weekend and we're at CCV (that part will come later)
-            if ( DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday )
+            // first make sure all initial setup is done.
+            if ( SeriesInfoDownloaded == true && IsOOBERunning == false && Billboard.Superview != null )
             {
-                if ( RockLaunchData.Instance.Data.NoteDB.SeriesList.Count > 0 )
+                // should we advertise the notes?
+                // yes, if it's a weekend
+                if ( DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday )
                 {
-                    // kick off a timer to reveal the billboard, because we 
-                    // don't want to do it the MOMENT the view appears.
-                    System.Timers.Timer timer = new System.Timers.Timer();
-                    timer.AutoReset = false;
-                    timer.Interval = 1;
-                    timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>
+                    if ( RockLaunchData.Instance.Data.NoteDB.SeriesList.Count > 0 )
+                    {
+                        // kick off a timer to reveal the billboard, because we 
+                        // don't want to do it the MOMENT the view appears.
+                        System.Timers.Timer timer = new System.Timers.Timer();
+                        timer.AutoReset = false;
+                        timer.Interval = 1;
+                        timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>
                         {
                             Rock.Mobile.Threading.Util.PerformOnUIThread( 
                                 delegate
@@ -854,7 +862,8 @@ namespace iOS
                                     Billboard.Reveal( );
                                 } );
                         };
-                    timer.Start( );
+                        timer.Start( );
+                    }
                 }
             }
         }

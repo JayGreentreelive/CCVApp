@@ -555,27 +555,6 @@ namespace CCVApp
             //This is a static class containing all the default styles for controls
             public class ControlStyles
             {
-                ///<summary>>
-                /// Delegate used to notify the creator that styles have been downloaded and created.
-                /// </summary>
-                public delegate void StylesCreated( Exception e );
-
-                /// <summary>
-                /// Delegate object to invoke.
-                /// </summary>
-                static StylesCreated mStylesCreatedDelegate;
-
-                /// <summary>
-                /// URL of the style sheet to download. (For reference / debugging)
-                /// </summary>
-                static string mStyleSheetUrl;
-
-                /// <summary>
-                /// Actual XML of the style sheet. Used when needing to rebuild notes for an orientation change.
-                /// </summary>
-                /// <value>The style sheet xml.</value>
-                public static string StyleSheetXml { get; protected set; }
-
                 // These are to be referenced globally as needed
                 /// <summary>
                 /// Note control's default styles if none are specified by a parent or in NoteScript XML.
@@ -821,7 +800,7 @@ namespace CCVApp
                     mUserNote.mTextCase = Styles.TextCase.Normal;
                 }
 
-                public static void Initialize( string styleSheetUrl, string styleSheetXml, StylesCreated stylesCreatedDelegate )
+                public static void Initialize( string styleSheetXml )
                 {
                     // Create each control's default style. And put some defaults...for the defaults.
                     //(Seriously, that way if it doesn't exist in XML we still have a value.)
@@ -838,40 +817,13 @@ namespace CCVApp
                     CreateListStyle();
                     CreateUserNoteStyle();
 
-                    mStylesCreatedDelegate = stylesCreatedDelegate;
-
-
-                    // store the styles URL so we can download it
-                    mStyleSheetUrl = styleSheetUrl;
-
-                    // if an existing XML stream wasn't provided, download via the URL
-                    if( styleSheetXml == null )
-                    {
-                        RestRequest request = new RestRequest( Method.GET );
-                        WebRequest.ExecuteAsync( mStyleSheetUrl, request, delegate(System.Net.HttpStatusCode statusCode, string statusDescription, byte[] model )
-                            {
-                                if( Util.StatusInSuccessRange( statusCode ) == true )
-                                {
-                                    ParseStyles( Encoding.UTF8.GetString( model, 0, model.Length ) );
-                                }
-                                else
-                                {
-                                    mStylesCreatedDelegate( new Exception( "Error retrieving style sheet." ) );
-                                }
-                            } );
-                    }
-                    else
-                    {
-                        // otherwise we can directly parse the XML
-                        ParseStyles( styleSheetXml );
-                    }
+                    // otherwise we can directly parse the XML
+                    ParseStyles( styleSheetXml );
                 }
 
                 protected static void ParseStyles( string styleSheetXml )
                 {
                     Exception exception = null;
-
-                    StyleSheetXml = styleSheetXml;
 
                     // now use a reader to get each element
                     XmlTextReader reader = XmlReader.Create( new StringReader( styleSheetXml ) ) as XmlTextReader;
@@ -924,8 +876,6 @@ namespace CCVApp
                     {
                         exception = new Exception( ex.Message + string.Format( "\nLine Number: {0}", reader.LineNumber ) );
                     }
-
-                    mStylesCreatedDelegate( exception );
                 }
             }
         }

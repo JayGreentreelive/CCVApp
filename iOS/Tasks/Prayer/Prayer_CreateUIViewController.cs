@@ -229,6 +229,12 @@ namespace iOS
                 // Update the prayer background color
                 uint targetPrayerColor = string.IsNullOrEmpty( PrayerRequest.Text ) ? ControlStylingConfig.BadInput_BG_Layer_Color : ControlStylingConfig.BG_Layer_Color;
                 Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetPrayerColor, PrayerRequestLayer );
+
+
+                int categoryId = RockGeneralData.Instance.Data.PrayerCategoryToId( CategoryButton.Title( UIControlState.Normal ) );
+
+                uint targetCategoryColor = categoryId == -1 ? ControlStylingConfig.BadInput_BG_Layer_Color : ControlStylingConfig.BG_Layer_Color;
+                Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetCategoryColor, CategoryLayer );
             }
         }
        
@@ -247,6 +253,9 @@ namespace iOS
                 PrayerRequest.ResignFirstResponder( );
                 FirstNameText.ResignFirstResponder( );
                 LastNameText.ResignFirstResponder( );
+
+                // default to the first choice
+                PickerSelected( 0 );
             }
 
             PickerAdjustManager.TogglePicker( enabled );

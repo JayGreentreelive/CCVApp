@@ -282,23 +282,41 @@ namespace CCVApp
                                 Data.NoteDB = noteModel;
                                 Data.NoteDB.MakeURLsAbsolute( );
                                 Data.NoteDBTimeStamp = DateTime.Now;
+
+                                // download the first note so the user can immediately access it without having to wait
+                                // for other crap.
+                                CCVApp.Shared.Notes.Note.TryDownloadNote( Data.NoteDB.SeriesList[ 0 ].Messages[ 0 ].NoteUrl, Data.NoteDB.HostDomain, delegate
+                                    {
+                                        RequestingNoteDB = false;
+
+                                        if ( resultCallback != null )
+                                        {
+                                            resultCallback( statusCode, statusDescription );
+                                        }
+                                    });
                             }
                             else if ( noteModel == null )
                             {
                                 statusDescription = "NoteDB downloaded but failed parsing.";
                                 statusCode = System.Net.HttpStatusCode.BadRequest;
                                 Console.WriteLine( statusDescription );
+
+                                RequestingNoteDB = false;
+
+                                if ( resultCallback != null )
+                                {
+                                    resultCallback( statusCode, statusDescription );
+                                }
                             }
                             else
                             {
                                 Console.WriteLine( "NoteDB request failed." );
-                            }
+                                RequestingNoteDB = false;
 
-                            RequestingNoteDB = false;
-
-                            if ( resultCallback != null )
-                            {
-                                resultCallback( statusCode, statusDescription );
+                                if ( resultCallback != null )
+                                {
+                                    resultCallback( statusCode, statusDescription );
+                                }
                             }
                         } );
                 }

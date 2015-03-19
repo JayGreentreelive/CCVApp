@@ -263,12 +263,7 @@ namespace Droid
                     // here we know whether the initial handshake with Rock went ok or not
                     SeriesInfoDownloaded = true;
 
-                    // if the billboard has been added, show it.
-                    // Otherwise, it'll be shown when the view is finished setting up.
-                    if( Billboard.Parent != null )
-                    {
-                        DisplaySeriesBillboard( );
-                    }
+                    TryDisplaySeriesBillboard( );
                 },
                 delegate(System.Net.HttpStatusCode statusCode, string statusDescription)
                 {
@@ -779,11 +774,7 @@ namespace Droid
                 // First add it 
                 ( (FrameLayout)NavbarFragment.ActiveTaskFrame ).AddView( Billboard );
 
-                // if we finished getting launch data, process the billboard
-                if ( SeriesInfoDownloaded == true )
-                {
-                    DisplaySeriesBillboard( );
-                }            
+                TryDisplaySeriesBillboard( );
             }
 
             // if we haven't yet, get the fullscreen layout
@@ -798,7 +789,11 @@ namespace Droid
             if ( RockMobileUser.Instance.OOBEComplete == false && IsOOBERunning == false )
             //if( oobeRan == false && IsOOBERunning == false )
             {
-                oobeRan = true;
+                // sanity check for testers that didn't listen to me and delete / reinstall.
+                // This will force them to be logged out so they experience the OOBE properly.
+                RockMobileUser.Instance.LogoutAndUnbind( );
+
+                //oobeRan = true;
                 IsOOBERunning = true;
                 StartModalFragment( OOBEFragment, true );
             }
@@ -845,10 +840,15 @@ namespace Droid
                 {
                     Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
                         {
-                            // then reveal the springboard
-                            NavbarFragment.RevealSpringboard( true );
                             IsOOBERunning = false;
                             RockMobileUser.Instance.OOBEComplete = true;
+
+                            // if the series billboard will NOT show up,
+                            if( TryDisplaySeriesBillboard( ) == false )
+                            {
+                                // reveal the springboard
+                                NavbarFragment.RevealSpringboard( true );
+                            }
                         } );
                 };
             timer.Start( );
@@ -857,29 +857,37 @@ namespace Droid
         /// <summary>
         /// Displays the "Tap to take notes" series billboard
         /// </summary>
-        void DisplaySeriesBillboard( )
+        bool TryDisplaySeriesBillboard( )
         {
             // should we advertise the notes?
-            // yes, if it's a weekend and we're at CCV (that part will come later)
-            if ( DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday )
+            if ( IsOOBERunning == false && Billboard.Parent != null && SeriesInfoDownloaded == true )
             {
-                if ( RockLaunchData.Instance.Data.NoteDB.SeriesList.Count > 0 )
+                // yes, if it's a weekend and we're at CCV (that part will come later)
+                if ( DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday )
                 {
-                    // kick off a timer to reveal the billboard, because we 
-                    // don't want to do it the MOMENT the view appears.
-                    System.Timers.Timer timer = new System.Timers.Timer();
-                    timer.AutoReset = false;
-                    timer.Interval = 1;
-                    timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>
+                    if ( RockLaunchData.Instance.Data.NoteDB.SeriesList.Count > 0 )
+                    {
+                        // kick off a timer to reveal the billboard, because we 
+                        // don't want to do it the MOMENT the view appears.
+                        System.Timers.Timer timer = new System.Timers.Timer();
+                        timer.AutoReset = false;
+                        timer.Interval = 1;
+                        timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>
                         {
                             Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
                                 {
                                     Billboard.Reveal( );
                                 } );
                         };
-                    timer.Start( );
+                        timer.Start( );
+
+                        // let the caller know it's gonna show
+                        return true;
+                    }
                 }
             }
+
+            return false;
         }
 
         public void NavbarWasResumed()

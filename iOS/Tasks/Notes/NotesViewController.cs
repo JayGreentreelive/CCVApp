@@ -157,6 +157,9 @@ namespace iOS
         /// <value>The name of the note presentable.</value>
         public string NoteName { get; set; }
 
+        protected string NoteFileName { get; set; }
+        protected string StyleFileName { get; set; }
+
         /// <summary>
         /// The current orientation of the device. We track this
         /// so we can know when it changes and only rebuild the notes then.
@@ -198,23 +201,6 @@ namespace iOS
         #else
         static int MaxDownloadAttempts = 5;
         #endif
-
-        /// <summary>
-        /// The currently loaded Note XML, so that we can avoid downloading 
-        /// when we don't have to
-        /// </summary>
-        string CachedNoteXml { get; set; }
-
-        /// <summary>
-        /// The currently loaded Style XML, so that we can avoid downloading when
-        /// we don't have to
-        /// </summary>
-        string CachedStyleXml { get; set; }
-
-        /// <summary>
-        /// The currently cached note name
-        /// </summary>
-        string CachedNoteUrl { get; set; }
 
         /// <summary>
         /// The amount of times we've attempted to download the current note.
@@ -277,7 +263,7 @@ namespace iOS
 				Indicator.Layer.Position = new CGPoint (View.Bounds.Width / 2, View.Bounds.Height / 2);
 
 				// re-create our notes with the new dimensions
-				CreateNotes (CachedNoteXml, CachedStyleXml);
+				PrepareCreateNotes( );
 			}
 
             UIApplication.SharedApplication.IdleTimerDisabled = true;
@@ -317,7 +303,9 @@ namespace iOS
             // if they tap the refresh button, refresh the list
             RefreshButton.TouchUpInside += (object sender, EventArgs e ) =>
             {
-                CreateNotes( null, null );
+                DeleteNote( );
+
+                PrepareCreateNotes( );
             };
 
             KeyboardAdjustManager = new Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager( View, UIScrollView );
@@ -350,7 +338,9 @@ namespace iOS
         void OnResultViewDone( )
         {
             // if they tap "Retry", well, retry!
-            CreateNotes( null, null );
+            DeleteNote( );
+
+            PrepareCreateNotes( );
         }
 
         public override void ViewWillAppear(bool animated)
@@ -361,15 +351,7 @@ namespace iOS
             NoteDownloadRetries = MaxDownloadAttempts;
             Console.WriteLine( "Resetting Download Attempts" );
 
-            // if the note name doesn't match our cache, dump our cache 
-            // so we download the correct note
-            if ( CachedNoteUrl != NoteUrl )
-            {
-                CachedNoteXml = null;
-                CachedStyleXml = null;
-
-                CreateNotes( CachedNoteXml, CachedStyleXml );
-            }
+            PrepareCreateNotes( );
         }
 
         public override void ViewDidAppear(bool animated)
@@ -629,7 +611,7 @@ namespace iOS
             }
         }
 
-        public void CreateNotes( string noteXml, string styleSheetXml )
+        public void PrepareCreateNotes( )
         {
             if( RefreshingNotes == false )
             {
@@ -637,8 +619,6 @@ namespace iOS
 
                 // if we're recreating the notes, reset our scrollview.
                 UIScrollView.ContentOffset = CGPoint.Empty;
-
-                Console.WriteLine( "CREATING NOTES" );
 
                 RefreshingNotes = true;
 
@@ -649,105 +629,65 @@ namespace iOS
                 // show a busy indicator
                 Indicator.StartAnimating( );
 
-                // if we don't have BOTH xml strings, re-download
-                if( noteXml == null || styleSheetXml == null )
-                {
-                    Console.WriteLine( "CACHE INVALID. DOWNLOADING NEW NOTES" );
-
-                    //download the notes
-                    Rock.Mobile.Network.HttpRequest request = new HttpRequest();
-
-                    RestRequest restRequest = new RestRequest( Method.GET );
-                    restRequest.RequestFormat = DataFormat.Xml;
-
-                    request.ExecuteAsync( NoteUrl, restRequest, 
-                        delegate(System.Net.HttpStatusCode statusCode, string statusDescription, byte[] model )
+                Note.TryDownloadNote( NoteUrl, StyleSheetDefaultHostDomain, delegate(bool result )
+                    {
+                        if( result == true )
                         {
-                            if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) )
-                            {
-                                string body = Encoding.UTF8.GetString(model, 0, model.Length);
-                                HandleNotePreReqs( body, null );
-                            }
-                            else
-                            {
-                                ReportException( "There was a problem trying to download the note. Please try again.", null );
-                            }
-                        } );
-                }
-                else
-                {
-                    // if we DO have both, go ahead and create with them.
-                    HandleNotePreReqs( noteXml, styleSheetXml );
-                }
+                            CreateNotes( );
+                        }
+                        else
+                        {
+                            ReportException( "", null );
+                        }
+                    } );
             }
         }
 
-        protected void HandleNotePreReqs( string noteXml, string styleXml )
+        protected void CreateNotes( )
         {
             try
             {
-                Note.HandlePreReqs( noteXml, styleXml, StyleSheetDefaultHostDomain, OnPreReqsComplete );
-            } 
-            catch( Exception e )
-            {
-                ReportException( "StyleSheet Error", e );
+                // expect the note and its style sheet to exist.
+                NoteFileName = Rock.Mobile.Util.Strings.Parsers.ParseURLToFileName( NoteUrl );
+                MemoryStream noteData = (MemoryStream)FileCache.Instance.LoadFile( NoteFileName );
+                string noteXML = Encoding.UTF8.GetString( noteData.ToArray( ), 0, (int)noteData.Length );
+
+                string styleSheetUrl = Note.GetStyleSheetUrl( noteXML, StyleSheetDefaultHostDomain );
+                StyleFileName = Rock.Mobile.Util.Strings.Parsers.ParseURLToFileName( styleSheetUrl );
+                MemoryStream styleData = (MemoryStream)FileCache.Instance.LoadFile( StyleFileName );
+                string styleXML = Encoding.UTF8.GetString( styleData.ToArray( ), 0, (int)styleData.Length );
+
+                Note = new Note( noteXML, styleXML );
+
+                Note.Create( (float)UIScrollView.Bounds.Width, (float)UIScrollView.Bounds.Height, this.UIScrollView, NoteFileName + NoteConfig.UserNoteSuffix );
+
+                // enable scrolling
+                UIScrollView.ScrollEnabled = true;
+
+                // take the requested background color
+                UIScrollView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value );
+                View.BackgroundColor = UIScrollView.BackgroundColor; //Make the view itself match too
+
+                // update the height of the scroll view to fit all content
+                CGRect frame = Note.GetFrame( );
+                UIScrollView.ContentSize = new CGSize( UIScrollView.Bounds.Width, frame.Size.Height + ( UIScrollView.Bounds.Height / 3 ) );
+
+                FinishNotesCreation( );
+
+                // log the note they are reading.
+                MessageAnalytic.Instance.Trigger( MessageAnalytic.Read, NoteName );
+
+                // if the user has never seen it, show them the tutorial screen
+                if( CCVApp.Shared.Network.RockMobileUser.Instance.NoteTutorialShown == false )
+                {
+                    CCVApp.Shared.Network.RockMobileUser.Instance.NoteTutorialShown = true;
+
+                    AnimateTutorialScreen( true );
+                }
             }
-        }
-
-        protected void OnPreReqsComplete( Note note, Exception e )
-        {
-            if( e != null )
+            catch( Exception ex )
             {
-                ReportException( "StyleSheet Error", e );
-            }
-            else
-            {
-                InvokeOnMainThread( delegate
-                    {
-                        Note = note;
-
-                        try
-                        {
-                            // log the note they are reading.
-                            MessageAnalytic.Instance.Trigger( MessageAnalytic.Read, NoteName );
-
-                            // build the filename of the locally stored user data. If there is no "/" because it isn't a URL,
-                            // we'll end up using the base name, which is what we want.
-                            int lastSlashIndex = NoteUrl.LastIndexOf( "/" ) + 1;
-                            string noteName = NoteUrl.Substring( lastSlashIndex );
-
-                            Note.Create( (float)UIScrollView.Bounds.Width, (float)UIScrollView.Bounds.Height, this.UIScrollView, noteName + NoteConfig.UserNoteSuffix );
-
-                            // enable scrolling
-                            UIScrollView.ScrollEnabled = true;
-
-                            // take the requested background color
-                            UIScrollView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value );
-                            View.BackgroundColor = UIScrollView.BackgroundColor; //Make the view itself match too
-
-                            // update the height of the scroll view to fit all content
-                            CGRect frame = Note.GetFrame( );
-                            UIScrollView.ContentSize = new CGSize( UIScrollView.Bounds.Width, frame.Size.Height + ( UIScrollView.Bounds.Height / 3 ) );
-
-                            FinishNotesCreation( );
-
-                            CachedNoteXml = Note.NoteXml;
-                            CachedStyleXml = ControlStyles.StyleSheetXml;
-                            CachedNoteUrl = NoteUrl;
-
-                            // if the user has never seen it, show them the tutorial screen
-                            if( CCVApp.Shared.Network.RockMobileUser.Instance.NoteTutorialShown == false )
-                            {
-                                CCVApp.Shared.Network.RockMobileUser.Instance.NoteTutorialShown = true;
-
-                                AnimateTutorialScreen( true );
-                            }
-                        }
-                        catch( Exception ex )
-                        {
-                            ReportException( "", ex );
-                        }
-                    } );
+                ReportException( "", ex );
             }
         }
 
@@ -785,11 +725,27 @@ namespace iOS
             }
         }
 
+        protected void DeleteNote( )
+        {
+            // delete the existing note files pertaining to this note.
+            if( string.IsNullOrEmpty( NoteFileName ) == false )
+            {
+                FileCache.Instance.RemoveFile( NoteFileName );
+            }
+
+            if( string.IsNullOrEmpty( StyleFileName ) == false )
+            {
+                FileCache.Instance.RemoveFile( StyleFileName );
+            }
+        }
+
         protected void ReportException( string errorMsg, Exception e )
         {
             new NSObject( ).InvokeOnMainThread( delegate
                 {
                     FinishNotesCreation( );
+
+                    DeleteNote( );
 
                     // since there was an error, try redownloading the notes
                     if( NoteDownloadRetries > 0 )
@@ -797,7 +753,7 @@ namespace iOS
                         Console.WriteLine( "Download error. Trying again" );
 
                         NoteDownloadRetries--;
-                        CreateNotes( null, null );
+                        PrepareCreateNotes( );
                     }
                     else 
                     {

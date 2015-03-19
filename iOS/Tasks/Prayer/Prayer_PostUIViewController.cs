@@ -41,7 +41,7 @@ namespace iOS
             ControlStyling.StyleUILabel( ResultLabel, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             ControlStyling.StyleBGLayer( ResultBackground );
 
-            ResultSymbolLabel.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Primary, PrayerConfig.PostPrayer_ResultSymbolSize );
+            ResultSymbolLabel.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, PrayerConfig.PostPrayer_ResultSymbolSize );
             ResultSymbolLabel.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
             ResultSymbolLabel.BackgroundColor = UIColor.Clear;
 
@@ -140,7 +140,7 @@ namespace iOS
                                     ResultLabel.Text = PrayerStrings.PostPrayer_Result_SuccessText;
 
                                     ResultSymbolLabel.Hidden = false;
-                                    ResultSymbolLabel.Text = PrayerConfig.PostPrayer_ResultSymbol_SuccessText;
+                                    ResultSymbolLabel.Text = ControlStylingConfig.Result_Symbol_Success;
 
                                     DoneButton.Hidden = false;
                                     DoneButton.SetTitle( GeneralStrings.Done, UIControlState.Normal );
@@ -158,7 +158,7 @@ namespace iOS
                                     ResultLabel.Text = PrayerStrings.PostPrayer_Result_FailedText;
 
                                     ResultSymbolLabel.Hidden = false;
-                                    ResultSymbolLabel.Text = PrayerConfig.PostPrayer_ResultSymbol_FailedText;
+                                    ResultSymbolLabel.Text = ControlStylingConfig.Result_Symbol_Failed;
 
                                     DoneButton.Hidden = false;
                                     DoneButton.SetTitle( GeneralStrings.Retry, UIControlState.Normal );

@@ -470,19 +470,9 @@ namespace CCVApp
                 public const float Card_AnimationDuration = .25f;
 
                 /// <summary>
-                /// The symbol to use when a prayer is successfully posted.
-                /// </summary>
-                public const string PostPrayer_ResultSymbol_SuccessText = "";
-
-                /// <summary>
-                /// The symbol to use when there was an error posting a prayer.
-                /// </summary>
-                public const string PostPrayer_ResultSymbol_FailedText = "";
-
-                /// <summary>
                 /// The size of the symbol used to representing a prayer post result.
                 /// </summary>
-                public const uint PostPrayer_ResultSymbolSize = 32;
+                public const uint PostPrayer_ResultSymbolSize = 64;
             }
 
             public class ConnectConfig

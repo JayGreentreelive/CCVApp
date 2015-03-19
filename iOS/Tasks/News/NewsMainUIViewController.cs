@@ -142,21 +142,24 @@ namespace iOS
 
         public void ReloadNews( )
         {
-            News.Clear( );
-
-            foreach ( RockNews rockEntry in SourceRockNews )
+            if ( NewsTableView != null )
             {
-                NewsEntry newsEntry = new NewsEntry();
-                News.Add( newsEntry );
+                News.Clear( );
 
-                newsEntry.News = rockEntry;
+                foreach ( RockNews rockEntry in SourceRockNews )
+                {
+                    NewsEntry newsEntry = new NewsEntry();
+                    News.Add( newsEntry );
 
-                // since we're in setup, go ahead and try loading any images we want.
-                // If thye don't exist, we'll use a placeholder until DownloadImages is called by our parent task.
-                TryLoadCachedImage( newsEntry );
+                    newsEntry.News = rockEntry;
+
+                    // since we're in setup, go ahead and try loading any images we want.
+                    // If thye don't exist, we'll use a placeholder until DownloadImages is called by our parent task.
+                    TryLoadCachedImage( newsEntry );
+                }
+
+                NewsTableView.ReloadData( );
             }
-
-            NewsTableView.ReloadData( );
         }
 
         public void DownloadImages( )
@@ -167,7 +170,7 @@ namespace iOS
                 // if no image is set, we couldn't load one, so download it.
                 if ( newsItem.Image == null )
                 {
-                    FileCache.Instance.DownloadImageToCache( newsItem.News.ImageURL, newsItem.News.ImageName, 
+                    FileCache.Instance.DownloadFileToCache( newsItem.News.ImageURL, newsItem.News.ImageName, 
                         delegate
                         {
                             SeriesImageDownloaded( );

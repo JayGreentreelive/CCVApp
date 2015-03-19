@@ -195,7 +195,7 @@ namespace Droid
                     {
                         if ( newsEntry.Image == null )
                         {
-                            FileCache.Instance.DownloadImageToCache( newsEntry.News.ImageURL, newsEntry.News.ImageName, delegate { SeriesImageDownloaded( ); } );
+                            FileCache.Instance.DownloadFileToCache( newsEntry.News.ImageURL, newsEntry.News.ImageName, delegate { SeriesImageDownloaded( ); } );
                         }
                     }
                 }

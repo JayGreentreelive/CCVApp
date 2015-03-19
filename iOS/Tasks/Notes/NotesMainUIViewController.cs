@@ -634,12 +634,12 @@ namespace iOS
                     // something failed, so see what needs to be downloaded (could be both)
                     if ( entry.mBillboard == null )
                     {
-                        FileCache.Instance.DownloadImageToCache( entry.Series.BillboardUrl, entry.Series.Name + "_bb", delegate{ SeriesImageDownloaded( ); } );
+                        FileCache.Instance.DownloadFileToCache( entry.Series.BillboardUrl, entry.Series.Name + "_bb", delegate{ SeriesImageDownloaded( ); } );
                     }
 
                     if ( entry.mThumbnail == null )
                     {
-                        FileCache.Instance.DownloadImageToCache( entry.Series.ThumbnailUrl, entry.Series.Name + "_thumb", delegate{ SeriesImageDownloaded( ); } );
+                        FileCache.Instance.DownloadFileToCache( entry.Series.ThumbnailUrl, entry.Series.Name + "_thumb", delegate{ SeriesImageDownloaded( ); } );
                     }
                 }
             }

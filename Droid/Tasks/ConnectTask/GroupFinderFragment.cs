@@ -663,7 +663,7 @@ namespace Droid
                         Map.AnimateCamera( camPos );
 
                         // show the info window for the first (closest) group
-                        MarkerList[ 0 ].ShowInfoWindow( );
+                        MarkerList[ 1 ].ShowInfoWindow( );
 
                         //SearchResult.Text = ConnectStrings.GroupFinder_GroupsFound;
                         SearchResult.Text = string.Format( ConnectStrings.GroupFinder_Neighborhood, GroupEntries[ 0 ].NeighborhoodArea );

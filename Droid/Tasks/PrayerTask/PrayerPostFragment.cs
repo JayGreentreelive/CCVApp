@@ -67,7 +67,7 @@ namespace Droid
                     ControlStyling.StyleBGLayer( StatusLayer );
 
                     StatusText = StatusLayer.FindViewById<TextView>( Resource.Id.text );
-                    ControlStyling.StyleUILabel( StatusText, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+                    ControlStyling.StyleUILabel( StatusText, ControlStylingConfig.Large_Font_Regular, ControlStylingConfig.Large_FontSize );
 
 
 
@@ -75,7 +75,7 @@ namespace Droid
                     ControlStyling.StyleBGLayer( ResultLayer );
 
                     ResultSymbol = ResultLayer.FindViewById<TextView>( Resource.Id.resultSymbol );
-                    ResultSymbol.SetTypeface( FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary ), TypefaceStyle.Normal );
+                    ResultSymbol.SetTypeface( FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary ), TypefaceStyle.Normal );
                     ResultSymbol.SetTextSize( ComplexUnitType.Dip, PrayerConfig.PostPrayer_ResultSymbolSize );
                     ResultSymbol.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
 
@@ -164,7 +164,7 @@ namespace Droid
 
                                     StatusText.Text = PrayerStrings.PostPrayer_Status_SuccessText;
 
-                                    ResultSymbol.Text = PrayerConfig.PostPrayer_ResultSymbol_SuccessText;
+                                    ResultSymbol.Text = ControlStylingConfig.Result_Symbol_Success;
                                     ResultText.Text = PrayerStrings.PostPrayer_Result_SuccessText;
 
                                     DoneButton.Visibility = ViewStates.Visible;
@@ -178,7 +178,7 @@ namespace Droid
                                     // failed. Update text to say so, and use the done button as a "retry"
                                     StatusText.Text = PrayerStrings.PostPrayer_Status_FailedText;
 
-                                    ResultSymbol.Text = PrayerConfig.PostPrayer_ResultSymbol_FailedText;
+                                    ResultSymbol.Text = ControlStylingConfig.Result_Symbol_Failed;
                                     ResultText.Text = PrayerStrings.PostPrayer_Result_FailedText;
 
                                     DoneButton.Visibility = ViewStates.Visible;

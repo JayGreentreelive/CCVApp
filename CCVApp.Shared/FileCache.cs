@@ -219,19 +219,21 @@ namespace CCVApp.Shared
             CacheMap.Remove( filename );
         }
 
-        public delegate void ImageDownloaded( string imageUrl, string cachedFilename );
-        public void DownloadImageToCache( string downloadUrl, string cachedFilename, ImageDownloaded callback )
+        public delegate void ImageDownloaded( string imageUrl, string cachedFilename, bool result );
+        public void DownloadFileToCache( string downloadUrl, string cachedFilename, ImageDownloaded callback )
         {
             if ( string.IsNullOrEmpty( downloadUrl ) == false )
             {
                 // request the image for the series
                 HttpRequest webRequest = new HttpRequest();
                 RestRequest restRequest = new RestRequest( Method.GET );
-                restRequest.AddHeader( "Accept", "image/png" );
+                restRequest.AddHeader( "Accept", "image/png, text/*" );
 
                 webRequest.ExecuteAsync( downloadUrl, restRequest, 
                     delegate(HttpStatusCode statusCode, string statusDescription, byte[] model )
                     {
+                        bool result = false;
+
                         if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
                         {
                             // write it to cache
@@ -240,8 +242,10 @@ namespace CCVApp.Shared
                             FileCache.Instance.SaveFile( imageBuffer, cachedFilename );
                             imageBuffer.Dispose( );
 
-                            callback( downloadUrl, cachedFilename );
+                            result = true;
                         }
+
+                        callback( downloadUrl, cachedFilename, result );
                     } );
             }
         }

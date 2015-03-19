@@ -121,7 +121,7 @@ namespace Droid
                         System.IO.Stream thumbnailStream = Activity.BaseContext.Assets.Open( GeneralConfig.NewsDetailsPlaceholder );
                         HeaderImage = BitmapFactory.DecodeStream( thumbnailStream );
 
-                        FileCache.Instance.DownloadImageToCache( NewsItem.HeaderImageURL, NewsItem.HeaderImageName, delegate
+                        FileCache.Instance.DownloadFileToCache( NewsItem.HeaderImageURL, NewsItem.HeaderImageName, delegate
                             {
                                 NewsHeaderDownloaded( );
                             } );

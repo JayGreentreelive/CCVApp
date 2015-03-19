@@ -107,7 +107,7 @@ namespace CCVApp
                     public int PrayerCategoryToId( string categoryName )
                     {
                         Rock.Client.Category categoryObj = PrayerCategories.Find( c => c.Name == categoryName );
-                        return categoryObj != null ? categoryObj.Id : 0;
+                        return categoryObj != null ? categoryObj.Id : -1;
                     }
 
                     /// <summary>

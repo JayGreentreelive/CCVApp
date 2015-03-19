@@ -313,9 +313,10 @@ namespace Droid
                     ControlStyling.StyleBGLayer( ResultLayer );
 
                     ResultSymbol = ResultLayer.FindViewById<TextView>( Resource.Id.resultSymbol );
-                    ResultSymbol.SetTypeface( FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary ), TypefaceStyle.Normal );
+                    ResultSymbol.SetTypeface( FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary ), TypefaceStyle.Normal );
                     ResultSymbol.SetTextSize( ComplexUnitType.Dip, PrayerConfig.PostPrayer_ResultSymbolSize );
                     ResultSymbol.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
+                    ResultSymbol.Text = ControlStylingConfig.Result_Symbol_Failed;
 
                     ResultText = ResultLayer.FindViewById<TextView>( Resource.Id.text );
                     ControlStyling.StyleUILabel( ResultText, ControlStylingConfig.Large_Font_Regular, ControlStylingConfig.Large_FontSize );

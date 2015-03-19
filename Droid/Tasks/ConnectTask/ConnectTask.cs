@@ -96,7 +96,7 @@ namespace Droid
                             JoinGroup.GroupTitle = entry.Title;
                             JoinGroup.Distance = string.Format( "{0:##.0} {1}", entry.Distance, ConnectStrings.GroupFinder_MilesSuffix );
                             JoinGroup.GroupID = entry.Id;
-                            JoinGroup.MeetingTime = entry.MeetingTime;
+                            JoinGroup.MeetingTime = string.IsNullOrEmpty( entry.MeetingTime) == false ? entry.MeetingTime : ConnectStrings.GroupFinder_ContactForTime;
 
                             PresentFragment( JoinGroup, true );
                         }

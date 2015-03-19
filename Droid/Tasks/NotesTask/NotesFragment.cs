@@ -22,6 +22,7 @@ using CCVApp.Shared.Strings;
 using CCVApp.Shared.Analytics;
 using CCVApp.Shared.UI;
 using Rock.Mobile.Animation;
+using Android.Graphics;
 
 namespace Droid
 {
@@ -136,28 +137,13 @@ namespace Droid
                 PowerManager.WakeLock WakeLock { get; set; }
 
                 /// <summary>
-                /// Name of the note that is being stored in memory via CachedNoteXml & CachedStyleSheetXml
-                /// </summary>
-                /// <value>The name of the cached note.</value>
-                string CachedNoteUrl { get; set; }
-
-                /// <summary>
-                /// reference to the note XML for re-creating the notes in OnResume()
-                /// </summary>
-                /// <value>The note XM.</value>
-                string CachedNoteXml { get; set; }
-
-                /// <summary>
-                /// reference to the style XML for re-creating the notes in OnResume()
-                /// </summary>
-                /// <value>The note XM.</value>
-                string CachedStyleSheetXml { get; set; }
-
-                /// <summary>
                 /// The URL for this note
                 /// </summary>
                 /// <value>The note URL.</value>
                 public string NoteUrl { get; set; }
+
+                protected string NoteFileName { get; set; }
+                protected string StyleFileName { get; set; }
 
                 /// <summary>
                 /// A presentable name for the note. Used for things like email subjects
@@ -225,6 +211,11 @@ namespace Droid
                 /// <value>The note download retries.</value>
                 int NoteDownloadRetries { get; set; }
 
+                /// <summary>
+                /// Reference to the tutorial overlay image
+                /// </summary>
+                Bitmap TutorialImage { get; set; }
+
                 public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
                 {
                     base.OnCreateView( inflater, container, savedInstanceState );
@@ -261,7 +252,9 @@ namespace Droid
 
                     RefreshButton.Click += (object sender, EventArgs e ) =>
                     {
-                        CreateNotes( null, null );
+                        DeleteNote( );
+
+                        PrepareCreateNotes(  );
                     };
 
                     #if !DEBUG
@@ -271,21 +264,6 @@ namespace Droid
                     // get our power management control
                     PowerManager pm = PowerManager.FromContext( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     WakeLock = pm.NewWakeLock(WakeLockFlags.Full, "Notes");
-
-                    // if we are loading a different note, force the current cached ones out of memory
-                    if ( NoteUrl != CachedNoteUrl )
-                    {
-                        CachedNoteXml = null;
-                        CachedStyleSheetXml = null;
-                    }
-
-                    // if our instance was saved, it's possible our cache was dumped, but it was saved in this instance bundle,
-                    // so grab it.
-                    if( savedInstanceState != null )
-                    {
-                        CachedNoteXml = savedInstanceState.GetString( XML_NOTE_KEY );
-                        CachedStyleSheetXml = savedInstanceState.GetString( XML_STYLE_KEY );
-                    }
 
                     ResultView = new UIResultView( layout, new System.Drawing.RectangleF( 0, 0, this.Resources.DisplayMetrics.WidthPixels, this.Resources.DisplayMetrics.HeightPixels ), OnResultViewDone );
 
@@ -308,8 +286,9 @@ namespace Droid
                     layout.AddView( TutorialOverlay );
 
                     System.IO.Stream tutorialStream = Activity.BaseContext.Assets.Open( NoteConfig.TutorialOverlayImage );
-                    TutorialOverlay.SetImageBitmap( Android.Graphics.BitmapFactory.DecodeStream( tutorialStream ) );
 
+                    TutorialImage = Android.Graphics.BitmapFactory.DecodeStream( tutorialStream );
+                    TutorialOverlay.SetImageBitmap( TutorialImage );
 
                     return layout;
                 }
@@ -317,7 +296,9 @@ namespace Droid
                 void OnResultViewDone( )
                 {
                     // if they tap "retry", redownload the notes.
-                    CreateNotes( null, null );
+                    DeleteNote( );
+
+                    PrepareCreateNotes( );
                 }
 
                 public override void OnConfigurationChanged(Android.Content.Res.Configuration newConfig)
@@ -333,7 +314,7 @@ namespace Droid
                         ParentTask.NavbarFragment.EnableSpringboardRevealButton( true );
                     }
 
-                    CreateNotes( CachedNoteXml, CachedStyleSheetXml );
+                    PrepareCreateNotes( );
                 }
 
                 public override void OnResume()
@@ -376,7 +357,7 @@ namespace Droid
                     FragmentReady = true;
                     if( ParentTask.TaskReadyForFragmentDisplay == true )
                     {
-                        CreateNotes( CachedNoteXml, CachedStyleSheetXml );
+                        PrepareCreateNotes( );
                     }
                 }
 
@@ -389,7 +370,7 @@ namespace Droid
                     // and we'll create the notes then.
                     if( FragmentReady == true )
                     {
-                        CreateNotes( CachedNoteXml, CachedStyleSheetXml );
+                        PrepareCreateNotes( );
                     }
                 }
 
@@ -457,11 +438,11 @@ namespace Droid
                     // TouchUp
                     try
                     {
-                        DidGestureCreateNote = Note.DidDoubleTap( new PointF( e.GetX( ), e.GetY( ) ) );
+                        DidGestureCreateNote = Note.DidDoubleTap( new System.Drawing.PointF( e.GetX( ), e.GetY( ) ) );
                     }
                     catch( Exception ex )
                     {
-                        ReportException( "", ex );
+                        Springboard.DisplayError( "Notes", ex.Message );
                         DidGestureCreateNote = false;
                     }
 
@@ -475,7 +456,7 @@ namespace Droid
                     {
                         if ( Note != null )
                         {
-                            if ( Note.TouchesBegan( new PointF( e.GetX( ), e.GetY( ) ) ) )
+                            if ( Note.TouchesBegan( new System.Drawing.PointF( e.GetX( ), e.GetY( ) ) ) )
                             {
                                 ScrollView.ScrollEnabled = false;
 
@@ -521,7 +502,7 @@ namespace Droid
 
                                 if ( Note != null )
                                 {
-                                    Note.TouchesMoved( new PointF( e.GetX( ), e.GetY( ) ) );
+                                    Note.TouchesMoved( new System.Drawing.PointF( e.GetX( ), e.GetY( ) ) );
                                 }
 
                                 break;
@@ -533,7 +514,7 @@ namespace Droid
                                 {
                                     AnimateTutorialScreen( false );
 
-                                    string activeUrl = Note.TouchesEnded( new PointF( e.GetX( ), e.GetY( ) ) );
+                                    string activeUrl = Note.TouchesEnded( new System.Drawing.PointF( e.GetX( ), e.GetY( ) ) );
 
                                     // again, only process this if we didn't create a note. We don't want to treat a double tap
                                     // like a request to view a note
@@ -558,8 +539,15 @@ namespace Droid
                     return false;
                 }
 
-                public void ShutdownNotes( Bundle instanceBundle )
+                protected void ShutdownNotes( Bundle instanceBundle )
                 {
+                    if ( TutorialImage != null )
+                    {
+                        TutorialOverlay.SetImageBitmap( null );
+                        TutorialImage.Dispose( );
+                        TutorialImage = null;
+                    }
+
                     // shutdown notes ensures that user settings are saved
                     // the note is destroyed and references to it are cleared.
                     if( Note != null )
@@ -569,19 +557,9 @@ namespace Droid
                         Note.Destroy( ScrollViewLayout );
                         Note = null;
                     }
-
-                    // if a bundle was provided, store the note XML in it
-                    // because this entire Fragment might get dumped from memory,
-                    // making our cache incredibly useless
-                    if( instanceBundle != null )
-                    {
-                        // store out xml in the bundle so we don't have to re-download it
-                        instanceBundle.PutString( XML_NOTE_KEY, CachedNoteXml );
-                        instanceBundle.PutString( XML_STYLE_KEY, CachedStyleSheetXml );
-                    }
                 }
 
-                void CreateNotes( string noteXml, string styleSheetXml )
+                protected void PrepareCreateNotes( )
                 {
                     if( RefreshingNotes == false )
                     {
@@ -594,107 +572,66 @@ namespace Droid
                         // show a busy indicator
                         Indicator.Visibility = ViewStates.Visible;
 
-                        // if we don't have BOTH xml strings, re-download
-                        if( noteXml == null || styleSheetXml == null )
-                        {
-                            Console.WriteLine( "NO CACHED NOTES. DOWNLOADING THEM." );
-
-                            //download the notes
-                            Rock.Mobile.Network.HttpRequest request = new HttpRequest();
-                            RestRequest restRequest = new RestRequest( Method.GET );
-                            restRequest.RequestFormat = DataFormat.Xml;
-
-                            request.ExecuteAsync( NoteUrl, restRequest, 
-                                delegate(System.Net.HttpStatusCode statusCode, string statusDescription, byte[] model )
+                        Note.TryDownloadNote( NoteUrl, StyleSheetDefaultHostDomain, delegate(bool result )
+                            {
+                                if( result == true )
                                 {
-                                    if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) )
-                                    {
-                                        string body = Encoding.UTF8.GetString( model, 0, model.Length );
-                                        HandleNotePreReqs( body, null );
-                                    }
-                                    else
-                                    {
-                                        ReportException( "NoteScript Download Error", null );
-                                    }
-                                } );
-                        }
-                        else
-                        {
-                            // if we DO have both, go ahead and create with them.
-                            HandleNotePreReqs( noteXml, styleSheetXml );
-                        }
+                                    CreateNotes( );
+                                }
+                                else
+                                {
+                                    ReportException( "", null );
+                                }
+                            } );
                     }
                 }
 
-                protected void HandleNotePreReqs( string noteXml, string styleXml )
+                protected void CreateNotes( )
                 {
                     try
                     {
-                        Note.HandlePreReqs( noteXml, styleXml, StyleSheetDefaultHostDomain, OnPreReqsComplete );
-                    } 
-                    catch( Exception e )
-                    {
-                        ReportException( "StyleSheet Error", e );
+                        // expect the note and its style sheet to exist.
+                        NoteFileName = Rock.Mobile.Util.Strings.Parsers.ParseURLToFileName( NoteUrl );
+                        MemoryStream noteData = (MemoryStream)FileCache.Instance.LoadFile( NoteFileName );
+                        string noteXML = Encoding.UTF8.GetString( noteData.ToArray( ), 0, (int)noteData.Length );
+
+                        string styleSheetUrl = Note.GetStyleSheetUrl( noteXML, StyleSheetDefaultHostDomain );
+                        StyleFileName = Rock.Mobile.Util.Strings.Parsers.ParseURLToFileName( styleSheetUrl );
+                        MemoryStream styleData = (MemoryStream)FileCache.Instance.LoadFile( StyleFileName );
+                        string styleXML = Encoding.UTF8.GetString( styleData.ToArray( ), 0, (int)styleData.Length );
+
+                        Note = new Note( noteXML, styleXML );
+
+                        // Use the metrics and not ScrollView for dimensions, because depending on when this gets called the ScrollView
+                        // may not have its dimensions set yet.
+                        Note.Create( this.Resources.DisplayMetrics.WidthPixels, this.Resources.DisplayMetrics.HeightPixels, ScrollViewLayout, NoteFileName + NoteConfig.UserNoteSuffix );
+
+                        // set the requested background color
+                        ScrollView.SetBackgroundColor( ( Android.Graphics.Color )Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value ) );
+
+                        // update the height of the scroll view to fit all content
+                        RectangleF frame = Note.GetFrame( );
+
+                        int scrollFrameHeight = ( int )frame.Size.Height + ( this.Resources.DisplayMetrics.HeightPixels / 3 );
+                        ScrollViewLayout.LayoutParameters.Height = scrollFrameHeight;
+
+                        FinishNotesCreation( );
+
+                        // log the note they are reading.
+                        MessageAnalytic.Instance.Trigger( MessageAnalytic.Read, NoteName );
+
+                        // display the tutorial
+                        // if the user has never seen it, show them the tutorial screen
+                        if( CCVApp.Shared.Network.RockMobileUser.Instance.NoteTutorialShown == false )
+                        {
+                            CCVApp.Shared.Network.RockMobileUser.Instance.NoteTutorialShown = true;
+
+                            AnimateTutorialScreen( true );
+                        }
                     }
-                }
-
-                protected void OnPreReqsComplete( Note note, Exception e )
-                {
-                    if( e != null )
+                    catch( Exception ex )
                     {
-                        ReportException( "StyleSheet Error", e );
-                    }
-                    else
-                    {
-                        Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
-                            {
-                                Note = note;
-
-                                try
-                                {
-                                    // log the note they are reading.
-                                    MessageAnalytic.Instance.Trigger( MessageAnalytic.Read, NoteName );
-
-                                    // build the filename of the locally stored user data. If there is no "/" because it isn't a URL,
-                                    // we'll end up using the base name, which is what we want.
-                                    int lastSlashIndex = NoteUrl.LastIndexOf( "/" ) + 1;
-                                    string noteName = NoteUrl.Substring( lastSlashIndex );
-
-                                    // Use the metrics and not ScrollView for dimensions, because depending on when this gets called the ScrollView
-                                    // may not have its dimensions set yet.
-                                    Note.Create( this.Resources.DisplayMetrics.WidthPixels, this.Resources.DisplayMetrics.HeightPixels, ScrollViewLayout, noteName + NoteConfig.UserNoteSuffix );
-
-
-                                    // set the requested background color
-                                    ScrollView.SetBackgroundColor( ( Android.Graphics.Color )Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value ) );
-
-                                    // update the height of the scroll view to fit all content
-                                    RectangleF frame = Note.GetFrame( );
-
-                                    int scrollFrameHeight = ( int )frame.Size.Height + ( this.Resources.DisplayMetrics.HeightPixels / 3 );
-                                    ScrollViewLayout.LayoutParameters.Height = scrollFrameHeight;
-
-                                    // cache the note so we only re-download it if we have to
-                                    CachedNoteXml = Note.NoteXml;
-                                    CachedStyleSheetXml = ControlStyles.StyleSheetXml;
-                                    CachedNoteUrl = NoteUrl;
-
-                                    FinishNotesCreation( );
-
-                                    // display the tutorial
-                                    // if the user has never seen it, show them the tutorial screen
-                                    if( CCVApp.Shared.Network.RockMobileUser.Instance.NoteTutorialShown == false )
-                                    {
-                                        CCVApp.Shared.Network.RockMobileUser.Instance.NoteTutorialShown = true;
-
-                                        AnimateTutorialScreen( true );
-                                    }
-                                } 
-                                catch( Exception ex )
-                                {
-                                    ReportException( "", ex );
-                                }
-                            } );
+                        ReportException( "", ex );
                     }
                 }
 
@@ -732,6 +669,20 @@ namespace Droid
                     }
                 }
 
+                protected void DeleteNote( )
+                {
+                    // delete the existing note files pertaining to this note.
+                    if( string.IsNullOrEmpty( NoteFileName ) == false )
+                    {
+                        FileCache.Instance.RemoveFile( NoteFileName );
+                    }
+
+                    if( string.IsNullOrEmpty( StyleFileName ) == false )
+                    {
+                        FileCache.Instance.RemoveFile( StyleFileName );
+                    }
+                }
+
                 protected void ReportException( string errorMsg, Exception e )
                 {
                     Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
@@ -744,7 +695,7 @@ namespace Droid
                             {
                                 NoteDownloadRetries--;
 
-                                CreateNotes( null, null );
+                                PrepareCreateNotes( );
                             }
                             else
                             {

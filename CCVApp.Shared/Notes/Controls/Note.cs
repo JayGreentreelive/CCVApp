@@ -8,6 +8,7 @@ using CCVApp.Shared.Notes.Model;
 using Newtonsoft.Json;
 using Rock.Mobile.PlatformUI;
 using System.Drawing;
+using System.Text;
 
 namespace CCVApp
 {
@@ -95,7 +96,59 @@ namespace CCVApp
                 /// <value>The load state timer.</value>
                 protected System.Timers.Timer LoadStateTimer { get; set; }
 
-                public static void HandlePreReqs( string noteXml, string styleXml, string styleSheetDefaultHostDomain, OnPreReqsComplete onPreReqsComplete )
+                /// <summary>
+                /// Attempt to download the note and its style sheet. If they are already downloaded, the completion delegate will be called immediately.
+                /// </summary>
+                public delegate void OnTryDownloadComplete( bool result );
+                public static void TryDownloadNote( string noteUrl, string styleSheetDefaultHostDomain, OnTryDownloadComplete complete )
+                {
+                    // see if the note is already downloaded
+                    string noteFileName = Rock.Mobile.Util.Strings.Parsers.ParseURLToFileName( noteUrl );
+                    MemoryStream noteData = (MemoryStream)FileCache.Instance.LoadFile( noteFileName );
+
+                    // if not, download it.
+                    if ( noteData == null )
+                    {
+                        try
+                        {
+                            Console.WriteLine( "NO CACHED NOTES. DOWNLOADING THEM." );
+
+                            FileCache.Instance.DownloadFileToCache( noteUrl, noteFileName, delegate
+                                {
+                                    // good, now get the style sheet
+                                    noteData = (MemoryStream)FileCache.Instance.LoadFile( noteFileName );
+                                    if ( noteData != null )
+                                    {
+                                        string body = Encoding.UTF8.GetString( noteData.ToArray( ), 0, (int)noteData.Length );
+
+                                        string styleSheetUrl = Note.GetStyleSheetUrl( body, styleSheetDefaultHostDomain );
+                                        string styleFileName = Rock.Mobile.Util.Strings.Parsers.ParseURLToFileName( styleSheetUrl );
+
+                                        FileCache.Instance.DownloadFileToCache( styleSheetUrl, styleFileName, delegate
+                                            {
+                                                // now we can create the notes
+                                                complete( true );
+                                            } );
+                                    }
+                                    else
+                                    {
+                                        complete( false );
+                                    }
+                                } );
+                        }
+                        catch ( Exception )
+                        {
+                            complete( false );
+                        }
+                    }
+                    else
+                    {
+                        // immediately let the caller know we're done
+                        complete( true );
+                    }
+                }
+
+                public static string GetStyleSheetUrl( string noteXml, string styleSheetDefaultHostDomain )
                 {
                     // now use a reader to get each element
                     XmlReader reader = XmlReader.Create( new StringReader( noteXml ) );
@@ -140,22 +193,18 @@ namespace CCVApp
                         }
                     }
 
-                    // Parse the styles. We cannot go any further until this is finished.
-                    ControlStyles.Initialize( styleSheetUrl, styleXml, (Exception e ) =>
-                        {
-                            // We don't just create the note here because the parent
-                            // might need to change threads before creating UI objects
-                            onPreReqsComplete( new Note( noteXml ), e );
-                        } );
+                    return styleSheetUrl;
                 }
 
-                public Note( string noteXml )
+                public Note( string noteXml, string styleXml )
                 {
                     // store our XML
                     NoteXml = noteXml;
 
                     mStyle = new Style( );
                     mStyle.Initialize( );
+
+                    ControlStyles.Initialize( styleXml );
                 }
 
                 public void Create( float parentWidth, float parentHeight, object masterView, string userNoteFileName )

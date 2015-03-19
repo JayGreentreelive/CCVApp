@@ -59,7 +59,7 @@ namespace iOS
                 // otherwise use a placeholder and request the actual image
                 ImageBanner.Image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + GeneralConfig.NewsDetailsPlaceholder );
 
-                FileCache.Instance.DownloadImageToCache( NewsItem.HeaderImageURL, NewsItem.HeaderImageName, delegate
+                FileCache.Instance.DownloadFileToCache( NewsItem.HeaderImageURL, NewsItem.HeaderImageName, delegate
                     {
                         NewsHeaderDownloaded( );
                     } );

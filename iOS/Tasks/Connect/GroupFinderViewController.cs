@@ -260,6 +260,7 @@ namespace iOS
         public UITextField City { get; set; }
         public UITextField State { get; set; }
         public UITextField Zip { get; set; }
+        public UIView ZipSpacer { get; set; }
 
         public MKMapView MapView { get; set; }
 
@@ -450,6 +451,13 @@ namespace iOS
             Zip.AutocorrectionType = UITextAutocorrectionType.No;
             Zip.Delegate = new AddressDelegate( ) { Parent = this };
             View.AddSubview( Zip );
+
+            ZipSpacer = new UIView( );
+            ZipSpacer.BackgroundColor = UIColor.DarkGray;
+            ZipSpacer.Layer.AnchorPoint = CGPoint.Empty;
+            ZipSpacer.Frame = new CGRect( 0, 0, SearchButton.Frame.Left - Zip.Frame.Right, SearchButton.Frame.Height );
+            ZipSpacer.Layer.Position = new CGPoint( Zip.Frame.Right, 0 );
+            View.AddSubview( ZipSpacer );
 
 
             // Map
@@ -805,6 +813,7 @@ namespace iOS
             // Validate Zip
             uint targetZipColor = string.IsNullOrEmpty( Zip.Text ) == true ? ControlStylingConfig.BadInput_BG_Layer_Color : ControlStylingConfig.BG_Layer_Color; 
             Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetZipColor, Zip );
+            Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetZipColor, ZipSpacer );
         }
 	}
 }
