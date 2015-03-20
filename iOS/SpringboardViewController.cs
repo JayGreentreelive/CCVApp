@@ -571,6 +571,8 @@ namespace iOS
                     // we now have the latest news and all initial downloading.
                     // Tell the news it's safe to reload.
                     PerformTaskAction( "News.Reload" );
+
+                    PerformTaskAction( "Notes.DownloadImages" );
                 });
         }
 

@@ -53,6 +53,12 @@ namespace iOS
                     }
                     break;
                 }
+
+                case "Notes.DownloadImages":
+                {
+                    //MainViewController.DownloadImages( );
+                    break;
+                }
             }
         }
 

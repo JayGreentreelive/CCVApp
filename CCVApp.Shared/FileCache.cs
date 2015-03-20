@@ -245,7 +245,10 @@ namespace CCVApp.Shared
                             result = true;
                         }
 
-                        callback( downloadUrl, cachedFilename, result );
+                        if( callback != null )
+                        {
+                            callback( downloadUrl, cachedFilename, result );
+                        }
                     } );
             }
         }

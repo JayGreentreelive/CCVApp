@@ -594,11 +594,13 @@ namespace Droid
                         NoteFileName = Rock.Mobile.Util.Strings.Parsers.ParseURLToFileName( NoteUrl );
                         MemoryStream noteData = (MemoryStream)FileCache.Instance.LoadFile( NoteFileName );
                         string noteXML = Encoding.UTF8.GetString( noteData.ToArray( ), 0, (int)noteData.Length );
+                        noteData.Dispose( );
 
                         string styleSheetUrl = Note.GetStyleSheetUrl( noteXML, StyleSheetDefaultHostDomain );
                         StyleFileName = Rock.Mobile.Util.Strings.Parsers.ParseURLToFileName( styleSheetUrl );
                         MemoryStream styleData = (MemoryStream)FileCache.Instance.LoadFile( StyleFileName );
                         string styleXML = Encoding.UTF8.GetString( styleData.ToArray( ), 0, (int)styleData.Length );
+                        styleData.Dispose( );
 
                         Note = new Note( noteXML, styleXML );
 

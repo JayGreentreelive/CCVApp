@@ -170,11 +170,8 @@ namespace iOS
                 // if no image is set, we couldn't load one, so download it.
                 if ( newsItem.Image == null )
                 {
-                    FileCache.Instance.DownloadFileToCache( newsItem.News.ImageURL, newsItem.News.ImageName, 
-                        delegate
-                        {
-                            SeriesImageDownloaded( );
-                        } );
+                    FileCache.Instance.DownloadFileToCache( newsItem.News.ImageURL, newsItem.News.ImageName, delegate { SeriesImageDownloaded( ); } );
+                    FileCache.Instance.DownloadFileToCache( newsItem.News.HeaderImageURL, newsItem.News.HeaderImageName, null );
                 }
             }
 

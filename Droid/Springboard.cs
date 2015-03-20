@@ -273,6 +273,8 @@ namespace Droid
                     // so let the news manager update the news items and download
                     // whatever it needs.
                     PerformTaskAction( "News.Reload" );
+
+                    PerformTaskAction( "Notes.DownloadImages" );
                 });
         }
 

@@ -120,6 +120,7 @@ namespace CCVApp
                                     if ( noteData != null )
                                     {
                                         string body = Encoding.UTF8.GetString( noteData.ToArray( ), 0, (int)noteData.Length );
+                                        noteData.Dispose( );
 
                                         string styleSheetUrl = Note.GetStyleSheetUrl( body, styleSheetDefaultHostDomain );
                                         string styleFileName = Rock.Mobile.Util.Strings.Parsers.ParseURLToFileName( styleSheetUrl );
@@ -143,6 +144,8 @@ namespace CCVApp
                     }
                     else
                     {
+                        noteData.Dispose( );
+
                         // immediately let the caller know we're done
                         complete( true );
                     }
