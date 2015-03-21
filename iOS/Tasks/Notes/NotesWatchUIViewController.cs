@@ -149,8 +149,6 @@ namespace iOS
             // only process this if we're not entering fullscreen
             if ( EnteringFullscreen == false )
             {
-                double currPlaybackTime = MoviePlayer.CurrentPlaybackTime;
-
                 MoviePlayer.Stop( );
 
                 foreach ( NSObject handle in ObserverHandles )
@@ -160,6 +158,20 @@ namespace iOS
 
                 ObserverHandles.Clear( );
             }
+        }
+
+        public override void AppOnResignActive()
+        {
+            base.AppOnResignActive();
+
+            SavePlaybackPos( );
+        }
+
+        public override void AppWillTerminate()
+        {
+            base.AppWillTerminate();
+
+            SavePlaybackPos( );
         }
 
         public void ShareVideo( )
@@ -229,21 +241,26 @@ namespace iOS
 
             if ( MoviePlayer.PlaybackState != MPMoviePlaybackState.Playing )
             {
-                // store the last video we watched.
-                CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaUrl = MediaUrl;
+                SavePlaybackPos( );
+            }
+        }
 
-                // see where we are in playback. If it's > 10 and < 90, we'll save the time.
-                if ( MoviePlayer.Duration > 0.00f )
+        void SavePlaybackPos( )
+        {
+            // store the last video we watched.
+            CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaUrl = MediaUrl;
+
+            // see where we are in playback. If it's > 10 and < 90, we'll save the time.
+            if ( MoviePlayer.Duration > 0.00f )
+            {
+                double playbackPerc = MoviePlayer.CurrentPlaybackTime / MoviePlayer.Duration;
+                if ( playbackPerc > .10f && playbackPerc < .95f )
                 {
-                    double playbackPerc = MoviePlayer.CurrentPlaybackTime / MoviePlayer.Duration;
-                    if ( playbackPerc > .10f && playbackPerc < .95f )
-                    {
-                        CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaPos = MoviePlayer.CurrentPlaybackTime;
-                    }
-                    else
-                    {
-                        CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaPos = 0;
-                    }
+                    CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaPos = MoviePlayer.CurrentPlaybackTime;
+                }
+                else
+                {
+                    CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaPos = 0;
                 }
             }
         }

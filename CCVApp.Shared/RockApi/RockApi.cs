@@ -287,7 +287,7 @@ namespace CCVApp
                     //2. Request that Person back
                     //3. Create a new Login for that person
                     //4. Post the location, phone number and home campus
-                    person.Guid = Guid.NewGuid( );
+                    /*person.Guid = Guid.NewGuid( );
 
                     CreateProfile( person, 
                         delegate(System.Net.HttpStatusCode statusCode, string statusDescription )
@@ -358,7 +358,7 @@ namespace CCVApp
                                     resultHandler( statusCode, statusDescription );
                                 }
                             }
-                        } );
+                        } );*/
                 }
 
                 void CreateProfile( Rock.Client.Person person, HttpRequest.RequestResult resultHandler )

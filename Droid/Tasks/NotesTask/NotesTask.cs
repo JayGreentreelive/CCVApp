@@ -97,6 +97,12 @@ namespace Droid
                             }
                             break;
                         }
+
+                        case "Notes.DownloadImages":
+                        {
+                            MainPage.DownloadImages( );
+                            break;
+                        }
                     }
                 }
 

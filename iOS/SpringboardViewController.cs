@@ -497,8 +497,8 @@ namespace iOS
                 View.AddSubview( OOBEViewController.View );
             }
         }
-        static bool RanOOBE = false;
 
+        //static bool RanOOBE = false;
         public void OOBEOnClick( int index )
         {
             // fade out the OOBE
@@ -571,7 +571,6 @@ namespace iOS
                     // we now have the latest news and all initial downloading.
                     // Tell the news it's safe to reload.
                     PerformTaskAction( "News.Reload" );
-
                     PerformTaskAction( "Notes.DownloadImages" );
                 });
         }
@@ -1065,6 +1064,15 @@ namespace iOS
         public void WillTerminate( )
         {
             NavViewController.WillTerminate( );
+
+            // request quick backgrounding so we can save objects
+            nint taskID = UIApplication.SharedApplication.BeginBackgroundTask( () => {});
+
+            RockApi.Instance.SaveObjectsToDevice( );
+
+            FileCache.Instance.SaveCacheMap( );
+
+            UIApplication.SharedApplication.EndBackgroundTask(taskID);
         }
 	}
 }

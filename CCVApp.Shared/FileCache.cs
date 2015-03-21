@@ -190,6 +190,11 @@ namespace CCVApp.Shared
             }
         }
 
+        public bool FileExists( string filename )
+        {
+            return File.Exists( CachePath + "/" + filename );
+        }
+
         public object LoadFile( string filename )
         {
             try

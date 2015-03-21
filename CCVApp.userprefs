@@ -1,19 +1,14 @@
 ﻿<Properties StartupItem="iOS/iOS.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhone4s.8.2" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/Tasks/Notes/NotesMainUIViewController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/Tasks/Notes/NotesViewController.cs">
     <Files>
-      <File FileName="Droid/Springboard.cs" Line="1" Column="1" />
-      <File FileName="iOS/SpringboardViewController.cs" Line="1" Column="1" />
-      <File FileName="Droid/Tasks/NotesTask/NotesPrimaryFragment.cs" Line="1" Column="1" />
-      <File FileName="iOS/Tasks/Notes/NotesTask.cs" Line="1" Column="1" />
-      <File FileName="iOS/Tasks/Notes/NotesMainUIViewController.cs" Line="680" Column="39" />
-      <File FileName="iOS/Tasks/Notes/NotesDetailsUIViewController.cs" Line="1" Column="1" />
+      <File FileName="Droid/Tasks/NotesTask/NotesFragment.cs" Line="631" Column="29" />
+      <File FileName="Droid/Springboard.cs" Line="839" Column="37" />
+      <File FileName="iOS/Tasks/Notes/NotesViewController.cs" Line="666" Column="17" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="/Users/jered/Projects/CCVApp/iOS/Tasks/Notes/NotesViewController.cs" line="341" column="27" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches>
     <Watch file="CCVApp.Shared/Notes/Controls/Note.cs" line="533" offsetX="1058" offsetY="7980" expression="state" liveUpdate="False" />

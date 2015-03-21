@@ -56,7 +56,7 @@ namespace iOS
 
                 case "Notes.DownloadImages":
                 {
-                    //MainViewController.DownloadImages( );
+                    MainViewController.DownloadImages( );
                     break;
                 }
             }

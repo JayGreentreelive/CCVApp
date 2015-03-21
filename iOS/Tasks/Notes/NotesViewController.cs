@@ -682,7 +682,18 @@ namespace iOS
                 {
                     CCVApp.Shared.Network.RockMobileUser.Instance.NoteTutorialShown = true;
 
-                    AnimateTutorialScreen( true );
+                    // wait a second before revealing the tutorial overlay
+                    System.Timers.Timer timer = new System.Timers.Timer();
+                    timer.AutoReset = false;
+                    timer.Interval = 750;
+                    timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>
+                        {
+                            Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                                {
+                                    AnimateTutorialScreen( true );
+                                });
+                        };
+                    timer.Start( );
                 }
             }
             catch( Exception ex )

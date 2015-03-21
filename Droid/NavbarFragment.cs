@@ -25,6 +25,103 @@ namespace Droid
     public class NavbarFragment : Fragment, Android.Animation.ValueAnimator.IAnimatorUpdateListener
     {
         /// <summary>
+        /// Full screen "wall" that continues to read input while the 
+        /// actual task input is disabled while the springboard is open
+        /// </summary>
+        public class InputChecker : View, View.IOnTouchListener
+        {
+            GestureDetector GestureDetector { get; set; }
+
+            public class SimpleGestureDetector : GestureDetector.SimpleOnGestureListener
+            {
+                InputChecker Parent { get; set; }
+
+                public SimpleGestureDetector( InputChecker parent )
+                {
+                    Parent = parent;
+                }
+
+                public override bool OnDown(MotionEvent e)
+                {
+                    // Make the TaskFragment handle this
+                    Parent.OnDownGesture( e );
+                    return true;
+                }
+
+                public override bool OnFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
+                {
+                    Parent.OnFlingGesture( e1, e2, velocityX, velocityY );
+                    return base.OnFling(e1, e2, velocityX, velocityY);
+                }
+
+                public override bool OnScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
+                {
+                    Parent.OnScrollGesture( e1, e2, distanceX, distanceY );
+                    return base.OnScroll(e1, e2, distanceX, distanceY);
+                }
+
+                public override bool OnDoubleTap(MotionEvent e)
+                {
+                    Parent.OnDoubleTap( e );
+                    return base.OnDoubleTap( e );
+                }
+            }
+
+            public NavbarFragment NavParent { get; set; }
+
+            public InputChecker( Context context ) : base( context )
+            {
+                GestureDetector = new GestureDetector( context, new SimpleGestureDetector( this ) );
+                SetOnTouchListener( this );
+            }
+
+            public virtual bool OnTouch( View v, MotionEvent e )
+            {
+                if ( GestureDetector.OnTouchEvent( e ) == true )
+                {
+                    return true;
+                }
+                else
+                {
+                    switch ( e.Action )
+                    {
+                        case MotionEventActions.Up:
+                        {
+                            NavParent.OnUp( e );
+                            break;
+                        }
+                    }
+                    return false;
+                }
+            }
+
+            public virtual bool OnDownGesture( MotionEvent e )
+            {
+                NavParent.OnDown( e );
+                return false;
+            }
+
+            public virtual bool OnDoubleTap(MotionEvent e)
+            {
+                return false;
+            }
+
+            public virtual bool OnFlingGesture( MotionEvent e1, MotionEvent e2, float velocityX, float velocityY )
+            {
+                // let the navbar know we're flicking
+                NavParent.OnFlick( e1, e2, velocityX, velocityY );
+                return false;
+            }
+
+            public virtual bool OnScrollGesture( MotionEvent e1, MotionEvent e2, float distanceX, float distanceY )
+            {
+                // let the navbar know we're scrolling
+                NavParent.OnScroll( e1, e2, distanceX, distanceY );
+                return false;
+            }
+        }
+        
+        /// <summary>
         /// Forwards the finished animation notification to the actual navbar fragment
         /// </summary>
         public class NavbarAnimationListener : Android.Animation.AnimatorListenerAdapter
@@ -90,9 +187,34 @@ namespace Droid
         /// The frame that stores the active task
         /// </summary>
         /// <value>The active task frame.</value>
-        public FrameLayout ActiveTaskFrame { get; set; }
+        FrameLayout _ActiveTaskFrame = null;
+        public FrameLayout ActiveTaskFrame 
+        { 
+            get { return _ActiveTaskFrame; }
+
+            set
+            {
+                if ( InputViewChecker != null )
+                {
+                    if ( _ActiveTaskFrame != null )
+                    {
+                        _ActiveTaskFrame.RemoveView( InputViewChecker );
+                    }
+
+                    _ActiveTaskFrame = value;
+
+                    _ActiveTaskFrame.AddView( InputViewChecker );
+                }
+                else
+                {
+                    _ActiveTaskFrame = value;
+                }
+            }
+        }
 
         public NavToolbarFragment NavToolbar { get; set; }
+
+        InputChecker InputViewChecker { get; set; }
 
         Button SpringboardRevealButton { get; set; }
 
@@ -208,7 +330,20 @@ namespace Droid
             DropShadowXOffset = 15;
             DropShadowView = Activity.FindViewById<FrameLayout>(Resource.Id.dropShadowView) as FrameLayout;
 
+            InputViewChecker = new InputChecker( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+            InputViewChecker.NavParent = this;
+
+            if ( _ActiveTaskFrame != null )
+            {
+                _ActiveTaskFrame.AddView( InputViewChecker );
+            }
+
             return Navbar;
+        }
+
+        public bool OnTouch( View v, MotionEvent e )
+        {
+            return false;
         }
 
         void CreateSpringboardButton( RelativeLayout relativeLayout )
@@ -484,20 +619,64 @@ namespace Droid
         {
             Animating = false;
 
+            InputViewChecker.BringToFront( );
+
             // based on the position, set the springboard flag
             if ( View.GetX( ) == 0 )
             {
                 SpringboardRevealed = false;
                 NavToolbar.Suspend( false );
+
+                ToggleInputViewChecker( false );
             }
             else
             {
                 SpringboardRevealed = true;
                 NavToolbar.Suspend( true );
+
+                ToggleInputViewChecker( true );
             }
 
             // notify the task regarding what happened
             ActiveTask.SpringboardDidAnimate( SpringboardRevealed );
+        }
+
+        void ToggleInputViewChecker( bool enabled )
+        {
+            DisableTaskInput( ActiveTaskFrame, !enabled );
+
+            InputViewChecker.Enabled = enabled;
+            InputViewChecker.Focusable = enabled;
+            InputViewChecker.FocusableInTouchMode = enabled;
+        }
+
+        void DisableTaskInput( ViewGroup frame, bool enable )
+        {
+            if ( frame as ListView != null || frame as ScrollView != null )
+            {
+                frame.Enabled = enable;
+                frame.Focusable = enable;
+                frame.FocusableInTouchMode = enable;
+            }
+
+            int i;
+            for ( i = 0; i < frame.ChildCount; i++ )
+            {
+                View child = frame.GetChildAt( i ) as View;
+                if ( (child as ViewGroup) != null )
+                {
+                    DisableTaskInput( (child as ViewGroup), enable );
+                }
+                else
+                {
+                    if ( child as ListView != null || child as ScrollView != null )
+                    {
+                        child.Enabled = enable;
+                        child.Focusable = enable;
+                        child.FocusableInTouchMode = enable;
+                    }
+                }
+            }
         }
 
         public override void OnPause( )

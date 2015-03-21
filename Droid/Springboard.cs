@@ -749,7 +749,7 @@ namespace Droid
         }
 
         bool IsOOBERunning { get; set; }
-        static bool oobeRan = false;
+        //static bool oobeRan = false;
         public override void OnResume()
         {
             base.OnResume();

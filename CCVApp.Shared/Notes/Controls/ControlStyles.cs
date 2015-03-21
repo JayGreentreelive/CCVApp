@@ -821,9 +821,9 @@ namespace CCVApp
                     ParseStyles( styleSheetXml );
                 }
 
-                protected static void ParseStyles( string styleSheetXml )
+                protected static bool ParseStyles( string styleSheetXml )
                 {
-                    Exception exception = null;
+                    bool result = false;
 
                     // now use a reader to get each element
                     XmlTextReader reader = XmlReader.Create( new StringReader( styleSheetXml ) ) as XmlTextReader;
@@ -866,16 +866,18 @@ namespace CCVApp
                                     if( reader.Name == "Styles" )
                                     {
                                         finishedParsing = true;
+                                        result = true;
                                     }
                                     break;
                                 }
                             }
                         }
                     } 
-                    catch( Exception ex )
+                    catch( Exception )
                     {
-                        exception = new Exception( ex.Message + string.Format( "\nLine Number: {0}", reader.LineNumber ) );
                     }
+
+                    return result;
                 }
             }
         }

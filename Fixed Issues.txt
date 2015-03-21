@@ -10,6 +10,8 @@ Both
 
 	Notes - Improved the download speed of the latest Note to be nearly instant.
 
+	Network - Rewrote the download system to work off a single worker thread, massively improving phone performance.
+
 iOS
 	Group Finder - Fixed an issue causing a gray space between Zip and Search when the zip code was invalid.
 
@@ -27,3 +29,4 @@ Android
 
 	Group Finder - Fixed an issue causing preventing the nearest group to be auto selected after a search.
 
+	General - Lists are no longer scrollable while the springboard is revealed.

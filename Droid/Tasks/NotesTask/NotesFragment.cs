@@ -285,11 +285,6 @@ namespace Droid
                     TutorialOverlay.SetScaleType( ImageView.ScaleType.CenterCrop );
                     layout.AddView( TutorialOverlay );
 
-                    System.IO.Stream tutorialStream = Activity.BaseContext.Assets.Open( NoteConfig.TutorialOverlayImage );
-
-                    TutorialImage = Android.Graphics.BitmapFactory.DecodeStream( tutorialStream );
-                    TutorialOverlay.SetImageBitmap( TutorialImage );
-
                     return layout;
                 }
 
@@ -628,7 +623,23 @@ namespace Droid
                         {
                             CCVApp.Shared.Network.RockMobileUser.Instance.NoteTutorialShown = true;
 
-                            AnimateTutorialScreen( true );
+                            System.IO.Stream tutorialStream = Activity.BaseContext.Assets.Open( NoteConfig.TutorialOverlayImage );
+
+                            TutorialImage = Android.Graphics.BitmapFactory.DecodeStream( tutorialStream );
+                            TutorialOverlay.SetImageBitmap( TutorialImage );
+
+                            // wait a second before revealing the tutorial overlay
+                            System.Timers.Timer timer = new System.Timers.Timer();
+                            timer.AutoReset = false;
+                            timer.Interval = 750;
+                            timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>
+                                {
+                                    Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                                        {
+                                            AnimateTutorialScreen( true );
+                                        });
+                                };
+                            timer.Start( );
                         }
                     }
                     catch( Exception ex )
@@ -658,7 +669,7 @@ namespace Droid
                         {
                             AnimatingTutorial = true;
 
-                            SimpleAnimator_Float tutorialAnim = new SimpleAnimator_Float( startVal, endVal, .15f, delegate(float percent, object value )
+                            SimpleAnimator_Float tutorialAnim = new SimpleAnimator_Float( startVal, endVal, .33f, delegate(float percent, object value )
                                 {
                                     TutorialOverlay.Alpha = (float)value;
                                 }, 

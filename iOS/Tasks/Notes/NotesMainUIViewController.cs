@@ -718,6 +718,34 @@ namespace iOS
         }
 
         /// <summary>
+        /// Goes thru the series list, and for each image not already downloaded, downloads it.
+        /// Note that this is different than the normal SetupSeriesEntries above, because that will
+        /// only download if the image is corrupt or not loaded, and is "on demand". This is meant to be
+        /// called in advance so the images are ready.
+        /// </summary>
+        public void DownloadImages( )
+        {
+            if ( RockLaunchData.Instance.RequestingNoteDB == false && RockLaunchData.Instance.NeedSeriesDownload( ) == false )
+            {
+                // for each entry in the series, see if it has been downloaded yet. If not, do it.
+                foreach ( Series series in RockLaunchData.Instance.Data.NoteDB.SeriesList )
+                {
+                    //bool fileExists = FileCache.Instance.FileExists( series.Name + "_bb" );
+                    //if ( fileExists == false )
+                    {
+                        FileCache.Instance.DownloadFileToCache( series.BillboardUrl, series.Name + "_bb", null );
+                    }
+
+                    //fileExists = FileCache.Instance.FileExists( series.Name + "_thumb" );
+                    //if( fileExists == false )
+                    {
+                        FileCache.Instance.DownloadFileToCache( series.ThumbnailUrl, series.Name + "_thumb", null );
+                    }
+                }   
+            }
+        }
+
+        /// <summary>
         /// Called when the user pressed the 'Watch' button in the primary cell
         /// </summary>
         public void WatchButtonClicked( )
