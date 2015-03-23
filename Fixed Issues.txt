@@ -4,6 +4,7 @@ Changes
 Both
 	Notes
 		Don't allow editing a user note while it's in the delete state.
+		Quotes can now be defined in NoteScript as an empty element if they only have a citation.
 
 	Login
 		If a field is blank it's now colored red when pressing Login.

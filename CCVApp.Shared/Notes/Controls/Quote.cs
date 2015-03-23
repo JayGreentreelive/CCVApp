@@ -163,7 +163,7 @@ namespace CCVApp
                     }
 
                     bool finishedScripture = false;
-                    while( finishedScripture == false && reader.Read( ) )
+                    while( finishedScripture == false && reader.IsEmptyElement == false && reader.Read( ) )
                     {
                         switch( reader.NodeType )
                         {
@@ -190,7 +190,7 @@ namespace CCVApp
                             case XmlNodeType.EndElement:
                             {
                                 // if we hit the end of our label, we're done.
-                                    if( reader.Name == "Quote" || reader.Name == "Q" )
+                                if( reader.Name == "Quote" || reader.Name == "Q" )
                                 {
                                     finishedScripture = true;
                                 }
