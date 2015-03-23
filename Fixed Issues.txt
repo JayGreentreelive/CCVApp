@@ -2,31 +2,29 @@ Changes
 -------
 
 Both
-	Various UI tweaks
-	
-	OOBE - Fixed an issue causing the notification banner to appear during the OOBE.
+	Notes
+		Don't allow editing a user note while it's in the delete state.
 
-	Notes - Notes are now cached, requiring they only be downloaded once.
-
-	Notes - Improved the download speed of the latest Note to be nearly instant.
-
-	Network - Rewrote the download system to work off a single worker thread, massively improving phone performance.
+	Login
+		If a field is blank it's now colored red when pressing Login.
 
 iOS
-	Group Finder - Fixed an issue causing a gray space between Zip and Search when the zip code was invalid.
+	Notes
+		Fixed an issue causign the back button to be disabled on the Notes WebView when in landscape.
 
-	OOBE - Fixed an issue causing the "Springboard Reveal" to not always work.
+		Fixed an issue causing the message to reload if you went past the user note limit.
 
-	Prayers - Fixed an issue allowing a prayer request to be submitted with no category.
+		Fixed some list popping issues that would occasionally occur.
 
-	Profile - Fixed an issue causing the news to be for the wrong campus after changing your profile's home campus
+		Fixed an issue causing "phantom" user notes to sometimes appear.
 	
+	Profile
+		Fixed an issue causing the profile page to scroll a ridiculous amount on iPhone 5 and newer
 
 Android
-	Login - Fixed an issue causing the tappable space of Username to be too small
+	Notes
+		Fixed an issue causing the nav toolbar to stop working after going into landscape in the notes webview.
 
-	Join Group - Fixed an issue causing the meeting time to be blank in certain cases.
+	OOBE
+		Fixed an issue causing it to occasionally display incorrectly
 
-	Group Finder - Fixed an issue causing preventing the nearest group to be auto selected after a search.
-
-	General - Lists are no longer scrollable while the springboard is revealed.

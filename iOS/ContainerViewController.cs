@@ -165,11 +165,21 @@ namespace iOS
 
         public void UpdateBackButton( UIInterfaceOrientation toInterfaceOrientation )
         {
-            // the back button is only allowed if there's a stack of VCs and 
-            // we are in portrait or unknown mode.
-            if ( SubNavigationController.ViewControllers.Length > 1 && toInterfaceOrientation == UIInterfaceOrientation.Portrait )
+            // if there are VCs in the stack
+            if ( SubNavigationController.ViewControllers.Length > 1 )
             {
-                SubNavToolbar.SetBackButtonEnabled( true );
+                // if there's a current task, ask it
+                if ( CurrentTask != null )
+                {
+                    bool allowBack = CurrentTask.ShouldAllowBackButton( toInterfaceOrientation );
+                    SubNavToolbar.SetBackButtonEnabled( allowBack );
+                }
+                // otherwise, only allow it if we're going to portrait mode
+                else
+                {
+                    bool allowBack = toInterfaceOrientation == UIInterfaceOrientation.Portrait ? true : false;
+                    SubNavToolbar.SetBackButtonEnabled( allowBack );
+                }
             }
             else
             {

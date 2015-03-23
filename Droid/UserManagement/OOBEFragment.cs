@@ -22,6 +22,7 @@ using Rock.Mobile.Util.Strings;
 using Java.Lang.Reflect;
 using CCVApp.Shared.UI;
 using Rock.Mobile.Animation;
+using Android.Graphics;
 
 namespace Droid
 {
@@ -49,7 +50,10 @@ namespace Droid
 
             string imageName = "oobe_ccv_logo.png";
 
-            OOBEView.Create( view, "oobe_splash_bg.png", imageName, new System.Drawing.RectangleF( 0, 0, this.Resources.DisplayMetrics.WidthPixels, this.Resources.DisplayMetrics.HeightPixels ), 
+            Point displaySize = new Point( );
+            Activity.WindowManager.DefaultDisplay.GetSize( displaySize );
+
+            OOBEView.Create( view, "oobe_splash_bg.png", imageName, new System.Drawing.RectangleF( 0, 0, displaySize.X, displaySize.Y ), 
 
                 delegate(int index) 
                 {

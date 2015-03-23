@@ -273,14 +273,35 @@ namespace iOS
 
         public void TryRockBind()
         {
-            // if both fields are valid, attempt a login!
-            if( string.IsNullOrEmpty( UserNameField.Field.Text ) == false &&
-                string.IsNullOrEmpty( PasswordField.Field.Text ) == false )
+            if( ValidateInput( ) )
             {
                 SetUIState( LoginState.Trying );
 
                 RockMobileUser.Instance.BindRockAccount( UserNameField.Field.Text, PasswordField.Field.Text, BindComplete );
             }
+        }
+
+        bool ValidateInput( )
+        {
+            bool inputValid = true;
+
+            uint targetColor = ControlStylingConfig.BG_Layer_Color;
+            if ( string.IsNullOrEmpty( UserNameField.Field.Text ) == true )
+            {
+                targetColor = ControlStylingConfig.BadInput_BG_Layer_Color;
+                inputValid = false;
+            }
+            Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetColor, UserNameField.Background );
+
+            targetColor = ControlStylingConfig.BG_Layer_Color;
+            if ( string.IsNullOrEmpty( PasswordField.Field.Text ) == true )
+            {
+                targetColor = ControlStylingConfig.BadInput_BG_Layer_Color;
+                inputValid = false;
+            }
+            Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetColor, PasswordField.Background );
+
+            return inputValid;
         }
 
         public void TryFacebookBind( )

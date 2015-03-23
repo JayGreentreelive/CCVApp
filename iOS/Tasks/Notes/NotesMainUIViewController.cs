@@ -51,29 +51,46 @@ namespace iOS
 
                 public UILabel BottomBanner { get; set; }
 
-                public SeriesPrimaryCell( UITableViewCellStyle style, string cellIdentifier ) : base( style, cellIdentifier )
+                public SeriesPrimaryCell( CGRect parentSize, UITableViewCellStyle style, string cellIdentifier, UIImage imagePlaceholder ) : base( style, cellIdentifier )
                 {
                     BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
 
                     Image = new UIImageView( );
                     Image.ContentMode = UIViewContentMode.ScaleAspectFit;
                     Image.Layer.AnchorPoint = CGPoint.Empty;
+
+                    // Banner Image
+                    Image.Image = imagePlaceholder;
+                    Image.SizeToFit( );
+
+                    // resize the image to fit the width of the device
+                    nfloat imageAspect = Image.Bounds.Height / Image.Bounds.Width;
+                    Image.Frame = new CGRect( 0, 0, parentSize.Width, parentSize.Width * imageAspect );
                     AddSubview( Image );
 
+
+                    // Create the title
                     Title = new UILabel( );
                     Title.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Large_Font_Bold, ControlStylingConfig.Large_FontSize );
                     Title.Layer.AnchorPoint = CGPoint.Empty;
                     Title.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
                     Title.BackgroundColor = UIColor.Clear;
                     Title.LineBreakMode = UILineBreakMode.TailTruncation;
+                    Title.Text = "PLACEHOLDER";
+                    Title.SizeToFit( );
+                    Title.Frame = new CGRect( 5, Image.Frame.Bottom + 5, parentSize.Width - 10, Title.Frame.Height + 5 );
                     AddSubview( Title );
 
+                    // Date & Speaker
                     Date = new UILabel( );
                     Date.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
                     Date.Layer.AnchorPoint = CGPoint.Empty;
                     Date.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
                     Date.BackgroundColor = UIColor.Clear;
                     Date.LineBreakMode = UILineBreakMode.TailTruncation;
+                    Date.Text = "88/88/8888";
+                    Date.SizeToFit( );
+                    Date.Frame = new CGRect( 5, Title.Frame.Bottom - 5, parentSize.Width, Date.Frame.Height + 5 );
                     AddSubview( Date );
 
                     Speaker = new UILabel( );
@@ -82,8 +99,13 @@ namespace iOS
                     Speaker.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
                     Speaker.BackgroundColor = UIColor.Clear;
                     Speaker.LineBreakMode = UILineBreakMode.TailTruncation;
+                    Speaker.Text = "PLACEHOLDER";
+                    Speaker.SizeToFit( );
+                    Speaker.Frame = new CGRect( parentSize.Width - Speaker.Bounds.Width - 5, Title.Frame.Bottom - 5, parentSize.Width, Speaker.Frame.Height + 5 );
                     AddSubview( Speaker );
 
+
+                    // Watch & Take Notes Buttons
                     WatchButton = new UIButton( UIButtonType.Custom );
                     WatchButton.TouchUpInside += (object sender, EventArgs e) => { Parent.WatchButtonClicked( ); };
                     WatchButton.Layer.AnchorPoint = CGPoint.Empty;
@@ -91,6 +113,8 @@ namespace iOS
                     WatchButton.Layer.BorderColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ).CGColor;
                     WatchButton.Layer.BorderWidth = 1;
                     WatchButton.SizeToFit( );
+                    WatchButton.Bounds = new CGRect( 0, 0, parentSize.Width / 2 + 6, WatchButton.Bounds.Height + 10 );
+                    WatchButton.Layer.Position = new CGPoint( -5, Speaker.Frame.Bottom + 15 );
                     AddSubview( WatchButton );
 
                     WatchButtonIcon = new UILabel( );
@@ -104,7 +128,12 @@ namespace iOS
                     WatchButtonLabel.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
                     WatchButtonLabel.Text = MessagesStrings.Series_Table_Watch;
                     WatchButtonLabel.SizeToFit( );
+
+                    nfloat labelTotalWidth = WatchButtonIcon.Bounds.Width + WatchButtonLabel.Bounds.Width + 5;
+                    WatchButtonIcon.Layer.Position = new CGPoint( (WatchButton.Bounds.Width - labelTotalWidth) / 2 + (WatchButtonIcon.Bounds.Width / 2), WatchButton.Bounds.Height / 2 );
+                    WatchButtonLabel.Layer.Position = new CGPoint( WatchButtonIcon.Frame.Right + (WatchButtonLabel.Bounds.Width / 2), WatchButton.Bounds.Height / 2 );
                     
+
 
                     TakeNotesButton = new UIButton( UIButtonType.Custom );
                     TakeNotesButton.TouchUpInside += (object sender, EventArgs e) => { Parent.TakeNotesButtonClicked( ); };
@@ -114,6 +143,9 @@ namespace iOS
                     TakeNotesButton.Layer.BorderWidth = 1;
                     TakeNotesButton.SizeToFit( );
                     AddSubview( TakeNotesButton );
+
+                    TakeNotesButton.Bounds = new CGRect( 0, 0, parentSize.Width / 2 + 5, TakeNotesButton.Bounds.Height + 10 );
+                    TakeNotesButton.Layer.Position = new CGPoint( (parentSize.Width + 5) - TakeNotesButton.Bounds.Width, Speaker.Frame.Bottom + 15 );
 
 
                     TakeNotesButtonIcon = new UILabel( );
@@ -128,7 +160,12 @@ namespace iOS
                     TakeNotesButtonLabel.Text = MessagesStrings.Series_Table_TakeNotes;
                     TakeNotesButtonLabel.SizeToFit( );
 
+                    labelTotalWidth = TakeNotesButtonIcon.Bounds.Width + TakeNotesButtonLabel.Bounds.Width + 5;
+                    TakeNotesButtonIcon.Layer.Position = new CGPoint( (TakeNotesButton.Bounds.Width - labelTotalWidth) / 2 + (TakeNotesButtonIcon.Bounds.Width / 2), TakeNotesButton.Bounds.Height / 2 );
+                    TakeNotesButtonLabel.Layer.Position = new CGPoint( TakeNotesButtonIcon.Frame.Right + (TakeNotesButtonLabel.Bounds.Width / 2), TakeNotesButton.Bounds.Height / 2 );
 
+
+                    // bottom banner
                     BottomBanner = new UILabel( );
                     BottomBanner.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
                     BottomBanner.Layer.AnchorPoint = new CGPoint( 0, 0 );
@@ -136,6 +173,10 @@ namespace iOS
                     BottomBanner.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
                     BottomBanner.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Table_Footer_Color );
                     BottomBanner.TextAlignment = UITextAlignment.Center;
+
+                    BottomBanner.SizeToFit( );
+                    BottomBanner.Bounds = new CGRect( 0, 0, parentSize.Width, BottomBanner.Bounds.Height + 10 );
+                    BottomBanner.Layer.Position = new CGPoint( 0, TakeNotesButton.Frame.Bottom - 1 );
                     AddSubview( BottomBanner );
                 }
 
@@ -231,7 +272,6 @@ namespace iOS
             UIImage ImageThumbPlaceholder { get; set; }
 
             nfloat PendingPrimaryCellHeight { get; set; }
-            nfloat PendingCellHeight { get; set; }
 
             public TableSource (NotesMainUIViewController parent, List<SeriesEntry> series, UIImage imageMainPlaceholder, UIImage imageThumbPlaceholder )
             {
@@ -239,6 +279,10 @@ namespace iOS
                 SeriesEntries = series;
                 ImageMainPlaceholder = imageMainPlaceholder;
                 ImageThumbPlaceholder = imageThumbPlaceholder;
+
+                // create a dummy cell so we can store the height
+                SeriesPrimaryCell cell = new SeriesPrimaryCell( parent.View.Frame, UITableViewCellStyle.Default, SeriesCell.Identifier, ImageMainPlaceholder );
+                PendingPrimaryCellHeight = cell.BottomBanner.Frame.Bottom;
             }
 
             public override nint RowsInSection (UITableView tableview, nint section)
@@ -276,26 +320,14 @@ namespace iOS
                 {
                     case 0:
                     {
-                        if ( PendingPrimaryCellHeight > 0 )
-                        {
-                            return PendingPrimaryCellHeight;
-                        }
-                        break;
+                        return PendingPrimaryCellHeight;
                     }
 
                     default:
                     {
-
-                        if ( PendingCellHeight > 0 )
-                        {
-                            return PendingCellHeight;
-                        }
-                        break;
+                        return NoteConfig.Series_Main_CellHeight;
                     }
                 }
-
-                // If we don't have the cell's height yet (first render), return the table's height
-                return tableView.Frame.Height;
             }
 
             public override UITableViewCell GetCell (UITableView tableView, NSIndexPath indexPath)
@@ -317,7 +349,7 @@ namespace iOS
                 // if there are no cells to reuse, create a new one
                 if (cell == null)
                 {
-                    cell = new SeriesPrimaryCell( UITableViewCellStyle.Default, SeriesCell.Identifier );
+                    cell = new SeriesPrimaryCell( tableView.Frame, UITableViewCellStyle.Default, SeriesCell.Identifier, ImageMainPlaceholder );
                     cell.Parent = this;
 
                     // take the parent table's width so we inherit its width constraint
@@ -330,40 +362,21 @@ namespace iOS
 
                 // Banner Image
                 cell.Image.Image = SeriesEntries[ 0 ].mBillboard != null ? SeriesEntries[ 0 ].mBillboard : ImageMainPlaceholder;
-                cell.Image.SizeToFit( );
-
-                // resize the image to fit the width of the device
-                nfloat imageAspect = cell.Image.Bounds.Height / cell.Image.Bounds.Width;
-                cell.Image.Frame = new CGRect( 0, 
-                                               0, 
-                                               cell.Bounds.Width, 
-                                               cell.Bounds.Width * imageAspect );
-
 
                 // Create the title
                 cell.Title.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Name;
                 cell.Title.SizeToFit( );
-                cell.Title.Frame = new CGRect( 5, cell.Image.Frame.Bottom + 5, cell.Frame.Width - 10, cell.Title.Frame.Height + 5 );
 
 
                 // Date & Speaker
                 cell.Date.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Date;
                 cell.Date.SizeToFit( );
-                cell.Date.Frame = new CGRect( 5, cell.Title.Frame.Bottom - 5, cell.Frame.Width, cell.Date.Frame.Height + 5 );
 
                 cell.Speaker.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Speaker;
                 cell.Speaker.SizeToFit( );
-                cell.Speaker.Frame = new CGRect( cell.Frame.Width - cell.Speaker.Bounds.Width - 5, cell.Title.Frame.Bottom - 5, cell.Frame.Width, cell.Speaker.Frame.Height + 5 );
 
 
                 // Watch Button & Labels
-                cell.WatchButton.Bounds = new CGRect( 0, 0, cell.Frame.Width / 2 + 6, cell.WatchButton.Bounds.Height + 10 );
-                cell.WatchButton.Layer.Position = new CGPoint( -5, cell.Speaker.Frame.Bottom + 15 );
-
-                nfloat labelTotalWidth = cell.WatchButtonIcon.Bounds.Width + cell.WatchButtonLabel.Bounds.Width + 5;
-                cell.WatchButtonIcon.Layer.Position = new CGPoint( (cell.WatchButton.Bounds.Width - labelTotalWidth) / 2 + (cell.WatchButtonIcon.Bounds.Width / 2), cell.WatchButton.Bounds.Height / 2 );
-                cell.WatchButtonLabel.Layer.Position = new CGPoint( cell.WatchButtonIcon.Frame.Right + (cell.WatchButtonLabel.Bounds.Width / 2), cell.WatchButton.Bounds.Height / 2 );
-
                 // disable the button if there's no watch URL
                 if ( string.IsNullOrEmpty( SeriesEntries[ 0 ].Series.Messages[ 0 ].WatchUrl ) )
                 {
@@ -376,13 +389,6 @@ namespace iOS
 
 
                 // Take Notes Button & Labels
-                cell.TakeNotesButton.Bounds = new CGRect( 0, 0, cell.Frame.Width / 2 + 5, cell.TakeNotesButton.Bounds.Height + 10 );
-                cell.TakeNotesButton.Layer.Position = new CGPoint( (cell.Frame.Width + 5) - cell.TakeNotesButton.Bounds.Width, cell.Speaker.Frame.Bottom + 15 );
-
-                labelTotalWidth = cell.TakeNotesButtonIcon.Bounds.Width + cell.TakeNotesButtonLabel.Bounds.Width + 5;
-                cell.TakeNotesButtonIcon.Layer.Position = new CGPoint( (cell.TakeNotesButton.Bounds.Width - labelTotalWidth) / 2 + (cell.TakeNotesButtonIcon.Bounds.Width / 2), cell.TakeNotesButton.Bounds.Height / 2 );
-                cell.TakeNotesButtonLabel.Layer.Position = new CGPoint( cell.TakeNotesButtonIcon.Frame.Right + (cell.TakeNotesButtonLabel.Bounds.Width / 2), cell.TakeNotesButton.Bounds.Height / 2 );
-
                 // disable the button if there's no note URL
                 if ( string.IsNullOrEmpty( SeriesEntries[ 0 ].Series.Messages[ 0 ].NoteUrl ) )
                 {
@@ -393,14 +399,7 @@ namespace iOS
                     cell.ToggleTakeNotesButton( true );
                 }
 
-
-                // Bottom Banner
-                cell.BottomBanner.SizeToFit( );
-                cell.BottomBanner.Bounds = new CGRect( 0, 0, cell.Bounds.Width, cell.BottomBanner.Bounds.Height + 10 );
-                cell.BottomBanner.Layer.Position = new CGPoint( 0, cell.TakeNotesButton.Frame.Bottom - 1 );
-
                 PendingPrimaryCellHeight = cell.BottomBanner.Frame.Bottom;
-
                 return cell;
             }
 
@@ -429,13 +428,13 @@ namespace iOS
                 // force the image to be sized according to the height of the cell
                 cell.Image.Frame = new CGRect( 0, 
                                                    0, 
-                                                   NoteConfig.Series_Main_CellImageWidth, 
-                                                   NoteConfig.Series_Main_CellImageHeight );
+                                                   NoteConfig.Series_Main_CellWidth, 
+                                                   NoteConfig.Series_Main_CellHeight );
 
                 nfloat availableTextWidth = cell.Bounds.Width - cell.Chevron.Bounds.Width - cell.Image.Bounds.Width - 10;
 
                 // Chevron
-                cell.Chevron.Layer.Position = new CGPoint( cell.Bounds.Width - (cell.Chevron.Bounds.Width / 2) - 5, (NoteConfig.Series_Main_CellImageHeight) / 2 );
+                cell.Chevron.Layer.Position = new CGPoint( cell.Bounds.Width - (cell.Chevron.Bounds.Width / 2) - 5, (NoteConfig.Series_Main_CellHeight) / 2 );
 
                 // Create the title
                 cell.Title.Text = SeriesEntries[ row ].Series.Name;
@@ -447,13 +446,11 @@ namespace iOS
 
                 // Position the Title & Date in the center to the right of the image
                 nfloat totalTextHeight = cell.Title.Bounds.Height + cell.Date.Bounds.Height - 1;
-                cell.Title.Frame = new CGRect( cell.Image.Frame.Right + 10, (NoteConfig.Series_Main_CellImageHeight - totalTextHeight) / 2, availableTextWidth - 5, cell.Title.Frame.Height );
+                cell.Title.Frame = new CGRect( cell.Image.Frame.Right + 10, (NoteConfig.Series_Main_CellHeight - totalTextHeight) / 2, availableTextWidth - 5, cell.Title.Frame.Height );
                 cell.Date.Frame = new CGRect( cell.Title.Frame.Left, cell.Title.Frame.Bottom - 6, availableTextWidth - 5, cell.Date.Frame.Height + 5 );
 
                 // add the seperator to the bottom
                 cell.Seperator.Frame = new CGRect( 0, cell.Image.Frame.Bottom - 1, cell.Bounds.Width, 1 );
-
-                PendingCellHeight = cell.Image.Frame.Bottom;
 
                 return cell;
             }

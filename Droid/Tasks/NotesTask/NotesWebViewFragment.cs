@@ -84,13 +84,13 @@ namespace Droid
                     if( newConfig.Orientation == Android.Content.Res.Orientation.Landscape )
                     {
                         ParentTask.NavbarFragment.EnableSpringboardRevealButton( false );
-                        ParentTask.NavbarFragment.ToggleFullscreen( true );
-                        ParentTask.NavbarFragment.NavToolbar.Reveal( false );
+                        //ParentTask.NavbarFragment.ToggleFullscreen( true );
+                        //ParentTask.NavbarFragment.NavToolbar.Reveal( false );
                     }
                     else
                     {
                         ParentTask.NavbarFragment.EnableSpringboardRevealButton( true );
-                        ParentTask.NavbarFragment.ToggleFullscreen( false );
+                        //ParentTask.NavbarFragment.ToggleFullscreen( false );
                     }
                 }
 

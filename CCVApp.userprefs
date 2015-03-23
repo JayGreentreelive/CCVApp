@@ -1,11 +1,35 @@
 ﻿<Properties StartupItem="iOS/iOS.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhone4s.8.2" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/Tasks/Notes/NotesViewController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="CCVApp.Shared/Notes/Controls/UserNote.cs">
     <Files>
-      <File FileName="Droid/Tasks/NotesTask/NotesFragment.cs" Line="631" Column="29" />
-      <File FileName="Droid/Springboard.cs" Line="839" Column="37" />
-      <File FileName="iOS/Tasks/Notes/NotesViewController.cs" Line="666" Column="17" />
+      <File FileName="iOS/Tasks/Task.cs" Line="155" Column="9" />
+      <File FileName="CCVApp.Shared/Notes/Controls/UserNote.cs" Line="110" Column="35" />
+      <File FileName="CCVApp.Shared/Config.cs" Line="395" Column="31" />
+      <File FileName="CCVApp.Shared/Notes/Controls/Note.cs" Line="63" Column="47" />
+      <File FileName="iOS/Tasks/Notes/NotesViewController.cs" Line="693" Column="34" />
     </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="CCVApp.Shared" expanded="True">
+            <Node name="Notes" expanded="True">
+              <Node name="Controls" expanded="True">
+                <Node name="UserNote.cs" selected="True" />
+              </Node>
+            </Node>
+          </Node>
+          <Node name="iOS" expanded="True">
+            <Node name="Tasks" expanded="True">
+              <Node name="Notes" expanded="True" />
+            </Node>
+            <Node name="UserManagement" expanded="True" />
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />

@@ -399,7 +399,7 @@ namespace iOS
         {
             base.ViewDidLayoutSubviews();
 
-            ScrollView.ContentSize = new CGSize( 0, View.Bounds.Height + ( View.Bounds.Height * .75f ) );
+            ScrollView.ContentSize = new CGSize( 0, LogoutButton.Frame.Bottom + ( View.Bounds.Height * .25f ) );
 
             // setup the header shadow
             UIBezierPath shadowPath = UIBezierPath.FromRect( HeaderView.Bounds );

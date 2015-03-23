@@ -202,5 +202,25 @@ namespace iOS
                 return base.GetSupportedInterfaceOrientations( );
             }
         }
+
+        public override bool ShouldAllowBackButton(UIInterfaceOrientation toInterfaceOrientation)
+        {
+            // if we're going to portrait, it's fine
+            if ( toInterfaceOrientation == UIInterfaceOrientation.Portrait )
+            {
+                return true;
+            }
+            else
+            {
+                // otherwise, the one exception is if the webview is open
+                if ( ( ActiveViewController as NotesWebViewController ) != null )
+                {
+                    return true;
+                }
+
+                // if it isn't, we shouldn't allow it
+                return false;
+            }
+        }
     }
 }

@@ -379,13 +379,25 @@ namespace CCVApp
                 /// </summary>
                 public const string UserNote_Icon = "";
 
+                /// <summary>
+                /// The color of the user note anchor (which is what the user interacts with to move, open, close and delete the note)
+                /// </summary>
                 public const uint UserNote_AnchorColor = 0x77777777;
-                public const uint UserNote_DeleteAnchorColor = 0xFF0000FF;
 
                 /// <summary>
-                /// The size of the font/icon when displaying the user note icon.
+                /// The color of the user note anchor (which is what the user interacts with to move, open, close and delete the note)
+                /// when the note is in delete mode.
+                /// </summary>
+                public const uint UserNote_DeleteAnchorColor = 0x7A1315FF;
+
+                /// <summary>
+                /// The size of the font/icon when the usernote is OPEN.
                 /// </summary>
                 public const int UserNote_IconOpenSize = 30;
+
+                /// <summary>
+                /// The size of the font/icon when the usernote is CLOSED.
+                /// </summary>
                 public const int UserNote_IconClosedSize = 46;
 
                 /// <summary>
@@ -442,12 +454,12 @@ namespace CCVApp
                 /// <summary>
                 /// The height that an image should be within the cell
                 /// </summary>
-                public const float Series_Main_CellImageHeight = 70;
+                public const float Series_Main_CellHeight = 70;
 
                 /// <summary>
                 /// The width that an image should be within the cell
                 /// </summary>
-                public const float Series_Main_CellImageWidth = 70;
+                public const float Series_Main_CellWidth = 70;
 
                 /// <summary>
                 /// Make Private
@@ -550,9 +562,6 @@ namespace CCVApp
 
                 public const uint Springboard_ActiveElementColor = 0xFFFFFFFF;
 
-                /// <summary>
-                /// The color for placeholder text in fields the user can type into.
-                /// </summary>
                 public const uint Springboard_InActiveElementColor = 0xA7A7A7FF;
 
                 public const uint PrimaryNavBarBackgroundColor = 0x191919FF;

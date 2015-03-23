@@ -400,7 +400,6 @@ namespace Droid
 
                 public void OnScrollChanged( float scrollDelta )
                 {
-
                     float scrollPerc = (float) ScrollView.ScrollY / (float) ScrollViewLayout.LayoutParameters.Height;
                     if ( scrollPerc < .10f )
                     {

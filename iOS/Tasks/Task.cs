@@ -156,5 +156,21 @@ namespace iOS
         public virtual void AppWillTerminate( )
         {
         }
+
+        /// <summary>
+        /// Lets the Task decide if the back button should be enabled
+        /// </summary>
+        /// <returns><c>true</c>, if allow back button was shoulded, <c>false</c> otherwise.</returns>
+        public virtual bool ShouldAllowBackButton( UIInterfaceOrientation toInterfaceOrientation )
+        {
+            // if we're going to portrait, it's fine
+            if ( toInterfaceOrientation == UIInterfaceOrientation.Portrait )
+            {
+                return true;
+            }
+
+            // otherwise don't allow it
+            return false;
+        }
     }
 }

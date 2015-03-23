@@ -266,7 +266,7 @@ namespace CCVApp
                     // setup the delete button
                     DeleteButton.Text = NoteConfig.UserNote_DeleteIcon;
                     DeleteButton.TextColor = NoteConfig.UserNote_DeleteIconColor;
-                    DeleteButton.SetFont( ControlStylingConfig.Icon_Font_Primary, NoteConfig.UserNote_DeleteIconSize );
+                    DeleteButton.SetFont( ControlStylingConfig.Icon_Font_Secondary, NoteConfig.UserNote_DeleteIconSize );
                     DeleteButton.Hidden = true;
                     DeleteButton.SizeToFit( );
                     DeleteButton.BackgroundColor = 0;
@@ -490,6 +490,8 @@ namespace CCVApp
                 void ShowDeleteUI( )
                 {
                     DeleteButton.Hidden = false;
+                    TextView.UserInteractionEnabled = false;
+                    TextView.ResignFirstResponder( );
 
                     SimpleAnimator_Color colorAnimator = new SimpleAnimator_Color( NoteConfig.UserNote_AnchorColor, NoteConfig.UserNote_DeleteAnchorColor, .15f, delegate(float percent, object value )
                         {
@@ -523,6 +525,7 @@ namespace CCVApp
                     {
                         DeleteEnabled = false;
                         Console.WriteLine( "Clearing Delete Mode" );
+                        TextView.UserInteractionEnabled = true;
 
                         DeleteButton.Hidden = true;
 

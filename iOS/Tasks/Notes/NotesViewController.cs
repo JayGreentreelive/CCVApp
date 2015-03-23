@@ -264,6 +264,11 @@ namespace iOS
 
 				// re-create our notes with the new dimensions
 				PrepareCreateNotes( );
+
+                if ( Orientation != UIDeviceOrientation.Portrait )
+                {
+                    AnimateTutorialScreen( false );
+                }
 			}
 
             UIApplication.SharedApplication.IdleTimerDisabled = true;
@@ -596,7 +601,8 @@ namespace iOS
                     }
                     catch( Exception e )
                     {
-                        ReportException( "", e );
+                        // we know this exception is the too many notes one. Just show it.
+                        SpringboardViewController.DisplayError( "Messages", e.Message );
                     }
                 }
             }

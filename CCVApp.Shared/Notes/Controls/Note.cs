@@ -87,14 +87,14 @@ namespace CCVApp
                 /// while the timer is still pending
                 /// </summary>
                 /// <value><c>true</c> if loading note state; otherwise, <c>false</c>.</value>
-                protected bool LoadingNoteState { get; set; }
+                //protected bool LoadingNoteState { get; set; }
 
                 /// <summary>
                 /// To speed up note generation, we delay note state loading with a timer.
                 /// This allows the notes to draw and then the 500ms file i/o to occur after.
                 /// </summary>
                 /// <value>The load state timer.</value>
-                protected System.Timers.Timer LoadStateTimer { get; set; }
+                //protected System.Timers.Timer LoadStateTimer { get; set; }
 
                 /// <summary>
                 /// Attempt to download the note and its style sheet. If they are already downloaded, the completion delegate will be called immediately.
@@ -214,7 +214,7 @@ namespace CCVApp
                 {
                     // setup our note timer that will wait to load our notes until AFTER the notes are created,
                     // as opposed to the same tick. This cuts down 500ms from the create time.
-                    LoadStateTimer = new System.Timers.Timer();
+                    /*LoadStateTimer = new System.Timers.Timer();
                     LoadStateTimer.AutoReset = false;
                     LoadStateTimer.Interval = 25;
                     LoadStateTimer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e) => 
@@ -223,7 +223,7 @@ namespace CCVApp
                             // Although the timer fires on a seperate thread, because we queue the reveal
                             // on the main (UI) thread, we don't have to worry about race conditions.
                             Rock.Mobile.Threading.Util.PerformOnUIThread( delegate { LoadState( UserNotePath ); } );
-                        };
+                        };*/
 
                     UserNotePath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), userNoteFileName);
 
@@ -391,11 +391,12 @@ namespace CCVApp
                     AddControlsToView( );
 
                     // kick off the timer that will load the user note state
-                    if( LoadingNoteState == false )
+                    /*if( LoadingNoteState == false )
                     {
                         LoadingNoteState = true;
                         LoadStateTimer.Start( );
-                    }
+                    }*/
+                    LoadState( UserNotePath );
                 }
 
                 protected void AddControlsToView( )
@@ -597,7 +598,7 @@ namespace CCVApp
                 {
                     // if we're waiting for our notes to load, don't allow saving! We'll
                     // save a blank state over our real notes!
-                    if( LoadingNoteState == false )
+                    //if( LoadingNoteState == false )
                     {
                         // open a stream
                         using (StreamWriter writer = new StreamWriter(UserNotePath, false))
@@ -644,7 +645,7 @@ namespace CCVApp
                 protected void LoadState( string filePath )
                 {
                     // sanity check to make sure the notes were requested to load.
-                    if( LoadingNoteState == true )
+                    //if( LoadingNoteState == true )
                     {
                         NoteState noteState = null;
 
@@ -711,7 +712,7 @@ namespace CCVApp
                             }
                         }
 
-                        LoadingNoteState = false;
+                        //LoadingNoteState = false;
                     }
                 }
 

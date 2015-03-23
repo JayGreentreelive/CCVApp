@@ -200,8 +200,6 @@ namespace CCVApp
 
                             case XmlNodeType.Text:
                             {
-                                lastControlWasReveal = false;
-
                                 // give the text a style that doesn't include things it shouldn't inherit
                                 Styles.Style textStyle = mStyle;
                                 textStyle.mBorderColor = null;
@@ -217,15 +215,6 @@ namespace CCVApp
                                     text = text.TrimStart( ' ' );
                                 }
 
-                                // Note - Treating the entire block of text as a single NoteText has an advantage and disadvantage.
-                                // The advantage is it's extremely fast. It causes note creation to go from 1500ms to about 800ms in debug.
-                                // The disadvantage is we can't have quite as precise word wrapping. So, if the ENTIRE block of text doesn't fit on the line,
-                                // it will be forced to the line below. This is extremely rare tho, and I've never seen it in normal notes.
-                                // If it does become an issue, we can revert to the slower code below.
-                                NoteText textLabel = new NoteText( new CreateParams( this, availableWidth, parentParams.Height, ref textStyle ), text );
-                                ChildControls.Add( textLabel );
-
-                                /*
                                 // now break it into words so we can do word wrapping
                                 string[] words = text.Split( ' ' );
                                 foreach( string word in words )
@@ -237,10 +226,10 @@ namespace CCVApp
                                         // need the first label after that to have a leading space so it doesn't bunch up against
                                         // the control
                                         string nextWord = word;
-                                        if( didAddInteractiveControl )
+                                        if( lastControlWasReveal )
                                         {
                                             nextWord = word.Insert(0, " ");
-                                            didAddInteractiveControl = false;
+                                            lastControlWasReveal = false;
                                         }
 
                                         NoteText wordLabel = new NoteText( new CreateParams( this, availableWidth, parentParams.Height, ref textStyle ), nextWord + " " );
@@ -248,7 +237,17 @@ namespace CCVApp
                                         ChildControls.Add( wordLabel );
                                     }
                                 }
-                                */
+
+                                lastControlWasReveal = false;
+
+
+                                // Note - Treating the entire block of text as a single NoteText has an advantage and disadvantage.
+                                // The advantage is it's extremely fast. It causes note creation to go from 1500ms to about 800ms in debug.
+                                // The disadvantage is we can't have quite as precise word wrapping. So, if the ENTIRE block of text doesn't fit on the line,
+                                // it will be forced to the line below. This is extremely rare tho, and I've never seen it in normal notes.
+                                // If it does become an issue, we can revert to the slower code below.
+                                //NoteText textLabel = new NoteText( new CreateParams( this, availableWidth, parentParams.Height, ref textStyle ), text );
+                                //ChildControls.Add( textLabel );
 
                                 break;
                             }
