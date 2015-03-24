@@ -232,7 +232,11 @@ namespace iOS
         {
             base.ViewDidLayoutSubviews();
 
-            ScrollView.ContentSize = new CGSize( 0, View.Bounds.Height + ( View.Bounds.Height * .25f ) );
+            // for the scroll size, if the content is larger than the screen, we'll take the bottom
+            // of the content plus some padding. Otherwise, we'll just use the window height plus a tiny bit so there's
+            // a subtle scroll effect
+            nfloat controlBottom = DoneButton.Frame.Bottom + ( View.Bounds.Height * .25f );
+            ScrollView.ContentSize = new CGSize( 0, (nfloat) Math.Max( controlBottom, View.Bounds.Height * 1.05f ) );
 
             // setup the header shadow
             UIBezierPath shadowPath = UIBezierPath.FromRect( HeaderView.Bounds );

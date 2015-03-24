@@ -29,7 +29,7 @@ namespace CCVApp.Shared.UI
             float height = 100;
             BusyIndicator.Frame = new RectangleF( (frame.Width - width) / 2, (frame.Height - height) / 2, width, height );
             BusyIndicator.Color = 0x999999FF;
-            BusyIndicator.BackgroundColor = 0xFFFFFFFF;
+            BusyIndicator.BackgroundColor = 0;
 
             // default to hidden
             SetOpacity( 0.00f );

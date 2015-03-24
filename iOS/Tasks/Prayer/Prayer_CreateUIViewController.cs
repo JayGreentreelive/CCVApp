@@ -371,7 +371,8 @@ namespace iOS
             base.ViewDidLayoutSubviews();
 
             // once all the controls are laid out, update the content size to provide a little "bounce"
-            ScrollView.ContentSize = new CGSize( ScrollView.Bounds.Width, ScrollView.Bounds.Height + ( ScrollView.Bounds.Height * .25f ) );
+            nfloat controlBottom = SubmitButton.Frame.Bottom + ( View.Bounds.Height * .25f );
+            ScrollView.ContentSize = new CGSize( 0, (nfloat) Math.Max( controlBottom, View.Bounds.Height * 1.05f ) );
         }
 
         void EnableControls( bool enabled )

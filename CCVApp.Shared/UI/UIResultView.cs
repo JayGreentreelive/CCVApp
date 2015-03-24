@@ -152,7 +152,7 @@ namespace CCVApp.Shared.UI
 
             DoneButton.Text = buttonLabel;
             DoneButton.SizeToFit( );
-            float doneWidth = DoneButton.Frame.Width + Rock.Mobile.Graphics.Util.UnitToPx( 122 );
+            float doneWidth = Rock.Mobile.Graphics.Util.UnitToPx( 122 );
             DoneButton.Frame = new RectangleF( ( View.Frame.Width - doneWidth ) / 2, ResultBackground.Frame.Bottom + Rock.Mobile.Graphics.Util.UnitToPx( 10 ), doneWidth, DoneButton.Frame.Height );
 
             SetOpacity( 1.00f );

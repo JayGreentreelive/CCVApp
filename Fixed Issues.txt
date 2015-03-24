@@ -9,6 +9,8 @@ Both
 	Login
 		If a field is blank it's now colored red when pressing Login.
 
+	Group Registration now works
+
 iOS
 	Notes
 		Fixed an issue causign the back button to be disabled on the Notes WebView when in landscape.
@@ -29,3 +31,5 @@ Android
 	OOBE
 		Fixed an issue causing it to occasionally display incorrectly
 
+	General
+		Fixed the apperance of buttons on certain pages.

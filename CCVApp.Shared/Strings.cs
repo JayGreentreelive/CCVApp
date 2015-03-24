@@ -185,6 +185,9 @@ namespace CCVApp.Shared
             public const string JoinGroup_EmailPlaceholder = "Email";
             public const string JoinGroup_CellPhonePlaceholder = "Cell Phone";
             public const string JoinGroup_JoinButtonLabel = "Join Group";
+
+            public const string JoinGroup_RegisterSuccess = "You're registered with {0}. Expect to be contacted in the next few days.";
+            public const string JoinGroup_RegisterFailed = "There was a problem registering for {0}. Check your network settings and try again.";
         }
 
         public class MessagesStrings

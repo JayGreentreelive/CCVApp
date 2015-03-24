@@ -5,6 +5,7 @@ using CCVApp.Shared.Config;
 using UIKit;
 using Foundation;
 using CCVApp.Shared.UI;
+using CoreGraphics;
 
 namespace iOS
 {
@@ -59,7 +60,8 @@ namespace iOS
         {
             base.ViewDidLayoutSubviews();
 
-            ScrollView.ContentSize = new CoreGraphics.CGSize( View.Frame.Width, View.Frame.Height * 1.25f );
+            nfloat controlBottom = JoinGroupView.GetControlBottom( ) + ( View.Bounds.Height * .25f );
+            ScrollView.ContentSize = new CGSize( 0, (nfloat) Math.Max( controlBottom, View.Bounds.Height * 1.05f ) );
         }
 
         public override void TouchesEnded(NSSet touches, UIEvent evt)

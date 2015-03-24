@@ -4,12 +4,16 @@ using System.Drawing;
 using CCVApp.Shared.Config;
 using CCVApp.Shared.Strings;
 using Rock.Mobile.Animation;
+using CCVApp.Shared.Network;
+using Rock.Mobile.Util.Strings;
 
 namespace CCVApp.Shared.UI
 {
     public class UIJoinGroup
     {
         public PlatformView View { get; set; }
+
+        int GroupID { get; set; }
 
         PlatformLabel GroupTitle { get; set; }
 
@@ -161,10 +165,6 @@ namespace CCVApp.Shared.UI
             JoinButton.Text = ConnectStrings.JoinGroup_JoinButtonLabel;
             JoinButton.SizeToFit( );
 
-
-            // Create our blocker view
-            BlockerView = new UIBlockerView( masterView, View.Frame );
-
             // Create our results view overlay
             ResultView = new UIResultView( masterView, View.Frame, OnResultViewDone );
 
@@ -176,6 +176,14 @@ namespace CCVApp.Shared.UI
                 ControlStylingConfig.TextField_PlaceholderTextColor,
                 ControlStylingConfig.Button_BGColor, 
                 ControlStylingConfig.Button_TextColor );
+
+            // Create our blocker view
+            BlockerView = new UIBlockerView( masterView, View.Frame );
+        }
+
+        public float GetControlBottom( )
+        {
+            return JoinButton.Frame.Bottom;
         }
 
         void OnResultViewDone( )
@@ -185,6 +193,9 @@ namespace CCVApp.Shared.UI
 
         public void DisplayView( string groupTitle, string distance, string meetingTime, int groupId )
         {
+            // store the group ID as we'll need it if they hit submit
+            GroupID = groupId;
+
             // set the group title
             GroupTitle.Text = groupTitle;
             GroupTitle.Frame = new RectangleF( 0, 0, View.Frame.Width, Rock.Mobile.Graphics.Util.UnitToPx( 50 ) );
@@ -280,15 +291,30 @@ namespace CCVApp.Shared.UI
         {
             if ( ValidateInput( ) )
             {
-                //BlockerView.Show( );
+                BlockerView.Show( );
 
-                //TODO: Call an end point to send off the join email
-                //BlockerView.Hide( );
+                int personAliasId = CCVApp.Shared.Network.RockMobileUser.Instance.LoggedIn == true ? CCVApp.Shared.Network.RockMobileUser.Instance.Person.Id : 0;
 
-                /*ResultView.Display( RegisterStrings.RegisterStatus_Success, 
-                    ControlStylingConfig.Result_Symbol_Success, 
-                    RegisterStrings.RegisterResult_Success,
-                    GeneralStrings.Done );*/
+                RockApi.Instance.JoinGroup( personAliasId, FirstName.Text, LastName.Text, SpouseName.Text, Email.Text, CellPhone.Text.AsNumeric( ), GroupID, GroupTitle.Text,
+                    delegate(System.Net.HttpStatusCode statusCode, string statusDescription )
+                    {
+                        BlockerView.Hide( );
+
+                        if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
+                        {
+                            ResultView.Display( RegisterStrings.RegisterStatus_Success, 
+                                ControlStylingConfig.Result_Symbol_Success, 
+                                string.Format( ConnectStrings.JoinGroup_RegisterSuccess, GroupTitle.Text ),
+                                GeneralStrings.Done );
+                        }
+                        else
+                        {
+                            ResultView.Display( RegisterStrings.RegisterStatus_Failed, 
+                                ControlStylingConfig.Result_Symbol_Failed, 
+                                string.Format( ConnectStrings.JoinGroup_RegisterFailed, GroupTitle.Text ),
+                                GeneralStrings.Done );
+                        }
+                    } );
             }
         }
     }

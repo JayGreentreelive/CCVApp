@@ -146,6 +146,11 @@ namespace CCVApp
                 const string GetCampusesEndPoint = "api/Campuses/";
 
                 /// <summary>
+                /// End point for submitting a group join request.
+                /// </summary>
+                const string JoinGroupEndPoint = "api/Workflows/WorkflowEntry/{0}?PersonAliasId={1}&FirstName={2}&LastName={3}&SpouseName={4}&Email={5}&MobilePhone={6}&GroupId={7}&GroupName={8}";
+
+                /// <summary>
                 /// The header key used for passing up the mobile app authorization token.
                 /// </summary>
                 const string AuthorizationTokenHeaderKey = "Authorization-Token";
@@ -359,6 +364,14 @@ namespace CCVApp
                                 }
                             }
                         } );*/
+                }
+
+                public void JoinGroup( int personAliasId, string firstName, string lastName, string spouseName, string email, string phone, int groupId, string groupName, HttpRequest.RequestResult resultHandler )
+                {
+                    RestRequest request = GetRockRestRequest( Method.POST );
+
+                    string requestString = string.Format( JoinGroupEndPoint, 52, personAliasId, firstName, lastName, spouseName, email, phone, groupId, groupName );
+                    Request.ExecuteAsync( BaseUrl + requestString, request, resultHandler );
                 }
 
                 void CreateProfile( Rock.Client.Person person, HttpRequest.RequestResult resultHandler )
@@ -643,16 +656,6 @@ namespace CCVApp
                     // get the raw response
                     Request.ExecuteAsync< List<Rock.Client.Group> >( requestUrl, request, resultHandler);
                 }
-
-                /*public void GetGroupsByLocation( int geoFenceGroupTypeId, int groupTypeId, string street, string city, string state, string zip, HttpRequest.RequestResult< List<Rock.Client.Group> > resultHandler )
-                {
-                    // request a profile by the username. If no username is specified, we'll use the logged in user's name.
-                    RestRequest request = GetRockRestRequest( Method.GET );
-                    string requestUrl = BaseUrl + string.Format( GetGroupsByLocationEndPoint, geoFenceGroupTypeId, groupTypeId, street, city, state, zip );
-
-                    // get the raw response
-                    Request.ExecuteAsync< List<Rock.Client.Group> >( requestUrl, request, resultHandler);
-                }*/
 
                 public void GetLocationFromAddress( string street, string city, string state, string zip, HttpRequest.RequestResult<Rock.Client.Location> resultHandler )
                 {
