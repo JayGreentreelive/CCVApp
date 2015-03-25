@@ -90,34 +90,25 @@ namespace iOS
             else
             {
                 ActivityIndicator.RemoveFromSuperview( );
-            }
-        }
 
-        public override void ViewDidLayoutSubviews( )
-        {
-            base.ViewDidLayoutSubviews( );
+                // total hack to fix an issue where hitting "done" on the full screen movie player
+                // throws the phone into portrait WITHOUT SENDING US ALL EVENTS.
 
-            // if the orientation is portrait, we need to limit the height to the same as the width so we don't
-            // overlap the bottom nav toolbar.
-            if ( UIApplication.SharedApplication.StatusBarOrientation == UIInterfaceOrientation.Portrait )
-            {
-                MoviePlayer.View.Frame = new CGRect( 0, ( View.Frame.Height - View.Frame.Width ) / 2, View.Frame.Width, View.Frame.Width );
-                MoviePlayer.SetFullscreen( false, true );
+                // certain iOS controllers (here's looking at you MovieController) cause the device
+                // orientation to change without notifying us when they finish being fullscreen.
 
-                // force the back button to be enabled. We shouldn't have to, but iOS isn't
-                // giving us a WillRotate from landscape to portrait because the movie player is fullscreen.
-                Task.NavToolbar.SetBackButtonEnabled( true );
-            }
-            else
-            {
-                // if we goto landscape throw the view into fullscreen
-                if ( MoviePlayer.Fullscreen != true )
+                // The specific bug this fixes, is if you are in landscape watching a video fullscreen, and tap Done,
+                // the phone goes to portait without notifying us, so the springboard button would remain disabled.
+                if ( SpringboardViewController.IsDeviceLandscape( ) )
                 {
-                    MoviePlayer.SetFullscreen( true, true );
+                    SpringboardViewController.ForcePortaitModeHack( );
+
+                    Task.NavToolbar.Reveal( true );
+                    Task.NavToolbar.SetBackButtonEnabled( true );
                 }
             }
 
-            ActivityIndicator.Layer.Position = new CGPoint( ( View.Frame.Width - ActivityIndicator.Frame.Width ) / 2, ( View.Frame.Height - ActivityIndicator.Frame.Height ) / 2 );
+            UpdateLayout( );
         }
 
         public override void ViewDidAppear(bool animated)
@@ -142,6 +133,23 @@ namespace iOS
             }
         }
 
+        public override void ViewDidLayoutSubviews()
+        {
+            base.ViewDidLayoutSubviews();
+
+            if ( SpringboardViewController.IsDeviceLandscape( ) )
+            {
+                Task.NavToolbar.Reveal( false );
+            }
+            else
+            {
+                Task.NavToolbar.Reveal( true );
+                Task.NavToolbar.SetBackButtonEnabled( true );
+            }
+
+            UpdateLayout( );
+        }
+
         public override void ViewWillDisappear(bool animated)
         {
             base.ViewWillDisappear(animated);
@@ -158,6 +166,36 @@ namespace iOS
 
                 ObserverHandles.Clear( );
             }
+        }
+
+        public override void LayoutChanging()
+        {
+            base.LayoutChanging();
+
+            UpdateLayout( );
+
+            // if we goto landscape throw the view into fullscreen
+            if ( SpringboardViewController.IsDeviceLandscape( ) )
+            {
+                if ( MoviePlayer.Fullscreen != true )
+                {
+                    MoviePlayer.SetFullscreen( true, false );
+                }
+            }
+            else
+            {
+                MoviePlayer.SetFullscreen( false, false );
+            }
+        }
+
+        void UpdateLayout( )
+        {
+            MoviePlayer.View.Frame = new CGRect( 0, ( SpringboardViewController.TraitSize.Height - SpringboardViewController.TraitSize.Width ) / 2, 
+                                                    SpringboardViewController.TraitSize.Width, 
+                                                    SpringboardViewController.TraitSize.Width );
+
+            ActivityIndicator.Layer.Position = new CGPoint( ( SpringboardViewController.TraitSize.Width - ActivityIndicator.Frame.Width ) / 2, 
+                                                            ( SpringboardViewController.TraitSize.Height - ActivityIndicator.Frame.Height ) / 2 );
         }
 
         public override void AppOnResignActive()
@@ -194,6 +232,8 @@ namespace iOS
                 UIActivityType.PostToTwitter, 
                 UIActivityType.CopyToPasteboard, 
                 UIActivityType.Message };
+
+            shareController.PopoverPresentationController.SourceView = Task.NavToolbar;
 
             PresentViewController( shareController, true, null );
         }

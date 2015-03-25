@@ -258,9 +258,19 @@ namespace iOS
             HomeCampusButton.Frame = HomeCampus.Background.Frame;
             HomeCampusButton.TouchUpInside += (object sender, EventArgs e ) =>
                 {
-                    UIAlertController actionSheet = UIAlertController.Create( ProfileStrings.SelectCampus_SourceTitle, 
-                                                                              ProfileStrings.SelectCampus_SourceDescription, 
-                                                                              UIAlertControllerStyle.ActionSheet );
+                    UIAlertController actionSheet = null;
+                    if ( UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Phone )
+                    {
+                        actionSheet = UIAlertController.Create( ProfileStrings.SelectCampus_SourceTitle, 
+                            ProfileStrings.SelectCampus_SourceDescription, 
+                            UIAlertControllerStyle.ActionSheet );
+                    }
+                    else
+                    {
+                        actionSheet = UIAlertController.Create( ProfileStrings.SelectCampus_SourceTitle, 
+                            ProfileStrings.SelectCampus_SourceDescription, 
+                            UIAlertControllerStyle.Alert );
+                    }
 
                     // for each campus, create an entry in the action sheet, and its callback will assign
                     // that campus index to the user's viewing preference
@@ -399,7 +409,8 @@ namespace iOS
         {
             base.ViewDidLayoutSubviews();
 
-            ScrollView.ContentSize = new CGSize( 0, LogoutButton.Frame.Bottom + ( View.Bounds.Height * .25f ) );
+            nfloat controlBottom = LogoutButton.Frame.Bottom + ( View.Bounds.Height * .25f );
+            ScrollView.ContentSize = new CGSize( 0, (nfloat) Math.Max( controlBottom, View.Bounds.Height * 1.05f ) );
 
             // setup the header shadow
             UIBezierPath shadowPath = UIBezierPath.FromRect( HeaderView.Bounds );

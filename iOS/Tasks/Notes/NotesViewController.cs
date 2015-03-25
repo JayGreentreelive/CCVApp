@@ -165,7 +165,8 @@ namespace iOS
         /// so we can know when it changes and only rebuild the notes then.
         /// </summary>
         /// <value>The orientation.</value>
-		UIDeviceOrientation Orientation { get; set; }
+		//UIDeviceOrientation Orientation { get; set; }
+        int OrientationState { get; set; }
 
         /// <summary>
         /// A list of the handles returned when adding observers to OS events
@@ -244,9 +245,13 @@ namespace iOS
         {
             base.ViewDidLayoutSubviews( );
 
-			if (Orientation != UIDevice.CurrentDevice.Orientation) 
+            // get the orientation state. WE consider unknown- 1, profile 0, landscape 1,
+            int orientationState = SpringboardViewController.IsDeviceLandscape( ) == true ? 1 : 0;
+
+            // if the states are in disagreement, correct it
+            if ( OrientationState != orientationState ) 
 			{
-				Orientation = UIDevice.CurrentDevice.Orientation;
+                OrientationState = orientationState;
 
 				//note: the frame height of the nav bar is what it CURRENTLY is, not what it WILL be after we rotate. So, when we go from Portrait to Landscape,
 				// it says 40, but it's gonna be 32. Conversely, going back, we use 32 and it's actually 40, which causes us to start this view 8px too high.
@@ -265,7 +270,8 @@ namespace iOS
 				// re-create our notes with the new dimensions
 				PrepareCreateNotes( );
 
-                if ( Orientation != UIDeviceOrientation.Portrait )
+                // if we are now GOING to landscape, hide the tutorial screen
+                if ( SpringboardViewController.IsDeviceLandscape( ) == true )
                 {
                     AnimateTutorialScreen( false );
                 }
@@ -279,7 +285,7 @@ namespace iOS
         {
             base.ViewDidLoad( );
 
-            Orientation = UIDeviceOrientation.Unknown;
+            OrientationState = -1;
 
             UIScrollView = new CustomScrollView();
             UIScrollView.Interceptor = this;
@@ -467,6 +473,7 @@ namespace iOS
                                                                          UIActivityType.CopyToPasteboard, 
                                                                          UIActivityType.Message };
 
+                shareController.PopoverPresentationController.SourceView = Task.NavToolbar;
                 PresentViewController( shareController, true, null );
             }
         }

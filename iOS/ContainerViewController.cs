@@ -68,21 +68,13 @@ namespace iOS
             TaskTransition.ContainerViewController = this;
 		}
 
-        public override void WillRotate(UIInterfaceOrientation toInterfaceOrientation, double duration)
-        {
-            base.WillRotate(toInterfaceOrientation, duration);
-
-            // forward this to our parent
-            ( ParentViewController as MainUINavigationController ).WillRotate( toInterfaceOrientation, duration );
-        }
-
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
 
             // container view must have a black background so that the ticks
             // before the task displays don't cause a flash
-            View.BackgroundColor = UIColor.Black;
+            View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             // First setup the SpringboardReveal button, which rests in the upper left
             // of the MainNavigationUI. (We must do it here because the ContainerViewController's
@@ -163,23 +155,46 @@ namespace iOS
             SubNavToolbar.ViewDidLayoutSubviews( );
         }
 
-        public void UpdateBackButton( UIInterfaceOrientation toInterfaceOrientation )
+        public void LayoutChanging( )
+        {
+            UpdateBackButton( );
+
+            if ( SpringboardViewController.IsLandscapeRegular( ) == true )
+            {
+                EnableSpringboardRevealButton( false );
+            }
+            else
+            {
+                EnableSpringboardRevealButton( true );
+            }
+
+            if ( CurrentTask != null )
+            {
+                CurrentTask.LayoutChanging( );
+            }
+        }
+
+        public void UpdateBackButton( )
         {
             // if there are VCs in the stack
             if ( SubNavigationController.ViewControllers.Length > 1 )
             {
-                // if there's a current task, ask it
+                // only allow back if we're in regular landscape or portrait mode
+                bool allowBack = false;
+                if ( SpringboardViewController.IsLandscapeRegular( ) == true || SpringboardViewController.IsDevicePortrait( ) == true )
+                {
+                    allowBack = true;
+                }
+
+                // OR, if there's a current task, ask it if there should be an override
                 if ( CurrentTask != null )
                 {
-                    bool allowBack = CurrentTask.ShouldAllowBackButton( toInterfaceOrientation );
-                    SubNavToolbar.SetBackButtonEnabled( allowBack );
+                    if ( CurrentTask.ShouldForceBackButtonEnabled( ) )
+                    {
+                        allowBack = true;
+                    }
                 }
-                // otherwise, only allow it if we're going to portrait mode
-                else
-                {
-                    bool allowBack = toInterfaceOrientation == UIInterfaceOrientation.Portrait ? true : false;
-                    SubNavToolbar.SetBackButtonEnabled( allowBack );
-                }
+                SubNavToolbar.SetBackButtonEnabled( allowBack );
             }
             else
             {
@@ -196,7 +211,7 @@ namespace iOS
                 CurrentTask.WillShowViewController( viewController );
             }
 
-            UpdateBackButton( UIApplication.SharedApplication.StatusBarOrientation );
+            UpdateBackButton( );
         }
 
         public void NavDidShowViewController( UIViewController viewController )

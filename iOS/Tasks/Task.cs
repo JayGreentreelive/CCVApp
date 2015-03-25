@@ -100,7 +100,19 @@ namespace iOS
 
         public virtual UIInterfaceOrientationMask GetSupportedInterfaceOrientations()
         {
-            return UIInterfaceOrientationMask.Portrait;
+            // if we're in wide landscape, support ANY orientation. otherwise it needs to be portrait (unless a derived class overrides)
+            if ( SpringboardViewController.IsDeviceLandscape( ) == true && SpringboardViewController.IsLandscapeRegular( ) == true )
+            {
+                return UIInterfaceOrientationMask.All;
+            }
+            else
+            {
+                return UIInterfaceOrientationMask.Portrait;
+            }
+        }
+
+        public virtual void LayoutChanging( )
+        {
         }
 
         /// <summary>
@@ -158,18 +170,11 @@ namespace iOS
         }
 
         /// <summary>
-        /// Lets the Task decide if the back button should be enabled
+        /// 99% of the time, the main container can decide if the back button should be enabled.
+        /// Every now and then, a task might need to force it on. (Like the notes webview)
         /// </summary>
-        /// <returns><c>true</c>, if allow back button was shoulded, <c>false</c> otherwise.</returns>
-        public virtual bool ShouldAllowBackButton( UIInterfaceOrientation toInterfaceOrientation )
+        public virtual bool ShouldForceBackButtonEnabled( )
         {
-            // if we're going to portrait, it's fine
-            if ( toInterfaceOrientation == UIInterfaceOrientation.Portrait )
-            {
-                return true;
-            }
-
-            // otherwise don't allow it
             return false;
         }
     }

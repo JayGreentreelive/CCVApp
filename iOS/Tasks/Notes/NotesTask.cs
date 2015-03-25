@@ -203,24 +203,23 @@ namespace iOS
             }
         }
 
-        public override bool ShouldAllowBackButton(UIInterfaceOrientation toInterfaceOrientation)
+        public override void LayoutChanging()
         {
-            // if we're going to portrait, it's fine
-            if ( toInterfaceOrientation == UIInterfaceOrientation.Portrait )
+            base.LayoutChanging();
+
+            ActiveViewController.LayoutChanging( );
+        }
+
+        public override bool ShouldForceBackButtonEnabled( )
+        {
+            // otherwise, the one exception is if the webview is open
+            if ( ( ActiveViewController as NotesWebViewController ) != null )
             {
                 return true;
             }
-            else
-            {
-                // otherwise, the one exception is if the webview is open
-                if ( ( ActiveViewController as NotesWebViewController ) != null )
-                {
-                    return true;
-                }
 
-                // if it isn't, we shouldn't allow it
-                return false;
-            }
+            // if it isn't, we shouldn't allow it
+            return false;
         }
     }
 }

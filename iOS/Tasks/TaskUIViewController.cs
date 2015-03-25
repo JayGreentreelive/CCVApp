@@ -21,6 +21,10 @@ namespace iOS
         {
         }
 
+        public virtual void LayoutChanging( )
+        {
+        }
+
         public override void TouchesEnded(NSSet touches, UIEvent evt)
         {
             base.TouchesEnded(touches, evt);

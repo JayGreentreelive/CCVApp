@@ -1,41 +1,33 @@
-﻿<Properties StartupItem="Droid/Droid.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.192.168.56.101:5555" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="CCVApp.Shared/UI/UIJoinGroup.cs">
+﻿<Properties StartupItem="iOS/iOS.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhone4s.8.2" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/Tasks/Notes/NotesWatchUIViewController.cs">
     <Files>
-      <File FileName="iOS/Tasks/Connect/GroupFinderJoinViewController.cs" Line="53" Column="80" />
-      <File FileName="CCVApp.Shared/UI/UIJoinGroup.cs" Line="250" Column="30" />
-      <File FileName="CCVApp.Shared/RockApi/RockApi.cs" Line="373" Column="48" />
+      <File FileName="CCVApp.Shared/UI/UIJoinGroup.cs" Line="1" Column="1" />
+      <File FileName="iOS/SpringboardViewController.cs" Line="293" Column="9" />
+      <File FileName="iOS/MainUINavigationController.cs" Line="308" Column="1" />
+      <File FileName="iOS/Tasks/Notes/NotesWatchUIViewController.cs" Line="82" Column="46" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="CCVApp.Shared" expanded="True">
-            <Node name="RockApi" expanded="True" />
-            <Node name="UI" expanded="True">
-              <Node name="UIJoinGroup.cs" selected="True" />
-            </Node>
-          </Node>
+          <Node name="Droid" expanded="True" />
           <Node name="iOS" expanded="True">
             <Node name="Tasks" expanded="True">
-              <Node name="Connect" expanded="True" />
-              <Node name="Notes" expanded="True" />
-              <Node name="Prayer" expanded="True" />
+              <Node name="Notes" expanded="True">
+                <Node name="NotesWatchUIViewController.cs" expanded="True" selected="True" />
+              </Node>
             </Node>
             <Node name="UserManagement" expanded="True" />
-          </Node>
-          <Node name="Rock.Client.Models" expanded="True">
-            <Node name="CodeGenerated" expanded="True" />
-          </Node>
-          <Node name="Rock.Mobile" expanded="True">
-            <Node name="PlatformUI" expanded="True">
-              <Node name="Droid" expanded="True" />
-              <Node name="iOS" expanded="True" />
-            </Node>
           </Node>
         </State>
       </Pad>
       <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
+        <State>
+          <Value>TraitCollection</Value>
+          <Value>View.TraitCollection</Value>
+          <Value>Container.TraitCollection</Value>
+          <Value>UIKit.UIScreen</Value>
+        </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>

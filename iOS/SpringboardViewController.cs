@@ -242,38 +242,23 @@ namespace iOS
             Elements = new List<SpringboardElement>( );
 		}
 
-        public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations()
+        public override UIInterfaceOrientation PreferredInterfaceOrientationForPresentation()
         {
-            // let the task decide what orientations we support if the springboard is closed.
-            if ( NavViewController.CurrentTask != null && NavViewController.IsSpringboardClosed( ) )
+            // phones should prefer a portrait mode
+            if ( UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Phone )
             {
-                return NavViewController.CurrentTask.GetSupportedInterfaceOrientations( );
+                return UIInterfaceOrientation.Portrait;
             }
             else
             {
-                // otherwise demand portrait
-                return UIInterfaceOrientationMask.Portrait;
+                // and ipads should prefer landscape.
+                return UIInterfaceOrientation.LandscapeLeft;
             }
-        }
-
-        public override UIInterfaceOrientation PreferredInterfaceOrientationForPresentation()
-        {
-            return UIInterfaceOrientation.Portrait;
         }
 
         public override bool ShouldAutorotate()
         {
             return true;
-        }
-
-        public override void WillRotate(UIInterfaceOrientation toInterfaceOrientation, double duration)
-        {
-            base.WillRotate(toInterfaceOrientation, duration);
-        }
-
-        public override void DidRotate(UIInterfaceOrientation fromInterfaceOrientation)
-        {
-            base.DidRotate(fromInterfaceOrientation);
         }
 
         public override bool ShouldAutomaticallyForwardRotationMethods
@@ -284,12 +269,104 @@ namespace iOS
             }
         }
 
-        public static void ForceDeviceToOrientation( UIInterfaceOrientation toOrientation )
+        public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations()
+        {
+            // let the task decide what orientations we support if the springboard is closed.
+            if ( NavViewController.CurrentTask != null && NavViewController.IsSpringboardClosed( ) )
+            {
+                return NavViewController.CurrentTask.GetSupportedInterfaceOrientations( );
+            }
+            else
+            {
+                if ( IsDeviceLandscape( ) == true && IsLandscapeRegular( ) == true )
+                {
+                    return UIInterfaceOrientationMask.All;
+                }
+                else
+                {
+                    return UIInterfaceOrientationMask.Portrait;
+                }
+            }
+        }
+
+        static UITraitCollection CurrentTraitCollection { get; set; }
+
+        static public CGSize TraitSize { get; protected set; }
+
+        public override void WillTransitionToTraitCollection(UITraitCollection traitCollection, IUIViewControllerTransitionCoordinator coordinator)
+        {
+            base.WillTransitionToTraitCollection(traitCollection, coordinator);
+
+            CurrentTraitCollection = traitCollection;
+        }
+
+        public override void ViewWillTransitionToSize(CGSize toSize, IUIViewControllerTransitionCoordinator coordinator)
+        {
+            base.ViewWillTransitionToSize( toSize, coordinator );
+
+            TraitSize = toSize;
+
+            if ( NavViewController != null )
+            {
+                NavViewController.LayoutChanging( );
+            }
+        }
+
+        public static void ForcePortaitModeHack( )
+        {
+            if ( TraitSize.Width > TraitSize.Height )
+            {
+                CGSize currSize = TraitSize;
+
+                TraitSize = new CGSize( currSize.Height, currSize.Width );
+            }
+        }
+
+        public static bool IsLandscapeRegular( )
+        {
+            if ( IsDeviceLandscape( ) && CurrentTraitCollection.HorizontalSizeClass == UIUserInterfaceSizeClass.Regular )
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool IsDeviceLandscape( )
+        {
+            if ( TraitSize.Width > TraitSize.Height )
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public static bool IsDevicePortrait( )
+        {
+            if ( TraitSize.Width < TraitSize.Height )
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /*public override void WillRotate(UIInterfaceOrientation toInterfaceOrientation, double duration)
+        {
+            base.WillRotate(toInterfaceOrientation, duration);
+        }
+
+        public override void DidRotate(UIInterfaceOrientation fromInterfaceOrientation)
+        {
+            base.DidRotate(fromInterfaceOrientation);
+        }*/
+
+        /*public static void ForceDeviceToOrientation( UIInterfaceOrientation toOrientation )
         {
             // amazingly, this works.
             NSNumber value = NSNumber.FromInt32( (int)UIInterfaceOrientation.Portrait );
             UIDevice.CurrentDevice.SetValueForKey( value, new NSString( "orientation" ) );
-        }
+        }*/
 
         public void RevealButtonClicked( )
         {
@@ -301,6 +378,9 @@ namespace iOS
         public override void ViewDidLoad()
         {
             base.ViewDidLoad( );
+
+            // seed the trait size with our current window size
+            TraitSize = UIScreen.MainScreen.Bounds.Size;
 
             // create the login controller / profile view controllers
             LoginViewController = UserManagementStoryboard.InstantiateViewController( "LoginViewController" ) as LoginViewController;
@@ -357,9 +437,20 @@ namespace iOS
             View.AddSubview( CampusSelectionButton );
             CampusSelectionButton.TouchUpInside += (object sender, EventArgs e ) =>
             {
-                    UIAlertController actionSheet = UIAlertController.Create( SpringboardStrings.SelectCampus_SourceTitle, 
-                                                                              SpringboardStrings.SelectCampus_SourceDescription, 
-                                                                              UIAlertControllerStyle.ActionSheet );
+                    // use an appropriate select menu based on the device type.
+                    UIAlertController actionSheet = null;
+                    if( UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Phone )
+                    {
+                        actionSheet = UIAlertController.Create( SpringboardStrings.SelectCampus_SourceTitle, 
+                                                                SpringboardStrings.SelectCampus_SourceDescription, 
+                                                                UIAlertControllerStyle.ActionSheet );
+                    }
+                    else
+                    {
+                        actionSheet = UIAlertController.Create( SpringboardStrings.SelectCampus_SourceTitle, 
+                                                                SpringboardStrings.SelectCampus_SourceDescription, 
+                                                                UIAlertControllerStyle.Alert );
+                    }
 
                     // for each campus, create an entry in the action sheet, and its callback will assign
                     // that campus index to the user's viewing preference
@@ -586,9 +677,19 @@ namespace iOS
 
         void ManageProfilePic( )
         {
-            UIAlertController actionSheet = UIAlertController.Create( SpringboardStrings.ProfilePicture_SourceTitle, 
-                                                                      SpringboardStrings.ProfilePicture_SourceDescription, 
-                                                                      UIAlertControllerStyle.ActionSheet );
+            UIAlertController actionSheet = null;
+            if ( UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Phone )
+            {
+                actionSheet = UIAlertController.Create( SpringboardStrings.ProfilePicture_SourceTitle, 
+                    SpringboardStrings.ProfilePicture_SourceDescription, 
+                    UIAlertControllerStyle.ActionSheet );
+            }
+            else
+            {
+                actionSheet = UIAlertController.Create( SpringboardStrings.ProfilePicture_SourceTitle, 
+                    SpringboardStrings.ProfilePicture_SourceDescription, 
+                    UIAlertControllerStyle.Alert );
+            }
 
             // setup the camera
             UIAlertAction cameraAction = UIAlertAction.Create( SpringboardStrings.ProfilePicture_SourceCamera, UIAlertActionStyle.Default, delegate(UIAlertAction obj) 

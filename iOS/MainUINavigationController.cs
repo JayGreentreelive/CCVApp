@@ -34,19 +34,19 @@ namespace iOS
         /// <value>The container.</value>
         protected ContainerViewController Container { get; set; }
 
-        UIPanGestureRecognizer PanGesture { get; set; }
+        protected UIPanGestureRecognizer PanGesture { get; set; }
 
         public SpringboardViewController ParentSpringboard { get; set; }
 
         /// <summary>
         /// Tracks the last position of panning so delta can be applied
         /// </summary>
-        CGPoint PanLastPos { get; set; }
+        protected CGPoint PanLastPos { get; set; }
 
         /// <summary>
         /// Direction we're currently panning. Important for syncing the card positions
         /// </summary>
-        int PanDir { get; set; }
+        protected int PanDir { get; set; }
 
         /// <summary>
         /// A wrapper for Container.CurrentTask, since Container is protected.
@@ -54,20 +54,10 @@ namespace iOS
         /// <value>The current task.</value>
         public Task CurrentTask { get { return Container != null ? Container.CurrentTask : null; } }
 
-        UIView DarkPanel { get; set; }
+        protected UIView DarkPanel { get; set; }
 
 		public MainUINavigationController (IntPtr handle) : base (handle)
 		{
-        }
-
-        public void EnableSpringboardRevealButton( bool enabled )
-        {
-            Container.EnableSpringboardRevealButton( enabled );
-
-            if ( enabled == false )
-            {
-                RevealSpringboard( false );
-            }
         }
 
         /// <summary>
@@ -106,7 +96,7 @@ namespace iOS
 
             // MainNavigationController must have a black background so that the ticks
             // before the task displays don't cause a flash
-            View.BackgroundColor = UIColor.Black;
+            View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             DarkPanel = new UIView(View.Frame);
             DarkPanel.Layer.Opacity = 0.0f;
@@ -235,7 +225,7 @@ namespace iOS
 
             // only allow panning if the task is ok with it AND we're in portrait mode.
             if (CurrentTask.CanContainerPan( touches, evt ) == true && 
-                UIApplication.SharedApplication.StatusBarOrientation == UIInterfaceOrientation.Portrait )
+                SpringboardViewController.IsDeviceLandscape( ) == false )
             {
                 PanGesture.Enabled = true;
             }
@@ -245,26 +235,26 @@ namespace iOS
             }
         }
 
-        public override void WillRotate(UIInterfaceOrientation toInterfaceOrientation, double duration)
+        public void LayoutChanging( )
         {
-            UpdateSpringboardAllowedState( toInterfaceOrientation );
+            Container.LayoutChanging( );
 
-            Container.UpdateBackButton( toInterfaceOrientation );
-        }
-
-        void UpdateSpringboardAllowedState( UIInterfaceOrientation toInterfaceOrientation )
-        {
-            // this catch-all will ensure we don't allow the springboard button or panning
-            // when not in portrait mode.
-            if ( toInterfaceOrientation == UIInterfaceOrientation.Portrait )
+            // should we setup the rules as if it's a split view?
+            if ( SpringboardViewController.IsLandscapeRegular( ) == true )
             {
-                PanGesture.Enabled = true;
-                EnableSpringboardRevealButton( true );
+                DarkPanel.Hidden = true;
+
+                PanGesture.Enabled = false;
+            
+                RevealSpringboard( true );
             }
             else
             {
-                PanGesture.Enabled = false;
-                EnableSpringboardRevealButton( false );
+                DarkPanel.Hidden = false;
+
+                PanGesture.Enabled = true;
+
+                RevealSpringboard( false );
             }
         }
 
@@ -304,23 +294,16 @@ namespace iOS
                 // shipping, i don't want to remove it.
                 PopToRootViewController( false );
 
-                RevealSpringboard( false );
+                // task activation should only close the springboard if our device isn't wide landscape
+                if( SpringboardViewController.IsLandscapeRegular( ) == false )
+                {
+                    RevealSpringboard( false );
+                }
 
                 return true;
             }
 
             return false;
-        }
-
-        public override void ViewWillAppear(bool animated)
-        {
-            base.ViewWillAppear(animated);
-
-            // certain iOS controllers (here's looking at you MovieController) cause the device
-            // orientation to change without notifying us when they finish being fullscreen.
-            // We WILL receive a WillAppear callback tho, so let's make sure the springboard state is sync'd
-            // with the given orientation.
-            UpdateSpringboardAllowedState( UIApplication.SharedApplication.StatusBarOrientation );
         }
 
         public void OnActivated( )
@@ -386,8 +369,12 @@ namespace iOS
 
                                 SpringboardRevealed = wantReveal;
 
-                                // if the springboard is open, disable input on app stuff
-                                Container.View.UserInteractionEnabled = !SpringboardRevealed;
+                                // if the springboard is open, disable input on app stuff if the device doesn't support
+                                // regular landscape
+                                if ( SpringboardViewController.IsLandscapeRegular( ) == false )
+                                {
+                                    Container.View.UserInteractionEnabled = !SpringboardRevealed;
+                                }
                             })
                     );
                 }

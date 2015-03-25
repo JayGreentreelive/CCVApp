@@ -370,7 +370,7 @@ namespace CCVApp
                 {
                     RestRequest request = GetRockRestRequest( Method.POST );
 
-                    string requestString = string.Format( JoinGroupEndPoint, 52, personAliasId, firstName, lastName, spouseName, email, phone, groupId, groupName );
+                    string requestString = string.Format( JoinGroupEndPoint, Config.GeneralConfig.GroupRegistrationValueId, personAliasId, firstName, lastName, spouseName, email, phone, groupId, groupName );
                     Request.ExecuteAsync( BaseUrl + requestString, request, resultHandler );
                 }
 
