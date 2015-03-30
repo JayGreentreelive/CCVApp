@@ -989,11 +989,40 @@ namespace iOS
             {
                 availableHeight = View.Frame.Height / 2;
             }
-            
-            // position the login button
+
             EditPictureButton.Layer.AnchorPoint = CGPoint.Empty;
             EditPictureButton.Layer.Position = new CGPoint( ( PrimaryContainerConfig.SlideAmount - EditPictureButton.Bounds.Width ) / 2, availableHeight * .02f );
 
+
+            // center the welcome and name labels within the available Springboard width
+            float totalNameWidth = (float) (WelcomeField.Bounds.Width + UserNameField.Bounds.Width);
+            float totalNameHeight = Math.Max( (float) WelcomeField.Bounds.Height, (float) UserNameField.Bounds.Height );
+
+            WelcomeField.Layer.AnchorPoint = CGPoint.Empty;
+            WelcomeField.Layer.Position = new CGPoint( ( PrimaryContainerConfig.SlideAmount - totalNameWidth ) / 2, EditPictureButton.Frame.Bottom + 10 );
+            WelcomeField.Bounds = new CGRect( 0, 0, WelcomeField.Bounds.Width, totalNameHeight );
+
+            UserNameField.Layer.AnchorPoint = CGPoint.Empty;
+            UserNameField.Layer.Position = new CGPoint( WelcomeField.Frame.Right, WelcomeField.Frame.Y );
+            UserNameField.Bounds = new CGRect( 0, 0, UserNameField.Bounds.Width, totalNameHeight );
+
+            ViewProfileLabel.Layer.AnchorPoint = CGPoint.Empty;
+            ViewProfileLabel.Font = FontManager.GetFont( ControlStylingConfig.Small_Font_Light, ControlStylingConfig.Small_FontSize );
+            ViewProfileLabel.SizeToFit( );
+            ViewProfileLabel.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
+            ViewProfileLabel.Layer.Position = new CGPoint( EditPictureButton.Layer.Position.X + ((EditPictureButton.Bounds.Width - ViewProfileLabel.Bounds.Width) / 2), WelcomeField.Frame.Bottom );
+
+            float totalHeight = (float) (totalNameHeight + ViewProfileLabel.Bounds.Height);
+
+            // wrap the view profile button around the entire "Welcome: Name" phrase
+            ViewProfileButton.SetTitle( "", UIControlState.Normal );
+            ViewProfileButton.Layer.AnchorPoint = CGPoint.Empty;
+            ViewProfileButton.Layer.Position = new CGPoint( 0, WelcomeField.Frame.Y );
+            ViewProfileButton.Bounds = new CGRect( 0, 0, View.Frame.Width, totalHeight );
+
+
+            
+            // position the login button
             NewsElement.Layer.AnchorPoint = CGPoint.Empty;
             NewsElement.Layer.Position = new CGPoint( 0, ViewProfileButton.Frame.Bottom + 40 );
 
@@ -1069,32 +1098,6 @@ namespace iOS
             WelcomeField.SizeToFit( );
             UserNameField.SizeToFit( );
 
-            // center the welcome and name labels within the available Springboard width
-            float totalNameWidth = (float) (WelcomeField.Bounds.Width + UserNameField.Bounds.Width);
-            float totalNameHeight = Math.Max( (float) WelcomeField.Bounds.Height, (float) UserNameField.Bounds.Height );
-
-            WelcomeField.Layer.AnchorPoint = CGPoint.Empty;
-            WelcomeField.Layer.Position = new CGPoint( ( PrimaryContainerConfig.SlideAmount - totalNameWidth ) / 2, EditPictureButton.Frame.Bottom + 10 );
-            WelcomeField.Bounds = new CGRect( 0, 0, WelcomeField.Bounds.Width, totalNameHeight );
-
-            UserNameField.Layer.AnchorPoint = CGPoint.Empty;
-            UserNameField.Layer.Position = new CGPoint( WelcomeField.Frame.Right, WelcomeField.Frame.Y );
-            UserNameField.Bounds = new CGRect( 0, 0, UserNameField.Bounds.Width, totalNameHeight );
-
-            ViewProfileLabel.Layer.AnchorPoint = CGPoint.Empty;
-            ViewProfileLabel.Font = FontManager.GetFont( ControlStylingConfig.Small_Font_Light, ControlStylingConfig.Small_FontSize );
-            ViewProfileLabel.SizeToFit( );
-            ViewProfileLabel.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
-            ViewProfileLabel.Layer.Position = new CGPoint( EditPictureButton.Layer.Position.X + ((EditPictureButton.Bounds.Width - ViewProfileLabel.Bounds.Width) / 2), WelcomeField.Frame.Bottom );
-
-            float totalHeight = (float) (totalNameHeight + ViewProfileLabel.Bounds.Height);
-
-            // wrap the view profile button around the entire "Welcome: Name" phrase
-            ViewProfileButton.SetTitle( "", UIControlState.Normal );
-            ViewProfileButton.Layer.AnchorPoint = CGPoint.Empty;
-            ViewProfileButton.Layer.Position = new CGPoint( 0, WelcomeField.Frame.Y );
-            ViewProfileButton.Bounds = new CGRect( 0, 0, View.Frame.Width, totalHeight );
-
             UpdateProfilePic( );
         }
 
@@ -1128,10 +1131,14 @@ namespace iOS
                 }
 
                 // if we made it here and useNoPhoto is true, well, use no photo
-                if( useNoPhotoImage == true )
+                if ( useNoPhotoImage == true )
                 {
                     ProfileImageView.Image = null;
                     EditPictureButton.SetTitle( SpringboardConfig.NoPhotoSymbol, UIControlState.Normal );
+                }
+                else
+                {
+                    EditPictureButton.SetTitle( "", UIControlState.Normal );
                 }
             }
             else

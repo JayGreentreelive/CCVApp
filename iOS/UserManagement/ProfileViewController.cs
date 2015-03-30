@@ -76,16 +76,6 @@ namespace iOS
             return Springboard.ShouldAutorotate();
         }
 
-        public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations( )
-        {
-            return Springboard.GetSupportedInterfaceOrientations( );
-        }
-
-        public override UIInterfaceOrientation PreferredInterfaceOrientationForPresentation( )
-        {
-            return Springboard.PreferredInterfaceOrientationForPresentation( );
-        }
-
         public override bool PrefersStatusBarHidden()
         {
             return Springboard.PrefersStatusBarHidden();
@@ -98,7 +88,7 @@ namespace iOS
             // setup the fake header
             HeaderView = new UIView( );
             View.AddSubview( HeaderView );
-            HeaderView.Frame = new CGRect( View.Frame.Left, View.Frame.Top, View.Frame.Width, StyledTextField.StyledFieldHeight );
+
             HeaderView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             string imagePath = NSBundle.MainBundle.BundlePath + "/" + PrimaryNavBarConfig.LogoFile;
@@ -107,7 +97,7 @@ namespace iOS
 
 
             ScrollView = new UIScrollViewWrapper();
-            ScrollView.Frame = new CGRect( View.Frame.Left, HeaderView.Frame.Bottom, View.Frame.Width, View.Frame.Height - HeaderView.Frame.Height );
+
             View.AddSubview( ScrollView );
             ScrollView.Parent = this;
 
@@ -116,7 +106,7 @@ namespace iOS
 
             NickName = new StyledTextField();
             ScrollView.AddSubview( NickName.Background );
-            NickName.SetFrame( new CGRect( -10, View.Frame.Height * .05f, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+
             ControlStyling.StyleTextField( NickName.Field, ProfileStrings.NickNamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( NickName.Background );
             NickName.Field.AutocapitalizationType = UITextAutocapitalizationType.Words;
@@ -124,8 +114,7 @@ namespace iOS
             NickName.Field.EditingDidBegin += (sender, e) => { Dirty = true; };
 
             LastName = new StyledTextField();
-            ScrollView.AddSubview( LastName.Background );
-            LastName.SetFrame( new CGRect( -10, NickName.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+
             LastName.Field.AutocapitalizationType = UITextAutocapitalizationType.Words;
             LastName.Field.AutocorrectionType = UITextAutocorrectionType.No;
             ControlStyling.StyleTextField( LastName.Field, ProfileStrings.LastNamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
@@ -136,7 +125,7 @@ namespace iOS
             ScrollView.AddSubview( Email.Background );
             Email.Field.AutocapitalizationType = UITextAutocapitalizationType.None;
             Email.Field.AutocorrectionType = UITextAutocorrectionType.No;
-            Email.SetFrame( new CGRect( -10, LastName.Background.Frame.Bottom + 20, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+            ScrollView.AddSubview( LastName.Background );
             ControlStyling.StyleTextField( Email.Field, ProfileStrings.EmailPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( Email.Background );
             Email.Field.EditingDidBegin += (sender, e) => { Dirty = true; };
@@ -145,7 +134,6 @@ namespace iOS
             ScrollView.AddSubview( CellPhone.Background );
             CellPhone.Field.AutocapitalizationType = UITextAutocapitalizationType.None;
             CellPhone.Field.AutocorrectionType = UITextAutocorrectionType.No;
-            CellPhone.SetFrame( new CGRect( -10, Email.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
             ControlStyling.StyleTextField( CellPhone.Field, ProfileStrings.CellPhonePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( CellPhone.Background );
             CellPhone.Field.EditingDidBegin += (sender, e) => { Dirty = true; };
@@ -153,7 +141,6 @@ namespace iOS
 
             Street = new StyledTextField();
             ScrollView.AddSubview( Street.Background );
-            Street.SetFrame( new CGRect( -10, CellPhone.Background.Frame.Bottom + 20, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
             Street.Field.AutocapitalizationType = UITextAutocapitalizationType.Words;
             Street.Field.AutocorrectionType = UITextAutocorrectionType.No;
             ControlStyling.StyleTextField( Street.Field, ProfileStrings.StreetPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
@@ -162,7 +149,6 @@ namespace iOS
 
             City = new StyledTextField();
             ScrollView.AddSubview( City.Background );
-            City.SetFrame( new CGRect( -10, Street.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
             City.Field.AutocapitalizationType = UITextAutocapitalizationType.Words;
             City.Field.AutocorrectionType = UITextAutocorrectionType.No;
             ControlStyling.StyleTextField( City.Field, ProfileStrings.CityPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
@@ -171,7 +157,6 @@ namespace iOS
 
             State = new StyledTextField();
             ScrollView.AddSubview( State.Background );
-            State.SetFrame( new CGRect( -10, City.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
             State.Field.AutocapitalizationType = UITextAutocapitalizationType.Words;
             State.Field.AutocorrectionType = UITextAutocorrectionType.No;
             ControlStyling.StyleTextField( State.Field, ProfileStrings.StatePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
@@ -180,7 +165,6 @@ namespace iOS
 
             Zip = new StyledTextField();
             ScrollView.AddSubview( Zip.Background );
-            Zip.SetFrame( new CGRect( -10, State.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
             Zip.Field.AutocapitalizationType = UITextAutocapitalizationType.None;
             Zip.Field.AutocorrectionType = UITextAutocorrectionType.No;
             ControlStyling.StyleTextField( Zip.Field, ProfileStrings.ZipPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
@@ -191,14 +175,12 @@ namespace iOS
             // Gender
             Gender = new StyledTextField();
             ScrollView.AddSubview( Gender.Background );
-            Gender.SetFrame( new CGRect( -10, Zip.Background.Frame.Bottom + 20, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
             Gender.Field.UserInteractionEnabled = false;
             ControlStyling.StyleTextField( Gender.Field, ProfileStrings.GenderPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( Gender.Background );
 
             GenderButton = new UIButton( );
             ScrollView.AddSubview( GenderButton );
-            GenderButton.Frame = Gender.Background.Frame;
             GenderButton.TouchUpInside += (object sender, EventArgs e ) =>
                 {
                     // don't allow multiple pickers
@@ -218,14 +200,12 @@ namespace iOS
             // Birthday
             Birthdate = new StyledTextField( );
             ScrollView.AddSubview( Birthdate.Background );
-            Birthdate.SetFrame( new CGRect( -10, Gender.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
             Birthdate.Field.UserInteractionEnabled = false;
             ControlStyling.StyleTextField( Birthdate.Field, ProfileStrings.BirthdatePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( Birthdate.Background );
 
             BirthdayButton = new UIButton( );
             ScrollView.AddSubview( BirthdayButton );
-            BirthdayButton.Frame = Birthdate.Background.Frame;
             BirthdayButton.TouchUpInside += (object sender, EventArgs e ) =>
                 {
                     // don't allow multiple pickers
@@ -248,14 +228,12 @@ namespace iOS
             // setup the home campus chooser
             HomeCampus = new StyledTextField( );
             ScrollView.AddSubview( HomeCampus.Background );
-            HomeCampus.SetFrame( new CGRect( -10, Birthdate.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
             HomeCampus.Field.UserInteractionEnabled = false;
             ControlStyling.StyleTextField( HomeCampus.Field, ProfileStrings.CampusPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( HomeCampus.Background );
 
             HomeCampusButton = new UIButton( );
             ScrollView.AddSubview( HomeCampusButton );
-            HomeCampusButton.Frame = HomeCampus.Background.Frame;
             HomeCampusButton.TouchUpInside += (object sender, EventArgs e ) =>
                 {
                     UIAlertController actionSheet = null;
@@ -293,13 +271,11 @@ namespace iOS
             ScrollView.AddSubview( DoneButton );
             ControlStyling.StyleButton( DoneButton, ProfileStrings.DoneButtonTitle, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             DoneButton.SizeToFit( );
-            DoneButton.Frame = new CGRect( View.Frame.Left + 8, HomeCampus.Background.Frame.Bottom + 20, ControlStyling.ButtonWidth, ControlStyling.ButtonHeight );
 
             LogoutButton = new UIButton( );
             ScrollView.AddSubview( LogoutButton );
             ControlStyling.StyleButton( LogoutButton, ProfileStrings.LogoutButtonTitle, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             LogoutButton.SizeToFit( );
-            LogoutButton.Frame = new CGRect( View.Frame.Right - ControlStyling.ButtonWidth - 8, HomeCampus.Background.Frame.Bottom + 20, ControlStyling.ButtonWidth, ControlStyling.ButtonHeight );
 
 
             // setup the pickers
@@ -409,6 +385,26 @@ namespace iOS
         {
             base.ViewDidLayoutSubviews();
 
+            HeaderView.Frame = new CGRect( View.Frame.Left, View.Frame.Top, View.Frame.Width, StyledTextField.StyledFieldHeight );
+            ScrollView.Frame = new CGRect( View.Frame.Left, HeaderView.Frame.Bottom, View.Frame.Width, View.Frame.Height - HeaderView.Frame.Height );
+            NickName.SetFrame( new CGRect( -10, View.Frame.Height * .05f, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+            LastName.SetFrame( new CGRect( -10, NickName.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+            Email.SetFrame( new CGRect( -10, LastName.Background.Frame.Bottom + 20, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+            CellPhone.SetFrame( new CGRect( -10, Email.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+            Street.SetFrame( new CGRect( -10, CellPhone.Background.Frame.Bottom + 20, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+            City.SetFrame( new CGRect( -10, Street.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+            State.SetFrame( new CGRect( -10, City.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+            Zip.SetFrame( new CGRect( -10, State.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+            Gender.SetFrame( new CGRect( -10, Zip.Background.Frame.Bottom + 20, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+            GenderButton.Frame = Gender.Background.Frame;
+            Birthdate.SetFrame( new CGRect( -10, Gender.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+            BirthdayButton.Frame = Birthdate.Background.Frame;
+            HomeCampus.SetFrame( new CGRect( -10, Birthdate.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+            HomeCampusButton.Frame = HomeCampus.Background.Frame;
+            DoneButton.Frame = new CGRect( View.Frame.Left + 8, HomeCampus.Background.Frame.Bottom + 20, ControlStyling.ButtonWidth, ControlStyling.ButtonHeight );
+            LogoutButton.Frame = new CGRect( View.Frame.Right - ControlStyling.ButtonWidth - 8, HomeCampus.Background.Frame.Bottom + 20, ControlStyling.ButtonWidth, ControlStyling.ButtonHeight );
+
+
             nfloat controlBottom = LogoutButton.Frame.Bottom + ( View.Bounds.Height * .25f );
             ScrollView.ContentSize = new CGSize( 0, (nfloat) Math.Max( controlBottom, View.Bounds.Height * 1.05f ) );
 
@@ -421,6 +417,12 @@ namespace iOS
             HeaderView.Layer.ShadowPath = shadowPath.CGPath;
 
             LogoView.Layer.Position = new CGPoint( HeaderView.Bounds.Width / 2, HeaderView.Bounds.Height / 2 );
+
+            BirthdatePicker.LayoutChanged( );
+            GenderPicker.LayoutChanged( );
+
+            GenderPicker.TogglePicker( false, false );
+            BirthdatePicker.TogglePicker( false, false );
         }
 
         public override void ViewWillAppear(bool animated)

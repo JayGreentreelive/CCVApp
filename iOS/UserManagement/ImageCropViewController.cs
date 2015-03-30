@@ -113,15 +113,8 @@ namespace iOS
             return Springboard.ShouldAutorotate();
         }
 
-        public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations( )
-        {
-            return Springboard.GetSupportedInterfaceOrientations( );
-        }
-
-        public override UIInterfaceOrientation PreferredInterfaceOrientationForPresentation( )
-        {
-            return Springboard.PreferredInterfaceOrientationForPresentation( );
-        }
+        UIToolbar Toolbar { get; set; }
+        UIView ButtonContainer { get; set; }
 
         public override void ViewDidLoad()
         {
@@ -133,7 +126,6 @@ namespace iOS
             ImageView = new UIImageView( );
             ImageView.BackgroundColor = UIColor.Black;
             ImageView.ContentMode = UIViewContentMode.ScaleAspectFit;
-            ImageView.Frame = new CGRect( View.Frame.X, View.Frame.Y, View.Frame.Width, View.Frame.Height );
 
             View.AddSubview( ImageView );
 
@@ -163,7 +155,7 @@ namespace iOS
 
 
             // create our bottom toolbar
-            UIToolbar toolbar = new UIToolbar( new CGRect( 0, View.Bounds.Height - 40, View.Bounds.Width, 40 ) );
+            Toolbar = new UIToolbar( new CGRect( 0, View.Bounds.Height - 40, View.Bounds.Width, 40 ) );
 
             // create the cancel button
             NSString cancelLabel = new NSString( ImageCropConfig.CropCancelButton_Text );
@@ -214,37 +206,61 @@ namespace iOS
                 };
 
             // create a container that will allow us to align the buttons
-            UIView buttonContainer = new UIView( new CGRect( 0, View.Bounds.Height - 40, View.Bounds.Width, 40 ) );
-            buttonContainer.AddSubview( EditButton );
-            buttonContainer.AddSubview( CancelButton );
+            ButtonContainer = new UIView( new CGRect( 0, View.Bounds.Height - 40, View.Bounds.Width, 40 ) );
+            ButtonContainer.AddSubview( EditButton );
+            ButtonContainer.AddSubview( CancelButton );
 
             CancelButton.BackgroundColor = UIColor.Clear;
-            CancelButton.Frame = new CGRect( (CancelButton.Frame.Width / 2), 0, CancelButton.Frame.Width, CancelButton.Frame.Height );
 
             EditButton.BackgroundColor = UIColor.Clear;
-            EditButton.Frame = new CGRect( buttonContainer.Frame.Width - (EditButton.Frame.Width * 2.5f), 0, EditButton.Frame.Width, EditButton.Frame.Height );
 
-            toolbar.SetItems( new UIBarButtonItem[] { new UIBarButtonItem( buttonContainer ) }, false );
-            View.AddSubview( toolbar );
+            Toolbar.SetItems( new UIBarButtonItem[] { new UIBarButtonItem( ButtonContainer ) }, false );
+            View.AddSubview( Toolbar );
         }
 
-        public override void ViewWillDisappear(bool animated)
+        public override void ViewDidLayoutSubviews( )
         {
-            base.ViewWillDisappear(animated);
+            base.ViewDidLayoutSubviews();
 
-            AnimateBlocker( false );
+            Toolbar.Frame = new CGRect( 0, View.Bounds.Height - 40, View.Bounds.Width, 40 );
+
+            ImageView.Frame = GetImageViewFrame( );
+
+            ButtonContainer.Frame = new CGRect( 0, View.Bounds.Height - 40, View.Bounds.Width, 40 );
+
+            CancelButton.Frame = new CGRect( (CancelButton.Frame.Width / 2), 0, CancelButton.Frame.Width, CancelButton.Frame.Height );
+            EditButton.Frame = new CGRect( ButtonContainer.Frame.Width - (EditButton.Frame.Width * 2.5f), 0, EditButton.Frame.Width, EditButton.Frame.Height );
+
+            DisplayLayout( );
         }
 
-        public override void ViewWillAppear(bool animated)
+        CGRect GetImageViewFrame( )
         {
-            base.ViewWillAppear(animated);
+            // helper function for getting the image View, since it must be smaller that the View in order to accomodate the
+            // toolbar
+            nfloat imageViewHeight = ( View.Frame.Height - Toolbar.Frame.Height );
+            return new CGRect( View.Frame.X, View.Frame.Y, View.Frame.Width, imageViewHeight );
+        }
 
+        void DisplayLayout( )
+        {
             // scale the image to match the view's width
-            ScreenToImageScalar = (float)SourceImage.Size.Width / (float)View.Bounds.Width;
+            ScreenToImageScalar = (float)SourceImage.Size.Width / (float)ImageView.Bounds.Width;
 
             // get the scaled dimensions, maintaining aspect ratio
             float scaledImageWidth = (float)SourceImage.Size.Width * (1.0f / ScreenToImageScalar);
             float scaledImageHeight = (float)SourceImage.Size.Height * (1.0f / ScreenToImageScalar);
+
+            // if the image's scaled down height would be greater than the device height,
+            // recalc based on the height.
+            if ( scaledImageHeight > ImageView.Frame.Height )
+            {
+                ScreenToImageScalar = (float)SourceImage.Size.Height / (float)ImageView.Bounds.Height;
+
+                scaledImageWidth = (float)SourceImage.Size.Width * (1.0f / ScreenToImageScalar);
+                scaledImageHeight = (float)SourceImage.Size.Height * (1.0f / ScreenToImageScalar);
+            }
+
 
             // calculate the image's starting X / Y location
             nfloat imageStartX = ( ImageView.Frame.Width - scaledImageWidth ) / 2;
@@ -286,14 +302,14 @@ namespace iOS
             }
 
             // set the crop bounds
-            CropView.Frame = new CGRect( View.Frame.X, View.Frame.Y, cropperWidth, cropperHeight );
+            CropView.Frame = new CGRect( ImageView.Frame.X, ImageView.Frame.Y, cropperWidth, cropperHeight );
 
 
             // Now set the min / max movement bounds for the cropper
             CropViewMinPos = new CGPoint( imageStartX, imageStartY );
 
             CropViewMaxPos = new CGPoint( ( imageStartX + scaledImageWidth ) - cropperWidth,
-                                         ( imageStartY + scaledImageHeight ) - cropperHeight );
+                                          ( imageStartY + scaledImageHeight ) - cropperHeight );
 
             // center the cropview
             CropView.Layer.Position = new CGPoint( 0, 0 );
@@ -305,14 +321,28 @@ namespace iOS
             FullscreenBlocker.Layer.Opacity = 0.00f;
             UIBezierPath viewFill = UIBezierPath.FromRect( FullscreenBlocker.Bounds );
             UIBezierPath cropMask = UIBezierPath.FromRoundedRect( new CGRect( ( FullscreenBlocker.Bounds.Width - CropView.Bounds.Width ) / 2, 
-                                                                              ( FullscreenBlocker.Bounds.Height - CropView.Bounds.Height ) / 2, 
-                                                                                CropView.Bounds.Width, 
-                                                                                CropView.Bounds.Height ), 4 );
+                ( FullscreenBlocker.Bounds.Height - CropView.Bounds.Height ) / 2, 
+                CropView.Bounds.Width, 
+                CropView.Bounds.Height ), 4 );
             viewFill.AppendPath( cropMask );
             FullscreenBlockerMask.Path = viewFill.CGPath;
 
             // and set our source image
             ImageView.Image = SourceImage;
+        }
+
+        public override void ViewWillDisappear(bool animated)
+        {
+            base.ViewWillDisappear(animated);
+
+            AnimateBlocker( false );
+        }
+
+        public override void ViewWillAppear(bool animated)
+        {
+            base.ViewWillAppear(animated);
+
+            DisplayLayout( );
         }
 
         public override void ViewDidAppear(bool animated)
@@ -422,7 +452,7 @@ namespace iOS
                                 { 
                                     // done, so now set the original image (which will
                                     // seamlessly replace the cropped image)
-                                    ImageView.Frame = View.Frame;
+                                    ImageView.Frame = GetImageViewFrame( );
                                     ImageView.Image = SourceImage;
 
                                     // and turn on the blocker fully, so we still only see
@@ -473,7 +503,7 @@ namespace iOS
                                 UIView.Animate( .5f, 0, UIViewAnimationOptions.CurveEaseInOut, 
                                     new Action( delegate
                                         { 
-                                            ImageView.Frame = View.Frame;
+                                            ImageView.Frame = GetImageViewFrame( );
                                         } ), null );
                             } ) );
                     break;
