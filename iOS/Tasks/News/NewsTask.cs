@@ -10,7 +10,6 @@ namespace iOS
     public class NewsTask : Task
     {
         NewsMainUIViewController MainPageVC { get; set; }
-        TaskUIViewController ActiveViewController { get; set; }
 
         List<RockNews> News { get; set; }
 
@@ -25,9 +24,11 @@ namespace iOS
             MainPageVC.SourceRockNews = News;
         }
 
-        public override void MakeActive( TaskUINavigationController parentViewController, NavToolbar navToolbar )
+        public override void MakeActive( TaskUINavigationController parentViewController, NavToolbar navToolbar, CGRect containerBounds )
         {
-            base.MakeActive( parentViewController, navToolbar );
+            base.MakeActive( parentViewController, navToolbar, containerBounds );
+
+            MainPageVC.View.Bounds = containerBounds;
 
             ReloadNews( );
 
@@ -58,9 +59,9 @@ namespace iOS
                 } );
         }
 
-        public override void WillShowViewController(UIViewController viewController)
+        public override void WillShowViewController(TaskUIViewController viewController)
         {
-            ActiveViewController = (TaskUIViewController) viewController;
+            base.WillShowViewController( viewController );
 
             // turn off the share & create buttons
             NavToolbar.SetShareButtonEnabled( false, null );

@@ -49,7 +49,6 @@ namespace CCVApp.Shared.UI
         public void Create( object masterView, RectangleF frame )
         {
             View = PlatformView.Create( );
-            View.Frame = new RectangleF( frame.Left, frame.Top, frame.Width, frame.Height );
             View.BackgroundColor = ControlStylingConfig.BackgroundColor;
             View.AddAsSubview( masterView );
 
@@ -198,13 +197,29 @@ namespace CCVApp.Shared.UI
 
             // set the group title
             GroupTitle.Text = groupTitle;
-            GroupTitle.Frame = new RectangleF( 0, 0, View.Frame.Width, Rock.Mobile.Graphics.Util.UnitToPx( 50 ) );
+
 
             // set the details for the group (distance, meeting time, etc)
-            GroupDetailsLayer.Frame = new RectangleF( 0, GroupTitle.Frame.Bottom, View.Frame.Width, Rock.Mobile.Graphics.Util.UnitToPx( 62 ) );
-            GroupDetails.Frame = new RectangleF( 0, GroupDetailsLayer.Frame.Top + 2, View.Frame.Width, Rock.Mobile.Graphics.Util.UnitToPx( 60 ) );
             GroupDetails.Text = meetingTime + "\n" + distance;
             GroupDetails.TextAlignment = TextAlignment.Center;
+
+
+            FirstName.Text = CCVApp.Shared.Network.RockMobileUser.Instance.Person.NickName;
+            LastName.Text = CCVApp.Shared.Network.RockMobileUser.Instance.Person.LastName;
+
+
+            Email.Text = CCVApp.Shared.Network.RockMobileUser.Instance.Person.Email;
+            CellPhone.Text = CCVApp.Shared.Network.RockMobileUser.Instance.CellPhoneNumberDigits( );
+
+            ResultView.Hide( );
+        }
+
+        public void LayoutChanged( RectangleF containerBounds )
+        {
+            View.Frame = new RectangleF( containerBounds.Left, containerBounds.Top, containerBounds.Width, containerBounds.Height );
+
+            BlockerView.SetBounds( containerBounds );
+            ResultView.SetBounds( containerBounds );
 
             float sectionSpacing = Rock.Mobile.Graphics.Util.UnitToPx( 25 );
             float layerHeight = Rock.Mobile.Graphics.Util.UnitToPx( 44 );
@@ -214,14 +229,17 @@ namespace CCVApp.Shared.UI
 
             float buttonWidth = Rock.Mobile.Graphics.Util.UnitToPx( 122 );
 
+            GroupTitle.Frame = new RectangleF( 0, 0, View.Frame.Width, Rock.Mobile.Graphics.Util.UnitToPx( 50 ) );
+
+            GroupDetailsLayer.Frame = new RectangleF( 0, GroupTitle.Frame.Bottom, View.Frame.Width, Rock.Mobile.Graphics.Util.UnitToPx( 62 ) );
+            GroupDetails.Frame = new RectangleF( 0, GroupDetailsLayer.Frame.Top + 2, View.Frame.Width, Rock.Mobile.Graphics.Util.UnitToPx( 60 ) );
+
             // Name Info
             FirstNameLayer.Frame = new RectangleF( 0, GroupDetailsLayer.Frame.Bottom + sectionSpacing, View.Frame.Width, layerHeight );
             FirstName.Frame = new RectangleF( textLeftInset, FirstNameLayer.Frame.Top + textTopInset, View.Frame.Width, textFieldHeight );
-            FirstName.Text = CCVApp.Shared.Network.RockMobileUser.Instance.Person.NickName;
 
             LastNameLayer.Frame = new RectangleF( 0, FirstNameLayer.Frame.Bottom, View.Frame.Width, layerHeight );
             LastName.Frame = new RectangleF( textLeftInset, LastNameLayer.Frame.Top + textTopInset, View.Frame.Width, textFieldHeight );
-            LastName.Text = CCVApp.Shared.Network.RockMobileUser.Instance.Person.LastName;
 
             SpouseNameLayer.Frame = new RectangleF( 0, LastNameLayer.Frame.Bottom, View.Frame.Width, layerHeight );
             SpouseName.Frame = new RectangleF( textLeftInset, SpouseNameLayer.Frame.Top + textTopInset, View.Frame.Width, textFieldHeight );
@@ -229,16 +247,12 @@ namespace CCVApp.Shared.UI
             // Contact Info
             EmailLayer.Frame = new RectangleF( 0, SpouseNameLayer.Frame.Bottom + sectionSpacing, View.Frame.Width, layerHeight );
             Email.Frame = new RectangleF( textLeftInset, EmailLayer.Frame.Top + textTopInset, View.Frame.Width, textFieldHeight );
-            Email.Text = CCVApp.Shared.Network.RockMobileUser.Instance.Person.Email;
 
             CellPhoneLayer.Frame = new RectangleF( 0, EmailLayer.Frame.Bottom, View.Frame.Width, layerHeight );
             CellPhone.Frame = new RectangleF( textLeftInset, CellPhoneLayer.Frame.Top + textTopInset, View.Frame.Width, textFieldHeight );
-            CellPhone.Text = CCVApp.Shared.Network.RockMobileUser.Instance.CellPhoneNumberDigits( );
 
             // Join Button
             JoinButton.Frame = new RectangleF( (View.Frame.Width - buttonWidth) / 2, CellPhoneLayer.Frame.Bottom + sectionSpacing, buttonWidth, layerHeight );
-
-            ResultView.Hide( );
         }
 
         bool ValidateInput( )
@@ -314,6 +328,8 @@ namespace CCVApp.Shared.UI
                                 string.Format( ConnectStrings.JoinGroup_RegisterFailed, GroupTitle.Text ),
                                 GeneralStrings.Done );
                         }
+
+                        ResultView.SetBounds( View.Bounds );
                     } );
             }
         }

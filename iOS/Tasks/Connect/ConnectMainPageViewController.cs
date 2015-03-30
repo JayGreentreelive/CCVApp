@@ -31,7 +31,7 @@ namespace iOS
                     BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
 
                     Image = new UIImageView( );
-                    Image.ContentMode = UIViewContentMode.ScaleAspectFit;
+                    Image.ContentMode = UIViewContentMode.ScaleAspectFill;
                     Image.Layer.AnchorPoint = CGPoint.Empty;
                     AddSubview( Image );
 
@@ -49,7 +49,6 @@ namespace iOS
                     Title.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Large_Font_Bold, ControlStylingConfig.Large_FontSize );
                     Title.Layer.AnchorPoint = CGPoint.Empty;
                     Title.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
-                    Title.BackgroundColor = UIColor.Clear;
                     Title.LineBreakMode = UILineBreakMode.TailTruncation;
                     Title.SizeToFit( );
                     Title.Frame = new CGRect( 5, Image.Frame.Bottom + 5, Frame.Width - 10, Title.Frame.Height + 5 );
@@ -186,6 +185,18 @@ namespace iOS
             {
                 if ( indexPath.Row == 0 )
                 {
+                    nfloat imageAspect = PrimaryTableCell.Image.Bounds.Height / PrimaryTableCell.Image.Bounds.Width;
+                    PrimaryTableCell.Image.Frame = new CGRect( 0, 0, tableView.Bounds.Width, tableView.Bounds.Width * imageAspect );
+
+                    PrimaryTableCell.Title.SizeToFit( );
+                    PrimaryTableCell.Title.Frame = new CGRect( 5, PrimaryTableCell.Image.Frame.Bottom + 5, tableView.Bounds.Width - 10, PrimaryTableCell.Title.Frame.Height + 5 );
+
+                    PrimaryTableCell.BottomBanner.SizeToFit( );
+                    PrimaryTableCell.BottomBanner.Bounds = new CGRect( 0, 0, tableView.Bounds.Width, PrimaryTableCell.BottomBanner.Bounds.Height + 10 );
+                    PrimaryTableCell.BottomBanner.Layer.Position = new CGPoint( 0, PrimaryTableCell.Title.Frame.Bottom + 5 );
+
+                    PendingPrimaryCellHeight = PrimaryTableCell.BottomBanner.Frame.Bottom;
+
                     return PrimaryTableCell;
                 }
                 else
@@ -273,14 +284,15 @@ namespace iOS
 
             ConnectTableView.SeparatorStyle = UITableViewCellSeparatorStyle.None;
             ConnectTableView.Source = new TableSource( this );
-            ConnectTableView.ReloadData( );
         }
 
-        public override void ViewDidLayoutSubviews()
+        public override void LayoutChanged( )
         {
-            base.ViewDidLayoutSubviews();
+            base.LayoutChanged( );
 
+            // if the layout is changed, the simplest way to fix the UI is to recreate the table source
             ConnectTableView.Frame = new CGRect( 0, 0, View.Bounds.Width, View.Bounds.Height );
+            ConnectTableView.ReloadData( );
         }
 
         public void RowClicked( int rowIndex )

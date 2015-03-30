@@ -521,6 +521,15 @@ namespace iOS
             NotesTableView.Frame = new CGRect( 0, 0, View.Bounds.Width, View.Bounds.Height );
         }
 
+        public override void LayoutChanged( )
+        {
+            base.LayoutChanged( );
+
+            // if the layout is changed, the simplest way to fix the UI is to recreate the table source
+            NotesTableView.Source = new TableSource( this, SeriesEntries, ImageMainPlaceholder, ImageThumbPlaceholder );
+            NotesTableView.ReloadData( );
+        }
+
         public override void ViewWillDisappear(bool animated)
         {
             base.ViewWillDisappear(animated);

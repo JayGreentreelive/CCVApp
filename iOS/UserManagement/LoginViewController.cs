@@ -80,7 +80,7 @@ namespace iOS
 
             UserNameField = new StyledTextField();
             View.AddSubview( UserNameField.Background );
-            UserNameField.SetFrame( new CGRect( -10, View.Frame.Height * .25f, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+
             UserNameField.Field.AutocorrectionType = UITextAutocorrectionType.No;
             ControlStyling.StyleTextField( UserNameField.Field, LoginStrings.UsernamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( UserNameField.Background );
@@ -96,7 +96,7 @@ namespace iOS
             View.AddSubview( PasswordField.Background );
             PasswordField.Field.AutocorrectionType = UITextAutocorrectionType.No;
             PasswordField.Field.SecureTextEntry = true;
-            PasswordField.SetFrame( new CGRect( UserNameField.Background.Frame.Left, UserNameField.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+
             ControlStyling.StyleTextField( PasswordField.Field, LoginStrings.PasswordPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( PasswordField.Background );
             PasswordField.Field.ShouldReturn += (textField) => 
@@ -112,7 +112,6 @@ namespace iOS
             View.AddSubview( LoginButton );
             ControlStyling.StyleButton( LoginButton, LoginStrings.LoginButton, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             LoginButton.SizeToFit( );
-            LoginButton.Frame = new CGRect( View.Frame.Left + 8, PasswordField.Background.Frame.Bottom + 20, ControlStyling.ButtonWidth, ControlStyling.ButtonHeight );
             LoginButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
                     if( RockMobileUser.Instance.LoggedIn == true )
@@ -131,7 +130,6 @@ namespace iOS
             View.AddSubview( RegisterButton );
             ControlStyling.StyleButton( RegisterButton, LoginStrings.RegisterButton, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             RegisterButton.SizeToFit( );
-            RegisterButton.Frame = new CGRect( View.Frame.Right - ControlStyling.ButtonWidth - 8, PasswordField.Background.Frame.Bottom + 20, ControlStyling.ButtonWidth, ControlStyling.ButtonHeight );
             RegisterButton.TouchUpInside += (object sender, EventArgs e ) =>
                 {
                     Springboard.RegisterNewUser( );
@@ -140,7 +138,7 @@ namespace iOS
             // setup the result
             LoginResult = new StyledTextField( );
             View.AddSubview( LoginResult.Background );
-            LoginResult.SetFrame( new CGRect( UserNameField.Background.Frame.Left, LoginButton.Frame.Bottom + 20, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+
             ControlStyling.StyleTextField( LoginResult.Field, "", ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             ControlStyling.StyleBGLayer( LoginResult.Background );
             LoginResult.Field.UserInteractionEnabled = false;
@@ -149,7 +147,6 @@ namespace iOS
             // setup the facebook button
             FacebookLogin = new UIButton( );
             View.AddSubview( FacebookLogin );
-            FacebookLogin.Frame = new CGRect( -2, LoginResult.Background.Frame.Bottom + 20, View.Frame.Width + 4, ControlStyling.ButtonHeight );
             string imagePath = NSBundle.MainBundle.BundlePath + "/" + "facebook_login.png";
             FBImageView = new UIImageView( new UIImage( imagePath ) );
 
@@ -167,7 +164,6 @@ namespace iOS
             CancelButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
             CancelButton.SetTitle( GeneralStrings.Cancel, UIControlState.Normal );
             CancelButton.SizeToFit( );
-            CancelButton.Frame = new CGRect( ( View.Frame.Width - CancelButton.Frame.Width ) / 2, FacebookLogin.Frame.Bottom + 20, CancelButton.Frame.Width, CancelButton.Frame.Height );
             CancelButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
                     // don't allow canceling while we wait for a web request.
@@ -180,7 +176,6 @@ namespace iOS
             // setup the fake header
             HeaderView = new UIView( );
             View.AddSubview( HeaderView );
-            HeaderView.Frame = new CGRect( View.Frame.Left, View.Frame.Top, View.Frame.Width, StyledTextField.StyledFieldHeight );
             HeaderView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             imagePath = NSBundle.MainBundle.BundlePath + "/" + PrimaryNavBarConfig.LogoFile;
@@ -188,9 +183,26 @@ namespace iOS
             HeaderView.AddSubview( LogoView );
         }
 
-        public override void ViewDidLayoutSubviews()
+        public override void ViewDidLayoutSubviews( )
         {
-            base.ViewDidLayoutSubviews();
+            base.ViewDidLayoutSubviews( );
+
+            UserNameField.SetFrame( new CGRect( -10, View.Frame.Height * .25f, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+            PasswordField.SetFrame( new CGRect( UserNameField.Background.Frame.Left, UserNameField.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+
+            LoginButton.Frame = new CGRect( View.Frame.Left + 8, PasswordField.Background.Frame.Bottom + 20, ControlStyling.ButtonWidth, ControlStyling.ButtonHeight );
+
+            RegisterButton.Frame = new CGRect( View.Frame.Right - ControlStyling.ButtonWidth - 8, PasswordField.Background.Frame.Bottom + 20, ControlStyling.ButtonWidth, ControlStyling.ButtonHeight );
+
+            LoginResult.SetFrame( new CGRect( UserNameField.Background.Frame.Left, LoginButton.Frame.Bottom + 20, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+
+            FacebookLogin.Frame = new CGRect( -2, LoginResult.Background.Frame.Bottom + 20, View.Frame.Width + 4, ControlStyling.ButtonHeight );
+
+            CancelButton.Frame = new CGRect( ( View.Frame.Width - CancelButton.Frame.Width ) / 2, FacebookLogin.Frame.Bottom + 20, CancelButton.Frame.Width, CancelButton.Frame.Height );
+
+
+
+            HeaderView.Frame = new CGRect( View.Frame.Left, View.Frame.Top, View.Frame.Width, StyledTextField.StyledFieldHeight );
 
             // setup the header shadow
             UIBezierPath shadowPath = UIBezierPath.FromRect( HeaderView.Bounds );
@@ -256,7 +268,7 @@ namespace iOS
             return Springboard.ShouldAutorotate();
         }
 
-        public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations( )
+        /*public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations( )
         {
             return Springboard.GetSupportedInterfaceOrientations( );
         }
@@ -264,7 +276,7 @@ namespace iOS
         public override UIInterfaceOrientation PreferredInterfaceOrientationForPresentation( )
         {
             return Springboard.PreferredInterfaceOrientationForPresentation( );
-        }
+        }*/
 
         public override bool PrefersStatusBarHidden()
         {

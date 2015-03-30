@@ -7,9 +7,11 @@ namespace iOS
 {
     public class Task
     {
+        public CGRect ContainerBounds { get; set; }
         protected TaskUINavigationController ParentViewController { get; set; }
         public NavToolbar NavToolbar { get; set; }
         protected UIStoryboard Storyboard { get; set; }
+        protected TaskUIViewController ActiveViewController { get; set; }
 
         public Task( string storyboardName )
         {
@@ -37,7 +39,6 @@ namespace iOS
                 throw new InvalidCastException( "View Controllers used by Activities must be of type TaskUIViewController" );
             }
 
-            viewController.Task = this;
             ParentViewController.PushViewController( destinationViewController, true );
         }
 
@@ -48,9 +49,12 @@ namespace iOS
         /// This is NOT called when the application comes into the foreground.
         /// </summary>
         /// <param name="parentViewController">Parent view controller.</param>
-        public virtual void MakeActive( TaskUINavigationController parentViewController, NavToolbar navToolbar )
+        public virtual void MakeActive( TaskUINavigationController parentViewController, NavToolbar navToolbar, CGRect containerBounds )
         {
+            ContainerBounds = containerBounds;
+
             ParentViewController = parentViewController;
+
             NavToolbar = navToolbar;
         }
 
@@ -74,6 +78,7 @@ namespace iOS
         public virtual void MakeInActive( )
         {
             // always clear our parent view controller when going inactive
+            ActiveViewController = null;
             ParentViewController = null;
             NavToolbar = null;
         }
@@ -82,10 +87,20 @@ namespace iOS
         /// Called when a new view controller is shown by the parent navigation controller.
         /// This is useful so the task can evaluate what viewcontroller was just shown
         /// and update itself or the toolbar accordingly.
+        /// It is ALWAYS called, whether a view controller is being pushed, or revealed because the stack is being popped.
         /// </summary>
         /// <param name="viewController">View controller.</param>
-        public virtual void WillShowViewController( UIViewController viewController )
+        public virtual void WillShowViewController( TaskUIViewController viewController )
         {
+            ActiveViewController = viewController;
+
+            // ensure this controller has the parent task
+            viewController.Task = this;
+
+            // and that it knows what its dimensions can be.
+            viewController.View.Bounds = ContainerBounds;
+
+            viewController.LayoutChanged( );
         }
 
         /// <summary>
@@ -98,21 +113,40 @@ namespace iOS
             return true;
         }
 
-        public virtual UIInterfaceOrientationMask GetSupportedInterfaceOrientations()
+        // if a given task wants all or some of its view controllers to support landscape, it should return true here.
+        public virtual bool SupportsLandscape( )
         {
-            // if we're in wide landscape, support ANY orientation. otherwise it needs to be portrait (unless a derived class overrides)
-            if ( SpringboardViewController.IsDeviceLandscape( ) == true && SpringboardViewController.IsLandscapeRegular( ) == true )
-            {
-                return UIInterfaceOrientationMask.All;
-            }
-            else
-            {
-                return UIInterfaceOrientationMask.Portrait;
-            }
+            return false;
         }
 
         public virtual void LayoutChanging( )
         {
+            if ( SpringboardViewController.IsLandscapeRegular( ) == true )
+            {
+                Console.WriteLine( "Landscape Regular" );
+            }
+            else if ( SpringboardViewController.IsDeviceLandscape( ) == true )
+            {
+                Console.WriteLine( "Landscape" );
+            }
+            else if ( SpringboardViewController.IsDevicePortrait( ) == true )
+            {
+                Console.WriteLine( "Portrait" );
+            }
+
+            ActiveViewController.LayoutChanging( );
+        }
+
+        public virtual void LayoutChanged( CGRect containerBounds )
+        {
+            // store the new container bounds so we can notify any view controllers we show
+            ContainerBounds = containerBounds;
+
+            // give the current view controller the new bounds
+            ActiveViewController.View.Bounds = containerBounds;
+
+            // and notify it.
+            ActiveViewController.LayoutChanged( );
         }
 
         /// <summary>

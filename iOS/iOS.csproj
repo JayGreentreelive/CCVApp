@@ -424,9 +424,6 @@
       <DependentUpon>NewsMainUIViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="Tasks\News\NewsDetailsUIViewController.cs" />
-    <Compile Include="Tasks\News\NewsDetailsUIViewController.designer.cs">
-      <DependentUpon>NewsDetailsUIViewController.cs</DependentUpon>
-    </Compile>
     <Compile Include="Tasks\About\AboutMainPageUIViewController.cs" />
     <Compile Include="Tasks\About\AboutMainPageUIViewController.designer.cs">
       <DependentUpon>AboutMainPageUIViewController.cs</DependentUpon>
@@ -479,9 +476,6 @@
       <DependentUpon>ConnectMainPageViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="Tasks\News\NewsWebViewController.cs" />
-    <Compile Include="Tasks\News\NewsWebViewController.designer.cs">
-      <DependentUpon>NewsWebViewController.cs</DependentUpon>
-    </Compile>
     <Compile Include="UserManagement\RegisterViewController.cs" />
     <Compile Include="UserManagement\RegisterViewController.designer.cs">
       <DependentUpon>RegisterViewController.cs</DependentUpon>

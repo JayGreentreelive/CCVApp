@@ -15,16 +15,20 @@ namespace iOS
             MainPageVC.Task = this;
         }
 
-        public override void MakeActive( TaskUINavigationController parentViewController, NavToolbar navToolbar )
+        public override void MakeActive( TaskUINavigationController parentViewController, NavToolbar navToolbar, CGRect containerBounds )
         {
-            base.MakeActive( parentViewController, navToolbar );
+            base.MakeActive( parentViewController, navToolbar, containerBounds );
+
+            MainPageVC.View.Bounds = containerBounds;
 
             // set our current page as root
             parentViewController.PushViewController(MainPageVC, false);
         }
 
-        public override void WillShowViewController(UIViewController viewController)
+        public override void WillShowViewController(TaskUIViewController viewController)
         {
+            base.WillShowViewController( viewController );
+
             // turn off the share & create buttons
             NavToolbar.SetShareButtonEnabled( false, null );
             NavToolbar.SetCreateButtonEnabled( false, null );

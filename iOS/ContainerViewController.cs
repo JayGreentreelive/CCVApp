@@ -68,6 +68,11 @@ namespace iOS
             TaskTransition.ContainerViewController = this;
 		}
 
+        public ContainerViewController () : base ()
+        {
+            TaskTransition.ContainerViewController = this;
+        }
+
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
@@ -75,6 +80,8 @@ namespace iOS
             // container view must have a black background so that the ticks
             // before the task displays don't cause a flash
             View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
+            View.Layer.AnchorPoint = CGPoint.Empty;
+            View.Layer.Position = CGPoint.Empty;
 
             // First setup the SpringboardReveal button, which rests in the upper left
             // of the MainNavigationUI. (We must do it here because the ContainerViewController's
@@ -144,8 +151,6 @@ namespace iOS
             // of the primary navigation controller.
             AddChildViewController( SubNavigationController );
             View.AddSubview( SubNavigationController.View );
-
-            SubNavigationController.View.BackgroundColor = UIColor.Black;
         }
 
         public override void ViewDidLayoutSubviews()
@@ -171,6 +176,16 @@ namespace iOS
             if ( CurrentTask != null )
             {
                 CurrentTask.LayoutChanging( );
+            }
+        }
+
+        public void LayoutChanged( )
+        {
+            SubNavigationController.View.Bounds = View.Bounds;
+
+            if ( CurrentTask != null )
+            {
+                CurrentTask.LayoutChanged( View.Bounds );
             }
         }
 
@@ -208,7 +223,7 @@ namespace iOS
             if( CurrentTask != null )
             {
                 TaskControllerAnimating = true;
-                CurrentTask.WillShowViewController( viewController );
+                CurrentTask.WillShowViewController( (TaskUIViewController) viewController );
             }
 
             UpdateBackButton( );
@@ -234,7 +249,7 @@ namespace iOS
 
             _CurrentTask = task;
 
-            CurrentTask.MakeActive( SubNavigationController, SubNavToolbar );
+            CurrentTask.MakeActive( SubNavigationController, SubNavToolbar, View.Bounds );
         }
 
         public void PerformSegue( UIViewController sourceViewController, UIViewController destinationViewController )

@@ -15,88 +15,10 @@
                     <view key="view" contentMode="scaleToFill" id="12">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="267">
-                                <rect key="frame" x="20" y="-70" width="46" height="30"/>
-                                <state key="normal" title="Button">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                            </button>
-                            <button opaque="NO" contentMode="scaleAspectFit" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="clip" translatesAutoresizingMaskIntoConstraints="NO" id="283">
-                                <rect key="frame" x="0.0" y="0.0" width="112" height="112"/>
-                                <state key="normal" title="P">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="390">
-                                <rect key="frame" x="4" y="105" width="92" height="17"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
-                                <state key="normal" title="View Profile">
-                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                            </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" fixedFrame="YES" text="Jered" lineBreakMode="tailTruncation" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="444">
-                                <rect key="frame" x="87" y="124" width="42" height="21"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" fixedFrame="YES" text="Welcome:" lineBreakMode="tailTruncation" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="449">
-                                <rect key="frame" x="0.0" y="126" width="80" height="21"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="456">
-                                <rect key="frame" x="0.0" y="380" width="275" height="40"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                            </view>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="467">
-                                <rect key="frame" x="0.0" y="350" width="275" height="45"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                            </view>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="476">
-                                <rect key="frame" x="0.0" y="305" width="275" height="45"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                            </view>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="479">
-                                <rect key="frame" x="0.0" y="265" width="275" height="45"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                            </view>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="486">
-                                <rect key="frame" x="0.0" y="225" width="275" height="45"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                            </view>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="491">
-                                <rect key="frame" x="0.0" y="180" width="275" height="45"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                            </view>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" fixedFrame="YES" text="Tap to personalize" lineBreakMode="tailTruncation" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="506">
-                                <rect key="frame" x="0.0" y="153" width="115" height="21"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
                         <color key="backgroundColor" red="0.082352941176470587" green="0.082352941176470587" blue="0.082352941176470587" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
                     <navigationItem key="navigationItem" title="Root View Controller" id="11"/>
                     <connections>
-                        <outlet property="ConnectElement" destination="486" id="name-outlet-486"/>
-                        <outlet property="EditPictureButton" destination="283" id="name-outlet-283"/>
-                        <outlet property="GiveElement" destination="467" id="name-outlet-467"/>
-                        <outlet property="MessagesElement" destination="479" id="name-outlet-479"/>
-                        <outlet property="MoreElement" destination="456" id="name-outlet-456"/>
-                        <outlet property="NewsElement" destination="491" id="name-outlet-491"/>
-                        <outlet property="PrayerElement" destination="476" id="name-outlet-476"/>
-                        <outlet property="UserNameField" destination="444" id="name-outlet-444"/>
-                        <outlet property="ViewProfileButton" destination="390" id="name-outlet-390"/>
-                        <outlet property="ViewProfileLabel" destination="506" id="name-outlet-506"/>
-                        <outlet property="WelcomeField" destination="449" id="name-outlet-449"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="13" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -111,7 +33,6 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="76" kind="relationship" relationship="rootViewController" id="81"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="39" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -119,24 +40,6 @@
             <point key="canvasLocation" x="-1310" y="-1042"/>
         </scene>
         <!--Container View Controller-->
-        <scene sceneID="75">
-            <objects>
-                <viewController storyboardIdentifier="ContainerViewController" id="76" customClass="ContainerViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="119"/>
-                        <viewControllerLayoutGuide type="bottom" id="120"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="77">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="80"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="78" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-915" y="-1042"/>
-        </scene>
         <!--Navigation Controller-->
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
@@ -194,12 +97,26 @@
         <image name="news_baptism_main.png" width="375" height="242"/>
         <image name="news_learnmore_header.png" width="414" height="180"/>
         <image name="news_learnmore_main.png" width="375" height="242"/>
-        <image name="news_startingpoint_header.png" width="1242" height="540"/>
+        <image name="news_startingpoint_header.png" width="414" height="180"/>
         <image name="news_startingpoint_main.png" width="375" height="242"/>
         <image name="podcastThumbnailPlaceholder.png" width="590" height="332"/>
         <image name="spot_mask.png" width="128" height="128"/>
         <image name="news_baptism_header.png" width="414" height="180"/>
         <image name="facebook_login.png" width="250" height="35"/>
         <image name="connect_banner.jpg" width="595" height="335"/>
+        <image name="baptism_thumb.png" width="210" height="210"/>
+        <image name="foundations_thumb.png" width="210" height="210"/>
+        <image name="starting_point_thumb.png" width="210" height="210"/>
+        <image name="placeholder_news_details.png" width="1242" height="540"/>
+        <image name="placeholder_news_main.png" width="1242" height="801"/>
+        <image name="placeholder_notes_main.png" width="750" height="422"/>
+        <image name="placeholder_notes_thumb.png" width="210" height="210"/>
+        <image name="note_tutorial.png" width="1242" height="2208"/>
+        <image name="oobe_ccv_logo_1gmini.png" width="102" height="38"/>
+        <image name="oobe_ccv_logo_i4.png" width="203" height="75"/>
+        <image name="oobe_ccv_logo_i5.png" width="173" height="65"/>
+        <image name="oobe_ccv_logo_i6.png" width="203" height="75"/>
+        <image name="oobe_ccv_logo_i6p.png" width="336" height="124"/>
+        <image name="oobe_splash_bg.png" width="1242" height="2208"/>
     </resources>
 </document>

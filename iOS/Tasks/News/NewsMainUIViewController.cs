@@ -68,7 +68,9 @@ namespace iOS
                 {
                     cell = new UITableViewCell (UITableViewCellStyle.Default, cellIdentifier);
                     cell.SelectionStyle = UITableViewCellSelectionStyle.Default;
+                    cell.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
                 }
+                cell.Bounds = new CGRect( cell.Bounds.X, cell.Bounds.Y, tableView.Bounds.Width, cell.Bounds.Height );
 
                 // set the image for the cell
                 if ( News[ indexPath.Row ].Image != null )
@@ -81,10 +83,10 @@ namespace iOS
                 }
 
                 // scale down the image to the width of the device
-                float imageWidth = cell.ContentView.Layer.Contents.Width;
-                float imageHeight = cell.ContentView.Layer.Contents.Height;
+                nfloat imageWidth = cell.ContentView.Layer.Contents.Width;
+                nfloat imageHeight = cell.ContentView.Layer.Contents.Height;
 
-                float aspectRatio = (float) (imageHeight / imageWidth);
+                nfloat aspectRatio = (float) (imageHeight / imageWidth);
                 cell.Bounds = new CGRect( 0, 0, tableView.Bounds.Width, tableView.Bounds.Width * aspectRatio );
 
                 PendingCellHeight = cell.Bounds.Height;
@@ -109,6 +111,8 @@ namespace iOS
         bool IsVisible { get; set; }
         UIImage ImagePlaceholder { get; set; }
 
+        UITableView NewsTableView { get; set; }
+
 		public NewsMainUIViewController (IntPtr handle) : base (handle)
 		{
             News = new List<NewsEntry>( );
@@ -116,6 +120,14 @@ namespace iOS
             string imagePath = NSBundle.MainBundle.BundlePath + "/" + GeneralConfig.NewsMainPlaceholder;
             ImagePlaceholder = new UIImage( imagePath );
 		}
+
+        public override void ViewDidLoad()
+        {
+            base.ViewDidLoad();
+
+            NewsTableView = new UITableView( );
+            View.AddSubview( NewsTableView );
+        }
 
         public override void ViewWillAppear(bool animated)
         {
@@ -225,19 +237,20 @@ namespace iOS
             }
         }
 
-        public override void ViewDidLayoutSubviews()
+        public override void LayoutChanged()
         {
-            base.ViewDidLayoutSubviews();
+            base.LayoutChanged();
 
             // adjust the table height for our navbar.
             // We MUST do it here, and we also have to set ContentType to Top, as opposed to ScaleToFill, on the view itself,
             // or our changes will be overwritten
             NewsTableView.Frame = new CGRect( 0, 0, View.Bounds.Width, View.Bounds.Height );
+            NewsTableView.ReloadData( );
         }
 
         public void RowClicked( int row )
         {
-            NewsDetailsUIViewController viewController = Storyboard.InstantiateViewController( "NewsDetailsUIViewController" ) as NewsDetailsUIViewController;
+            NewsDetailsUIViewController viewController = new NewsDetailsUIViewController( );
             viewController.NewsItem = News[ row ].News;
 
             Task.PerformSegue( this, viewController );

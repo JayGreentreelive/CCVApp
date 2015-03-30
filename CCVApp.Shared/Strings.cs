@@ -246,6 +246,8 @@ namespace CCVApp.Shared
 
             public const string ViewPrayer_StatusText_Retrieving = "Getting Prayer Requests";
             public const string ViewPrayer_StatusText_Failed = "Oops";
+            public const string ViewPrayer_StatusText_NoPrayers = "Prayer Reqests";
+            public const string ViewPrayer_Result_NoPrayersText = "There dont't currently appear to be any public prayer requests. Why not add one?";
             public const string Prayer_Confirm = "I Prayed";
 
             public const string CreatePrayer_FirstNamePlaceholderText = "First Name";

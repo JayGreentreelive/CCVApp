@@ -267,8 +267,11 @@ namespace iOS
         public UILabel SearchResultsBanner { get; set; }
         public UILabel DetailsFooter { get; set; }
         public UILabel JoinFooter { get; set; }
-        //public UILabel NeighborhoodBanner { get; set; }
         public UIView Seperator { get; set; }
+
+        UIView StreetBorder { get; set; }
+        UIView CityBorder { get; set; }
+        UIView StateBorder { get; set; }
 
         public UIButton SearchButton { get; set; }
 
@@ -361,110 +364,83 @@ namespace iOS
 
             View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( CCVApp.Shared.Config.ControlStylingConfig.BG_Layer_Color );
 
+            // setup everything except positioning, which will happen in LayoutChanged()
             SourceLocation = null;
             GroupEntries = new List<GroupFinder.GroupEntry>();
 
-            // setup the top area with the map
-            // define the search button
             SearchButton = UIButton.FromType( UIButtonType.System );
+            View.AddSubview( SearchButton );
             SearchButton.Layer.AnchorPoint = new CGPoint( 0, 0 );
             ControlStyling.StyleButton( SearchButton, ConnectConfig.GroupFinder_SearchIcon, ControlStylingConfig.Icon_Font_Secondary, 32 );
             SearchButton.SizeToFit( );
-            SearchButton.Frame = new CGRect( View.Frame.Width - SearchButton.Frame.Width, 0, SearchButton.Frame.Width, 33 );
             SearchButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
                     GetGroups( Street.Text, City.Text, State.Text, Zip.Text );
                 };
-            View.AddSubview( SearchButton );
 
-            // add all four address fields with a border between each
-            nfloat widthPerField = (View.Frame.Width - SearchButton.Frame.Width - 20) / 4;
-
-            // Street
             Street = new UIInsetTextField( );
+            View.AddSubview( Street );
             Street.Layer.AnchorPoint = CGPoint.Empty;
             ControlStyling.StyleTextField( Street, ConnectStrings.GroupFinder_StreetPlaceholder, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-            Street.Frame = new CGRect( 0, 0, widthPerField * 1.5f, SearchButton.Frame.Height );
             Street.ReturnKeyType = UIReturnKeyType.Search;
             Street.KeyboardAppearance = UIKeyboardAppearance.Dark;
             Street.AutocapitalizationType = UITextAutocapitalizationType.Words;
             Street.Delegate = new AddressDelegate( ) { Parent = this };
             Street.AutocorrectionType = UITextAutocorrectionType.No;
-            View.AddSubview( Street );
 
-            UIView border = new UIView( );
-            border.BackgroundColor = UIColor.DarkGray;
-            border.Layer.AnchorPoint = CGPoint.Empty;
-            border.Frame = new CGRect( 0, 0, 1, SearchButton.Frame.Height );
-            border.Layer.Position = new CGPoint( Street.Frame.Right, 0 );
-            View.AddSubview( border );
+            StreetBorder = new UIView( );
+            View.AddSubview( StreetBorder );
+            StreetBorder.BackgroundColor = UIColor.DarkGray;
+            StreetBorder.Layer.AnchorPoint = CGPoint.Empty;
 
-
-            // City
             City = new UIInsetTextField( );
+            View.AddSubview( City );
             City.Layer.AnchorPoint = CGPoint.Empty;
             ControlStyling.StyleTextField( City, ConnectStrings.GroupFinder_CityPlaceholder, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-            City.Frame = new CGRect( border.Frame.Right, 0, widthPerField, SearchButton.Frame.Height );
             City.ReturnKeyType = UIReturnKeyType.Search;
             City.KeyboardAppearance = UIKeyboardAppearance.Dark;
             City.AutocapitalizationType = UITextAutocapitalizationType.Words;
             City.AutocorrectionType = UITextAutocorrectionType.No;
             City.Delegate = new AddressDelegate( ) { Parent = this };
-            View.AddSubview( City );
-
-            border = new UIView( );
-            border.BackgroundColor = UIColor.DarkGray;
-            border.Layer.AnchorPoint = CGPoint.Empty;
-            border.Frame = new CGRect( 0, 0, 1, SearchButton.Frame.Height );
-            border.Layer.Position = new CGPoint( City.Frame.Right, 0 );
-            View.AddSubview( border );
 
 
-            // State
+            CityBorder = new UIView( );
+            View.AddSubview( CityBorder );
+            CityBorder.BackgroundColor = UIColor.DarkGray;
+            CityBorder.Layer.AnchorPoint = CGPoint.Empty;
+
             State = new UIInsetTextField( );
+            View.AddSubview( State );
             State.Layer.AnchorPoint = CGPoint.Empty;
             ControlStyling.StyleTextField( State, ConnectStrings.GroupFinder_StatePlaceholder, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             State.Text = ConnectStrings.GroupFinder_DefaultState;
-            State.Frame = new CGRect( border.Frame.Right, 0, widthPerField / 2, SearchButton.Frame.Height );
             State.ReturnKeyType = UIReturnKeyType.Search;
             State.Delegate = new AddressDelegate( ) { Parent = this };
             State.KeyboardAppearance = UIKeyboardAppearance.Dark;
             State.AutocapitalizationType = UITextAutocapitalizationType.Words;
             State.AutocorrectionType = UITextAutocorrectionType.No;
-            View.AddSubview( State );
-
-            border = new UIView( );
-            border.BackgroundColor = UIColor.DarkGray;
-            border.Layer.AnchorPoint = CGPoint.Empty;
-            border.Frame = new CGRect( 0, 0, 1, SearchButton.Frame.Height );
-            border.Layer.Position = new CGPoint( State.Frame.Right, 0 );
-            View.AddSubview( border );
 
 
-            // Zip
+            StateBorder = new UIView( );
+            StateBorder.BackgroundColor = UIColor.DarkGray;
+            StateBorder.Layer.AnchorPoint = CGPoint.Empty;
+            View.AddSubview( StateBorder );
+
             Zip = new UIInsetTextField( );
+            View.AddSubview( Zip );
             Zip.Layer.AnchorPoint = CGPoint.Empty;
             ControlStyling.StyleTextField( Zip, ConnectStrings.GroupFinder_ZipPlaceholder, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-            Zip.Frame = new CGRect( border.Frame.Right, 0, widthPerField, SearchButton.Frame.Height );
             Zip.KeyboardAppearance = UIKeyboardAppearance.Dark;
             Zip.ReturnKeyType = UIReturnKeyType.Search;
             Zip.AutocorrectionType = UITextAutocorrectionType.No;
             Zip.Delegate = new AddressDelegate( ) { Parent = this };
-            View.AddSubview( Zip );
 
             ZipSpacer = new UIView( );
-            ZipSpacer.BackgroundColor = UIColor.DarkGray;
-            ZipSpacer.Layer.AnchorPoint = CGPoint.Empty;
-            ZipSpacer.Frame = new CGRect( 0, 0, SearchButton.Frame.Left - Zip.Frame.Right, SearchButton.Frame.Height );
-            ZipSpacer.Layer.Position = new CGPoint( Zip.Frame.Right, 0 );
             View.AddSubview( ZipSpacer );
+            ZipSpacer.BackgroundColor = UIColor.Clear;
+            ZipSpacer.Layer.AnchorPoint = CGPoint.Empty;
 
-
-            // Map
             MapView = new MKMapView( );
-            MapView.Layer.AnchorPoint = new CGPoint( 0, 0 );
-            MapView.Frame = new CGRect( 0, Street.Frame.Bottom, View.Frame.Width, 250 );
-            MapView.Delegate = new MapViewDelegate() { Parent = this };
             View.AddSubview( MapView );
 
             // set the default position for the map to whatever specified area.
@@ -475,71 +451,121 @@ namespace iOS
                 ConnectConfig.GroupFinder_DefaultScale_iOS );
             MapView.SetRegion( region, true );
 
+            MapView.Layer.AnchorPoint = new CGPoint( 0, 0 );
+            MapView.Delegate = new MapViewDelegate() { Parent = this };
 
-            // Search Results Banner
+
             SearchResultsBanner = new UILabel( );
+            View.AddSubview( SearchResultsBanner );
             SearchResultsBanner.Layer.AnchorPoint = new CGPoint( 0, 0 );
             SearchResultsBanner.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             SearchResultsBanner.Text = ConnectStrings.GroupFinder_BeforeSearch;
             SearchResultsBanner.SizeToFit( );
-            SearchResultsBanner.Frame = new CGRect( 0, MapView.Frame.Bottom, View.Frame.Width, SearchResultsBanner.Frame.Height );
             SearchResultsBanner.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
             SearchResultsBanner.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
             SearchResultsBanner.TextAlignment = UITextAlignment.Center;
-            View.AddSubview( SearchResultsBanner );
 
-            // Details / Join Banners
+
             DetailsFooter = new UILabel( );
+            View.AddSubview( DetailsFooter );
             DetailsFooter.Layer.AnchorPoint = new CGPoint( 0, 0 );
             DetailsFooter.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             DetailsFooter.Text = ConnectStrings.GroupFinder_DetailsLabel;
             DetailsFooter.SizeToFit( );
-            DetailsFooter.Frame = new CGRect( 10, SearchResultsBanner.Frame.Bottom, DetailsFooter.Frame.Width, SearchResultsBanner.Frame.Height );
             DetailsFooter.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
             DetailsFooter.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
             DetailsFooter.TextAlignment = UITextAlignment.Left;
-            View.AddSubview( DetailsFooter );
+
 
             JoinFooter = new UILabel( );
+            View.AddSubview( JoinFooter );
             JoinFooter.Layer.AnchorPoint = new CGPoint( 0, 0 );
             JoinFooter.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             JoinFooter.Text = ConnectStrings.GroupFinder_JoinLabel;
             JoinFooter.SizeToFit( );
-            JoinFooter.Frame = new CGRect( View.Frame.Width - JoinFooter.Frame.Width - 10, SearchResultsBanner.Frame.Bottom, JoinFooter.Frame.Width, SearchResultsBanner.Frame.Height );
             JoinFooter.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
             JoinFooter.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
             JoinFooter.TextAlignment = UITextAlignment.Left;
-            View.AddSubview( JoinFooter );
 
-            /*NeighborhoodBanner = new UILabel( );
-                    NeighborhoodBanner.Layer.AnchorPoint = new System.Drawing.PointF( 0, 0 );
-                    NeighborhoodBanner.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-                    NeighborhoodBanner.Text = "Your neighborhood is {0}";
-                    NeighborhoodBanner.SizeToFit( );
-                    NeighborhoodBanner.Frame = new RectangleF( 0, SearchResultsBanner.Frame.Bottom, parentSize.Width, NeighborhoodBanner.Frame.Height );
-                    NeighborhoodBanner.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
-                    NeighborhoodBanner.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Table_Footer_Color );
-                    NeighborhoodBanner.TextAlignment = UITextAlignment.Center;
-                    AddSubview( NeighborhoodBanner );*/
 
-            // add the seperator to the bottom
             Seperator = new UIView( );
             View.AddSubview( Seperator );
             Seperator.Layer.BorderWidth = 1;
             Seperator.Layer.BorderColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ).CGColor;
-            Seperator.Frame = new CGRect( 0, DetailsFooter.Frame.Bottom - 1, View.Bounds.Width, 1 );
 
-            // add the table view and source
-            GroupTableSource = new GroupFinderViewController.TableSource( this );
 
             GroupFinderTableView = new UITableView();
             View.AddSubview( GroupFinderTableView );
+            GroupTableSource = new GroupFinderViewController.TableSource( this );
+
+            // add the table view and source
             GroupFinderTableView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( CCVApp.Shared.Config.ControlStylingConfig.Table_Footer_Color );
             GroupFinderTableView.Source = GroupTableSource;
             GroupFinderTableView.SeparatorStyle = UITableViewCellSeparatorStyle.None;
 
             BlockerView = new BlockerView( View.Frame );
             View.AddSubview( BlockerView );
+        }
+
+        public override void LayoutChanged( )
+        {
+            base.LayoutChanged( );
+
+            // setup the top area with the map
+            // define the search button
+            SearchButton.Frame = new CGRect( View.Frame.Width - SearchButton.Frame.Width, 0, SearchButton.Frame.Width, 33 );
+
+            // add all four address fields with a border between each
+            nfloat widthPerField = (View.Frame.Width - SearchButton.Frame.Width - 20) / 4;
+
+            // Street
+            Street.Frame = new CGRect( 0, 0, widthPerField * 1.5f, SearchButton.Frame.Height );
+
+            StreetBorder.Frame = new CGRect( 0, 0, 1, SearchButton.Frame.Height );
+            StreetBorder.Layer.Position = new CGPoint( Street.Frame.Right, 0 );
+
+
+            // City
+            City.Frame = new CGRect( StreetBorder.Frame.Right, 0, widthPerField, SearchButton.Frame.Height );
+
+            CityBorder.Frame = new CGRect( 0, 0, 1, SearchButton.Frame.Height );
+            CityBorder.Layer.Position = new CGPoint( City.Frame.Right, 0 );
+
+
+            // State
+            State.Frame = new CGRect( CityBorder.Frame.Right, 0, widthPerField / 2, SearchButton.Frame.Height );
+
+
+            StateBorder.Frame = new CGRect( 0, 0, 1, SearchButton.Frame.Height );
+            StateBorder.Layer.Position = new CGPoint( State.Frame.Right, 0 );
+
+
+            // Zip
+            Zip.Frame = new CGRect( StateBorder.Frame.Right, 0, widthPerField, SearchButton.Frame.Height );
+
+            ZipSpacer.Frame = new CGRect( 0, 0, SearchButton.Frame.Left - Zip.Frame.Right, SearchButton.Frame.Height );
+            ZipSpacer.Layer.Position = new CGPoint( Zip.Frame.Right, 0 );
+
+
+            // Map
+            MapView.Frame = new CGRect( 0, Street.Frame.Bottom, View.Frame.Width, View.Frame.Height * .40f );
+
+            // Search Results Banner
+            SearchResultsBanner.Frame = new CGRect( 0, MapView.Frame.Bottom, View.Frame.Width, SearchResultsBanner.Frame.Height );
+
+
+            // Details / Join Banners
+            DetailsFooter.Frame = new CGRect( 10, SearchResultsBanner.Frame.Bottom, DetailsFooter.Frame.Width, SearchResultsBanner.Frame.Height );
+            JoinFooter.Frame = new CGRect( View.Frame.Width - JoinFooter.Frame.Width - 10, SearchResultsBanner.Frame.Bottom, JoinFooter.Frame.Width, SearchResultsBanner.Frame.Height );
+
+
+            // add the seperator to the bottom
+            Seperator.Frame = new CGRect( 0, DetailsFooter.Frame.Bottom - 1, View.Bounds.Width, 1 );
+
+            // wait to layout the table view until all subviews have been laid out. Fixes an issue where the table gets more height than it should,
+            // and the last row doesn't fit on screen.
+            GroupFinderTableView.Frame = new CGRect( 0, Seperator.Frame.Bottom, View.Bounds.Width, View.Bounds.Height - Seperator.Frame.Bottom );
+            GroupFinderTableView.ReloadData( );
         }
 
         public void UpdateMap( )
@@ -696,16 +722,7 @@ namespace iOS
         public override void TouchesEnded(NSSet touches, UIEvent evt)
         {
             //base.TouchesEnded(touches, evt);
-        }
-
-        public override void ViewDidLayoutSubviews()
-        {
-            base.ViewDidLayoutSubviews();
-
-            // wait to layout the table view until all subviews have been laid out. Fixes an issue where the table gets more height than it should,
-            // and the last row doesn't fit on screen.
-            GroupFinderTableView.Frame = new CGRect( 0, Seperator.Frame.Bottom, View.Bounds.Width, View.Bounds.Height - Seperator.Frame.Bottom );
-        }
+        } 
 
         public override void ViewWillAppear(bool animated)
         {

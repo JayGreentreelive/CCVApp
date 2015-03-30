@@ -32,6 +32,7 @@ namespace iOS
             View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             ScrollView = new UIScrollViewWrapper();
+            ScrollView.Layer.AnchorPoint = CGPoint.Empty;
             ScrollView.Parent = this;
             ScrollView.Frame = View.Frame;
             View.AddSubview( ScrollView );
@@ -50,18 +51,22 @@ namespace iOS
         {
             base.ViewWillAppear(animated);
 
-            JoinGroupView.DisplayView( GroupTitle, Distance, MeetingTime, GroupID );
-
             // force the cell phone field to update itself so it contains proper formatting
             CellPhoneTextField.Delegate.ShouldChangeCharacters( CellPhoneTextField, new NSRange( CellPhoneTextField.Text.Length, 0 ), "" );
+
+            JoinGroupView.DisplayView( GroupTitle, Distance, MeetingTime, GroupID );
         }
 
-        public override void ViewDidLayoutSubviews()
+        public override void LayoutChanged( )
         {
-            base.ViewDidLayoutSubviews();
+            base.LayoutChanged( );
+
+            ScrollView.Bounds = View.Bounds;
 
             nfloat controlBottom = JoinGroupView.GetControlBottom( ) + ( View.Bounds.Height * .25f );
             ScrollView.ContentSize = new CGSize( 0, (nfloat) Math.Max( controlBottom, View.Bounds.Height * 1.05f ) );
+
+            JoinGroupView.LayoutChanged( View.Bounds.ToRectF( ) );
         }
 
         public override void TouchesEnded(NSSet touches, UIEvent evt)
@@ -72,4 +77,3 @@ namespace iOS
         }
     }
 }
-

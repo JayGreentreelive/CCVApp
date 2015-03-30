@@ -2,6 +2,7 @@ using System;
 using Foundation;
 using UIKit;
 using System.CodeDom.Compiler;
+using CoreGraphics;
 
 namespace iOS
 {
@@ -22,6 +23,10 @@ namespace iOS
         }
 
         public virtual void LayoutChanging( )
+        {
+        }
+
+        public virtual void LayoutChanged( )
         {
         }
 

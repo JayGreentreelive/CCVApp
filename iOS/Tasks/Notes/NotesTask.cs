@@ -9,7 +9,6 @@ namespace iOS
 {
     public class NotesTask : Task
     {
-        TaskUIViewController ActiveViewController { get; set; }
         NotesMainUIViewController MainViewController { get; set; }
         public NotesViewController NoteController { get; set; }
 
@@ -24,9 +23,12 @@ namespace iOS
             NoteController.Task = this;
         }
 
-        public override void MakeActive( TaskUINavigationController parentViewController, NavToolbar navToolbar )
+        public override void MakeActive( TaskUINavigationController parentViewController, NavToolbar navToolbar, CGRect containerBounds )
         {
-            base.MakeActive( parentViewController, navToolbar );
+            base.MakeActive( parentViewController, navToolbar, containerBounds );
+
+            MainViewController.View.Bounds = containerBounds;
+            NoteController.View.Bounds = containerBounds;
 
             parentViewController.PushViewController( MainViewController, false );
         }
@@ -67,11 +69,12 @@ namespace iOS
             base.MakeInActive( );
         }
 
-        public override void WillShowViewController(UIViewController viewController)
+        public override void WillShowViewController(TaskUIViewController viewController)
         {
+            base.WillShowViewController( viewController );
+
             // if we're coming from WebView or Notes and going to something else,
             // force the device back to portrait
-            ActiveViewController = (TaskUIViewController)viewController;
 
             // if the notes are active, make sure the share button gets turned on
             if ( ( viewController as NotesViewController ) != null )
@@ -188,7 +191,7 @@ namespace iOS
             ActiveViewController.AppWillTerminate( );
         }
 
-        public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations()
+        /*public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations()
         {
             // if we're using the watch or notes controller, allow landscape
             if ( ( ActiveViewController as NotesViewController ) != null || 
@@ -201,14 +204,7 @@ namespace iOS
             {
                 return base.GetSupportedInterfaceOrientations( );
             }
-        }
-
-        public override void LayoutChanging()
-        {
-            base.LayoutChanging();
-
-            ActiveViewController.LayoutChanging( );
-        }
+        }*/
 
         public override bool ShouldForceBackButtonEnabled( )
         {

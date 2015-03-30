@@ -333,16 +333,24 @@ namespace iOS
                                                 RetrievingPrayersView.Layer.Opacity = 0.00f;
 
                                                 // setup the card positions to be to the offscreen to the left, centered on screen, and offscreen to the right
-                                                foreach( Rock.Client.PrayerRequest prayer in prayerRequests )
+                                                for( int i = 0; i < Math.Min( prayerRequests.Count, 50 ); i++ )
                                                 {
-                                                    PrayerCard card = new PrayerCard( prayer, CardSize );
+                                                    PrayerCard card = new PrayerCard( prayerRequests[ i ], CardSize );
                                                     PrayerRequests.Add( card );
                                                     Carousel.AddCard( card.View );
                                                 }
-
-                                                // add a read analytic
-                                                PrayerAnalytic.Instance.Trigger( PrayerAnalytic.Read );
                                             }
+                                            else
+                                            {
+                                                // let them know there aren't any prayer requests
+                                                StatusLabel.Text = PrayerStrings.ViewPrayer_StatusText_NoPrayers;
+                                                RetryButton.Hidden = false;
+                                                ResultLabel.Hidden = false;
+                                                ResultLabel.Text = PrayerStrings.ViewPrayer_Result_NoPrayersText;
+                                            }
+
+                                            // add a read analytic
+                                            PrayerAnalytic.Instance.Trigger( PrayerAnalytic.Read );
                                         }
                                         else
                                         {

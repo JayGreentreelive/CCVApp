@@ -543,6 +543,15 @@ namespace iOS
             SeriesTable.Frame = new CGRect( 0, 0, View.Bounds.Width, View.Bounds.Height );
         }
 
+        public override void LayoutChanged( )
+        {
+            base.LayoutChanged( );
+
+            // if the layout is changed, the simplest way to fix the UI is to recreate the table source
+            SeriesTable.Source = new TableSource( this, Messages, Series, SeriesBillboard );
+            SeriesTable.ReloadData( );
+        }
+
         public void RowClicked( int row, int buttonIndex )
         {
             // passing in -1 means they tapped an empty area of a cell. Use 

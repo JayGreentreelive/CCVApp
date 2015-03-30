@@ -9,6 +9,8 @@ namespace iOS
 	{
         public string DisplayUrl { get; set; }
 
+        UIWebView WebView { get; set; }
+
 		public ConnectWebViewController (IntPtr handle) : base (handle)
 		{
 		}
@@ -17,9 +19,17 @@ namespace iOS
         {
             base.ViewDidLoad();
 
-            UIWebView webView = new UIWebView( View.Frame );
-            View.AddSubview( webView );
-            webView.LoadRequest( new NSUrlRequest( new NSUrl( DisplayUrl ) ) );
+            WebView = new UIWebView( );
+            WebView.Frame = View.Frame;
+            View.AddSubview( WebView );
+            WebView.LoadRequest( new NSUrlRequest( new NSUrl( DisplayUrl ) ) );
+        }
+
+        public override void LayoutChanged()
+        {
+            base.LayoutChanged();
+
+            WebView.Frame = View.Frame;
         }
 	}
 }

@@ -97,15 +97,18 @@ namespace iOS
             // MainNavigationController must have a black background so that the ticks
             // before the task displays don't cause a flash
             View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
+            View.Layer.AnchorPoint = CGPoint.Empty;
+            View.Layer.Position = CGPoint.Empty;
 
-            DarkPanel = new UIView(View.Frame);
+            DarkPanel = new UIView();
+            DarkPanel.Layer.AnchorPoint = CGPoint.Empty;
+            DarkPanel.Frame = View.Frame;
             DarkPanel.Layer.Opacity = 0.0f;
             DarkPanel.BackgroundColor = UIColor.Black;
             View.AddSubview( DarkPanel );
 
             // setup the style of the nav bar
             NavigationBar.TintColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
-
 
             UIImage solidColor = new UIImage();
             UIGraphics.BeginImageContext( new CGSize( 1, 1 ) );
@@ -123,22 +126,27 @@ namespace iOS
             NavigationBar.Translucent = false;
 
             // our first (and only) child IS a ContainerViewController.
-            Container = ChildViewControllers[0] as ContainerViewController;
-            if( Container == null ) throw new InvalidCastException( String.Format( "MainUINavigationController's first child must be a ContainerViewController.") );
+            Container = new ContainerViewController( );
+            AddChildViewController( Container );
 
             // setup a shadow that provides depth when this panel is slid "out" from the springboard.
-            UIBezierPath shadowPath = UIBezierPath.FromRect( View.Bounds );
-            View.Layer.MasksToBounds = false;
-            View.Layer.ShadowColor = UIColor.Black.CGColor;
-            View.Layer.ShadowOffset = PrimaryContainerConfig.ShadowOffset;
-            View.Layer.ShadowOpacity = PrimaryContainerConfig.ShadowOpacity;
-            View.Layer.ShadowPath = shadowPath.CGPath;
+            ApplyEdgeShadow( );
 
             // setup our pan gesture
             PanGesture = new UIPanGestureRecognizer( OnPanGesture );
             PanGesture.MinimumNumberOfTouches = 1;
             PanGesture.MaximumNumberOfTouches = 1;
             View.AddGestureRecognizer( PanGesture );
+        }
+
+        void ApplyEdgeShadow( )
+        {
+            UIBezierPath shadowPath = UIBezierPath.FromRect( View.Bounds );
+            View.Layer.MasksToBounds = false;
+            View.Layer.ShadowColor = UIColor.Black.CGColor;
+            View.Layer.ShadowOffset = PrimaryContainerConfig.ShadowOffset;
+            View.Layer.ShadowOpacity = PrimaryContainerConfig.ShadowOpacity;
+            View.Layer.ShadowPath = shadowPath.CGPath;
         }
 
         void OnPanGesture(UIPanGestureRecognizer obj) 
@@ -179,7 +187,7 @@ namespace iOS
                 {
                     CGPoint currVelocity = obj.VelocityInView( View );
 
-                    float restingPoint = (float) (View.Layer.Bounds.Width / 2);
+                    float restingPoint = (float)0.00f;//(View.Layer.Bounds.Width / 2);
                     float currX = (float) (View.Layer.Position.X - restingPoint);
 
                     // if they slide at least a third of the way, allow a switch
@@ -238,24 +246,40 @@ namespace iOS
         public void LayoutChanging( )
         {
             Container.LayoutChanging( );
+        }
 
-            // should we setup the rules as if it's a split view?
+        public override void ViewDidLayoutSubviews()
+        {
+            base.ViewDidLayoutSubviews();
+
             if ( SpringboardViewController.IsLandscapeRegular( ) == true )
             {
+                View.Frame = new CGRect( PrimaryContainerConfig.SlideAmount, 0, SpringboardViewController.TraitSize.Width - PrimaryContainerConfig.SlideAmount, SpringboardViewController.TraitSize.Height );
+
+                SpringboardRevealed = true;
+                Container.View.UserInteractionEnabled = true;
+
                 DarkPanel.Hidden = true;
 
                 PanGesture.Enabled = false;
-            
-                RevealSpringboard( true );
             }
             else
             {
+                View.Frame = new CGRect( 0, 0, SpringboardViewController.TraitSize.Width, SpringboardViewController.TraitSize.Height );
+
                 DarkPanel.Hidden = false;
 
                 PanGesture.Enabled = true;
 
-                RevealSpringboard( false );
+                SpringboardRevealed = false;
+                Container.View.UserInteractionEnabled = true;
             }
+
+            DarkPanel.Bounds = View.Bounds;
+
+            ApplyEdgeShadow( );
+
+            Container.LayoutChanged( );
         }
 
         public void TryPanSpringboard( CGPoint delta )
@@ -263,7 +287,7 @@ namespace iOS
             // make sure the springboard is clamped
             float xPos = (float) (View.Layer.Position.X + delta.X);
 
-            float viewHalfWidth = (float) ( View.Layer.Bounds.Width / 2 );
+            float viewHalfWidth = (float)0.00f;//( View.Layer.Bounds.Width / 2 );
 
             xPos = Math.Max( viewHalfWidth, Math.Min( xPos, PrimaryContainerConfig.SlideAmount + viewHalfWidth ) );
 
@@ -349,12 +373,12 @@ namespace iOS
                                 float endPos = 0.0f;
                                 if( wantReveal == true )
                                 {
-                                    endPos = (float) (PrimaryContainerConfig.SlideAmount + (View.Layer.Bounds.Width / 2));
+                                    endPos = (float) PrimaryContainerConfig.SlideAmount;
                                     DarkPanel.Layer.Opacity = PrimaryContainerConfig.SlideDarkenAmount;
                                 }
                                 else
                                 {
-                                    endPos = (float) (View.Layer.Bounds.Width / 2);
+                                    endPos = 0.00f;
                                     DarkPanel.Layer.Opacity = 0.0f;
                                 }
 

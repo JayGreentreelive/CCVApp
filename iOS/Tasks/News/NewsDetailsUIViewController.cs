@@ -12,13 +12,19 @@ using CCVApp.Shared;
 
 namespace iOS
 {
-	partial class NewsDetailsUIViewController : TaskUIViewController
+	public class NewsDetailsUIViewController : TaskUIViewController
 	{
         public RockNews NewsItem { get; set; }
 
         bool IsVisible { get; set; }
 
-		public NewsDetailsUIViewController (IntPtr handle) : base (handle)
+        UILabel NewsTitle { get; set; }
+        UITextView NewsDescription { get; set; }
+        UIImageView ImageBanner { get; set; }
+        UIButton LearnMoreButton { get; set; }
+
+
+		public NewsDetailsUIViewController( ) : base ( )
 		{
 		}
 
@@ -28,17 +34,37 @@ namespace iOS
 
             View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
+            // setup the news title
+            NewsTitle = new UILabel( );
+            NewsTitle.Layer.AnchorPoint = CGPoint.Empty;
+            View.AddSubview( NewsTitle );
+            ControlStyling.StyleUILabel( NewsTitle, ControlStylingConfig.Large_Font_Bold, ControlStylingConfig.Large_FontSize );
+            NewsTitle.Text = NewsItem.Title;
+            NewsTitle.SizeToFit( );
+
             // populate the details view with this news item.
-            //NewsDescription.Layer.AnchorPoint = CGPoint.Empty;
+            NewsDescription = new UITextView( );
+            NewsDescription.Layer.AnchorPoint = CGPoint.Empty;
+            View.AddSubview( NewsDescription );
             NewsDescription.Text = NewsItem.Description;
             NewsDescription.BackgroundColor = UIColor.Clear;
             NewsDescription.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
             NewsDescription.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Light, ControlStylingConfig.Small_FontSize );
             NewsDescription.TextContainerInset = UIEdgeInsets.Zero;
             NewsDescription.TextContainer.LineFragmentPadding = 0;
+            NewsDescription.Editable = false;
 
             // we should always assume images are in cache. If they aren't, show a placeholder.
             // It is not our job to download them.
+            ImageBanner = new UIImageView( );
+            ImageBanner.Layer.AnchorPoint = CGPoint.Empty;
+
+            // scale the image down to fit the contents of the window, but allow cropping.
+            ImageBanner.BackgroundColor = UIColor.Green;
+            ImageBanner.ContentMode = UIViewContentMode.ScaleAspectFill;
+            ImageBanner.ClipsToBounds = true;
+
+            View.AddSubview( ImageBanner );
             MemoryStream imageStream = (MemoryStream)FileCache.Instance.LoadFile( NewsItem.HeaderImageName );
             if ( imageStream != null )
             {
@@ -65,13 +91,13 @@ namespace iOS
                     } );
             }
 
-            // scale the image down to fit the contents of the window, but allow cropping.
-            ImageBanner.BackgroundColor = UIColor.Green;
-            ImageBanner.ContentMode = UIViewContentMode.ScaleAspectFill;
 
+            // finally setup the Learn More button
+            LearnMoreButton = UIButton.FromType( UIButtonType.System );
+            View.AddSubview( LearnMoreButton );
             LearnMoreButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
-                    NewsWebViewController viewController = Storyboard.InstantiateViewController( "NewsWebViewController" ) as NewsWebViewController;
+                    NewsWebViewController viewController = new NewsWebViewController( );
                     viewController.DisplayUrl = NewsItem.ReferenceURL;
 
                     Task.PerformSegue( this, viewController );
@@ -82,11 +108,8 @@ namespace iOS
             {
                 LearnMoreButton.Hidden = true;
             }
-
             ControlStyling.StyleButton( LearnMoreButton, NewsStrings.LearnMore, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-
-            ControlStyling.StyleUILabel( NewsTitle, ControlStylingConfig.Large_Font_Bold, ControlStylingConfig.Large_FontSize );
-            NewsTitle.Text = NewsItem.Title;
+            LearnMoreButton.SizeToFit( );
         }
 
         public override void ViewWillAppear(bool animated)
@@ -131,12 +154,38 @@ namespace iOS
             }
         }
 
-        public override void ViewDidLayoutSubviews()
+        public override void ViewDidAppear(bool animated)
         {
-            base.ViewDidLayoutSubviews();
+            base.ViewDidAppear(animated);
+        }
+
+        public override void LayoutChanged()
+        {
+            base.LayoutChanged();
+
+            ImageBanner.Bounds = new CGRect( 0, 0, View.Bounds.Width, View.Bounds.Height * .30f );
+
+            // adjust the news title to have padding on the left and right.
+            NewsTitle.Frame = new CGRect( 10, ImageBanner.Frame.Bottom + ((40 - NewsTitle.Frame.Height) / 2), View.Bounds.Width - 30, NewsTitle.Bounds.Height );
+
+            // put the learn more button at the bottom center
+            nfloat learnMoreWidth = View.Bounds.Width * .45f;
+            LearnMoreButton.Frame = new CGRect( ( View.Bounds.Width - learnMoreWidth ) / 2, View.Bounds.Height - LearnMoreButton.Bounds.Height - Task.NavToolbar.Bounds.Height - 10, learnMoreWidth, LearnMoreButton.Bounds.Height );
+
+            // and fit the news description in between the title and learn more
+            NewsDescription.Frame = new CGRect( 10, ImageBanner.Frame.Bottom + 40, View.Bounds.Width - 20, 0 );
+            NewsDescription.SizeToFit( );
+
+
+            // determine whether we can use the height of the description, or limit it and enable scrolling
+            nfloat paddedLearnMoreTop = ( LearnMoreButton.Frame.Top - 10 );
+            nfloat descriptionHeight = NewsDescription.Frame.Bottom > paddedLearnMoreTop ? paddedLearnMoreTop - NewsTitle.Frame.Bottom - 10 : NewsDescription.Frame.Height;
+
+            NewsDescription.Frame = new CGRect( NewsDescription.Frame.Left, NewsDescription.Frame.Top, NewsDescription.Frame.Width, descriptionHeight );
 
             // if the description needs to scroll, enable user interaction (which disables the nav toolbar)
-            if ( NewsDescription.ContentSize.Height > NewsDescription.Frame.Height )
+            CGSize size = NewsDescription.SizeThatFits( new CGSize( NewsDescription.Bounds.Width, NewsDescription.Bounds.Height ) );
+            if ( size.Height > NewsDescription.Frame.Height )
             {
                 NewsDescription.UserInteractionEnabled = true;
             }
@@ -144,15 +193,6 @@ namespace iOS
             {
                 NewsDescription.UserInteractionEnabled = false;
             }
-
-            //nfloat imageBase = ( ImageBanner.Frame.Top + ImageBanner.Image.Size.Height );
-
-            // adjust the news title to have padding on the left and right.
-            NewsTitle.Layer.AnchorPoint = CGPoint.Empty;
-            NewsTitle.SizeToFit( );
-            NewsTitle.Frame = new CGRect( NewsDescription.Frame.Left, ImageBanner.Frame.Bottom + (40 - NewsTitle.Frame.Height) / 2, View.Bounds.Width - 30, NewsTitle.Bounds.Height );
-
-            NewsDescription.Frame = new CGRect( NewsDescription.Frame.Left, ImageBanner.Frame.Bottom + 40, NewsDescription.Frame.Width, NewsDescription.Frame.Height );
         }
 	}
 }

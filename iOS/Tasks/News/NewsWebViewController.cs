@@ -2,6 +2,7 @@ using Foundation;
 using System;
 using System.CodeDom.Compiler;
 using UIKit;
+using CoreGraphics;
 
 namespace iOS
 {
@@ -9,17 +10,27 @@ namespace iOS
 	{
         public string DisplayUrl { get; set; }
 
-		public NewsWebViewController (IntPtr handle) : base (handle)
+		public NewsWebViewController ( ) : base ( )
 		{
 		}
+
+        UIWebView WebView { get; set; }
 
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
 
-            UIWebView webView = new UIWebView( View.Frame );
-            View.AddSubview( webView );
-            webView.LoadRequest( new NSUrlRequest( new NSUrl( DisplayUrl ) ) );
+            WebView = new UIWebView( );
+            WebView.Layer.AnchorPoint = CGPoint.Empty;
+            View.AddSubview( WebView );
+            WebView.LoadRequest( new NSUrlRequest( new NSUrl( DisplayUrl ) ) );
+        }
+
+        public override void LayoutChanged()
+        {
+            base.LayoutChanged();
+
+            WebView.Bounds = View.Bounds;
         }
 	}
 }

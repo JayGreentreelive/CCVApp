@@ -8,7 +8,6 @@ namespace iOS
     public class PrayerTask : Task
     {
         PrayerMainUIViewController MainPage { get; set; }
-        TaskUIViewController ActiveViewController { get; set; }
 
         public PrayerTask( string storyboardName ) : base( storyboardName )
         {
@@ -18,17 +17,17 @@ namespace iOS
             ActiveViewController = MainPage;
         }
 
-        public override void MakeActive( TaskUINavigationController parentViewController, NavToolbar navToolbar )
+        public override void MakeActive( TaskUINavigationController parentViewController, NavToolbar navToolbar, CGRect containerBounds )
         {
-            base.MakeActive( parentViewController, navToolbar );
+            base.MakeActive( parentViewController, navToolbar, containerBounds );
 
             // set our current page as root
             parentViewController.PushViewController(MainPage, false);
         }
 
-        public override void WillShowViewController(UIViewController viewController)
+        public override void WillShowViewController(TaskUIViewController viewController)
         {
-            ActiveViewController = (TaskUIViewController)viewController;
+            base.WillShowViewController( viewController );
 
             // if it's the main page, disable the back button on the toolbar
             if ( viewController == MainPage )

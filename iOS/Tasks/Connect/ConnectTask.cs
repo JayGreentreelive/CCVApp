@@ -9,8 +9,6 @@ namespace iOS
     {
         TaskUIViewController MainPageVC { get; set; }
 
-        TaskUIViewController ActiveViewController { get; set; }
-
         public ConnectTask( string storyboardName ) : base( storyboardName )
         {
             MainPageVC = Storyboard.InstantiateViewController( "ConnectMainPageViewController" ) as TaskUIViewController;
@@ -19,9 +17,9 @@ namespace iOS
             ActiveViewController = MainPageVC;
         }
 
-        public override void MakeActive( TaskUINavigationController parentViewController, NavToolbar navToolbar )
+        public override void MakeActive( TaskUINavigationController parentViewController, NavToolbar navToolbar, CGRect containerBounds )
         {
-            base.MakeActive( parentViewController, navToolbar );
+            base.MakeActive( parentViewController, navToolbar, containerBounds );
 
             // set our current page as root
             parentViewController.PushViewController(MainPageVC, false);
@@ -32,9 +30,9 @@ namespace iOS
             base.MakeInActive( );
         }
 
-        public override void WillShowViewController(UIViewController viewController)
+        public override void WillShowViewController(TaskUIViewController viewController)
         {
-            ActiveViewController = (TaskUIViewController) viewController;
+            base.WillShowViewController( viewController );
 
             // turn off the share & create buttons
             NavToolbar.SetShareButtonEnabled( false, null );

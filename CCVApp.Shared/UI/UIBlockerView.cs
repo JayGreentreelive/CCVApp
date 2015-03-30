@@ -12,22 +12,18 @@ namespace CCVApp.Shared.UI
         PlatformView View { get; set; }
         PlatformBusyIndicator BusyIndicator { get; set; }
 
-        public UIBlockerView( object parentView, RectangleF frame )
+        public UIBlockerView( object parentView, RectangleF bounds )
         {
             // setup the fullscreen blocker view
             View = PlatformView.Create( );
             View.AddAsSubview( parentView );
             View.UserInteractionEnabled = false;
             View.BackgroundColor = 0x000000FF;
-            View.Frame = new RectangleF( frame.Left, frame.Top, frame.Width, frame.Height );
 
             // and the busy indicator
             BusyIndicator = PlatformBusyIndicator.Create( );
             BusyIndicator.AddAsSubview( parentView );
 
-            float width = 100;
-            float height = 100;
-            BusyIndicator.Frame = new RectangleF( (frame.Width - width) / 2, (frame.Height - height) / 2, width, height );
             BusyIndicator.Color = 0x999999FF;
             BusyIndicator.BackgroundColor = 0;
 
@@ -39,6 +35,15 @@ namespace CCVApp.Shared.UI
         {
             View.Opacity = opacity;
             BusyIndicator.Opacity = opacity;
+        }
+
+        public void SetBounds( RectangleF bounds )
+        {
+            View.Bounds = bounds;
+
+            float width = 100;
+            float height = 100;
+            BusyIndicator.Frame = new RectangleF( (bounds.Width - width) / 2, (bounds.Height - height) / 2, width, height );
         }
 
         public void Show( )

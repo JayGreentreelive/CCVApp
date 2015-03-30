@@ -25,6 +25,7 @@ using Rock.Mobile.Animation;
 using Android.Gms.Maps.Model;
 using CCVApp.Shared.UI;
 using Android.Telephony;
+using System.Drawing;
 
 namespace Droid
 {

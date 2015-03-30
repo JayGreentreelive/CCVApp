@@ -242,55 +242,17 @@ namespace iOS
             Elements = new List<SpringboardElement>( );
 		}
 
-        public override UIInterfaceOrientation PreferredInterfaceOrientationForPresentation()
-        {
-            // phones should prefer a portrait mode
-            if ( UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Phone )
-            {
-                return UIInterfaceOrientation.Portrait;
-            }
-            else
-            {
-                // and ipads should prefer landscape.
-                return UIInterfaceOrientation.LandscapeLeft;
-            }
-        }
-
         public override bool ShouldAutorotate()
         {
             return true;
         }
 
-        public override bool ShouldAutomaticallyForwardRotationMethods
-        {
-            get
-            {
-                return false;
-            }
-        }
-
         public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations()
         {
-            // let the task decide what orientations we support if the springboard is closed.
-            if ( NavViewController.CurrentTask != null && NavViewController.IsSpringboardClosed( ) )
-            {
-                return NavViewController.CurrentTask.GetSupportedInterfaceOrientations( );
-            }
-            else
-            {
-                if ( IsDeviceLandscape( ) == true && IsLandscapeRegular( ) == true )
-                {
-                    return UIInterfaceOrientationMask.All;
-                }
-                else
-                {
-                    return UIInterfaceOrientationMask.Portrait;
-                }
-            }
+            return UIInterfaceOrientationMask.All;
         }
 
         static UITraitCollection CurrentTraitCollection { get; set; }
-
         static public CGSize TraitSize { get; protected set; }
 
         public override void WillTransitionToTraitCollection(UITraitCollection traitCollection, IUIViewControllerTransitionCoordinator coordinator)
@@ -351,23 +313,6 @@ namespace iOS
             return false;
         }
 
-        /*public override void WillRotate(UIInterfaceOrientation toInterfaceOrientation, double duration)
-        {
-            base.WillRotate(toInterfaceOrientation, duration);
-        }
-
-        public override void DidRotate(UIInterfaceOrientation fromInterfaceOrientation)
-        {
-            base.DidRotate(fromInterfaceOrientation);
-        }*/
-
-        /*public static void ForceDeviceToOrientation( UIInterfaceOrientation toOrientation )
-        {
-            // amazingly, this works.
-            NSNumber value = NSNumber.FromInt32( (int)UIInterfaceOrientation.Portrait );
-            UIDevice.CurrentDevice.SetValueForKey( value, new NSString( "orientation" ) );
-        }*/
-
         public void RevealButtonClicked( )
         {
             // this will be called by the Navbar (which owns the reveal button) when
@@ -375,12 +320,29 @@ namespace iOS
             Billboard.Hide( );
         }
 
+        UIView NewsElement { get; set; }
+        UIView ConnectElement { get; set; }
+        UIView MessagesElement { get; set; }
+        UIView PrayerElement{ get; set; }
+        UIView GiveElement { get; set; }
+        UIView MoreElement { get; set; }
+
+        UIButton EditPictureButton { get; set; }
+        UILabel WelcomeField { get; set; }
+        UILabel UserNameField { get; set; }
+
+        UIButton ViewProfileButton { get; set; }
+        UILabel ViewProfileLabel { get; set; }
+
+        UIScrollViewWrapper ScrollView { get; set; }
+
         public override void ViewDidLoad()
         {
             base.ViewDidLoad( );
 
             // seed the trait size with our current window size
             TraitSize = UIScreen.MainScreen.Bounds.Size;
+            CurrentTraitCollection = TraitCollection;
 
             // create the login controller / profile view controllers
             LoginViewController = UserManagementStoryboard.InstantiateViewController( "LoginViewController" ) as LoginViewController;
@@ -398,7 +360,51 @@ namespace iOS
             OOBEViewController = new OOBEViewController( );
             OOBEViewController.Springboard = this;
 
+            ScrollView = new UIScrollViewWrapper( );
+            ScrollView.Frame = View.Frame;
+            ScrollView.Parent = this;
+            View.AddSubview( ScrollView );
+
             // Instantiate all activities
+            float elementWidth = 250;
+            float elementHeight = 45;
+
+            NewsElement = new UIView( new CGRect( 0, 0, elementWidth, elementHeight ) );
+            ScrollView.AddSubview( NewsElement );
+
+            ConnectElement = new UIView( new CGRect( 0, 0, elementWidth, elementHeight ) );
+            ScrollView.AddSubview( ConnectElement );
+
+            MessagesElement = new UIView( new CGRect( 0, 0, elementWidth, elementHeight ) );
+            ScrollView.AddSubview( MessagesElement );
+
+            PrayerElement = new UIView( new CGRect( 0, 0, elementWidth, elementHeight ) );
+            ScrollView.AddSubview( PrayerElement );
+
+            GiveElement = new UIView( new CGRect( 0, 0, elementWidth, elementHeight ) );
+            ScrollView.AddSubview( GiveElement );
+
+            MoreElement = new UIView( new CGRect( 0, 0, elementWidth, elementHeight ) );
+            ScrollView.AddSubview( MoreElement );
+
+
+            EditPictureButton = new UIButton( new CGRect( 0, 0, 112, 112 )  );
+            ScrollView.AddSubview( EditPictureButton );
+
+            WelcomeField = new UILabel();
+            ScrollView.AddSubview( WelcomeField );
+
+            UserNameField = new UILabel();
+            ScrollView.AddSubview( UserNameField );
+
+
+            ViewProfileButton = new UIButton();
+            ScrollView.AddSubview( ViewProfileButton );
+
+            ViewProfileLabel = new UILabel();
+            ScrollView.AddSubview( ViewProfileLabel );
+        
+
             Elements.Add( new SpringboardElement( this, new NewsTask( "NewsStoryboard_iPhone" )      , NewsElement    , SpringboardConfig.Element_News_Icon    , SpringboardStrings.Element_News_Title ) );
             Elements.Add( new SpringboardElement( this, new ConnectTask( "ConnectStoryboard_iPhone" ), ConnectElement , SpringboardConfig.Element_Connect_Icon , SpringboardStrings.Element_Connect_Title ) );
             Elements.Add( new SpringboardElement( this, new NotesTask( "NotesStoryboard_iPhone" )    , MessagesElement, SpringboardConfig.Element_Messages_Icon, SpringboardStrings.Element_Messages_Title ) );
@@ -409,7 +415,7 @@ namespace iOS
             // add a bottom seperator for the final element
             BottomSeperator = new UIView();
             BottomSeperator.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
-            View.AddSubview( BottomSeperator );
+            ScrollView.AddSubview( BottomSeperator );
             BottomSeperator.Frame = new CGRect( 0, 0, View.Frame.Width, 1.0f );
 
 
@@ -425,16 +431,16 @@ namespace iOS
             // setup the campus selector and settings button
             CampusSelectionText = new UILabel();
             ControlStyling.StyleUILabel( CampusSelectionText, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-            View.AddSubview( CampusSelectionText );
+            ScrollView.AddSubview( CampusSelectionText );
 
             CampusSelectionIcon = new UILabel();
             ControlStyling.StyleUILabel( CampusSelectionIcon, ControlStylingConfig.Icon_Font_Primary, ControlStylingConfig.Small_FontSize );
             CampusSelectionIcon.Text = SpringboardConfig.SettingsSymbol;
             CampusSelectionIcon.SizeToFit( );
-            View.AddSubview( CampusSelectionIcon );
+            ScrollView.AddSubview( CampusSelectionIcon );
 
             CampusSelectionButton = new UIButton();
-            View.AddSubview( CampusSelectionButton );
+            ScrollView.AddSubview( CampusSelectionButton );
             CampusSelectionButton.TouchUpInside += (object sender, EventArgs e ) =>
             {
                     // use an appropriate select menu based on the device type.
@@ -863,7 +869,7 @@ namespace iOS
             base.TouchesEnded(touches, evt);
 
             // don't allow any navigation while the login controller is active
-            if( ModalControllerVisible == false )
+            if( ModalControllerVisible == false && IsLandscapeRegular( ) == false )
             {
                 NavViewController.RevealSpringboard( false );
             }
@@ -924,12 +930,14 @@ namespace iOS
         {
             base.ViewDidLayoutSubviews();
 
-            AdjustSpringboardLayout( );
+            ScrollView.Frame = View.Frame;
 
             UpdateLoginState( );
 
+            AdjustSpringboardLayout( );
+
             // add the billboard now that we're ready
-            if ( Billboard.Superview == null )
+            if ( Billboard != null && Billboard.Superview == null )
             {
                 View.AddSubview( Billboard );
 
@@ -943,7 +951,7 @@ namespace iOS
         void TryDisplaySeriesBillboard( )
         {
             // first make sure all initial setup is done.
-            if ( SeriesInfoDownloaded == true && IsOOBERunning == false && Billboard.Superview != null )
+            if ( SeriesInfoDownloaded == true && IsOOBERunning == false && Billboard != null && Billboard.Superview != null )
             {
                 // should we advertise the notes?
                 // yes, if it's a weekend
@@ -976,12 +984,18 @@ namespace iOS
         /// </summary>
         void AdjustSpringboardLayout( )
         {
+            nfloat availableHeight = View.Frame.Height;
+            if ( SpringboardViewController.IsLandscapeRegular( ) == true )
+            {
+                availableHeight = View.Frame.Height / 2;
+            }
+            
             // position the login button
             EditPictureButton.Layer.AnchorPoint = CGPoint.Empty;
-            EditPictureButton.Layer.Position = new CGPoint( ( PrimaryContainerConfig.SlideAmount - EditPictureButton.Bounds.Width ) / 2, View.Frame.Height * .02f );
+            EditPictureButton.Layer.Position = new CGPoint( ( PrimaryContainerConfig.SlideAmount - EditPictureButton.Bounds.Width ) / 2, availableHeight * .02f );
 
             NewsElement.Layer.AnchorPoint = CGPoint.Empty;
-            NewsElement.Layer.Position = new CGPoint( 0, View.Frame.Height * .40f );
+            NewsElement.Layer.Position = new CGPoint( 0, ViewProfileButton.Frame.Bottom + 40 );
 
             ConnectElement.Layer.AnchorPoint = CGPoint.Empty;
             ConnectElement.Layer.Position = new CGPoint( 0, NewsElement.Frame.Bottom );
@@ -1001,10 +1015,23 @@ namespace iOS
             BottomSeperator.Layer.AnchorPoint = CGPoint.Empty;
             BottomSeperator.Layer.Position = new CGPoint( 0, MoreElement.Frame.Bottom );
 
+            // so basically, if the springboard is too large for the device and needs to scroll,
+            // put campus selection under the "More" element.
             CampusSelectionText.Layer.AnchorPoint = CGPoint.Empty;
-            CampusSelectionText.Layer.Position = new CGPoint( 5, View.Frame.Height - CampusSelectionText.Frame.Height - 2 );
+            if ( BottomSeperator.Frame.Bottom >= View.Frame.Height )
+            {
+                CampusSelectionText.Layer.Position = new CGPoint( 5, BottomSeperator.Frame.Bottom + 15 );
+            }
+            // if it is NOT too large, place it at the bottom of the screen
+            else
+            {
+                CampusSelectionText.Layer.Position = new CGPoint( 5, View.Frame.Height - CampusSelectionText.Frame.Height - 2 );
+            }
 
             UpdateCampusViews( );
+
+            nfloat controlBottom = CampusSelectionButton.Frame.Bottom + ( View.Bounds.Height * .05f );
+            ScrollView.ContentSize = new CGSize( 0, (nfloat) Math.Max( controlBottom, View.Bounds.Height * 1.05f ) );
         }
 
         void UpdateCampusViews( )
