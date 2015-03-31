@@ -1,6 +1,7 @@
 ﻿using System;
 using Rock.Mobile.PlatformUI;
 using System.Drawing;
+using Rock.Mobile.Animation;
 
 namespace CCVApp.Shared.UI
 {
@@ -31,6 +32,12 @@ namespace CCVApp.Shared.UI
             SetOpacity( 0.00f );
         }
 
+        public void BringToFront( )
+        {
+            View.ZPosition = 1.0f;
+            BusyIndicator.ZPosition = 1.1f;
+        }
+
         void SetOpacity( float opacity )
         {
             View.Opacity = opacity;
@@ -46,17 +53,16 @@ namespace CCVApp.Shared.UI
             BusyIndicator.Frame = new RectangleF( (bounds.Width - width) / 2, (bounds.Height - height) / 2, width, height );
         }
 
-        public void Show( )
+        public void Show( SimpleAnimator.AnimationComplete onCompletion = null )
         {
-            Util.AnimateBackgroundOpacity( View, 1.00f );
-            Util.AnimateBackgroundOpacity( BusyIndicator, 1.00f );
+            Util.AnimateBackgroundOpacity( View, 0.80f, onCompletion );
+            Util.AnimateBackgroundOpacity( BusyIndicator, 1.00f, null );
         }
 
-        public void Hide( )
+        public void Hide( SimpleAnimator.AnimationComplete onCompletion = null )
         {
-            Util.AnimateBackgroundOpacity( View, 0.00f );
-            Util.AnimateBackgroundOpacity( BusyIndicator, 0.00f );
+            Util.AnimateBackgroundOpacity( View, 0.00f, onCompletion );
+            Util.AnimateBackgroundOpacity( BusyIndicator, 0.00f, null );
         }
     }
 }
-

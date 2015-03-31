@@ -110,7 +110,9 @@ namespace iOS
 
         public override bool ShouldAutorotate()
         {
-            return Springboard.ShouldAutorotate();
+            // we will support landscape or portrait, but we will NOT support
+            // changing while the view is up. That's dumb.
+            return false;
         }
 
         UIToolbar Toolbar { get; set; }
@@ -216,22 +218,6 @@ namespace iOS
 
             Toolbar.SetItems( new UIBarButtonItem[] { new UIBarButtonItem( ButtonContainer ) }, false );
             View.AddSubview( Toolbar );
-        }
-
-        public override void ViewDidLayoutSubviews( )
-        {
-            base.ViewDidLayoutSubviews();
-
-            Toolbar.Frame = new CGRect( 0, View.Bounds.Height - 40, View.Bounds.Width, 40 );
-
-            ImageView.Frame = GetImageViewFrame( );
-
-            ButtonContainer.Frame = new CGRect( 0, View.Bounds.Height - 40, View.Bounds.Width, 40 );
-
-            CancelButton.Frame = new CGRect( (CancelButton.Frame.Width / 2), 0, CancelButton.Frame.Width, CancelButton.Frame.Height );
-            EditButton.Frame = new CGRect( ButtonContainer.Frame.Width - (EditButton.Frame.Width * 2.5f), 0, EditButton.Frame.Width, EditButton.Frame.Height );
-
-            DisplayLayout( );
         }
 
         CGRect GetImageViewFrame( )
@@ -341,6 +327,22 @@ namespace iOS
         public override void ViewWillAppear(bool animated)
         {
             base.ViewWillAppear(animated);
+        }
+
+        public override void ViewDidLayoutSubviews()
+        {
+            base.ViewDidLayoutSubviews();
+
+            View.Frame = new CGRect( 0, 0, View.Bounds.Width, View.Bounds.Height );
+
+            Toolbar.Frame = new CGRect( 0, View.Bounds.Height - 40, View.Bounds.Width, 40 );
+
+            ImageView.Frame = GetImageViewFrame( );
+
+            ButtonContainer.Frame = new CGRect( 0, View.Bounds.Height - 40, View.Bounds.Width, 40 );
+
+            CancelButton.Frame = new CGRect( (CancelButton.Frame.Width / 2), 0, CancelButton.Frame.Width, CancelButton.Frame.Height );
+            EditButton.Frame = new CGRect( ButtonContainer.Frame.Width - (EditButton.Frame.Width * 2.5f), 0, EditButton.Frame.Width, EditButton.Frame.Height );
 
             DisplayLayout( );
         }

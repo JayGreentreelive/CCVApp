@@ -343,6 +343,8 @@ namespace CCVApp
                 /// The image to display for the tutorial screen.
                 /// </summary>
                 public const string TutorialOverlayImage = "note_tutorial.png";
+                public const string TutorialOverlayImageIPadLS = "note_tutorial_ipad_ls.png";
+                public const string TutorialOverlayImageIPadPort = "note_tutorial_ipad_port.png";
 
                 /// <summary>
                 /// The suffix to use for the user note filename.

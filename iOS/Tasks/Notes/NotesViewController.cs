@@ -270,11 +270,8 @@ namespace iOS
 				// re-create our notes with the new dimensions
 				PrepareCreateNotes( );
 
-                // if we are now GOING to landscape, hide the tutorial screen
-                if ( SpringboardViewController.IsDeviceLandscape( ) == true )
-                {
-                    AnimateTutorialScreen( false );
-                }
+                // since we're changing orientations, hide the tutorial screen
+                AnimateTutorialScreen( false );
 			}
 
             UIApplication.SharedApplication.IdleTimerDisabled = true;
@@ -339,9 +336,10 @@ namespace iOS
 
             // setup the tutorial overlay
             AnimatingTutorial = false;
-            TutorialOverlay = new UIImageView( View.Frame );
-            TutorialOverlay.ContentMode = UIViewContentMode.ScaleAspectFill;
-            TutorialOverlay.Image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + NoteConfig.TutorialOverlayImage );
+            TutorialOverlay = new UIImageView( );
+            TutorialOverlay.Layer.AnchorPoint = CGPoint.Empty;
+            TutorialOverlay.Frame = View.Frame;
+            TutorialOverlay.ContentMode = UIViewContentMode.ScaleAspectFit;
             TutorialOverlay.Alpha = 0.00f;
             View.AddSubview( TutorialOverlay );
         }
@@ -703,6 +701,22 @@ namespace iOS
                         {
                             Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
                                 {
+                                    if( UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Phone )
+                                    {
+                                        TutorialOverlay.Image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + NoteConfig.TutorialOverlayImage );
+                                    }
+                                    else
+                                    {
+                                        if( SpringboardViewController.IsLandscapeRegular( ) )
+                                        {
+                                            TutorialOverlay.Image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + NoteConfig.TutorialOverlayImageIPadLS );
+                                        }
+                                        else
+                                        {
+                                            TutorialOverlay.Image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + NoteConfig.TutorialOverlayImageIPadPort );
+                                        }
+                                    }
+                                    TutorialOverlay.Frame = View.Frame;
                                     AnimateTutorialScreen( true );
                                 });
                         };
@@ -740,7 +754,7 @@ namespace iOS
                         {
                             TutorialOverlay.Alpha = (float)value;
                         }, 
-                                                            delegate
+                        delegate
                         {
                             AnimatingTutorial = false;
                         } );

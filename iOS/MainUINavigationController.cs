@@ -245,13 +245,6 @@ namespace iOS
 
         public void LayoutChanging( )
         {
-            Container.LayoutChanging( );
-        }
-
-        public override void ViewDidLayoutSubviews()
-        {
-            base.ViewDidLayoutSubviews();
-
             if ( SpringboardViewController.IsLandscapeRegular( ) == true )
             {
                 View.Frame = new CGRect( PrimaryContainerConfig.SlideAmount, 0, SpringboardViewController.TraitSize.Width - PrimaryContainerConfig.SlideAmount, SpringboardViewController.TraitSize.Height );
@@ -260,6 +253,7 @@ namespace iOS
                 Container.View.UserInteractionEnabled = true;
 
                 DarkPanel.Hidden = true;
+                DarkPanel.Layer.Opacity = 0.0f;
 
                 PanGesture.Enabled = false;
             }
@@ -268,6 +262,7 @@ namespace iOS
                 View.Frame = new CGRect( 0, 0, SpringboardViewController.TraitSize.Width, SpringboardViewController.TraitSize.Height );
 
                 DarkPanel.Hidden = false;
+                DarkPanel.Layer.Opacity = 0.0f;
 
                 PanGesture.Enabled = true;
 
@@ -279,6 +274,19 @@ namespace iOS
 
             ApplyEdgeShadow( );
 
+            Container.LayoutChanging( );
+        }
+
+        public void LayoutChanged( )
+        {
+            Container.LayoutChanged( );
+        }
+
+        public override void ViewDidLayoutSubviews()
+        {
+            base.ViewDidLayoutSubviews();
+
+            LayoutChanging( );
             Container.LayoutChanged( );
         }
 

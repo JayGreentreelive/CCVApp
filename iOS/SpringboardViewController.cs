@@ -271,16 +271,7 @@ namespace iOS
             if ( NavViewController != null )
             {
                 NavViewController.LayoutChanging( );
-            }
-        }
-
-        public static void ForcePortaitModeHack( )
-        {
-            if ( TraitSize.Width > TraitSize.Height )
-            {
-                CGSize currSize = TraitSize;
-
-                TraitSize = new CGSize( currSize.Height, currSize.Width );
+                NavViewController.LayoutChanged( );
             }
         }
 

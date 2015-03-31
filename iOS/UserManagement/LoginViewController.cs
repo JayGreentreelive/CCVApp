@@ -14,6 +14,8 @@ using Rock.Mobile.PlatformSpecific.iOS.UI;
 using System.Collections.Generic;
 using Rock.Mobile.Animation;
 using CoreGraphics;
+using CCVApp.Shared.UI;
+using Rock.Mobile.PlatformSpecific.Util;
 
 namespace iOS
 {
@@ -31,7 +33,9 @@ namespace iOS
         /// <value>The login successful timer.</value>
         System.Timers.Timer LoginSuccessfulTimer { get; set; }
 
-        Rock.Mobile.PlatformSpecific.iOS.UI.BlockerView BlockerView { get; set; }
+        UIBlockerView BlockerView { get; set; }
+
+        WebLayout WebLayout { get; set; }
 
 		public LoginViewController (IntPtr handle) : base (handle)
 		{
@@ -73,8 +77,7 @@ namespace iOS
         {
             base.ViewDidLoad();
 
-            BlockerView = new Rock.Mobile.PlatformSpecific.iOS.UI.BlockerView( View.Frame );
-            View.AddSubview( BlockerView );
+            BlockerView = new UIBlockerView( View, View.Frame.ToRectF( ) );
 
             View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
@@ -200,8 +203,6 @@ namespace iOS
 
             CancelButton.Frame = new CGRect( ( View.Frame.Width - CancelButton.Frame.Width ) / 2, FacebookLogin.Frame.Bottom + 20, CancelButton.Frame.Width, CancelButton.Frame.Height );
 
-
-
             HeaderView.Frame = new CGRect( View.Frame.Left, View.Frame.Top, View.Frame.Width, StyledTextField.StyledFieldHeight );
 
             // setup the header shadow
@@ -214,6 +215,13 @@ namespace iOS
 
             LogoView.Layer.Position = new CoreGraphics.CGPoint( HeaderView.Bounds.Width / 2, HeaderView.Bounds.Height / 2 );
             FBImageView.Layer.Position = new CoreGraphics.CGPoint( FacebookLogin.Bounds.Width / 2, FacebookLogin.Bounds.Height / 2 );
+
+            if ( WebLayout != null )
+            {
+                WebLayout.LayoutChanged( View.Frame );
+            }
+
+            BlockerView.SetBounds( View.Frame.ToRectF( ) );
         }
 
         public override void ViewWillAppear(bool animated)
@@ -289,6 +297,8 @@ namespace iOS
             {
                 SetUIState( LoginState.Trying );
 
+                BlockerView.BringToFront( );
+
                 RockMobileUser.Instance.BindRockAccount( UserNameField.Field.Text, PasswordField.Field.Text, BindComplete );
             }
         }
@@ -324,28 +334,28 @@ namespace iOS
             RockMobileUser.Instance.BindFacebookAccount( delegate(string fromUri, Facebook.FacebookClient session) 
             {
                     // it's ready, so create a webView that will take them to the FBLogin page
-                    WebLayout webLayout = new WebLayout( View.Frame );
-                    webLayout.DeleteCacheandCookies( );
+                    WebLayout = new WebLayout( View.Frame );
+                    WebLayout.DeleteCacheandCookies( );
 
-                    View.AddSubview( webLayout.ContainerView );
+                    View.AddSubview( WebLayout.ContainerView );
 
                     // set it totally transparent so we can fade it in
-                    webLayout.ContainerView.BackgroundColor = UIColor.Black;
-                    webLayout.ContainerView.Layer.Opacity = 0.00f;
-                    webLayout.SetCancelButtonColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+                    WebLayout.ContainerView.BackgroundColor = UIColor.Black;
+                    WebLayout.ContainerView.Layer.Opacity = 0.00f;
+                    WebLayout.SetCancelButtonColor( ControlStylingConfig.TextField_PlaceholderTextColor );
 
                     // do a nice fade-in
                     SimpleAnimator_Float floatAnimator = new SimpleAnimator_Float( 0.00f, 1.00f, .25f, 
                         delegate(float percent, object value) 
                         {
-                            webLayout.ContainerView.Layer.Opacity = (float)value;
+                            WebLayout.ContainerView.Layer.Opacity = (float)value;
                         },
                         delegate 
                         {
                             // once faded in, begin loading the page
-                            webLayout.ContainerView.Layer.Opacity = 1.00f;
+                            WebLayout.ContainerView.Layer.Opacity = 1.00f;
 
-                            webLayout.LoadUrl( fromUri, delegate(WebLayout.Result result, string url) 
+                            WebLayout.LoadUrl( fromUri, delegate(WebLayout.Result result, string url) 
                                 {
                                     // if fail/success comes in
                                     if( result != WebLayout.Result.Cancel )
@@ -354,14 +364,14 @@ namespace iOS
                                         if ( RockMobileUser.Instance.HasFacebookResponse( url, session ) )
                                         {
                                             // it is, so remove the webview and continue the bind process
-                                            webLayout.ContainerView.RemoveFromSuperview( );
+                                            WebLayout.ContainerView.RemoveFromSuperview( );
                                             RockMobileUser.Instance.FacebookCredentialResult( url, session, BindComplete );
                                         }
                                     }
                                     else
                                     {
                                         // they pressed cancel, so simply cancel the attempt
-                                        webLayout.ContainerView.RemoveFromSuperview( );
+                                        WebLayout.ContainerView.RemoveFromSuperview( );
                                         LoginComplete( System.Net.HttpStatusCode.ResetContent, "" );
                                     }
                                 } );
@@ -408,7 +418,7 @@ namespace iOS
                 case LoginState.Trying:
                 {
                     FadeLoginResult( false );
-                    BlockerView.FadeIn( null );
+                    BlockerView.Show( null );
 
                     UserNameField.Field.Enabled = false;
                     PasswordField.Field.Enabled = false;
@@ -453,7 +463,7 @@ namespace iOS
 
                 case System.Net.HttpStatusCode.Unauthorized:
                 {
-                    BlockerView.FadeOut( delegate
+                    BlockerView.Hide( delegate
                         {
                             // allow them to attempt logging in again
                             SetUIState( LoginState.Out );
@@ -468,7 +478,7 @@ namespace iOS
                 case System.Net.HttpStatusCode.ResetContent:
                 {
                     // consider this a cancellation
-                    BlockerView.FadeOut( delegate
+                    BlockerView.Hide( delegate
                         {
                             // allow them to attempt logging in again
                             SetUIState( LoginState.Out );
@@ -481,7 +491,7 @@ namespace iOS
 
                 default:
                 {
-                    BlockerView.FadeOut( delegate
+                    BlockerView.Hide( delegate
                         {
                             // allow them to attempt logging in again
                             SetUIState( LoginState.Out );
@@ -505,7 +515,7 @@ namespace iOS
 
         void UIThread_ProfileComplete( System.Net.HttpStatusCode code, string desc, Rock.Client.Person model ) 
         {
-            BlockerView.FadeOut( delegate
+            BlockerView.Hide( delegate
                 {
                     switch ( code )
                     {
@@ -543,7 +553,7 @@ namespace iOS
 
         void UIThread_AddressComplete( System.Net.HttpStatusCode code, string desc, List<Rock.Client.Group> model ) 
         {
-            BlockerView.FadeOut( delegate
+            BlockerView.Hide( delegate
                 {
                     switch ( code )
                     {

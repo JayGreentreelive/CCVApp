@@ -10,6 +10,8 @@ namespace iOS
 {
 	partial class AboutMainPageUIViewController : TaskUIViewController
 	{
+        UIWebView WebView { get; set; }
+        
 		public AboutMainPageUIViewController (IntPtr handle) : base (handle)
 		{
 		}
@@ -18,17 +20,24 @@ namespace iOS
         {
             base.ViewDidLoad();
 
-            CGRect webViewFrame;
             AboutVersionText.Text = string.Format( "Version: {0}", BuildStrings.Version );
 
-            webViewFrame = new CGRect( View.Frame.X, 
-                                           View.Frame.Y + AboutVersionText.Frame.Height, 
-                                           View.Frame.Width, 
-                                           View.Frame.Height - AboutVersionText.Frame.Height );
+            WebView = new UIWebView( );
+            View.AddSubview( WebView );
+            WebView.LoadRequest( new NSUrlRequest( new NSUrl( AboutConfig.Url ) ) );
+        }
 
-            UIWebView webView = new UIWebView( webViewFrame );
-            View.AddSubview( webView );
-            webView.LoadRequest( new NSUrlRequest( new NSUrl( AboutConfig.Url ) ) );
+        public override void LayoutChanged()
+        {
+            base.LayoutChanged();
+
+            CGRect webViewFrame;
+            webViewFrame = new CGRect( 0, 
+                                       AboutVersionText.Frame.Height, 
+                                       View.Frame.Width, 
+                                       View.Frame.Height - AboutVersionText.Frame.Height );
+
+            WebView.Frame = webViewFrame;
         }
 	}
 }

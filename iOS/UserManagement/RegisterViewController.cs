@@ -42,7 +42,7 @@ namespace iOS
 
         RegisterState State { get; set; }
 
-        BlockerView BlockerView { get; set; }
+        UIBlockerView BlockerView { get; set; }
 
         UIResultView ResultView { get; set; }
 
@@ -95,7 +95,6 @@ namespace iOS
             // setup the fake header
             HeaderView = new UIView( );
             View.AddSubview( HeaderView );
-            HeaderView.Frame = new CGRect( View.Frame.Left, View.Frame.Top, View.Frame.Width, StyledTextField.StyledFieldHeight );
             HeaderView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             string imagePath = NSBundle.MainBundle.BundlePath + "/" + PrimaryNavBarConfig.LogoFile;
@@ -110,8 +109,7 @@ namespace iOS
             // logged in sanity check.
             //if( RockMobileUser.Instance.LoggedIn == true ) throw new Exception("A user cannot be logged in when registering. How did you do this?" );
 
-            BlockerView = new BlockerView( View.Frame );
-            View.AddSubview( BlockerView );
+            BlockerView = new UIBlockerView( View, View.Frame.ToRectF( ) );
 
             //setup styles
             View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
@@ -120,13 +118,11 @@ namespace iOS
             ScrollView.AddSubview( UserNameText.Background );
             UserNameText.Field.AutocapitalizationType = UITextAutocapitalizationType.None;
             UserNameText.Field.AutocorrectionType = UITextAutocorrectionType.No;
-            UserNameText.SetFrame( new CGRect( -10, View.Frame.Height * .05f, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
             ControlStyling.StyleTextField( UserNameText.Field, RegisterStrings.UsernamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( UserNameText.Background );
 
             PasswordText = new StyledTextField();
             ScrollView.AddSubview( PasswordText.Background );
-            PasswordText.SetFrame( new CGRect( -10, UserNameText.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
             PasswordText.Field.AutocapitalizationType = UITextAutocapitalizationType.None;
             PasswordText.Field.AutocorrectionType = UITextAutocorrectionType.No;
             PasswordText.Field.SecureTextEntry = true;
@@ -135,7 +131,6 @@ namespace iOS
 
             ConfirmPasswordText = new StyledTextField();
             ScrollView.AddSubview( ConfirmPasswordText.Background );
-            ConfirmPasswordText.SetFrame( new CGRect( -10, PasswordText.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
             ConfirmPasswordText.Field.SecureTextEntry = true;
             ControlStyling.StyleTextField( ConfirmPasswordText.Field, RegisterStrings.ConfirmPasswordPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( ConfirmPasswordText.Background );
@@ -144,7 +139,6 @@ namespace iOS
             ScrollView.AddSubview( NickNameText.Background );
             NickNameText.Field.AutocapitalizationType = UITextAutocapitalizationType.Words;
             NickNameText.Field.AutocorrectionType = UITextAutocorrectionType.No;
-            NickNameText.SetFrame( new CGRect( -10, ConfirmPasswordText.Background.Frame.Bottom + 40, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
             ControlStyling.StyleTextField( NickNameText.Field, RegisterStrings.NickNamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( NickNameText.Background );
 
@@ -152,7 +146,6 @@ namespace iOS
             ScrollView.AddSubview( LastNameText.Background );
             LastNameText.Field.AutocapitalizationType = UITextAutocapitalizationType.Words;
             LastNameText.Field.AutocorrectionType = UITextAutocorrectionType.No;
-            LastNameText.SetFrame( new CGRect( -10, NickNameText.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
             ControlStyling.StyleTextField( LastNameText.Field, RegisterStrings.LastNamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( LastNameText.Background );
 
@@ -160,7 +153,6 @@ namespace iOS
             ScrollView.AddSubview( EmailText.Background );
             EmailText.Field.AutocapitalizationType = UITextAutocapitalizationType.None;
             EmailText.Field.AutocorrectionType = UITextAutocorrectionType.No;
-            EmailText.SetFrame( new CGRect( -10, LastNameText.Background.Frame.Bottom + 40, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
             ControlStyling.StyleTextField( EmailText.Field, RegisterStrings.EmailPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( EmailText.Background );
 
@@ -168,7 +160,6 @@ namespace iOS
             ScrollView.AddSubview( CellPhoneText.Background );
             CellPhoneText.Field.AutocapitalizationType = UITextAutocapitalizationType.None;
             CellPhoneText.Field.AutocorrectionType = UITextAutocorrectionType.No;
-            CellPhoneText.SetFrame( new CGRect( -10, EmailText.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
             ControlStyling.StyleTextField( CellPhoneText.Field, RegisterStrings.CellPhonePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( CellPhoneText.Background );
 
@@ -176,14 +167,12 @@ namespace iOS
             ScrollView.AddSubview( DoneButton );
             ControlStyling.StyleButton( DoneButton, RegisterStrings.RegisterButton, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             DoneButton.SizeToFit( );
-            DoneButton.Frame = new CGRect( View.Frame.Left + 8, CellPhoneText.Background.Frame.Bottom + 20, ControlStyling.ButtonWidth, ControlStyling.ButtonHeight );
 
 
             CancelButton = UIButton.FromType( UIButtonType.System );
             ScrollView.AddSubview( CancelButton );
             ControlStyling.StyleButton( CancelButton, GeneralStrings.Cancel, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             CancelButton.SizeToFit( );
-            CancelButton.Frame = new CGRect( ( View.Frame.Width - ControlStyling.ButtonWidth ) - 8, CellPhoneText.Background.Frame.Bottom + 20, ControlStyling.ButtonWidth, ControlStyling.ButtonHeight );
 
 
             // Allow the return on username and password to start
@@ -238,6 +227,24 @@ namespace iOS
             nfloat controlBottom = DoneButton.Frame.Bottom + ( View.Bounds.Height * .25f );
             ScrollView.ContentSize = new CGSize( 0, (nfloat) Math.Max( controlBottom, View.Bounds.Height * 1.05f ) );
 
+            HeaderView.Frame = new CGRect( View.Frame.Left, View.Frame.Top, View.Frame.Width, StyledTextField.StyledFieldHeight );
+
+            ScrollView.Frame = new CGRect( View.Frame.Left, HeaderView.Frame.Bottom, View.Frame.Width, View.Frame.Height - HeaderView.Frame.Height );
+
+            UserNameText.SetFrame( new CGRect( -10, View.Frame.Height * .05f, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+            PasswordText.SetFrame( new CGRect( -10, UserNameText.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+            ConfirmPasswordText.SetFrame( new CGRect( -10, PasswordText.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+
+            NickNameText.SetFrame( new CGRect( -10, ConfirmPasswordText.Background.Frame.Bottom + 40, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+            LastNameText.SetFrame( new CGRect( -10, NickNameText.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+
+            EmailText.SetFrame( new CGRect( -10, LastNameText.Background.Frame.Bottom + 40, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+            CellPhoneText.SetFrame( new CGRect( -10, EmailText.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
+
+            DoneButton.Frame = new CGRect( View.Frame.Left + 8, CellPhoneText.Background.Frame.Bottom + 20, ControlStyling.ButtonWidth, ControlStyling.ButtonHeight );
+            CancelButton.Frame = new CGRect( ( View.Frame.Width - ControlStyling.ButtonWidth ) - 8, CellPhoneText.Background.Frame.Bottom + 20, ControlStyling.ButtonWidth, ControlStyling.ButtonHeight );
+
+
             // setup the header shadow
             UIBezierPath shadowPath = UIBezierPath.FromRect( HeaderView.Bounds );
             HeaderView.Layer.MasksToBounds = false;
@@ -247,6 +254,9 @@ namespace iOS
             HeaderView.Layer.ShadowPath = shadowPath.CGPath;
 
             LogoView.Layer.Position = new CGPoint( HeaderView.Bounds.Width / 2, HeaderView.Bounds.Height / 2 );
+
+            ResultView.SetBounds( View.Frame.ToRectF( ) );
+            BlockerView.SetBounds( View.Frame.ToRectF( ) );
         }
 
         public override void ViewWillAppear(bool animated)
@@ -362,7 +372,7 @@ namespace iOS
                 // make sure they entered all required fields
                 if ( ValidateInput( ) )
                 {
-                    BlockerView.FadeIn( 
+                    BlockerView.Show( 
                         delegate
                         {
                             // force the UI to scroll back up
@@ -411,7 +421,7 @@ namespace iOS
                                             GeneralStrings.Done );
                                     }
 
-                                    BlockerView.FadeOut( null );
+                                    BlockerView.Hide( null );
                                 } );
                         } );
                 }

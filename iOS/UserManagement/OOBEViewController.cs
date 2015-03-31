@@ -69,5 +69,12 @@ namespace iOS
 
             OOBEView.PerformStartup( );
         }
+
+        public override void ViewDidLayoutSubviews()
+        {
+            base.ViewDidLayoutSubviews();
+
+            OOBEView.LayoutChanged( View.Bounds.ToRectF( ) );
+        }
 	}
 }

@@ -87,28 +87,6 @@ namespace iOS
                 handle = NSNotificationCenter.DefaultCenter.AddObserver( MPMoviePlayerController.DidExitFullscreenNotification, DidExitFullscreen );
                 ObserverHandles.Add( handle );
             }
-            else
-            {
-                ActivityIndicator.RemoveFromSuperview( );
-
-                // total hack to fix an issue where hitting "done" on the full screen movie player
-                // throws the phone into portrait WITHOUT SENDING US ALL EVENTS.
-
-                // certain iOS controllers (here's looking at you MovieController) cause the device
-                // orientation to change without notifying us when they finish being fullscreen.
-
-                // The specific bug this fixes, is if you are in landscape watching a video fullscreen, and tap Done,
-                // the phone goes to portait without notifying us, so the springboard button would remain disabled.
-                if ( SpringboardViewController.IsDeviceLandscape( ) )
-                {
-                    SpringboardViewController.ForcePortaitModeHack( );
-
-                    Task.NavToolbar.Reveal( true );
-                    Task.NavToolbar.SetBackButtonEnabled( true );
-                }
-            }
-
-            UpdateLayout( );
         }
 
         public override void ViewDidAppear(bool animated)
@@ -131,6 +109,10 @@ namespace iOS
                 MoviePlayer.ContentUrl = new NSUrl( MediaUrl );
                 MoviePlayer.PrepareToPlay( );
             }
+            else
+            {
+                ActivityIndicator.Hidden = true;
+            }
         }
 
         public override void ViewDidLayoutSubviews()
@@ -146,8 +128,32 @@ namespace iOS
                 Task.NavToolbar.Reveal( true );
                 Task.NavToolbar.SetBackButtonEnabled( true );
             }
+        }
 
-            UpdateLayout( );
+        public override void LayoutChanged()
+        {
+            base.LayoutChanged();
+
+            // center the movie window.
+            nfloat movieHeight = 0.00f;
+
+            // if we have the movie's actual size, use that to center
+            if ( MoviePlayer.NaturalSize.Width != 0 && MoviePlayer.NaturalSize.Height != 0 )
+            {
+                nfloat aspectRatio = MoviePlayer.NaturalSize.Height / MoviePlayer.NaturalSize.Width;    
+                movieHeight = View.Frame.Width * aspectRatio;
+            }
+            else
+            {
+                // otherwise as a temporary measure, use half the viewing width
+                movieHeight = View.Frame.Width / 2;
+            }
+
+            // center the movie frame and activity indicator
+            MoviePlayer.View.Frame = new CGRect( 0, (View.Frame.Height - movieHeight) / 2, View.Frame.Width, movieHeight );
+
+            ActivityIndicator.Layer.Position = new CGPoint( ( View.Frame.Width - ActivityIndicator.Frame.Width ) / 2, 
+                                                            ( View.Frame.Height - ActivityIndicator.Frame.Height ) / 2 );
         }
 
         public override void ViewWillDisappear(bool animated)
@@ -166,36 +172,6 @@ namespace iOS
 
                 ObserverHandles.Clear( );
             }
-        }
-
-        public override void LayoutChanging()
-        {
-            base.LayoutChanging();
-
-            UpdateLayout( );
-
-            // if we goto landscape throw the view into fullscreen
-            if ( SpringboardViewController.IsDeviceLandscape( ) )
-            {
-                if ( MoviePlayer.Fullscreen != true )
-                {
-                    MoviePlayer.SetFullscreen( true, false );
-                }
-            }
-            else
-            {
-                MoviePlayer.SetFullscreen( false, false );
-            }
-        }
-
-        void UpdateLayout( )
-        {
-            MoviePlayer.View.Frame = new CGRect( 0, ( SpringboardViewController.TraitSize.Height - SpringboardViewController.TraitSize.Width ) / 2, 
-                                                    SpringboardViewController.TraitSize.Width, 
-                                                    SpringboardViewController.TraitSize.Width );
-
-            ActivityIndicator.Layer.Position = new CGPoint( ( SpringboardViewController.TraitSize.Width - ActivityIndicator.Frame.Width ) / 2, 
-                                                            ( SpringboardViewController.TraitSize.Height - ActivityIndicator.Frame.Height ) / 2 );
         }
 
         public override void AppOnResignActive()
@@ -244,6 +220,10 @@ namespace iOS
             ActivityIndicator.Hidden = true;
 
             MoviePlayer.Play( );
+
+            // now that the content is preloaded, update our layout so that
+            // we size the window according to the video dimensions.
+            LayoutChanged( );
 
             if ( AudioOnly )
             {

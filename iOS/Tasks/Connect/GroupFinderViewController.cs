@@ -15,6 +15,8 @@ using Rock.Mobile.PlatformSpecific.iOS.UI;
 using CCVApp.Shared.Strings;
 using CCVApp.Shared.Analytics;
 using Rock.Mobile.Animation;
+using CCVApp.Shared.UI;
+using Rock.Mobile.PlatformSpecific.Util;
 
 namespace iOS
 {
@@ -254,7 +256,7 @@ namespace iOS
         UITableView GroupFinderTableView { get; set; }
         GroupFinderViewController.TableSource GroupTableSource { get; set; }
 
-        BlockerView BlockerView { get; set; }
+        UIBlockerView BlockerView { get; set; }
 
         public UITextField Street { get; set; }
         public UITextField City { get; set; }
@@ -503,8 +505,7 @@ namespace iOS
             GroupFinderTableView.Source = GroupTableSource;
             GroupFinderTableView.SeparatorStyle = UITableViewCellSeparatorStyle.None;
 
-            BlockerView = new BlockerView( View.Frame );
-            View.AddSubview( BlockerView );
+            BlockerView = new UIBlockerView( View, View.Frame.ToRectF( ) );
         }
 
         public override void LayoutChanged( )
@@ -566,6 +567,8 @@ namespace iOS
             // and the last row doesn't fit on screen.
             GroupFinderTableView.Frame = new CGRect( 0, Seperator.Frame.Bottom, View.Bounds.Width, View.Bounds.Height - Seperator.Frame.Bottom );
             GroupFinderTableView.ReloadData( );
+
+            BlockerView.SetBounds( View.Frame.ToRectF( ) );
         }
 
         public void UpdateMap( )
@@ -759,12 +762,12 @@ namespace iOS
                     {
                         Searching = true;
 
-                        BlockerView.FadeIn( delegate
+                        BlockerView.Show( delegate
                             {
                                 GroupFinder.GetGroups( street, city, state, zip, 
                                     delegate( GroupFinder.GroupEntry sourceLocation, List<GroupFinder.GroupEntry> groupEntries )
                                     {
-                                        BlockerView.FadeOut( delegate
+                                        BlockerView.Hide( delegate
                                             {
                                                 Searching = false;
 

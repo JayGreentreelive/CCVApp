@@ -181,7 +181,10 @@ namespace iOS
 
         public void LayoutChanged( )
         {
-            SubNavigationController.View.Bounds = View.Bounds;
+            if ( SubNavigationController != null )
+            {
+                SubNavigationController.View.Bounds = View.Bounds;
+            }
 
             if ( CurrentTask != null )
             {

@@ -37,7 +37,6 @@ namespace CCVApp.Shared.UI
         public void Create( object masterView, string bgLayerImageName, string logoImageName, RectangleF frame, OnButtonClick onClick )
         {
             View = PlatformView.Create( );
-            View.Frame = new RectangleF( frame.Left, frame.Top, frame.Width, frame.Height );
             View.BackgroundColor = 0x5b0f10ff;
             View.AddAsSubview( masterView );
 
@@ -48,7 +47,7 @@ namespace CCVApp.Shared.UI
             ImageBG.Opacity = 0;
             ImageBG.Image = stream;
             ImageBG.SizeToFit( );
-            ImageBG.ImageScaleType = PlatformImageView.ScaleType.Center;
+            ImageBG.ImageScaleType = PlatformImageView.ScaleType.ScaleAspectFill;
 
             WelcomeLabel = PlatformLabel.Create( );
             WelcomeLabel.SetFont( ControlStylingConfig.Large_Font_Light, ControlStylingConfig.Large_FontSize );
@@ -56,7 +55,6 @@ namespace CCVApp.Shared.UI
             WelcomeLabel.Text = OOBEConfig.Welcome;
             WelcomeLabel.Opacity = 0;
             WelcomeLabel.SizeToFit( );
-            WelcomeLabel.Position = new PointF( (( View.Frame.Width - WelcomeLabel.Frame.Width ) / 2), View.Frame.Height * .35f );
             WelcomeLabel.AddAsSubview( masterView );
 
 
@@ -66,7 +64,6 @@ namespace CCVApp.Shared.UI
             RegisterButton.Text = string.Format( OOBEConfig.WantAccount, GeneralConfig.OrganizationShortName );
             RegisterButton.Opacity = 0;
             RegisterButton.SizeToFit( );
-            RegisterButton.Position = new PointF( ( ( View.Frame.Width - RegisterButton.Frame.Width ) / 2 ), WelcomeLabel.Frame.Bottom + Rock.Mobile.Graphics.Util.UnitToPx( 33 ) );
             RegisterButton.ClickEvent = (PlatformButton button ) =>
             {
                 onClick( 0 );
@@ -80,7 +77,6 @@ namespace CCVApp.Shared.UI
             LoginButton.Text = string.Format( OOBEConfig.HaveAccount, GeneralConfig.OrganizationShortName );
             LoginButton.Opacity = 0;
             LoginButton.SizeToFit( );
-            LoginButton.Position = new PointF( ( ( View.Frame.Width - LoginButton.Frame.Width ) / 2 ), RegisterButton.Frame.Bottom + Rock.Mobile.Graphics.Util.UnitToPx( 33 ) );
             LoginButton.ClickEvent = (PlatformButton button ) =>
                 {
                     onClick( 1 );
@@ -94,7 +90,6 @@ namespace CCVApp.Shared.UI
             SkipButton.Text = OOBEConfig.SkipAccount;
             SkipButton.Opacity = 0;
             SkipButton.SizeToFit( );
-            SkipButton.Position = new PointF( ( ( View.Frame.Width - SkipButton.Frame.Width ) / 2 ), LoginButton.Frame.Bottom + Rock.Mobile.Graphics.Util.UnitToPx( 33 ) );
             SkipButton.ClickEvent = (PlatformButton button ) =>
                 {
                     onClick( 2 );
@@ -110,8 +105,6 @@ namespace CCVApp.Shared.UI
             ImageLogo.SizeToFit( );
             ImageLogo.ImageScaleType = PlatformImageView.ScaleType.ScaleAspectFit;
 
-            ImageLogo.Frame = new RectangleF( (( View.Frame.Width - ImageLogo.Frame.Width ) / 2), (( View.Frame.Height - ImageLogo.Frame.Height ) / 2) + 2, ImageLogo.Frame.Width, ImageLogo.Frame.Height );
-
             State = OOBE_State.Startup;
         }
 
@@ -120,6 +113,23 @@ namespace CCVApp.Shared.UI
             // clean up resources (looking at you, Android)
             ImageLogo.Destroy( );
             ImageBG.Destroy( );
+        }
+
+        public void LayoutChanged( RectangleF frame )
+        {
+            View.Frame = new RectangleF( frame.Left, frame.Top, frame.Width, frame.Height );
+
+            ImageBG.Frame = View.Frame;
+
+            WelcomeLabel.Position = new PointF( (( View.Frame.Width - WelcomeLabel.Frame.Width ) / 2), View.Frame.Height * .35f );
+
+            RegisterButton.Position = new PointF( ( ( View.Frame.Width - RegisterButton.Frame.Width ) / 2 ), WelcomeLabel.Frame.Bottom + Rock.Mobile.Graphics.Util.UnitToPx( 33 ) );
+
+            LoginButton.Position = new PointF( ( ( View.Frame.Width - LoginButton.Frame.Width ) / 2 ), RegisterButton.Frame.Bottom + Rock.Mobile.Graphics.Util.UnitToPx( 33 ) );
+
+            SkipButton.Position = new PointF( ( ( View.Frame.Width - SkipButton.Frame.Width ) / 2 ), LoginButton.Frame.Bottom + Rock.Mobile.Graphics.Util.UnitToPx( 33 ) );
+
+            ImageLogo.Frame = new RectangleF( (( View.Frame.Width - ImageLogo.Frame.Width ) / 2), (( View.Frame.Height - ImageLogo.Frame.Height ) / 2) + 2, ImageLogo.Frame.Width, ImageLogo.Frame.Height );
         }
 
         public void PerformStartup( )

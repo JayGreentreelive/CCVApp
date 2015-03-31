@@ -4,6 +4,7 @@ using System;
 
 using Foundation;
 using UIKit;
+using CoreGraphics;
 
 namespace iOS
 {
@@ -18,13 +19,15 @@ namespace iOS
         {
             base.ViewDidLoad();
 
-            WebView = new UIWebView( View.Frame );
+            WebView = new UIWebView( );
+            WebView.Layer.AnchorPoint = CGPoint.Empty;
+            WebView.Frame = View.Frame;
             View.AddSubview( WebView );
+
             WebView.LoadRequest( new NSUrlRequest( new NSUrl( ActiveUrl ) ) );
 
             // place a busy indicator
             Indicator = new UIActivityIndicatorView( );
-            Indicator.Layer.Position = new CoreGraphics.CGPoint( View.Frame.Width / 2, View.Frame.Height / 2 );
             Indicator.ActivityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge;
             Indicator.Color = UIColor.Gray;
             Indicator.StartAnimating( );
@@ -43,11 +46,16 @@ namespace iOS
         {
             base.ViewDidLayoutSubviews();
 
-            WebView.Frame = View.Frame;
-            Indicator.Layer.Position = new CoreGraphics.CGPoint( View.Frame.Width / 2, View.Frame.Height / 2 );
-
             UIApplication.SharedApplication.IdleTimerDisabled = true;
             Console.WriteLine( "Turning idle timer OFF" );
+        }
+
+        public override void LayoutChanged()
+        {
+            base.LayoutChanged();
+
+            WebView.Bounds = View.Bounds;
+            Indicator.Layer.Position = new CoreGraphics.CGPoint( View.Frame.Width / 2, View.Frame.Height / 2 );
         }
 
         public override void ViewDidAppear(bool animated)

@@ -10,6 +10,8 @@ using CCVApp.Shared.Config;
 using CCVApp.Shared.Strings;
 using CCVApp.Shared.Analytics;
 using CCVApp.Shared.Network;
+using CCVApp.Shared.UI;
+using Rock.Mobile.PlatformSpecific.Util;
 
 namespace iOS
 {
@@ -194,7 +196,7 @@ namespace iOS
 
         DateTime LastDownload { get; set; }
 
-        Rock.Mobile.PlatformSpecific.iOS.UI.BlockerView BlockerView { get; set; }
+        UIBlockerView BlockerView { get; set; }
 
 		public PrayerMainUIViewController (IntPtr handle) : base (handle)
 		{
@@ -205,7 +207,7 @@ namespace iOS
         {
             base.ViewDidLoad();
 
-            BlockerView = new Rock.Mobile.PlatformSpecific.iOS.UI.BlockerView( View.Frame );
+            BlockerView = new UIBlockerView( View, View.Frame.ToRectF( ) );
 
             View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
@@ -232,8 +234,6 @@ namespace iOS
 
             ControlStyling.StyleUILabel( ResultLabel, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             ControlStyling.StyleBGLayer( ResultBackground );
-
-            View.AddSubview( BlockerView );
 
             ControlStyling.StyleButton( RetryButton, GeneralStrings.Retry, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             RetryButton.TouchUpInside += (object sender, EventArgs e ) =>
@@ -262,7 +262,7 @@ namespace iOS
                 if ( deltaTime.TotalHours > PrayerConfig.PrayerDownloadFrequency.TotalHours )
                 {
                     View.BringSubviewToFront( RetrievingPrayersView );
-                    View.BringSubviewToFront( BlockerView );
+                    BlockerView.BringToFront( );
 
                     Console.WriteLine( "Grabbing Prayers" );
                     RetrievePrayerRequests( );
@@ -294,6 +294,13 @@ namespace iOS
             );
         }
 
+        public override void LayoutChanged()
+        {
+            base.LayoutChanged();
+
+            BlockerView.SetBounds( View.Bounds.ToRectF( ) );
+        }
+
         void RetrievePrayerRequests( )
         {
             // show the retrieve layer
@@ -302,7 +309,7 @@ namespace iOS
             ResultLabel.Hidden = true;
             RetryButton.Hidden = true;
 
-            BlockerView.FadeIn( delegate
+            BlockerView.Show( delegate
                 {
                     RequestingPrayers = true;
 
@@ -320,7 +327,7 @@ namespace iOS
 
                                         RequestingPrayers = false;
 
-                                        BlockerView.FadeOut( null );
+                                        BlockerView.Hide( null );
 
                                         // somestimes our prayers can be received with errors in the xml, so ensure we have a valid model.
                                         if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) && prayerRequests != null )

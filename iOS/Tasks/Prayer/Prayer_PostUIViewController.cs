@@ -7,6 +7,8 @@ using Rock.Mobile.PlatformUI;
 using CoreGraphics;
 using CCVApp.Shared.Config;
 using CCVApp.Shared.Analytics;
+using CCVApp.Shared.UI;
+using Rock.Mobile.PlatformSpecific.Util;
 
 namespace iOS
 {
@@ -17,7 +19,7 @@ namespace iOS
         bool Success { get; set; }
         bool IsActive { get; set; }
 
-        Rock.Mobile.PlatformSpecific.iOS.UI.BlockerView BlockerView { get; set; }
+        UIBlockerView BlockerView { get; set; }
 
 		public Prayer_PostUIViewController (IntPtr handle) : base (handle)
 		{
@@ -27,8 +29,7 @@ namespace iOS
         {
             base.ViewDidLoad();
 
-            BlockerView = new Rock.Mobile.PlatformSpecific.iOS.UI.BlockerView( View.Frame );
-            View.AddSubview( BlockerView );
+            BlockerView = new UIBlockerView( View, View.Frame.ToRectF( ) );
 
             StatusLabel.Text = PrayerStrings.PostPrayer_Status_Submitting;
 
@@ -60,9 +61,6 @@ namespace iOS
             DoneButton.Hidden = true;
             ResultLabel.Hidden = true;
             ResultSymbolLabel.Hidden = true;
-
-            BlockerView.Hidden = false;
-            BlockerView.Layer.Opacity = 0.00f;
 
             if ( PrayerRequest == null )
             {
@@ -115,7 +113,7 @@ namespace iOS
             ResultSymbolLabel.Hidden = true;
 
             // fade in our blocker, and when it's complete, send our request off
-            BlockerView.FadeIn( delegate
+            BlockerView.Show( delegate
                 {
                     // sleep this thread for a second to give an appearance of submission
                     System.Threading.Thread.Sleep( 1000 );
@@ -128,7 +126,7 @@ namespace iOS
                             // if they left while posting, screw em.
                             if ( IsActive == true )
                             {
-                                BlockerView.FadeOut( null );
+                                BlockerView.Hide( null );
 
                                 if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) )
                                 {
