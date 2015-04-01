@@ -1,41 +1,13 @@
 ﻿<Properties StartupItem="iOS/iOS.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPad2.8.2" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="CCVApp.Shared/RockApi/RockApi.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget.Information's iPad" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/Tasks/Prayer/PrayerMainUIViewController.cs">
     <Files>
-      <File FileName="iOS/SpringboardViewController.cs" Line="504" Column="71" />
-      <File FileName="iOS/Tasks/About/AboutMainPageUIViewController.cs" Line="23" Column="83" />
-      <File FileName="iOS/Tasks/Prayer/PrayerMainUIViewController.cs" Line="223" Column="13" />
-      <File FileName="CCVApp.Shared/UI/UIBlockerView.cs" Line="56" Column="9" />
-      <File FileName="CCVApp.Shared/RockApi/RockApi.cs" Line="80" Column="17" />
+      <File FileName="iOS/SpringboardViewController.cs" Line="1" Column="1" />
+      <File FileName="iOS/Tasks/About/AboutMainPageUIViewController.cs" Line="1" Column="1" />
+      <File FileName="iOS/Tasks/Prayer/Prayer_CreateUIViewController.cs" Line="346" Column="38" />
+      <File FileName="iOS/Tasks/Prayer/PrayerMainUIViewController.cs" Line="112" Column="19" />
+      <File FileName="iOS/UserManagement/ProfileViewController.cs" Line="421" Column="13" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="CCVApp.Shared" expanded="True">
-            <Node name="RockApi" expanded="True">
-              <Node name="RockApi.cs" selected="True" />
-            </Node>
-          </Node>
-          <Node name="iOS" expanded="True">
-            <Node name="Tasks" expanded="True">
-              <Node name="About" expanded="True" />
-              <Node name="Connect" expanded="True" />
-              <Node name="Notes" expanded="True" />
-              <Node name="Prayer" expanded="True">
-                <Node name="PrayerMainUIViewController.cs" expanded="True" />
-              </Node>
-            </Node>
-            <Node name="UserManagement" expanded="True" />
-          </Node>
-          <Node name="Rock.Mobile" expanded="True">
-            <Node name="Network" expanded="True" />
-          </Node>
-        </State>
-      </Pad>
-      <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />

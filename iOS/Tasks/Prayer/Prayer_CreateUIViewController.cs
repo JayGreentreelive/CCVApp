@@ -375,6 +375,14 @@ namespace iOS
             ScrollView.ContentSize = new CGSize( 0, (nfloat) Math.Max( controlBottom, View.Bounds.Height * 1.05f ) );
         }
 
+        public override void LayoutChanged( )
+        {
+            base.LayoutChanged( );
+
+            PickerAdjustManager.LayoutChanged( );
+            PickerAdjustManager.TogglePicker( false, false );
+        }
+
         void EnableControls( bool enabled )
         {
             FirstNameText.Enabled = enabled;

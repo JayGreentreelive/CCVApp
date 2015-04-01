@@ -12,6 +12,7 @@ using CCVApp.Shared.Analytics;
 using CCVApp.Shared.Network;
 using CCVApp.Shared.UI;
 using Rock.Mobile.PlatformSpecific.Util;
+using System.Drawing;
 
 namespace iOS
 {
@@ -93,13 +94,11 @@ namespace iOS
 
             PrayFillIn = new UIView( );
             PrayFillIn.Bounds = new CGRect( 0, 0, Pray.Frame.Height / 2, Pray.Frame.Height / 2 );
-            PrayFillIn.Layer.Position = new CGPoint( View.Bounds.Width - PrayFillIn.Layer.Bounds.Width - ViewPadding, View.Bounds.Height - PrayFillIn.Layer.Bounds.Height - (PrayFillIn.Layer.Bounds.Height / 2) );
             PrayFillIn.Layer.CornerRadius = PrayFillIn.Bounds.Width / 2;
             PrayFillIn.Layer.BorderWidth = 1;
             PrayFillIn.Layer.BorderColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ).CGColor;
             PrayFillIn.Layer.AnchorPoint = new CGPoint( 0, 0 );
 
-            Pray.Layer.Position = new CGPoint( PrayFillIn.Frame.Left - Pray.Layer.Bounds.Width - ViewPadding, View.Bounds.Height - Pray.Layer.Bounds.Height );
             Pray.TouchUpInside += (object sender, EventArgs e) => 
                 {
                     if( Prayed == false )
@@ -155,27 +154,45 @@ namespace iOS
             // set the text for the name, size it so we get the height, then
             // restrict its bounds to the card itself
             Name.Text = prayer.FirstName;
-            Name.SizeToFit( );
-            Name.Frame = new CGRect( ViewPadding, ViewPadding, View.Bounds.Width - (ViewPadding * 2), Name.Bounds.Height );
-
             Category.Text = PrayerRequest.CategoryId.HasValue ? RockGeneralData.Instance.Data.PrayerIdToCategory( PrayerRequest.CategoryId.Value ) : RockGeneralData.Instance.Data.PrayerCategories[ 0 ].Name;
-            Category.SizeToFit( );
-            Category.Layer.Position = new CGPoint( ViewPadding, Name.Frame.Bottom );
-
-            // set the date text, then calculate the dimensions so we can right-adjust it
-            Date.Text = string.Format( "{0:MM/dd/yy}", prayer.CreatedDateTime );
-            Date.Frame = new CGRect( ViewPadding, Name.Frame.Bottom, View.Bounds.Width - ViewPadding, 0 );
-            Date.SizeToFit( );
-            Date.Layer.Position = new CGPoint( View.Bounds.Width - Date.Frame.Width - ViewPadding, Name.Frame.Bottom );
-
-            // set the prayer text, allow multiple lines, set the width to be the card itself,
-            // and let SizeToFit measure the height.
+            Date.Text = string.Format( "{0:MM/dd/yy}", DateTime.MinValue );
             PrayerText.Text = prayer.Text;
 
-            PrayerText.Frame = new CGRect( ViewPadding, Date.Frame.Bottom + ViewPadding, View.Bounds.Width - (ViewPadding * 2), 0 );
+            LayoutChanged( View.Frame );
+        }
+
+        public void LayoutChanged( RectangleF bounds )
+        {
+            View.Bounds = bounds;
+
+            Name.Frame = new CGRect( ViewPadding, ViewPadding, View.Bounds.Width - (ViewPadding * 2), Name.Bounds.Height );
+            Name.SizeToFit( );
+
+            Category.Layer.Position = new CGPoint( ViewPadding, Name.Frame.Bottom );
+            Category.SizeToFit( );
+
+            float metaDataSpacing = 30;
+            nfloat metaDataYSpacing = ( ( metaDataSpacing - Category.Frame.Height ) / 2 );
+            Category.Layer.Position = new CGPoint( ViewPadding, Name.Frame.Bottom + metaDataYSpacing );
+
+
+            Date.Frame = new CGRect( ViewPadding, Name.Frame.Bottom, View.Bounds.Width - ViewPadding, 0 );
+            Date.SizeToFit( );
+
+            metaDataYSpacing = ( ( metaDataSpacing - Date.Frame.Height ) / 2 );
+            Date.Layer.Position = new CGPoint( View.Bounds.Width - Date.Frame.Width - ViewPadding, Name.Frame.Bottom + metaDataYSpacing );
+
+
+
+
+            PrayerText.Frame = new CGRect( ViewPadding, Name.Frame.Bottom + metaDataSpacing, View.Bounds.Width - (ViewPadding * 2), 0 );
             PrayerText.SizeToFit( );
             float prayerHeight = (float) Math.Min( PrayerText.Frame.Height, View.Bounds.Height - PrayerText.Frame.Top - Pray.Frame.Height - ViewPadding );
             PrayerText.Frame = new CGRect( PrayerText.Frame.Left, PrayerText.Frame.Top, PrayerText.Frame.Width, prayerHeight );
+
+            PrayFillIn.Bounds = new CGRect( 0, 0, Pray.Frame.Height / 2, Pray.Frame.Height / 2 );
+            PrayFillIn.Layer.Position = new CGPoint( View.Bounds.Width - PrayFillIn.Layer.Bounds.Width - ViewPadding, View.Bounds.Height - PrayFillIn.Layer.Bounds.Height - (PrayFillIn.Layer.Bounds.Height / 2) );
+            Pray.Layer.Position = new CGPoint( PrayFillIn.Frame.Left - Pray.Layer.Bounds.Width - ViewPadding, View.Bounds.Height - Pray.Layer.Bounds.Height );
         }
     }
 
@@ -237,12 +254,12 @@ namespace iOS
 
             ControlStyling.StyleButton( RetryButton, GeneralStrings.Retry, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             RetryButton.TouchUpInside += (object sender, EventArgs e ) =>
-            {
-                if( RequestingPrayers == false )
                 {
-                    RetrievePrayerRequests( );
-                }
-            };
+                    if( RequestingPrayers == false )
+                    {
+                        RetrievePrayerRequests( );
+                    }
+                };
 
             LastDownload = DateTime.MinValue;
         }
@@ -288,8 +305,6 @@ namespace iOS
 
                     Prayer_CreateUIViewController viewController = Storyboard.InstantiateViewController( "Prayer_CreateUIViewController" ) as Prayer_CreateUIViewController;
                     Task.PerformSegue( this, viewController );
-
-                    Console.WriteLine( "pushing" );
                 }
             );
         }
@@ -297,6 +312,22 @@ namespace iOS
         public override void LayoutChanged()
         {
             base.LayoutChanged();
+
+            float viewRealHeight = (float)( View.Bounds.Height - Task.NavToolbar.Frame.Height);
+
+            float cardSizePerc = .83f;
+            float cardWidth = (float)(View.Bounds.Width * cardSizePerc);
+            float cardHeight = (float) (viewRealHeight * cardSizePerc);
+            float cardYOffset = ( viewRealHeight * .03f );
+
+            // setup the card positions to be to the offscreen to the left, centered on screen, and offscreen to the right
+            Carousel.LayoutChanged( cardWidth, cardHeight, new System.Drawing.RectangleF( 0, cardYOffset, (float)View.Bounds.Width, viewRealHeight ) );
+
+            CardSize = new CGRect( 0, 0, cardWidth, cardHeight );
+            for( int i = 0; i < PrayerRequests.Count; i++ )
+            {
+                PrayerRequests[ i ].LayoutChanged( CardSize.ToRectF( ) );
+            }
 
             BlockerView.SetBounds( View.Bounds.ToRectF( ) );
         }
