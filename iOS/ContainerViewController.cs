@@ -164,7 +164,7 @@ namespace iOS
         {
             UpdateBackButton( );
 
-            if ( SpringboardViewController.IsLandscapeRegular( ) == true )
+            if ( SpringboardViewController.IsDeviceLandscape( ) == true )
             {
                 EnableSpringboardRevealButton( false );
             }
@@ -190,6 +190,16 @@ namespace iOS
             {
                 CurrentTask.LayoutChanged( View.Bounds );
             }
+        }
+
+        public bool SupportsLandscape( )
+        {
+            if( CurrentTask != null )
+            {
+                return CurrentTask.SupportsLandscape( );
+            }
+
+            return false;
         }
 
         public void UpdateBackButton( )

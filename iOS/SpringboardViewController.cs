@@ -244,12 +244,37 @@ namespace iOS
 
         public override bool ShouldAutorotate()
         {
+            if ( UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Phone )
+            {
+                if ( NavViewController.SupportsLandscape( ) )
+                {
+                    return true;
+                }
+                return false;
+            }
+
             return true;
         }
 
         public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations()
         {
-            return UIInterfaceOrientationMask.All;
+            // we have a choice here to support rotation on an iPhone 6+, but it just doesn't work well enough.
+            // so limit rotation to tablets.
+            if ( UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Phone )
+            {
+                if ( NavViewController.SupportsLandscape( ) )
+                {
+                    return UIInterfaceOrientationMask.All;
+                }
+                else
+                {
+                    return UIInterfaceOrientationMask.Portrait;
+                }
+            }
+            else
+            {
+                return UIInterfaceOrientationMask.All;
+            }
         }
 
         static UITraitCollection CurrentTraitCollection { get; set; }
@@ -277,9 +302,14 @@ namespace iOS
 
         public static bool IsLandscapeRegular( )
         {
-            if ( IsDeviceLandscape( ) && CurrentTraitCollection.HorizontalSizeClass == UIUserInterfaceSizeClass.Regular )
+            // we have a choice here to support rotation on an iPhone 6+, but it just doesn't work well enough.
+            // so limit rotation to tablets.
+            if ( UIDevice.CurrentDevice.UserInterfaceIdiom != UIUserInterfaceIdiom.Phone )
             {
-                return true;
+                if ( IsDeviceLandscape( ) && CurrentTraitCollection.HorizontalSizeClass == UIUserInterfaceSizeClass.Regular )
+                {
+                    return true;
+                }
             }
 
             return false;

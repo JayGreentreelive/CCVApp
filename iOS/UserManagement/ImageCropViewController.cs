@@ -115,6 +115,12 @@ namespace iOS
             return false;
         }
 
+        public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations()
+        {
+            // insist they stay in portait on iPhones
+            return Springboard.GetSupportedInterfaceOrientations( );
+        }
+
         UIToolbar Toolbar { get; set; }
         UIView ButtonContainer { get; set; }
 

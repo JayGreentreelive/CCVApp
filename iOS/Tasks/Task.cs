@@ -121,19 +121,6 @@ namespace iOS
 
         public virtual void LayoutChanging( )
         {
-            if ( SpringboardViewController.IsLandscapeRegular( ) == true )
-            {
-                Console.WriteLine( "Landscape Regular" );
-            }
-            else if ( SpringboardViewController.IsDeviceLandscape( ) == true )
-            {
-                Console.WriteLine( "Landscape" );
-            }
-            else if ( SpringboardViewController.IsDevicePortrait( ) == true )
-            {
-                Console.WriteLine( "Portrait" );
-            }
-
             ActiveViewController.LayoutChanging( );
         }
 

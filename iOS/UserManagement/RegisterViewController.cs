@@ -77,11 +77,6 @@ namespace iOS
             return Springboard.GetSupportedInterfaceOrientations( );
         }
 
-        public override UIInterfaceOrientation PreferredInterfaceOrientationForPresentation( )
-        {
-            return Springboard.PreferredInterfaceOrientationForPresentation( );
-        }
-
         public override bool PrefersStatusBarHidden()
         {
             return Springboard.PrefersStatusBarHidden();

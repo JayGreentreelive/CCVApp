@@ -245,37 +245,42 @@ namespace iOS
         {
             base.ViewDidLayoutSubviews( );
 
+            UIApplication.SharedApplication.IdleTimerDisabled = true;
+            Console.WriteLine( "Turning idle timer OFF" );
+        }
+
+        public override void LayoutChanged()
+        {
+            base.LayoutChanged();
+
             // get the orientation state. WE consider unknown- 1, profile 0, landscape 1,
             int orientationState = SpringboardViewController.IsDeviceLandscape( ) == true ? 1 : 0;
 
             // if the states are in disagreement, correct it
             if ( OrientationState != orientationState ) 
-			{
+            {
                 OrientationState = orientationState;
 
-				//note: the frame height of the nav bar is what it CURRENTLY is, not what it WILL be after we rotate. So, when we go from Portrait to Landscape,
-				// it says 40, but it's gonna be 32. Conversely, going back, we use 32 and it's actually 40, which causes us to start this view 8px too high.
+                //note: the frame height of the nav bar is what it CURRENTLY is, not what it WILL be after we rotate. So, when we go from Portrait to Landscape,
+                // it says 40, but it's gonna be 32. Conversely, going back, we use 32 and it's actually 40, which causes us to start this view 8px too high.
                 #if DEBUG
-				RefreshButton.Layer.Position = new CGPoint (View.Bounds.Width / 2, (RefreshButton.Frame.Height / 2));
+                RefreshButton.Layer.Position = new CGPoint (View.Bounds.Width / 2, (RefreshButton.Frame.Height / 2));
 
-				UIScrollView.Frame = new CGRect(0, 0, View.Bounds.Width, View.Bounds.Height - RefreshButton.Frame.Height );
-				UIScrollView.Layer.Position = new CGPoint(UIScrollView.Layer.Position.X, UIScrollView.Layer.Position.Y + RefreshButton.Frame.Bottom);
+                UIScrollView.Frame = new CGRect(0, 0, View.Bounds.Width, View.Bounds.Height - RefreshButton.Frame.Height );
+                UIScrollView.Layer.Position = new CGPoint(UIScrollView.Layer.Position.X, UIScrollView.Layer.Position.Y + RefreshButton.Frame.Bottom);
                 #else
                 UIScrollView.Frame = new CGRect (0, 0, View.Bounds.Width, View.Bounds.Height );
                 UIScrollView.Layer.Position = new CGPoint (UIScrollView.Layer.Position.X, UIScrollView.Layer.Position.Y );
                 #endif
 
-				Indicator.Layer.Position = new CGPoint (View.Bounds.Width / 2, View.Bounds.Height / 2);
+                Indicator.Layer.Position = new CGPoint (View.Bounds.Width / 2, View.Bounds.Height / 2);
 
-				// re-create our notes with the new dimensions
-				PrepareCreateNotes( );
+                // re-create our notes with the new dimensions
+                PrepareCreateNotes( );
 
                 // since we're changing orientations, hide the tutorial screen
                 AnimateTutorialScreen( false );
-			}
-
-            UIApplication.SharedApplication.IdleTimerDisabled = true;
-            Console.WriteLine( "Turning idle timer OFF" );
+            }
         }
 
         public override void ViewDidLoad( )
@@ -579,17 +584,18 @@ namespace iOS
 
         public void ViewDidScroll( float scrollDelta )
         {
-            // notify our task that fast scrolling was detected
-            //Task.ViewDidScroll( scrollDelta );
-
-            nfloat scrollPerc = UIScrollView.ContentOffset.Y / UIScrollView.ContentSize.Height;
-            if ( scrollPerc < .10f )
+            // guard against this callback being received after we've switched away from this task.
+            if ( Task.NavToolbar != null )
             {
-                Task.NavToolbar.Reveal( true );
-            }
-            else
-            {
-                Task.NavToolbar.Reveal( false );
+                nfloat scrollPerc = UIScrollView.ContentOffset.Y / UIScrollView.ContentSize.Height;
+                if ( scrollPerc < .10f )
+                {
+                    Task.NavToolbar.Reveal( true );
+                }
+                else
+                {
+                    Task.NavToolbar.Reveal( false );
+                }
             }
         }
 

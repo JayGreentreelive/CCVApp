@@ -95,6 +95,13 @@ namespace iOS
             Task.NavToolbar.Reveal( false );
         }
 
+        public override void LayoutChanged()
+        {
+            base.LayoutChanged();
+
+            BlockerView.SetBounds( View.Bounds.ToRectF( ) );
+        }
+
         public override void ViewWillDisappear(bool animated)
         {
             base.ViewWillDisappear(animated);

@@ -115,9 +115,43 @@ namespace iOS
             }
         }
 
-        public override void ViewDidLayoutSubviews()
+        public override void LayoutChanged()
         {
-            base.ViewDidLayoutSubviews();
+            base.LayoutChanged();
+
+            // center the movie window.
+            nfloat movieHeight = 0.00f;
+            nfloat movieWidth = View.Frame.Width;
+
+            // if we have the movie size, correctly resize it
+            if ( MoviePlayer.NaturalSize.Width != 0 && MoviePlayer.NaturalSize.Height != 0 )
+            {
+                // fit the video into the width of the view
+                nfloat aspectRatio = MoviePlayer.NaturalSize.Height / MoviePlayer.NaturalSize.Width;
+                movieWidth = View.Frame.Width;
+                movieHeight = movieWidth * aspectRatio;
+
+                // if the height is still too large, scale the width down from what our height is
+                if ( movieHeight > View.Frame.Height )
+                {
+                    aspectRatio = MoviePlayer.NaturalSize.Width / MoviePlayer.NaturalSize.Height;
+
+                    movieHeight = View.Frame.Height;
+                    movieWidth = View.Frame.Height * aspectRatio;
+                }
+            }
+            else
+            {
+                // otherwise as a temporary measure, use half the viewing width
+                movieWidth = View.Frame.Width;
+                movieHeight = View.Frame.Height;
+            }
+
+            // center the movie frame and activity indicator
+            MoviePlayer.View.Frame = new CGRect( (View.Frame.Width - movieWidth) / 2, (View.Frame.Height - movieHeight) / 2, movieWidth, movieHeight );
+
+            ActivityIndicator.Layer.Position = new CGPoint( ( View.Frame.Width - ActivityIndicator.Frame.Width ) / 2, 
+                                                            ( View.Frame.Height - ActivityIndicator.Frame.Height ) / 2 );
 
             if ( SpringboardViewController.IsDeviceLandscape( ) )
             {
@@ -128,32 +162,6 @@ namespace iOS
                 Task.NavToolbar.Reveal( true );
                 Task.NavToolbar.SetBackButtonEnabled( true );
             }
-        }
-
-        public override void LayoutChanged()
-        {
-            base.LayoutChanged();
-
-            // center the movie window.
-            nfloat movieHeight = 0.00f;
-
-            // if we have the movie's actual size, use that to center
-            if ( MoviePlayer.NaturalSize.Width != 0 && MoviePlayer.NaturalSize.Height != 0 )
-            {
-                nfloat aspectRatio = MoviePlayer.NaturalSize.Height / MoviePlayer.NaturalSize.Width;    
-                movieHeight = View.Frame.Width * aspectRatio;
-            }
-            else
-            {
-                // otherwise as a temporary measure, use half the viewing width
-                movieHeight = View.Frame.Width / 2;
-            }
-
-            // center the movie frame and activity indicator
-            MoviePlayer.View.Frame = new CGRect( 0, (View.Frame.Height - movieHeight) / 2, View.Frame.Width, movieHeight );
-
-            ActivityIndicator.Layer.Position = new CGPoint( ( View.Frame.Width - ActivityIndicator.Frame.Width ) / 2, 
-                                                            ( View.Frame.Height - ActivityIndicator.Frame.Height ) / 2 );
         }
 
         public override void ViewWillDisappear(bool animated)

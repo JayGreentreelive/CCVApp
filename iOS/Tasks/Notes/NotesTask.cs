@@ -191,20 +191,20 @@ namespace iOS
             ActiveViewController.AppWillTerminate( );
         }
 
-        /*public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations()
+        public override bool SupportsLandscape()
         {
             // if we're using the watch or notes controller, allow landscape
             if ( ( ActiveViewController as NotesViewController ) != null || 
                  ( ActiveViewController as NotesWatchUIViewController ) != null || 
                  ( ActiveViewController as NotesWebViewController ) != null )
             {
-                return UIInterfaceOrientationMask.All;
+                return true;
             }
             else
             {
-                return base.GetSupportedInterfaceOrientations( );
+                return false;
             }
-        }*/
+        }
 
         public override bool ShouldForceBackButtonEnabled( )
         {

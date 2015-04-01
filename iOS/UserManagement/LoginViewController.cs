@@ -276,15 +276,11 @@ namespace iOS
             return Springboard.ShouldAutorotate();
         }
 
-        /*public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations( )
+        public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations()
         {
+            // insist they stay in portait on iPhones
             return Springboard.GetSupportedInterfaceOrientations( );
         }
-
-        public override UIInterfaceOrientation PreferredInterfaceOrientationForPresentation( )
-        {
-            return Springboard.PreferredInterfaceOrientationForPresentation( );
-        }*/
 
         public override bool PrefersStatusBarHidden()
         {

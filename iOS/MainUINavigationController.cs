@@ -245,6 +245,7 @@ namespace iOS
 
         public void LayoutChanging( )
         {
+            // for landscape regular, permanantly reveal the springboard
             if ( SpringboardViewController.IsLandscapeRegular( ) == true )
             {
                 View.Frame = new CGRect( PrimaryContainerConfig.SlideAmount, 0, SpringboardViewController.TraitSize.Width - PrimaryContainerConfig.SlideAmount, SpringboardViewController.TraitSize.Height );
@@ -288,6 +289,15 @@ namespace iOS
 
             LayoutChanging( );
             Container.LayoutChanged( );
+        }
+
+        public bool SupportsLandscape( )
+        {
+            if ( Container != null )
+            {
+                return Container.SupportsLandscape( );
+            }
+            return false;
         }
 
         public void TryPanSpringboard( CGPoint delta )
