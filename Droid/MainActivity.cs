@@ -19,8 +19,18 @@ namespace Droid
         {
             base.OnCreate( bundle );
 
+            // see if this device will support wide landscape (like, if it's a tablet)
+            if ( ( this.BaseContext.Resources.Configuration.ScreenLayout & Android.Content.Res.ScreenLayout.SizeMask ) >= Android.Content.Res.ScreenLayout.SizeLarge )
+            {
+                //RequestedOrientation = Android.Content.PM.ScreenOrientation.FullSensor;
+            }
+            else
+            {
+                //RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
+                RequestedOrientation = Android.Content.PM.ScreenOrientation.FullSensor;
+            }
             Window.AddFlags( WindowManagerFlags.Fullscreen );
-            RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
+
 
             // Set our view from the "main" layout resource
             SetContentView( Resource.Layout.Splash );
@@ -57,10 +67,17 @@ namespace Droid
 
             Window.AddFlags(WindowManagerFlags.Fullscreen);
 
-            // default our app to protrait mode, and let the notes change it.
-            RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
-
             Rock.Mobile.PlatformSpecific.Android.Core.Context = this;
+
+            // default our app to protrait mode, and let the notes change it.
+            if ( SupportsLandscapeWide( ) )
+            {
+                RequestedOrientation = Android.Content.PM.ScreenOrientation.FullSensor;
+            }
+            else
+            {
+                RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
+            }
 
             DisplayMetrics metrics = Resources.DisplayMetrics;
             Console.WriteLine("Android Device detected dpi: {0}", metrics.DensityDpi );
@@ -76,6 +93,19 @@ namespace Droid
 
             Springboard = FragmentManager.FindFragmentById(Resource.Id.springboard) as Springboard;
             Springboard.SetActiveTaskFrame( layout );
+        }
+
+        public static bool SupportsLandscapeWide( )
+        {
+            // get the current device configuration
+            Android.Content.Res.Configuration currConfig = Rock.Mobile.PlatformSpecific.Android.Core.Context.Resources.Configuration;
+
+            if ( ( currConfig.ScreenLayout & Android.Content.Res.ScreenLayout.SizeMask ) >= Android.Content.Res.ScreenLayout.SizeLarge )
+            {
+                return true;
+            }
+
+            return false;
         }
 
         protected override void OnResume()

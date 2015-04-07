@@ -297,7 +297,7 @@ namespace CCVApp
                 /// <summary>
                 /// The percentage of the navbar width to slide over when revealing the Springboard. (Android Only)
                 /// </summary>
-                public const float RevealPercentage = .65f;
+                public const float RevealPercentage = .35f;
 
                 /// <summary>
                 /// The size of the character representing the reveal button.

@@ -301,8 +301,6 @@ namespace Droid
             outState.PutInt( "LastActiveElement", ActiveElementIndex );
         }
 
-
-
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             // grab our resource file
@@ -515,6 +513,63 @@ namespace Droid
 
                 ft.Commit( );
             }
+        }
+
+        public override void OnConfigurationChanged(Android.Content.Res.Configuration newConfig)
+        {
+            base.OnConfigurationChanged(newConfig);
+
+            System.Console.WriteLine( "X: {0} Y: {1}", newConfig.ScreenWidthDp, newConfig.ScreenHeightDp );
+
+            if ( IsLandscapeWide( ) )
+            {
+                System.Console.WriteLine( "Landscape Wide" );
+            }
+            else if ( IsLandscape( ) )
+            {
+                System.Console.WriteLine( "Landscape" );
+            }
+            else
+            {
+                System.Console.WriteLine( "Portrait" );
+            }
+
+            NavbarFragment.LayoutChanged( );
+        }
+
+        public static bool IsLandscapeWide( )
+        {
+            if ( MainActivity.SupportsLandscapeWide( ) == true && IsLandscape( ) == true )
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool IsLandscape( )
+        {
+            Android.Content.Res.Configuration currConfig = Rock.Mobile.PlatformSpecific.Android.Core.Context.Resources.Configuration;
+
+            if ( currConfig.ScreenWidthDp > currConfig.ScreenHeightDp )
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Returns the width of the springboard when revealed
+        /// </summary>
+        /// <returns>The container display width.</returns>
+        public static int GetSpringboardDisplayWidth( )
+        {
+            Point displaySize = new Point( );
+            ((Activity)Rock.Mobile.PlatformSpecific.Android.Core.Context).WindowManager.DefaultDisplay.GetSize( displaySize );
+            float displayWidth = displaySize.X;
+
+            return (int) (displayWidth * PrimaryNavBarConfig.RevealPercentage);
         }
 
         /// <summary>
@@ -1000,8 +1055,13 @@ namespace Droid
                     // and we're not showing a modal fragment (like the Login screen)
                     if ( NavbarFragment.ShouldSpringboardAllowInput( ) == true && VisibleModalFragment == null )
                     {
-                        // no matter what, close the springboard
-                        NavbarFragment.RevealSpringboard( false );
+                        // if we're not in landscape regular, close the springboard.
+                        // we need this here as WELL as in NavbarFragment's ActivateTask so that
+                        // if we tap an empty space of the springboard, we can close it.
+                        if ( IsLandscapeWide( ) == false )
+                        {
+                            NavbarFragment.RevealSpringboard( false );
+                        }
 
                         // did we tap a button?
                         SpringboardElement element = Elements.Where( el => el.Button == v ).SingleOrDefault( );

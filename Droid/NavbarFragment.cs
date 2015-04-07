@@ -157,11 +157,18 @@ namespace Droid
         /// </summary>
         public bool ShouldSpringboardAllowInput( )
         {
-            if ( SpringboardRevealed == true && Animating == false && Panning != PanState.Panning )
+            if ( Springboard.IsLandscapeWide( ) == true )
             {
                 return true;
             }
-            return false;
+            else
+            {
+                if ( SpringboardRevealed == true && Animating == false && Panning != PanState.Panning )
+                {
+                    return true;
+                }
+                return false;
+            }
         }
 
         /// <summary>
@@ -170,11 +177,18 @@ namespace Droid
         /// </summary>
         public bool ShouldTaskAllowInput( )
         {
-            if ( SpringboardRevealed == false && Animating == false && Panning != PanState.Panning )
+            if ( Springboard.IsLandscapeWide( ) == true )
             {
                 return true;
             }
-            return false;
+            else
+            {
+                if ( SpringboardRevealed == false && Animating == false && Panning != PanState.Panning )
+                {
+                    return true;
+                }
+                return false;
+            }
         }
 
         /// <summary>
@@ -341,6 +355,51 @@ namespace Droid
             return Navbar;
         }
 
+        public void LayoutChanged( )
+        {
+            // if we just entered landscape wide mode
+            if ( Springboard.IsLandscapeWide( ) == true )
+            {
+                // turn off the springboard button
+                SpringboardRevealButton.Enabled = false;
+
+                // move the container over so the springboard is revealed
+                PanContainerViews( Springboard.GetSpringboardDisplayWidth( ) );
+
+                // turn off the shadow
+                FadeOutFrame.Alpha = 0.0f;
+
+                // resize the containers to use the remaining width
+                int containerWidth = GetContainerDisplayWidth( );
+
+                DropShadowView.LayoutParameters.Width = containerWidth;
+                View.LayoutParameters.Width = containerWidth;
+                ActiveTaskFrame.LayoutParameters.Width = containerWidth;
+                NavToolbar.ButtonLayout.LayoutParameters.Width = containerWidth;
+                FadeOutFrame.LayoutParameters.Width = containerWidth;
+            }
+            // we're going back to portrait (or normal landscape)
+            else
+            {
+                // enable the springboard reveal button
+                SpringboardRevealButton.Enabled = true;
+
+                // close the springboard
+                PanContainerViews( 0 );
+
+                // resize the containers to use the full device width
+                Point displaySize = new Point( );
+                Activity.WindowManager.DefaultDisplay.GetSize( displaySize );
+                float displayWidth = displaySize.X;
+
+                DropShadowView.LayoutParameters.Width = (int) displayWidth;
+                View.LayoutParameters.Width = (int) displayWidth;
+                ActiveTaskFrame.LayoutParameters.Width = (int) displayWidth;
+                NavToolbar.ButtonLayout.LayoutParameters.Width = (int) displayWidth;
+                FadeOutFrame.LayoutParameters.Width = (int) displayWidth;
+            }
+        }
+
         public bool OnTouch( View v, MotionEvent e )
         {
             return false;
@@ -428,7 +487,7 @@ namespace Droid
             {
                 Animating = true;
 
-                int xOffset = wantReveal ? (int) (View.Width * PrimaryNavBarConfig.RevealPercentage) : 0;
+                int xOffset = wantReveal ? (int) Springboard.GetSpringboardDisplayWidth( ) : 0;
 
                 // setup an animation from our current mask scale to the new one.
                 ValueAnimator xPosAnimator = ValueAnimator.OfInt((int)View.GetX( ) , xOffset);
@@ -438,6 +497,21 @@ namespace Droid
                 xPosAnimator.SetDuration( (int) (PrimaryContainerConfig.SlideRate * 1000.0f) );
                 xPosAnimator.Start();
             }
+        }
+
+        /// <summary>
+        /// Used to get the available width for views in the container.
+        /// For example, if in portrait mode, it'll be the width device.
+        /// If in LandscapeWide mode, it'll be the width minus the springboard width.
+        /// </summary>
+        /// <returns>The container display width.</returns>
+        public static int GetContainerDisplayWidth( )
+        {
+            Point displaySize = new Point( );
+            ((Activity)Rock.Mobile.PlatformSpecific.Android.Core.Context).WindowManager.DefaultDisplay.GetSize( displaySize );
+            float displayWidth = displaySize.X;
+
+            return (int) (displayWidth - ( displayWidth * PrimaryNavBarConfig.RevealPercentage ));
         }
 
         /// <summary>
@@ -454,7 +528,7 @@ namespace Droid
             FadeOutFrame.SetX( xPos );
 
             // now determine the alpha
-            float maxSlide = ( View.Width * PrimaryNavBarConfig.RevealPercentage );
+            float maxSlide = Springboard.GetSpringboardDisplayWidth( );
             FadeOutFrame.Alpha = Math.Min( xPos / maxSlide, PrimaryContainerConfig.SlideDarkenAmount );
         }
 
@@ -545,7 +619,7 @@ namespace Droid
                             distanceX = e2.RawX - PanStartX;
 
                             float xPos = PanelOriginX + distanceX;
-                            float revealAmount = ( View.Width * PrimaryNavBarConfig.RevealPercentage );
+                            float revealAmount = Springboard.GetSpringboardDisplayWidth( );
                             xPos = Math.Max( 0, Math.Min( xPos, revealAmount ) );
 
                             PanContainerViews( xPos );
@@ -561,7 +635,7 @@ namespace Droid
             // if we were panning
             if ( Panning == PanState.Panning )
             {
-                float revealAmount = ( View.Width * PrimaryNavBarConfig.RevealPercentage );
+                float revealAmount = Springboard.GetSpringboardDisplayWidth( );
                 if ( SpringboardRevealed == false )
                 {
                     // since the springboard wasn't revealed, require that they moved
@@ -608,7 +682,6 @@ namespace Droid
 
         public void OnAnimationUpdate(ValueAnimator animation)
         {
-
             // update the container position
             int xPos = ((Java.Lang.Integer)animation.GetAnimatedValue("")).IntValue();
 
@@ -703,6 +776,8 @@ namespace Droid
             }
 
             SpringboardParent.NavbarWasResumed( );
+
+            LayoutChanged( );
         }
 
         public void SetActiveTask( Tasks.Task newTask )
@@ -721,7 +796,10 @@ namespace Droid
                 newTask.Activate( false );
 
                 // force the springboard to close
-                RevealSpringboard( false );
+                if ( Springboard.IsLandscapeWide( ) == false )
+                {
+                    RevealSpringboard( false );
+                }
             }
             else
             {

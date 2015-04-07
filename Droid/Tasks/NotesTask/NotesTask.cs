@@ -215,7 +215,7 @@ namespace Droid
                             {
                                 WatchPage.MediaUrl = DetailsPage.Messages[ buttonId ].Message.WatchUrl;
                                 WatchPage.ShareUrl = DetailsPage.Messages[ buttonId ].Message.ShareUrl;
-                                WatchPage.Name = MainPage.SeriesEntries[ 0 ].Series.Messages[ buttonId ].Name;
+                                WatchPage.Name = DetailsPage.Messages[ buttonId ].Message.Name;
                                 PresentFragment( WatchPage, true );
                             }
                             // 2 is read

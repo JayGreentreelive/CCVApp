@@ -379,7 +379,11 @@ namespace Droid
 
                     WakeLock.Release( );
 
-                    ParentTask.NavbarFragment.EnableSpringboardRevealButton( true );
+                    // if we don't support full widescreen, enable the reveal button
+                    if ( Springboard.IsLandscapeWide( ) == false )
+                    {
+                        ParentTask.NavbarFragment.EnableSpringboardRevealButton( true );
+                    }
 
                     ShutdownNotes( null );
                 }
@@ -417,10 +421,13 @@ namespace Droid
                 {
                     // called by the LockableScrollView. This allows us to shut the
                     // springboard if it's open and the user touches the note.
-                    if( ParentTask.NavbarFragment.ShouldSpringboardAllowInput( ) )
+                    if ( Springboard.IsLandscapeWide( ) == false )
                     {
-                        ParentTask.NavbarFragment.RevealSpringboard( false );
-                        return false;
+                        if ( ParentTask.NavbarFragment.ShouldSpringboardAllowInput( ) )
+                        {
+                            ParentTask.NavbarFragment.RevealSpringboard( false );
+                            return false;
+                        }
                     }
                     return true;
                 }
@@ -600,7 +607,7 @@ namespace Droid
 
                         // Use the metrics and not ScrollView for dimensions, because depending on when this gets called the ScrollView
                         // may not have its dimensions set yet.
-                        Note.Create( this.Resources.DisplayMetrics.WidthPixels, this.Resources.DisplayMetrics.HeightPixels, ScrollViewLayout, NoteFileName + NoteConfig.UserNoteSuffix );
+                        Note.Create( NavbarFragment.GetContainerDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels, ScrollViewLayout, NoteFileName + NoteConfig.UserNoteSuffix );
 
                         // set the requested background color
                         ScrollView.SetBackgroundColor( ( Android.Graphics.Color )Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value ) );

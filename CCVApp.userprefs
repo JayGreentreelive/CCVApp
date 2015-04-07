@@ -1,35 +1,15 @@
-﻿<Properties StartupItem="iOS/iOS.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget.Jered's iPhone" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/UserManagement/LoginViewController.cs">
+﻿<Properties StartupItem="Droid/Droid.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" PreferredExecutionTarget="Android.192.168.56.101:5555" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Springboard.cs">
     <Files>
-      <File FileName="iOS/MainUINavigationController.cs" Line="263" Column="50" />
-      <File FileName="iOS/Tasks/Notes/NotesTask.cs" Line="198" Column="51" />
-      <File FileName="iOS/Tasks/Notes/NotesViewController.cs" Line="247" Column="13" />
-      <File FileName="iOS/Tasks/Task.cs" Line="125" Column="1" />
-      <File FileName="iOS/Tasks/TaskUIViewController.cs" Line="27" Column="1" />
-      <File FileName="iOS/Tasks/Notes/NotesWatchUIViewController.cs" Line="94" Column="25" />
-      <File FileName="iOS/UserManagement/ImageCropViewController.cs" Line="122" Column="10" />
-      <File FileName="iOS/SpringboardViewController.cs" Line="247" Column="41" />
-      <File FileName="iOS/UserManagement/LoginViewController.cs" Line="296" Column="10" />
-      <File FileName="iOS/UserManagement/ProfileViewController.cs" Line="79" Column="9" />
-      <File FileName="iOS/UserManagement/RegisterViewController.cs" Line="79" Column="9" />
-      <File FileName="iOS/UserManagement/OOBEViewController.cs" Line="11" Column="1" />
+      <File FileName="Droid/Springboard.cs" Line="11" Column="20" />
+      <File FileName="Droid/NavbarFragment.cs" Line="1" Column="1" />
+      <File FileName="Droid/Tasks/NotesTask/NotesTask.cs" Line="1" Column="1" />
+      <File FileName="CCVApp.Shared/Config.cs" Line="1" Column="1" />
+      <File FileName="Droid/NavToolbar.cs" Line="1" Column="1" />
+      <File FileName="Droid/Tasks/NotesTask/NotesFragment.cs" Line="1" Column="1" />
+      <File FileName="Droid/Tasks/NotesTask/NotesWatchFragment.cs" Line="1" Column="1" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="iOS" expanded="True">
-            <Node name="Tasks" expanded="True" />
-            <Node name="UserManagement" expanded="True">
-              <Node name="LoginViewController.cs" selected="True" />
-            </Node>
-          </Node>
-        </State>
-      </Pad>
-      <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
