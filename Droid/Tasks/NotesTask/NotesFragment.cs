@@ -300,15 +300,6 @@ namespace Droid
                 {
                     base.OnConfigurationChanged(newConfig);
 
-                    if( newConfig.Orientation == Android.Content.Res.Orientation.Landscape )
-                    {
-                        ParentTask.NavbarFragment.EnableSpringboardRevealButton( false );
-                    }
-                    else
-                    {
-                        ParentTask.NavbarFragment.EnableSpringboardRevealButton( true );
-                    }
-
                     PrepareCreateNotes( );
                 }
 
@@ -380,9 +371,12 @@ namespace Droid
                     WakeLock.Release( );
 
                     // if we don't support full widescreen, enable the reveal button
-                    if ( Springboard.IsLandscapeWide( ) == false )
+                    if ( MainActivity.SupportsLandscapeWide( ) == false )
                     {
                         ParentTask.NavbarFragment.EnableSpringboardRevealButton( true );
+
+                        // also force the orientation to portait
+                        Activity.RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
                     }
 
                     ShutdownNotes( null );
@@ -421,7 +415,7 @@ namespace Droid
                 {
                     // called by the LockableScrollView. This allows us to shut the
                     // springboard if it's open and the user touches the note.
-                    if ( Springboard.IsLandscapeWide( ) == false )
+                    if ( MainActivity.IsLandscapeWide( ) == false )
                     {
                         if ( ParentTask.NavbarFragment.ShouldSpringboardAllowInput( ) )
                         {

@@ -131,6 +131,12 @@ namespace Droid
         /// </summary>
         const float MaskFadeAmount = .50f;
 
+        /// <summary>
+        /// The orientation when this fragment begins. Allows us to lock the orientation while
+        /// active, and restore it when stopping.
+        /// </summary>
+        Android.Content.PM.ScreenOrientation StartingOrientation { get; set; }
+
         public override void OnCreate( Bundle savedInstanceState )
         {
             base.OnCreate( savedInstanceState );
@@ -328,6 +334,26 @@ namespace Droid
             base.OnResume();
 
             SpringboardParent.ModalFragmentOpened( this );
+
+            StartingOrientation = Activity.RequestedOrientation;
+
+            // freeze the orientation
+            if ( MainActivity.IsLandscapeWide( ) )
+            {
+                Activity.RequestedOrientation = Android.Content.PM.ScreenOrientation.Landscape;
+            }
+            else
+            {
+                Activity.RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
+            }
+        }
+
+        public override void OnPause()
+        {
+            base.OnPause();
+
+            // restore the orientation
+            Activity.RequestedOrientation = StartingOrientation;
         }
 
         public override void OnStop()
@@ -523,7 +549,16 @@ namespace Droid
 
                                     // setup the dimension changes
                                     System.Drawing.SizeF startSize = new System.Drawing.SizeF( ScaledCroppedImage.Width, ScaledCroppedImage.Height );
-                                    System.Drawing.SizeF endSize = new System.Drawing.SizeF( ScreenSize.Width, (float)System.Math.Ceiling( ScreenSize.Width * ( startSize.Width / startSize.Height ) ) );
+
+                                    System.Drawing.SizeF endSize;
+                                    if( ScreenSize.Width < ScreenSize.Height )
+                                    {
+                                        endSize = new System.Drawing.SizeF( ScreenSize.Width, (float)System.Math.Ceiling( ScreenSize.Width * ( startSize.Width / startSize.Height ) ) );
+                                    }
+                                    else
+                                    {
+                                        endSize = new System.Drawing.SizeF( (float)System.Math.Ceiling( ScreenSize.Height * ( startSize.Height / startSize.Width ) ), ScreenSize.Height );
+                                    }
 
                                     PointF startPos = new PointF( CropView.GetX( ), CropView.GetY( ) );
                                     PointF endPos = new PointF( (ScreenSize.Width - endSize.Width) / 2, (ScreenSize.Height - endSize.Height) / 2 );

@@ -22,13 +22,13 @@ namespace Droid
             // see if this device will support wide landscape (like, if it's a tablet)
             if ( ( this.BaseContext.Resources.Configuration.ScreenLayout & Android.Content.Res.ScreenLayout.SizeMask ) >= Android.Content.Res.ScreenLayout.SizeLarge )
             {
-                //RequestedOrientation = Android.Content.PM.ScreenOrientation.FullSensor;
+                RequestedOrientation = Android.Content.PM.ScreenOrientation.FullSensor;
             }
             else
             {
-                //RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
-                RequestedOrientation = Android.Content.PM.ScreenOrientation.FullSensor;
+                RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
             }
+
             Window.AddFlags( WindowManagerFlags.Fullscreen );
 
 
@@ -78,6 +78,7 @@ namespace Droid
             {
                 RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
             }
+            RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
 
             DisplayMetrics metrics = Resources.DisplayMetrics;
             Console.WriteLine("Android Device detected dpi: {0}", metrics.DensityDpi );
@@ -95,6 +96,10 @@ namespace Droid
             Springboard.SetActiveTaskFrame( layout );
         }
 
+        /// <summary>
+        /// Returns true if the device CAN display in landscape wide mode. This doesn't
+        /// necessarily mean it IS in landscape wide mode.
+        /// </summary>
         public static bool SupportsLandscapeWide( )
         {
             // get the current device configuration
@@ -102,6 +107,23 @@ namespace Droid
 
             if ( ( currConfig.ScreenLayout & Android.Content.Res.ScreenLayout.SizeMask ) >= Android.Content.Res.ScreenLayout.SizeLarge )
             {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true if the device is CURRENTLY IN landscape wide mode.
+        /// </summary>
+        public static bool IsLandscapeWide( )
+        {
+            Android.Content.Res.Configuration currConfig = Rock.Mobile.PlatformSpecific.Android.Core.Context.Resources.Configuration;
+
+            // if it has the capacity for landscape wide, and is currently in landscape
+            if ( MainActivity.SupportsLandscapeWide( ) == true && (currConfig.ScreenWidthDp > currConfig.ScreenHeightDp) == true )
+            {
+                // then yes, we're in landscape wide.
                 return true;
             }
 

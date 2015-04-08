@@ -116,6 +116,17 @@ namespace Droid
                     Placeholder = BitmapFactory.DecodeStream( thumbnailStream );
                 }
 
+                public override void OnDestroy()
+                {
+                    base.OnDestroy();
+
+                    if ( Placeholder != null )
+                    {
+                        Placeholder.Dispose( );
+                        Placeholder = null;
+                    }
+                }
+
                 public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
                 {
                     if (container == null)

@@ -157,7 +157,7 @@ namespace Droid
         /// </summary>
         public bool ShouldSpringboardAllowInput( )
         {
-            if ( Springboard.IsLandscapeWide( ) == true )
+            if ( MainActivity.IsLandscapeWide( ) == true )
             {
                 return true;
             }
@@ -177,7 +177,7 @@ namespace Droid
         /// </summary>
         public bool ShouldTaskAllowInput( )
         {
-            if ( Springboard.IsLandscapeWide( ) == true )
+            if ( MainActivity.IsLandscapeWide( ) == true )
             {
                 return true;
             }
@@ -358,7 +358,7 @@ namespace Droid
         public void LayoutChanged( )
         {
             // if we just entered landscape wide mode
-            if ( Springboard.IsLandscapeWide( ) == true )
+            if ( MainActivity.IsLandscapeWide( ) == true )
             {
                 // turn off the springboard button
                 SpringboardRevealButton.Enabled = false;
@@ -507,11 +507,21 @@ namespace Droid
         /// <returns>The container display width.</returns>
         public static int GetContainerDisplayWidth( )
         {
-            Point displaySize = new Point( );
-            ((Activity)Rock.Mobile.PlatformSpecific.Android.Core.Context).WindowManager.DefaultDisplay.GetSize( displaySize );
-            float displayWidth = displaySize.X;
+            Point displaySize = new Point();
+            ( (Activity)Rock.Mobile.PlatformSpecific.Android.Core.Context ).WindowManager.DefaultDisplay.GetSize( displaySize );
 
-            return (int) (displayWidth - ( displayWidth * PrimaryNavBarConfig.RevealPercentage ));
+            // if we're in landscape wide mode, return the container viewing width
+            if ( MainActivity.IsLandscapeWide( ) == true )
+            {
+                float displayWidth = displaySize.X;
+
+                return (int)( displayWidth - ( displayWidth * PrimaryNavBarConfig.RevealPercentage ) );
+            }
+            // otherwise, for portrait, just return the full display width
+            else
+            {
+                return displaySize.X;
+            }
         }
 
         /// <summary>
@@ -796,7 +806,7 @@ namespace Droid
                 newTask.Activate( false );
 
                 // force the springboard to close
-                if ( Springboard.IsLandscapeWide( ) == false )
+                if ( MainActivity.IsLandscapeWide( ) == false )
                 {
                     RevealSpringboard( false );
                 }

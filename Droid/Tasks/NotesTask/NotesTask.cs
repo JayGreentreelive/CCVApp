@@ -205,9 +205,9 @@ namespace Droid
                             // 0 is listen
                             if ( buttonChoice == 0 )
                             {
-                                ListenPage.MediaUrl = MainPage.SeriesEntries[ 0 ].Series.Messages[ buttonId ].AudioUrl;
-                                ListenPage.ShareUrl = MainPage.SeriesEntries[ 0 ].Series.Messages[ buttonId ].ShareUrl;
-                                ListenPage.Name = MainPage.SeriesEntries[ 0 ].Series.Messages[ buttonId ].Name;
+                                ListenPage.MediaUrl = DetailsPage.Messages[ buttonId ].Message.AudioUrl;
+                                ListenPage.ShareUrl = DetailsPage.Messages[ buttonId ].Message.ShareUrl;
+                                ListenPage.Name = DetailsPage.Messages[ buttonId ].Message.Name;
                                 PresentFragment( ListenPage, true );
                             }
                             // 1 is watch

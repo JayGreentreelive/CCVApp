@@ -118,13 +118,13 @@ namespace CCVApp
                             // cache the main image
                             MemoryStream stream = Rock.Mobile.Util.FileIO.AssetConvert.AssetToStream( mainImageName );
                             stream.Position = 0;
-                            FileCache.Instance.SaveFile( stream, copiedNews.ImageName, GeneralConfig.CacheFileNoExpiration );
+                            FileCache.Instance.SaveFile( stream, copiedNews.ImageName, FileCache.CacheFileNoExpiration );
                             stream.Dispose( );
 
                             // cache the header image
                             stream = Rock.Mobile.Util.FileIO.AssetConvert.AssetToStream( headerImageName );
                             stream.Position = 0;
-                            FileCache.Instance.SaveFile( stream, copiedNews.HeaderImageName, GeneralConfig.CacheFileNoExpiration );
+                            FileCache.Instance.SaveFile( stream, copiedNews.HeaderImageName, FileCache.CacheFileNoExpiration );
                             stream.Dispose( );
                         }
                     }

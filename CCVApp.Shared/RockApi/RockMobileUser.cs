@@ -737,7 +737,7 @@ namespace CCVApp
 
                 public void SaveProfilePicture( MemoryStream imageStream )
                 {
-                    FileCache.Instance.SaveFile( imageStream, SpringboardConfig.ProfilePic, GeneralConfig.CacheFileNoExpiration );
+                    FileCache.Instance.SaveFile( imageStream, SpringboardConfig.ProfilePic, FileCache.CacheFileNoExpiration );
 
                     // now we have a picture!
                     HasProfileImage = true;

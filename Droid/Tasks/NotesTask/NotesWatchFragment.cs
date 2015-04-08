@@ -121,7 +121,12 @@ namespace Droid
                 {
                     base.OnResume();
 
-                    Activity.RequestedOrientation = Android.Content.PM.ScreenOrientation.FullSensor;
+                    // this is contrary to the other Note fragments, but here, if we can't do
+                    // landscape, we want to ALLOW full sensor so the user can view the video in fullscreen
+                    if ( MainActivity.SupportsLandscapeWide( ) == false )
+                    {
+                        Activity.RequestedOrientation = Android.Content.PM.ScreenOrientation.FullSensor;
+                    }
 
                     ParentTask.NavbarFragment.NavToolbar.SetBackButtonEnabled( true );
                     ParentTask.NavbarFragment.NavToolbar.SetCreateButtonEnabled( false, null );
@@ -165,6 +170,12 @@ namespace Droid
 
                     ParentTask.NavbarFragment.EnableSpringboardRevealButton( true );
                     ParentTask.NavbarFragment.ToggleFullscreen( false );
+
+                    // and if we leave, and don't support landscape, put it back to portrait
+                    if ( MainActivity.SupportsLandscapeWide( ) == false )
+                    {
+                        Activity.RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
+                    }
 
                     // see if we should store the playback position for resuming
                     if ( VideoPlayer.Duration > 0 )

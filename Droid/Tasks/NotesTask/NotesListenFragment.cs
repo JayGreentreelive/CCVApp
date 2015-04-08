@@ -218,12 +218,6 @@ namespace Droid
                 {
                     base.OnResume();
 
-                    // if this device can't do wide landscape, force portrait
-                    if ( MainActivity.SupportsLandscapeWide( ) == false )
-                    {
-                        Activity.RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
-                    }
-
                     ParentTask.NavbarFragment.NavToolbar.SetBackButtonEnabled( true );
                     ParentTask.NavbarFragment.NavToolbar.SetCreateButtonEnabled( false, null );
                     ParentTask.NavbarFragment.NavToolbar.Reveal( true );

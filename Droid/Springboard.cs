@@ -124,6 +124,8 @@ namespace Droid
         //bool DisplayingModalFragment { get; set; }
         Fragment VisibleModalFragment { get; set; }
 
+        bool AppInForeground { get; set; }
+
         /// <summary>
         /// Get a pointer to the Fullscreen layout so we can hide it when a modal fragment isn't displaying
         /// </summary>
@@ -519,44 +521,7 @@ namespace Droid
         {
             base.OnConfigurationChanged(newConfig);
 
-            System.Console.WriteLine( "X: {0} Y: {1}", newConfig.ScreenWidthDp, newConfig.ScreenHeightDp );
-
-            if ( IsLandscapeWide( ) )
-            {
-                System.Console.WriteLine( "Landscape Wide" );
-            }
-            else if ( IsLandscape( ) )
-            {
-                System.Console.WriteLine( "Landscape" );
-            }
-            else
-            {
-                System.Console.WriteLine( "Portrait" );
-            }
-
             NavbarFragment.LayoutChanged( );
-        }
-
-        public static bool IsLandscapeWide( )
-        {
-            if ( MainActivity.SupportsLandscapeWide( ) == true && IsLandscape( ) == true )
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        public static bool IsLandscape( )
-        {
-            Android.Content.Res.Configuration currConfig = Rock.Mobile.PlatformSpecific.Android.Core.Context.Resources.Configuration;
-
-            if ( currConfig.ScreenWidthDp > currConfig.ScreenHeightDp )
-            {
-                return true;
-            }
-
-            return false;
         }
 
         /// <summary>
@@ -633,14 +598,13 @@ namespace Droid
 
         public void ModalFragmentDone( object context )
         {
-            if ( VisibleModalFragment != null )
+            if ( VisibleModalFragment != null && AppInForeground == true )
             {
                 // remove the modal fragment
                 FragmentTransaction ft = FragmentManager.BeginTransaction( );
                 ft.SetTransition( FragmentTransit.FragmentFade );
                 ft.Remove( VisibleModalFragment );
                 ft.Commit( );
-
 
                 // if login or profile are ending, update the login state
                 if ( LoginFragment == VisibleModalFragment || ProfileFragment == VisibleModalFragment )
@@ -801,6 +765,8 @@ namespace Droid
             base.OnPause();
 
             System.Console.WriteLine( "Springboard OnPause()" );
+
+            AppInForeground = false;
         }
 
         bool IsOOBERunning { get; set; }
@@ -808,6 +774,8 @@ namespace Droid
         public override void OnResume()
         {
             base.OnResume();
+
+            AppInForeground = true;
 
             System.Console.WriteLine( "Springboard OnResume()" );
 
@@ -1058,7 +1026,7 @@ namespace Droid
                         // if we're not in landscape regular, close the springboard.
                         // we need this here as WELL as in NavbarFragment's ActivateTask so that
                         // if we tap an empty space of the springboard, we can close it.
-                        if ( IsLandscapeWide( ) == false )
+                        if ( MainActivity.IsLandscapeWide( ) == false )
                         {
                             NavbarFragment.RevealSpringboard( false );
                         }

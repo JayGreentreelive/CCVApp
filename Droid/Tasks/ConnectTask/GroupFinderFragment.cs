@@ -573,6 +573,15 @@ namespace Droid
                     ParentTask.NavbarFragment.NavToolbar.RevealForTime( 3.0f );
                 }
 
+                public override void OnConfigurationChanged(Android.Content.Res.Configuration newConfig)
+                {
+                    base.OnConfigurationChanged(newConfig);
+
+                    Point displaySize = new Point( );
+                    Activity.WindowManager.DefaultDisplay.GetSize( displaySize );
+                    MapView.LayoutParameters.Height = (int) (displaySize.Y * .50f);
+                }
+
                 public override void OnDestroy()
                 {
                     base.OnDestroy();

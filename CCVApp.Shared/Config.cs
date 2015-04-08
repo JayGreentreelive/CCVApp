@@ -30,22 +30,6 @@ namespace CCVApp
                 /// The abbreviated name of your organization. (You can set this to OrganizationName if desired)
                 /// </summary>
                 public const string OrganizationShortName = "CCV";
-                
-                /// <summary>
-                /// The subfolder where cached files should be stored
-                /// </summary>
-                public const string CacheDirectory = "cache";
-
-                /// <summary>
-                /// The length of time a file should remain cached. After this, it will be deleted
-                /// from cache. (30 days)
-                /// </summary>
-                public static TimeSpan CacheFileDefaultExpiration = new TimeSpan( 30, 0, 0, 0 );
-
-                /// <summary>
-                /// Ok, it's not technically NONE, but it's 10 years. Come on...
-                /// </summary>
-                public static TimeSpan CacheFileNoExpiration = new TimeSpan( 3650, 0, 0, 0 );
 
                 /// <summary>
                 /// The size (in pixels) of the profile image to download from Rock
