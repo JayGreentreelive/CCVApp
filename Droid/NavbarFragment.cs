@@ -362,12 +362,14 @@ namespace Droid
             {
                 // turn off the springboard button
                 SpringboardRevealButton.Enabled = false;
+                SpringboardRevealed = true;
 
                 // move the container over so the springboard is revealed
                 PanContainerViews( Springboard.GetSpringboardDisplayWidth( ) );
 
                 // turn off the shadow
                 FadeOutFrame.Alpha = 0.0f;
+                FadeOutFrame.Visibility = ViewStates.Invisible;
 
                 // resize the containers to use the remaining width
                 int containerWidth = GetContainerDisplayWidth( );
@@ -377,15 +379,19 @@ namespace Droid
                 ActiveTaskFrame.LayoutParameters.Width = containerWidth;
                 NavToolbar.ButtonLayout.LayoutParameters.Width = containerWidth;
                 FadeOutFrame.LayoutParameters.Width = containerWidth;
+
+                ToggleInputViewChecker( false );
             }
             // we're going back to portrait (or normal landscape)
             else
             {
                 // enable the springboard reveal button
                 SpringboardRevealButton.Enabled = true;
+                SpringboardRevealed = false;
 
                 // close the springboard
                 PanContainerViews( 0 );
+                FadeOutFrame.Visibility = ViewStates.Visible;
 
                 // resize the containers to use the full device width
                 Point displaySize = new Point( );
@@ -499,12 +505,19 @@ namespace Droid
             }
         }
 
+        public static int GetFullDisplayWidth( )
+        {
+            Point displaySize = new Point();
+            ( (Activity)Rock.Mobile.PlatformSpecific.Android.Core.Context ).WindowManager.DefaultDisplay.GetSize( displaySize );
+
+            return (int)displaySize.X;
+        }
+
         /// <summary>
         /// Used to get the available width for views in the container.
         /// For example, if in portrait mode, it'll be the width device.
         /// If in LandscapeWide mode, it'll be the width minus the springboard width.
         /// </summary>
-        /// <returns>The container display width.</returns>
         public static int GetContainerDisplayWidth( )
         {
             Point displaySize = new Point();
@@ -717,7 +730,10 @@ namespace Droid
                 SpringboardRevealed = true;
                 NavToolbar.Suspend( true );
 
-                ToggleInputViewChecker( true );
+                if ( MainActivity.IsLandscapeWide( ) == false )
+                {
+                    ToggleInputViewChecker( true );
+                }
             }
 
             // notify the task regarding what happened

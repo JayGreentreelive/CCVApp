@@ -163,6 +163,7 @@ namespace CCVApp.Shared.UI
             JoinButton.CornerRadius = ControlStylingConfig.Button_CornerRadius;
             JoinButton.Text = ConnectStrings.JoinGroup_JoinButtonLabel;
             JoinButton.SizeToFit( );
+            JoinButton.UserInteractionEnabled = true;
 
             // Create our results view overlay
             ResultView = new UIResultView( masterView, View.Frame, OnResultViewDone );
@@ -316,20 +317,18 @@ namespace CCVApp.Shared.UI
 
                         if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
                         {
-                            ResultView.Display( RegisterStrings.RegisterStatus_Success, 
+                            ResultView.Show( RegisterStrings.RegisterStatus_Success, 
                                 ControlStylingConfig.Result_Symbol_Success, 
                                 string.Format( ConnectStrings.JoinGroup_RegisterSuccess, GroupTitle.Text ),
                                 GeneralStrings.Done );
                         }
                         else
                         {
-                            ResultView.Display( RegisterStrings.RegisterStatus_Failed, 
+                            ResultView.Show( RegisterStrings.RegisterStatus_Failed, 
                                 ControlStylingConfig.Result_Symbol_Failed, 
                                 string.Format( ConnectStrings.JoinGroup_RegisterFailed, GroupTitle.Text ),
                                 GeneralStrings.Done );
                         }
-
-                        ResultView.SetBounds( View.Bounds );
                     } );
             }
         }

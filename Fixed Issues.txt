@@ -11,6 +11,8 @@ Both
 
 	Group Registration now works
 
+	Tablet support!
+
 iOS
 	Notes
 		Fixed an issue causign the back button to be disabled on the Notes WebView when in landscape.

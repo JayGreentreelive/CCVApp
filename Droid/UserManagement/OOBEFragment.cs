@@ -86,6 +86,19 @@ namespace Droid
             timer.Start( );
 
             SpringboardParent.ModalFragmentOpened( this );
+
+            Point displaySize = new Point( );
+            Activity.WindowManager.DefaultDisplay.GetSize( displaySize );
+            OOBEView.LayoutChanged( new System.Drawing.RectangleF( 0, 0, displaySize.X, displaySize.Y ) );
+        }
+
+        public override void OnConfigurationChanged(Android.Content.Res.Configuration newConfig)
+        {
+            base.OnConfigurationChanged(newConfig);
+
+            Point displaySize = new Point( );
+            Activity.WindowManager.DefaultDisplay.GetSize( displaySize );
+            OOBEView.LayoutChanged( new System.Drawing.RectangleF( 0, 0, displaySize.X, displaySize.Y ) );
         }
 
         public override void OnStop()

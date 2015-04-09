@@ -91,7 +91,6 @@ namespace iOS
             // However, that would give them NO WAY to get out of this page should they decide
             // they don't want the prayer to finish posting. Maybe it's fine to let them leave if they
             // want to.
-            //EnableSpringboardRevealButton
             Task.NavToolbar.Reveal( false );
         }
 

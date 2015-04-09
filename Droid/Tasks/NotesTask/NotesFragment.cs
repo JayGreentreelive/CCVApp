@@ -265,7 +265,7 @@ namespace Droid
                     PowerManager pm = PowerManager.FromContext( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     WakeLock = pm.NewWakeLock(WakeLockFlags.Full, "Notes");
 
-                    ResultView = new UIResultView( layout, new System.Drawing.RectangleF( 0, 0, this.Resources.DisplayMetrics.WidthPixels, this.Resources.DisplayMetrics.HeightPixels ), OnResultViewDone );
+                    ResultView = new UIResultView( layout, new System.Drawing.RectangleF( 0, 0, NavbarFragment.GetContainerDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels ), OnResultViewDone );
 
                     ResultView.SetStyle( ControlStylingConfig.Medium_Font_Light, 
                         ControlStylingConfig.Icon_Font_Secondary, 
@@ -301,6 +301,8 @@ namespace Droid
                     base.OnConfigurationChanged(newConfig);
 
                     PrepareCreateNotes( );
+
+                    ResultView.SetBounds( new System.Drawing.RectangleF( 0, 0, NavbarFragment.GetContainerDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels ) );
                 }
 
                 public override void OnResume()

@@ -114,7 +114,7 @@ namespace CCVApp.Shared.UI
             #endif
         }
 
-        public void Display( string statusLabel, string resultSymbol, string resultLabel, string buttonLabel )
+        public void Show( string statusLabel, string resultSymbol, string resultLabel, string buttonLabel )
         {
             // set and position the status label
             StatusLabel.Text = statusLabel;
@@ -133,7 +133,17 @@ namespace CCVApp.Shared.UI
             DoneButton.Text = buttonLabel;
             DoneButton.SizeToFit( );
 
+            SetHidden( false );
             SetOpacity( 1.00f );
+
+            SetBounds( View.Bounds );
+        }
+
+        public void Hide( )
+        {
+            SetHidden( true );
+
+            SetOpacity( 0.00f );
         }
 
         public void SetBounds( RectangleF containerBounds )
@@ -153,11 +163,15 @@ namespace CCVApp.Shared.UI
             
 
             // and the labels
+            StatusLabel.Frame = new RectangleF( 0, 0, View.Frame.Width - Rock.Mobile.Graphics.Util.UnitToPx( 40 ), 0 );
+            StatusLabel.SizeToFit( );
             StatusLabel.Frame = new RectangleF( ( View.Frame.Width - StatusLabel.Frame.Width ) / 2, 
                 StatusBackground.Frame.Top + (( StatusBackground.Frame.Height - StatusLabel.Frame.Height ) / 2), 
                 StatusLabel.Frame.Width, 
                 StatusLabel.Frame.Height );
-
+            
+            ResultSymbol.Frame = new RectangleF( 0, 0, View.Frame.Width - Rock.Mobile.Graphics.Util.UnitToPx( 40 ), 0 );
+            ResultSymbol.SizeToFit( );
             ResultSymbol.Frame = new RectangleF( ( View.Frame.Width - ResultSymbol.Frame.Width ) / 2, 
                 ResultBackground.Frame.Top + Rock.Mobile.Graphics.Util.UnitToPx( 10 ), 
                 ResultSymbol.Frame.Width, 
@@ -172,10 +186,17 @@ namespace CCVApp.Shared.UI
             DoneButton.Frame = new RectangleF( ( View.Frame.Width - doneWidth ) / 2, ResultBackground.Frame.Bottom + Rock.Mobile.Graphics.Util.UnitToPx( 10 ), doneWidth, DoneButton.Frame.Height );
         }
 
-        public void Hide( )
+        void SetHidden( bool hidden )
         {
-            SetOpacity( 0.00f );
+            View.Hidden = hidden;
+            DoneButton.Hidden = hidden;
+
+            StatusLabel.Hidden = hidden;
+            StatusBackground.Hidden = hidden;
+
+            ResultSymbol.Hidden = hidden;
+            ResultLabel.Hidden = hidden;
+            ResultBackground.Hidden = hidden;
         }
     }
 }
-

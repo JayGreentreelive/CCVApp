@@ -89,10 +89,10 @@ namespace Droid
             ProgressBarBlocker = view.FindViewById<RelativeLayout>( Resource.Id.progressBarBlocker );
             ProgressBarBlocker.Visibility = ViewStates.Gone;
             ProgressBarBlocker.LayoutParameters = new RelativeLayout.LayoutParams( 0, 0 );
-            ProgressBarBlocker.LayoutParameters.Width = this.Resources.DisplayMetrics.WidthPixels;
+            ProgressBarBlocker.LayoutParameters.Width = NavbarFragment.GetFullDisplayWidth( );
             ProgressBarBlocker.LayoutParameters.Height = this.Resources.DisplayMetrics.HeightPixels;
 
-            ResultView = new UIResultView( layoutView, new System.Drawing.RectangleF( 0, 0, this.Resources.DisplayMetrics.WidthPixels, this.Resources.DisplayMetrics.HeightPixels ), OnResultViewDone );
+            ResultView = new UIResultView( layoutView, new System.Drawing.RectangleF( 0, 0, NavbarFragment.GetFullDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels ), OnResultViewDone );
 
             ResultView.SetStyle( ControlStylingConfig.Medium_Font_Light, 
                 ControlStylingConfig.Icon_Font_Secondary, 
@@ -301,7 +301,7 @@ namespace Droid
                             if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
                             {
                                 State = RegisterState.Success;
-                                ResultView.Display( RegisterStrings.RegisterStatus_Success, 
+                                ResultView.Show( RegisterStrings.RegisterStatus_Success, 
                                     ControlStylingConfig.Result_Symbol_Success, 
                                     RegisterStrings.RegisterResult_Success,
                                     GeneralStrings.Done );
@@ -309,14 +309,24 @@ namespace Droid
                             else
                             {
                                 State = RegisterState.Fail;
-                                ResultView.Display( RegisterStrings.RegisterStatus_Failed, 
+                                ResultView.Show( RegisterStrings.RegisterStatus_Failed, 
                                     ControlStylingConfig.Result_Symbol_Failed, 
                                     RegisterStrings.RegisterResult_Failed,
                                     GeneralStrings.Done );
                             }
+
+                            ResultView.SetBounds( new System.Drawing.RectangleF( 0, 0, NavbarFragment.GetFullDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels ) );
                         } );
                 }
             }
+        }
+
+        public override void OnConfigurationChanged(Android.Content.Res.Configuration newConfig)
+        {
+            base.OnConfigurationChanged(newConfig);
+
+            ProgressBarBlocker.LayoutParameters.Width = NavbarFragment.GetFullDisplayWidth( );
+            ResultView.SetBounds( new System.Drawing.RectangleF( 0, 0, NavbarFragment.GetFullDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels ) );
         }
 
         /// <summary>
@@ -376,7 +386,6 @@ namespace Droid
 
             return result;
         }
-
 
         void OnResultViewDone( )
         {

@@ -78,7 +78,7 @@ namespace Droid
             {
                 RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
             }
-            RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
+            //RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
 
             DisplayMetrics metrics = Resources.DisplayMetrics;
             Console.WriteLine("Android Device detected dpi: {0}", metrics.DensityDpi );

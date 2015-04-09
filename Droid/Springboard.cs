@@ -563,8 +563,8 @@ namespace Droid
                     return false;
                 }
             }
-            // if they press back while the springboard is open, close it.
-            else if ( NavbarFragment.SpringboardRevealed == true )
+            // if they press back while the springboard is open, close it. (if we're not in landscape wide)
+            else if ( NavbarFragment.SpringboardRevealed == true && MainActivity.IsLandscapeWide( ) == false )
             {
                 // otherwise, close the springboard
                 NavbarFragment.RevealSpringboard( false );

@@ -402,7 +402,7 @@ namespace iOS
                                     if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
                                     {
                                         State = RegisterState.Success;
-                                        ResultView.Display( RegisterStrings.RegisterStatus_Success, 
+                                        ResultView.Show( RegisterStrings.RegisterStatus_Success, 
                                             ControlStylingConfig.Result_Symbol_Success, 
                                             RegisterStrings.RegisterResult_Success,
                                             GeneralStrings.Done );
@@ -410,7 +410,7 @@ namespace iOS
                                     else
                                     {
                                         State = RegisterState.Fail;
-                                        ResultView.Display( RegisterStrings.RegisterStatus_Failed, 
+                                        ResultView.Show( RegisterStrings.RegisterStatus_Failed, 
                                             ControlStylingConfig.Result_Symbol_Failed, 
                                             RegisterStrings.RegisterResult_Failed,
                                             GeneralStrings.Done );

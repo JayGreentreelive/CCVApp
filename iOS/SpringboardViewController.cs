@@ -300,7 +300,7 @@ namespace iOS
             }
         }
 
-        public static bool IsLandscapeRegular( )
+        public static bool IsLandscapeWide( )
         {
             // we have a choice here to support rotation on an iPhone 6+, but it just doesn't work well enough.
             // so limit rotation to tablets.
@@ -658,12 +658,15 @@ namespace iOS
                 {
                     Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
                         {
-                            // then reveal the springboard
-                            NavViewController.RevealSpringboard( true );
                             IsOOBERunning = false;
                             RockMobileUser.Instance.OOBEComplete = true;
 
-                            TryDisplaySeriesBillboard( );
+                            // if the series billboard will NOT show up,
+                            if( TryDisplaySeriesBillboard( ) == false )
+                            {
+                                // reveal the springboard
+                                NavViewController.RevealSpringboard( true );
+                            }
                         } );
                 };
             timer.Start( );
@@ -890,7 +893,7 @@ namespace iOS
             base.TouchesEnded(touches, evt);
 
             // don't allow any navigation while the login controller is active
-            if( ModalControllerVisible == false && IsLandscapeRegular( ) == false )
+            if( ModalControllerVisible == false && IsLandscapeWide( ) == false )
             {
                 NavViewController.RevealSpringboard( false );
             }
@@ -969,7 +972,7 @@ namespace iOS
         /// <summary>
         /// Displays the "Tap to take notes" series billboard
         /// </summary>
-        void TryDisplaySeriesBillboard( )
+        bool TryDisplaySeriesBillboard( )
         {
             // first make sure all initial setup is done.
             if ( SeriesInfoDownloaded == true && IsOOBERunning == false && Billboard != null && Billboard.Superview != null )
@@ -994,9 +997,13 @@ namespace iOS
                                 } );
                         };
                         timer.Start( );
+
+                        return true;
                     }
                 }
             }
+
+            return false;
         }
 
         /// <summary>
@@ -1006,7 +1013,7 @@ namespace iOS
         void AdjustSpringboardLayout( )
         {
             nfloat availableHeight = View.Frame.Height;
-            if ( SpringboardViewController.IsLandscapeRegular( ) == true )
+            if ( SpringboardViewController.IsLandscapeWide( ) == true )
             {
                 availableHeight = View.Frame.Height / 2;
             }

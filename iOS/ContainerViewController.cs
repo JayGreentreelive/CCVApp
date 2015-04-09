@@ -108,6 +108,15 @@ namespace iOS
             string imagePath = NSBundle.MainBundle.BundlePath + "/" + PrimaryNavBarConfig.LogoFile;
             this.NavigationItem.TitleView = new UIImageView( new UIImage( imagePath ) );
 
+
+            // iOS 8.3 caused the title bar to stop working unless we explicitely push it. Pushing it in prior
+            // versions causes an exception. So, without further ado, a hack.
+            if ( UIDevice.CurrentDevice.CheckSystemVersion( 8, 3 ) )
+            {
+                // set our nav item as the current, which will cause the bar to display the logo and button
+                ( ParentViewController as MainUINavigationController ).NavigationBar.PushNavigationItem( this.NavigationItem, false );
+            }
+
             // Now create the sub-navigation, which includes
             // the NavToolbar used to let the user navigate
             CreateSubNavigationController( );
@@ -209,7 +218,7 @@ namespace iOS
             {
                 // only allow back if we're in regular landscape or portrait mode
                 bool allowBack = false;
-                if ( SpringboardViewController.IsLandscapeRegular( ) == true || SpringboardViewController.IsDevicePortrait( ) == true )
+                if ( SpringboardViewController.IsLandscapeWide( ) == true || SpringboardViewController.IsDevicePortrait( ) == true )
                 {
                     allowBack = true;
                 }

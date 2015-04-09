@@ -246,7 +246,7 @@ namespace iOS
         public void LayoutChanging( )
         {
             // for landscape regular, permanantly reveal the springboard
-            if ( SpringboardViewController.IsLandscapeRegular( ) == true )
+            if ( SpringboardViewController.IsLandscapeWide( ) == true )
             {
                 View.Frame = new CGRect( PrimaryContainerConfig.SlideAmount, 0, SpringboardViewController.TraitSize.Width - PrimaryContainerConfig.SlideAmount, SpringboardViewController.TraitSize.Height );
 
@@ -337,7 +337,7 @@ namespace iOS
                 PopToRootViewController( false );
 
                 // task activation should only close the springboard if our device isn't wide landscape
-                if( SpringboardViewController.IsLandscapeRegular( ) == false )
+                if( SpringboardViewController.IsLandscapeWide( ) == false )
                 {
                     RevealSpringboard( false );
                 }
@@ -413,7 +413,7 @@ namespace iOS
 
                                 // if the springboard is open, disable input on app stuff if the device doesn't support
                                 // regular landscape
-                                if ( SpringboardViewController.IsLandscapeRegular( ) == false )
+                                if ( SpringboardViewController.IsLandscapeWide( ) == false )
                                 {
                                     Container.View.UserInteractionEnabled = !SpringboardRevealed;
                                 }

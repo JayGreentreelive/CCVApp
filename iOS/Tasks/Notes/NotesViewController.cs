@@ -713,7 +713,7 @@ namespace iOS
                                     }
                                     else
                                     {
-                                        if( SpringboardViewController.IsLandscapeRegular( ) )
+                                        if( SpringboardViewController.IsLandscapeWide( ) )
                                         {
                                             TutorialOverlay.Image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + NoteConfig.TutorialOverlayImageIPadLS );
                                         }

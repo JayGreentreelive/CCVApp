@@ -131,6 +131,12 @@ namespace Droid
                                 Prayer.ScrollY = Math.Max( 0, Math.Min( Prayer.ScrollY, Prayer.MeasuredHeight - availableHeight ) );
                             }
                         }
+
+                        public void LayoutChanged( RectangleF bounds )
+                        {
+                            Prayer.SetMinWidth( (int)bounds.Width - 40 );
+                            Prayer.SetMaxWidth( (int)bounds.Width - 40 );
+                        }
                     }
 
                     PrayerLayoutRender PrayerLayout { get; set; }
@@ -237,9 +243,16 @@ namespace Droid
                             PrayerLayout.Scroll( distanceY );
                         }
                     }
+
+                    public void LayoutChanged( RectangleF bounds )
+                    {
+                        View.Bounds = bounds;
+
+                        PrayerLayout.LayoutChanged( bounds );
+                    }
                 }
 
-                List<PrayerCard> PrayerRequests { get; set; }
+                List<PrayerCard> PrayerRequestCards { get; set; }
 
                 PlatformCardCarousel Carousel { get; set; }
 
@@ -264,7 +277,7 @@ namespace Droid
                 public PrayerPrimaryFragment( )
                 {
                     LastDownloadTime = DateTime.MinValue;
-                    PrayerRequests = new List<PrayerCard>();
+                    PrayerRequestCards = new List<PrayerCard>();
                 }
 
                 public override void OnCreate( Bundle savedInstanceState )
@@ -288,18 +301,17 @@ namespace Droid
                     ActivityIndicator = (ProgressBar)view.FindViewById<ProgressBar>( Resource.Id.prayer_primary_activityIndicator );
                     ActivityIndicator.Visibility = ViewStates.Invisible;
 
+                    // create the carousel
                     float viewRealHeight = this.Resources.DisplayMetrics.HeightPixels;
 
                     float cardSizePerc = .80f;
-                    float cardWidth = this.Resources.DisplayMetrics.WidthPixels * cardSizePerc;
+                    float cardWidth = NavbarFragment.GetContainerDisplayWidth( ) * cardSizePerc;
                     float cardHeight = viewRealHeight * cardSizePerc;
+                    PrayerCardSize = new RectangleF( 0, 0, cardWidth, cardHeight );
 
                     // setup the card positions to be to the offscreen to the left, centered on screen, and offscreen to the right
                     float cardYOffset = viewRealHeight * .03f;
-
-                    PrayerCardSize = new RectangleF( 0, 0, cardWidth, cardHeight );
-
-                    Carousel = PlatformCardCarousel.Create( view, cardWidth, cardHeight, new RectangleF( 0, cardYOffset, this.Resources.DisplayMetrics.WidthPixels, viewRealHeight ), PrayerConfig.Card_AnimationDuration );
+                    Carousel = PlatformCardCarousel.Create( view, cardWidth, cardHeight, new RectangleF( 0, cardYOffset, NavbarFragment.GetContainerDisplayWidth( ), viewRealHeight ), PrayerConfig.Card_AnimationDuration );
 
 
                     // setup our error UI
@@ -333,6 +345,36 @@ namespace Droid
                         };
 
                     return view;
+                }
+
+                void LayoutChanged( )
+                {
+                    float viewRealHeight = this.Resources.DisplayMetrics.HeightPixels;
+
+                    float cardSizePerc = .80f;
+                    float cardWidth = NavbarFragment.GetContainerDisplayWidth( ) * cardSizePerc;
+                    float cardHeight = viewRealHeight * cardSizePerc;
+
+                    // setup the card positions to be to the offscreen to the left, centered on screen, and offscreen to the right
+                    float cardYOffset = viewRealHeight * .03f;
+
+                    PrayerCardSize = new RectangleF( 0, 0, cardWidth, cardHeight );
+
+                    Carousel.LayoutChanged( cardWidth, cardHeight, new RectangleF( 0, cardYOffset, NavbarFragment.GetContainerDisplayWidth( ), viewRealHeight ) );
+
+                    // now update the layout for each prayer card
+                    foreach ( PrayerCard prayerCard in PrayerRequestCards )
+                    {
+                        prayerCard.LayoutChanged( PrayerCardSize );
+                    }
+                }
+
+                public override void OnConfigurationChanged(Android.Content.Res.Configuration newConfig)
+                {
+                    base.OnConfigurationChanged(newConfig);
+
+                    // let the carousel and cards update
+                    LayoutChanged( );
                 }
 
                 public override void OnPause()
@@ -377,7 +419,7 @@ namespace Droid
 
                             // setup the carousel again
                             Carousel.Clear( );
-                            foreach ( PrayerCard prayerCard in PrayerRequests )
+                            foreach ( PrayerCard prayerCard in PrayerRequestCards )
                             {
                                 Carousel.AddCard( prayerCard.View );
                             }
@@ -385,6 +427,8 @@ namespace Droid
                             // prayers received and are being viewed
                             PrayerAnalytic.Instance.Trigger( PrayerAnalytic.Read );
                         }
+
+                        LayoutChanged( );
                     }
                 }
 
@@ -409,7 +453,7 @@ namespace Droid
                         {
                             IsRequesting = false;
 
-                            PrayerRequests.Clear( );
+                            PrayerRequestCards.Clear( );
 
                             // only process this if the view is still active. It's possible this request came in after we left the view.
                             if( IsActive == true )
@@ -427,7 +471,7 @@ namespace Droid
                                     foreach ( Rock.Client.PrayerRequest request in prayerRequests )
                                     {
                                         PrayerCard prayerCard = new PrayerCard( request, PrayerCardSize );
-                                        PrayerRequests.Add( prayerCard );
+                                        PrayerRequestCards.Add( prayerCard );
 
                                         Carousel.AddCard( prayerCard.View );
                                     }
@@ -459,7 +503,7 @@ namespace Droid
                 public override bool OnScrollGesture(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
                 {
                     // let the center prayer scroll
-                    PrayerRequests[ Carousel.CenterCardIndex ].Scroll( distanceY );
+                    PrayerRequestCards[ Carousel.CenterCardIndex ].Scroll( distanceY );
 
                     //Console.WriteLine( "OnScrollGesture" );
                     return ( (DroidCardCarousel)Carousel ).OnScroll( e1, e2, distanceX, distanceY );

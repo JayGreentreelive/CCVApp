@@ -6,6 +6,7 @@ using UIKit;
 using Foundation;
 using CCVApp.Shared.UI;
 using CoreGraphics;
+using System.Drawing;
 
 namespace iOS
 {
@@ -66,7 +67,8 @@ namespace iOS
             nfloat controlBottom = JoinGroupView.GetControlBottom( ) + ( View.Bounds.Height * .25f );
             ScrollView.ContentSize = new CGSize( 0, (nfloat) Math.Max( controlBottom, View.Bounds.Height * 1.05f ) );
 
-            JoinGroupView.LayoutChanged( View.Bounds.ToRectF( ) );
+            RectangleF joinBounds = new RectangleF( 0, 0, (float)View.Bounds.Width, (float)ScrollView.ContentSize.Height );
+            JoinGroupView.LayoutChanged( joinBounds );
         }
 
         public override void TouchesEnded(NSSet touches, UIEvent evt)
