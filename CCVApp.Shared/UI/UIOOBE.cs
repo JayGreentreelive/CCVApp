@@ -64,6 +64,7 @@ namespace CCVApp.Shared.UI
             RegisterButton.Text = string.Format( OOBEConfig.WantAccount, GeneralConfig.OrganizationShortName );
             RegisterButton.Opacity = 0;
             RegisterButton.SizeToFit( );
+            RegisterButton.BackgroundColor = 0;
             RegisterButton.ClickEvent = (PlatformButton button ) =>
             {
                 onClick( 0 );
@@ -77,6 +78,7 @@ namespace CCVApp.Shared.UI
             LoginButton.Text = string.Format( OOBEConfig.HaveAccount, GeneralConfig.OrganizationShortName );
             LoginButton.Opacity = 0;
             LoginButton.SizeToFit( );
+            LoginButton.BackgroundColor = 0;
             LoginButton.ClickEvent = (PlatformButton button ) =>
                 {
                     onClick( 1 );
@@ -90,6 +92,7 @@ namespace CCVApp.Shared.UI
             SkipButton.Text = OOBEConfig.SkipAccount;
             SkipButton.Opacity = 0;
             SkipButton.SizeToFit( );
+            SkipButton.BackgroundColor = 0;
             SkipButton.ClickEvent = (PlatformButton button ) =>
                 {
                     onClick( 2 );

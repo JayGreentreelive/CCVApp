@@ -73,7 +73,7 @@ namespace Droid
                         // decide what to do.
                         if ( source == MainPage )
                         {
-                            if ( buttonId == -1 )
+                            if ( buttonId == 0 )
                             {
                                 // launch group finder
                                 PresentFragment( GroupFinder, true );

@@ -42,6 +42,11 @@ namespace CCVApp
                 const string AuthFacebookLoginEndPoint = "api/Auth/FacebookLogin";
 
                 /// <summary>
+                /// Given a Person Alias ID, retrieves the ID of that person
+                /// </summary>
+                const string GetPersonAliasId = "api/PersonAlias/";
+
+                /// <summary>
                 /// End point for retrieving a Person object
                 /// </summary>
                 const string GetProfileEndPoint = "api/People/GetByUserName/";
@@ -277,7 +282,11 @@ namespace CCVApp
                     RestRequest request = GetRockRestRequest( Method.PUT );
                     request.AddBody( person );
 
-                    Request.ExecuteAsync( BaseUrl + PutPostProfileEndPoint + person.Id, request, resultHandler);
+                    ResolvePersonAliasId( person, 
+                        delegate(int personId )
+                        {
+                            Request.ExecuteAsync( BaseUrl + PutPostProfileEndPoint + personId, request, resultHandler );
+                        } );
                 }
 
                 public void RegisterNewUser( Rock.Client.Person person, Rock.Client.PhoneNumber phoneNumber, string username, string password, HttpRequest.RequestResult resultHandler )
@@ -565,66 +574,70 @@ namespace CCVApp
 
                 public void UpdateProfileImageGroup( Rock.Client.Person person, HttpRequest.RequestResult resultHandler )
                 {
-                    // first see if the user is already a member of this group (which is true if they've EVER attempted to update their profile picture.
-                    RestRequest request = GetRockRestRequest( Method.GET );
-                    string requestUrl = BaseUrl + GetProfileImageMemberEndPoint + string.Format( "?$filter=PersonId eq {0} and GroupId eq {1}", person.Id, GeneralConfig.ApplicationGroup_PhotoRequest_ValueId );
-                    Request.ExecuteAsync< List<Rock.Client.GroupMember> >( requestUrl, request, 
-                        delegate(HttpStatusCode statusCode, string statusDescription, List<Rock.Client.GroupMember> model )
+                    ResolvePersonAliasId( person, 
+                        delegate(int personId )
                         {
-                            if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
-                            {
-                                // if it's null, they are NOT in the group and we should POST. if it's valid,
-                                // we can simply update the existing.
-                                if( model.Count == 0 )
+                            // first see if the user is already a member of this group (which is true if they've EVER attempted to update their profile picture.
+                            RestRequest request = GetRockRestRequest( Method.GET );
+                            string requestUrl = BaseUrl + GetProfileImageMemberEndPoint + string.Format( "?$filter=PersonId eq {0} and GroupId eq {1}", personId, GeneralConfig.ApplicationGroup_PhotoRequest_ValueId );
+                            Request.ExecuteAsync< List<Rock.Client.GroupMember> >( requestUrl, request, 
+                                delegate(HttpStatusCode statusCode, string statusDescription, List<Rock.Client.GroupMember> model )
                                 {
-                                    request = GetRockRestRequest( Method.POST );
+                                    if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
+                                    {
+                                        // if it's null, they are NOT in the group and we should POST. if it's valid,
+                                        // we can simply update the existing.
+                                        if ( model.Count == 0 )
+                                        {
+                                            request = GetRockRestRequest( Method.POST );
 
-                                    Rock.Client.GroupMember groupMember = new Rock.Client.GroupMember();
-                                    groupMember.Guid = Guid.NewGuid( );
-                                    groupMember.PersonId = person.Id;
-                                    groupMember.GroupMemberStatus = GeneralConfig.GroupMemberStatus_Pending_ValueId;
-                                    groupMember.GroupId = GeneralConfig.ApplicationGroup_PhotoRequest_ValueId;
-                                    groupMember.GroupRoleId = GeneralConfig.GroupMemberRole_Member_ValueId;
-                                    request.AddBody( groupMember );
+                                            Rock.Client.GroupMember groupMember = new Rock.Client.GroupMember();
+                                            groupMember.Guid = Guid.NewGuid( );
+                                            groupMember.PersonId = personId;
+                                            groupMember.GroupMemberStatus = GeneralConfig.GroupMemberStatus_Pending_ValueId;
+                                            groupMember.GroupId = GeneralConfig.ApplicationGroup_PhotoRequest_ValueId;
+                                            groupMember.GroupRoleId = GeneralConfig.GroupMemberRole_Member_ValueId;
+                                            request.AddBody( groupMember );
 
-                                    requestUrl = BaseUrl + GetProfileImageMemberEndPoint;
+                                            requestUrl = BaseUrl + GetProfileImageMemberEndPoint;
 
-                                    // send off the request and let the original caller have the result
-                                    Request.ExecuteAsync( requestUrl, request, resultHandler );
-                                }
-                                else
-                                {
-                                    // otherwise, we'll do a PUT
-                                    request = GetRockRestRequest( Method.PUT );
+                                            // send off the request and let the original caller have the result
+                                            Request.ExecuteAsync( requestUrl, request, resultHandler );
+                                        }
+                                        else
+                                        {
+                                            // otherwise, we'll do a PUT
+                                            request = GetRockRestRequest( Method.PUT );
 
-                                    Rock.Client.GroupMember groupMember = new Rock.Client.GroupMember();
+                                            Rock.Client.GroupMember groupMember = new Rock.Client.GroupMember();
 
-                                    // set the status to pending
-                                    groupMember.GroupMemberStatus = GeneralConfig.GroupMemberStatus_Pending_ValueId;
+                                            // set the status to pending
+                                            groupMember.GroupMemberStatus = GeneralConfig.GroupMemberStatus_Pending_ValueId;
 
-                                    // and copy over all the other data
-                                    groupMember.PersonId = model[ 0 ].PersonId;
-                                    groupMember.Guid = model[ 0 ].Guid;
-                                    groupMember.GroupId = model[ 0 ].GroupId;
-                                    groupMember.GroupRoleId = model[ 0 ].GroupRoleId;
-                                    groupMember.Id = model[ 0 ].Id;
-                                    groupMember.IsSystem = model[ 0 ].IsSystem;
+                                            // and copy over all the other data
+                                            groupMember.PersonId = model[ 0 ].PersonId;
+                                            groupMember.Guid = model[ 0 ].Guid;
+                                            groupMember.GroupId = model[ 0 ].GroupId;
+                                            groupMember.GroupRoleId = model[ 0 ].GroupRoleId;
+                                            groupMember.Id = model[ 0 ].Id;
+                                            groupMember.IsSystem = model[ 0 ].IsSystem;
 
-                                    request.AddBody( groupMember );
+                                            request.AddBody( groupMember );
 
 
-                                    requestUrl = BaseUrl + GetProfileImageMemberEndPoint + string.Format( "{0}", groupMember.Id );
+                                            requestUrl = BaseUrl + GetProfileImageMemberEndPoint + string.Format( "{0}", groupMember.Id );
 
-                                    // send off the request and let the original caller have the result
-                                    Request.ExecuteAsync( requestUrl, request, resultHandler );
-                                }
-                            }
-                            else
-                            {
-                                // fail...
-                                resultHandler( statusCode, statusDescription );
-                            }
-                            
+                                            // send off the request and let the original caller have the result
+                                            Request.ExecuteAsync( requestUrl, request, resultHandler );
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // fail...
+                                        resultHandler( statusCode, statusDescription );
+                                    }
+                                    
+                                } );
                         } );
                 }
 
@@ -647,14 +660,17 @@ namespace CCVApp
                     Request.ExecuteAsync< List<Rock.Client.Campus> >( requestUrl, request, resultHandler);
                 }
 
-                public void GetFamiliesOfPerson( int personId, HttpRequest.RequestResult< List<Rock.Client.Group> > resultHandler )
+                public void GetFamiliesOfPerson( Rock.Client.Person person, HttpRequest.RequestResult< List<Rock.Client.Group> > resultHandler )
                 {
-                    // request a profile by the username. If no username is specified, we'll use the logged in user's name.
-                    RestRequest request = GetRockRestRequest( Method.GET );
-                    string requestUrl = string.Format( BaseUrl + GetFamiliesEndPoint, personId.ToString( ) );
+                    ResolvePersonAliasId( person, delegate(int personId )
+                        {
+                            // request a profile by the username. If no username is specified, we'll use the logged in user's name.
+                            RestRequest request = GetRockRestRequest( Method.GET );
+                            string requestUrl = string.Format( BaseUrl + GetFamiliesEndPoint, personId.ToString( ) );
 
-                    // get the raw response
-                    Request.ExecuteAsync< List<Rock.Client.Group> >( requestUrl, request, resultHandler);
+                            // get the raw response
+                            Request.ExecuteAsync< List<Rock.Client.Group> >( requestUrl, request, resultHandler);
+                        } );
                 }
 
                 public void GetLocationFromAddress( string street, string city, string state, string zip, HttpRequest.RequestResult<Rock.Client.Location> resultHandler )
@@ -723,6 +739,39 @@ namespace CCVApp
                     request.AddHeader( AuthorizationTokenHeaderKey, CCVApp.Shared.Config.GeneralConfig.RockMobileAppAuthorizationKey );
                  
                     return request;
+                }
+
+                class PersonIdObj
+                {
+                    public int PersonId { get; set; }
+                }
+                delegate void OnPersonAliasIdResolved( int personId );
+
+                /// <summary>
+                /// Core function that must be used before calling ANY endpoint requiring a personId
+                /// </summary>
+                void ResolvePersonAliasId( Rock.Client.Person person, OnPersonAliasIdResolved onComplete )
+                {
+                    // note: aliasId is being returned as null right now.
+                    onComplete( person.Id );
+                    return;
+
+                    /*
+                    // make the request for the ID
+                    RestRequest request = GetRockRestRequest( Method.GET );
+                    Request.ExecuteAsync<PersonIdObj>( BaseUrl + GetPersonAliasId + person.PrimaryAliasId, request, 
+                        delegate(HttpStatusCode statusCode, string statusDescription, PersonIdObj model )
+                        {
+                            if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
+                            {
+                                onComplete( model.PersonId );
+                            }
+                            else
+                            {
+                                onComplete( -1 );
+                            }
+                        } );
+                    */
                 }
 
                 /*private void SaveCookieToDevice( )

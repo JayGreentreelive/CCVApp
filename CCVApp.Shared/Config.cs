@@ -483,6 +483,8 @@ namespace CCVApp
                         "Foundations", "http://www.ccvonline.com/Arena/default.aspx?page=17659&campus=1", "foundations_thumb.png"
                     };
 
+                public const string GroupFinder_IconImage = "groupfinder_thumb.png";
+
                 public const string MainPageHeaderImage = "connect_banner.jpg";
 
                 /// <summary>

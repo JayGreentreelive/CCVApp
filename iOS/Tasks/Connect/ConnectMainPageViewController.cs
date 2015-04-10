@@ -24,7 +24,7 @@ namespace iOS
                 public UIImageView Image { get; set; }
                 public TableSource TableSource { get; set; }
                 public UILabel Title { get; set; }
-                public UILabel BottomBanner { get; set; }
+                //public UILabel BottomBanner { get; set; }
 
                 public PrimaryCell( CGSize parentSize, UITableViewCellStyle style, string cellIdentifier ) : base( style, cellIdentifier )
                 {
@@ -55,7 +55,7 @@ namespace iOS
                     AddSubview( Title );
 
 
-                    BottomBanner = new UILabel( );
+                    /*BottomBanner = new UILabel( );
                     BottomBanner.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
                     BottomBanner.Layer.AnchorPoint = new CGPoint( 0, 0 );
                     BottomBanner.Text = ConnectStrings.Main_Connect_OtherWays;
@@ -66,7 +66,7 @@ namespace iOS
                     BottomBanner.SizeToFit( );
                     BottomBanner.Bounds = new CGRect( 0, 0, parentSize.Width, BottomBanner.Bounds.Height + 10 );
                     BottomBanner.Layer.Position = new CGPoint( 0, Title.Frame.Bottom + 5 );
-                    AddSubview( BottomBanner );
+                    AddSubview( BottomBanner );*/
                 }
             }
 
@@ -134,7 +134,8 @@ namespace iOS
                 PrimaryTableCell.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
                 PrimaryTableCell.SelectionStyle = UITableViewCellSelectionStyle.None;
 
-                PendingPrimaryCellHeight = PrimaryTableCell.BottomBanner.Frame.Bottom;
+                //PendingPrimaryCellHeight = PrimaryTableCell.BottomBanner.Frame.Bottom;
+                PendingPrimaryCellHeight = PrimaryTableCell.Title.Frame.Bottom;
             }
 
             public override nint RowsInSection (UITableView tableview, nint section)
@@ -191,11 +192,12 @@ namespace iOS
                     PrimaryTableCell.Title.SizeToFit( );
                     PrimaryTableCell.Title.Frame = new CGRect( 5, PrimaryTableCell.Image.Frame.Bottom + 5, tableView.Bounds.Width - 10, PrimaryTableCell.Title.Frame.Height + 5 );
 
-                    PrimaryTableCell.BottomBanner.SizeToFit( );
-                    PrimaryTableCell.BottomBanner.Bounds = new CGRect( 0, 0, tableView.Bounds.Width, PrimaryTableCell.BottomBanner.Bounds.Height + 10 );
-                    PrimaryTableCell.BottomBanner.Layer.Position = new CGPoint( 0, PrimaryTableCell.Title.Frame.Bottom + 5 );
+                    //PrimaryTableCell.BottomBanner.SizeToFit( );
+                    //PrimaryTableCell.BottomBanner.Bounds = new CGRect( 0, 0, tableView.Bounds.Width, PrimaryTableCell.BottomBanner.Bounds.Height + 10 );
+                    //PrimaryTableCell.BottomBanner.Layer.Position = new CGPoint( 0, PrimaryTableCell.Title.Frame.Bottom + 5 );
 
-                    PendingPrimaryCellHeight = PrimaryTableCell.BottomBanner.Frame.Bottom;
+                    //PendingPrimaryCellHeight = PrimaryTableCell.BottomBanner.Frame.Bottom;
+                    PendingPrimaryCellHeight = PrimaryTableCell.Title.Frame.Bottom;
 
                     return PrimaryTableCell;
                 }
@@ -282,6 +284,12 @@ namespace iOS
 
             LinkEntries = ConnectLink.BuildList( );
 
+            // ensure the first link entry is always group finder.
+            ConnectLink link = new ConnectLink( );
+            link.Title = ConnectStrings.Main_Connect_GroupFinder;
+            link.ImageName = ConnectConfig.GroupFinder_IconImage;
+            LinkEntries.Insert( 0, link );
+
             ConnectTableView.SeparatorStyle = UITableViewCellSeparatorStyle.None;
             ConnectTableView.Source = new TableSource( this );
         }
@@ -297,16 +305,19 @@ namespace iOS
 
         public void RowClicked( int rowIndex )
         {
-            if ( rowIndex == -1 )
+            if ( rowIndex > -1 )
             {
-                TaskUIViewController viewController = Storyboard.InstantiateViewController( "GroupFinderViewController" ) as TaskUIViewController;
-                Task.PerformSegue( this, viewController );
-            }
-            else
-            {
-                ConnectWebViewController viewController = Storyboard.InstantiateViewController( "ConnectWebViewController" ) as ConnectWebViewController;
-                viewController.DisplayUrl = LinkEntries[ rowIndex ].Url;
-                Task.PerformSegue( this, viewController );
+                if ( rowIndex == 0 )
+                {
+                    TaskUIViewController viewController = Storyboard.InstantiateViewController( "GroupFinderViewController" ) as TaskUIViewController;
+                    Task.PerformSegue( this, viewController );
+                }
+                else
+                {
+                    ConnectWebViewController viewController = Storyboard.InstantiateViewController( "ConnectWebViewController" ) as ConnectWebViewController;
+                    viewController.DisplayUrl = LinkEntries[ rowIndex ].Url;
+                    Task.PerformSegue( this, viewController );
+                }
             }
         }
 	}

@@ -107,7 +107,7 @@ namespace Droid
 
                 LinearLayout ButtonLayout { get; set; }
 
-                TextView Footer { get; set; }
+                //TextView Footer { get; set; }
 
                 public PrimaryListItem( Context context ) : base( context )
                 {
@@ -145,16 +145,16 @@ namespace Droid
                     ( (LinearLayout.LayoutParams)dummyView.LayoutParameters ).Weight = 1;
                     DetailsLayout.AddView( dummyView );
 
-                    Footer = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
-                    Footer.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
-                    ( (LinearLayout.LayoutParams)Footer.LayoutParameters ).TopMargin = -5;
-                    Footer.Text = ConnectStrings.Main_Connect_OtherWays;
-                    Footer.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
-                    Footer.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
-                    Footer.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
-                    Footer.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Table_Footer_Color ) );
-                    Footer.Gravity = GravityFlags.Center;
-                    AddView( Footer );
+                    //Footer = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    //Footer.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
+                    //( (LinearLayout.LayoutParams)Footer.LayoutParameters ).TopMargin = -5;
+                    //Footer.Text = ConnectStrings.Main_Connect_OtherWays;
+                    //Footer.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
+                    //Footer.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
+                    //Footer.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    //Footer.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Table_Footer_Color ) );
+                    //Footer.Gravity = GravityFlags.Center;
+                    //AddView( Footer );
                 }
             }
 
@@ -256,6 +256,13 @@ namespace Droid
                     }
 
                     LinkEntries = ConnectLink.BuildList( );
+
+                    // insert group finder into the beginning of the list so it's always the first entry
+                    ConnectLink groupFinderLink = new ConnectLink( );
+                    groupFinderLink.Title = ConnectStrings.Main_Connect_GroupFinder;
+                    groupFinderLink.ImageName = ConnectConfig.GroupFinder_IconImage;
+                    LinkEntries.Insert( 0, groupFinderLink );
+
                     foreach ( ConnectLink link in LinkEntries )
                     {
                         // load each entry's thumbnail image
@@ -274,14 +281,18 @@ namespace Droid
 
                     ListView.ItemClick += (object sender, AdapterView.ItemClickEventArgs e ) =>
                         {
-                            if( e.Position == 0 )
+                            // ignore clicks to the top banner
+                            if( e.Position > 0 )
                             {
-                                ParentTask.OnClick( this, e.Position - 1 );
-                            }
-                            else
-                            {
-                                // if they clicked a non-groupfinder row, get the link they want to visit
-                                ParentTask.OnClick( this, e.Position - 1, LinkEntries[ e.Position - 1 ].Url );
+                                if( e.Position == 1 )
+                                {
+                                    ParentTask.OnClick( this, 0 );
+                                }
+                                else
+                                {
+                                    // if they clicked a non-groupfinder row, get the link they want to visit
+                                    ParentTask.OnClick( this, e.Position - 1, LinkEntries[ e.Position - 1 ].Url );
+                                }
                             }
                         };
                     ListView.SetOnTouchListener( this );

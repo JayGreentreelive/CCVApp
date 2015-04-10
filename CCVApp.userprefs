@@ -1,29 +1,30 @@
-﻿<Properties StartupItem="iOS/iOS.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget.Information's iPad" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/Tasks/Connect/GroupFinderJoinViewController.cs">
+﻿<Properties StartupItem="Droid/Droid.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.094c904b" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Tasks/NotesTask/NotesWatchFragment.cs">
     <Files>
-      <File FileName="iOS/MainUINavigationController.cs" Line="69" Column="10" />
-      <File FileName="iOS/Tasks/Connect/GroupFinderJoinViewController.cs" Line="62" Column="10" />
+      <File FileName="Droid/Tasks/NotesTask/NotesWatchFragment.cs" Line="54" Column="21" />
+      <File FileName="Droid/NavbarFragment.cs" Line="492" Column="18" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="CCVApp.Shared" expanded="True" />
-          <Node name="iOS" expanded="True">
-            <Node name="Tasks" expanded="True">
-              <Node name="Connect" expanded="True">
-                <Node name="GroupFinderJoinViewController.cs" selected="True" />
-              </Node>
-              <Node name="News" expanded="True" />
-              <Node name="Notes" expanded="True" />
-              <Node name="Prayer" expanded="True" />
-            </Node>
-            <Node name="UserManagement" expanded="True" />
+          <Node name="CCVApp.Shared" expanded="True">
+            <Node name="UI" expanded="True" />
           </Node>
+          <Node name="Droid" expanded="True">
+            <Node name="Tasks" expanded="True">
+              <Node name="ConnectTask" expanded="True" />
+              <Node name="NotesTask" expanded="True">
+                <Node name="NotesWatchFragment.cs" selected="True" />
+              </Node>
+            </Node>
+          </Node>
+          <Node name="iOS" expanded="True" />
           <Node name="Rock.Mobile" expanded="True">
             <Node name="PlatformUI" expanded="True">
-              <Node name="Droid" expanded="True" />
-              <Node name="iOS" expanded="True" />
+              <Node name="Droid" expanded="True">
+                <Node name="DroidNative" expanded="True" />
+              </Node>
             </Node>
           </Node>
         </State>

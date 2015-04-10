@@ -308,7 +308,7 @@ namespace CCVApp.Shared.UI
             {
                 BlockerView.Show( );
 
-                int personAliasId = CCVApp.Shared.Network.RockMobileUser.Instance.LoggedIn == true ? CCVApp.Shared.Network.RockMobileUser.Instance.Person.Id : 0;
+                int personAliasId = CCVApp.Shared.Network.RockMobileUser.Instance.LoggedIn == true ? CCVApp.Shared.Network.RockMobileUser.Instance.Person.PrimaryAliasId.Value : 0;
 
                 RockApi.Instance.JoinGroup( personAliasId, FirstName.Text, LastName.Text, SpouseName.Text, Email.Text, CellPhone.Text.AsNumeric( ), GroupID, GroupTitle.Text,
                     delegate(System.Net.HttpStatusCode statusCode, string statusDescription )

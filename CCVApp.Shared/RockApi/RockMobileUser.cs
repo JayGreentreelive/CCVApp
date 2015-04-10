@@ -570,7 +570,7 @@ namespace CCVApp
                 public void GetFamilyAndAddress( HttpRequest.RequestResult< List<Rock.Client.Group> > addressResult )
                 {
                     // for the address (which implicitly is their primary residence address), first get all group locations associated with them
-                    RockApi.Instance.GetFamiliesOfPerson( Person.Id, 
+                    RockApi.Instance.GetFamiliesOfPerson( Person, 
 
                         delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.Group> model)
                         {

@@ -176,8 +176,8 @@ namespace CCVApp.Shared
             public const string GroupFinder_JoinLabel = "Join";
             public const string GroupFinder_DetailsLabel = "Details";
 
-            public const string Main_Connect_Header = "Group Finder";
-            public const string Main_Connect_OtherWays = "Other ways to connect";
+            public const string Main_Connect_Header = "Connect";
+            public const string Main_Connect_GroupFinder = "Group Finder";
 
             public const string JoinGroup_FirstNamePlaceholder = "First Name";
             public const string JoinGroup_LastNamePlaceholder = "Last Name";

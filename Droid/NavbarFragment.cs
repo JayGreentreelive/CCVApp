@@ -355,6 +355,15 @@ namespace Droid
             return Navbar;
         }
 
+        void SetContainerWidth( int containerWidth )
+        {
+            DropShadowView.LayoutParameters.Width = containerWidth;
+            View.LayoutParameters.Width = containerWidth;
+            ActiveTaskFrame.LayoutParameters.Width = containerWidth;
+            NavToolbar.ButtonLayout.LayoutParameters.Width = containerWidth;
+            FadeOutFrame.LayoutParameters.Width = containerWidth;
+        }
+
         public void LayoutChanged( )
         {
             // if we just entered landscape wide mode
@@ -374,11 +383,7 @@ namespace Droid
                 // resize the containers to use the remaining width
                 int containerWidth = GetContainerDisplayWidth( );
 
-                DropShadowView.LayoutParameters.Width = containerWidth;
-                View.LayoutParameters.Width = containerWidth;
-                ActiveTaskFrame.LayoutParameters.Width = containerWidth;
-                NavToolbar.ButtonLayout.LayoutParameters.Width = containerWidth;
-                FadeOutFrame.LayoutParameters.Width = containerWidth;
+                SetContainerWidth( containerWidth );
 
                 ToggleInputViewChecker( false );
             }
@@ -398,11 +403,7 @@ namespace Droid
                 Activity.WindowManager.DefaultDisplay.GetSize( displaySize );
                 float displayWidth = displaySize.X;
 
-                DropShadowView.LayoutParameters.Width = (int) displayWidth;
-                View.LayoutParameters.Width = (int) displayWidth;
-                ActiveTaskFrame.LayoutParameters.Width = (int) displayWidth;
-                NavToolbar.ButtonLayout.LayoutParameters.Width = (int) displayWidth;
-                FadeOutFrame.LayoutParameters.Width = (int) displayWidth;
+                SetContainerWidth( (int)displayWidth );
             }
         }
 
@@ -469,11 +470,29 @@ namespace Droid
             {
                 Navbar.Visibility = ViewStates.Gone;
                 NavToolbar.ButtonLayout.Visibility = ViewStates.Gone;
+
+                // if we're in landscape wide, ensure the springboard is closed while in fullscreen.
+                if ( MainActivity.IsLandscapeWide( ) == true )
+                {
+                    PanContainerViews( 0 );
+
+                    Point displaySize = new Point();
+                    Activity.WindowManager.DefaultDisplay.GetSize( displaySize );
+                    float displayWidth = displaySize.X;
+                    SetContainerWidth( (int)displayWidth );
+                }
             }
             else
             {
                 Navbar.Visibility = ViewStates.Visible;
                 NavToolbar.ButtonLayout.Visibility = ViewStates.Visible;
+
+                // if we're in landscape wide, ensure the springboard is closed while in fullscreen.
+                if ( MainActivity.IsLandscapeWide( ) == true )
+                {
+                    PanContainerViews( Springboard.GetSpringboardDisplayWidth( ) );
+                    SetContainerWidth( GetContainerDisplayWidth( ) );
+                }
             }
         }
 

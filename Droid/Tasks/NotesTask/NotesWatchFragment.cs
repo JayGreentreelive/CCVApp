@@ -96,6 +96,12 @@ namespace Droid
                     {
                         CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaUrl = MediaUrl;
                         VideoPlayer.Start( );
+
+                        // once the video starts, if we're in landscape wide, go full screen
+                        if ( MainActivity.IsLandscapeWide( ) )
+                        {
+                            ParentTask.NavbarFragment.ToggleFullscreen( true );
+                        }
                     }
                     else
                     {
@@ -107,6 +113,12 @@ namespace Droid
                 public void OnSeekComplete( MediaPlayer mp )
                 {
                     VideoPlayer.Start( );
+
+                    // once the video starts, if we're in landscape wide, go full screen
+                    if ( MainActivity.IsLandscapeWide( ) )
+                    {
+                        ParentTask.NavbarFragment.ToggleFullscreen( true );
+                    }
                 }
 
                 public bool OnError( MediaPlayer mp, MediaError error, int extra )
@@ -168,12 +180,12 @@ namespace Droid
                 {
                     base.OnPause();
 
-                    ParentTask.NavbarFragment.EnableSpringboardRevealButton( true );
                     ParentTask.NavbarFragment.ToggleFullscreen( false );
 
                     // and if we leave, and don't support landscape, put it back to portrait
                     if ( MainActivity.SupportsLandscapeWide( ) == false )
                     {
+                        ParentTask.NavbarFragment.EnableSpringboardRevealButton( true );
                         Activity.RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
                     }
 
@@ -202,16 +214,24 @@ namespace Droid
                 {
                     base.OnConfigurationChanged(newConfig);
 
+                    // if we're entering landscape (wide or regular, we don't care)
                     if( newConfig.Orientation == Android.Content.Res.Orientation.Landscape )
                     {
+                        // go fullscreen
                         ParentTask.NavbarFragment.EnableSpringboardRevealButton( false );
                         ParentTask.NavbarFragment.ToggleFullscreen( true );
                         ParentTask.NavbarFragment.NavToolbar.Reveal( false );
                     }
                     else
                     {
-                        ParentTask.NavbarFragment.EnableSpringboardRevealButton( true );
+                        // if we're going portrait, turn off fullscreen
                         ParentTask.NavbarFragment.ToggleFullscreen( false );
+
+                        // and if we're NOT in wide, enable the reveal button.
+                        if ( MainActivity.IsLandscapeWide( ) == false )
+                        {
+                            ParentTask.NavbarFragment.EnableSpringboardRevealButton( true );
+                        }
                     }
                 }
             }
