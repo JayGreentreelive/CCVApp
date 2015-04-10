@@ -78,7 +78,6 @@ namespace Droid
             {
                 RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
             }
-            //RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
 
             DisplayMetrics metrics = Resources.DisplayMetrics;
             Console.WriteLine("Android Device detected dpi: {0}", metrics.DensityDpi );
@@ -105,7 +104,7 @@ namespace Droid
             // get the current device configuration
             Android.Content.Res.Configuration currConfig = Rock.Mobile.PlatformSpecific.Android.Core.Context.Resources.Configuration;
 
-            if ( ( currConfig.ScreenLayout & Android.Content.Res.ScreenLayout.SizeMask ) >= Android.Content.Res.ScreenLayout.SizeLarge )
+            if ( ( currConfig.ScreenLayout & Android.Content.Res.ScreenLayout.SizeMask ) >= Android.Content.Res.ScreenLayout.SizeXlarge )
             {
                 return true;
             }

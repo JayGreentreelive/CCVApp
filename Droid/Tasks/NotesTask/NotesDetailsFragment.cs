@@ -364,8 +364,10 @@ namespace Droid
                     }
                     else
                     {
+                        TakeNotesButton.Enabled = false;
+                        
                         uint disabledColor = Rock.Mobile.Graphics.Util.ScaleRGBAColor( ControlStylingConfig.TextField_PlaceholderTextColor, 2, false );
-                        WatchButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( disabledColor ) );
+                        TakeNotesButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( disabledColor ) );
                     }
                 }
             }

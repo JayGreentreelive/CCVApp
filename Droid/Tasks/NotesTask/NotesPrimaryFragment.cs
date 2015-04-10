@@ -90,27 +90,35 @@ namespace Droid
                     primaryItem.Billboard.SetImageBitmap( SeriesEntries[ 0 ].Billboard != null ? SeriesEntries[ 0 ].Billboard : ImageMainPlaceholder );
                     primaryItem.Billboard.SetScaleType( ImageView.ScaleType.CenterCrop );
 
-                    primaryItem.Title.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Name;
-                    primaryItem.Speaker.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Speaker;
-                    primaryItem.Date.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Date;
-
-                    // toggle the Take Notes button
-                    if ( string.IsNullOrEmpty( SeriesEntries[ 0 ].Series.Messages[ 0 ].NoteUrl ) == false )
+                    if ( SeriesEntries[ 0 ].Series.Messages.Count > 0 )
                     {
-                        primaryItem.ToggleTakeNotesButton( true );
+                        primaryItem.Title.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Name;
+                        primaryItem.Speaker.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Speaker;
+                        primaryItem.Date.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Date;
+
+                        // toggle the Take Notes button
+                        if ( string.IsNullOrEmpty( SeriesEntries[ 0 ].Series.Messages[ 0 ].NoteUrl ) == false )
+                        {
+                            primaryItem.ToggleTakeNotesButton( true );
+                        }
+                        else
+                        {
+                            primaryItem.ToggleTakeNotesButton( false );
+                        }
+
+                        // toggle the Watch button
+                        if ( string.IsNullOrEmpty( SeriesEntries[ 0 ].Series.Messages[ 0 ].WatchUrl ) == false )
+                        {
+                            primaryItem.ToggleWatchButton( true );
+                        }
+                        else
+                        {
+                            primaryItem.ToggleWatchButton( false );
+                        }
                     }
                     else
                     {
                         primaryItem.ToggleTakeNotesButton( false );
-                    }
-
-                    // toggle the Watch button
-                    if ( string.IsNullOrEmpty( SeriesEntries[ 0 ].Series.Messages[ 0 ].WatchUrl ) == false )
-                    {
-                        primaryItem.ToggleWatchButton( true );
-                    }
-                    else
-                    {
                         primaryItem.ToggleWatchButton( false );
                     }
 
@@ -365,11 +373,8 @@ namespace Droid
                     }
                     else
                     {
-                        uint disabledColorVal = Rock.Mobile.Graphics.Util.ScaleRGBAColor( ControlStylingConfig.TextField_PlaceholderTextColor, 2, false );
-                        Color disabledColor = Rock.Mobile.PlatformUI.Util.GetUIColor( disabledColorVal );
-
-                        TakeNotesButton.Icon.SetTextColor( disabledColor );
-                        TakeNotesButton.Label.SetTextColor( disabledColor );
+                        TakeNotesButton.Icon.SetTextColor( Color.DimGray );
+                        TakeNotesButton.Label.SetTextColor( Color.DimGray );
                     }
                 }
             }

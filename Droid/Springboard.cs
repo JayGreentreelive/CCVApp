@@ -149,6 +149,10 @@ namespace Droid
 
         NotificationBillboard Billboard { get; set; }
 
+        LinearLayout ProfileContainer { get; set; }
+
+        View CampusContainer { get; set; }
+
         /// <summary>
         /// True when series info is downloaded and it's safe to start downloading other stuff.
         /// </summary>
@@ -406,28 +410,29 @@ namespace Droid
             Activity.WindowManager.DefaultDisplay.GetSize( displaySize );
             float displayWidth = displaySize.X;
 
+            float revealPercent = MainActivity.IsLandscapeWide( ) ? PrimaryNavBarConfig.Landscape_RevealPercentage : PrimaryNavBarConfig.Portrait_RevealPercentage;
 
             // setup the width of the springboard area and campus selector
-            LinearLayout profileContainer = view.FindViewById<LinearLayout>( Resource.Id.springboard_profile_image_container );
-            profileContainer.LayoutParameters.Width = (int) ( displayWidth * PrimaryNavBarConfig.RevealPercentage );
+            ProfileContainer = view.FindViewById<LinearLayout>( Resource.Id.springboard_profile_image_container );
+            ProfileContainer.LayoutParameters.Width = (int) ( displayWidth * revealPercent );
 
-            View campusContainer = view.FindViewById<View>( Resource.Id.campus_container );
-            campusContainer.LayoutParameters.Width = (int) ( displayWidth * PrimaryNavBarConfig.RevealPercentage );
-            campusContainer.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.SpringboardBackgroundColor ) );
+            CampusContainer = view.FindViewById<View>( Resource.Id.campus_container );
+            CampusContainer.LayoutParameters.Width = (int) ( displayWidth * revealPercent );
+            CampusContainer.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.SpringboardBackgroundColor ) );
 
             View seperator = view.FindViewById<View>( Resource.Id.end_seperator );
             seperator.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
 
 
             // setup the bottom campus / settings selector
-            CampusText = campusContainer.FindViewById<TextView>( Resource.Id.campus_selection_text );
+            CampusText = CampusContainer.FindViewById<TextView>( Resource.Id.campus_selection_text );
             CampusText.Ellipsize = Android.Text.TextUtils.TruncateAt.End;
             CampusText.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
             CampusText.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
             CampusText.SetTextSize(Android.Util.ComplexUnitType.Dip,  ControlStylingConfig.Small_FontSize );
             CampusText.SetSingleLine( );
 
-            TextView settingsIcon = campusContainer.FindViewById<TextView>( Resource.Id.campus_selection_icon );
+            TextView settingsIcon = CampusContainer.FindViewById<TextView>( Resource.Id.campus_selection_icon );
             settingsIcon.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary ), TypefaceStyle.Normal );
             settingsIcon.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
             settingsIcon.SetTextSize( Android.Util.ComplexUnitType.Dip, SpringboardConfig.SettingsSymbolSize );
@@ -437,7 +442,7 @@ namespace Droid
             CampusText.Text = string.Format( SpringboardStrings.Viewing_Campus, RockGeneralData.Instance.Data.CampusIdToName( RockMobileUser.Instance.ViewingCampus ) );
 
             // setup the campus selection button.
-            Button campusSelectionButton = campusContainer.FindViewById<Button>( Resource.Id.campus_selection_button );
+            Button campusSelectionButton = CampusContainer.FindViewById<Button>( Resource.Id.campus_selection_button );
             campusSelectionButton.Click += (object sender, EventArgs e ) =>
                 {
                     // build an alert dialog containing all the campus choices
@@ -521,6 +526,17 @@ namespace Droid
         {
             base.OnConfigurationChanged(newConfig);
 
+            // when the configuration changes, update the springboard profile and campus containers
+            Point displaySize = new Point( );
+            Activity.WindowManager.DefaultDisplay.GetSize( displaySize );
+            float displayWidth = displaySize.X;
+
+            float revealPercent = MainActivity.IsLandscapeWide( ) ? PrimaryNavBarConfig.Landscape_RevealPercentage : PrimaryNavBarConfig.Portrait_RevealPercentage;
+
+            ProfileContainer.LayoutParameters.Width = (int) ( displayWidth * revealPercent );
+            CampusContainer.LayoutParameters.Width = (int) ( displayWidth * revealPercent );
+
+
             NavbarFragment.LayoutChanged( );
         }
 
@@ -534,7 +550,14 @@ namespace Droid
             ((Activity)Rock.Mobile.PlatformSpecific.Android.Core.Context).WindowManager.DefaultDisplay.GetSize( displaySize );
             float displayWidth = displaySize.X;
 
-            return (int) (displayWidth * PrimaryNavBarConfig.RevealPercentage);
+            if ( MainActivity.IsLandscapeWide( ) == true )
+            {
+                return (int)( displayWidth * PrimaryNavBarConfig.Landscape_RevealPercentage );
+            }
+            else
+            {
+                return (int) (displayWidth * PrimaryNavBarConfig.Portrait_RevealPercentage);
+            }
         }
 
         /// <summary>
@@ -890,24 +913,28 @@ namespace Droid
                 // yes, if it's a weekend and we're at CCV (that part will come later)
                 if ( DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday )
                 {
-                    if ( RockLaunchData.Instance.Data.NoteDB.SeriesList.Count > 0 )
+                    if ( RockLaunchData.Instance.Data.NoteDB.SeriesList.Count > 0 && RockLaunchData.Instance.Data.NoteDB.SeriesList[ 0 ].Messages[ 0 ] != null )
                     {
-                        // kick off a timer to reveal the billboard, because we 
-                        // don't want to do it the MOMENT the view appears.
-                        System.Timers.Timer timer = new System.Timers.Timer();
-                        timer.AutoReset = false;
-                        timer.Interval = 1;
-                        timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>
+                        // lastly, ensure there's a valid note for the message
+                        if ( string.IsNullOrEmpty( RockLaunchData.Instance.Data.NoteDB.SeriesList[ 0 ].Messages[ 0 ].NoteUrl ) == false )
                         {
-                            Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
-                                {
-                                    Billboard.Reveal( );
-                                } );
-                        };
-                        timer.Start( );
+                            // kick off a timer to reveal the billboard, because we 
+                            // don't want to do it the MOMENT the view appears.
+                            System.Timers.Timer timer = new System.Timers.Timer();
+                            timer.AutoReset = false;
+                            timer.Interval = 1;
+                            timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>
+                            {
+                                Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                                    {
+                                        Billboard.Reveal( );
+                                    } );
+                            };
+                            timer.Start( );
 
-                        // let the caller know it's gonna show
-                        return true;
+                            // let the caller know it's gonna show
+                            return true;
+                        }
                     }
                 }
             }
@@ -1036,7 +1063,7 @@ namespace Droid
                         if ( element != null )
                         {
                             // did we tap within the revealed springboard area?
-                            float visibleButtonWidth = NavbarFragment.View.Width * PrimaryNavBarConfig.RevealPercentage;
+                            float visibleButtonWidth = NavbarFragment.View.Width * PrimaryNavBarConfig.Portrait_RevealPercentage;
                             if ( e.GetX( ) < visibleButtonWidth )
                             {
                                 // we did, so activate the element associated with that button

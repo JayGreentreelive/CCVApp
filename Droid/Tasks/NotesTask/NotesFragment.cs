@@ -722,10 +722,10 @@ namespace Droid
                                 #if DEBUG
                                 Springboard.DisplayError( "Note Error", errorMsg );
                                 #else
-                                ResultView.Display( MessagesStrings.Error_Title, 
-                                    ControlStylingConfig.Result_Symbol_Failed, 
-                                    MessagesStrings.Error_Message, 
-                                    GeneralStrings.Retry );
+                                ResultView.Show( MessagesStrings.Error_Title, 
+                                                 ControlStylingConfig.Result_Symbol_Failed, 
+                                                 MessagesStrings.Error_Message, 
+                                                 GeneralStrings.Retry );
                                 #endif
                                 
                             }

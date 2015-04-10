@@ -188,6 +188,10 @@ namespace CCVApp.Shared.UI
 
         void OnResultViewDone( )
         {
+            //hack - Can't figure out WHY the join button isn't in the proper Z order on the Nexus 7.
+            // but I just don't care right now. So hide it and unhide it.
+            JoinButton.Hidden = false;
+
             ResultView.Hide( );
         }
 
@@ -306,9 +310,18 @@ namespace CCVApp.Shared.UI
         {
             if ( ValidateInput( ) )
             {
+                //hack - Can't figure out WHY the join button isn't in the proper Z order on the Nexus 7.
+                // but I just don't care right now. So hide it and unhide it.
+                JoinButton.Hidden = true;
+
                 BlockerView.Show( );
 
-                int personAliasId = CCVApp.Shared.Network.RockMobileUser.Instance.LoggedIn == true ? CCVApp.Shared.Network.RockMobileUser.Instance.Person.PrimaryAliasId.Value : 0;
+                // default to no alias ID, but if they're logged in and have one, set it
+                int personAliasId = 0;
+                if ( CCVApp.Shared.Network.RockMobileUser.Instance.LoggedIn == true && CCVApp.Shared.Network.RockMobileUser.Instance.Person.PrimaryAliasId.HasValue )
+                {
+                    personAliasId = CCVApp.Shared.Network.RockMobileUser.Instance.Person.PrimaryAliasId.Value;
+                }
 
                 RockApi.Instance.JoinGroup( personAliasId, FirstName.Text, LastName.Text, SpouseName.Text, Email.Text, CellPhone.Text.AsNumeric( ), GroupID, GroupTitle.Text,
                     delegate(System.Net.HttpStatusCode statusCode, string statusDescription )

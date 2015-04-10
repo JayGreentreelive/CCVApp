@@ -2,6 +2,10 @@ Changes
 -------
 
 Both
+	General 
+		Fixed a crash at startup if the newest sermon didn't have a note.
+		Fixed a crash if tapping the Take Notes banner when there was no note associated with the sermon.
+
 	Notes
 		Don't allow editing a user note while it's in the delete state.
 		Quotes can now be defined in NoteScript as an empty element if they only have a citation.
@@ -29,6 +33,7 @@ iOS
 Android
 	Notes
 		Fixed an issue causing the nav toolbar to stop working after going into landscape in the notes webview.
+		Fixed an issue causing the Take Notes button to be invisible, instead of grayed out, when disabled.
 
 	OOBE
 		Fixed an issue causing it to occasionally display incorrectly

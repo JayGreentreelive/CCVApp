@@ -285,15 +285,30 @@ namespace CCVApp
 
                                 // download the first note so the user can immediately access it without having to wait
                                 // for other crap.
-                                CCVApp.Shared.Notes.Note.TryDownloadNote( Data.NoteDB.SeriesList[ 0 ].Messages[ 0 ].NoteUrl, Data.NoteDB.HostDomain, delegate
-                                    {
-                                        RequestingNoteDB = false;
-
-                                        if ( resultCallback != null )
+                                if( Data.NoteDB.SeriesList[ 0 ].Messages.Count > 0 && 
+                                    string.IsNullOrEmpty( Data.NoteDB.SeriesList[ 0 ].Messages[ 0 ].NoteUrl ) == false )
+                                {
+                                    CCVApp.Shared.Notes.Note.TryDownloadNote( Data.NoteDB.SeriesList[ 0 ].Messages[ 0 ].NoteUrl, Data.NoteDB.HostDomain, delegate
                                         {
-                                            resultCallback( statusCode, statusDescription );
-                                        }
-                                    });
+                                            RequestingNoteDB = false;
+
+                                            if ( resultCallback != null )
+                                            {
+                                                resultCallback( statusCode, statusDescription );
+                                            }
+                                        });
+                                }
+                                else
+                                {
+                                    Console.WriteLine( "No note for latest message." );
+
+                                    RequestingNoteDB = false;
+
+                                    if ( resultCallback != null )
+                                    {
+                                        resultCallback( statusCode, statusDescription );
+                                    }
+                                }
                             }
                             else if ( noteModel == null )
                             {

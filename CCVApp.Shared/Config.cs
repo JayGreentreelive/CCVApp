@@ -279,9 +279,14 @@ namespace CCVApp
                 public const string RevealButton_Text = "";
 
                 /// <summary>
-                /// The percentage of the navbar width to slide over when revealing the Springboard. (Android Only)
+                /// The percentage of the navbar width to slide over when revealing the Springboard in Portrait. (Android Only)
                 /// </summary>
-                public const float RevealPercentage = .35f;
+                public const float Portrait_RevealPercentage = .65f;
+
+                /// <summary>
+                /// The percentage of the navbar width to slide over when revealing the Springboard in Landscape Wide. (Android Only)
+                /// </summary>
+                public const float Landscape_RevealPercentage = .35f;
 
                 /// <summary>
                 /// The size of the character representing the reveal button.

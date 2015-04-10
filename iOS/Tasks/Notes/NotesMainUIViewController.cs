@@ -364,39 +364,47 @@ namespace iOS
                 cell.Image.Image = SeriesEntries[ 0 ].mBillboard != null ? SeriesEntries[ 0 ].mBillboard : ImageMainPlaceholder;
 
                 // Create the title
-                cell.Title.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Name;
-                cell.Title.SizeToFit( );
+                if ( SeriesEntries[ 0 ].Series.Messages.Count > 0 )
+                {
+                    cell.Title.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Name;
+                    cell.Title.SizeToFit( );
 
 
-                // Date & Speaker
-                cell.Date.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Date;
-                cell.Date.SizeToFit( );
+                    // Date & Speaker
+                    cell.Date.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Date;
+                    cell.Date.SizeToFit( );
 
-                cell.Speaker.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Speaker;
-                cell.Speaker.SizeToFit( );
+                    cell.Speaker.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Speaker;
+                    cell.Speaker.SizeToFit( );
 
 
-                // Watch Button & Labels
-                // disable the button if there's no watch URL
-                if ( string.IsNullOrEmpty( SeriesEntries[ 0 ].Series.Messages[ 0 ].WatchUrl ) )
+                    // Watch Button & Labels
+                    // disable the button if there's no watch URL
+                    if ( string.IsNullOrEmpty( SeriesEntries[ 0 ].Series.Messages[ 0 ].WatchUrl ) )
+                    {
+                        cell.ToggleWatchButton( false );
+                    }
+                    else
+                    {
+                        cell.ToggleWatchButton( true );
+                    }
+
+
+                    // Take Notes Button & Labels
+                    // disable the button if there's no note URL
+                    if ( string.IsNullOrEmpty( SeriesEntries[ 0 ].Series.Messages[ 0 ].NoteUrl ) )
+                    {
+                        cell.ToggleTakeNotesButton( false );
+                    }
+                    else
+                    {
+                        cell.ToggleTakeNotesButton( true );
+                    }
+                }
+                else
                 {
                     cell.ToggleWatchButton( false );
-                }
-                else
-                {
-                    cell.ToggleWatchButton( true );
-                }
-
-
-                // Take Notes Button & Labels
-                // disable the button if there's no note URL
-                if ( string.IsNullOrEmpty( SeriesEntries[ 0 ].Series.Messages[ 0 ].NoteUrl ) )
-                {
                     cell.ToggleTakeNotesButton( false );
-                }
-                else
-                {
-                    cell.ToggleTakeNotesButton( true );
                 }
 
                 PendingPrimaryCellHeight = cell.BottomBanner.Frame.Bottom;

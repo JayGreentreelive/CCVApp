@@ -981,24 +981,28 @@ namespace iOS
                 // yes, if it's a weekend
                 if ( DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday )
                 {
-                    if ( RockLaunchData.Instance.Data.NoteDB.SeriesList.Count > 0 )
+                    if ( RockLaunchData.Instance.Data.NoteDB.SeriesList.Count > 0 && RockLaunchData.Instance.Data.NoteDB.SeriesList[ 0 ].Messages[ 0 ] != null )
                     {
-                        // kick off a timer to reveal the billboard, because we 
-                        // don't want to do it the MOMENT the view appears.
-                        System.Timers.Timer timer = new System.Timers.Timer();
-                        timer.AutoReset = false;
-                        timer.Interval = 1;
-                        timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>
+                        // lastly, ensure there's a valid note for the message
+                        if ( string.IsNullOrEmpty( RockLaunchData.Instance.Data.NoteDB.SeriesList[ 0 ].Messages[ 0 ].NoteUrl ) == false )
                         {
-                            Rock.Mobile.Threading.Util.PerformOnUIThread( 
-                                delegate
-                                {
-                                    Billboard.Reveal( );
-                                } );
-                        };
-                        timer.Start( );
+                            // kick off a timer to reveal the billboard, because we 
+                            // don't want to do it the MOMENT the view appears.
+                            System.Timers.Timer timer = new System.Timers.Timer();
+                            timer.AutoReset = false;
+                            timer.Interval = 1;
+                            timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>
+                            {
+                                Rock.Mobile.Threading.Util.PerformOnUIThread( 
+                                    delegate
+                                    {
+                                        Billboard.Reveal( );
+                                    } );
+                            };
+                            timer.Start( );
 
-                        return true;
+                            return true;
+                        }
                     }
                 }
             }

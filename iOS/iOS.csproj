@@ -69,10 +69,12 @@
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <ConsolePause>false</ConsolePause>
     <CodesignKey>iPhone Developer: Jered McFerron (5U8BJ9M783)</CodesignKey>
-    <CodesignProvision>d65dc294-aa3f-4a64-8fd2-9975d3a9feb4</CodesignProvision>
+    <CodesignProvision>7a22a980-d968-4650-83c9-cd75d0c4964d</CodesignProvision>
     <MtouchI18n>
     </MtouchI18n>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
+    <IpaPackageName>
+    </IpaPackageName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Ad-Hoc|iPhone' ">
     <DebugType>full</DebugType>

@@ -547,7 +547,7 @@ namespace Droid
             {
                 float displayWidth = displaySize.X;
 
-                return (int)( displayWidth - ( displayWidth * PrimaryNavBarConfig.RevealPercentage ) );
+                return (int)( displayWidth - ( displayWidth * PrimaryNavBarConfig.Landscape_RevealPercentage ) );
             }
             // otherwise, for portrait, just return the full display width
             else
