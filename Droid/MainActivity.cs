@@ -129,6 +129,34 @@ namespace Droid
             return false;
         }
 
+        public static bool IsLandscape( )
+        {
+            Android.Content.Res.Configuration currConfig = Rock.Mobile.PlatformSpecific.Android.Core.Context.Resources.Configuration;
+
+            // is our width greater?
+            if ( currConfig.ScreenWidthDp > currConfig.ScreenHeightDp == true )
+            {
+                
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool IsPortrait( )
+        {
+            Android.Content.Res.Configuration currConfig = Rock.Mobile.PlatformSpecific.Android.Core.Context.Resources.Configuration;
+
+            // is our width less?
+            if ( currConfig.ScreenWidthDp < currConfig.ScreenHeightDp == true )
+            {
+
+                return true;
+            }
+
+            return false;
+        }
+
         protected override void OnResume()
         {
             base.OnResume();

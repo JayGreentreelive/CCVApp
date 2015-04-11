@@ -40,7 +40,7 @@
 		<string>audio</string>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>13</string>
+	<string>14</string>
 	<key>UIMainStoryboardFile~ipad</key>
 	<string>MainStoryboard</string>
 	<key>UISupportedInterfaceOrientations~ipad</key>

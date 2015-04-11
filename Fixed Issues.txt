@@ -2,41 +2,7 @@ Changes
 -------
 
 Both
-	General 
-		Fixed a crash at startup if the newest sermon didn't have a note.
-		Fixed a crash if tapping the Take Notes banner when there was no note associated with the sermon.
-
-	Notes
-		Don't allow editing a user note while it's in the delete state.
-		Quotes can now be defined in NoteScript as an empty element if they only have a citation.
-
-	Login
-		If a field is blank it's now colored red when pressing Login.
-
-	Group Registration now works
-
-	Tablet support!
 
 iOS
-	Notes
-		Fixed an issue causign the back button to be disabled on the Notes WebView when in landscape.
-
-		Fixed an issue causing the message to reload if you went past the user note limit.
-
-		Fixed some list popping issues that would occasionally occur.
-
-		Fixed an issue causing "phantom" user notes to sometimes appear.
-	
-	Profile
-		Fixed an issue causing the profile page to scroll a ridiculous amount on iPhone 5 and newer
 
 Android
-	Notes
-		Fixed an issue causing the nav toolbar to stop working after going into landscape in the notes webview.
-		Fixed an issue causing the Take Notes button to be invisible, instead of grayed out, when disabled.
-
-	OOBE
-		Fixed an issue causing it to occasionally display incorrectly
-
-	General
-		Fixed the apperance of buttons on certain pages.

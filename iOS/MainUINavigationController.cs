@@ -265,10 +265,18 @@ namespace iOS
                 DarkPanel.Hidden = false;
                 DarkPanel.Layer.Opacity = 0.0f;
 
-                PanGesture.Enabled = true;
-
                 SpringboardRevealed = false;
                 Container.View.UserInteractionEnabled = true;
+
+                // only allow panning if we're in portrait. We COULD be going into normal Landscape
+                if ( SpringboardViewController.IsDevicePortrait( ) == true )
+                {
+                    PanGesture.Enabled = true;
+                }
+                else
+                {
+                    PanGesture.Enabled = false;
+                }
             }
 
             DarkPanel.Bounds = View.Bounds;

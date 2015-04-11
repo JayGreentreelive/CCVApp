@@ -391,7 +391,6 @@ namespace Droid
             else
             {
                 // enable the springboard reveal button
-                SpringboardRevealButton.Enabled = true;
                 SpringboardRevealed = false;
 
                 // close the springboard
@@ -404,6 +403,16 @@ namespace Droid
                 float displayWidth = displaySize.X;
 
                 SetContainerWidth( (int)displayWidth );
+
+                // only allow the reveal button if the device is in portrait.
+                if ( MainActivity.IsPortrait( ) )
+                {
+                    SpringboardRevealButton.Enabled = true;
+                }
+                else
+                {
+                    SpringboardRevealButton.Enabled = false;
+                }
             }
         }
 
