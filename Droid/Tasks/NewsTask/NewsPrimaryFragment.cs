@@ -359,7 +359,7 @@ namespace Droid
                         {
                             // in landscape wide, we only want the first item. All the rest
                             // are handled by the rows themselves
-                            if ( MainActivity.IsLandscapeWide( ) == true )
+                            if ( MainActivity.SupportsLandscapeWide( ) == true )
                             {
                                 if( e.Position == 0 )
                                 {
@@ -382,7 +382,7 @@ namespace Droid
                 {
                     base.OnConfigurationChanged(newConfig);
 
-                    if ( MainActivity.IsLandscapeWide( ) == true )
+                    if ( MainActivity.SupportsLandscapeWide( ) == true )
                     {
                         ListView.Adapter = new LandscapeNewsArrayAdapter( this, News, Placeholder );
                     }
@@ -409,7 +409,7 @@ namespace Droid
                         DidInitNews = true;
                     }
 
-                    if ( MainActivity.IsLandscapeWide( ) == true )
+                    if ( MainActivity.SupportsLandscapeWide( ) == true )
                     {
                         ListView.Adapter = new LandscapeNewsArrayAdapter( this, News, Placeholder );
                     }
@@ -447,7 +447,7 @@ namespace Droid
                     // if we've already created the list source, refresh it
                     if ( ListView.Adapter != null )
                     {
-                        if ( MainActivity.IsLandscapeWide( ) == true )
+                        if ( MainActivity.SupportsLandscapeWide( ) == true )
                         {
                             ( ListView.Adapter as LandscapeNewsArrayAdapter ).NotifyDataSetChanged( );
                         }
@@ -514,7 +514,7 @@ namespace Droid
 
                             if ( FragmentActive == true )
                             {
-                                if ( MainActivity.IsLandscapeWide( ) == true )
+                                if ( MainActivity.SupportsLandscapeWide( ) == true )
                                 {
                                     ( ListView.Adapter as LandscapeNewsArrayAdapter ).NotifyDataSetChanged( );
                                 }

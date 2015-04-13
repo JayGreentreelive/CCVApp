@@ -1,12 +1,12 @@
 ﻿<Properties StartupItem="Droid/Droid.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.192.168.56.102:5555" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" PreferredExecutionTarget="Android.192.168.56.101:5555" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Tasks/NewsTask/NewsPrimaryFragment.cs">
     <Files>
-      <File FileName="iOS/MainUINavigationController.cs" Line="263" Column="48" />
-      <File FileName="Droid/NavToolbar.cs" Line="285" Column="39" />
-      <File FileName="Droid/Tasks/NewsTask/NewsPrimaryFragment.cs" Line="355" Column="42" />
-      <File FileName="Droid/Tasks/NotesTask/NotesPrimaryFragment.cs" Line="130" Column="21" />
-      <File FileName="Droid/NavbarFragment.cs" Line="386" Column="47" />
+      <File FileName="iOS/Tasks/News/NewsMainUIViewController.cs" Line="492" Column="54" />
+      <File FileName="iOS/Tasks/News/NewsTask.cs" Line="30" Column="13" />
+      <File FileName="iOS/Tasks/Prayer/PrayerMainUIViewController.cs" Line="147" Column="10" />
+      <File FileName="iOS/SpringboardViewController.cs" Line="299" Column="38" />
+      <File FileName="Droid/Tasks/NewsTask/NewsPrimaryFragment.cs" Line="493" Column="45" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -14,21 +14,21 @@
           <Node name="CCVApp.Shared" expanded="True">
             <Node name="UI" expanded="True" />
           </Node>
-          <Node name="Droid" expanded="True">
+          <Node name="Droid" expanded="True" selected="True">
             <Node name="Tasks" expanded="True">
-              <Node name="NewsTask" expanded="True">
-                <Node name="NewsPrimaryFragment.cs" selected="True" />
-              </Node>
-              <Node name="NotesTask" expanded="True" />
+              <Node name="NewsTask" expanded="True" />
+              <Node name="PrayerTask" expanded="True" />
             </Node>
           </Node>
           <Node name="iOS" expanded="True">
             <Node name="Tasks" expanded="True">
-              <Node name="About" expanded="True" />
-              <Node name="Connect" expanded="True" />
               <Node name="News" expanded="True" />
               <Node name="Notes" expanded="True" />
+              <Node name="Prayer" expanded="True" />
             </Node>
+          </Node>
+          <Node name="Rock.Client.Models" expanded="True">
+            <Node name="CodeGenerated" expanded="True" />
           </Node>
           <Node name="Rock.Mobile" expanded="True">
             <Node name="PlatformSpecific" expanded="True">
@@ -38,6 +38,9 @@
             </Node>
           </Node>
         </State>
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>

@@ -300,6 +300,19 @@ namespace iOS
             }
         }
 
+        public static bool SupportsLandscapeWide( )
+        {
+            // note: this is not my favorite way to do this, 
+            // because we eliminate devices like the iPhone 6+. But,
+            // it works ok since we don't want LandscapeWide on that device.
+            if ( UIDevice.CurrentDevice.UserInterfaceIdiom != UIUserInterfaceIdiom.Phone )
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public static bool IsLandscapeWide( )
         {
             // we have a choice here to support rotation on an iPhone 6+, but it just doesn't work well enough.

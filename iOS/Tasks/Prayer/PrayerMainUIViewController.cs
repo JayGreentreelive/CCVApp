@@ -155,7 +155,7 @@ namespace iOS
             // restrict its bounds to the card itself
             Name.Text = prayer.FirstName;
             Category.Text = PrayerRequest.CategoryId.HasValue ? RockGeneralData.Instance.Data.PrayerIdToCategory( PrayerRequest.CategoryId.Value ) : RockGeneralData.Instance.Data.PrayerCategories[ 0 ].Name;
-            Date.Text = string.Format( "{0:MM/dd/yy}", DateTime.MinValue );
+            Date.Text = string.Format( "{0:MM/dd/yy}", PrayerRequest.EnteredDateTime );
             PrayerText.Text = prayer.Text;
 
             LayoutChanged( View.Frame );

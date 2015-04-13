@@ -8,6 +8,7 @@ Both
 iOS
 	Fixed a crash on iPhone when tapping the 'Share' button in Notes.
 	Fixed an issue causing the keyboard to appear when tapping on result screens.
+	Fixed an issue causing Prayer Requests to always have a created date of 01/01/01
 
 Android
 	Removed the Back Button from the Nav Toolbar, since it's completely redundant.

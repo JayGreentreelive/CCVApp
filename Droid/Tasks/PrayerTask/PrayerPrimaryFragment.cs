@@ -94,7 +94,7 @@ namespace Droid
                             Date.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                             Date.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Light ), TypefaceStyle.Normal );
                             Date.SetTextSize( ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
-                            Date.Text = string.Format( "{0:MM/dd/yy}", prayer.CreatedDateTime );
+                            Date.Text = string.Format( "{0:MM/dd/yy}", prayer.EnteredDateTime );
                             detailsLayout.AddView( Date );
 
                             // actual prayer
