@@ -217,8 +217,11 @@ namespace iOS
                 UIActivityType.CopyToPasteboard, 
                 UIActivityType.Message };
 
-            shareController.PopoverPresentationController.SourceView = Task.NavToolbar;
-
+            // if devices like an iPad want an anchor, set it
+            if ( shareController.PopoverPresentationController != null )
+            {
+                shareController.PopoverPresentationController.SourceView = Task.NavToolbar;
+            }
             PresentViewController( shareController, true, null );
         }
 

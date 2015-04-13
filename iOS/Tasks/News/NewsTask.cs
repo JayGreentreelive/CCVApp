@@ -72,7 +72,7 @@ namespace iOS
             {
                 NavToolbar.Reveal( false );
             }
-            else
+            else if ( viewController as TaskWebViewController == null )
             {
                 NavToolbar.RevealForTime( 3.0f );
             }

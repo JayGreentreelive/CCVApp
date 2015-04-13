@@ -452,9 +452,6 @@
       <DependentUpon>GIveMainPageUIViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="Tasks\Notes\NotesDetailsUIViewController.cs" />
-    <Compile Include="Tasks\Notes\NotesDetailsUIViewController.designer.cs">
-      <DependentUpon>NotesDetailsUIViewController.cs</DependentUpon>
-    </Compile>
     <Compile Include="Tasks\Notes\NotesMainUIViewController.cs" />
     <Compile Include="Tasks\Notes\NotesMainUIViewController.designer.cs">
       <DependentUpon>NotesMainUIViewController.cs</DependentUpon>
@@ -472,21 +469,15 @@
       <DependentUpon>Prayer_PostUIViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="ControlStyling.cs" />
-    <Compile Include="Tasks\Notes\NotesWebViewController.cs" />
     <Compile Include="Tasks\Connect\ConnectTask.cs" />
     <Compile Include="Tasks\Connect\GroupFinderViewController.cs" />
     <Compile Include="Tasks\Connect\GroupFinderViewController.designer.cs">
       <DependentUpon>GroupFinderViewController.cs</DependentUpon>
     </Compile>
-    <Compile Include="Tasks\Connect\ConnectWebViewController.cs" />
-    <Compile Include="Tasks\Connect\ConnectWebViewController.designer.cs">
-      <DependentUpon>ConnectWebViewController.cs</DependentUpon>
-    </Compile>
     <Compile Include="Tasks\Connect\ConnectMainPageViewController.cs" />
     <Compile Include="Tasks\Connect\ConnectMainPageViewController.designer.cs">
       <DependentUpon>ConnectMainPageViewController.cs</DependentUpon>
     </Compile>
-    <Compile Include="Tasks\News\NewsWebViewController.cs" />
     <Compile Include="UserManagement\RegisterViewController.cs" />
     <Compile Include="UserManagement\RegisterViewController.designer.cs">
       <DependentUpon>RegisterViewController.cs</DependentUpon>
@@ -494,6 +485,7 @@
     <Compile Include="Tasks\Connect\GroupFinderJoinViewController.cs" />
     <Compile Include="UserManagement\OOBEViewController.cs" />
     <Compile Include="Tasks\TaskUINavigationController.cs" />
+    <Compile Include="Tasks\TaskWebViewController.cs" />
   </ItemGroup>
   <Import Project="..\..\Rock\Rock.Client\Rock.Client.Models.projitems" Label="Shared" Condition="Exists('..\..\Rock\Rock.Client\Rock.Client.Models.projitems')" />
   <Import Project="..\..\Rock.Mobile\Rock.Mobile.projitems" Label="Shared" Condition="Exists('..\..\Rock.Mobile\Rock.Mobile.projitems')" />

@@ -77,37 +77,6 @@ namespace iOS
         }
     }
 
-    public class NotesScrollViewDelegate : UIScrollViewDelegate
-    {
-        public NotesViewController Parent { get; set; }
-
-        CGPoint LastPos { get; set; }
-
-        double LastTime { get; set; }
-
-        public override void DraggingStarted(UIScrollView scrollView)
-        {
-            LastTime = NSDate.Now.SecondsSinceReferenceDate;
-            LastPos = scrollView.ContentOffset;
-        }
-
-        public override void Scrolled( UIScrollView scrollView )
-        {
-            double timeLapsed = NSDate.Now.SecondsSinceReferenceDate - LastTime;
-
-            if( timeLapsed > .10f )
-            {
-                float delta = (float) (scrollView.ContentOffset.Y - LastPos.Y);
-
-                // notify our parent
-                Parent.ViewDidScroll( delta );
-
-                LastTime = NSDate.Now.SecondsSinceReferenceDate;
-                LastPos = scrollView.ContentOffset;
-            }
-        }
-    }
-
     public partial class NotesViewController : TaskUIViewController
     {
         /// <summary>
@@ -293,7 +262,7 @@ namespace iOS
             UIScrollView.Interceptor = this;
             UIScrollView.Frame = View.Frame;
             UIScrollView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( 0x1C1C1CFF );
-            UIScrollView.Delegate = new NotesScrollViewDelegate() { Parent = this };
+            UIScrollView.Delegate = new NavBarRevealHelperDelegate( Task.NavToolbar );
             UIScrollView.Layer.AnchorPoint = new CGPoint( 0, 0 );
 
             UITapGestureRecognizer tapGesture = new UITapGestureRecognizer();
@@ -476,7 +445,11 @@ namespace iOS
                                                                          UIActivityType.CopyToPasteboard, 
                                                                          UIActivityType.Message };
 
-                shareController.PopoverPresentationController.SourceView = Task.NavToolbar;
+                // if devices like an iPad want an anchor, set it
+                if ( shareController.PopoverPresentationController != null )
+                {
+                    shareController.PopoverPresentationController.SourceView = Task.NavToolbar;
+                }
                 PresentViewController( shareController, true, null );
             }
         }
@@ -571,8 +544,7 @@ namespace iOS
                     string activeUrl = Note.TouchesEnded( touch.LocationInView( UIScrollView ).ToPointF( ) );
                     if ( string.IsNullOrEmpty( activeUrl ) == false )
                     {
-                        NotesWebViewController viewController = new NotesWebViewController( );
-                        viewController.ActiveUrl = activeUrl;
+                        TaskWebViewController viewController = new TaskWebViewController( activeUrl, Task );
                         Task.PerformSegue( this, viewController );
                     }
                 }
@@ -580,23 +552,6 @@ namespace iOS
 
             // when a touch is released, re-enabled scrolling
             UIScrollView.ScrollEnabled = true;
-        }
-
-        public void ViewDidScroll( float scrollDelta )
-        {
-            // guard against this callback being received after we've switched away from this task.
-            if ( Task.NavToolbar != null )
-            {
-                nfloat scrollPerc = UIScrollView.ContentOffset.Y / UIScrollView.ContentSize.Height;
-                if ( scrollPerc < .10f )
-                {
-                    Task.NavToolbar.Reveal( true );
-                }
-                else
-                {
-                    Task.NavToolbar.Reveal( false );
-                }
-            }
         }
 
         [Foundation.Export("DoubleTapSelector:")]

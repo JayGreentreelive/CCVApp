@@ -117,11 +117,10 @@ namespace iOS
                 NavToolbar.SetShareButtonEnabled( false, null );
                 NavToolbar.Reveal( false );
             }
-            else if ( ( viewController as NotesWebViewController ) != null )
+            else if ( ( viewController as TaskWebViewController ) != null )
             {
                 NavToolbar.SetCreateButtonEnabled( false, null );
                 NavToolbar.SetShareButtonEnabled( false, null );
-                NavToolbar.Reveal( true );
             }
         }
 
@@ -129,16 +128,15 @@ namespace iOS
         {
             base.TouchesEnded(taskUIViewController, touches, evt);
 
-            // if they touched a dead area, reveal the nav toolbar again.
-            // Don't do this for the Notes themselves, because they reveal it thru the
-            // scroll gesture
-            if ( ( ActiveViewController as NotesViewController ) == null )
+            // immediately hide the toolbar on the main page
+            if ( ActiveViewController == MainViewController )
             {
-                // now allow it as long as it isn't the watch window in landscape mode
-                if ( ( ActiveViewController as NotesWatchUIViewController ) == null || UIDevice.CurrentDevice.Orientation == UIDeviceOrientation.Portrait )
-                {
-                    NavToolbar.RevealForTime( 3.0f );
-                }
+                NavToolbar.Reveal( false );
+            }
+            // allow it as long as it's the watch window in portrait mode. All the others handle it themselves
+            else if ( ( ActiveViewController as NotesWatchUIViewController ) != null && UIDevice.CurrentDevice.Orientation == UIDeviceOrientation.Portrait )
+            {
+                NavToolbar.RevealForTime( 3.0f );
             }
         }
 
@@ -196,7 +194,7 @@ namespace iOS
             // if we're using the watch or notes controller, allow landscape
             if ( ( ActiveViewController as NotesViewController ) != null || 
                  ( ActiveViewController as NotesWatchUIViewController ) != null || 
-                 ( ActiveViewController as NotesWebViewController ) != null )
+                 ( ActiveViewController as TaskWebViewController ) != null )
             {
                 return true;
             }
@@ -209,7 +207,7 @@ namespace iOS
         public override bool ShouldForceBackButtonEnabled( )
         {
             // otherwise, the one exception is if the webview is open
-            if ( ( ActiveViewController as NotesWebViewController ) != null )
+            if ( ( ActiveViewController as TaskWebViewController ) != null )
             {
                 return true;
             }

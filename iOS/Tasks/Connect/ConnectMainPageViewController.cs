@@ -314,8 +314,7 @@ namespace iOS
                 }
                 else
                 {
-                    ConnectWebViewController viewController = Storyboard.InstantiateViewController( "ConnectWebViewController" ) as ConnectWebViewController;
-                    viewController.DisplayUrl = LinkEntries[ rowIndex ].Url;
+                    TaskWebViewController viewController = new TaskWebViewController( LinkEntries[ rowIndex ].Url, Task );
                     Task.PerformSegue( this, viewController );
                 }
             }

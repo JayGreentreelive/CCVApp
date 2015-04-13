@@ -16,6 +16,26 @@ namespace iOS
 {
     partial class NotesDetailsUIViewController : TaskUIViewController
 	{
+        public class TableViewDelegate : NavBarRevealHelperDelegate
+        {
+            TableSource TableSource { get; set; }
+
+            public TableViewDelegate( TableSource tableSource, NavToolbar toolbar ) : base( toolbar )
+            {
+                TableSource = tableSource;
+            }
+
+            public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
+            {
+                return TableSource.GetHeightForRow( tableView, indexPath );
+            }
+
+            public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
+            {
+                TableSource.RowSelected( tableView, indexPath );
+            }
+        }
+
         public class TableSource : UITableViewSource 
         {
             /// <summary>
@@ -220,9 +240,6 @@ namespace iOS
             public override void RowSelected (UITableView tableView, NSIndexPath indexPath)
             {
                 tableView.DeselectRow( indexPath, true );
-
-                // let the parent know it should reveal the nav bar
-                Parent.RowClicked( 0, -1 );
             }
 
             public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
@@ -441,9 +458,11 @@ namespace iOS
         public List<MessageEntry> Messages { get; set; }
         //public UIImage ThumbnailPlaceholder{ get; set; }
         bool IsVisible { get; set; }
+        UITableView SeriesTable { get; set; }
 
-		public NotesDetailsUIViewController (IntPtr handle) : base (handle)
+        public NotesDetailsUIViewController ( Task parentTask )
 		{
+            Task = parentTask;
 		}
 
         public override void ViewDidLoad()
@@ -451,12 +470,17 @@ namespace iOS
             base.ViewDidLoad( );
 
             // setup the table view and general background view colors
+            SeriesTable = new UITableView( );
+            SeriesTable.Layer.AnchorPoint = CGPoint.Empty;
             SeriesTable.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
             SeriesTable.SeparatorStyle = UITableViewCellSeparatorStyle.None;
+            View.AddSubview( SeriesTable );
 
             // setup the messages list
             Messages = new List<MessageEntry>();
-            SeriesTable.Source = new TableSource( this, Messages, Series, SeriesBillboard );
+            TableSource source = new TableSource( this, Messages, Series, SeriesBillboard );
+            SeriesTable.Source = source;
+            SeriesTable.Delegate = new TableViewDelegate( source, Task.NavToolbar );
 
             // log the series they tapped on.
             MessageAnalytic.Instance.Trigger( MessageAnalytic.BrowseSeries, Series.Name );
@@ -548,20 +572,16 @@ namespace iOS
             base.LayoutChanged( );
 
             // if the layout is changed, the simplest way to fix the UI is to recreate the table source
-            SeriesTable.Source = new TableSource( this, Messages, Series, SeriesBillboard );
+            TableSource source = new TableSource( this, Messages, Series, SeriesBillboard );
+            SeriesTable.Source = source;
+            SeriesTable.Delegate = new TableViewDelegate( source, Task.NavToolbar );
             SeriesTable.ReloadData( );
         }
 
         public void RowClicked( int row, int buttonIndex )
         {
-            // passing in -1 means they tapped an empty area of a cell. Use 
-            // that to reveal the navbar
-            if ( buttonIndex == -1 )
-            {
-                Task.NavToolbar.RevealForTime( 3.0f );
-            }
-            // 0 would be the audio button
-            else if ( buttonIndex == 0 )
+           // 0 would be the audio button
+            if ( buttonIndex == 0 )
             {
                 NotesWatchUIViewController viewController = Storyboard.InstantiateViewController( "NotesWatchUIViewController" ) as NotesWatchUIViewController;
                 viewController.MediaUrl = Series.Messages[ row ].AudioUrl;

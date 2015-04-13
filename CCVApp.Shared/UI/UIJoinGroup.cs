@@ -191,6 +191,7 @@ namespace CCVApp.Shared.UI
             //hack - Can't figure out WHY the join button isn't in the proper Z order on the Nexus 7.
             // but I just don't care right now. So hide it and unhide it.
             JoinButton.Hidden = false;
+            EnableControls( true );
 
             ResultView.Hide( );
         }
@@ -306,6 +307,15 @@ namespace CCVApp.Shared.UI
             CellPhone.ResignFirstResponder( );
         }
 
+        void EnableControls( bool enabled )
+        {
+            FirstName.UserInteractionEnabled = enabled;
+            LastName.UserInteractionEnabled = enabled;
+            SpouseName.UserInteractionEnabled = enabled;
+            Email.UserInteractionEnabled = enabled;
+            CellPhone.UserInteractionEnabled = enabled;
+        }
+
         void JoinClicked( PlatformButton button )
         {
             if ( ValidateInput( ) )
@@ -313,6 +323,7 @@ namespace CCVApp.Shared.UI
                 //hack - Can't figure out WHY the join button isn't in the proper Z order on the Nexus 7.
                 // but I just don't care right now. So hide it and unhide it.
                 JoinButton.Hidden = true;
+                EnableControls( false );
 
                 BlockerView.Show( );
 

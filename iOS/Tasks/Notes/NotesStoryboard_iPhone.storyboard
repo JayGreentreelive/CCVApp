@@ -32,38 +32,6 @@
             <point key="canvasLocation" x="-234" y="-289"/>
         </scene>
         <!--Notes DetailsUI View Controller-->
-        <scene sceneID="15">
-            <objects>
-                <viewController storyboardIdentifier="NotesDetailsUIViewController" id="16" customClass="NotesDetailsUIViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="13"/>
-                        <viewControllerLayoutGuide type="bottom" id="14"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="17">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <tableView clipsSubviews="YES" contentMode="top" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="168">
-                                <rect key="frame" x="0.0" y="45" width="320" height="523"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                            </tableView>
-                        </subviews>
-                        <color key="backgroundColor" red="0.082352941176470587" green="0.082352941176470587" blue="0.082352941176470587" alpha="1" colorSpace="calibratedRGB"/>
-                        <constraints>
-                            <constraint firstItem="168" firstAttribute="bottom" secondItem="14" secondAttribute="top" id="7MM-xa-Df7"/>
-                            <constraint firstItem="168" firstAttribute="top" secondItem="13" secondAttribute="bottom" constant="25" id="7UF-Ne-LZ8"/>
-                            <constraint firstItem="168" firstAttribute="leading" secondItem="17" secondAttribute="leading" id="ZfW-Gq-pXt"/>
-                            <constraint firstAttribute="trailing" secondItem="168" secondAttribute="trailing" id="k2L-Zv-Vpp"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <outlet property="SeriesTable" destination="168" id="name-outlet-168"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="18" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="186" y="-287"/>
-        </scene>
         <!--Notes WatchUI View Controller-->
         <scene sceneID="173">
             <objects>
@@ -92,13 +60,76 @@
     <resources>
         <image name="ccvLogo.png" width="57" height="28"/>
         <image name="news_baptism_main.png" width="375" height="242"/>
-        <image name="news_learnmore_header.png" width="375" height="211"/>
+        <image name="news_learnmore_header.png" width="414" height="180"/>
         <image name="news_learnmore_main.png" width="375" height="242"/>
-        <image name="news_startingpoint_header.png" width="1242" height="699"/>
+        <image name="news_startingpoint_header.png" width="414" height="180"/>
         <image name="news_startingpoint_main.png" width="375" height="242"/>
         <image name="podcastThumbnailPlaceholder.png" width="590" height="332"/>
         <image name="spot_mask.png" width="128" height="128"/>
-        <image name="news_baptism_header.png" width="320" height="180"/>
+        <image name="news_baptism_header.png" width="414" height="180"/>
         <image name="facebook_login.png" width="250" height="35"/>
+        <image name="Fonts/Bevan.ttf" width="0" height="0"/>
+        <image name="Fonts/ChangaOne-Italic.ttf" width="0" height="0"/>
+        <image name="Fonts/ChangaOne-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/DroidSerif-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/DroidSerif-BoldItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/DroidSerif-Italic.ttf" width="0" height="0"/>
+        <image name="Fonts/DroidSerif.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-Black.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-BoldItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-HeavyItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-Italic.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-Light.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-LightItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/Montserrat-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/Montserrat-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-BoldItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-ExtraBold.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-ExtraBoldItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-Italic.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-Light.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-LightItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-Semibold.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-SemiboldItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/PassionOne-Black.ttf" width="0" height="0"/>
+        <image name="Fonts/PassionOne-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/PassionOne-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/Quicksand-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/Quicksand-Light.ttf" width="0" height="0"/>
+        <image name="Fonts/Quicksand-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoCondensed-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoCondensed-BoldItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoCondensed-Italic.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoCondensed-Light.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoCondensed-LightItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoCondensed-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoSlab-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoSlab-Light.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoSlab-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoSlab-Thin.ttf" width="0" height="0"/>
+        <image name="Fonts/FontAwesome.ttf" width="0" height="0"/>
+        <image name="Fonts/Bh.ttf" width="0" height="0"/>
+        <image name="connect_banner.jpg" width="595" height="335"/>
+        <image name="baptism_thumb.png" width="210" height="210"/>
+        <image name="foundations_thumb.png" width="210" height="210"/>
+        <image name="starting_point_thumb.png" width="210" height="210"/>
+        <image name="placeholder_news_details.png" width="1242" height="540"/>
+        <image name="placeholder_news_main.png" width="1242" height="801"/>
+        <image name="placeholder_notes_main.png" width="750" height="422"/>
+        <image name="placeholder_notes_thumb.png" width="210" height="210"/>
+        <image name="note_tutorial.png" width="1242" height="2208"/>
+        <image name="oobe_ccv_logo_1gmini.png" width="102" height="38"/>
+        <image name="oobe_ccv_logo_i4.png" width="203" height="75"/>
+        <image name="oobe_ccv_logo_i5.png" width="173" height="65"/>
+        <image name="oobe_ccv_logo_i6.png" width="203" height="75"/>
+        <image name="oobe_ccv_logo_i6p.png" width="336" height="124"/>
+        <image name="oobe_splash_bg.png" width="1242" height="2208"/>
+        <image name="note_tutorial_ipad_ls.png" width="1588" height="1448"/>
+        <image name="note_tutorial_ipad_port.png" width="1536" height="1960"/>
+        <image name="groupfinder_thumb.png" width="210" height="210"/>
     </resources>
 </document>

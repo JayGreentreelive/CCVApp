@@ -38,21 +38,20 @@ namespace iOS
             NavToolbar.SetShareButtonEnabled( false, null );
             NavToolbar.SetCreateButtonEnabled( false, null );
 
-            // if it's the main page, disable the back button on the toolbar
+            // if it's the main page, nide the nav toolbar
             if ( viewController == MainPageVC )
             {
                 NavToolbar.Reveal( false );
             }
-            else
+            // if it's the group finder, force the nav toolbar to always show
+            else if ( viewController as GroupFinderViewController != null )
             {
-                if ( viewController as ConnectWebViewController != null )
-                {
-                    NavToolbar.Reveal( true );
-                }
-                else
-                {
-                    NavToolbar.RevealForTime( 3.0f );
-                }
+                NavToolbar.Reveal( true );
+            }
+            // otherwise, as long as it IS NOT the webView, do the standard 3 seconds
+            else if ( viewController as TaskWebViewController == null )
+            {
+                NavToolbar.RevealForTime( 3.0f );
             }
         }
 
@@ -60,8 +59,12 @@ namespace iOS
         {
             base.TouchesEnded(taskUIViewController, touches, evt);
 
-            // if they touched a dead area, reveal the nav toolbar again.
-            NavToolbar.RevealForTime( 3.0f );
+            // if they're not on the main page or the webView
+            if ( ActiveViewController != MainPageVC && ( ActiveViewController as TaskWebViewController ) == null )
+            {
+                // let a dead space tap reveal the toolbar
+                NavToolbar.RevealForTime( 3.0f );
+            }
         }
 
         public override void OnActivated( )

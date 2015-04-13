@@ -127,7 +127,7 @@ namespace iOS
 
             // our first (and only) child IS a ContainerViewController.
             Container = new ContainerViewController( );
-            AddChildViewController( Container );
+            PushViewController( Container, false );
 
             // setup a shadow that provides depth when this panel is slid "out" from the springboard.
             ApplyEdgeShadow( );

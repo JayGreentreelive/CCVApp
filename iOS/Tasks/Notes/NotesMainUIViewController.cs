@@ -616,8 +616,7 @@ namespace iOS
                         // only update the table if we're still visible
                         if ( IsVisible == true )
                         {
-                            TableSource source = new TableSource( this, SeriesEntries, ImageMainPlaceholder, ImageThumbPlaceholder );
-                            NotesTableView.Source = source;
+                            NotesTableView.Source = new TableSource( this, SeriesEntries, ImageMainPlaceholder, ImageThumbPlaceholder );
                             NotesTableView.ReloadData( );
                         }
                     }
@@ -791,7 +790,7 @@ namespace iOS
 
         public void RowClicked( int row )
         {
-            DetailsViewController = Storyboard.InstantiateViewController( "NotesDetailsUIViewController" ) as NotesDetailsUIViewController;
+            DetailsViewController = new NotesDetailsUIViewController( Task );
             DetailsViewController.Series = SeriesEntries[ row ].Series;
             DetailsViewController.SeriesBillboard = SeriesEntries[ row ].mBillboard != null ? SeriesEntries[ row ].mBillboard : ImageMainPlaceholder;
 

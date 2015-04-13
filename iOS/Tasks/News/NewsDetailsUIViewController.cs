@@ -97,9 +97,7 @@ namespace iOS
             View.AddSubview( LearnMoreButton );
             LearnMoreButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
-                    NewsWebViewController viewController = new NewsWebViewController( );
-                    viewController.DisplayUrl = NewsItem.ReferenceURL;
-
+                    TaskWebViewController viewController = new TaskWebViewController( NewsItem.ReferenceURL, Task );
                     Task.PerformSegue( this, viewController );
                 };
 

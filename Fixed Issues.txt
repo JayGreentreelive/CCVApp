@@ -2,7 +2,11 @@ Changes
 -------
 
 Both
+	Improved the Nav Toolbar's auto-reveal behavior
+
 
 iOS
+	Fixed a crash on iPhone when tapping the 'Share' button in Notes.
+	Fixed an issue causing the keyboard to appear when tapping on result screens.
 
 Android
