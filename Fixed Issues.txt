@@ -10,3 +10,4 @@ iOS
 	Fixed an issue causing the keyboard to appear when tapping on result screens.
 
 Android
+	Removed the Back Button from the Nav Toolbar, since it's completely redundant.

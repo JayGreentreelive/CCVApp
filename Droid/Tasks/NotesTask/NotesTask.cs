@@ -242,12 +242,6 @@ namespace Droid
                 public override void OnUp( MotionEvent e )
                 {
                     base.OnUp( e );
-
-                    // for the notes page, the navbar should show up when we scroll
-                    if ( NotesPage.IsVisible == false )
-                    {
-                        NavbarFragment.NavToolbar.RevealForTime( 3.00f );
-                    }
                 }
             }
         }

@@ -56,11 +56,6 @@ namespace Droid
                 public override void OnUp( MotionEvent e )
                 {
                     base.OnUp( e );
-
-                    if ( GroupFinder.IsVisible == false )
-                    {
-                        NavbarFragment.NavToolbar.RevealForTime( 3.00f );
-                    }
                 }
 
                 public override void OnClick(Fragment source, int buttonId, object context)
@@ -84,10 +79,6 @@ namespace Droid
                                 WebPage.DisplayUrl( (string)context );
                                 PresentFragment( WebPage, true );
                             }
-                        }
-                        else if ( source == WebPage )
-                        {
-                            NavbarFragment.NavToolbar.RevealForTime( 3.00f );
                         }
                         else if ( source == GroupFinder )
                         {

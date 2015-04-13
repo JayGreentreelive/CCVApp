@@ -24,13 +24,13 @@ namespace Droid
     {
         namespace News
         {
-            public class NewsArrayAdapter : BaseAdapter
+            public class PortraitNewsArrayAdapter : BaseAdapter
             {
                 List<NewsEntry> News { get; set; }
                 Bitmap Placeholder { get; set; }
 
                 NewsPrimaryFragment ParentFragment { get; set; }
-                public NewsArrayAdapter( NewsPrimaryFragment parentFragment, List<NewsEntry> news, Bitmap placeholder )
+                public PortraitNewsArrayAdapter( NewsPrimaryFragment parentFragment, List<NewsEntry> news, Bitmap placeholder )
                 {
                     ParentFragment = parentFragment;
 
@@ -75,6 +75,217 @@ namespace Droid
                     scaledImageView.SetScaleType( ImageView.ScaleType.CenterCrop );
 
                     return scaledImageView;
+                }
+            }
+
+            public class LandscapeNewsArrayAdapter : BaseAdapter
+            {
+                List<NewsEntry> News { get; set; }
+                Bitmap Placeholder { get; set; }
+
+                NewsPrimaryFragment ParentFragment { get; set; }
+                public LandscapeNewsArrayAdapter( NewsPrimaryFragment parentFragment, List<NewsEntry> news, Bitmap placeholder )
+                {
+                    ParentFragment = parentFragment;
+
+                    News = news;
+                    Placeholder = placeholder;
+                }
+
+                public override int Count 
+                {
+                    get 
+                    { 
+                        // start with a top row
+                        int numItems = 1;
+
+                        // each row after will show two items
+                        double remainingItems = News.Count - 1;
+                        if ( remainingItems > 0 )
+                        {
+                            // take the rows we'll need and round up
+                            double rowsNeeded = remainingItems / 2.0f;
+
+                            rowsNeeded = Math.Ceiling( rowsNeeded );
+
+                            numItems += (int)rowsNeeded;
+                        }
+                        return numItems;
+                    }
+                }
+
+                public override Java.Lang.Object GetItem (int position) 
+                {
+                    // could wrap a Contact in a Java.Lang.Object
+                    // to return it here if needed
+                    return null;
+                }
+
+                public override long GetItemId (int position) 
+                {
+                    return 0;
+                }
+
+                public void RowItemClicked( int itemIndex )
+                {
+                    ParentFragment.OnClick( itemIndex );
+                }
+
+                public override View GetView(int position, View convertView, ViewGroup parent)
+                {
+                    if ( position == 0 )
+                    {
+                        return GetPrimaryView( position, convertView, parent );
+                    }
+                    else
+                    {
+                        // for standard views, subtract one from the position so we
+                        // can more easily convert from row index to correct left index image.
+                        return GetStandardView( position - 1, convertView, parent );
+                    }
+                }
+
+                View GetPrimaryView( int position, View convertView, ViewGroup parent )
+                {
+                    // primary view is easy. Get an image view, and set the image
+                    AspectScaledImageView scaledImageView = convertView as AspectScaledImageView;
+                    if ( scaledImageView == null )
+                    {
+                        scaledImageView = new AspectScaledImageView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                        scaledImageView.LayoutParameters = new AbsListView.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent );
+                    }
+
+                    if ( News[ position ].Image != null )
+                    {
+                        scaledImageView.SetImageBitmap( News[ position ].Image );
+                    }
+                    else
+                    {
+                        scaledImageView.SetImageBitmap( Placeholder );
+                    }
+
+                    scaledImageView.SetScaleType( ImageView.ScaleType.CenterCrop );
+
+                    return scaledImageView;
+                }
+
+                View GetStandardView( int rowIndex, View convertView, ViewGroup parent )
+                {
+                    // convert the position to the appropriate image index.
+                    int leftImageIndex = 1 + ( rowIndex * 2 );
+
+                    // create the item if needed
+                    NewsListItem seriesItem = convertView as NewsListItem;
+                    if ( seriesItem == null )
+                    {
+                        seriesItem = new NewsListItem( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                        seriesItem.ParentAdapter = this;
+                    }   
+
+                    seriesItem.LeftImageIndex = leftImageIndex;
+
+                    // first set the left item
+                    if ( leftImageIndex < News.Count )
+                    {
+                        if ( News[ leftImageIndex ].Image != null )
+                        {
+                            seriesItem.LeftImage.SetImageBitmap( News[ leftImageIndex ].Image );
+                        }
+                        else
+                        {
+                            seriesItem.LeftImage.SetImageBitmap( Placeholder );
+                        }
+                    }
+                    else
+                    {
+                        seriesItem.LeftImage.SetImageBitmap( Placeholder );
+                    }
+
+                    // now if there's a right item, set it
+                    int rightImageIndex = leftImageIndex + 1;
+                    if ( rightImageIndex < News.Count )
+                    {
+                        if ( News[ rightImageIndex ].Image != null )
+                        {
+                            seriesItem.RightImage.SetImageBitmap( News[ rightImageIndex ].Image );
+                        }
+                        else
+                        {
+                            seriesItem.RightImage.SetImageBitmap( Placeholder );
+                        }    
+                    }
+                    else
+                    {
+                        seriesItem.RightImage.SetImageBitmap( Placeholder );
+                    }
+
+                    return seriesItem;
+                }
+            }
+
+            /// <summary>
+            /// Implementation of the news row that has two images side by side
+            /// </summary>
+            class NewsListItem : LinearLayout
+            {
+                public LandscapeNewsArrayAdapter ParentAdapter { get; set; }
+
+                public int LeftImageIndex { get; set; }
+                
+                public RelativeLayout LeftLayout { get; set; }
+                public Button LeftButton { get; set; }
+                public Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView LeftImage { get; set; }
+
+                public RelativeLayout RightLayout { get; set; }
+                public Button RightButton { get; set; }
+                public Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView RightImage { get; set; }
+
+                public NewsListItem( Context context ) : base( context )
+                {
+                    Orientation = Orientation.Horizontal;
+
+                    SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+
+                    LeftLayout = new RelativeLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    LeftLayout.LayoutParameters = new LinearLayout.LayoutParams( LayoutParams.WrapContent, LayoutParams.WrapContent );
+                    AddView( LeftLayout );
+
+                    LeftImage = new Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    LeftImage.LayoutParameters = new LinearLayout.LayoutParams( NavbarFragment.GetContainerDisplayWidth( ) / 2, LayoutParams.WrapContent );
+                    ( (LinearLayout.LayoutParams)LeftImage.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
+                    LeftImage.SetScaleType( ImageView.ScaleType.CenterCrop );
+                    LeftLayout.AddView( LeftImage );
+
+                    LeftButton = new Button( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    LeftButton.LayoutParameters = LeftImage.LayoutParameters;
+                    LeftButton.SetBackgroundDrawable( null );
+                    LeftButton.Click += (object sender, EventArgs e ) =>
+                    {
+                        // notify our parent that the image index was clicked
+                        ParentAdapter.RowItemClicked( LeftImageIndex );
+                    };
+                    LeftLayout.AddView( LeftButton );
+
+
+                    RightLayout = new RelativeLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    RightLayout.LayoutParameters = new LinearLayout.LayoutParams( LayoutParams.WrapContent, LayoutParams.WrapContent );
+                    AddView( RightLayout );
+
+                    RightImage = new Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    RightImage.LayoutParameters = new LinearLayout.LayoutParams( NavbarFragment.GetContainerDisplayWidth( ) / 2, LayoutParams.WrapContent );
+                    ( (LinearLayout.LayoutParams)RightImage.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
+                    RightImage.SetScaleType( ImageView.ScaleType.CenterCrop );
+                    RightLayout.AddView( RightImage );
+
+                    RightButton = new Button( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    RightButton.LayoutParameters = RightImage.LayoutParameters;
+                    RightButton.SetBackgroundDrawable( null );
+                    RightButton.Click += (object sender, EventArgs e ) =>
+                    {
+                        // notify our parent that the image index was clicked
+                        ParentAdapter.RowItemClicked( LeftImageIndex + 1 );
+                    };
+                    RightLayout.AddView( RightButton );
                 }
             }
 
@@ -127,6 +338,11 @@ namespace Droid
                     }
                 }
 
+                public void OnClick( int position )
+                {
+                    ParentTask.OnClick( this, position );
+                }
+
                 public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
                 {
                     if (container == null)
@@ -141,11 +357,39 @@ namespace Droid
                     ListView = view.FindViewById<ListView>( Resource.Id.news_primary_list );
                     ListView.ItemClick += (object sender, AdapterView.ItemClickEventArgs e) => 
                         {
-                            ParentTask.OnClick( this, e.Position );
+                            // in landscape wide, we only want the first item. All the rest
+                            // are handled by the rows themselves
+                            if ( MainActivity.IsLandscapeWide( ) == true )
+                            {
+                                if( e.Position == 0 )
+                                {
+                                    OnClick( e.Position );
+                                }
+                            }
+                            else
+                            {
+                                // in portrait mode, it's fine to use the list
+                                // for click detection
+                                OnClick( e.Position );
+                            }
                         };
                     ListView.SetOnTouchListener( this );
 
                     return view;
+                }
+
+                public override void OnConfigurationChanged(Android.Content.Res.Configuration newConfig)
+                {
+                    base.OnConfigurationChanged(newConfig);
+
+                    if ( MainActivity.IsLandscapeWide( ) == true )
+                    {
+                        ListView.Adapter = new LandscapeNewsArrayAdapter( this, News, Placeholder );
+                    }
+                    else
+                    {
+                        ListView.Adapter = new PortraitNewsArrayAdapter( this, News, Placeholder );
+                    }
                 }
 
                 public override void OnResume()
@@ -165,7 +409,14 @@ namespace Droid
                         DidInitNews = true;
                     }
 
-                    ListView.Adapter = new NewsArrayAdapter( this, News, Placeholder );
+                    if ( MainActivity.IsLandscapeWide( ) == true )
+                    {
+                        ListView.Adapter = new LandscapeNewsArrayAdapter( this, News, Placeholder );
+                    }
+                    else
+                    {
+                        ListView.Adapter = new PortraitNewsArrayAdapter( this, News, Placeholder );
+                    }
                 }
 
                 public void ReloadNews( )
@@ -196,7 +447,14 @@ namespace Droid
                     // if we've already created the list source, refresh it
                     if ( ListView.Adapter != null )
                     {
-                        ( ListView.Adapter as NewsArrayAdapter ).NotifyDataSetChanged( );
+                        if ( MainActivity.IsLandscapeWide( ) == true )
+                        {
+                            ( ListView.Adapter as LandscapeNewsArrayAdapter ).NotifyDataSetChanged( );
+                        }
+                        else
+                        {
+                            ( ListView.Adapter as PortraitNewsArrayAdapter ).NotifyDataSetChanged( );
+                        }
                     }
                 }
 
@@ -256,7 +514,14 @@ namespace Droid
 
                             if ( FragmentActive == true )
                             {
-                                ( ListView.Adapter as NewsArrayAdapter ).NotifyDataSetChanged( );
+                                if ( MainActivity.IsLandscapeWide( ) == true )
+                                {
+                                    ( ListView.Adapter as LandscapeNewsArrayAdapter ).NotifyDataSetChanged( );
+                                }
+                                else
+                                {
+                                    ( ListView.Adapter as PortraitNewsArrayAdapter ).NotifyDataSetChanged( );
+                                }
                             }
                         } );
                 }

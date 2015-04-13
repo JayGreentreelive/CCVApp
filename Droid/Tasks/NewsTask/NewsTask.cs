@@ -113,14 +113,15 @@ namespace Droid
                     // only handle input if the springboard is closed
                     if ( NavbarFragment.ShouldTaskAllowInput( ) )
                     {
-                        // decide what to do.
-                        if ( source == MainPage )
+                        // if the main page had a VALID news item clicked, go to it
+                        if ( source == MainPage && buttonId < News.Count )
                         {
                             DetailsPage.NewsItem = News[ buttonId ];
                             PresentFragment( DetailsPage, true );
                         }
                         else if ( source == DetailsPage )
                         {
+                            // otherwise visit the reference URL
                             if ( buttonId == Resource.Id.news_details_launch_url )
                             {
                                 WebPage.DisplayUrl( DetailsPage.NewsItem.ReferenceURL );
@@ -128,13 +129,6 @@ namespace Droid
                             }
                         }
                     }
-                }
-
-                public override void OnUp( MotionEvent e )
-                {
-                    base.OnUp( e );
-
-                    NavbarFragment.NavToolbar.RevealForTime( 3.00f );
                 }
             }
         }

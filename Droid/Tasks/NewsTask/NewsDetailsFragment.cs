@@ -93,7 +93,7 @@ namespace Droid
                     ParentTask.NavbarFragment.NavToolbar.SetBackButtonEnabled( true );
                     ParentTask.NavbarFragment.NavToolbar.SetCreateButtonEnabled( false, null );
                     ParentTask.NavbarFragment.NavToolbar.SetShareButtonEnabled( false, null );
-                    ParentTask.NavbarFragment.NavToolbar.RevealForTime( 3.00f );
+                    ParentTask.NavbarFragment.NavToolbar.Reveal( false );
 
                     IsFragmentActive = true;
 

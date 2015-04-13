@@ -249,7 +249,7 @@ namespace Droid
                     ParentTask.NavbarFragment.NavToolbar.SetBackButtonEnabled( true );
                     ParentTask.NavbarFragment.NavToolbar.SetShareButtonEnabled( false, null );
                     ParentTask.NavbarFragment.NavToolbar.SetCreateButtonEnabled( false, null );
-                    ParentTask.NavbarFragment.NavToolbar.RevealForTime( 3.0f );
+                    ParentTask.NavbarFragment.NavToolbar.Reveal( false );
 
                     // if they're logged in, pre-populate the name fields
                     if ( RockMobileUser.Instance.LoggedIn == true )

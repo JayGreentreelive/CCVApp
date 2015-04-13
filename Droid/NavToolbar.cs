@@ -288,7 +288,9 @@ namespace Droid
                 ButtonLayout.RemoveAllViews( );
 
                 // now add each button
-                ButtonLayout.AddView( BackButton );
+                //JHM: 4-13-15 - Google asks us not to add custom back buttons, since they are
+                // completely redundant.
+                //ButtonLayout.AddView( BackButton );
 
                 ButtonLayout.AddView( ShareButton );
 

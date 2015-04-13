@@ -311,7 +311,7 @@ namespace Droid
                     ParentTask.NavbarFragment.NavToolbar.SetBackButtonEnabled( false );
                     ParentTask.NavbarFragment.NavToolbar.SetShareButtonEnabled( false, null );
                     ParentTask.NavbarFragment.NavToolbar.SetCreateButtonEnabled( false, null );
-                    ParentTask.NavbarFragment.NavToolbar.Reveal( true );
+                    ParentTask.NavbarFragment.NavToolbar.Reveal( false );
                 }
 
                 public override void OnPause( )

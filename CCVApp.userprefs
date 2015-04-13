@@ -1,8 +1,12 @@
-﻿<Properties StartupItem="iOS/iOS.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhone4s.8.3" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/MainUINavigationController.cs">
+﻿<Properties StartupItem="Droid/Droid.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.192.168.56.102:5555" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Tasks/NewsTask/NewsPrimaryFragment.cs">
     <Files>
-      <File FileName="iOS/MainUINavigationController.cs" Line="114" Column="29" />
+      <File FileName="iOS/MainUINavigationController.cs" Line="263" Column="48" />
+      <File FileName="Droid/NavToolbar.cs" Line="285" Column="39" />
+      <File FileName="Droid/Tasks/NewsTask/NewsPrimaryFragment.cs" Line="355" Column="42" />
+      <File FileName="Droid/Tasks/NotesTask/NotesPrimaryFragment.cs" Line="130" Column="21" />
+      <File FileName="Droid/NavbarFragment.cs" Line="386" Column="47" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -10,12 +14,21 @@
           <Node name="CCVApp.Shared" expanded="True">
             <Node name="UI" expanded="True" />
           </Node>
+          <Node name="Droid" expanded="True">
+            <Node name="Tasks" expanded="True">
+              <Node name="NewsTask" expanded="True">
+                <Node name="NewsPrimaryFragment.cs" selected="True" />
+              </Node>
+              <Node name="NotesTask" expanded="True" />
+            </Node>
+          </Node>
           <Node name="iOS" expanded="True">
             <Node name="Tasks" expanded="True">
+              <Node name="About" expanded="True" />
+              <Node name="Connect" expanded="True" />
               <Node name="News" expanded="True" />
               <Node name="Notes" expanded="True" />
             </Node>
-            <Node name="ContainerViewController.cs" selected="True" />
           </Node>
           <Node name="Rock.Mobile" expanded="True">
             <Node name="PlatformSpecific" expanded="True">
@@ -25,9 +38,6 @@
             </Node>
           </Node>
         </State>
-      </Pad>
-      <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>

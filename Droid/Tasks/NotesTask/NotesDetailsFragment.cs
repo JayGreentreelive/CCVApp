@@ -432,7 +432,7 @@ namespace Droid
                     ParentTask.NavbarFragment.NavToolbar.SetBackButtonEnabled( true );
                     ParentTask.NavbarFragment.NavToolbar.SetShareButtonEnabled( false, null );
                     ParentTask.NavbarFragment.NavToolbar.SetCreateButtonEnabled( false, null );
-                    ParentTask.NavbarFragment.NavToolbar.RevealForTime( 3.0f );
+                    ParentTask.NavbarFragment.NavToolbar.Reveal( false );
 
                     // log the series they tapped on.
                     MessageAnalytic.Instance.Trigger( MessageAnalytic.BrowseSeries, Series.Name );

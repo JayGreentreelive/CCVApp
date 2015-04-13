@@ -46,6 +46,8 @@ namespace Droid
                     view.SetOnTouchListener( this );
 
                     WebView = view.FindViewById<WebView>( Resource.Id.WebView );
+
+
                     return view;
                 }
 
@@ -71,7 +73,7 @@ namespace Droid
                     ParentTask.NavbarFragment.NavToolbar.SetBackButtonEnabled( true );
                     ParentTask.NavbarFragment.NavToolbar.SetCreateButtonEnabled( false, null );
                     ParentTask.NavbarFragment.NavToolbar.SetShareButtonEnabled( false, null );
-                    ParentTask.NavbarFragment.NavToolbar.RevealForTime( 3.0f );
+                    ParentTask.NavbarFragment.NavToolbar.Reveal( false );
 
                     IsActive = true;
 

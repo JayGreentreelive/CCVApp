@@ -32,8 +32,6 @@ namespace Droid
                 public override void OnUp( MotionEvent e )
                 {
                     base.OnUp( e );
-
-                    NavbarFragment.NavToolbar.RevealForTime( 3.00f );
                 }
 
                 public override void Activate(bool forResume)

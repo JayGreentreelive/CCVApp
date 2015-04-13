@@ -86,12 +86,7 @@ namespace Droid
                 {
                     base.OnUp( e );
 
-                    // don't toggle the nav toolbar when the main page is up. There
-                    // it should ALWAYS be visible
-                    if ( MainPage.IsVisible == false )
-                    {
-                        NavbarFragment.NavToolbar.RevealForTime( 3.00f );
-                    }
+                    // ignore Up gestures. Do not reveal the nav toolbar.
                 }
             }
         }
