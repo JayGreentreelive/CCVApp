@@ -1,55 +1,15 @@
-﻿<Properties StartupItem="Droid/Droid.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" PreferredExecutionTarget="Android.192.168.56.101:5555" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Tasks/NewsTask/NewsPrimaryFragment.cs">
+﻿<Properties StartupItem="iOS/iOS.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget.Information's iPad" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/SpringboardViewController.cs">
     <Files>
-      <File FileName="iOS/Tasks/News/NewsMainUIViewController.cs" Line="492" Column="54" />
-      <File FileName="iOS/Tasks/News/NewsTask.cs" Line="30" Column="13" />
-      <File FileName="iOS/Tasks/Prayer/PrayerMainUIViewController.cs" Line="147" Column="10" />
-      <File FileName="iOS/SpringboardViewController.cs" Line="299" Column="38" />
-      <File FileName="Droid/Tasks/NewsTask/NewsPrimaryFragment.cs" Line="493" Column="45" />
+      <File FileName="iOS/SpringboardViewController.cs" Line="246" Column="10" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="CCVApp.Shared" expanded="True">
-            <Node name="UI" expanded="True" />
-          </Node>
-          <Node name="Droid" expanded="True" selected="True">
-            <Node name="Tasks" expanded="True">
-              <Node name="NewsTask" expanded="True" />
-              <Node name="PrayerTask" expanded="True" />
-            </Node>
-          </Node>
-          <Node name="iOS" expanded="True">
-            <Node name="Tasks" expanded="True">
-              <Node name="News" expanded="True" />
-              <Node name="Notes" expanded="True" />
-              <Node name="Prayer" expanded="True" />
-            </Node>
-          </Node>
-          <Node name="Rock.Client.Models" expanded="True">
-            <Node name="CodeGenerated" expanded="True" />
-          </Node>
-          <Node name="Rock.Mobile" expanded="True">
-            <Node name="PlatformSpecific" expanded="True">
-              <Node name="iOS" expanded="True">
-                <Node name="UIScrollViewWrapper.cs" expanded="True" />
-              </Node>
-            </Node>
-          </Node>
-        </State>
-      </Pad>
-      <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches>
     <Watch file="CCVApp.Shared/Notes/Controls/Note.cs" line="533" offsetX="1058" offsetY="7980" expression="state" liveUpdate="False" />
-    <Watch file="iOS/UserManagement/ImageCropViewController.cs" line="498" offsetX="806" offsetY="7455" expression="resultTransform" liveUpdate="False" />
     <Watch file="Droid/Tasks/NotesTask/NotesDetailsFragment.cs" line="215" offsetX="1268" offsetY="3210" expression="ThumbnailPlaceholder" liveUpdate="False" />
     <Watch file="../Rock.Mobile/PlatformUI/Droid/DroidLabel.cs" line="78" offsetX="733" offsetY="1155" expression="transparentColor" liveUpdate="False" />
   </MonoDevelop.Ide.DebuggingService.PinnedWatches>

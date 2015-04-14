@@ -385,7 +385,7 @@ namespace iOS
             ProfileViewController = UserManagementStoryboard.InstantiateViewController( "ProfileViewController" ) as ProfileViewController;
             ProfileViewController.Springboard = this;
 
-            ImageCropViewController = UserManagementStoryboard.InstantiateViewController( "ImageCropViewController" ) as ImageCropViewController;
+            ImageCropViewController = new ImageCropViewController( );
             ImageCropViewController.Springboard = this;
 
             RegisterViewController = UserManagementStoryboard.InstantiateViewController( "RegisterViewController" ) as RegisterViewController;
@@ -845,17 +845,17 @@ namespace iOS
                 }
             }
 
-            modelViewController.DismissViewController( true, delegate 
-                {
-                    // if this resign is while the OOBE is running, it was the register or login finishing up, 
-                    // so wrap up the OOBE
-                    if ( IsOOBERunning == true )
+            modelViewController.DismissViewController( true, delegate
                     {
-                        CompleteOOBE( );
-                    }
-                    ModalControllerVisible = false;
+                        // if this resign is while the OOBE is running, it was the register or login finishing up, 
+                        // so wrap up the OOBE
+                        if ( IsOOBERunning == true )
+                        {
+                            CompleteOOBE( );
+                        }
+                        ModalControllerVisible = false;
 
-                } );
+                    } );
         }
 
         public void RegisterNewUser( )

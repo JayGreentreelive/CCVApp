@@ -49,23 +49,6 @@
             <point key="canvasLocation" x="-1184" y="-414"/>
         </scene>
         <!--Image Crop View Controller-->
-        <scene sceneID="477">
-            <objects>
-                <viewController storyboardIdentifier="ImageCropViewController" id="478" customClass="ImageCropViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="480"/>
-                        <viewControllerLayoutGuide type="bottom" id="481"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="479">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="482" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-752" y="-416"/>
-        </scene>
         <!--Register View Controller-->
         <scene sceneID="510">
             <objects>
@@ -144,7 +127,7 @@
         <image name="news_baptism_main.png" width="375" height="242"/>
         <image name="news_learnmore_header.png" width="414" height="180"/>
         <image name="news_learnmore_main.png" width="375" height="242"/>
-        <image name="news_startingpoint_header.png" width="1242" height="540"/>
+        <image name="news_startingpoint_header.png" width="414" height="180"/>
         <image name="news_startingpoint_main.png" width="375" height="242"/>
         <image name="spot_mask.png" width="128" height="128"/>
         <image name="news_baptism_header.png" width="414" height="180"/>
@@ -158,5 +141,14 @@
         <image name="placeholder_notes_main.png" width="750" height="422"/>
         <image name="placeholder_notes_thumb.png" width="210" height="210"/>
         <image name="note_tutorial.png" width="1242" height="2208"/>
+        <image name="oobe_ccv_logo_1gmini.png" width="102" height="38"/>
+        <image name="oobe_ccv_logo_i4.png" width="203" height="75"/>
+        <image name="oobe_ccv_logo_i5.png" width="173" height="65"/>
+        <image name="oobe_ccv_logo_i6.png" width="203" height="75"/>
+        <image name="oobe_ccv_logo_i6p.png" width="336" height="124"/>
+        <image name="oobe_splash_bg.png" width="1242" height="2208"/>
+        <image name="note_tutorial_ipad_ls.png" width="1588" height="1448"/>
+        <image name="note_tutorial_ipad_port.png" width="1536" height="1960"/>
+        <image name="groupfinder_thumb.png" width="210" height="210"/>
     </resources>
 </document>

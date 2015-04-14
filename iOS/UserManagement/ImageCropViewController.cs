@@ -92,7 +92,7 @@ namespace iOS
         UIView FullscreenBlocker { get; set; }
         CAShapeLayer FullscreenBlockerMask { get; set; }
 
-		public ImageCropViewController (IntPtr handle) : base (handle)
+		public ImageCropViewController ( )
 		{
 		}
 
@@ -117,7 +117,6 @@ namespace iOS
 
         public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations()
         {
-            // insist they stay in portait on iPhones
             return Springboard.GetSupportedInterfaceOrientations( );
         }
 
@@ -333,11 +332,6 @@ namespace iOS
         public override void ViewWillAppear(bool animated)
         {
             base.ViewWillAppear(animated);
-        }
-
-        public override void ViewDidLayoutSubviews()
-        {
-            base.ViewDidLayoutSubviews();
 
             View.Frame = new CGRect( 0, 0, View.Bounds.Width, View.Bounds.Height );
 

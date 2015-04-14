@@ -440,9 +440,6 @@
       <DependentUpon>AboutMainPageUIViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="UserManagement\ImageCropViewController.cs" />
-    <Compile Include="UserManagement\ImageCropViewController.designer.cs">
-      <DependentUpon>ImageCropViewController.cs</DependentUpon>
-    </Compile>
     <Compile Include="Tasks\Prayer\PrayerMainUIViewController.cs" />
     <Compile Include="Tasks\Prayer\PrayerMainUIViewController.designer.cs">
       <DependentUpon>PrayerMainUIViewController.cs</DependentUpon>
