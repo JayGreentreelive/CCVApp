@@ -242,18 +242,15 @@ namespace iOS
             ScrollView.AddSubview( HomeCampusButton );
             HomeCampusButton.TouchUpInside += (object sender, EventArgs e ) =>
                 {
-                    UIAlertController actionSheet = null;
-                    if ( UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Phone )
+                    UIAlertController actionSheet = UIAlertController.Create( ProfileStrings.SelectCampus_SourceTitle, 
+                                                                              ProfileStrings.SelectCampus_SourceDescription, 
+                                                                              UIAlertControllerStyle.ActionSheet );
+
+                    // if the device is a tablet, anchor the menu
+                    if( UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad )
                     {
-                        actionSheet = UIAlertController.Create( ProfileStrings.SelectCampus_SourceTitle, 
-                            ProfileStrings.SelectCampus_SourceDescription, 
-                            UIAlertControllerStyle.ActionSheet );
-                    }
-                    else
-                    {
-                        actionSheet = UIAlertController.Create( ProfileStrings.SelectCampus_SourceTitle, 
-                            ProfileStrings.SelectCampus_SourceDescription, 
-                            UIAlertControllerStyle.Alert );
+                        actionSheet.PopoverPresentationController.SourceView = HomeCampusButton;
+                        actionSheet.PopoverPresentationController.SourceRect = HomeCampusButton.Bounds;
                     }
 
                     // for each campus, create an entry in the action sheet, and its callback will assign

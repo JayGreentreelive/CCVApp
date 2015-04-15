@@ -477,19 +477,15 @@ namespace iOS
             ScrollView.AddSubview( CampusSelectionButton );
             CampusSelectionButton.TouchUpInside += (object sender, EventArgs e ) =>
             {
-                    // use an appropriate select menu based on the device type.
-                    UIAlertController actionSheet = null;
-                    if( UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Phone )
+                    UIAlertController actionSheet = UIAlertController.Create( SpringboardStrings.SelectCampus_SourceTitle, 
+                                                                                  SpringboardStrings.SelectCampus_SourceDescription, 
+                                                                                  UIAlertControllerStyle.ActionSheet );
+
+                    // if the device is a tablet, anchor the menu
+                    if( UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad )
                     {
-                        actionSheet = UIAlertController.Create( SpringboardStrings.SelectCampus_SourceTitle, 
-                                                                SpringboardStrings.SelectCampus_SourceDescription, 
-                                                                UIAlertControllerStyle.ActionSheet );
-                    }
-                    else
-                    {
-                        actionSheet = UIAlertController.Create( SpringboardStrings.SelectCampus_SourceTitle, 
-                                                                SpringboardStrings.SelectCampus_SourceDescription, 
-                                                                UIAlertControllerStyle.Alert );
+                        actionSheet.PopoverPresentationController.SourceView = CampusSelectionButton;
+                        actionSheet.PopoverPresentationController.SourceRect = CampusSelectionButton.Bounds;
                     }
 
                     // for each campus, create an entry in the action sheet, and its callback will assign
@@ -506,6 +502,8 @@ namespace iOS
 
                         actionSheet.AddAction( campusAction );
                     }
+
+
 
                     PresentViewController( actionSheet, true, null );
             };
@@ -720,18 +718,15 @@ namespace iOS
 
         void ManageProfilePic( )
         {
-            UIAlertController actionSheet = null;
-            if ( UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Phone )
+            UIAlertController actionSheet = UIAlertController.Create( SpringboardStrings.ProfilePicture_SourceTitle, 
+                                                                      SpringboardStrings.ProfilePicture_SourceDescription, 
+                                                                      UIAlertControllerStyle.ActionSheet );
+
+            // if the device is a tablet, anchor the menu
+            if( UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad )
             {
-                actionSheet = UIAlertController.Create( SpringboardStrings.ProfilePicture_SourceTitle, 
-                    SpringboardStrings.ProfilePicture_SourceDescription, 
-                    UIAlertControllerStyle.ActionSheet );
-            }
-            else
-            {
-                actionSheet = UIAlertController.Create( SpringboardStrings.ProfilePicture_SourceTitle, 
-                    SpringboardStrings.ProfilePicture_SourceDescription, 
-                    UIAlertControllerStyle.Alert );
+                actionSheet.PopoverPresentationController.SourceView = EditPictureButton;
+                actionSheet.PopoverPresentationController.SourceRect = EditPictureButton.Bounds;
             }
 
             // setup the camera

@@ -7,6 +7,7 @@ Both
 	Display an error result screen if Message Series fail to download.
 	Display an error result screen if web-based pages fail to load.
 	News is now sorted according to priority
+	Tons of UI bug fixes and polish.
 
 iOS
 	Fixed a crash on iPhone when tapping the 'Share' button in Notes.
