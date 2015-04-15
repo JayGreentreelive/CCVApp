@@ -15,33 +15,21 @@ namespace Droid
             {
                 NewsPrimaryFragment MainPage { get; set; }
                 NewsDetailsFragment DetailsPage { get; set; }
-                NewsWebFragment WebPage { get; set; }
+                TaskWebFragment WebFragment { get; set; }
 
                 List<RockNews> News { get; set; }
 
                 public NewsTask( NavbarFragment navFragment ) : base( navFragment )
                 {
                     // create our fragments (which are basically equivalent to iOS ViewControllers)
-                    MainPage = (NewsPrimaryFragment) NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.News.NewsPrimaryFragment" );
-                    if( MainPage == null )
-                    {
-                        MainPage = new NewsPrimaryFragment( );
-                    }
+                    MainPage = new NewsPrimaryFragment( );
                     MainPage.ParentTask = this;
 
-                    DetailsPage = (NewsDetailsFragment) NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.News.NewsDetailsFragment" );
-                    if( DetailsPage == null )
-                    {
-                        DetailsPage = new NewsDetailsFragment( );
-                    }
+                    DetailsPage = new NewsDetailsFragment( );
                     DetailsPage.ParentTask = this;
 
-                    WebPage = (NewsWebFragment)NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.News.NewsWebFragment" );
-                    if ( WebPage == null )
-                    {
-                        WebPage = new NewsWebFragment( );
-                    }
-                    WebPage.ParentTask = this;
+                    WebFragment = new TaskWebFragment( );
+                    WebFragment.ParentTask = this;
 
                     // setup a list we can use to cache the news, so should it update we don't use the wrong set.
                     News = new List<RockNews>();
@@ -124,8 +112,8 @@ namespace Droid
                             // otherwise visit the reference URL
                             if ( buttonId == Resource.Id.news_details_launch_url )
                             {
-                                WebPage.DisplayUrl( DetailsPage.NewsItem.ReferenceURL );
-                                PresentFragment( WebPage, true );
+                                WebFragment.DisplayUrl( DetailsPage.NewsItem.ReferenceURL );
+                                PresentFragment( WebFragment, true );
                             }
                         }
                     }

@@ -201,15 +201,6 @@ namespace iOS
                 };
 
             ResultView = new UIResultView( ScrollView, View.Frame.ToRectF( ), OnResultViewDone );
-
-            ResultView.SetStyle( ControlStylingConfig.Medium_Font_Light, 
-                ControlStylingConfig.Icon_Font_Secondary, 
-                ControlStylingConfig.BackgroundColor,
-                ControlStylingConfig.BG_Layer_Color, 
-                ControlStylingConfig.BG_Layer_BorderColor, 
-                ControlStylingConfig.TextField_PlaceholderTextColor,
-                ControlStylingConfig.Button_BGColor, 
-                ControlStylingConfig.Button_TextColor );
         }
 
         public override void ViewDidLayoutSubviews()

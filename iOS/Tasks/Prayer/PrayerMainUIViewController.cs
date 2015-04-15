@@ -303,7 +303,7 @@ namespace iOS
                     // now disable the button so they can't spam it
                     Task.NavToolbar.SetCreateButtonEnabled( false );
 
-                    Prayer_CreateUIViewController viewController = Storyboard.InstantiateViewController( "Prayer_CreateUIViewController" ) as Prayer_CreateUIViewController;
+                    Prayer_CreateUIViewController viewController = new Prayer_CreateUIViewController( );
                     Task.PerformSegue( this, viewController );
                 }
             );

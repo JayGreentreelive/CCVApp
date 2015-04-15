@@ -97,19 +97,17 @@
     <Compile Include="Tasks\NotesTask\NotesPrimaryFragment.cs" />
     <Compile Include="Tasks\NotesTask\NotesDetailsFragment.cs" />
     <Compile Include="Tasks\NotesTask\NotesTask.cs" />
-    <Compile Include="Tasks\NotesTask\NotesWebViewFragment.cs" />
     <Compile Include="Tasks\NotesTask\NotesWatchFragment.cs" />
     <Compile Include="ControlStyling.cs" />
     <Compile Include="Tasks\ConnectTask\ConnectPrimaryFragment.cs" />
     <Compile Include="Tasks\ConnectTask\ConnectTask.cs" />
-    <Compile Include="Tasks\ConnectTask\ConnectWebFragment.cs" />
     <Compile Include="Tasks\ConnectTask\GroupFinderFragment.cs" />
     <Compile Include="Tasks\PrayerTask\PrayerPostFragment.cs" />
-    <Compile Include="Tasks\NewsTask\NewsWebFragment.cs" />
     <Compile Include="Tasks\NotesTask\NotesListenFragment.cs" />
     <Compile Include="UserManagement\RegisterFragment.cs" />
     <Compile Include="Tasks\ConnectTask\JoinGroupFragment.cs" />
     <Compile Include="UserManagement\OOBEFragment.cs" />
+    <Compile Include="Tasks\TaskWebFragment.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
@@ -151,22 +149,20 @@
     </AndroidResource>
     <AndroidResource Include="Resources\drawable\dark_cursor.axml" />
     <AndroidResource Include="Resources\drawable\light_cursor.axml" />
-    <AndroidResource Include="Resources\layout\Notes_WebView.axml" />
     <AndroidResource Include="Resources\values\themes.xml" />
     <AndroidResource Include="Resources\values-v21\themes.xml" />
     <AndroidResource Include="Resources\layout\DatePicker.axml" />
     <AndroidResource Include="Resources\layout\Connect_Primary.axml" />
-    <AndroidResource Include="Resources\layout\Connect_Web.axml" />
     <AndroidResource Include="Resources\layout\Connect_GroupFinder.axml" />
     <AndroidResource Include="Resources\layout\Splash.axml" />
     <AndroidResource Include="..\Assets\splashiphone6plus.png">
       <Link>Resources\drawable-hdpi\splash.png</Link>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\Prayer_Post.axml" />
-    <AndroidResource Include="Resources\layout\News_Web.axml" />
     <AndroidResource Include="Resources\layout\Register.axml" />
     <AndroidResource Include="Resources\layout\JoinGroup.axml" />
     <AndroidResource Include="Resources\layout\OOBEView.axml" />
+    <AndroidResource Include="Resources\layout\TaskWebView.axml" />
   </ItemGroup>
   <Import Project="..\..\Rock.Mobile\Rock.Mobile.projitems" Label="Shared" Condition="Exists('..\..\Rock.Mobile\Rock.Mobile.projitems')" />
   <Import Project="..\..\Rock\Rock.Client\Rock.Client.Models.projitems" Label="Shared" Condition="Exists('..\..\Rock\Rock.Client\Rock.Client.Models.projitems')" />

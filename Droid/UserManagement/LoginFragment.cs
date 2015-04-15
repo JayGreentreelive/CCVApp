@@ -219,17 +219,19 @@ namespace Droid
 
                         ( View as RelativeLayout ).AddView( WebLayout );
 
+                        WebLayout.ResetCookies( );
+
                         WebLayout.LoadUrl( fromUri, 
-                            delegate( string url )
+                            delegate( bool result )
                             {
                                 // either way, wait for a facebook response
-                                if ( RockMobileUser.Instance.HasFacebookResponse( url, Session ) )
+                                if ( RockMobileUser.Instance.HasFacebookResponse( fromUri, Session ) )
                                 {
                                     BindingFacebook = false;
 
                                     SetUIState( LoginState.Trying );
                                     ( View as RelativeLayout ).RemoveView( WebLayout );
-                                    RockMobileUser.Instance.FacebookCredentialResult( url, Session, BindComplete );
+                                    RockMobileUser.Instance.FacebookCredentialResult( fromUri, Session, BindComplete );
                                 }
                             } );
                         //

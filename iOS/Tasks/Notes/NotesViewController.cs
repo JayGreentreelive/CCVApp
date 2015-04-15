@@ -249,6 +249,8 @@ namespace iOS
 
                 // since we're changing orientations, hide the tutorial screen
                 AnimateTutorialScreen( false );
+
+                ResultView.SetBounds( View.Bounds.ToRectF( ) );
             }
         }
 
@@ -298,14 +300,6 @@ namespace iOS
 
             ResultView = new UIResultView( UIScrollView, View.Frame.ToRectF( ), OnResultViewDone );
 
-            ResultView.SetStyle( ControlStylingConfig.Medium_Font_Light, 
-                                 ControlStylingConfig.Icon_Font_Secondary, 
-                                 ControlStylingConfig.BackgroundColor,
-                                 ControlStylingConfig.BG_Layer_Color, 
-                                 ControlStylingConfig.BG_Layer_BorderColor, 
-                                 ControlStylingConfig.TextField_PlaceholderTextColor,
-                                 ControlStylingConfig.Button_BGColor, 
-                                 ControlStylingConfig.Button_TextColor );
             ResultView.Hide( );
 
             // setup the tutorial overlay

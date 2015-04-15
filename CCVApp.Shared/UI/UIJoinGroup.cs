@@ -168,15 +168,6 @@ namespace CCVApp.Shared.UI
             // Create our results view overlay
             ResultView = new UIResultView( masterView, View.Frame, OnResultViewDone );
 
-            ResultView.SetStyle( ControlStylingConfig.Medium_Font_Light, 
-                ControlStylingConfig.Icon_Font_Secondary, 
-                ControlStylingConfig.BackgroundColor,
-                ControlStylingConfig.BG_Layer_Color, 
-                ControlStylingConfig.BG_Layer_BorderColor, 
-                ControlStylingConfig.TextField_PlaceholderTextColor,
-                ControlStylingConfig.Button_BGColor, 
-                ControlStylingConfig.Button_TextColor );
-
             // Create our blocker view
             BlockerView = new UIBlockerView( masterView, View.Frame );
         }
@@ -230,7 +221,7 @@ namespace CCVApp.Shared.UI
             float sectionSpacing = Rock.Mobile.Graphics.Util.UnitToPx( 25 );
             float layerHeight = Rock.Mobile.Graphics.Util.UnitToPx( 44 );
             float textFieldHeight = Rock.Mobile.Graphics.Util.UnitToPx( 40 );
-            float textLeftInset = Rock.Mobile.Graphics.Util.UnitToPx( 5 );
+            float textLeftInset = Rock.Mobile.Graphics.Util.UnitToPx( 10 );
             float textTopInset = Rock.Mobile.Graphics.Util.UnitToPx( 2 );
 
             float buttonWidth = Rock.Mobile.Graphics.Util.UnitToPx( 122 );

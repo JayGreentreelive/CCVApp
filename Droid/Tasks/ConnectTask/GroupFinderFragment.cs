@@ -266,6 +266,12 @@ namespace Droid
                 View CitySeperator { get; set; }
                 View StateSeperator { get; set; }
 
+                // store the values they type in so that if they leave the page and return, we can re-populate them.
+                string StreetValue { get; set; }
+                string CityValue { get; set; }
+                string StateValue { get; set; }
+                string ZipValue { get; set; }
+
                 public bool OnEditorAction(TextView v, Android.Views.InputMethods.ImeAction actionId, KeyEvent keyEvent)
                 {
                     // don't allow searching until the map is valid (which it should be by now)
@@ -500,6 +506,17 @@ namespace Droid
 
                         GetGroups( );
                     }
+                    else
+                    {
+                        // otherwise, if there are values from a previous session, use those.
+                        if ( string.IsNullOrEmpty( Street.Text ) == false &&
+                             string.IsNullOrEmpty( City.Text ) == false &&
+                             string.IsNullOrEmpty( State.Text ) == false &&
+                             string.IsNullOrEmpty( Zip.Text ) == false )
+                        {
+                            GetGroups( );
+                        }
+                    }
                 }
 
                 public bool OnMarkerClick( Android.Gms.Maps.Model.Marker marker )
@@ -571,6 +588,12 @@ namespace Droid
                     ParentTask.NavbarFragment.NavToolbar.SetCreateButtonEnabled( false, null );
                     ParentTask.NavbarFragment.NavToolbar.SetShareButtonEnabled( false, null );
                     ParentTask.NavbarFragment.NavToolbar.Reveal( false );
+
+                    // restore saved values
+                    Street.Text = StreetValue;
+                    City.Text = CityValue;
+                    State.Text = StateValue;
+                    Zip.Text = ZipValue;
                 }
 
                 public override void OnConfigurationChanged(Android.Content.Res.Configuration newConfig)
@@ -628,6 +651,11 @@ namespace Droid
                     base.OnPause();
 
                     MapView.OnPause( );
+
+                    StreetValue = Street.Text;
+                    CityValue = City.Text;
+                    StateValue = State.Text;
+                    ZipValue = Zip.Text;
                 }
 
                 void UpdateMap( )

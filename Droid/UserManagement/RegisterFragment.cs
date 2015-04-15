@@ -94,16 +94,6 @@ namespace Droid
 
             ResultView = new UIResultView( layoutView, new System.Drawing.RectangleF( 0, 0, NavbarFragment.GetFullDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels ), OnResultViewDone );
 
-            ResultView.SetStyle( ControlStylingConfig.Medium_Font_Light, 
-                ControlStylingConfig.Icon_Font_Secondary, 
-                ControlStylingConfig.BackgroundColor,
-                ControlStylingConfig.BG_Layer_Color, 
-                ControlStylingConfig.BG_Layer_BorderColor, 
-                ControlStylingConfig.TextField_PlaceholderTextColor,
-                ControlStylingConfig.Button_BGColor, 
-                ControlStylingConfig.Button_TextColor );
-
-
             RelativeLayout navBar = view.FindViewById<RelativeLayout>( Resource.Id.navbar_relative_layout );
             navBar.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
 
@@ -121,17 +111,19 @@ namespace Droid
             borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
             PasswordText = backgroundView.FindViewById<EditText>( Resource.Id.passwordText );
+            PasswordText.InputType |= InputTypes.TextVariationPassword;
             ControlStyling.StyleTextField( PasswordText, RegisterStrings.PasswordPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             PasswordBGColor = ControlStylingConfig.BG_Layer_Color;
-            PasswordText.InputType |= InputTypes.TextVariationPassword;
+
 
             borderView = backgroundView.FindViewById<View>( Resource.Id.password_border );
             borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
             ConfirmPasswordText = backgroundView.FindViewById<EditText>( Resource.Id.confirmPasswordText );
+            ConfirmPasswordText.InputType |= InputTypes.TextVariationPassword;
             ControlStyling.StyleTextField( ConfirmPasswordText, RegisterStrings.ConfirmPasswordPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ConfirmPasswordBGColor = ControlStylingConfig.BG_Layer_Color;
-            ConfirmPasswordText.InputType |= InputTypes.TextVariationPassword;
+
 
 
             // setup the name section

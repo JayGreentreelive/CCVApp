@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="5">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7531" systemVersion="14D131" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="5">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -54,7 +54,7 @@
                                             <constraint firstAttribute="trailing" secondItem="654" secondAttribute="trailing" constant="20" id="CbF-3a-TQm"/>
                                         </constraints>
                                     </view>
-                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="667">
+                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="667">
                                         <rect key="frame" x="10" y="350" width="300" height="30"/>
                                         <state key="normal" title="Retry">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -179,183 +179,6 @@
             <point key="canvasLocation" x="923" y="125"/>
         </scene>
         <!--Prayer CreateUI View Controller-->
-        <scene sceneID="692">
-            <objects>
-                <viewController storyboardIdentifier="Prayer_CreateUIViewController" id="693" customClass="Prayer_CreateUIViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="690"/>
-                        <viewControllerLayoutGuide type="bottom" id="691"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="694">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="697" customClass="UIScrollViewWrapper">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                                <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="698">
-                                        <rect key="frame" x="-10" y="25" width="340" height="33"/>
-                                        <subviews>
-                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="699">
-                                                <rect key="frame" x="20" y="2" width="300" height="30"/>
-                                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" spellCheckingType="no" keyboardAppearance="alert"/>
-                                            </textField>
-                                        </subviews>
-                                        <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="trailing" secondItem="699" secondAttribute="trailing" constant="20" id="0xr-Lb-48q"/>
-                                            <constraint firstItem="699" firstAttribute="leading" secondItem="698" secondAttribute="leading" constant="20" id="Ak6-Wc-JJP"/>
-                                            <constraint firstAttribute="height" constant="33" id="YK3-9m-eoj"/>
-                                        </constraints>
-                                    </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="700">
-                                        <rect key="frame" x="-10" y="58" width="340" height="33"/>
-                                        <subviews>
-                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="701">
-                                                <rect key="frame" x="20" y="2" width="300" height="30"/>
-                                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" spellCheckingType="no" keyboardAppearance="alert"/>
-                                            </textField>
-                                        </subviews>
-                                        <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="33" id="GXo-FC-aHj"/>
-                                            <constraint firstAttribute="trailing" secondItem="701" secondAttribute="trailing" constant="20" id="LMR-bE-Ln0"/>
-                                            <constraint firstItem="701" firstAttribute="leading" secondItem="700" secondAttribute="leading" constant="20" id="Vsb-Pn-3xM"/>
-                                        </constraints>
-                                    </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="702">
-                                        <rect key="frame" x="-10" y="116" width="340" height="150"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Prayer Request" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="703">
-                                                <rect key="frame" x="20" y="5" width="250" height="26"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="704">
-                                                <rect key="frame" x="20" y="5" width="300" height="140"/>
-                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" keyboardAppearance="alert"/>
-                                            </textView>
-                                        </subviews>
-                                        <color key="backgroundColor" red="0.05276594215375896" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="150" id="cZc-mM-Z07"/>
-                                        </constraints>
-                                    </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="705">
-                                        <rect key="frame" x="-10" y="291" width="340" height="33"/>
-                                        <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="706">
-                                                <rect key="frame" x="20" y="2" width="300" height="30"/>
-                                                <state key="normal" title="Button">
-                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                </state>
-                                            </button>
-                                        </subviews>
-                                        <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="33" id="XBz-oZ-1MS"/>
-                                        </constraints>
-                                    </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="707">
-                                        <rect key="frame" x="-10" y="349" width="349" height="91"/>
-                                        <subviews>
-                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" fixedFrame="YES" text="Post Anonymously" lineBreakMode="tailTruncation" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="708">
-                                                <rect key="frame" x="20" y="13" width="198" height="21"/>
-                                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" fixedFrame="YES" text="Make Public" lineBreakMode="tailTruncation" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="709">
-                                                <rect key="frame" x="20" y="57" width="198" height="21"/>
-                                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <switch opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="710">
-                                                <rect key="frame" x="264" y="8" width="51" height="31"/>
-                                            </switch>
-                                            <switch opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="711">
-                                                <rect key="frame" x="264" y="52" width="51" height="31"/>
-                                            </switch>
-                                        </subviews>
-                                        <color key="backgroundColor" red="0.052765942150000002" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="91" id="Iqt-Y3-v4E"/>
-                                        </constraints>
-                                    </view>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="712">
-                                        <rect key="frame" x="10" y="465" width="300" height="30"/>
-                                        <state key="normal" title="Submit">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstItem="702" firstAttribute="leading" secondItem="700" secondAttribute="leading" id="2o2-lJ-IUP"/>
-                                    <constraint firstItem="698" firstAttribute="leading" secondItem="697" secondAttribute="leading" constant="-10" id="5Sh-7b-mp9"/>
-                                    <constraint firstItem="702" firstAttribute="top" secondItem="700" secondAttribute="bottom" constant="25" id="6EL-oH-eDD"/>
-                                    <constraint firstItem="700" firstAttribute="leading" secondItem="698" secondAttribute="leading" id="8eB-aT-Cb3"/>
-                                    <constraint firstItem="707" firstAttribute="top" secondItem="705" secondAttribute="bottom" constant="25" id="EWN-NW-SK0"/>
-                                    <constraint firstItem="698" firstAttribute="centerX" secondItem="697" secondAttribute="centerX" id="Iar-gP-h4L"/>
-                                    <constraint firstItem="702" firstAttribute="leading" secondItem="705" secondAttribute="leading" id="Lme-fz-9gU"/>
-                                    <constraint firstItem="698" firstAttribute="top" secondItem="697" secondAttribute="top" constant="25" id="NMj-IE-GmL"/>
-                                    <constraint firstItem="705" firstAttribute="trailing" secondItem="702" secondAttribute="trailing" id="U5G-OZ-mpw"/>
-                                    <constraint firstItem="712" firstAttribute="top" secondItem="707" secondAttribute="bottom" constant="25" id="UAd-LT-eWX"/>
-                                    <constraint firstItem="705" firstAttribute="top" secondItem="702" secondAttribute="bottom" constant="25" id="VUa-Co-BHK"/>
-                                    <constraint firstItem="712" firstAttribute="centerX" secondItem="705" secondAttribute="centerX" id="WTz-LZ-cfA"/>
-                                    <constraint firstItem="700" firstAttribute="top" secondItem="698" secondAttribute="bottom" id="Wx2-e2-Xyr"/>
-                                    <constraint firstItem="707" firstAttribute="leading" secondItem="705" secondAttribute="leading" id="eck-ZQ-r57"/>
-                                    <constraint firstAttribute="bottom" secondItem="712" secondAttribute="bottom" constant="73" id="iQn-aq-YCQ"/>
-                                    <constraint firstAttribute="trailing" secondItem="698" secondAttribute="trailing" constant="-10" id="oSs-Uq-8lJ"/>
-                                    <constraint firstItem="700" firstAttribute="trailing" secondItem="698" secondAttribute="trailing" id="prf-5Y-cNn"/>
-                                    <constraint firstAttribute="trailing" secondItem="707" secondAttribute="trailing" constant="-19" id="q1t-ea-YDY"/>
-                                    <constraint firstItem="702" firstAttribute="trailing" secondItem="700" secondAttribute="trailing" id="qIR-k7-1bc"/>
-                                    <constraint firstItem="712" firstAttribute="leading" secondItem="697" secondAttribute="leading" constant="10" id="ywl-8n-geb"/>
-                                </constraints>
-                            </scrollView>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstAttribute="trailing" secondItem="697" secondAttribute="trailing" id="4e8-gA-I1G"/>
-                            <constraint firstItem="697" firstAttribute="top" secondItem="694" secondAttribute="top" id="6cu-4R-pHt"/>
-                            <constraint firstItem="697" firstAttribute="leading" secondItem="694" secondAttribute="leading" id="7y6-gl-4jP"/>
-                            <constraint firstItem="697" firstAttribute="bottom" secondItem="691" secondAttribute="top" id="JXS-sa-eAJ"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <outlet property="CategoryButton" destination="706" id="name-outlet-706"/>
-                        <outlet property="CategoryLayer" destination="705" id="name-outlet-705"/>
-                        <outlet property="FirstNameBackground" destination="698" id="name-outlet-698"/>
-                        <outlet property="FirstNameText" destination="699" id="name-outlet-699"/>
-                        <outlet property="LastNameBackground" destination="700" id="name-outlet-700"/>
-                        <outlet property="LastNameText" destination="701" id="name-outlet-701"/>
-                        <outlet property="MakePublicLabel" destination="709" id="name-outlet-709"/>
-                        <outlet property="PostAnonymouslyLabel" destination="708" id="name-outlet-708"/>
-                        <outlet property="PrayerRequest" destination="704" id="name-outlet-704"/>
-                        <outlet property="PrayerRequestLayer" destination="702" id="name-outlet-702"/>
-                        <outlet property="PrayerRequestPlaceholder" destination="703" id="name-outlet-703"/>
-                        <outlet property="ScrollView" destination="697" id="name-outlet-697"/>
-                        <outlet property="SubmitButton" destination="712" id="name-outlet-712"/>
-                        <outlet property="SwitchBackground" destination="707" id="name-outlet-707"/>
-                        <outlet property="UIPublicSwitch" destination="711" id="name-outlet-711"/>
-                        <outlet property="UISwitchAnonymous" destination="710" id="name-outlet-710"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="695" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="553" y="127"/>
-        </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
@@ -363,15 +186,77 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <resources>
+        <image name="Fonts/Bevan.ttf" width="0" height="0"/>
+        <image name="Fonts/ChangaOne-Italic.ttf" width="0" height="0"/>
+        <image name="Fonts/ChangaOne-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/DroidSerif-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/DroidSerif-BoldItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/DroidSerif-Italic.ttf" width="0" height="0"/>
+        <image name="Fonts/DroidSerif.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-Black.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-BoldItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-HeavyItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-Italic.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-Light.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-LightItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/Merriweather-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/Montserrat-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/Montserrat-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-BoldItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-ExtraBold.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-ExtraBoldItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-Italic.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-Light.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-LightItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-Semibold.ttf" width="0" height="0"/>
+        <image name="Fonts/OpenSans-SemiboldItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/PassionOne-Black.ttf" width="0" height="0"/>
+        <image name="Fonts/PassionOne-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/PassionOne-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/Quicksand-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/Quicksand-Light.ttf" width="0" height="0"/>
+        <image name="Fonts/Quicksand-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoCondensed-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoCondensed-BoldItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoCondensed-Italic.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoCondensed-Light.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoCondensed-LightItalic.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoCondensed-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoSlab-Bold.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoSlab-Light.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoSlab-Regular.ttf" width="0" height="0"/>
+        <image name="Fonts/RobotoSlab-Thin.ttf" width="0" height="0"/>
+        <image name="Fonts/FontAwesome.ttf" width="0" height="0"/>
+        <image name="Fonts/Bh.ttf" width="0" height="0"/>
         <image name="ccvLogo.png" width="57" height="28"/>
         <image name="news_baptism_main.png" width="375" height="242"/>
-        <image name="news_learnmore_header.png" width="375" height="211"/>
+        <image name="news_learnmore_header.png" width="414" height="180"/>
         <image name="news_learnmore_main.png" width="375" height="242"/>
-        <image name="news_startingpoint_header.png" width="1242" height="699"/>
+        <image name="news_startingpoint_header.png" width="414" height="180"/>
         <image name="news_startingpoint_main.png" width="375" height="242"/>
-        <image name="podcastThumbnailPlaceholder.png" width="590" height="332"/>
         <image name="spot_mask.png" width="128" height="128"/>
-        <image name="news_baptism_header.png" width="320" height="180"/>
+        <image name="news_baptism_header.png" width="414" height="180"/>
         <image name="facebook_login.png" width="250" height="35"/>
+        <image name="connect_banner.jpg" width="595" height="335"/>
+        <image name="baptism_thumb.png" width="210" height="210"/>
+        <image name="foundations_thumb.png" width="210" height="210"/>
+        <image name="starting_point_thumb.png" width="210" height="210"/>
+        <image name="placeholder_news_details.png" width="1242" height="540"/>
+        <image name="placeholder_news_main.png" width="1242" height="801"/>
+        <image name="placeholder_notes_main.png" width="750" height="422"/>
+        <image name="placeholder_notes_thumb.png" width="210" height="210"/>
+        <image name="note_tutorial.png" width="1242" height="2208"/>
+        <image name="oobe_ccv_logo_1gmini.png" width="102" height="38"/>
+        <image name="oobe_ccv_logo_i4.png" width="203" height="75"/>
+        <image name="oobe_ccv_logo_i5.png" width="173" height="65"/>
+        <image name="oobe_ccv_logo_i6.png" width="203" height="75"/>
+        <image name="oobe_ccv_logo_i6p.png" width="336" height="124"/>
+        <image name="oobe_splash_bg.png" width="1242" height="2208"/>
+        <image name="note_tutorial_ipad_ls.png" width="1588" height="1448"/>
+        <image name="note_tutorial_ipad_port.png" width="1536" height="1960"/>
+        <image name="groupfinder_thumb.png" width="210" height="210"/>
     </resources>
 </document>

@@ -14,38 +14,22 @@ namespace Droid
                 ConnectPrimaryFragment MainPage { get; set; }
                 GroupFinderFragment GroupFinder { get; set; }
                 JoinGroupFragment JoinGroup { get; set; }
-                ConnectWebFragment WebPage { get; set; }
+                TaskWebFragment WebFragment { get; set; }
 
                 public ConnectTask( NavbarFragment navFragment ) : base( navFragment )
                 {
                     // create our fragments (which are basically equivalent to iOS ViewControllers)
-                    MainPage = (ConnectPrimaryFragment) NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.Connect.ConnectPrimaryFragment" );
-                    if( MainPage == null )
-                    {
-                        MainPage = new ConnectPrimaryFragment( );
-                    }
+                    MainPage = new ConnectPrimaryFragment( );
                     MainPage.ParentTask = this;
 
-                    GroupFinder = (GroupFinderFragment) NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.Connect.GroupFinderFragment" );
-                    if( GroupFinder == null )
-                    {
-                        GroupFinder = new GroupFinderFragment( );
-                    }
+                    GroupFinder = new GroupFinderFragment( );
                     GroupFinder.ParentTask = this;
 
-                    JoinGroup = (JoinGroupFragment)NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.Connect.JoinGroup" );
-                    if ( JoinGroup == null )
-                    {
-                        JoinGroup = new JoinGroupFragment( );
-                    }
+                    JoinGroup = new JoinGroupFragment( );
                     JoinGroup.ParentTask = this;
 
-                    WebPage = (ConnectWebFragment) NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.Connect.ConnectWebFragment" );
-                    if( WebPage == null )
-                    {
-                        WebPage = new ConnectWebFragment( );
-                    }
-                    WebPage.ParentTask = this;
+                    WebFragment = new TaskWebFragment( );
+                    WebFragment.ParentTask = this;
                 }
 
                 public override TaskFragment StartingFragment()
@@ -76,8 +60,8 @@ namespace Droid
                             else
                             {
                                 // launch the ConnectWebFragment.
-                                WebPage.DisplayUrl( (string)context );
-                                PresentFragment( WebPage, true );
+                                WebFragment.DisplayUrl( (string)context );
+                                PresentFragment( WebFragment, true );
                             }
                         }
                         else if ( source == GroupFinder )

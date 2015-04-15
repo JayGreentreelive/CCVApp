@@ -583,7 +583,7 @@ namespace iOS
            // 0 would be the audio button
             if ( buttonIndex == 0 )
             {
-                NotesWatchUIViewController viewController = Storyboard.InstantiateViewController( "NotesWatchUIViewController" ) as NotesWatchUIViewController;
+                NotesWatchUIViewController viewController = new NotesWatchUIViewController( );
                 viewController.MediaUrl = Series.Messages[ row ].AudioUrl;
                 viewController.ShareUrl = Series.Messages[ row ].ShareUrl;
                 viewController.Name = Series.Messages[ row ].Name;
@@ -594,7 +594,7 @@ namespace iOS
             // 1 would be the watch button
             else if ( buttonIndex == 1 )
             {
-                NotesWatchUIViewController viewController = Storyboard.InstantiateViewController( "NotesWatchUIViewController" ) as NotesWatchUIViewController;
+                NotesWatchUIViewController viewController = new NotesWatchUIViewController( );
                 viewController.MediaUrl = Series.Messages[ row ].WatchUrl;
                 viewController.ShareUrl = Series.Messages[ row ].ShareUrl;
                 viewController.Name = Series.Messages[ row ].Name;

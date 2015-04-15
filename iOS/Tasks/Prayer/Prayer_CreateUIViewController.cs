@@ -48,7 +48,29 @@ namespace iOS
 
         PickerAdjustManager PickerAdjustManager { get; set; }
 
-        public Prayer_CreateUIViewController (IntPtr handle) : base (handle)
+        UIScrollViewWrapper ScrollView { get; set; }
+
+        UIView CategoryLayer { get; set; }
+        UIButton CategoryButton { get; set; }
+
+        StyledTextField FirstName { get; set; }
+
+        StyledTextField LastName { get; set; }
+
+        UILabel MakePublicLabel { get; set; }
+        UILabel PostAnonymouslyLabel { get; set; }
+
+        UIView PrayerRequestLayer { get; set; }
+        UILabel PrayerRequestPlaceholder { get; set; }
+        UITextView PrayerRequest { get; set; }
+
+        UIView SwitchBackground { get; set; }
+        UISwitch UIPublicSwitch { get; set; }
+        UISwitch UISwitchAnonymous { get; set; }
+
+        UIButton SubmitButton { get; set; }
+
+        public Prayer_CreateUIViewController ( )
         {
             ObserverHandles = new List<NSObject>();
         }
@@ -60,23 +82,41 @@ namespace iOS
             // set the background view to black so we don't get white aliasing flicker during
             // the pan
             View.BackgroundColor = UIColor.Black;
+            View.Layer.AnchorPoint = CGPoint.Empty;
+
+
+            // scroll view
+            ScrollView = new UIScrollViewWrapper( );
+            ScrollView.Layer.AnchorPoint = CGPoint.Empty;
+            ScrollView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
+            ScrollView.Parent = this;
+            View.AddSubview( ScrollView );
 
             // create our keyboard adjustment manager, which works to make sure text fields scroll into visible
             // range when a keyboard appears
             KeyboardAdjustManager = new Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager( View, ScrollView );
 
-            // setup the default control styles
-            PrayerRequest.Editable = true;
 
-            // skin the controls
-            ScrollView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
-            ScrollView.Parent = this;
+            // setup the First Name field
+            FirstName = new StyledTextField();
+            ScrollView.AddSubview( FirstName.Background );
+            ControlStyling.StyleTextField( FirstName.Field, PrayerStrings.CreatePrayer_FirstNamePlaceholderText, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleBGLayer( FirstName.Background );
 
-            ControlStyling.StyleTextField( FirstNameText, PrayerStrings.CreatePrayer_FirstNamePlaceholderText, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
-            ControlStyling.StyleBGLayer( FirstNameBackground );
+            LastName = new StyledTextField();
+            ScrollView.AddSubview( LastName.Background );
+            ControlStyling.StyleTextField( LastName.Field, PrayerStrings.CreatePrayer_LastNamePlaceholderText, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleBGLayer( LastName.Background );
 
-            ControlStyling.StyleTextField( LastNameText, PrayerStrings.CreatePrayer_LastNamePlaceholderText, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
-            ControlStyling.StyleBGLayer( LastNameBackground );
+
+            PrayerRequestLayer = new UIView();
+            ScrollView.AddSubview( PrayerRequestLayer );
+
+            PrayerRequestPlaceholder = new UILabel();
+            PrayerRequestLayer.AddSubview( PrayerRequestPlaceholder );
+
+            PrayerRequest = new UITextView();
+            PrayerRequestLayer.AddSubview( PrayerRequest );
 
             // setup the prayer request field, which requires a fake "placeholder" text field
             PrayerRequest.Delegate = new TextViewDelegate( );
@@ -85,12 +125,63 @@ namespace iOS
             PrayerRequest.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             PrayerRequest.TextContainer.LineFragmentPadding = 0;
             PrayerRequest.BackgroundColor = UIColor.Clear;
+            PrayerRequest.Editable = true;
             PrayerRequestPlaceholder.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
             PrayerRequestPlaceholder.BackgroundColor = UIColor.Clear;
             PrayerRequestPlaceholder.Text = PrayerStrings.CreatePrayer_PrayerRequest;
             PrayerRequestPlaceholder.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             //PrayerRequestPlaceholder.SizeToFit( );
             ControlStyling.StyleBGLayer( PrayerRequestLayer );
+
+
+            // category layer
+            CategoryLayer = new UIView();
+            ScrollView.AddSubview( CategoryLayer );
+
+            CategoryButton = new UIButton();
+            CategoryLayer.AddSubview( CategoryButton );
+
+            // setup the category picker and selector button
+            UILabel categoryLabel = new UILabel( );
+            ControlStyling.StyleUILabel( categoryLabel, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            categoryLabel.Text = PrayerStrings.CreatePrayer_SelectCategoryLabel;
+
+            PickerAdjustManager = new PickerAdjustManager( View, ScrollView, categoryLabel, CategoryLayer );
+            UIPickerView pickerView = new UIPickerView();
+            pickerView.Model = new CategoryPickerModel() { Parent = this };
+            PickerAdjustManager.SetPicker( pickerView );
+
+
+            CategoryButton.TouchUpInside += (object sender, EventArgs e ) =>
+                {
+                    OnToggleCategoryPicker( true );
+                };
+            CategoryButton.SetTitle( PrayerStrings.CreatePrayer_CategoryButtonText, UIControlState.Normal );
+            CategoryButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
+            CategoryButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            CategoryButton.HorizontalAlignment = UIControlContentHorizontalAlignment.Left;
+            ControlStyling.StyleBGLayer( CategoryLayer );
+
+
+            // preference switches
+            SwitchBackground = new UIView();
+            ScrollView.AddSubview( SwitchBackground );
+            ControlStyling.StyleBGLayer( SwitchBackground );
+
+            UIPublicSwitch = new UISwitch();
+            SwitchBackground.AddSubview( UIPublicSwitch );
+
+            MakePublicLabel = new UILabel();
+            SwitchBackground.AddSubview( MakePublicLabel );
+            MakePublicLabel.TextColor = UIColor.White;
+
+
+            UISwitchAnonymous = new UISwitch();
+            SwitchBackground.AddSubview( UISwitchAnonymous );
+
+            PostAnonymouslyLabel = new UILabel();
+            SwitchBackground.AddSubview( PostAnonymouslyLabel );
+            PostAnonymouslyLabel.TextColor = UIColor.White;
 
 
             // Setup the anonymous switch
@@ -101,19 +192,19 @@ namespace iOS
                 {
                     if( UISwitchAnonymous.On == true )
                     {
-                        FirstNameText.Enabled = false;
-                        FirstNameText.Text = string.Empty;
+                        FirstName.Field.Enabled = false;
+                        FirstName.Field.Text = string.Empty;
 
-                        LastNameText.Enabled = false;
-                        LastNameText.Text = string.Empty;
+                        LastName.Field.Enabled = false;
+                        LastName.Field.Text = string.Empty;
                     }
                     else
                     {
-                        FirstNameText.Enabled = true;
-                        FirstNameText.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
+                        FirstName.Field.Enabled = true;
+                        FirstName.Field.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
 
-                        LastNameText.Enabled = true;
-                        LastNameText.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
+                        LastName.Field.Enabled = true;
+                        LastName.Field.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
                     }
                 };
 
@@ -122,8 +213,13 @@ namespace iOS
             MakePublicLabel.Text = PrayerStrings.CreatePrayer_MakePublic;
             UIPublicSwitch.OnTintColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Switch_OnColor );
 
-            ControlStyling.StyleBGLayer( SwitchBackground );
 
+            // setup the submit button
+            SubmitButton = UIButton.FromType( UIButtonType.Custom );
+            ScrollView.AddSubview( SubmitButton );
+            ControlStyling.StyleButton( SubmitButton, PrayerStrings.CreatePrayer_SubmitButtonText, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            SubmitButton.SizeToFit( );
+            SubmitButton.TouchUpInside += SubmitPrayerRequest;
 
 
             // monitor for text field being edited, and keyboard show/hide notitications
@@ -138,32 +234,6 @@ namespace iOS
 
             handle = NSNotificationCenter.DefaultCenter.AddObserver (UIKeyboard.WillShowNotification, KeyboardAdjustManager.OnKeyboardNotification);
             ObserverHandles.Add( handle );
-
-
-            // setup the category picker and selector button
-            UILabel categoryLabel = new UILabel( );
-            ControlStyling.StyleUILabel( categoryLabel, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
-            categoryLabel.Text = PrayerStrings.CreatePrayer_SelectCategoryLabel;
-
-            PickerAdjustManager = new PickerAdjustManager( View, ScrollView, categoryLabel, CategoryLayer );
-            UIPickerView pickerView = new UIPickerView();
-            pickerView.Model = new CategoryPickerModel() { Parent = this };
-            PickerAdjustManager.SetPicker( pickerView );
-
-
-            CategoryButton.TouchUpInside += (object sender, EventArgs e ) =>
-            {
-                OnToggleCategoryPicker( true );
-            };
-            CategoryButton.SetTitle( PrayerStrings.CreatePrayer_CategoryButtonText, UIControlState.Normal );
-            CategoryButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
-            CategoryButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
-            ControlStyling.StyleBGLayer( CategoryLayer );
-
-
-            // setup the submit button
-            ControlStyling.StyleButton( SubmitButton, PrayerStrings.CreatePrayer_SubmitButtonText, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-            SubmitButton.TouchUpInside += SubmitPrayerRequest;
         }
 
         /// <summary>
@@ -172,7 +242,7 @@ namespace iOS
         void SubmitPrayerRequest(object sender, EventArgs e)
         {
             // ensure they either put a first name or enabled anonymous, and ensure there's a prayer request
-            if ( ( (string.IsNullOrEmpty( FirstNameText.Text ) == false && string.IsNullOrEmpty( LastNameText.Text ) == false) || UISwitchAnonymous.On == true ) &&
+            if ( ( (string.IsNullOrEmpty( FirstName.Field.Text ) == false && string.IsNullOrEmpty( LastName.Field.Text ) == false) || UISwitchAnonymous.On == true ) &&
                     string.IsNullOrEmpty( PrayerRequest.Text ) == false )
             {
                 Rock.Client.PrayerRequest prayerRequest = new Rock.Client.PrayerRequest();
@@ -186,8 +256,8 @@ namespace iOS
                 }
                 else
                 {
-                    prayerRequest.FirstName = FirstNameText.Text;
-                    prayerRequest.LastName = LastNameText.Text;
+                    prayerRequest.FirstName = FirstName.Field.Text;
+                    prayerRequest.LastName = LastName.Field.Text;
                 }
 
                 prayerRequest.Text = PrayerRequest.Text;
@@ -209,21 +279,21 @@ namespace iOS
                 // Update the first name background color
                 // if they left the name field blank and didn't turn on Anonymous, flag the field.
                 uint targetNameColor = ControlStylingConfig.BG_Layer_Color; 
-                if( string.IsNullOrEmpty( FirstNameText.Text ) && UISwitchAnonymous.On == false )
+                if( string.IsNullOrEmpty( FirstName.Field.Text ) && UISwitchAnonymous.On == false )
                 {
                     targetNameColor = ControlStylingConfig.BadInput_BG_Layer_Color;
                 }
-                Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetNameColor, FirstNameBackground );
+                Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetNameColor, FirstName.Background );
 
 
                 // Update the LAST name background color
                 // if they left the name field blank and didn't turn on Anonymous, flag the field.
                 uint targetLastNameColor = ControlStylingConfig.BG_Layer_Color; 
-                if( string.IsNullOrEmpty( LastNameText.Text ) && UISwitchAnonymous.On == false )
+                if( string.IsNullOrEmpty( LastName.Field.Text ) && UISwitchAnonymous.On == false )
                 {
                     targetLastNameColor = ControlStylingConfig.BadInput_BG_Layer_Color;
                 }
-                Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetLastNameColor, LastNameBackground );
+                Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetLastNameColor, LastName.Background );
 
 
                 // Update the prayer background color
@@ -251,8 +321,8 @@ namespace iOS
 
                 // force the keyboard to hide.
                 PrayerRequest.ResignFirstResponder( );
-                FirstNameText.ResignFirstResponder( );
-                LastNameText.ResignFirstResponder( );
+                FirstName.Field.ResignFirstResponder( );
+                LastName.Field.ResignFirstResponder( );
 
                 // default to the first choice
                 PickerSelected( 0 );
@@ -361,18 +431,9 @@ namespace iOS
             // prepopulate the name fields if we have them
             if ( RockMobileUser.Instance.LoggedIn == true )
             {
-                FirstNameText.Text = RockMobileUser.Instance.Person.NickName;
-                LastNameText.Text = RockMobileUser.Instance.Person.LastName;
+                FirstName.Field.Text = RockMobileUser.Instance.Person.NickName;
+                LastName.Field.Text = RockMobileUser.Instance.Person.LastName;
             }
-        }
-
-        public override void ViewDidLayoutSubviews()
-        {
-            base.ViewDidLayoutSubviews();
-
-            // once all the controls are laid out, update the content size to provide a little "bounce"
-            nfloat controlBottom = SubmitButton.Frame.Bottom + ( View.Bounds.Height * .25f );
-            ScrollView.ContentSize = new CGSize( 0, (nfloat) Math.Max( controlBottom, View.Bounds.Height * 1.05f ) );
         }
 
         public override void LayoutChanged( )
@@ -381,12 +442,39 @@ namespace iOS
 
             PickerAdjustManager.LayoutChanged( );
             PickerAdjustManager.TogglePicker( false, false );
+
+            ScrollView.Frame = View.Frame;
+
+            FirstName.SetFrame( new CGRect( -10, 25, View.Bounds.Width + 20, 33 ) );
+            LastName.SetFrame( new CGRect( -10, FirstName.Background.Frame.Bottom, View.Bounds.Width + 20, 33 ) );
+
+            PrayerRequestLayer.Frame = new CGRect( -10, LastName.Background.Frame.Bottom + 20, View.Bounds.Width + 20, 200 );
+            PrayerRequestPlaceholder.Frame = new CGRect( 20, 0, View.Bounds.Width - 20, 33 );
+            PrayerRequest.Frame = new CGRect( 20, 3, View.Bounds.Width - 20, 200 );
+
+
+            CategoryLayer.Frame = new CGRect( -10, PrayerRequestLayer.Frame.Bottom + 20, View.Bounds.Width + 20, 40 );
+            CategoryButton.Frame = new CGRect( 20, 0, View.Bounds.Width - 20, 40 );
+
+
+            SwitchBackground.Frame = new CGRect( -10, CategoryLayer.Frame.Bottom + 20, View.Bounds.Width + 20, 88 );
+            PostAnonymouslyLabel.Frame = new CGRect( 20, 6, View.Bounds.Width + 20, 33 );
+            UISwitchAnonymous.Frame = new CGRect( (View.Bounds.Width / 2) - 10 - UISwitchAnonymous.Bounds.Width, 6, UISwitchAnonymous.Bounds.Width, UISwitchAnonymous.Bounds.Height );
+
+            MakePublicLabel.Frame = new CGRect( 20, PostAnonymouslyLabel.Frame.Bottom + 10, View.Bounds.Width + 10, 33 );
+            UIPublicSwitch.Frame = new CGRect( (View.Bounds.Width / 2) - 10 - UIPublicSwitch.Bounds.Width, PostAnonymouslyLabel.Frame.Bottom + 10, UIPublicSwitch.Bounds.Width, UIPublicSwitch.Bounds.Height );
+
+            SubmitButton.Frame = new CGRect( 20, SwitchBackground.Frame.Bottom + 20, View.Bounds.Width - 40, SubmitButton.Bounds.Height );
+
+            // once all the controls are laid out, update the content size to provide a little "bounce"
+            nfloat controlBottom = SubmitButton.Frame.Bottom + ( View.Bounds.Height * .25f );
+            ScrollView.ContentSize = new CGSize( 0, (nfloat) Math.Max( controlBottom, View.Bounds.Height * 1.05f ) );
         }
 
         void EnableControls( bool enabled )
         {
-            FirstNameText.Enabled = enabled;
-            LastNameText.Enabled = enabled;
+            FirstName.Field.Enabled = enabled;
+            LastName.Field.Enabled = enabled;
 
             PrayerRequest.Editable = enabled;
 
@@ -406,8 +494,8 @@ namespace iOS
                 base.TouchesEnded( touches, evt );
 
                 // ensure that tapping anywhere outside a text field will hide the keyboard
-                FirstNameText.ResignFirstResponder( );
-                LastNameText.ResignFirstResponder( );
+                FirstName.Field.ResignFirstResponder( );
+                LastName.Field.ResignFirstResponder( );
                 PrayerRequest.ResignFirstResponder( );
             }
         }

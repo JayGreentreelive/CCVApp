@@ -233,6 +233,12 @@ namespace CCVApp
                             {
                                 Console.WriteLine( "Got news from Rock." );
 
+                                // sort it by priority
+                                model.Sort( delegate(Rock.Client.ContentChannelItem x, Rock.Client.ContentChannelItem y )
+                                    {
+                                        return x.Priority > y.Priority ? -1 : 1;
+                                    } );
+
                                 // setup the new rock news
                                 Data.News.Clear( );
                                 foreach( Rock.Client.ContentChannelItem item in model )

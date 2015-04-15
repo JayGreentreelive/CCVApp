@@ -3,6 +3,10 @@ using System;
 using System.CodeDom.Compiler;
 using UIKit;
 using CoreGraphics;
+using CCVApp.Shared.UI;
+using CCVApp.Shared.Strings;
+using CCVApp.Shared.Config;
+using Rock.Mobile.PlatformSpecific.Util;
 
 namespace iOS
 {
@@ -136,7 +140,11 @@ namespace iOS
 
         UIWebView WebView { get; set; }
 
+        UIResultView ResultView { get; set; }
+
         WebScrollDelegate WebScrollDelegateOverride { get; set; }
+
+        UIActivityIndicatorView ActivityIndicator { get; set; }
 
         public TaskWebViewController ( string displayUrl, Task parentTask ) : base ( )
 		{
@@ -148,10 +156,49 @@ namespace iOS
         {
             base.ViewDidLoad();
 
+            View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
+
+            // setup our web view
             WebView = new UIWebView( );
             WebView.Layer.AnchorPoint = CGPoint.Empty;
+            WebView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
+            WebView.Hidden = true;
             View.AddSubview( WebView );
+
+            // add an activity indicator
+            ActivityIndicator = new UIActivityIndicatorView();
+            ActivityIndicator.Layer.AnchorPoint = CGPoint.Empty;
+            ActivityIndicator.ActivityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge;
+            ActivityIndicator.StartAnimating( );
+            View.AddSubview( ActivityIndicator );
+
+            // setup a result view in the case of failure
+            ResultView = new UIResultView( View, View.Bounds.ToRectF( ), 
+                delegate 
+                { 
+                    ResultView.Hide( );
+                    ActivityIndicator.Hidden = false;
+                    WebView.LoadRequest( new NSUrlRequest( new NSUrl( DisplayUrl ) ) ); 
+                } );
+            
+
+            // kick off our initial request
+            ActivityIndicator.Hidden = false;
             WebView.LoadRequest( new NSUrlRequest( new NSUrl( DisplayUrl ) ) );
+
+            // if it fails, display the result view
+            WebView.LoadError += (object sender, UIWebErrorArgs e ) =>
+            {
+                ResultView.Show( GeneralStrings.Network_Status_FailedText, ControlStylingConfig.Result_Symbol_Failed, GeneralStrings.Network_Result_FailedText, GeneralStrings.Retry );
+                ActivityIndicator.Hidden = true;
+            };
+
+            // if it succeeds, reveal the webView
+            WebView.LoadFinished += (object sender, EventArgs e ) =>
+            {
+                WebView.Hidden = false;
+                ActivityIndicator.Hidden = true;
+            };
 
             // not 100% sure that this is safe. If WebView sets the scrollView delegate and doesn't back ours up
             // (which it SHOULD) we won't get our calls
@@ -171,6 +218,13 @@ namespace iOS
             base.LayoutChanged();
 
             WebView.Bounds = View.Bounds;
+
+            ResultView.SetBounds( WebView.Bounds.ToRectF( ) );
+
+            ActivityIndicator.Frame = new CGRect( ( View.Bounds.Width - ActivityIndicator.Bounds.Width ) / 2, 
+                                                  ( View.Bounds.Height - ActivityIndicator.Bounds.Height ) / 2,
+                                                  ActivityIndicator.Bounds.Width, 
+                                                  ActivityIndicator.Bounds.Height );
         }
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using Rock.Mobile.PlatformUI;
 using System.Drawing;
+using CCVApp.Shared.Config;
 
 namespace CCVApp.Shared.UI
 {
@@ -59,12 +60,27 @@ namespace CCVApp.Shared.UI
             DoneButton.AddAsSubview( parentView );
             DoneButton.ClickEvent = ( PlatformButton button ) =>
             {
-                onClick( );
+                if( onClick != null )
+                {
+                    onClick( );
+                }
             };
 
 
             // default the view size and opacity
             SetOpacity( 0.00f );
+
+            SetBounds( frame );
+
+            // give it a default style
+            SetStyle( ControlStylingConfig.Medium_Font_Light, 
+                ControlStylingConfig.Icon_Font_Secondary, 
+                ControlStylingConfig.BackgroundColor,
+                ControlStylingConfig.BG_Layer_Color, 
+                ControlStylingConfig.BG_Layer_BorderColor, 
+                ControlStylingConfig.TextField_PlaceholderTextColor,
+                ControlStylingConfig.Button_BGColor, 
+                ControlStylingConfig.Button_TextColor );
         }
 
         void SetOpacity( float opacity )

@@ -24,6 +24,7 @@ using System.IO;
 using CCVApp.Shared;
 using Rock.Mobile.PlatformUI.DroidNative;
 using System.Threading;
+using CCVApp.Shared.UI;
 
 namespace Droid
 {
@@ -478,6 +479,8 @@ namespace Droid
 
                 bool FragmentActive { get; set; }
 
+                UIResultView ResultView { get; set; }
+
                 public NotesPrimaryFragment( ) : base( )
                 {
                     SeriesEntries = new List<SeriesEntry>();
@@ -518,7 +521,18 @@ namespace Droid
                         };
                     ListView.SetOnTouchListener( this );
 
+                    ResultView = new UIResultView( view, new System.Drawing.RectangleF( 0, 0, NavbarFragment.GetContainerDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels ), delegate { TrySetupSeries( ); } );
+
+                    ResultView.Hide( );
+
                     return view;
+                }
+
+                public override void OnConfigurationChanged(Android.Content.Res.Configuration newConfig)
+                {
+                    base.OnConfigurationChanged(newConfig);
+
+                    ResultView.SetBounds( new System.Drawing.RectangleF( 0, 0, NavbarFragment.GetContainerDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels ) );
                 }
 
                 public void WatchButtonClicked( )
@@ -548,6 +562,13 @@ namespace Droid
                     ParentTask.NavbarFragment.NavToolbar.SetShareButtonEnabled( false, null );
                     ParentTask.NavbarFragment.NavToolbar.SetCreateButtonEnabled( false, null );
                     ParentTask.NavbarFragment.NavToolbar.Reveal( false );
+
+                    TrySetupSeries( );
+                }
+
+                void TrySetupSeries( )
+                {
+                    ResultView.Hide( );
 
                     // what's the state of the series xml?
                     if ( RockLaunchData.Instance.RequestingNoteDB == true )
@@ -611,7 +632,10 @@ namespace Droid
                                 if ( FragmentActive == true )
                                 {
                                     // error
-                                    Springboard.DisplayError( MessagesStrings.Error_Title, MessagesStrings.Error_Message );
+                                    ResultView.Show( MessagesStrings.Series_Error_Title, 
+                                        ControlStylingConfig.Result_Symbol_Failed, 
+                                        MessagesStrings.Series_Error_Message, 
+                                        GeneralStrings.Retry );
                                 }
                             }
                         } );

@@ -267,14 +267,6 @@ namespace Droid
 
                     ResultView = new UIResultView( layout, new System.Drawing.RectangleF( 0, 0, NavbarFragment.GetContainerDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels ), OnResultViewDone );
 
-                    ResultView.SetStyle( ControlStylingConfig.Medium_Font_Light, 
-                        ControlStylingConfig.Icon_Font_Secondary, 
-                        ControlStylingConfig.BackgroundColor,
-                        ControlStylingConfig.BG_Layer_Color, 
-                        ControlStylingConfig.BG_Layer_BorderColor, 
-                        ControlStylingConfig.TextField_PlaceholderTextColor,
-                        ControlStylingConfig.Button_BGColor, 
-                        ControlStylingConfig.Button_TextColor );
                     ResultView.Hide( );
 
                     // setup the tutorial overlay

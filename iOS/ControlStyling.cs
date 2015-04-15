@@ -71,7 +71,7 @@ namespace iOS
         public void SetFrame( CGRect frame )
         {
             Background.Frame = frame;
-            Field.Frame = new CGRect( 12, 2, Background.Frame.Width - 24, frame.Height * .90f );
+            Field.Frame = new CGRect( 20, 2, Background.Frame.Width - 40, frame.Height * .90f );
         }
     }
 }

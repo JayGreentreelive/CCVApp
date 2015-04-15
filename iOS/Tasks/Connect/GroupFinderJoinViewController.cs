@@ -52,10 +52,11 @@ namespace iOS
         {
             base.ViewWillAppear(animated);
 
+            // setup the values
+            JoinGroupView.DisplayView( GroupTitle, Distance, MeetingTime, GroupID );
+
             // force the cell phone field to update itself so it contains proper formatting
             CellPhoneTextField.Delegate.ShouldChangeCharacters( CellPhoneTextField, new NSRange( CellPhoneTextField.Text.Length, 0 ), "" );
-
-            JoinGroupView.DisplayView( GroupTitle, Distance, MeetingTime, GroupID );
         }
 
         public override void LayoutChanged( )

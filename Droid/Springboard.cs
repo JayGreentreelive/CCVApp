@@ -279,7 +279,6 @@ namespace Droid
                     // so let the news manager update the news items and download
                     // whatever it needs.
                     PerformTaskAction( "News.Reload" );
-
                     PerformTaskAction( "Notes.DownloadImages" );
                 });
         }
@@ -463,9 +462,7 @@ namespace Droid
                                     RockMobileUser.Instance.ViewingCampus = RockGeneralData.Instance.Data.CampusNameToId( campusTitle );
 
                                     // build a label showing what they picked
-                                    CampusText.Text = string.Format( SpringboardStrings.Viewing_Campus, campusTitle );
-
-                                    PerformTaskAction( "News.Reload" );
+                                    RefreshCampusSelection( );
                                 });
                         });
 
@@ -496,6 +493,20 @@ namespace Droid
             Billboard.Hide( );
 
             return view;
+        }
+
+        void RefreshCampusSelection( )
+        {
+            string newCampusText = string.Format( SpringboardStrings.Viewing_Campus, 
+                RockGeneralData.Instance.Data.CampusIdToName( RockMobileUser.Instance.ViewingCampus ) );
+
+            if ( CampusText.Text != newCampusText )
+            {
+                CampusText.Text = newCampusText;
+
+                // let the news know it should reload
+                PerformTaskAction( "News.Reload" );
+            }
         }
 
         public void RevealButtonClicked( )
@@ -633,6 +644,8 @@ namespace Droid
                 if ( LoginFragment == VisibleModalFragment || ProfileFragment == VisibleModalFragment )
                 {
                     UpdateLoginState( );
+
+                    RefreshCampusSelection( );
                 }
                 // for the image cropper, store the picture
                 else if ( ImageCropFragment == VisibleModalFragment )
@@ -809,8 +822,7 @@ namespace Droid
             }
 
             // refresh the viewing campus
-            CampusText.Text = string.Format( SpringboardStrings.Viewing_Campus, 
-                RockGeneralData.Instance.Data.CampusIdToName( RockMobileUser.Instance.ViewingCampus ) );
+            RefreshCampusSelection( );
 
             UpdateLoginState( );
 
@@ -964,7 +976,7 @@ namespace Droid
                 ViewProfileLabel.Text = SpringboardStrings.ViewProfile;
 
                 // refresh the viewing campus
-                CampusText.Text = string.Format( SpringboardStrings.Viewing_Campus, RockGeneralData.Instance.Data.CampusIdToName( RockMobileUser.Instance.ViewingCampus ) );
+                RefreshCampusSelection( );
             }
             else
             {

@@ -77,7 +77,7 @@ namespace Droid
                 // if back was requested, put it in our stack
                 if( allowBack )
                 {
-                    ft.AddToBackStack( fragment.ToString() );
+                    ft.AddToBackStack( fragment.ToString( ) );
                 }
 
                 // do the transaction

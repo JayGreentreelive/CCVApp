@@ -29,7 +29,7 @@ namespace iOS
         bool EnteringFullscreen { get; set; }
         bool ExitingFullscreen { get; set; }
 
-		public NotesWatchUIViewController (IntPtr handle) : base (handle)
+		public NotesWatchUIViewController ( )
 		{
             ObserverHandles = new List<NSObject>( );
 		}
@@ -153,13 +153,20 @@ namespace iOS
             ActivityIndicator.Layer.Position = new CGPoint( ( View.Frame.Width - ActivityIndicator.Frame.Width ) / 2, 
                                                             ( View.Frame.Height - ActivityIndicator.Frame.Height ) / 2 );
 
-            if ( SpringboardViewController.IsDeviceLandscape( ) )
+            // landscape wide devices MAY show the nav toolbar
+            if ( SpringboardViewController.IsLandscapeWide( ) == true )
+            {
+                Task.NavToolbar.RevealForTime( 3.0f );
+                Task.NavToolbar.SetBackButtonEnabled( true );
+            }
+            // landscape non-wide devices should not
+            else if ( SpringboardViewController.IsDeviceLandscape( ) == true )
             {
                 Task.NavToolbar.Reveal( false );
             }
             else
             {
-                Task.NavToolbar.Reveal( true );
+                Task.NavToolbar.RevealForTime( 3.0f );
                 Task.NavToolbar.SetBackButtonEnabled( true );
             }
         }

@@ -23,7 +23,7 @@ namespace Droid
         /// to work with the fragments of tasks in an abstract manner.
         /// </summary>
         public class TaskFragment : Fragment, View.IOnTouchListener
-        {
+        {            
             /// <summary>
             /// Manages forwarding gestures to the carousel
             /// </summary>

@@ -100,10 +100,6 @@ namespace iOS
                     { 
                         ( viewController as NotesWatchUIViewController ).ShareVideo( );
                     } );
-
-
-                // go ahead and show the bar, because we're at the top of the page.
-                NavToolbar.RevealForTime( 3.0f );
             }
             else if ( ( viewController as NotesDetailsUIViewController ) != null )
             {
@@ -133,10 +129,13 @@ namespace iOS
             {
                 NavToolbar.Reveal( false );
             }
-            // allow it as long as it's the watch window in portrait mode. All the others handle it themselves
-            else if ( ( ActiveViewController as NotesWatchUIViewController ) != null && UIDevice.CurrentDevice.Orientation == UIDeviceOrientation.Portrait )
+            // allow it as long as it's the watch window in portrait mode or landscape wide mode.
+            else if ( ( ActiveViewController as NotesWatchUIViewController ) != null )
             {
-                NavToolbar.RevealForTime( 3.0f );
+                if ( SpringboardViewController.IsLandscapeWide( ) || SpringboardViewController.IsDevicePortrait( ) )
+                {
+                    NavToolbar.RevealForTime( 3.0f );
+                }
             }
         }
 

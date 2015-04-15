@@ -18,25 +18,13 @@ namespace Droid
                 public PrayerTask( NavbarFragment navFragment ) : base( navFragment )
                 {
                     // create our fragments (which are basically equivalent to iOS ViewControllers)
-                    MainPage = (PrayerPrimaryFragment) NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.Prayer.PrayerPrimaryFragment" );
-                    if( MainPage == null )
-                    {
-                        MainPage = new PrayerPrimaryFragment( );
-                    }
+                    MainPage = new PrayerPrimaryFragment( );
                     MainPage.ParentTask = this;
 
-                    CreatePage = (PrayerCreateFragment)NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.Prayer.PrayerCreateFragment" );
-                    if ( CreatePage == null )
-                    {
-                        CreatePage = new PrayerCreateFragment();
-                    }
+                    CreatePage = new PrayerCreateFragment();
                     CreatePage.ParentTask = this;
 
-                    PostPage = (PrayerPostFragment)NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.Prayer.PrayerPostFragment" );
-                    if ( PostPage == null )
-                    {
-                        PostPage = new PrayerPostFragment();
-                    }
+                    PostPage = new PrayerPostFragment();
                     PostPage.ParentTask = this;
                 }
 

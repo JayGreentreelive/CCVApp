@@ -15,52 +15,27 @@ namespace Droid
                 NotesDetailsFragment DetailsPage { get; set; }
                 NotesWatchFragment WatchPage { get; set; }
                 NotesListenFragment ListenPage { get; set; }
-                NotesWebViewFragment WebViewPage { get; set; }
+                TaskWebFragment WebViewPage { get; set; }
 
                 public NotesTask( NavbarFragment navFragment ) : base( navFragment )
                 {
                     // create our fragments (which are basically equivalent to iOS ViewControllers)
-                    MainPage = (NotesPrimaryFragment) NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.Notes.NotesPrimaryFragment" );
-                    if( MainPage == null )
-                    {
-                        MainPage = new NotesPrimaryFragment( );
-                    }
-
-                    DetailsPage = (NotesDetailsFragment)NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.Notes.NotesDetailsFragment" );
-                    if ( DetailsPage == null )
-                    {
-                        DetailsPage = new NotesDetailsFragment( );
-                    }
-
-                    NotesPage = (NotesFragment) NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.Notes.NotesFragment" );
-                    if( NotesPage == null )
-                    {
-                        NotesPage = new NotesFragment( );
-                    }
-
-                    WatchPage = (NotesWatchFragment)NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.Notes.NotesWatchFragment" );
-                    if ( WatchPage == null )
-                    {
-                        WatchPage = new NotesWatchFragment( );
-                    }
-
-                    ListenPage = (NotesListenFragment)NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.Notes.NotesListenFragment" );
-                    if ( ListenPage == null )
-                    {
-                        ListenPage = new NotesListenFragment( );
-                    }
-
-                    WebViewPage = (NotesWebViewFragment)NavbarFragment.FragmentManager.FindFragmentByTag( "Droid.Tasks.Notes.NotesWebViewFragment" );
-                    if ( WebViewPage == null )
-                    {
-                        WebViewPage = new NotesWebViewFragment( );
-                    }
-
+                    MainPage = new NotesPrimaryFragment( );
                     MainPage.ParentTask = this;
+
+                    DetailsPage = new NotesDetailsFragment( );
                     DetailsPage.ParentTask = this;
+
+                    NotesPage = new NotesFragment( );
                     NotesPage.ParentTask = this;
+
+                    WatchPage = new NotesWatchFragment( );
                     WatchPage.ParentTask = this;
+
+                    ListenPage = new NotesListenFragment( );
                     ListenPage.ParentTask = this;
+
+                    WebViewPage = new TaskWebFragment( );
                     WebViewPage.ParentTask = this;
                 }
 
@@ -231,8 +206,7 @@ namespace Droid
                         else if ( source == NotesPage )
                         {
                             // the context is the activeURL to visit.
-                            string activeUrl = (string)context;
-                            WebViewPage.ActiveUrl = activeUrl;
+                            WebViewPage.DisplayUrl( (string)context );
 
                             PresentFragment( WebViewPage, true );
                         }

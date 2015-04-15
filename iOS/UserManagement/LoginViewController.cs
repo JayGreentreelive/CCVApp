@@ -353,21 +353,29 @@ namespace iOS
 
                             WebLayout.LoadUrl( fromUri, delegate(WebLayout.Result result, string url) 
                                 {
+                                    // remove the webview, this part's done.
+                                    WebLayout.ContainerView.RemoveFromSuperview( );
+
                                     // if fail/success comes in
                                     if( result != WebLayout.Result.Cancel )
                                     {
                                         // see if it's a valid facebook response
-                                        if ( RockMobileUser.Instance.HasFacebookResponse( url, session ) )
+
+                                        // if an empty url was returned, it's NOT. Fail.
+                                        if( string.IsNullOrEmpty( url ) == true )
                                         {
-                                            // it is, so remove the webview and continue the bind process
-                                            WebLayout.ContainerView.RemoveFromSuperview( );
+                                            BindComplete( false );
+                                        }
+                                        // otherwise, try to parse the response and move forward
+                                        else if ( RockMobileUser.Instance.HasFacebookResponse( url, session ) )
+                                        {
+                                            // it is, continue the bind process
                                             RockMobileUser.Instance.FacebookCredentialResult( url, session, BindComplete );
                                         }
                                     }
                                     else
                                     {
                                         // they pressed cancel, so simply cancel the attempt
-                                        WebLayout.ContainerView.RemoveFromSuperview( );
                                         LoginComplete( System.Net.HttpStatusCode.ResetContent, "" );
                                     }
                                 } );

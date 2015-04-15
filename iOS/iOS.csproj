@@ -454,13 +454,7 @@
       <DependentUpon>NotesMainUIViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="Tasks\Notes\NotesWatchUIViewController.cs" />
-    <Compile Include="Tasks\Notes\NotesWatchUIViewController.designer.cs">
-      <DependentUpon>NotesWatchUIViewController.cs</DependentUpon>
-    </Compile>
     <Compile Include="Tasks\Prayer\Prayer_CreateUIViewController.cs" />
-    <Compile Include="Tasks\Prayer\Prayer_CreateUIViewController.designer.cs">
-      <DependentUpon>Prayer_CreateUIViewController.cs</DependentUpon>
-    </Compile>
     <Compile Include="Tasks\Prayer\Prayer_PostUIViewController.cs" />
     <Compile Include="Tasks\Prayer\Prayer_PostUIViewController.designer.cs">
       <DependentUpon>Prayer_PostUIViewController.cs</DependentUpon>

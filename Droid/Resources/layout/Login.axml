@@ -51,6 +51,7 @@
                 android:layout_below="@+id/top_border"
                 android:id="@+id/usernameText"
                 android:inputType="textPersonName"
+                android:layout_marginLeft="10dp"
                 android:maxLength="16"
                 android:maxLines="1" />
             <View
@@ -64,6 +65,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/middle_border"
+                android:layout_marginLeft="10dp"
                 android:id="@+id/passwordText"
                 android:inputType="textPersonName"
                 android:maxLength="12"
@@ -82,7 +84,7 @@
                 android:layout_width="100dp"
                 android:layout_height="40dp"
                 android:id="@+id/loginButton"
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginRight="5dp" />
             <Button
                 android:text="Register"
@@ -121,6 +123,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/top_border"
+                android:layout_marginLeft="10dp"
                 android:id="@+id/loginResult"
                 android:maxLines="1" />
         </RelativeLayout>

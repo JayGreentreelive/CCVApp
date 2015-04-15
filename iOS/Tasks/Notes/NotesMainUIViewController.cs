@@ -17,6 +17,8 @@ using System.Net;
 using CCVApp.Shared;
 using System.Threading.Tasks;
 using System.Threading;
+using CCVApp.Shared.UI;
+using Rock.Mobile.PlatformSpecific.Util;
 
 namespace iOS
 {
@@ -361,50 +363,53 @@ namespace iOS
                 }
 
                 // Banner Image
-                cell.Image.Image = SeriesEntries[ 0 ].mBillboard != null ? SeriesEntries[ 0 ].mBillboard : ImageMainPlaceholder;
-
-                // Create the title
-                if ( SeriesEntries[ 0 ].Series.Messages.Count > 0 )
+                if ( SeriesEntries.Count > 0 )
                 {
-                    cell.Title.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Name;
-                    cell.Title.SizeToFit( );
+                    cell.Image.Image = SeriesEntries[ 0 ].mBillboard != null ? SeriesEntries[ 0 ].mBillboard : ImageMainPlaceholder;
+
+                    // Create the title
+                    if ( SeriesEntries[ 0 ].Series.Messages.Count > 0 )
+                    {
+                        cell.Title.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Name;
+                        cell.Title.SizeToFit( );
 
 
-                    // Date & Speaker
-                    cell.Date.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Date;
-                    cell.Date.SizeToFit( );
+                        // Date & Speaker
+                        cell.Date.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Date;
+                        cell.Date.SizeToFit( );
 
-                    cell.Speaker.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Speaker;
-                    cell.Speaker.SizeToFit( );
+                        cell.Speaker.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Speaker;
+                        cell.Speaker.SizeToFit( );
 
 
-                    // Watch Button & Labels
-                    // disable the button if there's no watch URL
-                    if ( string.IsNullOrEmpty( SeriesEntries[ 0 ].Series.Messages[ 0 ].WatchUrl ) )
+                        // Watch Button & Labels
+                        // disable the button if there's no watch URL
+                        if ( string.IsNullOrEmpty( SeriesEntries[ 0 ].Series.Messages[ 0 ].WatchUrl ) )
+                        {
+                            cell.ToggleWatchButton( false );
+                        }
+                        else
+                        {
+                            cell.ToggleWatchButton( true );
+                        }
+
+
+                        // Take Notes Button & Labels
+                        // disable the button if there's no note URL
+                        if ( string.IsNullOrEmpty( SeriesEntries[ 0 ].Series.Messages[ 0 ].NoteUrl ) )
+                        {
+                            cell.ToggleTakeNotesButton( false );
+                        }
+                        else
+                        {
+                            cell.ToggleTakeNotesButton( true );
+                        }
+                    }
+                    else
                     {
                         cell.ToggleWatchButton( false );
-                    }
-                    else
-                    {
-                        cell.ToggleWatchButton( true );
-                    }
-
-
-                    // Take Notes Button & Labels
-                    // disable the button if there's no note URL
-                    if ( string.IsNullOrEmpty( SeriesEntries[ 0 ].Series.Messages[ 0 ].NoteUrl ) )
-                    {
                         cell.ToggleTakeNotesButton( false );
                     }
-                    else
-                    {
-                        cell.ToggleTakeNotesButton( true );
-                    }
-                }
-                else
-                {
-                    cell.ToggleWatchButton( false );
-                    cell.ToggleTakeNotesButton( false );
                 }
 
                 PendingPrimaryCellHeight = cell.BottomBanner.Frame.Bottom;
@@ -491,6 +496,8 @@ namespace iOS
 
         NotesDetailsUIViewController DetailsViewController { get; set; }
 
+        UIResultView ResultView { get; set; }
+
         bool IsVisible { get; set; }
 
         public NotesMainUIViewController (IntPtr handle) : base (handle)
@@ -517,6 +524,10 @@ namespace iOS
             ActivityIndicator.StartAnimating( );
             ActivityIndicator.ActivityIndicatorViewStyle = UIActivityIndicatorViewStyle.White;
             ActivityIndicator.SizeToFit( );
+
+            ResultView = new UIResultView( View, View.Frame.ToRectF( ), delegate { TrySetupSeries( ); } );
+
+            ResultView.Hide( );
         }
 
         public override void ViewDidLayoutSubviews()
@@ -536,6 +547,8 @@ namespace iOS
             // if the layout is changed, the simplest way to fix the UI is to recreate the table source
             NotesTableView.Source = new TableSource( this, SeriesEntries, ImageMainPlaceholder, ImageThumbPlaceholder );
             NotesTableView.ReloadData( );
+
+            ResultView.SetBounds( View.Bounds.ToRectF( ) );
         }
 
         public override void ViewWillDisappear(bool animated)
@@ -552,6 +565,14 @@ namespace iOS
             DetailsViewController = null;
 
             IsVisible = true;
+
+            TrySetupSeries( );
+        }
+
+        void TrySetupSeries( )
+        {
+            NotesTableView.Hidden = true;
+            ResultView.Hide( );
 
             // what's the state of the series xml?
             if ( RockLaunchData.Instance.RequestingNoteDB == true )
@@ -616,13 +637,17 @@ namespace iOS
                         // only update the table if we're still visible
                         if ( IsVisible == true )
                         {
+                            NotesTableView.Hidden = false;
                             NotesTableView.Source = new TableSource( this, SeriesEntries, ImageMainPlaceholder, ImageThumbPlaceholder );
                             NotesTableView.ReloadData( );
                         }
                     }
                     else if ( IsVisible == true )
                     {
-                        SpringboardViewController.DisplayError( MessagesStrings.Error_Title, MessagesStrings.Error_Message );
+                        ResultView.Show( MessagesStrings.Series_Error_Title, 
+                                         ControlStylingConfig.Result_Symbol_Failed, 
+                                         MessagesStrings.Series_Error_Message, 
+                                         GeneralStrings.Retry );
                     }
                 });
         }

@@ -36,6 +36,9 @@ namespace CCVApp.Shared
                 "Friday",
                 "Saturday"
             };
+
+            public const string Network_Status_FailedText = "Oops";
+            public const string Network_Result_FailedText = "There was a problem communicating with the internet. Check your network settings and try again";
         }
 
         public class SpringboardStrings
@@ -192,6 +195,9 @@ namespace CCVApp.Shared
 
         public class MessagesStrings
         {
+            public const string Series_Error_Title = "Messages";
+            public const string Series_Error_Message = "There was a problem downloading message series. Check your network settings and try again.";
+
             public const string Error_Title = "Messages";
             public const string Error_Message = "There was a problem downloading the message. Check your network settings and try again.";
 
