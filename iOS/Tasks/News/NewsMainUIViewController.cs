@@ -67,7 +67,7 @@ namespace iOS
                 if (cell == null)
                 {
                     cell = new UITableViewCell (UITableViewCellStyle.Default, cellIdentifier);
-                    cell.SelectionStyle = UITableViewCellSelectionStyle.Default;
+                    cell.SelectionStyle = UITableViewCellSelectionStyle.None;
                     cell.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
                 }
                 cell.Bounds = new CGRect( cell.Bounds.X, cell.Bounds.Y, tableView.Bounds.Width, cell.Bounds.Height );

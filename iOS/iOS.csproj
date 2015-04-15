@@ -456,9 +456,6 @@
     <Compile Include="Tasks\Notes\NotesWatchUIViewController.cs" />
     <Compile Include="Tasks\Prayer\Prayer_CreateUIViewController.cs" />
     <Compile Include="Tasks\Prayer\Prayer_PostUIViewController.cs" />
-    <Compile Include="Tasks\Prayer\Prayer_PostUIViewController.designer.cs">
-      <DependentUpon>Prayer_PostUIViewController.cs</DependentUpon>
-    </Compile>
     <Compile Include="ControlStyling.cs" />
     <Compile Include="Tasks\Connect\ConnectTask.cs" />
     <Compile Include="Tasks\Connect\GroupFinderViewController.cs" />

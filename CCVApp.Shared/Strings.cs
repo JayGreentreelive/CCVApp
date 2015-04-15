@@ -201,7 +201,7 @@ namespace CCVApp.Shared
             public const string Error_Title = "Messages";
             public const string Error_Message = "There was a problem downloading the message. Check your network settings and try again.";
 
-            public const string Error_Watch_Playback = "There was a problem playing this video. Check your network settings and try again.";
+            public const string Error_Watch_Playback = "There was a problem playing this content. Check your network settings and try again.";
 
             public const string Watch_Share_Subject = "Check out this Video";
 

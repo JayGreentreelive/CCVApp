@@ -1144,6 +1144,8 @@ namespace iOS
             UserNameField.SizeToFit( );
 
             UpdateProfilePic( );
+
+            RefreshCampusSelection( );
         }
 
         public void UpdateProfilePic( )

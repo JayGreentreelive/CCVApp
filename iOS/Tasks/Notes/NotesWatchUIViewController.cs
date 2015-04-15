@@ -34,33 +34,37 @@ namespace iOS
             ObserverHandles = new List<NSObject>( );
 		}
 
+        public override void ViewDidLoad()
+        {
+            base.ViewDidLoad();
+
+            // don't allow anything if there isn't a watchUrl set
+            if ( MediaUrl == null )
+            {
+                throw new Exception( "MediaUrl must not be null!" );
+            }
+
+            // setup our activity indicator
+            ActivityIndicator = new UIActivityIndicatorView();
+            ActivityIndicator.ActivityIndicatorViewStyle = UIActivityIndicatorViewStyle.White;
+            ActivityIndicator.SizeToFit( );
+            ActivityIndicator.StartAnimating( );
+
+            PreloadFinished = false;
+
+            // create the movie player control
+            MoviePlayer = new MPMoviePlayerController( );
+            View.AddSubview( MoviePlayer.View );
+
+            View.AddSubview( ActivityIndicator );
+        }
+
         public override void ViewWillAppear(bool animated)
         {
             base.ViewWillAppear(animated);
 
             if ( ExitingFullscreen == false )
             {
-                // don't allow anything if there isn't a watchUrl set
-                if ( MediaUrl == null )
-                {
-                    throw new Exception( "MediaUrl must not be null!" );
-                }
-
-                // setup our activity indicator
-                ActivityIndicator = new UIActivityIndicatorView();
-                ActivityIndicator.ActivityIndicatorViewStyle = UIActivityIndicatorViewStyle.White;
-                ActivityIndicator.SizeToFit( );
-                ActivityIndicator.StartAnimating( );
-
-                PreloadFinished = false;
-
-                // create the movie player control
-                MoviePlayer = new MPMoviePlayerController( );
-                View.AddSubview( MoviePlayer.View );
-
-                View.AddSubview( ActivityIndicator );
-
-
                 // setup a notification so we know when to hide the spinner
 
                 NSObject handle = NSNotificationCenter.DefaultCenter.AddObserver( new NSString("MPMoviePlayerContentPreloadDidFinishNotification"), ContentPreloadDidFinish );

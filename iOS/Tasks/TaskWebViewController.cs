@@ -196,6 +196,7 @@ namespace iOS
             // if it succeeds, reveal the webView
             WebView.LoadFinished += (object sender, EventArgs e ) =>
             {
+                ResultView.Hide( );
                 WebView.Hidden = false;
                 ActivityIndicator.Hidden = true;
             };

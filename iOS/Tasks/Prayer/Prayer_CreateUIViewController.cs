@@ -270,7 +270,7 @@ namespace iOS
                 prayerRequest.IsApproved = false;
 
                 // launch the post view controller
-                Prayer_PostUIViewController postPrayerVC = Storyboard.InstantiateViewController( "Prayer_PostUIViewController" ) as Prayer_PostUIViewController;
+                Prayer_PostUIViewController postPrayerVC = new Prayer_PostUIViewController( );
                 postPrayerVC.PrayerRequest = prayerRequest;
                 Task.PerformSegue( this, postPrayerVC );
             }
@@ -458,11 +458,13 @@ namespace iOS
 
 
             SwitchBackground.Frame = new CGRect( -10, CategoryLayer.Frame.Bottom + 20, View.Bounds.Width + 20, 88 );
-            PostAnonymouslyLabel.Frame = new CGRect( 20, 6, View.Bounds.Width + 20, 33 );
-            UISwitchAnonymous.Frame = new CGRect( (View.Bounds.Width / 2) - 10 - UISwitchAnonymous.Bounds.Width, 6, UISwitchAnonymous.Bounds.Width, UISwitchAnonymous.Bounds.Height );
+            PostAnonymouslyLabel.Frame = new CGRect( 20, 6, View.Bounds.Width - 10, 33 );
 
-            MakePublicLabel.Frame = new CGRect( 20, PostAnonymouslyLabel.Frame.Bottom + 10, View.Bounds.Width + 10, 33 );
-            UIPublicSwitch.Frame = new CGRect( (View.Bounds.Width / 2) - 10 - UIPublicSwitch.Bounds.Width, PostAnonymouslyLabel.Frame.Bottom + 10, UIPublicSwitch.Bounds.Width, UIPublicSwitch.Bounds.Height );
+            UISwitchAnonymous.Frame = new CGRect( View.Bounds.Width- 10 - UISwitchAnonymous.Bounds.Width, 6, UISwitchAnonymous.Bounds.Width, UISwitchAnonymous.Bounds.Height );
+
+
+            MakePublicLabel.Frame = new CGRect( 20, PostAnonymouslyLabel.Frame.Bottom + 10, View.Bounds.Width - 10, 33 );
+            UIPublicSwitch.Frame = new CGRect( View.Bounds.Width- 10 - UIPublicSwitch.Bounds.Width, PostAnonymouslyLabel.Frame.Bottom + 10, UIPublicSwitch.Bounds.Width, UIPublicSwitch.Bounds.Height );
 
             SubmitButton.Frame = new CGRect( 20, SwitchBackground.Frame.Bottom + 20, View.Bounds.Width - 40, SubmitButton.Bounds.Height );
 

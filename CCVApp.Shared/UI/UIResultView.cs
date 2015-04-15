@@ -132,24 +132,49 @@ namespace CCVApp.Shared.UI
 
         public void Show( string statusLabel, string resultSymbol, string resultLabel, string buttonLabel )
         {
+            SetHidden( false );
+
             // set and position the status label
+            if ( string.IsNullOrEmpty( statusLabel ) == false )
+            {
+                StatusBackground.Hidden = false;
+            }
+            else
+            {
+                StatusBackground.Hidden = true;
+            }
             StatusLabel.Text = statusLabel;
             StatusLabel.SizeToFit( );
 
 
-            // set and position the result symbol
+            // set the result symbol
             ResultSymbol.Text = resultSymbol;
             ResultSymbol.SizeToFit( );
 
 
-            // set and position the result text
+            // set the result text
+            if ( string.IsNullOrEmpty( resultLabel ) == false )
+            {
+                ResultBackground.Hidden = false;
+            }
+            else
+            {
+                ResultBackground.Hidden = true;
+            }
             ResultLabel.Text = resultLabel;
 
-
+            // set the done button
+            if ( string.IsNullOrEmpty( buttonLabel ) == false )
+            {
+                DoneButton.Hidden = false;
+            }
+            else
+            {
+                DoneButton.Hidden = true;
+            }
             DoneButton.Text = buttonLabel;
             DoneButton.SizeToFit( );
 
-            SetHidden( false );
             SetOpacity( 1.00f );
 
             SetBounds( View.Bounds );
