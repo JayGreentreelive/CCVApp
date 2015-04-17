@@ -8,6 +8,8 @@ Both
 	Display an error result screen if web-based pages fail to load.
 	News is now sorted according to priority
 	Tons of UI bug fixes and polish.
+	Fixed the appearance of the Note Tutorial image.
+	Prayers are now sorted by least prayed for (those come up first)
 
 iOS
 	Fixed a crash on iPhone when tapping the 'Share' button in Notes.
@@ -17,6 +19,8 @@ iOS
 	Fixed an issue causing the Prayer Request field's width to be too small on iPad
 	Fixed an issue preventing the Nav Toolbar from showing up on Landscape iPad on the Watch page.
 	Fixed crashes related to no network connection
+	Fixed issues related to rotating the device during image cropping.
+	Fixed an issue causing the News Details Banner to be cropped
 
 Android
 	Removed the Back Button from the Nav Toolbar, since it's completely redundant.

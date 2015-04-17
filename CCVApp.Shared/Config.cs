@@ -331,9 +331,8 @@ namespace CCVApp
                 /// <summary>
                 /// The image to display for the tutorial screen.
                 /// </summary>
-                public const string TutorialOverlayImage = "note_tutorial.png";
+                public const string TutorialOverlayImage = "note_tutorial_portrait.png";
                 public const string TutorialOverlayImageIPadLS = "note_tutorial_ipad_ls.png";
-                public const string TutorialOverlayImageIPadPort = "note_tutorial_ipad_port.png";
 
                 /// <summary>
                 /// The suffix to use for the user note filename.
@@ -490,7 +489,7 @@ namespace CCVApp
 
                 public const string GroupFinder_IconImage = "groupfinder_thumb.png";
 
-                public const string MainPageHeaderImage = "connect_banner.jpg";
+                public const string MainPageHeaderImage = "connect_banner.png";
 
                 /// <summary>
                 /// The width/height of the image used as a thumbnail for each entry in the "Other ways to connect"

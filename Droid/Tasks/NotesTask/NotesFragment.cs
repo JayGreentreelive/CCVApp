@@ -196,7 +196,7 @@ namespace Droid
                 /// <summary>
                 /// The overlay displayed the first time the user enters Notes
                 /// </summary>
-                Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView TutorialOverlay { get; set; }
+                ImageView TutorialOverlay { get; set; }
 
                 /// <summary>
                 /// True if the tutorial is fading in or out
@@ -271,10 +271,10 @@ namespace Droid
 
                     // setup the tutorial overlay
                     AnimatingTutorial = false;
-                    TutorialOverlay = new Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    TutorialOverlay = new ImageView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     TutorialOverlay.LayoutParameters = new ViewGroup.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent );
                     TutorialOverlay.Alpha = 0;
-                    TutorialOverlay.SetScaleType( ImageView.ScaleType.CenterCrop );
+                    TutorialOverlay.SetBackgroundColor( Android.Graphics.Color.Black );
                     layout.AddView( TutorialOverlay );
 
                     return layout;
@@ -617,7 +617,15 @@ namespace Droid
                         {
                             CCVApp.Shared.Network.RockMobileUser.Instance.NoteTutorialShown = true;
 
-                            System.IO.Stream tutorialStream = Activity.BaseContext.Assets.Open( NoteConfig.TutorialOverlayImage );
+                            System.IO.Stream tutorialStream = null;
+                            if( MainActivity.IsLandscapeWide( ) )
+                            {
+                                tutorialStream = Activity.BaseContext.Assets.Open( NoteConfig.TutorialOverlayImageIPadLS );
+                            }
+                            else
+                            {
+                                tutorialStream = Activity.BaseContext.Assets.Open( NoteConfig.TutorialOverlayImage );
+                            }
 
                             TutorialImage = Android.Graphics.BitmapFactory.DecodeStream( tutorialStream );
                             TutorialOverlay.SetImageBitmap( TutorialImage );

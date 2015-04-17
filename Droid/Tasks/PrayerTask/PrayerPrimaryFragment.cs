@@ -462,6 +462,12 @@ namespace Droid
 
                                 if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true && prayerRequests.Count > 0 )
                                 {
+                                    // sort the prayers based on prayer count (least prayed for first)
+                                    prayerRequests.Sort( delegate(Rock.Client.PrayerRequest x, Rock.Client.PrayerRequest y) 
+                                        {
+                                            return x.PrayerCount < y.PrayerCount ? -1 : 1;
+                                        });
+                                    
                                     LastDownloadTime = DateTime.Now;
 
                                     // success, so hide the status layer, we don't need it

@@ -414,11 +414,6 @@ namespace iOS
             Console.WriteLine( "Turning idle timer ON" );
         }
 
-        public void DidScroll( )
-        {
-
-        }
-
         public void ShareNotes()
         {
             if ( Note != null )
@@ -452,6 +447,8 @@ namespace iOS
         {
             if( Note != null )
             {
+                AnimateTutorialScreen( false );
+
                 // Base OS controls need to know whether to process & consume
                 // input or pass it up to the higher level (us.)
                 // We decide that based on whether the HitTest intersects any of our controls.
@@ -656,23 +653,20 @@ namespace iOS
                         {
                             Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
                                 {
-                                    if( UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Phone )
+                                    if( SpringboardViewController.IsLandscapeWide( ) )
                                     {
-                                        TutorialOverlay.Image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + NoteConfig.TutorialOverlayImage );
+                                        TutorialOverlay.Image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + NoteConfig.TutorialOverlayImageIPadLS );
                                     }
                                     else
                                     {
-                                        if( SpringboardViewController.IsLandscapeWide( ) )
-                                        {
-                                            TutorialOverlay.Image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + NoteConfig.TutorialOverlayImageIPadLS );
-                                        }
-                                        else
-                                        {
-                                            TutorialOverlay.Image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + NoteConfig.TutorialOverlayImageIPadPort );
-                                        }
+                                        TutorialOverlay.Image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + NoteConfig.TutorialOverlayImage );
                                     }
+
+                                    TutorialOverlay.ContentMode = UIViewContentMode.ScaleAspectFill;
                                     TutorialOverlay.Frame = View.Frame;
+
                                     AnimateTutorialScreen( true );
+                                    Task.NavToolbar.Reveal( false );
                                 });
                         };
                     timer.Start( );

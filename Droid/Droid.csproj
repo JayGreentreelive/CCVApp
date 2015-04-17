@@ -344,9 +344,6 @@
     <AndroidAsset Include="..\Assets\news_startingpoint_main%402x.png">
       <Link>Assets\news_startingpoint_main.png</Link>
     </AndroidAsset>
-    <AndroidAsset Include="..\Assets\connect_banner%403x.jpg">
-      <Link>Assets\connect_banner.jpg</Link>
-    </AndroidAsset>
     <AndroidAsset Include="..\Assets\baptism_thumb.png">
       <Link>Assets\baptism_thumb.png</Link>
     </AndroidAsset>
@@ -368,9 +365,6 @@
     <AndroidAsset Include="..\Assets\placeholder_notes_thumb.png">
       <Link>Assets\placeholder_notes_thumb.png</Link>
     </AndroidAsset>
-    <AndroidAsset Include="..\Assets\note_tutorial.png">
-      <Link>Assets\note_tutorial.png</Link>
-    </AndroidAsset>
     <AndroidAsset Include="..\Assets\oobe_ccv_logo%403x.png">
       <Link>Assets\oobe_ccv_logo.png</Link>
     </AndroidAsset>
@@ -379,6 +373,15 @@
     </AndroidAsset>
     <AndroidAsset Include="..\Assets\groupfinder_thumb.png">
       <Link>Assets\groupfinder_thumb.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\connect_banner%403x.png">
+      <Link>Assets\connect_banner.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\note_tutorial_portrait%403x.png">
+      <Link>Assets\note_tutorial_portrait.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\note_tutorial_ipad_ls.png">
+      <Link>Assets\note_tutorial_ipad_ls.png</Link>
     </AndroidAsset>
   </ItemGroup>
   <ItemGroup>

@@ -65,6 +65,8 @@ namespace iOS
             ImageBanner.ClipsToBounds = true;
 
             View.AddSubview( ImageBanner );
+
+            // do we have the real image?
             MemoryStream imageStream = (MemoryStream)FileCache.Instance.LoadFile( NewsItem.HeaderImageName );
             if ( imageStream != null )
             {
@@ -72,6 +74,10 @@ namespace iOS
                 {
                     NSData imageData = NSData.FromStream( imageStream );
                     ImageBanner.Image = new UIImage( imageData );
+
+                    // resize the image to fit the width of the device
+                    nfloat imageAspect = ImageBanner.Image.Size.Height / ImageBanner.Image.Size.Width;
+                    ImageBanner.Frame = new CGRect( 0, 0, View.Bounds.Width, View.Bounds.Width * imageAspect );
                 }
                 catch( Exception )
                 {
@@ -84,6 +90,10 @@ namespace iOS
             {
                 // otherwise use a placeholder and request the actual image
                 ImageBanner.Image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + GeneralConfig.NewsDetailsPlaceholder );
+
+                // resize the image to fit the width of the device
+                nfloat imageAspect = ImageBanner.Image.Size.Height / ImageBanner.Image.Size.Width;
+                ImageBanner.Frame = new CGRect( 0, 0, View.Bounds.Width, View.Bounds.Width * imageAspect );
 
                 FileCache.Instance.DownloadFileToCache( NewsItem.HeaderImageURL, NewsItem.HeaderImageName, delegate
                     {
@@ -138,6 +148,10 @@ namespace iOS
                             {
                                 NSData imageData = NSData.FromStream( imageStream );
                                 ImageBanner.Image = new UIImage( imageData, UIScreen.MainScreen.Scale );
+
+                                // resize the image to fit the width of the device
+                                nfloat imageAspect = ImageBanner.Image.Size.Height / ImageBanner.Image.Size.Width;
+                                ImageBanner.Frame = new CGRect( 0, 0, View.Bounds.Width, View.Bounds.Width * imageAspect );
                             }
                             catch( Exception )
                             {
@@ -161,7 +175,9 @@ namespace iOS
         {
             base.LayoutChanged();
 
-            ImageBanner.Bounds = new CGRect( 0, 0, View.Bounds.Width, View.Bounds.Height * .30f );
+            // resize the image to fit the width of the device
+            nfloat imageAspect = ImageBanner.Image.Size.Height / ImageBanner.Image.Size.Width;
+            ImageBanner.Frame = new CGRect( 0, 0, View.Bounds.Width, View.Bounds.Width * imageAspect );
 
             // adjust the news title to have padding on the left and right.
             NewsTitle.Frame = new CGRect( 10, ImageBanner.Frame.Bottom + ((40 - NewsTitle.Frame.Height) / 2), View.Bounds.Width - 30, NewsTitle.Bounds.Height );

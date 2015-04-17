@@ -365,6 +365,12 @@ namespace iOS
                                         {
                                             if ( prayerRequests.Count > 0 )
                                             {
+                                                // sort the prayers based on prayer count (least prayed for first)
+                                                prayerRequests.Sort( delegate(Rock.Client.PrayerRequest x, Rock.Client.PrayerRequest y) 
+                                                    {
+                                                        return x.PrayerCount < y.PrayerCount ? -1 : 1;
+                                                    });
+                                                
                                                 // update our timestamp since this was successful
                                                 LastDownload = DateTime.Now;
 

@@ -258,9 +258,13 @@ namespace CCVApp
 
                         // check for background color
                         result = reader.GetAttribute( "BackgroundColor" );
-                        if( string.IsNullOrEmpty( result ) == false )
+                        if ( string.IsNullOrEmpty( result ) == false )
                         {
                             style.mBackgroundColor = ParseColor( result );
+                        }
+                        else
+                        {
+                            style.mBackgroundColor = null;
                         }
 
                         // check for text input background color

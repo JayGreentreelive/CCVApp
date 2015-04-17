@@ -31,6 +31,7 @@ namespace iOS
                     BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
 
                     Image = new UIImageView( );
+                    Image.BackgroundColor = UIColor.Yellow;
                     Image.ContentMode = UIViewContentMode.ScaleAspectFill;
                     Image.Layer.AnchorPoint = CGPoint.Empty;
                     AddSubview( Image );

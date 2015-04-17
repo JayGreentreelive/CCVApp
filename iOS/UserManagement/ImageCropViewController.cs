@@ -101,6 +101,19 @@ namespace iOS
             CropAspectRatio = cropAspectRatio;
 
             SourceImage = image;
+
+            OrientationState = -1;
+        }
+
+        public override bool ShouldAutorotate()
+        {
+            return Springboard.ShouldAutorotate();
+        }
+
+        public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations()
+        {
+            // insist they stay in portait on iPhones
+            return Springboard.GetSupportedInterfaceOrientations( );
         }
 
         public override bool PrefersStatusBarHidden()
@@ -108,20 +121,51 @@ namespace iOS
             return Springboard.PrefersStatusBarHidden();
         }
 
-        public override bool ShouldAutorotate()
-        {
-            // we will support landscape or portrait, but we will NOT support
-            // changing while the view is up. That's dumb.
-            return false;
-        }
-
-        public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations()
-        {
-            return Springboard.GetSupportedInterfaceOrientations( );
-        }
-
         UIToolbar Toolbar { get; set; }
         UIView ButtonContainer { get; set; }
+
+        int OrientationState { get; set; }
+
+        public override void ViewDidLayoutSubviews()
+        {
+            // get the orientation state. WE consider unknown- 1, profile 0, landscape 1,
+            int orientationState = SpringboardViewController.IsDeviceLandscape( ) == true ? 1 : 0;
+
+            // if the states are in disagreement, correct it
+            if ( OrientationState != orientationState )
+            {
+                OrientationState = orientationState;
+
+                Toolbar.Frame = new CGRect( 0, View.Bounds.Height - 40, View.Bounds.Width, 40 );
+
+                NSString cancelLabel = new NSString( ImageCropConfig.CropCancelButton_Text );
+                CGSize buttonSize = cancelLabel.StringSize( CancelButton.Font );
+                CancelButton.Bounds = new CGRect( 0, 0, buttonSize.Width, buttonSize.Height );
+
+
+                NSString editLabel = new NSString( ImageCropConfig.CropOkButton_Text );
+                buttonSize = editLabel.StringSize( EditButton.Font );
+                EditButton.Bounds = new CGRect( 0, 0, buttonSize.Width, buttonSize.Height );
+
+                ImageView.Frame = GetImageViewFrame( );
+
+                ButtonContainer.Frame = new CGRect( 0, View.Bounds.Height - 40, View.Bounds.Width, 40 );
+                CancelButton.Frame = new CGRect( (CancelButton.Frame.Width / 2), 0, CancelButton.Frame.Width, CancelButton.Frame.Height );
+                EditButton.Frame = new CGRect( ButtonContainer.Frame.Width - (EditButton.Frame.Width * 2.5f), 0, EditButton.Frame.Width, EditButton.Frame.Height );
+
+                DisplayLayout( );
+
+                // make sure we reset to editing mode
+                if ( CropMode.Editing != Mode )
+                {
+                    SetMode( CropMode.Editing );
+                }
+                else
+                {
+                    AnimateBlocker( true );
+                }
+            }
+        }
 
         public override void ViewDidLoad()
         {
@@ -133,7 +177,6 @@ namespace iOS
             ImageView = new UIImageView( );
             ImageView.BackgroundColor = UIColor.Black;
             ImageView.ContentMode = UIViewContentMode.ScaleAspectFit;
-
             View.AddSubview( ImageView );
 
 
@@ -143,7 +186,6 @@ namespace iOS
             CropView.Layer.BorderColor = UIColor.White.CGColor;
             CropView.Layer.BorderWidth = 1;
             CropView.Layer.CornerRadius = 4;
-
             View.AddSubview( CropView );
 
 
@@ -162,7 +204,7 @@ namespace iOS
 
 
             // create our bottom toolbar
-            Toolbar = new UIToolbar( new CGRect( 0, View.Bounds.Height - 40, View.Bounds.Width, 40 ) );
+            Toolbar = new UIToolbar( );
 
             // create the cancel button
             NSString cancelLabel = new NSString( ImageCropConfig.CropCancelButton_Text );
@@ -171,8 +213,6 @@ namespace iOS
             CancelButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, ImageCropConfig.CropCancelButton_Size );
             CancelButton.SetTitle( cancelLabel.ToString( ), UIControlState.Normal );
 
-            CGSize buttonSize = cancelLabel.StringSize( CancelButton.Font );
-            CancelButton.Bounds = new CGRect( 0, 0, buttonSize.Width, buttonSize.Height );
             CancelButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
                     // if cancel was pressed while editing, cancel this entire operation
@@ -195,9 +235,6 @@ namespace iOS
             EditButton.SetTitle( editLabel.ToString( ), UIControlState.Normal );
             EditButton.HorizontalAlignment = UIControlContentHorizontalAlignment.Right;
 
-            // determine its dimensions
-            buttonSize = editLabel.StringSize( EditButton.Font );
-            EditButton.Bounds = new CGRect( 0, 0, buttonSize.Width, buttonSize.Height );
             EditButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
                     if( Mode == CropMode.Previewing )
@@ -211,9 +248,9 @@ namespace iOS
                         SetMode( CropMode.Previewing );
                     }
                 };
-
+            
             // create a container that will allow us to align the buttons
-            ButtonContainer = new UIView( new CGRect( 0, View.Bounds.Height - 40, View.Bounds.Width, 40 ) );
+            ButtonContainer = new UIView( );
             ButtonContainer.AddSubview( EditButton );
             ButtonContainer.AddSubview( CancelButton );
 
@@ -327,32 +364,6 @@ namespace iOS
             base.ViewWillDisappear(animated);
 
             AnimateBlocker( false );
-        }
-
-        public override void ViewWillAppear(bool animated)
-        {
-            base.ViewWillAppear(animated);
-
-            View.Frame = new CGRect( 0, 0, View.Bounds.Width, View.Bounds.Height );
-
-            Toolbar.Frame = new CGRect( 0, View.Bounds.Height - 40, View.Bounds.Width, 40 );
-
-            ImageView.Frame = GetImageViewFrame( );
-
-            ButtonContainer.Frame = new CGRect( 0, View.Bounds.Height - 40, View.Bounds.Width, 40 );
-
-            CancelButton.Frame = new CGRect( (CancelButton.Frame.Width / 2), 0, CancelButton.Frame.Width, CancelButton.Frame.Height );
-            EditButton.Frame = new CGRect( ButtonContainer.Frame.Width - (EditButton.Frame.Width * 2.5f), 0, EditButton.Frame.Width, EditButton.Frame.Height );
-
-            DisplayLayout( );
-        }
-
-        public override void ViewDidAppear(bool animated)
-        {
-            base.ViewDidAppear(animated);
-
-            // start in editing mode (obviously)
-            SetMode( CropMode.Editing );
         }
 
         void AnimateBlocker( bool visible )

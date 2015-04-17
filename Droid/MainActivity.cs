@@ -106,7 +106,7 @@ namespace Droid
             // get the current device configuration
             Android.Content.Res.Configuration currConfig = currContext.Resources.Configuration;
 
-            if ( ( currConfig.ScreenLayout & Android.Content.Res.ScreenLayout.SizeMask ) >= Android.Content.Res.ScreenLayout.SizeXlarge )
+            if ( ( currConfig.ScreenLayout & Android.Content.Res.ScreenLayout.SizeMask ) >= Android.Content.Res.ScreenLayout.SizeLarge )
             {
                 return true;
             }

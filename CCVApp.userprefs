@@ -1,34 +1,50 @@
 ﻿<Properties StartupItem="iOS/iOS.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhone4s.8.3" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/SpringboardViewController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="CCVApp.Shared/Notes/Controls/Quote.cs">
     <Files>
-      <File FileName="iOS/SpringboardViewController.cs" Line="729" Column="23" />
+      <File FileName="iOS/Tasks/Notes/NotesViewController.cs" Line="677" Column="1" />
+      <File FileName="CCVApp.Shared/Config.cs" Line="631" Column="17" />
+      <File FileName="CCVApp.Shared/Notes/Controls/UserNote.cs" Line="267" Column="43" />
+      <File FileName="CCVApp.Shared/Notes/Controls/Quote.cs" Line="138" Column="21" />
+      <File FileName="CCVApp.Shared/Notes/Controls/ControlStyles.cs" Line="203" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="CCVApp.Shared" expanded="True">
+            <Node name="Notes" expanded="True">
+              <Node name="Controls" expanded="True" />
+            </Node>
             <Node name="RockApi" expanded="True" />
             <Node name="UI" expanded="True" />
           </Node>
           <Node name="Droid" expanded="True">
-            <Node name="Tasks" expanded="True" />
-            <Node name="UserManagement" expanded="True" />
-          </Node>
-          <Node name="iOS" expanded="True">
             <Node name="Tasks" expanded="True">
-              <Node name="Connect" expanded="True" />
+              <Node name="NotesTask" expanded="True" />
+              <Node name="PrayerTask" expanded="True" />
+            </Node>
+          </Node>
+          <Node name="iOS" expanded="True" selected="True">
+            <Node name="Tasks" expanded="True">
+              <Node name="News" expanded="True" />
               <Node name="Notes" expanded="True" />
+              <Node name="Prayer" expanded="True" />
             </Node>
             <Node name="UserManagement" expanded="True" />
-            <Node name="SpringboardViewController.cs" selected="True" />
           </Node>
           <Node name="Rock.Mobile" expanded="True">
+            <Node name="PlatformIO" expanded="True" />
+            <Node name="PlatformMedia" expanded="True" />
             <Node name="PlatformSpecific" expanded="True">
               <Node name="Android" expanded="True" />
             </Node>
             <Node name="PlatformUI" expanded="True">
-              <Node name="Droid" expanded="True" />
+              <Node name="Droid" expanded="True">
+                <Node name="DroidNative" expanded="True" />
+              </Node>
+              <Node name="iOS" expanded="True">
+                <Node name="iOSNative" expanded="True" />
+              </Node>
             </Node>
           </Node>
         </State>
@@ -36,6 +52,8 @@
       <Pad Id="MonoDevelop.Debugger.WatchPad">
         <State>
           <Value>Street</Value>
+          <Value>parentSize</Value>
+          <Value>View</Value>
         </State>
       </Pad>
     </Pads>

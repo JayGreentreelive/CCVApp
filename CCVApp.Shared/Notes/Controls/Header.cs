@@ -132,7 +132,7 @@ namespace CCVApp
                                         RectangleF elementBounds = new RectangleF( 0, 0, availableWidth, parentParams.Height );
                                         Parser.ParseBounds( reader, ref parentSize, ref elementBounds );
 
-                                        ParseHeaderElement( reader, availableWidth, parentParams.Height, mStyle.mBackgroundColor.Value, out mTitle, ref elementBounds, ref ControlStyles.mHeaderTitle );
+                                        ParseHeaderElement( reader, availableWidth, parentParams.Height, mStyle.mBackgroundColor, out mTitle, ref elementBounds, ref ControlStyles.mHeaderTitle );
                                         break;
                                     }
 
@@ -142,7 +142,7 @@ namespace CCVApp
                                         RectangleF elementBounds = new RectangleF( 0, 0, availableWidth, parentParams.Height );
                                         Parser.ParseBounds( reader, ref parentSize, ref elementBounds );
 
-                                        ParseHeaderElement( reader, availableWidth, parentParams.Height, mStyle.mBackgroundColor.Value, out mDate, ref elementBounds, ref ControlStyles.mHeaderDate );
+                                        ParseHeaderElement( reader, availableWidth, parentParams.Height, mStyle.mBackgroundColor, out mDate, ref elementBounds, ref ControlStyles.mHeaderDate );
                                         break;
                                     }
 
@@ -152,7 +152,7 @@ namespace CCVApp
                                         RectangleF elementBounds = new RectangleF( 0, 0, availableWidth, parentParams.Height );
                                         Parser.ParseBounds( reader, ref parentSize, ref elementBounds );
 
-                                        ParseHeaderElement( reader, availableWidth, parentParams.Height, mStyle.mBackgroundColor.Value, out mSpeaker, ref elementBounds, ref ControlStyles.mHeaderSpeaker );
+                                        ParseHeaderElement( reader, availableWidth, parentParams.Height, mStyle.mBackgroundColor, out mSpeaker, ref elementBounds, ref ControlStyles.mHeaderSpeaker );
                                         break;
                                     }
                                 }
@@ -194,7 +194,7 @@ namespace CCVApp
                     SetDebugFrame( Frame );
                 }
 
-                void ParseHeaderElement( XmlReader reader, float parentWidth, float parentHeight, uint parentBGColor, out PlatformLabel element, ref RectangleF elementBounds, ref Styles.Style defaultStyle )
+                void ParseHeaderElement( XmlReader reader, float parentWidth, float parentHeight, uint? parentBGColor, out PlatformLabel element, ref RectangleF elementBounds, ref Styles.Style defaultStyle )
                 {
                     element = PlatformLabel.Create( );
 
@@ -202,7 +202,7 @@ namespace CCVApp
                     // so we create our own and mix that with our defaults
                     Styles.Style elementStyle = new Styles.Style( );
                     elementStyle.Initialize( );
-                    elementStyle.mBackgroundColor = parentBGColor; //one exception is background color. We do want to inherit that.
+                    elementStyle.mBackgroundColor = parentBGColor.HasValue ? parentBGColor.Value : 0; //one exception is background color. We do want to inherit that.
                     Styles.Style.ParseStyleAttributesWithDefaults( reader, ref elementStyle, ref defaultStyle );
 
                     // Note: Margins and padding are not supported by the individual elements of the header.
