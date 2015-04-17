@@ -278,10 +278,10 @@ namespace CCVApp
 
                     // because we're basing it off of the largest control (quote or citation),
                     // we need to reintroduce the border padding.
-                    frame = new RectangleF( frame.X - borderPaddingPx, 
-                                            frame.Y - borderPaddingPx, 
-                                            frame.Width + borderPaddingPx * 2, 
-                                            frame.Height + borderPaddingPx * 2 );
+                    frame = new RectangleF( frame.X - borderPaddingPx - padding.Left, 
+                                            frame.Y - borderPaddingPx - padding.Top, 
+                                            frame.Width + (padding.Width * 2) + (borderPaddingPx * 2), 
+                                            frame.Height + (padding.Height) + borderPaddingPx );
 
                     // and store that as our bounds
                     BorderView.Frame = frame;

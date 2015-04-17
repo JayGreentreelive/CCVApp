@@ -175,7 +175,7 @@ namespace CCVApp
                             }
                         }
 
-                        return styleValue;
+                        return Rock.Mobile.Graphics.Util.UnitToPx( styleValue );
                     }
 
                     public static UInt32 ParseColor( string color )

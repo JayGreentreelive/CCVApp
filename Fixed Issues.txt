@@ -10,6 +10,7 @@ Both
 	Tons of UI bug fixes and polish.
 	Fixed the appearance of the Note Tutorial image.
 	Prayers are now sorted by least prayed for (those come up first)
+	New experimental method for deleting user notes
 
 iOS
 	Fixed a crash on iPhone when tapping the 'Share' button in Notes.

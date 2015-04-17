@@ -295,6 +295,8 @@ namespace Droid
                     PrepareCreateNotes( );
 
                     ResultView.SetBounds( new System.Drawing.RectangleF( 0, 0, NavbarFragment.GetContainerDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels ) );
+
+                    AnimateTutorialScreen( false );
                 }
 
                 public override void OnResume()

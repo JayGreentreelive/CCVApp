@@ -264,10 +264,10 @@ namespace CCVApp
 
 
                     // setup the delete button
-                    DeleteButton.Text = NoteConfig.UserNote_DeleteIcon;
-                    DeleteButton.TextColor = NoteConfig.UserNote_DeleteIconColor;
-                    DeleteButton.SetFont( ControlStylingConfig.Icon_Font_Secondary, NoteConfig.UserNote_DeleteIconSize );
-                    DeleteButton.Hidden = true;
+                    DeleteButton.Text = "";
+                    DeleteButton.TextColor = NoteConfig.UserNote_IconColor;
+                    DeleteButton.SetFont( ControlStylingConfig.Icon_Font_Primary, NoteConfig.UserNote_DeleteIconSize );
+                    //DeleteButton.Hidden = true;
                     DeleteButton.SizeToFit( );
                     DeleteButton.BackgroundColor = 0;
 
@@ -281,19 +281,23 @@ namespace CCVApp
                     AnchorTouchMaxDist *= AnchorTouchMaxDist;
 
 
-                    // validate its bounds
-                    ValidateBounds( );
+
 
                     NoteIcon.Position = new PointF( Anchor.Frame.Left + (Anchor.Frame.Width - NoteIconClosedSize.Width) / 2, 
                                                     Anchor.Frame.Top + (Anchor.Frame.Height - NoteIconClosedSize.Height) / 2 );
-
-                    // set the position for the delete button
-                    DeleteButton.Position = new PointF( AnchorFrame.Left - DeleteButton.Bounds.Width / 2, 
-                                                        AnchorFrame.Top - DeleteButton.Bounds.Height / 2 );
-
+                    
                     // set the actual note TextView relative to the anchor
                     TextView.Position = new PointF( AnchorFrame.Left + AnchorFrame.Width / 2, 
                                                      AnchorFrame.Top + AnchorFrame.Height / 2 );
+
+                    // set the position for the delete button
+                    DeleteButton.Position = new PointF( AnchorFrame.Left + width - DeleteButton.Bounds.Width / 2, 
+                        TextView.Position.Y - DeleteButton.Bounds.Height );
+
+                    // validate its bounds
+                    ValidateBounds( );
+
+
 
                     // set the starting text if it was provided
                     if( startingText != null )
@@ -352,7 +356,7 @@ namespace CCVApp
                     bool consumed = false;
 
                     // if delete is enabled, see if they tapped within range of the delete button
-                    if( DeleteEnabled )
+                    /*if( DeleteEnabled )
                     {
                         if( TouchInDeleteButtonRange( touch ) )
                         {
@@ -361,6 +365,13 @@ namespace CCVApp
 
                             State = TouchState.Delete;
                         }
+                    }*/
+                    if( DeleteButton.Hidden == false && TouchInDeleteButtonRange( touch ) )
+                    {
+                        // if they did, we consume this and bye bye note.
+                        consumed = true;
+
+                        State = TouchState.Delete;
                     }
                     // if the touch is in our region, begin tracking
                     else if( TouchInAnchorRange( touch ) )
@@ -374,7 +385,7 @@ namespace CCVApp
 
                             // Store our starting touch and kick off our delete timer
                             TrackingLastPos = touch;
-                            DeleteTimer.Start();
+                            //DeleteTimer.Start();
                             Console.WriteLine( "UserNote Hold" );
                         }
                     }
@@ -388,7 +399,7 @@ namespace CCVApp
                 {
                     // We would be in the hold state if this is the first TouchesMoved 
                     // after TouchesBegan.
-                    if( DeleteEnabled == false )
+                    //if( DeleteEnabled == false )
                     {
                         // if we're moving, update by the amount we moved.
                         PointF delta = new PointF( touch.X - TrackingLastPos.X, touch.Y - TrackingLastPos.Y );
@@ -448,7 +459,7 @@ namespace CCVApp
                             // if delete enabled was turned on while holding
                             // (which would happen if a timer fired while holding)
                             // then don't toggle, they are deciding what to delete.
-                            if( DeleteEnabled == false )
+                            //if( DeleteEnabled == false )
                             {
                                 // if it's open and they tapped in the note anchor, close it.
                                 if( TextView.Hidden == false )
@@ -471,7 +482,7 @@ namespace CCVApp
                         }
                     }
 
-                    DeleteTimer.Stop();
+                    //DeleteTimer.Stop();
 
                     return consumed == true ? this : null;
                 }
@@ -521,7 +532,7 @@ namespace CCVApp
                     // we only want to do that when no other note is touched.
                     TextView.ResignFirstResponder( );
 
-                    if( DeleteEnabled == true )
+                    /*if( DeleteEnabled == true )
                     {
                         DeleteEnabled = false;
                         Console.WriteLine( "Clearing Delete Mode" );
@@ -538,7 +549,7 @@ namespace CCVApp
                             {
                             } );
                         colorAnimator.Start( );
-                    }
+                    }*/
                 }
 
                 public override void AddOffset( float xOffset, float yOffset )
@@ -576,16 +587,17 @@ namespace CCVApp
 
                     NoteIcon.Position = new PointF( NoteIcon.Position.X + xOffset,
                                                     NoteIcon.Position.Y + yOffset );
-
-                    DeleteButton.Position = new PointF( DeleteButton.Position.X + xOffset,
-                                                        DeleteButton.Position.Y + yOffset );
-
+                    
                     AnchorFrame = Anchor.Frame;
 
 
                     // Scale the TextView to no larger than the remaining width of the screen 
                     float width = Math.Max( MinNoteWidth, Math.Min( MaxNoteWidth, ScreenWidth - (AnchorFrame.X + (AnchorFrame.Width / 2)) ) );
                     TextView.Bounds = new RectangleF( 0, 0, width, TextView.Bounds.Height);
+
+                    // set the position for the delete button
+                    DeleteButton.Position = new PointF( AnchorFrame.Left + width - DeleteButton.Bounds.Width / 2, 
+                                                        TextView.Position.Y - DeleteButton.Bounds.Height );
                 }
 
                 void ValidateBounds()
@@ -601,6 +613,10 @@ namespace CCVApp
                     // Scale the TextView to no larger than the remaining width of the screen 
                     float width = Math.Max( MinNoteWidth, Math.Min( MaxNoteWidth, ScreenWidth - (AnchorFrame.X + (AnchorFrame.Width / 2)) ) );
                     TextView.Bounds = new RectangleF( 0, 0, width, TextView.Bounds.Height);
+
+                    // set the position for the delete button
+                    DeleteButton.Position = new PointF( AnchorFrame.Left + width - DeleteButton.Bounds.Width / 2, 
+                                                        TextView.Position.Y - DeleteButton.Bounds.Height );
                 }
 
                 public override void AddToView( object obj )
@@ -692,6 +708,8 @@ namespace CCVApp
                             endTypeSize = NoteConfig.UserNote_IconOpenSize;
 
                             sizeAnimTimeScalar = .95f;
+
+                            DeleteButton.Hidden = false;
                         }
                         else
                         {
@@ -701,6 +719,8 @@ namespace CCVApp
                             endTypeSize = NoteConfig.UserNote_IconClosedSize;
 
                             sizeAnimTimeScalar = 1.05f;
+
+                            DeleteButton.Hidden = true;
                         }
 
                         // size...
