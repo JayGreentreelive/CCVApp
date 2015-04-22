@@ -52,7 +52,7 @@ namespace iOS
                     Title.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
                     Title.LineBreakMode = UILineBreakMode.TailTruncation;
                     Title.SizeToFit( );
-                    Title.Frame = new CGRect( 5, Image.Frame.Bottom + 5, Frame.Width - 10, Title.Frame.Height + 5 );
+                    Title.Frame = new CGRect( 5, Image.Frame.Bottom, Frame.Width - 10, Title.Frame.Height );
                     AddSubview( Title );
 
 
@@ -191,7 +191,7 @@ namespace iOS
                     PrimaryTableCell.Image.Frame = new CGRect( 0, 0, tableView.Bounds.Width, tableView.Bounds.Width * imageAspect );
 
                     PrimaryTableCell.Title.SizeToFit( );
-                    PrimaryTableCell.Title.Frame = new CGRect( 5, PrimaryTableCell.Image.Frame.Bottom + 5, tableView.Bounds.Width - 10, PrimaryTableCell.Title.Frame.Height + 5 );
+                    PrimaryTableCell.Title.Frame = new CGRect( 5, PrimaryTableCell.Image.Frame.Bottom, tableView.Bounds.Width - 10, PrimaryTableCell.Title.Frame.Height );
 
                     //PrimaryTableCell.BottomBanner.SizeToFit( );
                     //PrimaryTableCell.BottomBanner.Bounds = new CGRect( 0, 0, tableView.Bounds.Width, PrimaryTableCell.BottomBanner.Bounds.Height + 10 );

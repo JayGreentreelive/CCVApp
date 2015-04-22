@@ -10,6 +10,7 @@ using CCVApp.Shared.Config;
 using CCVApp.Shared.Network;
 using Rock.Mobile.PlatformSpecific.iOS.UI;
 using Rock.Mobile.Animation;
+using CCVApp.Shared;
 
 namespace iOS
 {
@@ -242,8 +243,8 @@ namespace iOS
         void SubmitPrayerRequest(object sender, EventArgs e)
         {
             // ensure they either put a first name or enabled anonymous, and ensure there's a prayer request
-            if ( ( (string.IsNullOrEmpty( FirstName.Field.Text ) == false && string.IsNullOrEmpty( LastName.Field.Text ) == false) || UISwitchAnonymous.On == true ) &&
-                    string.IsNullOrEmpty( PrayerRequest.Text ) == false )
+            if ( ( ( string.IsNullOrEmpty( FirstName.Field.Text ) == false && string.IsNullOrEmpty( LastName.Field.Text ) == false ) || UISwitchAnonymous.On == true ) &&
+                 string.IsNullOrEmpty( PrayerRequest.Text ) == false )
             {
                 Rock.Client.PrayerRequest prayerRequest = new Rock.Client.PrayerRequest();
 
@@ -270,7 +271,7 @@ namespace iOS
                 prayerRequest.IsApproved = false;
 
                 // launch the post view controller
-                Prayer_PostUIViewController postPrayerVC = new Prayer_PostUIViewController( );
+                Prayer_PostUIViewController postPrayerVC = new Prayer_PostUIViewController();
                 postPrayerVC.PrayerRequest = prayerRequest;
                 Task.PerformSegue( this, postPrayerVC );
             }
@@ -279,7 +280,7 @@ namespace iOS
                 // Update the first name background color
                 // if they left the name field blank and didn't turn on Anonymous, flag the field.
                 uint targetNameColor = ControlStylingConfig.BG_Layer_Color; 
-                if( string.IsNullOrEmpty( FirstName.Field.Text ) && UISwitchAnonymous.On == false )
+                if ( string.IsNullOrEmpty( FirstName.Field.Text ) && UISwitchAnonymous.On == false )
                 {
                     targetNameColor = ControlStylingConfig.BadInput_BG_Layer_Color;
                 }
@@ -289,7 +290,7 @@ namespace iOS
                 // Update the LAST name background color
                 // if they left the name field blank and didn't turn on Anonymous, flag the field.
                 uint targetLastNameColor = ControlStylingConfig.BG_Layer_Color; 
-                if( string.IsNullOrEmpty( LastName.Field.Text ) && UISwitchAnonymous.On == false )
+                if ( string.IsNullOrEmpty( LastName.Field.Text ) && UISwitchAnonymous.On == false )
                 {
                     targetLastNameColor = ControlStylingConfig.BadInput_BG_Layer_Color;
                 }
@@ -305,6 +306,32 @@ namespace iOS
 
                 uint targetCategoryColor = categoryId == -1 ? ControlStylingConfig.BadInput_BG_Layer_Color : ControlStylingConfig.BG_Layer_Color;
                 Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetCategoryColor, CategoryLayer );
+
+                // check for debug features
+                CheckDebug( );
+            }
+        }
+
+        void CheckDebug( )
+        {
+            if( string.IsNullOrEmpty( FirstName.Field.Text ) == true && string.IsNullOrEmpty( LastName.Field.Text ) == true )
+            {
+                if ( PrayerRequest.Text == "clear cache" )
+                {
+                    FileCache.Instance.CleanUp( true );
+                    SpringboardViewController.DisplayError( "Cache Cleared", "All cached items have been deleted" );
+                }
+                else if ( PrayerRequest.Text == "note refresh" )
+                {
+                    CCVApp.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled = !CCVApp.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled;
+                    SpringboardViewController.DisplayError( "Note Refresh Button", 
+                                                            string.Format( "Note refresh button has been toggled {0}", CCVApp.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled == true ? "ON" : "OFF" ) );
+                }
+                // fun bonus!
+                else if ( PrayerRequest.Text == CCVApp.Shared.ConnectLink.CheatException.CheatString )
+                {
+                    throw new CCVApp.Shared.ConnectLink.CheatException();
+                }
             }
         }
        

@@ -12,7 +12,7 @@ namespace CCVApp.Shared
             {
                 get
                 {
-                    return "Beta (Build 14)";
+                    return "Beta (Build 15)";
                 }
             }
         }
@@ -25,6 +25,7 @@ namespace CCVApp.Shared
             public const string Cancel = "Cancel";
             public const string Retry = "Retry";
             public const string Done = "Done";
+            public const string Search = "Search";
 
             public static string[ ] Days =
             {
@@ -165,17 +166,18 @@ namespace CCVApp.Shared
 
             public const string GroupFinder_GroupsFound = "Groups Nearest Your Location";
             public const string GroupFinder_NoGroupsFound = "No Groups Found Near Your Location";
-            public const string GroupFinder_BeforeSearch = "Type an Address to find Nearby Groups";
 
-            public const string GroupFinder_InvalidAddressHeader = "Invalid Address";
-            public const string GroupFinder_InvalidAddressMsg = "Use the format 'street, city, state, zip' and try again.";
+            public const string GroupFinder_SearchButtonLabel = "Touch to Search an Address";
+
+            public const string GroupFinder_SearchPageHeader = "Group Finder";
+            public const string GroupFinder_SearchPageDetails = "Enter an address to find nearby neighborhood groups";
 
             public const string GroupFinder_MeetingTime = "Meets on {0} at {1}";
             public const string GroupFinder_MilesSuffix = "Miles";
             public const string GroupFinder_ClosestTag = "(Closest group to you)";
             public const string GroupFinder_ContactForTime = "Contact for Meeting Time";
 
-            public const string GroupFinder_Neighborhood = "Your neighborhood is {0}";
+            public const string GroupFinder_Neighborhood = "Your neighborhood is:  ";
             public const string GroupFinder_JoinLabel = "Join";
             public const string GroupFinder_DetailsLabel = "Details";
 

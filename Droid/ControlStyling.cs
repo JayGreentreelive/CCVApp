@@ -4,6 +4,7 @@ using Rock.Mobile.PlatformUI;
 using CCVApp.Shared.Config;
 using Android.Views;
 using Android.Graphics;
+using Android.Graphics.Drawables;
 
 namespace Droid
 {
@@ -11,8 +12,12 @@ namespace Droid
     {
         public static void StyleButton( Button button, string text, string font, uint size )
         {
+            // load up the rounded drawable and set the color
+            Drawable buttonDrawable = (Drawable)Rock.Mobile.PlatformSpecific.Android.Core.Context.Resources.GetDrawable( Resource.Drawable.RoundButton );
+            buttonDrawable.SetColorFilter( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Button_BGColor ), PorterDuff.Mode.Src );
+
+            button.SetBackgroundDrawable( buttonDrawable );
             button.Text = text;
-            button.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Button_BGColor ) );
 
             button.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( font ), TypefaceStyle.Normal );
             button.SetTextSize( Android.Util.ComplexUnitType.Dip, size );

@@ -1,54 +1,43 @@
-﻿<Properties StartupItem="Droid/Droid.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|iPhone" PreferredExecutionTarget="Android.094c904b" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Tasks/NotesTask/NotesFragment.cs">
+﻿<Properties StartupItem="iOS/iOS.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhone4s.8.3" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/SpringboardViewController.cs">
     <Files>
-      <File FileName="iOS/Tasks/Notes/NotesViewController.cs" Line="691" Column="59" />
-      <File FileName="CCVApp.Shared/Notes/Controls/UserNote.cs" Line="269" Column="28" />
-      <File FileName="CCVApp.Shared/Notes/Controls/Note.cs" Line="474" Column="53" />
-      <File FileName="iOS/Tasks/Notes/NotesWatchUIViewController.cs" Line="290" Column="32" />
-      <File FileName="Droid/Tasks/NotesTask/NotesFragment.cs" Line="284" Column="18" />
+      <File FileName="Droid/Tasks/ConnectTask/JoinGroupFragment.cs" Line="70" Column="56" />
+      <File FileName="iOS/Tasks/Prayer/PrayerMainUIViewController.cs" Line="131" Column="43" />
+      <File FileName="iOS/SpringboardViewController.cs" Line="1228" Column="67" />
+      <File FileName="CCVApp.Shared/RockApi/RockGeneralData.cs" Line="137" Column="40" />
+      <File FileName="CCVApp.Shared/RockApi/RockApi.cs" Line="795" Column="17" />
+      <File FileName="../Rock/Rock.Client/CodeGenerated/FinancialPersonSavedAccount.cs" Line="66" Column="9" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="CCVApp.Shared" expanded="True">
-            <Node name="Notes" expanded="True">
-              <Node name="Controls" expanded="True" />
-            </Node>
-            <Node name="RockApi" expanded="True" />
-            <Node name="UI" expanded="True" />
-          </Node>
           <Node name="Droid" expanded="True">
+            <Node name="Resources" expanded="True" />
             <Node name="Tasks" expanded="True">
-              <Node name="NotesTask" expanded="True">
-                <Node name="NotesFragment.cs" selected="True" />
-              </Node>
+              <Node name="ConnectTask" expanded="True" />
+              <Node name="NewsTask" expanded="True" />
+              <Node name="PrayerTask" selected="True" />
             </Node>
           </Node>
           <Node name="iOS" expanded="True">
             <Node name="Tasks" expanded="True">
+              <Node name="Connect" expanded="True" />
               <Node name="News" expanded="True" />
               <Node name="Notes" expanded="True" />
               <Node name="Prayer" expanded="True" />
             </Node>
-            <Node name="UserManagement" expanded="True" />
           </Node>
+          <Node name="Rock.Client.Models" expanded="True" />
           <Node name="Rock.Mobile" expanded="True">
-            <Node name="PlatformIO" expanded="True" />
-            <Node name="PlatformMedia" expanded="True" />
-            <Node name="PlatformSpecific" expanded="True">
-              <Node name="Android" expanded="True" />
-            </Node>
             <Node name="PlatformUI" expanded="True">
-              <Node name="Droid" expanded="True">
-                <Node name="DroidNative" expanded="True" />
-              </Node>
-              <Node name="iOS" expanded="True">
-                <Node name="iOSNative" expanded="True" />
-              </Node>
+              <Node name="Droid" expanded="True" />
             </Node>
           </Node>
         </State>
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>

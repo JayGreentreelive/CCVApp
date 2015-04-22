@@ -181,6 +181,8 @@ namespace iOS
         /// <value>The OOBE view controller.</value>
         protected OOBEViewController OOBEViewController { get; set; }
 
+        protected SplashViewController SplashViewController { get; set; }
+
         /// <summary>
         /// True while the user is still being guided through the OOBE. This includes
         /// the view controllers the OOBE launches, like Login and Register
@@ -394,6 +396,9 @@ namespace iOS
             OOBEViewController = new OOBEViewController( );
             OOBEViewController.Springboard = this;
 
+            SplashViewController = new SplashViewController( );
+            SplashViewController.Springboard = this;
+
             ScrollView = new UIScrollViewWrapper( );
             ScrollView.Frame = View.Frame;
             ScrollView.Parent = this;
@@ -577,7 +582,7 @@ namespace iOS
             Console.WriteLine( "Loading objects done." );
 
             // set the viewing campus now that their profile has loaded
-            CampusSelectionText.Text = string.Format( SpringboardStrings.Viewing_Campus, RockGeneralData.Instance.Data.CampusIdToName( RockMobileUser.Instance.ViewingCampus ) );
+            CampusSelectionText.Text = string.Format( SpringboardStrings.Viewing_Campus, RockGeneralData.Instance.Data.CampusIdToName( RockMobileUser.Instance.ViewingCampus ) ).ToUpper( );
             CampusSelectionText.SizeToFit( );
 
             // seed the last sync time with now, so that when OnActivated gets called we don't do it again.
@@ -614,17 +619,38 @@ namespace iOS
 
             // only do the OOBE if the user hasn't seen it yet
             if ( RockMobileUser.Instance.OOBEComplete == false )
-            //if( RanOOBE == false )
+                //if( RanOOBE == false )
             {
                 // sanity check for testers that didn't listen to me and delete / reinstall.
                 // This will force them to be logged out so they experience the OOBE properly.
                 RockMobileUser.Instance.LogoutAndUnbind( );
-                
+
                 //RanOOBE = true;
                 IsOOBERunning = true;
                 AddChildViewController( OOBEViewController );
                 View.AddSubview( OOBEViewController.View );
             }
+            else
+            {
+                // kick off the splash screen animation
+                AddChildViewController( SplashViewController );
+                View.AddSubview( SplashViewController.View );
+            }
+        }
+
+        public void SplashComplete( )
+        {
+            SimpleAnimator_Float splashFadeOutAnim = new SimpleAnimator_Float( 1.00f, 0.00f, .33f, delegate(float percent, object value )
+                {
+                    SplashViewController.View.Layer.Opacity = (float)value;
+                },
+                delegate
+                {
+                    // remove the splash screen
+                    SplashViewController.RemoveFromParentViewController( );
+                    SplashViewController.View.RemoveFromSuperview( );
+                } );
+            splashFadeOutAnim.Start( );
         }
 
         //static bool RanOOBE = false;
@@ -918,7 +944,7 @@ namespace iOS
         void RefreshCampusSelection( )
         {
             string newCampusText = string.Format( SpringboardStrings.Viewing_Campus, 
-                                                  RockGeneralData.Instance.Data.CampusIdToName( RockMobileUser.Instance.ViewingCampus ) );
+                RockGeneralData.Instance.Data.CampusIdToName( RockMobileUser.Instance.ViewingCampus ) ).ToUpper( );
 
             if ( CampusSelectionText.Text != newCampusText )
             {
@@ -1036,15 +1062,21 @@ namespace iOS
 
             // center the welcome and name labels within the available Springboard width
             float totalNameWidth = (float) (WelcomeField.Bounds.Width + UserNameField.Bounds.Width);
+            totalNameWidth = Math.Min( totalNameWidth, PrimaryContainerConfig.SlideAmount - 10 );
+
             float totalNameHeight = Math.Max( (float) WelcomeField.Bounds.Height, (float) UserNameField.Bounds.Height );
 
             WelcomeField.Layer.AnchorPoint = CGPoint.Empty;
             WelcomeField.Layer.Position = new CGPoint( ( PrimaryContainerConfig.SlideAmount - totalNameWidth ) / 2, EditPictureButton.Frame.Bottom + 10 );
             WelcomeField.Bounds = new CGRect( 0, 0, WelcomeField.Bounds.Width, totalNameHeight );
 
+
+            nfloat availNameWidth = totalNameWidth - WelcomeField.Bounds.Width + 5;
             UserNameField.Layer.AnchorPoint = CGPoint.Empty;
             UserNameField.Layer.Position = new CGPoint( WelcomeField.Frame.Right, WelcomeField.Frame.Y );
-            UserNameField.Bounds = new CGRect( 0, 0, UserNameField.Bounds.Width, totalNameHeight );
+            UserNameField.Bounds = new CGRect( 0, 0, availNameWidth, totalNameHeight );
+            UserNameField.LineBreakMode = UILineBreakMode.TailTruncation;
+            UserNameField.AdjustsFontSizeToFitWidth = false;
 
             ViewProfileLabel.Layer.AnchorPoint = CGPoint.Empty;
             ViewProfileLabel.Font = FontManager.GetFont( ControlStylingConfig.Small_Font_Light, ControlStylingConfig.Small_FontSize );
@@ -1089,12 +1121,12 @@ namespace iOS
             CampusSelectionText.Layer.AnchorPoint = CGPoint.Empty;
             if ( BottomSeperator.Frame.Bottom >= View.Frame.Height )
             {
-                CampusSelectionText.Layer.Position = new CGPoint( 5, BottomSeperator.Frame.Bottom + 15 );
+                CampusSelectionText.Layer.Position = new CGPoint( 10, BottomSeperator.Frame.Bottom + 25 );
             }
             // if it is NOT too large, place it at the bottom of the screen
             else
             {
-                CampusSelectionText.Layer.Position = new CGPoint( 5, View.Frame.Height - CampusSelectionText.Frame.Height - 2 );
+                CampusSelectionText.Layer.Position = new CGPoint( 10, View.Frame.Height - CampusSelectionText.Frame.Height - 10 );
             }
 
             UpdateCampusViews( );

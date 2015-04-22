@@ -98,7 +98,7 @@ namespace Droid
             public class PrimaryListItem : LinearLayout
             {
                 public ArrayAdapter ParentAdapter { get; set; }
-                LinearLayout DetailsLayout { get; set; }
+                //LinearLayout DetailsLayout { get; set; }
 
                 // stuff that will be set by data
                 public Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView Billboard { get; set; }
@@ -126,24 +126,25 @@ namespace Droid
                     Title.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Large_FontSize );
                     Title.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
                     Title.Text = ConnectStrings.Main_Connect_Header;
-                    ( (LinearLayout.LayoutParams)Title.LayoutParameters ).TopMargin = 25;
+                    ( (LinearLayout.LayoutParams)Title.LayoutParameters ).TopMargin = 5;
                     ( (LinearLayout.LayoutParams)Title.LayoutParameters ).LeftMargin = 25;
+                    ( (LinearLayout.LayoutParams)Title.LayoutParameters ).BottomMargin = 5;
                     AddView( Title );
 
-                    DetailsLayout = new LinearLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    /*DetailsLayout = new LinearLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     DetailsLayout.Orientation = Android.Widget.Orientation.Horizontal;
                     DetailsLayout.LayoutParameters = new LinearLayout.LayoutParams( LayoutParams.WrapContent, LayoutParams.WrapContent );
                     ( (LinearLayout.LayoutParams)DetailsLayout.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
                     ( (LinearLayout.LayoutParams)DetailsLayout.LayoutParameters ).LeftMargin = 25;
                     ( (LinearLayout.LayoutParams)DetailsLayout.LayoutParameters ).RightMargin = 25;
                     ( (LinearLayout.LayoutParams)DetailsLayout.LayoutParameters ).BottomMargin = 50;
-                    AddView( DetailsLayout );
+                    AddView( DetailsLayout );*/
 
                     // fill the remaining space with a dummy view, and that will align our speaker to the right
-                    View dummyView = new View( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    /*View dummyView = new View( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     dummyView.LayoutParameters = new LinearLayout.LayoutParams( 0, 0 );
                     ( (LinearLayout.LayoutParams)dummyView.LayoutParameters ).Weight = 1;
-                    DetailsLayout.AddView( dummyView );
+                    DetailsLayout.AddView( dummyView );*/
 
                     //Footer = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     //Footer.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );

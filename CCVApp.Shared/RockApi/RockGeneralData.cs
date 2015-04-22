@@ -54,6 +54,11 @@ namespace CCVApp
                         PrayerCategories.Add( new Rock.Client.Category( ) { Name = "Current Events", Id = 111 } );
                         PrayerCategories.Add( new Rock.Client.Category( ) { Name = "Depression/Anxiety", Id = 112 } );
                         PrayerCategories.Add( new Rock.Client.Category( ) { Name = "Family Issues", Id = 113 } );
+
+                        // in debug builds, let the refresh button be enabled by default
+                        #if DEBUG
+                        RefreshButtonEnabled = true;
+                        #endif
                     }
 
                     [JsonConstructor]
@@ -139,6 +144,13 @@ namespace CCVApp
                     /// </summary>
                     /// <value>The prayer categories.</value>
                     public List<Rock.Client.Category> PrayerCategories { get; set; }
+
+                    /// <summary>
+                    /// Debug feature, when true there's a refresh button in the Notes section
+                    /// letting you update the note as you write it.
+                    /// </summary>
+                    /// <value><c>true</c> if refresh button enabled; otherwise, <c>false</c>.</value>
+                    public bool RefreshButtonEnabled { get; set; }
                 }
                 public GeneralData Data { get; set; }
 

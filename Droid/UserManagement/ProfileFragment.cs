@@ -233,6 +233,7 @@ namespace Droid
 
             LogoutButton = view.FindViewById<Button>( Resource.Id.logoutButton );
             ControlStyling.StyleButton( LogoutButton, ProfileStrings.LogoutButtonTitle, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            LogoutButton.SetBackgroundDrawable( null );
 
             DoneButton.Click += (object sender, EventArgs e) => 
                 {

@@ -6,10 +6,19 @@
 		<!--Start Series-->
 		<Series>
 			<Message>
+				<Name>COMPARISON</Name>
+				<Speaker>Ashley Wooldridge</Speaker>
+				<Date>4/19/2015</Date>
+				<NoteUrl>xml/message_4_18_2015.xml</NoteUrl>
+			</Message>
+
+			<Message>
 				<Name>DOUBT</Name>
 				<Speaker>Todd Clark</Speaker>
 				<Date>4/12/2015</Date>
 				<NoteUrl>xml/message_4_11_2015.xml</NoteUrl>
+				<WatchUrl>http://player.vimeo.com/external/124855889.m3u8?p=high,standard,mobile&amp;s=5a20cbfadb3301a1ac8e6d19373c8fbe</WatchUrl>
+				<ShareUrl>http://ccv.church/Arena/default.aspx?page=17529&amp;item=503</ShareUrl>
 			</Message>
 
 			<Name>DETOX</Name>

@@ -116,7 +116,7 @@ namespace iOS
                 public SeriesCell( UITableViewCellStyle style, string cellIdentifier ) : base( style, cellIdentifier )
                 {
                     Title = new UILabel( );
-                    Title.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Medium_Font_Bold, ControlStylingConfig.Medium_FontSize );
+                    Title.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
 
                     Title.Layer.AnchorPoint = CGPoint.Empty;
                     Title.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
@@ -328,7 +328,7 @@ namespace iOS
                 // Date
                 cell.Date.Text = Series.DateRanges;
                 cell.Date.SizeToFit( );
-                cell.Date.Frame = new CGRect( 5, cell.Title.Frame.Bottom, cell.Frame.Width - 5, cell.Date.Frame.Height + 5 );
+                cell.Date.Frame = new CGRect( 5, cell.Title.Frame.Bottom - 5, cell.Frame.Width - 5, cell.Date.Frame.Height + 5 );
 
                 // Description
                 cell.Desc.Text = Series.Description;
@@ -336,7 +336,7 @@ namespace iOS
                 cell.Desc.SizeToFit( );
                 cell.Desc.Frame = new CGRect( 5, cell.Date.Frame.Bottom, cell.Frame.Width - 10, cell.Desc.Frame.Height + 5 );
 
-                PendingPrimaryCellHeight = cell.Desc.Frame.Bottom;
+                PendingPrimaryCellHeight = cell.Desc.Frame.Bottom + 5;
 
                 return cell;
             }
@@ -366,21 +366,21 @@ namespace iOS
 
                 // Buttons
                 cell.TakeNotesButton.Frame = new CGRect( cell.Bounds.Width - cell.TakeNotesButton.Bounds.Width, 
-                    (rowHeight - cell.TakeNotesButton.Bounds.Height) / 2, 
+                                                        (rowHeight - cell.TakeNotesButton.Bounds.Height) / 2, 
                                                              cell.TakeNotesButton.Bounds.Width, 
                                                              cell.TakeNotesButton.Bounds.Height );
 
-                cell.WatchButton.Frame = new CGRect( cell.TakeNotesButton.Frame.Left - cell.WatchButton.Bounds.Width - 10, 
+                cell.WatchButton.Frame = new CGRect( cell.TakeNotesButton.Frame.Left - cell.WatchButton.Bounds.Width, 
                     (rowHeight - cell.WatchButton.Bounds.Height) / 2, 
                                                          cell.WatchButton.Bounds.Width, 
                                                          cell.WatchButton.Bounds.Height );
 
-                cell.ListenButton.Frame = new CGRect( cell.WatchButton.Frame.Left - cell.ListenButton.Bounds.Width - 10, 
+                cell.ListenButton.Frame = new CGRect( cell.WatchButton.Frame.Left - cell.ListenButton.Bounds.Width, 
                     (rowHeight - cell.ListenButton.Bounds.Height) / 2, 
                     cell.ListenButton.Bounds.Width, 
                     cell.ListenButton.Bounds.Height );
 
-                nfloat availableWidth = cell.Bounds.Width - cell.ListenButton.Bounds.Width - cell.WatchButton.Bounds.Width - cell.TakeNotesButton.Bounds.Width - 5 - 10;
+                nfloat availableWidth = cell.Bounds.Width - cell.ListenButton.Bounds.Width - cell.WatchButton.Bounds.Width - cell.TakeNotesButton.Bounds.Width;
 
                 // disable the button if there's no listen URL
                 if ( string.IsNullOrEmpty( Series.Messages[ row ].AudioUrl ) )

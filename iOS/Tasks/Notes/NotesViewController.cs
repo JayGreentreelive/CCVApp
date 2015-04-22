@@ -232,15 +232,18 @@ namespace iOS
 
                 //note: the frame height of the nav bar is what it CURRENTLY is, not what it WILL be after we rotate. So, when we go from Portrait to Landscape,
                 // it says 40, but it's gonna be 32. Conversely, going back, we use 32 and it's actually 40, which causes us to start this view 8px too high.
-                #if DEBUG
-                RefreshButton.Layer.Position = new CGPoint (View.Bounds.Width / 2, (RefreshButton.Frame.Height / 2));
+                if ( CCVApp.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled == true )
+                {
+                    RefreshButton.Layer.Position = new CGPoint( View.Bounds.Width / 2, ( RefreshButton.Frame.Height / 2 ) );
 
-                UIScrollView.Frame = new CGRect(0, 0, View.Bounds.Width, View.Bounds.Height - RefreshButton.Frame.Height );
-                UIScrollView.Layer.Position = new CGPoint(UIScrollView.Layer.Position.X, UIScrollView.Layer.Position.Y + RefreshButton.Frame.Bottom);
-                #else
-                UIScrollView.Frame = new CGRect (0, 0, View.Bounds.Width, View.Bounds.Height );
-                UIScrollView.Layer.Position = new CGPoint (UIScrollView.Layer.Position.X, UIScrollView.Layer.Position.Y );
-                #endif
+                    UIScrollView.Frame = new CGRect( 0, 0, View.Bounds.Width, View.Bounds.Height - RefreshButton.Frame.Height );
+                    UIScrollView.Layer.Position = new CGPoint( UIScrollView.Layer.Position.X, UIScrollView.Layer.Position.Y + RefreshButton.Frame.Bottom );
+                }
+                else
+                {
+                    UIScrollView.Frame = new CGRect( 0, 0, View.Bounds.Width, View.Bounds.Height );
+                    UIScrollView.Layer.Position = new CGPoint( UIScrollView.Layer.Position.X, UIScrollView.Layer.Position.Y );
+                }
 
                 Indicator.Layer.Position = new CGPoint (View.Bounds.Width / 2, View.Bounds.Height / 2);
 
@@ -294,9 +297,10 @@ namespace iOS
 
             KeyboardAdjustManager = new Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager( View, UIScrollView );
 
-            #if DEBUG
-            View.AddSubview( RefreshButton );
-            #endif
+            if ( CCVApp.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled == true )
+            {
+                View.AddSubview( RefreshButton );
+            }
 
             ResultView = new UIResultView( UIScrollView, View.Frame.ToRectF( ), OnResultViewDone );
 

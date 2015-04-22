@@ -33,6 +33,18 @@ namespace Droid
                     base.Activate( forResume );
                 }
 
+                public override void Deactivate(bool forPause)
+                {
+                    base.Deactivate(forPause);
+
+                    // if we're deactivating because they navigated away,
+                    // reset the prayer state
+                    if ( forPause == false )
+                    {
+                        MainPage.ResetPrayerStatus( );
+                    }
+                }
+
                 public override TaskFragment StartingFragment()
                 {
                     return MainPage;

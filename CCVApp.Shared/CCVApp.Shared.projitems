@@ -49,5 +49,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)UI\UIResultView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\UIBlockerView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\UIOOBE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\UISplash.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\UIGroupFinderSearch.cs" />
   </ItemGroup>
 </Project>

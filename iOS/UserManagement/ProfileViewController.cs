@@ -272,12 +272,13 @@ namespace iOS
 
             DoneButton = new UIButton( );
             ScrollView.AddSubview( DoneButton );
-            ControlStyling.StyleButton( DoneButton, ProfileStrings.DoneButtonTitle, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            ControlStyling.StyleButton( DoneButton, ProfileStrings.DoneButtonTitle, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             DoneButton.SizeToFit( );
 
             LogoutButton = new UIButton( );
             ScrollView.AddSubview( LogoutButton );
-            ControlStyling.StyleButton( LogoutButton, ProfileStrings.LogoutButtonTitle, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            LogoutButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
+            LogoutButton.SetTitle( ProfileStrings.LogoutButtonTitle, UIControlState.Normal );
             LogoutButton.SizeToFit( );
 
 
@@ -404,9 +405,9 @@ namespace iOS
             BirthdayButton.Frame = Birthdate.Background.Frame;
             HomeCampus.SetFrame( new CGRect( -10, Birthdate.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
             HomeCampusButton.Frame = HomeCampus.Background.Frame;
-            DoneButton.Frame = new CGRect( View.Frame.Left + 8, HomeCampus.Background.Frame.Bottom + 20, ControlStyling.ButtonWidth, ControlStyling.ButtonHeight );
-            LogoutButton.Frame = new CGRect( View.Frame.Right - ControlStyling.ButtonWidth - 8, HomeCampus.Background.Frame.Bottom + 20, ControlStyling.ButtonWidth, ControlStyling.ButtonHeight );
 
+            DoneButton.Frame = new CGRect( View.Frame.Left + 10, HomeCampus.Background.Frame.Bottom + 20, View.Bounds.Width - 20, ControlStyling.ButtonHeight );
+            LogoutButton.Frame = new CGRect( ( View.Frame.Width - ControlStyling.ButtonWidth) / 2, DoneButton.Frame.Bottom + 20, ControlStyling.ButtonWidth, ControlStyling.ButtonHeight );
 
             nfloat controlBottom = LogoutButton.Frame.Bottom + ( View.Bounds.Height * .25f );
             ScrollView.ContentSize = new CGSize( 0, (nfloat) Math.Max( controlBottom, View.Bounds.Height * 1.05f ) );

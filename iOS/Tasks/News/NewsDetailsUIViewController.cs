@@ -175,19 +175,22 @@ namespace iOS
         {
             base.LayoutChanged();
 
+            float textHorzPadding = 20;
+            float textVertPadding = 50;
+
             // resize the image to fit the width of the device
             nfloat imageAspect = ImageBanner.Image.Size.Height / ImageBanner.Image.Size.Width;
             ImageBanner.Frame = new CGRect( 0, 0, View.Bounds.Width, View.Bounds.Width * imageAspect );
 
             // adjust the news title to have padding on the left and right.
-            NewsTitle.Frame = new CGRect( 10, ImageBanner.Frame.Bottom + ((40 - NewsTitle.Frame.Height) / 2), View.Bounds.Width - 30, NewsTitle.Bounds.Height );
+            NewsTitle.Frame = new CGRect( textHorzPadding, ImageBanner.Frame.Bottom + ((textVertPadding - NewsTitle.Frame.Height) / 2), View.Bounds.Width - (textHorzPadding * 2), NewsTitle.Bounds.Height );
 
             // put the learn more button at the bottom center
             nfloat learnMoreWidth = View.Bounds.Width * .45f;
             LearnMoreButton.Frame = new CGRect( ( View.Bounds.Width - learnMoreWidth ) / 2, View.Bounds.Height - LearnMoreButton.Bounds.Height - Task.NavToolbar.Bounds.Height - 10, learnMoreWidth, LearnMoreButton.Bounds.Height );
 
             // and fit the news description in between the title and learn more
-            NewsDescription.Frame = new CGRect( 10, ImageBanner.Frame.Bottom + 40, View.Bounds.Width - 20, 0 );
+            NewsDescription.Frame = new CGRect( textHorzPadding, ImageBanner.Frame.Bottom + textVertPadding, View.Bounds.Width - (textHorzPadding * 2), 0 );
             NewsDescription.SizeToFit( );
 
 

@@ -145,13 +145,6 @@ namespace CCVApp.Shared.UI
                 null );
             imageBGAlphaAnim.Start( );
 
-            /*SimpleAnimator_Color bgColorAnim = new SimpleAnimator_Color( View.BackgroundColor, ControlStylingConfig.BackgroundColor, .25f, delegate(float percent, object value )
-                {
-                    View.BackgroundColor = (uint)value;
-                },
-                null );
-            bgColorAnim.Start( );*/
-
             // Fade OUT the logo
             SimpleAnimator_Float imageAlphaAnim = new SimpleAnimator_Float( ImageLogo.Opacity, 0.00f, .13f, delegate(float percent, object value )
                 {

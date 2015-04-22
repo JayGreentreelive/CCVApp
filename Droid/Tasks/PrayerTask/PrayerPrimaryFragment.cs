@@ -56,9 +56,9 @@ namespace Droid
                             ((LinearLayout.LayoutParams)Name.LayoutParameters).TopMargin = 20;
                             ((LinearLayout.LayoutParams)Name.LayoutParameters).LeftMargin = 20;
                             Name.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
-                            Name.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Medium_Font_Regular ), TypefaceStyle.Normal );
+                            Name.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Medium_Font_Bold ), TypefaceStyle.Normal );
                             Name.SetTextSize( ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
-                            Name.Text = prayer.FirstName;
+                            Name.Text = prayer.FirstName.ToUpper( );
                             LinearLayout.AddView( Name );
 
 
@@ -143,6 +143,8 @@ namespace Droid
                     Rock.Client.PrayerRequest PrayerRequest { get; set; }
                     public PlatformView View { get; set; }
                     Button Pray { get; set; }
+
+                    CircleView TappedCircle { get; set; }
                     bool Prayed { get; set; }
 
                     public PrayerCard( Rock.Client.PrayerRequest prayer, RectangleF bounds )
@@ -203,25 +205,19 @@ namespace Droid
                         prayedLabel.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                         prayedLayout.AddView( prayedLabel );
 
-                        CircleView tappedCircle = new Rock.Mobile.PlatformSpecific.Android.Graphics.CircleView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
-                        tappedCircle.LayoutParameters = new LinearLayout.LayoutParams( 30, ViewGroup.LayoutParams.MatchParent );
-                        ((LinearLayout.LayoutParams)tappedCircle.LayoutParameters).LeftMargin = 20;
-                        ((LinearLayout.LayoutParams)tappedCircle.LayoutParameters).RightMargin = 20;
-                        tappedCircle.Color = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor );
-                        tappedCircle.StrokeWidth = 1;
-                        prayedLayout.AddView( tappedCircle );
+                        TappedCircle = new Rock.Mobile.PlatformSpecific.Android.Graphics.CircleView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                        TappedCircle.LayoutParameters = new LinearLayout.LayoutParams( 30, ViewGroup.LayoutParams.MatchParent );
+                        ((LinearLayout.LayoutParams)TappedCircle.LayoutParameters).LeftMargin = 20;
+                        ((LinearLayout.LayoutParams)TappedCircle.LayoutParameters).RightMargin = 20;
+                        TappedCircle.Color = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor );
+                        TappedCircle.StrokeWidth = 1;
+                        prayedLayout.AddView( TappedCircle );
 
                         Pray.Click += (object sender, EventArgs e) => 
                             {
-                                Prayed = true;
-
-                                CCVApp.Shared.Network.RockApi.Instance.IncrementPrayerCount( PrayerRequest.Id, null );
-
-                                tappedCircle.Style = Android.Graphics.Paint.Style.FillAndStroke;
-                                tappedCircle.Invalidate( );
+                                TogglePrayed( true );
                             };
                         //
-
 
                         // add the controls
                         ViewGroup nativeView = View.PlatformNativeObject as ViewGroup;
@@ -233,6 +229,31 @@ namespace Droid
                         nativeView.AddView( PrayerLayout.LinearLayout );
 
                         Pray.Enabled = true;
+                    }
+
+                    public void TogglePrayed( bool prayed )
+                    {
+                        // ignore if the state remains the same
+                        if ( prayed != Prayed )
+                        {
+                            Prayed = prayed;
+
+                            // if we are ACTIVATING prayed, 
+                            if ( prayed == true )
+                            {
+                                // send an analytic 
+                                CCVApp.Shared.Network.RockApi.Instance.IncrementPrayerCount( PrayerRequest.Id, null );
+
+                                // and fill in the circle
+                                TappedCircle.Style = Android.Graphics.Paint.Style.FillAndStroke;
+                            }
+                            else
+                            {
+                                // on deactivation, clear the circle
+                                TappedCircle.Style = Android.Graphics.Paint.Style.Stroke;
+                            }
+                            TappedCircle.Invalidate( );
+                        }
                     }
 
                     public void Scroll( float distanceY )
@@ -345,6 +366,15 @@ namespace Droid
                         };
 
                     return view;
+                }
+
+                public void ResetPrayerStatus( )
+                {
+                    // now update the layout for each prayer card
+                    foreach ( PrayerCard prayerCard in PrayerRequestCards )
+                    {
+                        prayerCard.TogglePrayed( false );
+                    }
                 }
 
                 void LayoutChanged( )

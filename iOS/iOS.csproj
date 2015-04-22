@@ -329,9 +329,6 @@
     <BundleResource Include="..\Assets\baptism_thumb.png">
       <Link>Resources\baptism_thumb.png</Link>
     </BundleResource>
-    <BundleResource Include="..\Assets\foundations_thumb.png">
-      <Link>Resources\foundations_thumb.png</Link>
-    </BundleResource>
     <BundleResource Include="..\Assets\starting_point_thumb.png">
       <Link>Resources\starting_point_thumb.png</Link>
     </BundleResource>
@@ -346,21 +343,6 @@
     </BundleResource>
     <BundleResource Include="..\Assets\placeholder_notes_thumb.png">
       <Link>Resources\placeholder_notes_thumb.png</Link>
-    </BundleResource>
-    <BundleResource Include="..\Assets\oobe_ccv_logo_1gmini.png">
-      <Link>Resources\oobe_ccv_logo_1gmini.png</Link>
-    </BundleResource>
-    <BundleResource Include="..\Assets\oobe_ccv_logo_i4%402x.png">
-      <Link>Resources\oobe_ccv_logo_i4%402x.png</Link>
-    </BundleResource>
-    <BundleResource Include="..\Assets\oobe_ccv_logo_i5%402x.png">
-      <Link>Resources\oobe_ccv_logo_i5%402x.png</Link>
-    </BundleResource>
-    <BundleResource Include="..\Assets\oobe_ccv_logo_i6%402x.png">
-      <Link>Resources\oobe_ccv_logo_i6%402x.png</Link>
-    </BundleResource>
-    <BundleResource Include="..\Assets\oobe_ccv_logo_i6p%403x.png">
-      <Link>Resources\oobe_ccv_logo_i6p%403x.png</Link>
     </BundleResource>
     <BundleResource Include="..\Assets\oobe_splash_bg.png">
       <Link>Resources\oobe_splash_bg.png</Link>
@@ -391,6 +373,60 @@
     </BundleResource>
     <BundleResource Include="..\Assets\note_tutorial_portrait%403x.png">
       <Link>Resources\note_tutorial_portrait%403x.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\ccv_logo_ipad_landscape_retina.png">
+      <Link>Resources\ccv_logo_ipad_landscape_retina.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\ccv_logo_ipad_landscape.png">
+      <Link>Resources\ccv_logo_ipad_landscape.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\ccv_logo_ipad_portrait_retina.png">
+      <Link>Resources\ccv_logo_ipad_portrait_retina.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\ccv_logo_ipad_portrait.png">
+      <Link>Resources\ccv_logo_ipad_portrait.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\ccv_logo_iphone4s.png">
+      <Link>Resources\ccv_logo_iphone4s.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\ccv_logo_iphone5.png">
+      <Link>Resources\ccv_logo_iphone5.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\ccv_logo_iphone6.png">
+      <Link>Resources\ccv_logo_iphone6.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\ccv_logo_iphone6p.png">
+      <Link>Resources\ccv_logo_iphone6p.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\splash_ipad_landscape_retina.png">
+      <Link>Resources\splash_ipad_landscape_retina.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\splash_ipad_landscape.png">
+      <Link>Resources\splash_ipad_landscape.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\splash_ipad_portrait_retina.png">
+      <Link>Resources\splash_ipad_portrait_retina.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\splash_ipad_portrait.png">
+      <Link>Resources\splash_ipad_portrait.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\splash_iphone4s.png">
+      <Link>Resources\splash_iphone4s.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\splash_iphone5.png">
+      <Link>Resources\splash_iphone5.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\splash_iphone6.png">
+      <Link>Resources\splash_iphone6.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\splash_iphone6p.png">
+      <Link>Resources\splash_iphone6p.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\serve_thumb.png">
+      <Link>Resources\serve_thumb.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\Fonts\DINOffc-CondBold.ttf">
+      <Link>Resources\Fonts\DINOffc-CondBold.ttf</Link>
     </BundleResource>
   </ItemGroup>
   <ItemGroup>
@@ -477,6 +513,7 @@
     <Compile Include="UserManagement\OOBEViewController.cs" />
     <Compile Include="Tasks\TaskUINavigationController.cs" />
     <Compile Include="Tasks\TaskWebViewController.cs" />
+    <Compile Include="UserManagement\SplashViewController.cs" />
   </ItemGroup>
   <Import Project="..\..\Rock\Rock.Client\Rock.Client.Models.projitems" Label="Shared" Condition="Exists('..\..\Rock\Rock.Client\Rock.Client.Models.projitems')" />
   <Import Project="..\..\Rock.Mobile\Rock.Mobile.projitems" Label="Shared" Condition="Exists('..\..\Rock.Mobile\Rock.Mobile.projitems')" />

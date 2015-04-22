@@ -28,24 +28,31 @@ namespace Droid
     {
         public Springboard SpringboardParent { get; set; }
 
+        View UserNameLayer { get; set; }
         EditText UserNameText { get; set; }
         uint UserNameBGColor { get; set; }
 
+        View PasswordLayer { get; set; }
         EditText PasswordText { get; set; }
         uint PasswordBGColor { get; set; }
 
+        View ConfirmPasswordLayer { get; set; }
         EditText ConfirmPasswordText { get; set; }
         uint ConfirmPasswordBGColor { get; set; }
 
+        View NickNameLayer { get; set; }
         EditText NickNameText { get; set; }
         uint NickNameBGColor { get; set; }
 
+        View LastNameLayer { get; set; }
         EditText LastNameText { get; set; }
         uint LastNameBGColor { get; set; }
 
+        View EmailLayer { get; set; }
         EditText EmailText { get; set; }
         uint EmailBGColor { get; set; }
 
+        View CellPhoneLayer { get; set; }
         EditText CellPhoneText { get; set; }
 
         Button RegisterButton { get; set; }
@@ -98,28 +105,36 @@ namespace Droid
             navBar.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
 
 
-            // setup the username / password section
-            RelativeLayout backgroundView = view.FindViewById<RelativeLayout>( Resource.Id.username_background );
-            ControlStyling.StyleBGLayer( backgroundView );
+            // setup the username 
+            UserNameLayer = view.FindViewById<RelativeLayout>( Resource.Id.username_background );
+            ControlStyling.StyleBGLayer( UserNameLayer );
 
-            UserNameText = backgroundView.FindViewById<EditText>( Resource.Id.userNameText );
+            UserNameText = UserNameLayer.FindViewById<EditText>( Resource.Id.userNameText );
             ControlStyling.StyleTextField( UserNameText, RegisterStrings.UsernamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             UserNameBGColor = ControlStylingConfig.BG_Layer_Color;
             UserNameText.InputType |= InputTypes.TextFlagCapWords;
 
-            View borderView = backgroundView.FindViewById<View>( Resource.Id.username_border );
+            View borderView = UserNameLayer.FindViewById<View>( Resource.Id.username_border );
             borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
-            PasswordText = backgroundView.FindViewById<EditText>( Resource.Id.passwordText );
+            // password
+            PasswordLayer = view.FindViewById<RelativeLayout>( Resource.Id.password_background );
+            ControlStyling.StyleBGLayer( PasswordLayer );
+
+            PasswordText = PasswordLayer.FindViewById<EditText>( Resource.Id.passwordText );
             PasswordText.InputType |= InputTypes.TextVariationPassword;
             ControlStyling.StyleTextField( PasswordText, RegisterStrings.PasswordPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             PasswordBGColor = ControlStylingConfig.BG_Layer_Color;
 
-
-            borderView = backgroundView.FindViewById<View>( Resource.Id.password_border );
+            borderView = PasswordLayer.FindViewById<View>( Resource.Id.password_border );
             borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
-            ConfirmPasswordText = backgroundView.FindViewById<EditText>( Resource.Id.confirmPasswordText );
+
+
+            ConfirmPasswordLayer = view.FindViewById<RelativeLayout>( Resource.Id.confirmPassword_background );
+            ControlStyling.StyleBGLayer( ConfirmPasswordLayer );
+
+            ConfirmPasswordText = ConfirmPasswordLayer.FindViewById<EditText>( Resource.Id.confirmPasswordText );
             ConfirmPasswordText.InputType |= InputTypes.TextVariationPassword;
             ControlStyling.StyleTextField( ConfirmPasswordText, RegisterStrings.ConfirmPasswordPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             ConfirmPasswordBGColor = ControlStylingConfig.BG_Layer_Color;
@@ -127,35 +142,43 @@ namespace Droid
 
 
             // setup the name section
-            backgroundView = view.FindViewById<RelativeLayout>( Resource.Id.name_background );
-            ControlStyling.StyleBGLayer( backgroundView );
+            NickNameLayer = view.FindViewById<RelativeLayout>( Resource.Id.firstname_background );
+            ControlStyling.StyleBGLayer( NickNameLayer );
 
-            NickNameText = backgroundView.FindViewById<EditText>( Resource.Id.nickNameText );
+            NickNameText = NickNameLayer.FindViewById<EditText>( Resource.Id.nickNameText );
             ControlStyling.StyleTextField( NickNameText, RegisterStrings.NickNamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             NickNameBGColor = ControlStylingConfig.BG_Layer_Color;
             NickNameText.InputType |= InputTypes.TextFlagCapWords;
 
-            borderView = backgroundView.FindViewById<View>( Resource.Id.middle_border );
+            borderView = NickNameLayer.FindViewById<View>( Resource.Id.middle_border );
             borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
-            LastNameText = backgroundView.FindViewById<EditText>( Resource.Id.lastNameText );
+            LastNameLayer = view.FindViewById<RelativeLayout>( Resource.Id.lastname_background );
+            ControlStyling.StyleBGLayer( LastNameLayer );
+
+            LastNameText = LastNameLayer.FindViewById<EditText>( Resource.Id.lastNameText );
             ControlStyling.StyleTextField( LastNameText, RegisterStrings.LastNamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             LastNameBGColor = ControlStylingConfig.BG_Layer_Color;
             LastNameText.InputType |= InputTypes.TextFlagCapWords;
 
 
-            // setup the contact section
-            backgroundView = view.FindViewById<RelativeLayout>( Resource.Id.contact_background );
-            ControlStyling.StyleBGLayer( backgroundView );
+            // setup the cell phone section
+            CellPhoneLayer = view.FindViewById<RelativeLayout>( Resource.Id.cellphone_background );
+            ControlStyling.StyleBGLayer( CellPhoneLayer );
 
-            CellPhoneText = backgroundView.FindViewById<EditText>( Resource.Id.cellPhoneText );
+            CellPhoneText = CellPhoneLayer.FindViewById<EditText>( Resource.Id.cellPhoneText );
             ControlStyling.StyleTextField( CellPhoneText, RegisterStrings.CellPhonePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             CellPhoneText.AddTextChangedListener(new PhoneNumberFormattingTextWatcher());
 
-            borderView = backgroundView.FindViewById<View>( Resource.Id.middle_border );
+
+            // email layer
+            EmailLayer = view.FindViewById<RelativeLayout>( Resource.Id.email_background );
+            ControlStyling.StyleBGLayer( EmailLayer );
+
+            borderView = EmailLayer.FindViewById<View>( Resource.Id.middle_border );
             borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
-            EmailText = backgroundView.FindViewById<EditText>( Resource.Id.emailAddressText );
+            EmailText = EmailLayer.FindViewById<EditText>( Resource.Id.emailAddressText );
             ControlStyling.StyleTextField( EmailText, RegisterStrings.EmailPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             EmailBGColor = ControlStylingConfig.BG_Layer_Color;
 
@@ -166,6 +189,7 @@ namespace Droid
 
             CancelButton = view.FindViewById<Button>( Resource.Id.cancelButton );
             ControlStyling.StyleButton( CancelButton, GeneralStrings.Cancel, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            CancelButton.SetBackgroundDrawable( null );
 
             RegisterButton.Click += (object sender, EventArgs e) => 
                 {
@@ -335,7 +359,7 @@ namespace Droid
                 userNameTargetColor = ControlStylingConfig.BadInput_BG_Layer_Color;
                 result = false;
             }
-            Rock.Mobile.PlatformSpecific.Android.UI.Util.AnimateViewColor( UserNameBGColor, userNameTargetColor, UserNameText, delegate { UserNameBGColor = userNameTargetColor; } );
+            Rock.Mobile.PlatformSpecific.Android.UI.Util.AnimateViewColor( UserNameBGColor, userNameTargetColor, UserNameLayer, delegate { UserNameBGColor = userNameTargetColor; } );
 
             // for the password, if EITHER field is blank, that's not ok, OR if the passwords don't match, also not ok.
             uint passwordTargetColor = ControlStylingConfig.BG_Layer_Color;
@@ -345,8 +369,8 @@ namespace Droid
                 passwordTargetColor = ControlStylingConfig.BadInput_BG_Layer_Color;
                 result = false;
             }
-            Rock.Mobile.PlatformSpecific.Android.UI.Util.AnimateViewColor( PasswordBGColor, passwordTargetColor, PasswordText, delegate { PasswordBGColor = passwordTargetColor; } );
-            Rock.Mobile.PlatformSpecific.Android.UI.Util.AnimateViewColor( ConfirmPasswordBGColor, passwordTargetColor, ConfirmPasswordText, delegate { ConfirmPasswordBGColor = passwordTargetColor; } );
+            Rock.Mobile.PlatformSpecific.Android.UI.Util.AnimateViewColor( PasswordBGColor, passwordTargetColor, PasswordLayer, delegate { PasswordBGColor = passwordTargetColor; } );
+            Rock.Mobile.PlatformSpecific.Android.UI.Util.AnimateViewColor( ConfirmPasswordBGColor, passwordTargetColor, ConfirmPasswordLayer, delegate { ConfirmPasswordBGColor = passwordTargetColor; } );
 
 
             uint nickNameTargetColor = ControlStylingConfig.BG_Layer_Color;
@@ -355,7 +379,7 @@ namespace Droid
                 nickNameTargetColor = ControlStylingConfig.BadInput_BG_Layer_Color;
                 result = false;
             }
-            Rock.Mobile.PlatformSpecific.Android.UI.Util.AnimateViewColor( NickNameBGColor, nickNameTargetColor, NickNameText, delegate { NickNameBGColor = nickNameTargetColor; } );
+            Rock.Mobile.PlatformSpecific.Android.UI.Util.AnimateViewColor( NickNameBGColor, nickNameTargetColor, NickNameLayer, delegate { NickNameBGColor = nickNameTargetColor; } );
 
 
             uint lastNameTargetColor = ControlStylingConfig.BG_Layer_Color;
@@ -364,7 +388,7 @@ namespace Droid
                 lastNameTargetColor = ControlStylingConfig.BadInput_BG_Layer_Color;
                 result = false;
             }
-            Rock.Mobile.PlatformSpecific.Android.UI.Util.AnimateViewColor( LastNameBGColor, lastNameTargetColor, LastNameText, delegate { LastNameBGColor = lastNameTargetColor; } );
+            Rock.Mobile.PlatformSpecific.Android.UI.Util.AnimateViewColor( LastNameBGColor, lastNameTargetColor, LastNameLayer, delegate { LastNameBGColor = lastNameTargetColor; } );
 
             // cell phone OR email is fine
             uint emailTargetColor = ControlStylingConfig.BG_Layer_Color;
@@ -373,7 +397,8 @@ namespace Droid
                 emailTargetColor = ControlStylingConfig.BadInput_BG_Layer_Color;
                 result = false;
             }
-            Rock.Mobile.PlatformSpecific.Android.UI.Util.AnimateViewColor( EmailBGColor, emailTargetColor, EmailText, delegate { EmailBGColor = emailTargetColor; } );
+            Rock.Mobile.PlatformSpecific.Android.UI.Util.AnimateViewColor( EmailBGColor, emailTargetColor, CellPhoneLayer, delegate { EmailBGColor = emailTargetColor; } );
+            Rock.Mobile.PlatformSpecific.Android.UI.Util.AnimateViewColor( EmailBGColor, emailTargetColor, EmailLayer, delegate { EmailBGColor = emailTargetColor; } );
 
 
             return result;

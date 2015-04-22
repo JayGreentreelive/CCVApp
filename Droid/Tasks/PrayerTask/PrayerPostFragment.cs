@@ -19,6 +19,7 @@ using CCVApp.Shared.Strings;
 using CCVApp.Shared.Config;
 using CCVApp.Shared.Analytics;
 using Rock.Mobile.PlatformSpecific.Android.Graphics;
+using CCVApp.Shared.UI;
 
 namespace Droid
 {
@@ -33,16 +34,8 @@ namespace Droid
                 bool Success { get; set; }
                 bool IsActive { get; set; }
 
-
-                public ProgressBar ProgressBar { get; set; }
-                public View StatusLayer { get; set; }
-                public TextView StatusText { get; set; }
-
-                public View ResultLayer { get; set; }
-                public TextView ResultSymbol { get; set; }
-                public TextView ResultText { get; set; }
-
-                public Button DoneButton { get; set; }
+                UIBlockerView BlockerView { get; set; }
+                UIResultView ResultView { get; set; }
 
                 public override void OnCreate( Bundle savedInstanceState )
                 {
@@ -62,35 +55,9 @@ namespace Droid
 
                     view.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
 
-
-                    StatusLayer = view.FindViewById<View>( Resource.Id.status_background );
-                    ControlStyling.StyleBGLayer( StatusLayer );
-
-                    StatusText = StatusLayer.FindViewById<TextView>( Resource.Id.text );
-                    ControlStyling.StyleUILabel( StatusText, ControlStylingConfig.Large_Font_Regular, ControlStylingConfig.Large_FontSize );
-
-
-
-                    ResultLayer = view.FindViewById<View>( Resource.Id.result_background );
-                    ControlStyling.StyleBGLayer( ResultLayer );
-
-                    ResultSymbol = ResultLayer.FindViewById<TextView>( Resource.Id.resultSymbol );
-                    ResultSymbol.SetTypeface( FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary ), TypefaceStyle.Normal );
-                    ResultSymbol.SetTextSize( ComplexUnitType.Dip, PrayerConfig.PostPrayer_ResultSymbolSize );
-                    ResultSymbol.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
-
-                    ResultText = ResultLayer.FindViewById<TextView>( Resource.Id.text );
-                    ControlStyling.StyleUILabel( ResultText, ControlStylingConfig.Large_Font_Regular, ControlStylingConfig.Large_FontSize );
-
-                    ProgressBar = ResultLayer.FindViewById<ProgressBar>( Resource.Id.activityIndicator );
-
-
-                    DoneButton = view.FindViewById<Button>( Resource.Id.doneButton );
-                    ControlStyling.StyleButton( DoneButton, GeneralStrings.Done, ControlStylingConfig.Large_Font_Regular, ControlStylingConfig.Large_FontSize );
-
-
-                    DoneButton.Click += (object sender, EventArgs e ) =>
-                    {
+                    ResultView = new UIResultView( view, new System.Drawing.RectangleF( 0, 0, NavbarFragment.GetContainerDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels ), 
+                        delegate 
+                        { 
                             if( Success == true )
                             {
                                 // leave
@@ -101,9 +68,20 @@ namespace Droid
                                 // retry
                                 SubmitPrayerRequest( );
                             }
-                    };
+                        } );
+
+                    BlockerView = new UIBlockerView( view, new System.Drawing.RectangleF( 0, 0, NavbarFragment.GetContainerDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels ) );
+
 
                     return view;
+                }
+
+                public override void OnConfigurationChanged(Android.Content.Res.Configuration newConfig)
+                {
+                    base.OnConfigurationChanged(newConfig);
+
+                    ResultView.SetBounds( new System.Drawing.RectangleF( 0, 0, NavbarFragment.GetContainerDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels ) );
+                    BlockerView.SetBounds( new System.Drawing.RectangleF( 0, 0, NavbarFragment.GetContainerDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels ) );
                 }
 
                 public override void OnResume()
@@ -129,63 +107,50 @@ namespace Droid
 
                 void SubmitPrayerRequest( )
                 {
-                    // update the status to say "submitting..."
-                    StatusText.Text = PrayerStrings.PostPrayer_Status_Submitting;
-
-                    // clear the results section
-                    ResultSymbol.Text = "";
-                    ResultText.Text = "";
-
-                    // hide the done button
-                    DoneButton.Enabled = false;
-                    DoneButton.Visibility = ViewStates.Invisible;
-
-                    ProgressBar.Visibility = ViewStates.Visible;
+                    ResultView.Show( PrayerStrings.PostPrayer_Status_Submitting,
+                        "", 
+                        "", 
+                        "" );
 
                     Success = false;
                     Posting = true;
 
-                    // submit the request
-                    CCVApp.Shared.Network.RockApi.Instance.PutPrayer( PrayerRequest, 
-                        delegate(System.Net.HttpStatusCode statusCode, string statusDescription )
+                    // fade in our blocker, and when it's complete, send our request off
+                    BlockerView.Show( delegate
                         {
-                            Posting = false;
-                            ProgressBar.Visibility = ViewStates.Invisible;
-
-                            // if they left while posting, screw em.
-                            if( IsActive == true )
-                            {
-                                if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
+                            // submit the request
+                            CCVApp.Shared.Network.RockApi.Instance.PutPrayer( PrayerRequest, 
+                                delegate(System.Net.HttpStatusCode statusCode, string statusDescription )
                                 {
-                                    Success = true;
+                                    Posting = false;
 
-                                    // success! Update text to say so, and reveal the done button.
-                                    PrayerAnalytic.Instance.Trigger( PrayerAnalytic.Create );
+                                    // if they left while posting, screw em.
+                                    if ( IsActive == true )
+                                    {
+                                        BlockerView.Hide( null );
 
-                                    StatusText.Text = PrayerStrings.PostPrayer_Status_SuccessText;
+                                        if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) )
+                                        {
+                                            Success = true;
 
-                                    ResultSymbol.Text = ControlStylingConfig.Result_Symbol_Success;
-                                    ResultText.Text = PrayerStrings.PostPrayer_Result_SuccessText;
+                                            ResultView.Show( PrayerStrings.PostPrayer_Status_SuccessText,
+                                                ControlStylingConfig.Result_Symbol_Success, 
+                                                PrayerStrings.PostPrayer_Result_SuccessText, 
+                                                GeneralStrings.Done );
 
-                                    DoneButton.Visibility = ViewStates.Visible;
-                                    DoneButton.Text = GeneralStrings.Done;
-                                    DoneButton.Enabled = true;
-                                }
-                                else
-                                {
-                                    Success = false;
+                                            PrayerAnalytic.Instance.Trigger( PrayerAnalytic.Create );
+                                        }
+                                        else
+                                        {
+                                            Success = false;
 
-                                    // failed. Update text to say so, and use the done button as a "retry"
-                                    StatusText.Text = PrayerStrings.PostPrayer_Status_FailedText;
-
-                                    ResultSymbol.Text = ControlStylingConfig.Result_Symbol_Failed;
-                                    ResultText.Text = PrayerStrings.PostPrayer_Result_FailedText;
-
-                                    DoneButton.Visibility = ViewStates.Visible;
-                                    DoneButton.Text = GeneralStrings.Retry;
-                                    DoneButton.Enabled = true;
-                                }
-                            }
+                                            ResultView.Show( PrayerStrings.PostPrayer_Status_FailedText,
+                                                ControlStylingConfig.Result_Symbol_Failed, 
+                                                PrayerStrings.PostPrayer_Result_FailedText, 
+                                                GeneralStrings.Retry );
+                                        }
+                                    }
+                                } );
                         } );
                 }
             }

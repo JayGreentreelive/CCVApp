@@ -101,14 +101,7 @@ namespace iOS
 
             Pray.TouchUpInside += (object sender, EventArgs e) => 
                 {
-                    if( Prayed == false )
-                    {
-                        Prayed = true;
-
-                        CCVApp.Shared.Network.RockApi.Instance.IncrementPrayerCount( PrayerRequest.Id, null );
-
-                        PrayFillIn.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor );
-                    }
+                    TogglePrayed( true );
                 };
 
 
@@ -116,7 +109,7 @@ namespace iOS
             Name = new UILabel( );
             Name.Layer.AnchorPoint = new CGPoint( 0, 0 );
             Name.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
-            Name.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            Name.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Medium_Font_Bold, ControlStylingConfig.Medium_FontSize );
 
             // setup the date field
             Date = new UILabel( );
@@ -146,6 +139,28 @@ namespace iOS
             SetPrayer( prayer );
         }
 
+        public void TogglePrayed( bool prayed )
+        {
+            // if the prayer state is changing
+            if( prayed != Prayed )
+            {
+                Prayed = prayed;
+
+                // if we are ACTIVATING prayed
+                if ( prayed == true )
+                {
+                    // fill in the circle and send an analytic
+                    CCVApp.Shared.Network.RockApi.Instance.IncrementPrayerCount( PrayerRequest.Id, null );
+                    PrayFillIn.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor );
+                }
+                else
+                {
+                    // otherwise clear the circle
+                    PrayFillIn.BackgroundColor = UIColor.Clear;
+                }
+            }
+        }
+
         const int ViewPadding = 10;
         void SetPrayer( Rock.Client.PrayerRequest prayer )
         {
@@ -153,7 +168,7 @@ namespace iOS
 
             // set the text for the name, size it so we get the height, then
             // restrict its bounds to the card itself
-            Name.Text = prayer.FirstName;
+            Name.Text = prayer.FirstName.ToUpper( );
             Category.Text = PrayerRequest.CategoryId.HasValue ? RockGeneralData.Instance.Data.PrayerIdToCategory( PrayerRequest.CategoryId.Value ) : RockGeneralData.Instance.Data.PrayerCategories[ 0 ].Name;
             Date.Text = string.Format( "{0:MM/dd/yy}", PrayerRequest.EnteredDateTime );
             PrayerText.Text = prayer.Text;
@@ -262,6 +277,15 @@ namespace iOS
                 };
 
             LastDownload = DateTime.MinValue;
+        }
+
+        public void ResetPrayerStatus( )
+        {
+            // now update the layout for each prayer card
+            foreach ( PrayerCard prayerCard in PrayerRequests )
+            {
+                prayerCard.TogglePrayed( false );
+            }
         }
 
         public override void ViewWillAppear(bool animated)

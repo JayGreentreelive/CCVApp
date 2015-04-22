@@ -144,12 +144,7 @@ namespace iOS
                 }
 
                 // if it's the group nearest the user, color it different. (we always sort by distance)
-                if ( indexPath.Row == 0 )
-                {
-                    cell.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ConnectConfig.GroupFinder_ClosestGroupColor );
-                }
-                // color the row based on whether it's selected or not
-                else if ( SelectedIndex == indexPath.Row )
+                if ( SelectedIndex == indexPath.Row )
                 {
                     cell.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
                 }
@@ -185,7 +180,7 @@ namespace iOS
 
                 // Position the Title & Address in the center to the right of the image
                 cell.Title.Frame = new CGRect( 10, 5, cell.Frame.Width - 5, cell.Title.Frame.Height );
-                cell.MeetingTime.Frame = new CGRect( 10, cell.Title.Frame.Bottom + 2, cell.Frame.Width - 5, cell.MeetingTime.Frame.Height + 5 );
+                cell.MeetingTime.Frame = new CGRect( 10, cell.Title.Frame.Bottom, cell.Frame.Width - 5, cell.MeetingTime.Frame.Height + 5 );
                 cell.Distance.Frame = new CGRect( 10, cell.MeetingTime.Frame.Bottom - 6, cell.Frame.Width - 5, cell.Distance.Frame.Height + 5 );
 
                 // add the seperator to the bottom
@@ -258,26 +253,23 @@ namespace iOS
 
         UIBlockerView BlockerView { get; set; }
 
-        public UITextField Street { get; set; }
-        public UITextField City { get; set; }
-        public UITextField State { get; set; }
-        public UITextField Zip { get; set; }
-        public UIView ZipSpacer { get; set; }
-
         public MKMapView MapView { get; set; }
 
-        public UILabel SearchResultsBanner { get; set; }
-        public UILabel DetailsFooter { get; set; }
-        public UILabel JoinFooter { get; set; }
+        public UILabel SearchResultsPrefix { get; set; }
+        public UILabel SearchResultsNeighborhood { get; set; }
         public UIView Seperator { get; set; }
 
-        UIView StreetBorder { get; set; }
-        UIView CityBorder { get; set; }
-        UIView StateBorder { get; set; }
+        UIButton CurrentAddress { get; set; }
 
-        public UIButton SearchButton { get; set; }
+        UIGroupFinderSearch SearchPage { get; set; }
 
         bool Searching { get; set; }
+
+        // store the values they type in so that if they leave the page and return, we can re-populate them.
+        string StreetValue { get; set; }
+        string CityValue { get; set; }
+        string StateValue { get; set; }
+        string ZipValue { get; set; }
 
         class MapViewDelegate : MKMapViewDelegate
         {
@@ -329,22 +321,6 @@ namespace iOS
         }
 
         /// <summary>
-        /// Delegate for our address field. When returning, notify the primary cell's parent that this was clicked.
-        /// </summary>
-        class AddressDelegate : UITextFieldDelegate
-        {
-            public GroupFinderViewController Parent { get; set; }
-
-            public override bool ShouldReturn(UITextField textField)
-            {
-                Parent.GetGroups( Parent.Street.Text, Parent.City.Text, Parent.State.Text, Parent.Zip.Text );
-
-                textField.ResignFirstResponder( );
-                return true;
-            }
-        }
-
-        /// <summary>
         /// Simple class to inset the text of our text fields.
         /// </summary>
         public class UIInsetTextField : UITextField
@@ -360,6 +336,22 @@ namespace iOS
             }
         }
 
+        /// <summary>
+        /// Delegate for our address field. When returning, notify the primary cell's parent that this was clicked.
+        /// </summary>
+        class AddressDelegate : UITextFieldDelegate
+        {
+            public GroupFinderViewController Parent { get; set; }
+
+            public override bool ShouldReturn(UITextField textField)
+            {
+                Parent.ShouldReturn( );
+
+                textField.ResignFirstResponder( );
+                return true;
+            }
+        }
+
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
@@ -370,77 +362,16 @@ namespace iOS
             SourceLocation = null;
             GroupEntries = new List<GroupFinder.GroupEntry>();
 
-            SearchButton = UIButton.FromType( UIButtonType.System );
-            View.AddSubview( SearchButton );
-            SearchButton.Layer.AnchorPoint = new CGPoint( 0, 0 );
-            ControlStyling.StyleButton( SearchButton, ConnectConfig.GroupFinder_SearchIcon, ControlStylingConfig.Icon_Font_Secondary, 32 );
-            SearchButton.SizeToFit( );
-            SearchButton.TouchUpInside += (object sender, EventArgs e) => 
+            CurrentAddress = UIButton.FromType( UIButtonType.System );
+            View.AddSubview( CurrentAddress );
+            CurrentAddress.Layer.AnchorPoint = CGPoint.Empty;
+            ControlStyling.StyleButton( CurrentAddress, ConnectStrings.GroupFinder_SearchButtonLabel, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            CurrentAddress.TouchUpInside += (object sender, EventArgs e ) =>
                 {
-                    GetGroups( Street.Text, City.Text, State.Text, Zip.Text );
+                    SearchPage.Show( );
+                    Task.NavToolbar.Reveal( false );
                 };
 
-            Street = new UIInsetTextField( );
-            View.AddSubview( Street );
-            Street.Layer.AnchorPoint = CGPoint.Empty;
-            ControlStyling.StyleTextField( Street, ConnectStrings.GroupFinder_StreetPlaceholder, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-            Street.ReturnKeyType = UIReturnKeyType.Search;
-            Street.KeyboardAppearance = UIKeyboardAppearance.Dark;
-            Street.AutocapitalizationType = UITextAutocapitalizationType.Words;
-            Street.Delegate = new AddressDelegate( ) { Parent = this };
-            Street.AutocorrectionType = UITextAutocorrectionType.No;
-
-            StreetBorder = new UIView( );
-            View.AddSubview( StreetBorder );
-            StreetBorder.BackgroundColor = UIColor.DarkGray;
-            StreetBorder.Layer.AnchorPoint = CGPoint.Empty;
-
-            City = new UIInsetTextField( );
-            View.AddSubview( City );
-            City.Layer.AnchorPoint = CGPoint.Empty;
-            ControlStyling.StyleTextField( City, ConnectStrings.GroupFinder_CityPlaceholder, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-            City.ReturnKeyType = UIReturnKeyType.Search;
-            City.KeyboardAppearance = UIKeyboardAppearance.Dark;
-            City.AutocapitalizationType = UITextAutocapitalizationType.Words;
-            City.AutocorrectionType = UITextAutocorrectionType.No;
-            City.Delegate = new AddressDelegate( ) { Parent = this };
-
-
-            CityBorder = new UIView( );
-            View.AddSubview( CityBorder );
-            CityBorder.BackgroundColor = UIColor.DarkGray;
-            CityBorder.Layer.AnchorPoint = CGPoint.Empty;
-
-            State = new UIInsetTextField( );
-            View.AddSubview( State );
-            State.Layer.AnchorPoint = CGPoint.Empty;
-            ControlStyling.StyleTextField( State, ConnectStrings.GroupFinder_StatePlaceholder, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-            State.Text = ConnectStrings.GroupFinder_DefaultState;
-            State.ReturnKeyType = UIReturnKeyType.Search;
-            State.Delegate = new AddressDelegate( ) { Parent = this };
-            State.KeyboardAppearance = UIKeyboardAppearance.Dark;
-            State.AutocapitalizationType = UITextAutocapitalizationType.Words;
-            State.AutocorrectionType = UITextAutocorrectionType.No;
-
-
-            StateBorder = new UIView( );
-            StateBorder.BackgroundColor = UIColor.DarkGray;
-            StateBorder.Layer.AnchorPoint = CGPoint.Empty;
-            View.AddSubview( StateBorder );
-
-            Zip = new UIInsetTextField( );
-            View.AddSubview( Zip );
-            Zip.Layer.AnchorPoint = CGPoint.Empty;
-            ControlStyling.StyleTextField( Zip, ConnectStrings.GroupFinder_ZipPlaceholder, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-            Zip.KeyboardAppearance = UIKeyboardAppearance.Dark;
-            Zip.ReturnKeyType = UIReturnKeyType.Search;
-            Zip.AutocorrectionType = UITextAutocorrectionType.No;
-            Zip.Delegate = new AddressDelegate( ) { Parent = this };
-
-            ZipSpacer = new UIView( );
-            View.AddSubview( ZipSpacer );
-            ZipSpacer.BackgroundColor = UIColor.Clear;
-            ZipSpacer.Layer.AnchorPoint = CGPoint.Empty;
 
             MapView = new MKMapView( );
             View.AddSubview( MapView );
@@ -457,37 +388,23 @@ namespace iOS
             MapView.Delegate = new MapViewDelegate() { Parent = this };
 
 
-            SearchResultsBanner = new UILabel( );
-            View.AddSubview( SearchResultsBanner );
-            SearchResultsBanner.Layer.AnchorPoint = new CGPoint( 0, 0 );
-            SearchResultsBanner.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-            SearchResultsBanner.Text = ConnectStrings.GroupFinder_BeforeSearch;
-            SearchResultsBanner.SizeToFit( );
-            SearchResultsBanner.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
-            SearchResultsBanner.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
-            SearchResultsBanner.TextAlignment = UITextAlignment.Center;
+            SearchResultsPrefix = new UILabel( );
+            View.AddSubview( SearchResultsPrefix );
+            SearchResultsPrefix.Layer.AnchorPoint = new CGPoint( 0, 0 );
+            SearchResultsPrefix.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            SearchResultsPrefix.Text = ConnectStrings.GroupFinder_NoGroupsFound;
+            SearchResultsPrefix.SizeToFit( );
+            SearchResultsPrefix.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+            SearchResultsPrefix.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
+            SearchResultsPrefix.TextAlignment = UITextAlignment.Center;
 
-
-            DetailsFooter = new UILabel( );
-            View.AddSubview( DetailsFooter );
-            DetailsFooter.Layer.AnchorPoint = new CGPoint( 0, 0 );
-            DetailsFooter.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-            DetailsFooter.Text = ConnectStrings.GroupFinder_DetailsLabel;
-            DetailsFooter.SizeToFit( );
-            DetailsFooter.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
-            DetailsFooter.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
-            DetailsFooter.TextAlignment = UITextAlignment.Left;
-
-
-            JoinFooter = new UILabel( );
-            View.AddSubview( JoinFooter );
-            JoinFooter.Layer.AnchorPoint = new CGPoint( 0, 0 );
-            JoinFooter.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-            JoinFooter.Text = ConnectStrings.GroupFinder_JoinLabel;
-            JoinFooter.SizeToFit( );
-            JoinFooter.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
-            JoinFooter.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
-            JoinFooter.TextAlignment = UITextAlignment.Left;
+            SearchResultsNeighborhood = new UILabel( );
+            View.AddSubview( SearchResultsNeighborhood );
+            SearchResultsNeighborhood.Layer.AnchorPoint = new CGPoint( 0, 0 );
+            SearchResultsNeighborhood.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            SearchResultsNeighborhood.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
+            SearchResultsNeighborhood.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
+            SearchResultsNeighborhood.TextAlignment = UITextAlignment.Center;
 
 
             Seperator = new UIView( );
@@ -506,62 +423,46 @@ namespace iOS
             GroupFinderTableView.SeparatorStyle = UITableViewCellSeparatorStyle.None;
 
             BlockerView = new UIBlockerView( View, View.Frame.ToRectF( ) );
+
+            SearchPage = new UIGroupFinderSearch();
+
+            SearchPage.Create( View, View.Frame.ToRectF( ), 
+                delegate
+                {
+                    SearchPage.Hide( true );
+                    GetGroups( SearchPage.Street.Text, SearchPage.City.Text, SearchPage.State.Text, SearchPage.ZipCode.Text );
+                    Task.NavToolbar.Reveal( true );
+                } );
+            SearchPage.SetTitle( ConnectStrings.GroupFinder_SearchPageHeader, ConnectStrings.GroupFinder_SearchPageDetails );
+
+            // hook in delegates so we can handle return
+            ((UITextField)SearchPage.Street.PlatformNativeObject).Delegate = new AddressDelegate( ) { Parent = this };
+            ((UITextField)SearchPage.City.PlatformNativeObject).Delegate = new AddressDelegate( ) { Parent = this };
+            ((UITextField)SearchPage.State.PlatformNativeObject).Delegate = new AddressDelegate( ) { Parent = this };
+            ((UITextField)SearchPage.ZipCode.PlatformNativeObject).Delegate = new AddressDelegate( ) { Parent = this };
+        }
+
+        public void ShouldReturn( )
+        {
+            SearchPage.ShouldReturn( );   
         }
 
         public override void LayoutChanged( )
         {
             base.LayoutChanged( );
 
-            // setup the top area with the map
-            // define the search button
-            SearchButton.Frame = new CGRect( View.Frame.Width - SearchButton.Frame.Width, 0, SearchButton.Frame.Width, 33 );
-
-            // add all four address fields with a border between each
-            nfloat widthPerField = (View.Frame.Width - SearchButton.Frame.Width - 20) / 4;
-
-            // Street
-            Street.Frame = new CGRect( 0, 0, widthPerField * 1.5f, SearchButton.Frame.Height );
-
-            StreetBorder.Frame = new CGRect( 0, 0, 1, SearchButton.Frame.Height );
-            StreetBorder.Layer.Position = new CGPoint( Street.Frame.Right, 0 );
-
-
-            // City
-            City.Frame = new CGRect( StreetBorder.Frame.Right, 0, widthPerField, SearchButton.Frame.Height );
-
-            CityBorder.Frame = new CGRect( 0, 0, 1, SearchButton.Frame.Height );
-            CityBorder.Layer.Position = new CGPoint( City.Frame.Right, 0 );
-
-
-            // State
-            State.Frame = new CGRect( CityBorder.Frame.Right, 0, widthPerField / 2, SearchButton.Frame.Height );
-
-
-            StateBorder.Frame = new CGRect( 0, 0, 1, SearchButton.Frame.Height );
-            StateBorder.Layer.Position = new CGPoint( State.Frame.Right, 0 );
-
-
-            // Zip
-            Zip.Frame = new CGRect( StateBorder.Frame.Right, 0, widthPerField, SearchButton.Frame.Height );
-
-            ZipSpacer.Frame = new CGRect( 0, 0, SearchButton.Frame.Left - Zip.Frame.Right, SearchButton.Frame.Height );
-            ZipSpacer.Layer.Position = new CGPoint( Zip.Frame.Right, 0 );
-
+            SearchPage.LayoutChanged( View.Frame.ToRectF( ) );
 
             // Map
-            MapView.Frame = new CGRect( 0, Street.Frame.Bottom, View.Frame.Width, View.Frame.Height * .40f );
+            MapView.Frame = new CGRect( 0, 0, View.Frame.Width, View.Frame.Height * .40f );
+
+            CurrentAddress.Frame = new CGRect( 0, MapView.Frame.Bottom, View.Frame.Width, 33 );
 
             // Search Results Banner
-            SearchResultsBanner.Frame = new CGRect( 0, MapView.Frame.Bottom, View.Frame.Width, SearchResultsBanner.Frame.Height );
-
-
-            // Details / Join Banners
-            DetailsFooter.Frame = new CGRect( 10, SearchResultsBanner.Frame.Bottom, DetailsFooter.Frame.Width, SearchResultsBanner.Frame.Height );
-            JoinFooter.Frame = new CGRect( View.Frame.Width - JoinFooter.Frame.Width - 10, SearchResultsBanner.Frame.Bottom, JoinFooter.Frame.Width, SearchResultsBanner.Frame.Height );
-
+            UpdateResultsBanner( );
 
             // add the seperator to the bottom
-            Seperator.Frame = new CGRect( 0, DetailsFooter.Frame.Bottom - 1, View.Bounds.Width, 1 );
+            Seperator.Frame = new CGRect( 0, SearchResultsPrefix.Frame.Bottom - 1, View.Bounds.Width, 1 );
 
             // wait to layout the table view until all subviews have been laid out. Fixes an issue where the table gets more height than it should,
             // and the last row doesn't fit on screen.
@@ -581,7 +482,8 @@ namespace iOS
             // set the search results banner appropriately
             if ( GroupEntries.Count > 0 )
             {
-                SearchResultsBanner.Text = string.Format( ConnectStrings.GroupFinder_Neighborhood, GroupEntries[ 0 ].NeighborhoodArea );
+                SearchResultsPrefix.Text = ConnectStrings.GroupFinder_Neighborhood;
+                SearchResultsNeighborhood.Text = GroupEntries[ 0 ].NeighborhoodArea;
 
                 // add an annotation for each position found in the group
                 List<IMKAnnotation> annotations = new List<IMKAnnotation>();
@@ -605,7 +507,8 @@ namespace iOS
             }
             else
             {
-                SearchResultsBanner.Text = ConnectStrings.GroupFinder_NoGroupsFound;
+                SearchResultsPrefix.Text = ConnectStrings.GroupFinder_NoGroupsFound;
+                SearchResultsNeighborhood.Text = string.Empty;
 
                 // since there were no groups, revert the map to whatever specified area
                 MKCoordinateRegion region = MKCoordinateRegion.FromDistance( new CLLocationCoordinate2D( 
@@ -615,14 +518,22 @@ namespace iOS
                     ConnectConfig.GroupFinder_DefaultScale_iOS );
                 MapView.SetRegion( region, true );
             }
+
+            UpdateResultsBanner( );
         }
 
-        public void UpdateAddress( string street, string city, string state, string zip )
+        void UpdateResultsBanner( )
         {
-            Street.Text = street;
-            City.Text = city;
-            State.Text = state;
-            Zip.Text = zip;
+            // Search Results Banner
+            SearchResultsPrefix.SizeToFit( );
+            SearchResultsNeighborhood.SizeToFit( );
+
+            // now center the search result / neighborhood
+            nfloat resultTotalWidth = SearchResultsPrefix.Bounds.Width + SearchResultsNeighborhood.Bounds.Width;
+            nfloat xStartPos = ( View.Bounds.Width - resultTotalWidth ) / 2;
+
+            SearchResultsPrefix.Frame = new CGRect( xStartPos, CurrentAddress.Frame.Bottom, SearchResultsPrefix.Frame.Width, SearchResultsPrefix.Frame.Height );
+            SearchResultsNeighborhood.Frame = new CGRect( SearchResultsPrefix.Frame.Right, CurrentAddress.Frame.Bottom, SearchResultsNeighborhood.Frame.Width, SearchResultsNeighborhood.Frame.Height );
         }
 
         public void RowButtonClicked( int row )
@@ -725,7 +636,20 @@ namespace iOS
         public override void TouchesEnded(NSSet touches, UIEvent evt)
         {
             //base.TouchesEnded(touches, evt);
+
+            SearchPage.TouchesEnded( );
         } 
+
+        public override void ViewWillDisappear(bool animated)
+        {
+            base.ViewWillDisappear(animated);
+
+            // store the values they type in so that if they leave the page and return, we can re-populate them.
+            StreetValue = SearchPage.Street.Text;
+            CityValue = SearchPage.City.Text;
+            StateValue = SearchPage.State.Text;
+            ZipValue = SearchPage.ZipCode.Text;
+        }
 
         public override void ViewWillAppear(bool animated)
         {
@@ -734,106 +658,83 @@ namespace iOS
             // see if there's an address for this person that we can automatically use.
             if ( RockMobileUser.Instance.HasFullAddress( ) == true )
             {
-                UpdateAddress( RockMobileUser.Instance.Street1( ), RockMobileUser.Instance.City( ), RockMobileUser.Instance.State( ), RockMobileUser.Instance.Zip( ) );
-                GetGroups( RockMobileUser.Instance.Street1( ), RockMobileUser.Instance.City( ), RockMobileUser.Instance.State( ), RockMobileUser.Instance.Zip( ) );
+                // only use it if a last value wasn't provided.
+                if ( string.IsNullOrEmpty( StreetValue ) == true &&
+                     string.IsNullOrEmpty( CityValue ) == true &&
+                     string.IsNullOrEmpty( StateValue ) == true &&
+                     string.IsNullOrEmpty( ZipValue ) == true )
+                {
+                    SearchPage.SetAddress( RockMobileUser.Instance.Street1( ), RockMobileUser.Instance.City( ), RockMobileUser.Instance.State( ), RockMobileUser.Instance.Zip( ) );
+                }
+                else
+                {
+                    // otherwise use whatever they last entered (and for state, use the default if nothing was entered
+                    SearchPage.SetAddress( StreetValue, CityValue, string.IsNullOrEmpty( StateValue ) ? ConnectStrings.GroupFinder_DefaultState : StateValue, ZipValue );
+                }
+            }
+            else
+            {
+                // populate with the last used values. If state is empty, use the default.
+                SearchPage.SetAddress( StreetValue, CityValue, string.IsNullOrEmpty( StateValue ) ? ConnectStrings.GroupFinder_DefaultState : StateValue, ZipValue );
             }
         }
 
         void GetGroups( string street, string city, string state, string zip )
         {
-            Street.ResignFirstResponder( );
-            City.ResignFirstResponder( );
-            State.ResignFirstResponder( );
-            Zip.ResignFirstResponder( );
-
-            // fun bonus!
-            if ( street == CCVApp.Shared.ConnectLink.CheatException.CheatString )
+            if ( string.IsNullOrEmpty( street ) == false &&
+                 string.IsNullOrEmpty( city ) == false &&
+                 string.IsNullOrEmpty( state ) == false &&
+                 string.IsNullOrEmpty( zip ) == false )
             {
-                throw new CCVApp.Shared.ConnectLink.CheatException( );
-            }
-            else
-            {
-                if ( string.IsNullOrEmpty( street ) == false &&
-                     string.IsNullOrEmpty( city ) == false &&
-                     string.IsNullOrEmpty( state ) == false &&
-                     string.IsNullOrEmpty( zip ) == false )
+                if ( Searching == false )
                 {
-                    if ( Searching == false )
-                    {
-                        Searching = true;
+                    Searching = true;
 
-                        BlockerView.Show( delegate
-                            {
-                                GroupFinder.GetGroups( street, city, state, zip, 
-                                    delegate( GroupFinder.GroupEntry sourceLocation, List<GroupFinder.GroupEntry> groupEntries )
-                                    {
-                                        BlockerView.Hide( delegate
+                    BlockerView.Show( delegate
+                        {
+                            GroupFinder.GetGroups( street, city, state, zip, 
+                                delegate( GroupFinder.GroupEntry sourceLocation, List<GroupFinder.GroupEntry> groupEntries )
+                                {
+                                    BlockerView.Hide( delegate
+                                        {
+                                            Searching = false;
+
+                                            groupEntries.Sort( delegate(GroupFinder.GroupEntry x, GroupFinder.GroupEntry y )
+                                                {
+                                                    return x.Distance < y.Distance ? -1 : 1;
+                                                } );
+
+                                            SourceLocation = sourceLocation;
+                                            GroupEntries = groupEntries;
+                                            UpdateMap( );
+                                            GroupFinderTableView.ReloadData( );
+
+                                            // flag that our group list was updated so that
+                                            // on the region updated callback from the map, we 
+                                            // can select the appropriate group
+                                            GroupListUpdated = true;
+
+                                            // and record an analytic for the neighborhood that this location was apart of. This helps us know
+                                            // which neighborhoods get the most hits.
+                                            string address = street + " " + city + ", " + state + ", " + zip;
+
+                                            if ( groupEntries.Count > 0 )
                                             {
-                                                Searching = false;
+                                                // record an analytic that they searched
+                                                GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.Location, address );
 
-                                                groupEntries.Sort( delegate(GroupFinder.GroupEntry x, GroupFinder.GroupEntry y )
-                                                    {
-                                                        return x.Distance < y.Distance ? -1 : 1;
-                                                    } );
-
-                                                SourceLocation = sourceLocation;
-                                                GroupEntries = groupEntries;
-                                                UpdateMap( );
-                                                GroupFinderTableView.ReloadData( );
-
-                                                // flag that our group list was updated so that
-                                                // on the region updated callback from the map, we 
-                                                // can select the appropriate group
-                                                GroupListUpdated = true;
-
-                                                // and record an analytic for the neighborhood that this location was apart of. This helps us know
-                                                // which neighborhoods get the most hits.
-                                                string address = street + " " + city + ", " + state + ", " + zip;
-
-                                                if ( groupEntries.Count > 0 )
-                                                {
-                                                    // record an analytic that they searched
-                                                    GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.Location, address );
-
-                                                    GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.Neighborhood, groupEntries[ 0 ].NeighborhoodArea );
-                                                }
-                                                else
-                                                {
-                                                    // record that this address failed
-                                                    GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.OutOfBounds, address );
-                                                }
-                                            } );
-                                    } );
-                            } );
-                    }
+                                                GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.Neighborhood, groupEntries[ 0 ].NeighborhoodArea );
+                                            }
+                                            else
+                                            {
+                                                // record that this address failed
+                                                GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.OutOfBounds, address );
+                                            }
+                                        } );
+                                } );
+                        } );
                 }
-
-                ValidateTextFields( );
             }
-        }
-
-        void ValidateTextFields( )
-        {
-            // this will color the invalid fields red so the user knows they need to fill them in.
-
-            // Validate Street
-            uint targetStreetColor = string.IsNullOrEmpty( Street.Text ) == true ? ControlStylingConfig.BadInput_BG_Layer_Color : ControlStylingConfig.BG_Layer_Color; 
-            Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetStreetColor, Street );
-
-
-            // Validate City
-            uint targetCityColor = string.IsNullOrEmpty( City.Text ) == true ? ControlStylingConfig.BadInput_BG_Layer_Color : ControlStylingConfig.BG_Layer_Color; 
-            Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetCityColor, City );
-
-            // Validate State
-            uint targetStateColor = string.IsNullOrEmpty( State.Text ) == true ? ControlStylingConfig.BadInput_BG_Layer_Color : ControlStylingConfig.BG_Layer_Color; 
-            Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetStateColor, State );
-
-
-            // Validate Zip
-            uint targetZipColor = string.IsNullOrEmpty( Zip.Text ) == true ? ControlStylingConfig.BadInput_BG_Layer_Color : ControlStylingConfig.BG_Layer_Color; 
-            Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetZipColor, Zip );
-            Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetZipColor, ZipSpacer );
         }
 	}
 }

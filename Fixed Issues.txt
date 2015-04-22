@@ -2,29 +2,8 @@ Changes
 -------
 
 Both
-	Improved the Nav Toolbar's auto-reveal behavior
-	Improved spacing and alignment of various text fields
-	Display an error result screen if Message Series fail to download.
-	Display an error result screen if web-based pages fail to load.
-	News is now sorted according to priority
-	Tons of UI bug fixes and polish.
-	Fixed the appearance of the Note Tutorial image.
-	Prayers are now sorted by least prayed for (those come up first)
-	New experimental method for deleting user notes
+	Fixed an issue that would cause exported notes to have words in the wrong order.
 
 iOS
-	Fixed a crash on iPhone when tapping the 'Share' button in Notes.
-	Fixed an issue causing the keyboard to appear when tapping on result screens.
-	Fixed an issue causing Prayer Requests to always have a created date of 01/01/01
-	Fixed an issue causing the Image Cropper to animate off screen incorrectly
-	Fixed an issue causing the Prayer Request field's width to be too small on iPad
-	Fixed an issue preventing the Nav Toolbar from showing up on Landscape iPad on the Watch page.
-	Fixed crashes related to no network connection
-	Fixed issues related to rotating the device during image cropping.
-	Fixed an issue causing the News Details Banner to be cropped
 
 Android
-	Removed the Back Button from the Nav Toolbar, since it's completely redundant.
-	Fixed an issue when logging into Facebook with incorrect credentials that could prevent a user from fixing it.
-	Fixed an issue where the News wouldn't immediately update if the home campus was changed.
-	Fixed an issue causing the address in GroupFinder to be lost when the user left and returned to the page.

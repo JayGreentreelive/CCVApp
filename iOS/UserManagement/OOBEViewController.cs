@@ -34,30 +34,46 @@ namespace iOS
                 } );
         }
 
-        string GetSplashLogo( CGSize screenSize, nfloat scalar )
+        public static string GetSplashLogo( CGSize screenSize, nfloat scalar )
         {
             nfloat nativeWidth = screenSize.Width * scalar;
             nfloat nativeHeight = screenSize.Height * scalar;
 
-            // default to iphone4, cause..why not.
-            string imageName = "oobe_ccv_logo_i4@2x.png";
+            // default to iphone4s, cause..why not.
+            string imageName = "ccv_logo_iphone4s.png";
 
             // compare the dimensions with the known iDevice sizes, and return the appropriate string.
             if ( nativeWidth == 640 && nativeHeight == 960 )
             {
-                imageName = "oobe_ccv_logo_i4@2x.png";
+                imageName = "ccv_logo_iphone4s.png";
             }
             else if ( nativeWidth == 640 && nativeHeight == 1136 )
             {
-                imageName = "oobe_ccv_logo_i5@2x.png";
+                imageName = "ccv_logo_iphone5.png";
             }
             else if ( nativeWidth == 750 && nativeHeight == 1334 )
             {
-                imageName = "oobe_ccv_logo_i6@2x.png";
+                imageName = "ccv_logo_iphone6.png";
             }
             else if ( nativeWidth == 1242 && nativeHeight == 2208 )
             {
-                imageName = "oobe_ccv_logo_i6p@3x.png";
+                imageName = "ccv_logo_iphone6p.png";
+            }
+            else if ( nativeWidth == 2048 && nativeHeight == 1536 )
+            {
+                imageName = "ccv_logo_ipad_landscape_retina.png";
+            }
+            else if ( nativeWidth == 1024 && nativeHeight == 768 )
+            {
+                imageName = "ccv_logo_ipad_landscape.png";
+            }
+            else if ( nativeWidth == 1536 && nativeHeight == 2048 )
+            {
+                imageName = "ccv_logo_ipad_portrait_retina.png";
+            }
+            else if ( nativeWidth == 768 && nativeHeight == 1024 )
+            {
+                imageName = "ccv_logo_ipad_portrait.png";
             }
 
             return imageName;

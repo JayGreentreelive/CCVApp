@@ -18,7 +18,7 @@ namespace CCVApp.Shared.UI
         PlatformLabel GroupTitle { get; set; }
 
         PlatformLabel GroupDetails { get; set; }
-        PlatformView GroupDetailsLayer { get; set; }
+        //PlatformView GroupDetailsLayer { get; set; }
 
         PlatformTextField FirstName { get; set; }
         PlatformView FirstNameLayer { get; set; }
@@ -54,19 +54,19 @@ namespace CCVApp.Shared.UI
 
             GroupTitle = PlatformLabel.Create( );
             GroupTitle.AddAsSubview( masterView );
-            GroupTitle.SetFont( ControlStylingConfig.Large_Font_Light, ControlStylingConfig.Large_FontSize );
+            GroupTitle.SetFont( ControlStylingConfig.Large_Font_Bold, ControlStylingConfig.Large_FontSize );
             GroupTitle.TextColor = ControlStylingConfig.TextField_ActiveTextColor;
             GroupTitle.TextAlignment = TextAlignment.Center;
 
-            GroupDetailsLayer = PlatformView.Create( );
+            /*GroupDetailsLayer = PlatformView.Create( );
             GroupDetailsLayer.AddAsSubview( masterView );
             GroupDetailsLayer.BackgroundColor = ControlStylingConfig.BG_Layer_Color;
             GroupDetailsLayer.BorderColor = ControlStylingConfig.BG_Layer_BorderColor;
-            GroupDetailsLayer.BorderWidth = ControlStylingConfig.BG_Layer_BorderWidth;
+            GroupDetailsLayer.BorderWidth = ControlStylingConfig.BG_Layer_BorderWidth;*/
 
             GroupDetails = PlatformLabel.Create( );
             GroupDetails.AddAsSubview( masterView );
-            GroupDetails.SetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            GroupDetails.SetFont( ControlStylingConfig.Medium_Font_Light, ControlStylingConfig.Medium_FontSize );
             GroupDetails.TextColor = ControlStylingConfig.TextField_ActiveTextColor;
 
 
@@ -194,12 +194,12 @@ namespace CCVApp.Shared.UI
 
             // set the group title
             GroupTitle.Text = groupTitle;
-
+            GroupTitle.SizeToFit( );
 
             // set the details for the group (distance, meeting time, etc)
             GroupDetails.Text = meetingTime + "\n" + distance;
             GroupDetails.TextAlignment = TextAlignment.Center;
-
+            GroupDetails.SizeToFit( );
 
             FirstName.Text = CCVApp.Shared.Network.RockMobileUser.Instance.Person.NickName;
             LastName.Text = CCVApp.Shared.Network.RockMobileUser.Instance.Person.LastName;
@@ -226,13 +226,13 @@ namespace CCVApp.Shared.UI
 
             float buttonWidth = Rock.Mobile.Graphics.Util.UnitToPx( 122 );
 
-            GroupTitle.Frame = new RectangleF( 0, 0, View.Frame.Width, Rock.Mobile.Graphics.Util.UnitToPx( 50 ) );
+            GroupTitle.Frame = new RectangleF( 0, 0, View.Frame.Width, GroupTitle.Frame.Height );
 
-            GroupDetailsLayer.Frame = new RectangleF( 0, GroupTitle.Frame.Bottom, View.Frame.Width, Rock.Mobile.Graphics.Util.UnitToPx( 62 ) );
-            GroupDetails.Frame = new RectangleF( 0, GroupDetailsLayer.Frame.Top + 2, View.Frame.Width, Rock.Mobile.Graphics.Util.UnitToPx( 60 ) );
+            //GroupDetailsLayer.Frame = new RectangleF( 0, GroupTitle.Frame.Bottom, View.Frame.Width, Rock.Mobile.Graphics.Util.UnitToPx( 62 ) );
+            GroupDetails.Frame = new RectangleF( 0, GroupTitle.Frame.Bottom, View.Frame.Width, Rock.Mobile.Graphics.Util.UnitToPx( 60 ) );
 
             // Name Info
-            FirstNameLayer.Frame = new RectangleF( 0, GroupDetailsLayer.Frame.Bottom + sectionSpacing, View.Frame.Width, layerHeight );
+            FirstNameLayer.Frame = new RectangleF( 0, GroupDetails.Frame.Bottom + sectionSpacing, View.Frame.Width, layerHeight );
             FirstName.Frame = new RectangleF( textLeftInset, FirstNameLayer.Frame.Top + textTopInset, View.Frame.Width, textFieldHeight );
 
             LastNameLayer.Frame = new RectangleF( 0, FirstNameLayer.Frame.Bottom, View.Frame.Width, layerHeight );

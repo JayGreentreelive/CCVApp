@@ -19,6 +19,7 @@ using CCVApp.Shared.Strings;
 using CCVApp.Shared.Config;
 using CCVApp.Shared.Analytics;
 using Rock.Mobile.Animation;
+using CCVApp.Shared;
 
 namespace Droid
 {
@@ -239,6 +240,31 @@ namespace Droid
                         uint currPrayerColor = RequestBGColor;
                         uint targetPrayerColor = string.IsNullOrEmpty( RequestText.Text ) ? ControlStylingConfig.BadInput_BG_Layer_Color : ControlStylingConfig.BG_Layer_Color;
                         Rock.Mobile.PlatformSpecific.Android.UI.Util.AnimateViewColor( RequestBGColor, targetPrayerColor, RequestBGLayer, delegate { RequestBGColor = targetPrayerColor; } );
+
+                        CheckDebug( );
+                    }
+                }
+
+                void CheckDebug( )
+                {
+                    if( string.IsNullOrEmpty( FirstNameText.Text ) == true && string.IsNullOrEmpty( LastNameText.Text ) == true )
+                    {
+                        if ( RequestText.Text == "clear cache" )
+                        {
+                            FileCache.Instance.CleanUp( true );
+                            Springboard.DisplayError( "Cache Cleared", "All cached items have been deleted" );
+                        }
+                        else if ( RequestText.Text == "note refresh" )
+                        {
+                            CCVApp.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled = !CCVApp.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled;
+                            Springboard.DisplayError( "Note Refresh Button", 
+                                string.Format( "Note refresh button has been toggled {0}", CCVApp.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled == true ? "ON" : "OFF" ) );
+                        }
+                        // fun bonus!
+                        else if ( RequestText.Text == CCVApp.Shared.ConnectLink.CheatException.CheatString )
+                        {
+                            throw new CCVApp.Shared.ConnectLink.CheatException();
+                        }
                     }
                 }
 

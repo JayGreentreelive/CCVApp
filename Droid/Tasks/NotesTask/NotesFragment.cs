@@ -257,9 +257,11 @@ namespace Droid
                         PrepareCreateNotes(  );
                     };
 
-                    #if !DEBUG
-                    RefreshButton.Visibility = ViewStates.Gone;
-                    #endif
+                    // if the refresh button isn't enabled, hide it
+                    if ( CCVApp.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled == false )
+                    {
+                        RefreshButton.Visibility = ViewStates.Gone;
+                    }
 
                     // get our power management control
                     PowerManager pm = PowerManager.FromContext( Rock.Mobile.PlatformSpecific.Android.Core.Context );

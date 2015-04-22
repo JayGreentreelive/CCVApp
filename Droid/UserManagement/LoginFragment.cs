@@ -47,9 +47,12 @@ namespace Droid
         ImageButton FacebookButton { get; set; }
 
 
+        View UsernameLayer { get; set; }
         EditText UsernameField { get; set; }
         uint UserNameBGColor { get; set; }
 
+
+        View PasswordLayer { get; set; }
         EditText PasswordField { get; set; }
         uint PasswordBGColor { get; set; }
 
@@ -87,9 +90,6 @@ namespace Droid
             RelativeLayout navBar = view.FindViewById<RelativeLayout>( Resource.Id.navbar_relative_layout );
             navBar.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
 
-            View backgroundView = view.FindViewById<View>( Resource.Id.login_background );
-            ControlStyling.StyleBGLayer( backgroundView );
-
             LoginActivityIndicator = view.FindViewById<ProgressBar>( Resource.Id.login_progressBar );
             LoginActivityIndicator.Visibility = ViewStates.Gone;
 
@@ -120,13 +120,23 @@ namespace Droid
                     SpringboardParent.RegisterNewUser( );
                 };
 
+
+
+            // get the username field and background
+            UsernameLayer = view.FindViewById<View>( Resource.Id.login_background );
+            ControlStyling.StyleBGLayer( UsernameLayer );
+
             UsernameField = view.FindViewById<EditText>( Resource.Id.usernameText );
             UserNameBGColor = ControlStylingConfig.BG_Layer_Color;
             ControlStyling.StyleTextField( UsernameField, LoginStrings.UsernamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
 
-            View borderView = backgroundView.FindViewById<View>( Resource.Id.middle_border );
+            View borderView = UsernameLayer.FindViewById<View>( Resource.Id.middle_border );
             borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
+
+            // get the password field and background
+            PasswordLayer = view.FindViewById<View>( Resource.Id.password_background );
+            ControlStyling.StyleBGLayer( PasswordLayer );
             PasswordField = view.FindViewById<EditText>( Resource.Id.passwordText );
             PasswordBGColor = ControlStylingConfig.BG_Layer_Color;
             ControlStyling.StyleTextField( PasswordField, LoginStrings.PasswordPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
@@ -181,7 +191,7 @@ namespace Droid
                 userNameTargetColor = ControlStylingConfig.BadInput_BG_Layer_Color;
                 inputValid = false;
             }
-            Rock.Mobile.PlatformSpecific.Android.UI.Util.AnimateViewColor( UserNameBGColor, userNameTargetColor, UsernameField, delegate { UserNameBGColor = userNameTargetColor; } );
+            Rock.Mobile.PlatformSpecific.Android.UI.Util.AnimateViewColor( UserNameBGColor, userNameTargetColor, UsernameLayer, delegate { UserNameBGColor = userNameTargetColor; } );
 
             uint passwordTargetColor = ControlStylingConfig.BG_Layer_Color;
             if ( string.IsNullOrEmpty( PasswordField.Text ) == true )
@@ -189,7 +199,7 @@ namespace Droid
                 passwordTargetColor = ControlStylingConfig.BadInput_BG_Layer_Color;
                 inputValid = false;
             }
-            Rock.Mobile.PlatformSpecific.Android.UI.Util.AnimateViewColor( PasswordBGColor, passwordTargetColor, PasswordField, delegate { PasswordBGColor = passwordTargetColor; } );
+            Rock.Mobile.PlatformSpecific.Android.UI.Util.AnimateViewColor( PasswordBGColor, passwordTargetColor, PasswordLayer, delegate { PasswordBGColor = passwordTargetColor; } );
 
             return inputValid;
         }

@@ -482,9 +482,9 @@ namespace CCVApp
             {
                 public static string[] WebViews = 
                     {
-                        "Baptisms", "http://www.ccvonline.com/Arena/default.aspx?page=17655&campus=1", "baptism_thumb.png",
                         "Starting Point", "http://www.ccvonline.com/Arena/default.aspx?page=17400&campus=1", "starting_point_thumb.png",
-                        "Foundations", "http://www.ccvonline.com/Arena/default.aspx?page=17659&campus=1", "foundations_thumb.png"
+                        "Baptisms", "http://www.ccvonline.com/Arena/default.aspx?page=17655&campus=1", "baptism_thumb.png",
+                        "Serve", "http://www.ccvonline.com/Arena/default.aspx?page=17659&campus=1", "serve_thumb.png"
                     };
 
                 public const string GroupFinder_IconImage = "groupfinder_thumb.png";
@@ -534,7 +534,7 @@ namespace CCVApp
                 /// <summary>
                 /// The icon to use representing the join button.
                 /// </summary>
-                public const string GroupFinder_JoinIcon = "";
+                public const string GroupFinder_JoinIcon = "";
 
                 public const uint GroupFinder_Join_IconSize = 64;
 
@@ -653,7 +653,7 @@ namespace CCVApp
                 /// <summary>
                 /// The font to use representing a large bold font throughout the app.
                 /// </summary>
-                public const string Large_Font_Bold = "OpenSans-Semibold";
+                public const string Large_Font_Bold = "DINOffc-CondBold";
 
                 /// <summary>
                 /// The font to use representing a large regular font throughout the app.
@@ -673,7 +673,7 @@ namespace CCVApp
                 /// <summary>
                 /// The font to use representing a medium bold font throughout the app.
                 /// </summary>
-                public const string Medium_Font_Bold = "OpenSans-Bold";
+                public const string Medium_Font_Bold = "DINOffc-CondBold";
 
                 /// <summary>
                 /// The font to use representing a medium regular font throughout the app.
@@ -693,7 +693,7 @@ namespace CCVApp
                 /// <summary>
                 /// The font to use representing a small bold font throughout the app.
                 /// </summary>
-                public const string Small_Font_Bold = "OpenSans-Bold";
+                public const string Small_Font_Bold = "DINOffc-CondBold";
 
                 /// <summary>
                 /// The font to use representing a small regular font throughout the app.

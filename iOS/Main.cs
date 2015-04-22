@@ -14,13 +14,7 @@ namespace iOS
         {
             // if you want to use a different Application Delegate class from "AppDelegate"
             // you can specify it here.
-            try
-            {
-                UIApplication.Main( args, null, "AppDelegate" );
-            }
-            catch( CCVApp.Shared.ConnectLink.CheatException )
-            {
-            }
+            UIApplication.Main( args, null, "AppDelegate" );
         }
     }
 }

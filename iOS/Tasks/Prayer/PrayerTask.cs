@@ -25,6 +25,13 @@ namespace iOS
             parentViewController.PushViewController(MainPage, false);
         }
 
+        public override void MakeInActive()
+        {
+            base.MakeInActive();
+
+            MainPage.ResetPrayerStatus( );
+        }
+
         public override void WillShowViewController(TaskUIViewController viewController)
         {
             base.WillShowViewController( viewController );

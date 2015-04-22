@@ -13,11 +13,12 @@ namespace CCVApp.Shared.UI
         PlatformView View { get; set; }
 
         PlatformLabel StatusLabel { get; set; }
-        PlatformView StatusBackground { get; set; }
+        //PlatformView StatusBackground { get; set; }
 
+        PlatformCircleView ResultCircle {get; set; }
         PlatformLabel ResultSymbol { get; set; }
         PlatformLabel ResultLabel { get; set; }
-        PlatformView ResultBackground { get; set; }
+        //PlatformView ResultBackground { get; set; }
 
         PlatformButton DoneButton { get; set; }
 
@@ -30,26 +31,29 @@ namespace CCVApp.Shared.UI
             View.UserInteractionEnabled = false;
 
             StatusLabel = PlatformLabel.Create( );
-            StatusBackground = PlatformView.Create( );
+            //StatusBackground = PlatformView.Create( );
 
             ResultSymbol = PlatformLabel.Create( );
             ResultLabel = PlatformLabel.Create( );
-            ResultBackground = PlatformView.Create( );
+            //ResultBackground = PlatformView.Create( );
 
-            DoneButton = PlatformButton.Create( );
+
+            ResultCircle = PlatformCircleView.Create( );
+            ResultCircle.AddAsSubview( parentView );
+
 
             // setup our UI hierarchy
-            StatusBackground.AddAsSubview( parentView );
-            StatusBackground.UserInteractionEnabled = false;
-            StatusBackground.BorderWidth = .5f;
+            //StatusBackground.AddAsSubview( parentView );
+            //StatusBackground.UserInteractionEnabled = false;
+            //StatusBackground.BorderWidth = .5f;
 
             StatusLabel.AddAsSubview( parentView );
             StatusLabel.UserInteractionEnabled = false;
 
 
-            ResultBackground.AddAsSubview( parentView );
-            ResultBackground.UserInteractionEnabled = false;
-            ResultBackground.BorderWidth = .5f;
+            //ResultBackground.AddAsSubview( parentView );
+            //ResultBackground.UserInteractionEnabled = false;
+            //ResultBackground.BorderWidth = .5f;
 
             ResultSymbol.AddAsSubview( parentView );
             ResultSymbol.UserInteractionEnabled = false;
@@ -57,6 +61,7 @@ namespace CCVApp.Shared.UI
             ResultLabel.AddAsSubview( parentView );
             ResultLabel.UserInteractionEnabled = false;
 
+            DoneButton = PlatformButton.Create( );
             DoneButton.AddAsSubview( parentView );
             DoneButton.ClickEvent = ( PlatformButton button ) =>
             {
@@ -73,14 +78,7 @@ namespace CCVApp.Shared.UI
             SetBounds( frame );
 
             // give it a default style
-            SetStyle( ControlStylingConfig.Medium_Font_Light, 
-                ControlStylingConfig.Icon_Font_Secondary, 
-                ControlStylingConfig.BackgroundColor,
-                ControlStylingConfig.BG_Layer_Color, 
-                ControlStylingConfig.BG_Layer_BorderColor, 
-                ControlStylingConfig.TextField_PlaceholderTextColor,
-                ControlStylingConfig.Button_BGColor, 
-                ControlStylingConfig.Button_TextColor );
+            SetStyle( );
         }
 
         void SetOpacity( float opacity )
@@ -89,40 +87,41 @@ namespace CCVApp.Shared.UI
 
             ResultSymbol.Opacity = opacity;
             ResultLabel.Opacity = opacity;
-            ResultBackground.Opacity = opacity;
+            ResultCircle.Opacity = opacity;
+            //ResultBackground.Opacity = opacity;
 
             StatusLabel.Opacity = opacity;
-            StatusBackground.Opacity = opacity;
+            //StatusBackground.Opacity = opacity;
 
             DoneButton.Opacity = opacity;
         }
 
-        public void SetStyle( string textFont, string symbolFont, uint bgColor, uint layerBgColor, uint layerBorderColor, uint textColor, uint buttonBGColor, uint buttonTextColor )
+        public void SetStyle( )
         {
             // setup the text fonts and colors
-            ResultSymbol.SetFont( symbolFont, 48 );
-            ResultSymbol.TextColor = textColor;
+            StatusLabel.SetFont( ControlStylingConfig.Medium_Font_Bold, 24 );
+            StatusLabel.TextColor = ControlStylingConfig.TextField_ActiveTextColor;
 
-            ResultLabel.SetFont( textFont, 14 );
-            ResultLabel.TextColor = textColor;
+            ResultSymbol.SetFont( ControlStylingConfig.Icon_Font_Secondary, 64 );
+            ResultSymbol.TextColor = ControlStylingConfig.TextField_PlaceholderTextColor;
 
-            StatusLabel.SetFont( textFont, 14 );
-            StatusLabel.TextColor = textColor;
+            ResultCircle.BackgroundColor = ControlStylingConfig.BG_Layer_Color;
 
-            DoneButton.SetFont( textFont, 14 );
-            DoneButton.TextColor = buttonTextColor;
+            ResultLabel.SetFont( ControlStylingConfig.Medium_Font_Light, 14 );
+            ResultLabel.TextColor = ControlStylingConfig.TextField_PlaceholderTextColor;
+
+            DoneButton.SetFont( ControlStylingConfig.Medium_Font_Regular, 14 );
+            DoneButton.TextColor = ControlStylingConfig.Button_TextColor;
+            DoneButton.BackgroundColor = ControlStylingConfig.Button_BGColor;
 
             // setup the background layer colors
-            ResultBackground.BackgroundColor = layerBgColor;
-            ResultBackground.BorderColor = layerBorderColor;
+            //ResultBackground.BackgroundColor = ControlStylingConfig.BG_Layer_Color;
+            //ResultBackground.BorderColor = ControlStylingConfig.BG_Layer_BorderColor;
 
-            StatusBackground.BackgroundColor = layerBgColor;
-            StatusBackground.BorderColor = layerBorderColor;
+            //StatusBackground.BackgroundColor = layerBgColor;
+            //StatusBackground.BorderColor = layerBorderColor;
 
-            View.BackgroundColor = bgColor;
-
-            DoneButton.BackgroundColor = buttonBGColor;
-            DoneButton.TextColor = buttonTextColor;
+            View.BackgroundColor = ControlStylingConfig.BackgroundColor;
 
             // only round the button on iOS
             #if __IOS__
@@ -135,14 +134,14 @@ namespace CCVApp.Shared.UI
             SetHidden( false );
 
             // set and position the status label
-            if ( string.IsNullOrEmpty( statusLabel ) == false )
+            /*if ( string.IsNullOrEmpty( statusLabel ) == false )
             {
                 StatusBackground.Hidden = false;
             }
             else
             {
                 StatusBackground.Hidden = true;
-            }
+            }*/
             StatusLabel.Text = statusLabel;
             StatusLabel.SizeToFit( );
 
@@ -153,14 +152,14 @@ namespace CCVApp.Shared.UI
 
 
             // set the result text
-            if ( string.IsNullOrEmpty( resultLabel ) == false )
+            /*if ( string.IsNullOrEmpty( resultLabel ) == false )
             {
                 ResultBackground.Hidden = false;
             }
             else
             {
                 ResultBackground.Hidden = true;
-            }
+            }*/
             ResultLabel.Text = resultLabel;
 
             // set the done button
@@ -192,39 +191,44 @@ namespace CCVApp.Shared.UI
             View.Bounds = containerBounds;
 
             // setup the background layers
-            StatusBackground.Frame = new RectangleF( View.Frame.X, 
+            /*StatusBackground.Frame = new RectangleF( View.Frame.X, 
                 View.Frame.Top + Rock.Mobile.Graphics.Util.UnitToPx( 10 ), 
                 View.Frame.Width, 
-                Rock.Mobile.Graphics.Util.UnitToPx( 44 ) );
+                Rock.Mobile.Graphics.Util.UnitToPx( 44 ) );*/
 
-            ResultBackground.Frame = new RectangleF( View.Frame.X, 
+            /*ResultBackground.Frame = new RectangleF( View.Frame.X, 
                 View.Frame.Height / 3, 
                 View.Frame.Width, 
-                Rock.Mobile.Graphics.Util.UnitToPx( 150 ) );
+                Rock.Mobile.Graphics.Util.UnitToPx( 150 ) );*/
             
 
             // and the labels
             StatusLabel.Frame = new RectangleF( 0, 0, View.Frame.Width - Rock.Mobile.Graphics.Util.UnitToPx( 40 ), 0 );
             StatusLabel.SizeToFit( );
             StatusLabel.Frame = new RectangleF( ( View.Frame.Width - StatusLabel.Frame.Width ) / 2, 
-                StatusBackground.Frame.Top + (( StatusBackground.Frame.Height - StatusLabel.Frame.Height ) / 2), 
+                View.Frame.Top + Rock.Mobile.Graphics.Util.UnitToPx( 10 ), 
                 StatusLabel.Frame.Width, 
                 StatusLabel.Frame.Height );
-            
+
             ResultSymbol.Frame = new RectangleF( 0, 0, View.Frame.Width - Rock.Mobile.Graphics.Util.UnitToPx( 40 ), 0 );
             ResultSymbol.SizeToFit( );
-            ResultSymbol.Frame = new RectangleF( ( View.Frame.Width - ResultSymbol.Frame.Width ) / 2, 
-                ResultBackground.Frame.Top + Rock.Mobile.Graphics.Util.UnitToPx( 10 ), 
+
+            float circleWidth = ResultSymbol.Frame.Width * 1.25f;
+            ResultCircle.Frame = new RectangleF( ( View.Frame.Width - circleWidth ) / 2, Rock.Mobile.Graphics.Util.UnitToPx( 140 ), circleWidth, circleWidth );
+
+            ResultSymbol.Frame = new RectangleF( ResultCircle.Frame.X + (ResultCircle.Frame.Width - ResultSymbol.Frame.Width) / 2,  
+                ResultCircle.Frame.Y + (ResultCircle.Frame.Height - ResultSymbol.Frame.Height) / 2, 
                 ResultSymbol.Frame.Width, 
                 ResultSymbol.Frame.Height );
+            
 
-            ResultLabel.Frame = new RectangleF( 0, 0, ResultBackground.Frame.Width - Rock.Mobile.Graphics.Util.UnitToPx( 40 ), 0 );
+            ResultLabel.Frame = new RectangleF( 0, 0, View.Frame.Width - Rock.Mobile.Graphics.Util.UnitToPx( 40 ), 0 );
             ResultLabel.SizeToFit( );
-            ResultLabel.Frame = new RectangleF( ( View.Frame.Width - ResultLabel.Frame.Width ) / 2, ResultSymbol.Frame.Bottom + Rock.Mobile.Graphics.Util.UnitToPx( 25 ), ResultLabel.Frame.Width, ResultLabel.Frame.Height );
+            ResultLabel.Frame = new RectangleF( ( View.Frame.Width - ResultLabel.Frame.Width ) / 2, ResultCircle.Frame.Bottom + Rock.Mobile.Graphics.Util.UnitToPx( 5 ), ResultLabel.Frame.Width, ResultLabel.Frame.Height );
 
             // lastly the button
             float doneWidth = Rock.Mobile.Graphics.Util.UnitToPx( 122 );
-            DoneButton.Frame = new RectangleF( ( View.Frame.Width - doneWidth ) / 2, ResultBackground.Frame.Bottom + Rock.Mobile.Graphics.Util.UnitToPx( 10 ), doneWidth, DoneButton.Frame.Height );
+            DoneButton.Frame = new RectangleF( ( View.Frame.Width - doneWidth ) / 2, ResultLabel.Frame.Bottom + Rock.Mobile.Graphics.Util.UnitToPx( 10 ), doneWidth, DoneButton.Frame.Height );
         }
 
         void SetHidden( bool hidden )
@@ -233,11 +237,12 @@ namespace CCVApp.Shared.UI
             DoneButton.Hidden = hidden;
 
             StatusLabel.Hidden = hidden;
-            StatusBackground.Hidden = hidden;
+            //StatusBackground.Hidden = hidden;
 
+            ResultCircle.Hidden = hidden;
             ResultSymbol.Hidden = hidden;
             ResultLabel.Hidden = hidden;
-            ResultBackground.Hidden = hidden;
+            //ResultBackground.Hidden = hidden;
         }
     }
 }

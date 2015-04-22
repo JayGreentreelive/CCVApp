@@ -30,6 +30,8 @@ namespace CCVApp.Shared.UI
 
             // default to hidden
             SetOpacity( 0.00f );
+
+            SetBounds( bounds );
         }
 
         public void BringToFront( )

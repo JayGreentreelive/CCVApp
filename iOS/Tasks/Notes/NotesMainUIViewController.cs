@@ -78,7 +78,7 @@ namespace iOS
                     Title.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
                     Title.BackgroundColor = UIColor.Clear;
                     Title.LineBreakMode = UILineBreakMode.TailTruncation;
-                    Title.Text = "PLACEHOLDER";
+                    Title.Text = "PLACEHOLDER PLACEHOLDER";
                     Title.SizeToFit( );
                     Title.Frame = new CGRect( 5, Image.Frame.Bottom + 5, parentSize.Width - 10, Title.Frame.Height + 5 );
                     AddSubview( Title );
@@ -380,7 +380,10 @@ namespace iOS
 
                         cell.Speaker.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Speaker;
                         cell.Speaker.SizeToFit( );
-
+                        cell.Speaker.Frame = new CGRect( cell.Bounds.Width - cell.Speaker.Bounds.Width - 5, 
+                                                         cell.Speaker.Frame.Top, 
+                                                         cell.Speaker.Bounds.Width, 
+                                                         cell.Speaker.Bounds.Height + 5 );
 
                         // Watch Button & Labels
                         // disable the button if there's no watch URL

@@ -112,6 +112,7 @@ namespace Droid
         protected RegisterFragment RegisterFragment { get; set; }
         protected ImageCropFragment ImageCropFragment { get; set; }
         protected OOBEFragment OOBEFragment { get; set; }
+        protected SplashFragment SplashFragment { get; set; }
 
         protected Button ProfileImageButton { get; set; }
 
@@ -180,47 +181,26 @@ namespace Droid
             RetainInstance = true;
 
             // setup our fragments (checking for these to be created might be unnecessary, since we'll retain this fragment)
-            NavbarFragment = FragmentManager.FindFragmentById(Resource.Id.navbar) as NavbarFragment;
-            if ( NavbarFragment == null )
-            {
-                NavbarFragment = new NavbarFragment( );
-                NavbarFragment.SpringboardParent = this;
-            }
+            NavbarFragment = new NavbarFragment( );
+            NavbarFragment.SpringboardParent = this;
 
-            LoginFragment = FragmentManager.FindFragmentByTag( "Droid.LoginFragment" ) as LoginFragment;
-            if ( LoginFragment == null )
-            {
-                LoginFragment = new LoginFragment( );
-                LoginFragment.SpringboardParent = this;
-            }
+            LoginFragment = new LoginFragment( );
+            LoginFragment.SpringboardParent = this;
 
-            ProfileFragment = FragmentManager.FindFragmentByTag( "Droid.ProfileFragment" ) as ProfileFragment;
-            if( ProfileFragment == null )
-            {
-                ProfileFragment = new ProfileFragment( );
-                ProfileFragment.SpringboardParent = this;
-            }
+            ProfileFragment = new ProfileFragment( );
+            ProfileFragment.SpringboardParent = this;
 
-            RegisterFragment = FragmentManager.FindFragmentByTag( "Droid.RegisterFragment" ) as RegisterFragment;
-            if( RegisterFragment == null )
-            {
-                RegisterFragment = new RegisterFragment( );
-                RegisterFragment.SpringboardParent = this;
-            }
+            RegisterFragment = new RegisterFragment( );
+            RegisterFragment.SpringboardParent = this;
 
-            OOBEFragment = FragmentManager.FindFragmentByTag( "Droid.OOBEFragment" ) as OOBEFragment;
-            if( OOBEFragment == null )
-            {
-                OOBEFragment = new OOBEFragment( );
-                OOBEFragment.SpringboardParent = this;
-            }
+            OOBEFragment = new OOBEFragment( );
+            OOBEFragment.SpringboardParent = this;
 
-            ImageCropFragment = FragmentManager.FindFragmentByTag( "Droid.ImageCropFragment" ) as ImageCropFragment;
-            if( ImageCropFragment == null )
-            {
-                ImageCropFragment = new ImageCropFragment( );
-                ImageCropFragment.SpringboardParent = this;
-            }
+            SplashFragment = new SplashFragment( );
+            SplashFragment.SpringboardParent = this;
+
+            ImageCropFragment = new ImageCropFragment( );
+            ImageCropFragment.SpringboardParent = this;
 
             // get the mask used for the profile pic
             ProfileMask = BitmapFactory.DecodeResource( Rock.Mobile.PlatformSpecific.Android.Core.Context.Resources, Resource.Drawable.androidPhotoMask );
@@ -383,19 +363,7 @@ namespace Droid
                         StartModalFragment( LoginFragment );
                     }
                 };
-
-
-            // setup the textView for rendering the user's name when they're logged in "Welcome: Jered"
-            ProfilePrefix = view.FindViewById<TextView>( Resource.Id.profile_prefix );
-            ProfilePrefix.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Large_Font_Light ), TypefaceStyle.Normal );
-            ProfilePrefix.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Large_FontSize );
-            ProfilePrefix.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
-
-            ProfileName = view.FindViewById<TextView>( Resource.Id.profile_name );
-            ProfileName.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
-            ProfileName.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Large_Font_Bold ), TypefaceStyle.Normal );
-            ProfileName.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Large_FontSize );
-
+            
             // setup the textView for rendering either "Tap to Personalize" or "View Profile"
             ViewProfileLabel = view.FindViewById<TextView>( Resource.Id.view_profile );
             ViewProfileLabel.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
@@ -414,6 +382,22 @@ namespace Droid
             // setup the width of the springboard area and campus selector
             ProfileContainer = view.FindViewById<LinearLayout>( Resource.Id.springboard_profile_image_container );
             ProfileContainer.LayoutParameters.Width = (int) ( displayWidth * revealPercent );
+
+            // setup the textView for rendering the user's name when they're logged in "Welcome: Jered"
+            ProfilePrefix = view.FindViewById<TextView>( Resource.Id.profile_prefix );
+            ProfilePrefix.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Large_Font_Light ), TypefaceStyle.Normal );
+            ProfilePrefix.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Large_FontSize );
+            ProfilePrefix.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
+            ProfilePrefix.Text = SpringboardStrings.LoggedIn_Prefix;
+            ProfilePrefix.Measure( 0, 0 );
+
+            ProfileName = view.FindViewById<TextView>( Resource.Id.profile_name );
+            ProfileName.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
+            ProfileName.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Large_Font_Bold ), TypefaceStyle.Normal );
+            ProfileName.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Large_FontSize );
+            ProfileName.SetMaxLines( 1 );
+            ProfileName.Ellipsize = Android.Text.TextUtils.TruncateAt.End;
+
 
             CampusContainer = view.FindViewById<View>( Resource.Id.campus_container );
             CampusContainer.LayoutParameters.Width = (int) ( displayWidth * revealPercent );
@@ -438,7 +422,7 @@ namespace Droid
             settingsIcon.Text = SpringboardConfig.SettingsSymbol;
 
             // set the campus text to whatever their profile has set for viewing.
-            CampusText.Text = string.Format( SpringboardStrings.Viewing_Campus, RockGeneralData.Instance.Data.CampusIdToName( RockMobileUser.Instance.ViewingCampus ) );
+            CampusText.Text = string.Format( SpringboardStrings.Viewing_Campus, RockGeneralData.Instance.Data.CampusIdToName( RockMobileUser.Instance.ViewingCampus ) ).ToUpper( );
 
             // setup the campus selection button.
             Button campusSelectionButton = CampusContainer.FindViewById<Button>( Resource.Id.campus_selection_button );
@@ -498,7 +482,7 @@ namespace Droid
         void RefreshCampusSelection( )
         {
             string newCampusText = string.Format( SpringboardStrings.Viewing_Campus, 
-                RockGeneralData.Instance.Data.CampusIdToName( RockMobileUser.Instance.ViewingCampus ) );
+                RockGeneralData.Instance.Data.CampusIdToName( RockMobileUser.Instance.ViewingCampus ) ).ToUpper( );
 
             if ( CampusText.Text != newCampusText )
             {
@@ -547,7 +531,6 @@ namespace Droid
             ProfileContainer.LayoutParameters.Width = (int) ( displayWidth * revealPercent );
             CampusContainer.LayoutParameters.Width = (int) ( displayWidth * revealPercent );
 
-
             NavbarFragment.LayoutChanged( );
         }
 
@@ -586,8 +569,8 @@ namespace Droid
             // if a modal fragment is visible, end it.
             if ( VisibleModalFragment != null )
             {
-                // the OOBE is special. If they hit back, ignore them.
-                if ( VisibleModalFragment == OOBEFragment )
+                // the OOBE / Splash is special. If they hit back, ignore them.
+                if ( VisibleModalFragment == OOBEFragment || VisibleModalFragment == SplashFragment )
                 {
                     return false;
                 }
@@ -857,6 +840,18 @@ namespace Droid
                 IsOOBERunning = true;
                 StartModalFragment( OOBEFragment, true );
             }
+            else
+            {
+                SplashFragment.ContainerView = FullScreenLayout;
+                StartModalFragment( SplashFragment, true );
+            }
+        }
+
+        public void SplashComplete( )
+        {
+            ModalFragmentDone( null );
+
+            FullScreenLayout.Alpha = 1.0f;
         }
 
         public void OOBEUserClick( int index )

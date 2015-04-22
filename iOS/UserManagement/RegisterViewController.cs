@@ -166,7 +166,8 @@ namespace iOS
 
             CancelButton = UIButton.FromType( UIButtonType.System );
             ScrollView.AddSubview( CancelButton );
-            ControlStyling.StyleButton( CancelButton, GeneralStrings.Cancel, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            CancelButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
+            CancelButton.SetTitle( GeneralStrings.Cancel, UIControlState.Normal );
             CancelButton.SizeToFit( );
 
 
@@ -227,8 +228,8 @@ namespace iOS
             EmailText.SetFrame( new CGRect( -10, LastNameText.Background.Frame.Bottom + 40, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
             CellPhoneText.SetFrame( new CGRect( -10, EmailText.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
 
-            DoneButton.Frame = new CGRect( View.Frame.Left + 8, CellPhoneText.Background.Frame.Bottom + 20, ControlStyling.ButtonWidth, ControlStyling.ButtonHeight );
-            CancelButton.Frame = new CGRect( ( View.Frame.Width - ControlStyling.ButtonWidth ) - 8, CellPhoneText.Background.Frame.Bottom + 20, ControlStyling.ButtonWidth, ControlStyling.ButtonHeight );
+            DoneButton.Frame = new CGRect( View.Frame.Left + 10, CellPhoneText.Background.Frame.Bottom + 20, View.Bounds.Width - 20, ControlStyling.ButtonHeight );
+            CancelButton.Frame = new CGRect( ( View.Frame.Width - ControlStyling.ButtonWidth) / 2, DoneButton.Frame.Bottom + 20, ControlStyling.ButtonWidth, ControlStyling.ButtonHeight );
 
 
             // setup the header shadow
@@ -347,6 +348,7 @@ namespace iOS
                 result = false;
             }
             Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetColor, EmailText.Background );
+            Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetColor, CellPhoneText.Background );
 
             return result;
         }

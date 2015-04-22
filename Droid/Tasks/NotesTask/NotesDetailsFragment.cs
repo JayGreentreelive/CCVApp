@@ -185,7 +185,7 @@ namespace Droid
                     DateRange.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Light ), TypefaceStyle.Normal );
                     DateRange.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
                     DateRange.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
-                    ( (LinearLayout.LayoutParams)DateRange.LayoutParameters ).TopMargin = 20;
+                    ( (LinearLayout.LayoutParams)DateRange.LayoutParameters ).TopMargin = 0;
                     ( (LinearLayout.LayoutParams)DateRange.LayoutParameters ).LeftMargin = 25;
                     AddView( DateRange );
 
@@ -197,7 +197,7 @@ namespace Droid
                     ( (LinearLayout.LayoutParams)Desc.LayoutParameters ).TopMargin = 10;
                     ( (LinearLayout.LayoutParams)Desc.LayoutParameters ).LeftMargin = 25;
                     ( (LinearLayout.LayoutParams)Desc.LayoutParameters ).RightMargin = 25;
-                    ( (LinearLayout.LayoutParams)Desc.LayoutParameters ).BottomMargin = 50;
+                    ( (LinearLayout.LayoutParams)Desc.LayoutParameters ).BottomMargin = 25;
                     AddView( Desc );
                 }
             }
@@ -230,7 +230,7 @@ namespace Droid
                     AddView( contentLayout );
 
                     TitleLayout = new LinearLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
-                    TitleLayout.LayoutParameters = new LinearLayout.LayoutParams( LayoutParams.WrapContent, LayoutParams.WrapContent );
+                    TitleLayout.LayoutParameters = new LinearLayout.LayoutParams( LayoutParams.MatchParent, LayoutParams.WrapContent );
                     TitleLayout.Orientation = Orientation.Vertical;
                     ( (LinearLayout.LayoutParams)TitleLayout.LayoutParameters ).Weight = 1;
                     ( (LinearLayout.LayoutParams)TitleLayout.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
@@ -272,40 +272,46 @@ namespace Droid
 
 
                     // setup the buttons
+                    LinearLayout buttonLayout = new LinearLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    buttonLayout.LayoutParameters = new LinearLayout.LayoutParams( LayoutParams.MatchParent, LayoutParams.MatchParent );
+                    ( (LinearLayout.LayoutParams)buttonLayout.LayoutParameters ).Weight = 1;
+                    buttonLayout.Orientation = Orientation.Horizontal;
+                    contentLayout.AddView( buttonLayout );
+
                     Typeface buttonFontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
 
                     ListenButton = new Button( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     ListenButton.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-                    ( (LinearLayout.LayoutParams)ListenButton.LayoutParameters ).Weight = 0;
+                    ( (LinearLayout.LayoutParams)ListenButton.LayoutParameters ).Weight = 1;
                     ( (LinearLayout.LayoutParams)ListenButton.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
                     ListenButton.SetTypeface( buttonFontFace, TypefaceStyle.Normal );
                     ListenButton.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Details_Table_IconSize );
                     ListenButton.Text = NoteConfig.Series_Table_Listen_Icon;
                     ListenButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
                     ListenButton.SetBackgroundDrawable( null );
-                    contentLayout.AddView( ListenButton );
+                    buttonLayout.AddView( ListenButton );
 
                     WatchButton = new Button( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     WatchButton.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-                    ( (LinearLayout.LayoutParams)WatchButton.LayoutParameters ).Weight = 0;
+                    ( (LinearLayout.LayoutParams)WatchButton.LayoutParameters ).Weight = 1;
                     ( (LinearLayout.LayoutParams)WatchButton.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
                     WatchButton.SetTypeface( buttonFontFace, TypefaceStyle.Normal );
                     WatchButton.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Details_Table_IconSize );
                     WatchButton.Text = NoteConfig.Series_Table_Watch_Icon;
                     WatchButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
                     WatchButton.SetBackgroundDrawable( null );
-                    contentLayout.AddView( WatchButton );
+                    buttonLayout.AddView( WatchButton );
 
                     TakeNotesButton = new Button( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     TakeNotesButton.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-                    ( (LinearLayout.LayoutParams)TakeNotesButton.LayoutParameters ).Weight = 0;
+                    ( (LinearLayout.LayoutParams)TakeNotesButton.LayoutParameters ).Weight = 1;
                     ( (LinearLayout.LayoutParams)TakeNotesButton.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
                     TakeNotesButton.SetTypeface( buttonFontFace, TypefaceStyle.Normal );
                     TakeNotesButton.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Details_Table_IconSize );
                     TakeNotesButton.Text = NoteConfig.Series_Table_TakeNotes_Icon;
                     TakeNotesButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
                     TakeNotesButton.SetBackgroundDrawable( null );
-                    contentLayout.AddView( TakeNotesButton );
+                    buttonLayout.AddView( TakeNotesButton );
 
                     ListenButton.Click += (object sender, EventArgs e ) =>
                         {

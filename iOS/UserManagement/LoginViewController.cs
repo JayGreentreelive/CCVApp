@@ -131,7 +131,7 @@ namespace iOS
 
             RegisterButton = UIButton.FromType( UIButtonType.System );
             View.AddSubview( RegisterButton );
-            ControlStyling.StyleButton( RegisterButton, LoginStrings.RegisterButton, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            ControlStyling.StyleButton( RegisterButton, LoginStrings.RegisterButton, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             RegisterButton.SizeToFit( );
             RegisterButton.TouchUpInside += (object sender, EventArgs e ) =>
                 {
@@ -155,6 +155,8 @@ namespace iOS
 
             FacebookLogin.SetTitle( "", UIControlState.Normal );
             FacebookLogin.AddSubview( FBImageView );
+            FacebookLogin.Layer.CornerRadius = 4;
+            FBImageView.Layer.CornerRadius = 4;
 
             FacebookLogin.TouchUpInside += (object sender, EventArgs e) => 
                 {
@@ -193,9 +195,9 @@ namespace iOS
             UserNameField.SetFrame( new CGRect( -10, View.Frame.Height * .25f, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
             PasswordField.SetFrame( new CGRect( UserNameField.Background.Frame.Left, UserNameField.Background.Frame.Bottom, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
 
-            LoginButton.Frame = new CGRect( View.Frame.Left + 8, PasswordField.Background.Frame.Bottom + 20, ControlStyling.ButtonWidth, ControlStyling.ButtonHeight );
+            LoginButton.Frame = new CGRect( View.Frame.Left + 10, PasswordField.Background.Frame.Bottom + 20, View.Bounds.Width / 2 - 10, ControlStyling.ButtonHeight );
 
-            RegisterButton.Frame = new CGRect( View.Frame.Right - ControlStyling.ButtonWidth - 8, PasswordField.Background.Frame.Bottom + 20, ControlStyling.ButtonWidth, ControlStyling.ButtonHeight );
+            RegisterButton.Frame = new CGRect( View.Frame.Right - View.Bounds.Width / 2 + 10, PasswordField.Background.Frame.Bottom + 20, View.Bounds.Width / 2 - 20, ControlStyling.ButtonHeight );
 
             LoginResult.SetFrame( new CGRect( UserNameField.Background.Frame.Left, LoginButton.Frame.Bottom + 20, View.Frame.Width + 20, StyledTextField.StyledFieldHeight ) );
 

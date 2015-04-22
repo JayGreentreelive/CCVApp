@@ -69,10 +69,17 @@ namespace CCVApp
                     RectangleF xFrame = x.GetFrame( );
                     RectangleF yFrame = y.GetFrame( );
 
+                    // take the absolute deltas so that when comparing for "exact",
+                    // we can allow an error-margin. The reason is certain words might be centered
+                    // within the line height, making them a pixel or two off, but they're still effectively
+                    // equal with their sibling
+                    float deltaY = Math.Abs( yFrame.Y - xFrame.Y );
+                    float deltaX = Math.Abs( yFrame.X - xFrame.X );
+
                     // if Y is the same, check X.
-                    if( yFrame.Y == xFrame.Y )
+                    if( deltaY < 2 )
                     {
-                        if( yFrame.X == xFrame.X )
+                        if( deltaX < 2 )
                         {
                             return 0;
                         }

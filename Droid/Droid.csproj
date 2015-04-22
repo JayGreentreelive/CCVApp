@@ -108,6 +108,7 @@
     <Compile Include="Tasks\ConnectTask\JoinGroupFragment.cs" />
     <Compile Include="UserManagement\OOBEFragment.cs" />
     <Compile Include="Tasks\TaskWebFragment.cs" />
+    <Compile Include="UserManagement\SplashFragment.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
@@ -115,9 +116,6 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\Strings.xml" />
-    <AndroidResource Include="..\Assets\ccvLogo%402x.png">
-      <Link>Resources\drawable-hdpi\ccvLogo.png</Link>
-    </AndroidResource>
     <AndroidResource Include="..\Assets\androidPhotoMask%402x.png">
       <Link>Resources\drawable-hdpi\androidPhotoMask.png</Link>
     </AndroidResource>
@@ -155,14 +153,18 @@
     <AndroidResource Include="Resources\layout\Connect_Primary.axml" />
     <AndroidResource Include="Resources\layout\Connect_GroupFinder.axml" />
     <AndroidResource Include="Resources\layout\Splash.axml" />
-    <AndroidResource Include="..\Assets\splashiphone6plus.png">
-      <Link>Resources\drawable-hdpi\splash.png</Link>
-    </AndroidResource>
     <AndroidResource Include="Resources\layout\Prayer_Post.axml" />
     <AndroidResource Include="Resources\layout\Register.axml" />
     <AndroidResource Include="Resources\layout\JoinGroup.axml" />
     <AndroidResource Include="Resources\layout\OOBEView.axml" />
     <AndroidResource Include="Resources\layout\TaskWebView.axml" />
+    <AndroidResource Include="..\Assets\ccvLogo%402x.png">
+      <Link>Resources\drawable-hdpi\ccvLogo.png</Link>
+    </AndroidResource>
+    <AndroidResource Include="..\Assets\splash_android.png">
+      <Link>Resources\drawable-hdpi\splash.png</Link>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable\RoundButton.axml" />
   </ItemGroup>
   <Import Project="..\..\Rock.Mobile\Rock.Mobile.projitems" Label="Shared" Condition="Exists('..\..\Rock.Mobile\Rock.Mobile.projitems')" />
   <Import Project="..\..\Rock\Rock.Client\Rock.Client.Models.projitems" Label="Shared" Condition="Exists('..\..\Rock\Rock.Client\Rock.Client.Models.projitems')" />
@@ -347,9 +349,6 @@
     <AndroidAsset Include="..\Assets\baptism_thumb.png">
       <Link>Assets\baptism_thumb.png</Link>
     </AndroidAsset>
-    <AndroidAsset Include="..\Assets\foundations_thumb.png">
-      <Link>Assets\foundations_thumb.png</Link>
-    </AndroidAsset>
     <AndroidAsset Include="..\Assets\starting_point_thumb.png">
       <Link>Assets\starting_point_thumb.png</Link>
     </AndroidAsset>
@@ -365,9 +364,6 @@
     <AndroidAsset Include="..\Assets\placeholder_notes_thumb.png">
       <Link>Assets\placeholder_notes_thumb.png</Link>
     </AndroidAsset>
-    <AndroidAsset Include="..\Assets\oobe_ccv_logo%403x.png">
-      <Link>Assets\oobe_ccv_logo.png</Link>
-    </AndroidAsset>
     <AndroidAsset Include="..\Assets\oobe_splash_bg.png">
       <Link>Assets\oobe_splash_bg.png</Link>
     </AndroidAsset>
@@ -382,6 +378,15 @@
     </AndroidAsset>
     <AndroidAsset Include="..\Assets\note_tutorial_ipad_ls.png">
       <Link>Assets\note_tutorial_ipad_ls.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\ccv_logo_iphone6p.png">
+      <Link>Assets\oobe_ccv_logo.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\serve_thumb.png">
+      <Link>Assets\serve_thumb.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Fonts\DINOffc-CondBold.ttf">
+      <Link>Assets\Fonts\DINOffc-CondBold.ttf</Link>
     </AndroidAsset>
   </ItemGroup>
   <ItemGroup>

@@ -62,6 +62,11 @@
                         android:layout_below="@+id/userNameText"
                         android:layout_width="match_parent"
                         android:layout_height="1dp" />
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/password_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
                     <EditText
                         android:hint="Password"
                         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -76,6 +81,11 @@
                         android:layout_below="@+id/passwordText"
                         android:layout_width="match_parent"
                         android:layout_height="1dp" />
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/confirmPassword_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
                     <EditText
                         android:hint="Confirm Password"
                         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -91,7 +101,7 @@
                     android:layout_height="30dp" />
             <!--Name Fields-->
                 <RelativeLayout
-                    android:id="@+id/name_background"
+                    android:id="@+id/firstname_background"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <View
@@ -121,6 +131,11 @@
                         android:layout_below="@+id/nickNameText"
                         android:layout_width="match_parent"
                         android:layout_height="1dp" />
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/lastname_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
                     <EditText
                         android:hint="Last Name"
                         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -137,7 +152,7 @@
                     android:layout_height="30dp" />
             <!--Contact-->
                 <RelativeLayout
-                    android:id="@+id/contact_background"
+                    android:id="@+id/email_background"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <View
@@ -167,6 +182,11 @@
                         android:layout_below="@+id/emailAddressText"
                         android:layout_width="match_parent"
                         android:layout_height="1dp" />
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/cellphone_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
                     <EditText
                         android:hint="Cell Phone"
                         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -187,21 +207,19 @@
                     android:layout_height="wrap_content">
                     <Button
                         android:text="Register"
-                        android:layout_width="120dp"
+                        android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:id="@+id/registerButton"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
                         android:gravity="top|center_horizontal" />
                     <Button
                         android:text="Cancel"
-                        android:layout_width="120dp"
-                        android:layout_height="40dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/registerButton"
                         android:id="@+id/cancelButton"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="15dp"
-                        android:gravity="top|center_horizontal"
-                        android:layout_alignParentRight="true" />
+                        android:layout_centerHorizontal="true" />
                 </RelativeLayout>
                 <Space
                     android:layout_width="match_parent"
