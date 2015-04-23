@@ -198,8 +198,6 @@ namespace iOS
             Date.Layer.Position = new CGPoint( View.Bounds.Width - Date.Frame.Width - ViewPadding, Name.Frame.Bottom + metaDataYSpacing );
 
 
-
-
             PrayerText.Frame = new CGRect( ViewPadding, Name.Frame.Bottom + metaDataSpacing, View.Bounds.Width - (ViewPadding * 2), 0 );
             PrayerText.SizeToFit( );
             float prayerHeight = (float) Math.Min( PrayerText.Frame.Height, View.Bounds.Height - PrayerText.Frame.Top - Pray.Frame.Height - ViewPadding );

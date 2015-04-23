@@ -3,7 +3,11 @@ Changes
 
 Both
 	Fixed an issue that would cause exported notes to have words in the wrong order.
+	Reworked Group Finder to have a modal search window instead of a search bar up top
+	Tons of UI polish and bug fixing
+	Fixed an issue causing the title and author of a note to overlap in certain cases
 
 iOS
 
 Android
+	Rounded buttons

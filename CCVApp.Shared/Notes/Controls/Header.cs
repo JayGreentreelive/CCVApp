@@ -182,6 +182,15 @@ namespace CCVApp
                     mSpeaker.Position = new PointF( mSpeaker.Position.X + bounds.X + padding.Left + borderPaddingPx, 
                                                     mTitle.Frame.Bottom + mSpeaker.Position.Y + bounds.Y + padding.Top );
 
+
+                    // verify that the speaker won't overlap date. if it will, we're going to have to center and lower them.
+                    if ( mSpeaker.Position.X < mDate.Frame.Right )
+                    {
+                        mDate.Position = new PointF( ( mTitle.Bounds.Width - mDate.Bounds.Width ) / 2, mTitle.Frame.Bottom );
+                        
+                        mSpeaker.Position = new PointF( ( mTitle.Bounds.Width - mSpeaker.Bounds.Width ) / 2, mDate.Frame.Bottom );
+                    }
+
                     // determine the lowest control
                     float bottomY = mSpeaker.Frame.Bottom > mTitle.Frame.Bottom ? mSpeaker.Frame.Bottom : mTitle.Frame.Bottom;
                     bottomY = bottomY > mDate.Frame.Bottom ? bottomY : mDate.Frame.Bottom;

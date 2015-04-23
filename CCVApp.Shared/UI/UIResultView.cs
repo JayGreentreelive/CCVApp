@@ -123,10 +123,7 @@ namespace CCVApp.Shared.UI
 
             View.BackgroundColor = ControlStylingConfig.BackgroundColor;
 
-            // only round the button on iOS
-            #if __IOS__
             DoneButton.CornerRadius = 4;
-            #endif
         }
 
         public void Show( string statusLabel, string resultSymbol, string resultLabel, string buttonLabel )
