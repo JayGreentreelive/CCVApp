@@ -476,6 +476,8 @@ namespace CCVApp
                 /// The size of the symbol used to representing a prayer post result.
                 /// </summary>
                 public const uint PostPrayer_ResultSymbolSize = 64;
+
+                public const uint PrayedForColor = 0x26b8e2FF;
             }
 
             public class ConnectConfig

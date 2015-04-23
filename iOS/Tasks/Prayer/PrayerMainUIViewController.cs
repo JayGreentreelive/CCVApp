@@ -13,6 +13,7 @@ using CCVApp.Shared.Network;
 using CCVApp.Shared.UI;
 using Rock.Mobile.PlatformSpecific.Util;
 using System.Drawing;
+using Rock.Mobile.Animation;
 
 namespace iOS
 {
@@ -53,10 +54,13 @@ namespace iOS
         UILabel Name { get; set; }
         UILabel Date { get; set; }
         UILabel Category { get; set; }
-        PrayerTextView PrayerText { get; set; }
-        UIButton Pray { get; set; }
-        UIView PrayFillIn { get; set; }
         Rock.Client.PrayerRequest PrayerRequest { get; set; }
+        PrayerTextView PrayerText { get; set; }
+
+
+        UIButton PrayerActionButton { get; set; }
+        UIView PrayerActionCircle { get; set; }
+
         bool Prayed { get; set; }
 
         public PrayerCard( Rock.Client.PrayerRequest prayer, CGRect bounds )
@@ -68,6 +72,9 @@ namespace iOS
             View.BorderColor = ControlStylingConfig.BG_Layer_BorderColor;
             View.CornerRadius = ControlStylingConfig.Button_CornerRadius;
             View.BorderWidth = ControlStylingConfig.BG_Layer_BorderWidth;
+
+            // ensure we clip children
+            ( (UIView)View.PlatformNativeObject ).ClipsToBounds = true;
 
 
             // setup the prayer request text field
@@ -81,27 +88,28 @@ namespace iOS
             PrayerText.TextContainerInset = UIEdgeInsets.Zero;
             PrayerText.TextContainer.LineFragmentPadding = 0;
 
+
             // setup the bottom prayer button, and its fill-in circle
-            Pray = UIButton.FromType( UIButtonType.Custom );
-            Pray.Layer.AnchorPoint = new CGPoint( 0, 0 );
-            Pray.SetTitle( PrayerStrings.Prayer_Confirm, UIControlState.Normal );
+            PrayerActionButton = UIButton.FromType( UIButtonType.Custom );
+            PrayerActionButton.Layer.AnchorPoint = new CGPoint( 0, 0 );
+            PrayerActionButton.SetTitle( PrayerStrings.Prayer_Before, UIControlState.Normal );
 
-            Pray.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
-            Pray.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( Rock.Mobile.Graphics.Util.ScaleRGBAColor( ControlStylingConfig.TextField_PlaceholderTextColor, 2, false ) ), UIControlState.Highlighted );
+            PrayerActionButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
+            PrayerActionButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( Rock.Mobile.Graphics.Util.ScaleRGBAColor( ControlStylingConfig.TextField_PlaceholderTextColor, 2, false ) ), UIControlState.Highlighted );
 
-            Pray.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-            Pray.SizeToFit( );
+            PrayerActionButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            PrayerActionButton.SizeToFit( );
 
-            PrayFillIn = new UIView( );
-            PrayFillIn.Bounds = new CGRect( 0, 0, Pray.Frame.Height / 2, Pray.Frame.Height / 2 );
-            PrayFillIn.Layer.CornerRadius = PrayFillIn.Bounds.Width / 2;
-            PrayFillIn.Layer.BorderWidth = 1;
-            PrayFillIn.Layer.BorderColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ).CGColor;
-            PrayFillIn.Layer.AnchorPoint = new CGPoint( 0, 0 );
+            PrayerActionCircle = new UIView( );
+            PrayerActionCircle.Bounds = new CGRect( 0, 0, 100, 100 );
+            PrayerActionCircle.Layer.CornerRadius = PrayerActionCircle.Bounds.Width / 2;
+            PrayerActionCircle.Layer.BorderWidth = 1;
+            PrayerActionCircle.Layer.BorderColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ).CGColor;
+            PrayerActionCircle.Layer.AnchorPoint = new CGPoint( 0, 0 );
 
-            Pray.TouchUpInside += (object sender, EventArgs e) => 
+            PrayerActionButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
-                    TogglePrayed( true );
+                    TogglePrayed( !Prayed );
                 };
 
 
@@ -132,8 +140,8 @@ namespace iOS
             nativeView.AddSubview( Category );
             nativeView.AddSubview( Date );
             nativeView.AddSubview( PrayerText );
-            nativeView.AddSubview( Pray );
-            nativeView.AddSubview( PrayFillIn );
+            nativeView.AddSubview( PrayerActionCircle );
+            nativeView.AddSubview( PrayerActionButton );
             PrayerText.Parent = nativeView;
 
             SetPrayer( prayer );
@@ -146,19 +154,50 @@ namespace iOS
             {
                 Prayed = prayed;
 
+                uint currColor = 0;
+                uint targetColor = 0;
+
                 // if we are ACTIVATING prayed
                 if ( prayed == true )
                 {
-                    // fill in the circle and send an analytic
+                    // update the circle color and send an analytic
                     CCVApp.Shared.Network.RockApi.Instance.IncrementPrayerCount( PrayerRequest.Id, null );
-                    PrayFillIn.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor );
+
+                    currColor = 0;
+                    targetColor = PrayerConfig.PrayedForColor;
+                    PrayerActionCircle.Layer.BorderWidth = 0;
+
+                    PrayerActionButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( 0xFFFFFFFF ), UIControlState.Normal );
+                    PrayerActionButton.SetTitle( PrayerStrings.Prayer_After, UIControlState.Normal );
                 }
                 else
                 {
-                    // otherwise clear the circle
-                    PrayFillIn.BackgroundColor = UIColor.Clear;
+                    // otherwise just update the color
+                    currColor = PrayerConfig.PrayedForColor;
+                    targetColor = 0;
+                    PrayerActionCircle.Layer.BorderWidth = 1;
+
+                    PrayerActionButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
+                    PrayerActionButton.SetTitle( PrayerStrings.Prayer_Before, UIControlState.Normal );
                 }
+
+                PrayerActionButton.SizeToFit( );
+                PositionPrayedLabel( );
+
+                // animate the circle color to its new target
+                SimpleAnimator_Color colorAnim = new SimpleAnimator_Color( currColor, targetColor, .35f, 
+                    delegate(float percent, object value )
+                    {
+                        PrayerActionCircle.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( (uint)value );
+                    }, null );
+                colorAnim.Start( );
             }
+        }
+
+        void PositionPrayedLabel( )
+        {
+            PrayerActionButton.Layer.Position = new CGPoint( PrayerActionCircle.Layer.Position.X + PrayerActionCircle.Frame.Width / 2 - PrayerActionButton.Frame.Width / 1.25f, 
+                                                             PrayerActionCircle.Layer.Position.Y + PrayerActionCircle.Frame.Height / 2 - PrayerActionButton.Frame.Height );
         }
 
         const int ViewPadding = 10;
@@ -200,12 +239,13 @@ namespace iOS
 
             PrayerText.Frame = new CGRect( ViewPadding, Name.Frame.Bottom + metaDataSpacing, View.Bounds.Width - (ViewPadding * 2), 0 );
             PrayerText.SizeToFit( );
-            float prayerHeight = (float) Math.Min( PrayerText.Frame.Height, View.Bounds.Height - PrayerText.Frame.Top - Pray.Frame.Height - ViewPadding );
+            float prayerHeight = (float) Math.Min( PrayerText.Frame.Height, View.Bounds.Height - PrayerText.Frame.Top - (PrayerActionButton.Frame.Height * 2) - ViewPadding );
             PrayerText.Frame = new CGRect( PrayerText.Frame.Left, PrayerText.Frame.Top, PrayerText.Frame.Width, prayerHeight );
 
-            PrayFillIn.Bounds = new CGRect( 0, 0, Pray.Frame.Height / 2, Pray.Frame.Height / 2 );
-            PrayFillIn.Layer.Position = new CGPoint( View.Bounds.Width - PrayFillIn.Layer.Bounds.Width - ViewPadding, View.Bounds.Height - PrayFillIn.Layer.Bounds.Height - (PrayFillIn.Layer.Bounds.Height / 2) );
-            Pray.Layer.Position = new CGPoint( PrayFillIn.Frame.Left - Pray.Layer.Bounds.Width - ViewPadding, View.Bounds.Height - Pray.Layer.Bounds.Height );
+            PrayerActionCircle.Layer.Position = new CGPoint( View.Bounds.Width - PrayerActionCircle.Layer.Bounds.Width / 1.5f, 
+                                                             View.Bounds.Height - PrayerActionCircle.Layer.Bounds.Height / 2.0f );
+            
+            PositionPrayedLabel( );
         }
     }
 

@@ -20,6 +20,7 @@ using CCVApp.Shared.Strings;
 using CCVApp.Shared;
 using CCVApp.Shared.Analytics;
 using Rock.Mobile.PlatformSpecific.Android.Graphics;
+using Rock.Mobile.Animation;
 
 namespace Droid
 {
@@ -142,10 +143,15 @@ namespace Droid
                     PrayerLayoutRender PrayerLayout { get; set; }
                     Rock.Client.PrayerRequest PrayerRequest { get; set; }
                     public PlatformView View { get; set; }
-                    Button Pray { get; set; }
 
-                    CircleView TappedCircle { get; set; }
+                    // properties for the actionable pray section
+                    Button PrayerActionButton { get; set; }
+                    CircleView PrayerActionCircle { get; set; }
+                    TextView PrayerActionLabel { get; set; }
+                    System.Drawing.SizeF PrayerActionSize { get; set; }
                     bool Prayed { get; set; }
+
+                    static float PrayerActionDimension = 100;
 
                     public PrayerCard( Rock.Client.PrayerRequest prayer, RectangleF bounds )
                     {
@@ -159,63 +165,65 @@ namespace Droid
                         View.BorderWidth = ControlStylingConfig.BG_Layer_BorderWidth;
 
                         // create a vertically oriented linearLayout that will act as our root
-                        LinearLayout root = new LinearLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                        RelativeLayout root = new RelativeLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                         //root.SetBackgroundColor( Android.Graphics.Color.GreenYellow );
                         root.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent );
-                        root.Orientation = Orientation.Vertical;
+                        //root.Orientation = Orientation.Vertical;
 
                         // use a dummy view to pad the root and force the "I Prayed" label to the bottom area
-                        View dummyView = new View( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                        /*View dummyView = new View( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                         //dummyView.SetBackgroundColor( Android.Graphics.Color.Orange );
                         dummyView.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, 0 );
                         ( (LinearLayout.LayoutParams)dummyView.LayoutParameters ).Weight = 10;
-                        root.AddView( dummyView );
+                        root.AddView( dummyView );*/
 
 
                         // create the bottom prayer layout
+                        PrayerActionSize = new System.Drawing.SizeF( Rock.Mobile.Graphics.Util.UnitToPx( PrayerActionDimension ), 
+                                                                     Rock.Mobile.Graphics.Util.UnitToPx( PrayerActionDimension ) );
+
+
+                        // create the layout that will contain the circle, button and label
                         RelativeLayout frameLayout = new RelativeLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                         //frameLayout.SetBackgroundColor( Android.Graphics.Color.Aqua );
-                        frameLayout.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, 0 );
+                        frameLayout.LayoutParameters = new LinearLayout.LayoutParams( (int)PrayerActionSize.Width, (int)PrayerActionSize.Height );
+                        frameLayout.SetX( bounds.Width - PrayerActionSize.Width / 1.5f );
+                        frameLayout.SetY( bounds.Height - PrayerActionSize.Height / 1.5f );
                         ((LinearLayout.LayoutParams)frameLayout.LayoutParameters).Weight = 1;
                         root.AddView( frameLayout );
 
 
                         // Pray Button
-                        Pray = new Button( Rock.Mobile.PlatformSpecific.Android.Core.Context );
-                        Pray.Enabled = false;
-                        Pray.SetBackgroundDrawable( null );
-                        Pray.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent );
-                        frameLayout.AddView( Pray );
+                        PrayerActionButton = new Button( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                        PrayerActionButton.Enabled = false;
+                        PrayerActionButton.SetBackgroundDrawable( null );
+                        PrayerActionButton.LayoutParameters = new RelativeLayout.LayoutParams( (int)PrayerActionSize.Width, (int)PrayerActionSize.Height );
+                        //Pray.SetBackgroundColor( Android.Graphics.Color.Green );
+                        frameLayout.AddView( PrayerActionButton );
 
 
                         // Layout for the text and circle
-                        LinearLayout prayedLayout = new LinearLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
-                        prayedLayout.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-                        ( (RelativeLayout.LayoutParams)prayedLayout.LayoutParameters ).AddRule( LayoutRules.AlignParentRight );
-                        prayedLayout.Orientation = Orientation.Horizontal;
-                        frameLayout.AddView( prayedLayout );
-
-
+                        PrayerActionCircle = new Rock.Mobile.PlatformSpecific.Android.Graphics.CircleView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                        PrayerActionCircle.Color = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor );
+                        PrayerActionCircle.StrokeWidth = 1;
+                        //PrayerActionCircle.SetBackgroundColor( Android.Graphics.Color.Blue );
+                        PrayerActionCircle.LayoutParameters = new RelativeLayout.LayoutParams( (int)PrayerActionSize.Width, (int)PrayerActionSize.Height );
+                        frameLayout.AddView( PrayerActionCircle );
 
                         // Setup the "I Prayed" label
-                        TextView prayedLabel = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
-                        prayedLabel.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.MatchParent );
-                        prayedLabel.Text = PrayerStrings.Prayer_Confirm;
-                        prayedLabel.Gravity = GravityFlags.Center;
-                        prayedLabel.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
-                        prayedLayout.AddView( prayedLabel );
+                        PrayerActionLabel = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                        PrayerActionLabel.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                        PrayerActionLabel.Text = PrayerStrings.Prayer_Before;
+                        PrayerActionLabel.Gravity = GravityFlags.Center;
+                        //PrayerActionLabel.SetBackgroundColor( Android.Graphics.Color.Orange );
+                        PrayerActionLabel.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                        frameLayout.AddView( PrayerActionLabel );
 
-                        TappedCircle = new Rock.Mobile.PlatformSpecific.Android.Graphics.CircleView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
-                        TappedCircle.LayoutParameters = new LinearLayout.LayoutParams( 30, ViewGroup.LayoutParams.MatchParent );
-                        ((LinearLayout.LayoutParams)TappedCircle.LayoutParameters).LeftMargin = 20;
-                        ((LinearLayout.LayoutParams)TappedCircle.LayoutParameters).RightMargin = 20;
-                        TappedCircle.Color = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor );
-                        TappedCircle.StrokeWidth = 1;
-                        prayedLayout.AddView( TappedCircle );
+                        PositionPrayedLabel( );
 
-                        Pray.Click += (object sender, EventArgs e) => 
+                        PrayerActionButton.Click += (object sender, EventArgs e) => 
                             {
-                                TogglePrayed( true );
+                                TogglePrayed( !Prayed );
                             };
                         //
 
@@ -228,7 +236,7 @@ namespace Droid
                         PrayerLayout = new PrayerLayoutRender( bounds, prayer );
                         nativeView.AddView( PrayerLayout.LinearLayout );
 
-                        Pray.Enabled = true;
+                        PrayerActionButton.Enabled = true;
                     }
 
                     public void TogglePrayed( bool prayed )
@@ -238,6 +246,9 @@ namespace Droid
                         {
                             Prayed = prayed;
 
+                            uint currColor = 0;
+                            uint targetColor = 0;
+
                             // if we are ACTIVATING prayed, 
                             if ( prayed == true )
                             {
@@ -245,15 +256,42 @@ namespace Droid
                                 CCVApp.Shared.Network.RockApi.Instance.IncrementPrayerCount( PrayerRequest.Id, null );
 
                                 // and fill in the circle
-                                TappedCircle.Style = Android.Graphics.Paint.Style.FillAndStroke;
+                                PrayerActionLabel.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
+                                PrayerActionLabel.Text = PrayerStrings.Prayer_After;
+
+                                currColor = ControlStylingConfig.BG_Layer_BorderColor;
+                                targetColor = PrayerConfig.PrayedForColor;
+                                PrayerActionCircle.Style = Android.Graphics.Paint.Style.FillAndStroke;
                             }
                             else
                             {
                                 // on deactivation, clear the circle
-                                TappedCircle.Style = Android.Graphics.Paint.Style.Stroke;
+                                PrayerActionLabel.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                                PrayerActionLabel.Text = PrayerStrings.Prayer_Before;
+
+                                currColor = PrayerConfig.PrayedForColor;
+                                targetColor = ControlStylingConfig.BG_Layer_BorderColor;
+                                PrayerActionCircle.Style = Android.Graphics.Paint.Style.Stroke;
                             }
-                            TappedCircle.Invalidate( );
+
+                            PositionPrayedLabel( );
+
+                            // animate the circle color to its new target
+                            SimpleAnimator_Color colorAnim = new SimpleAnimator_Color( currColor, targetColor, .35f, 
+                                delegate(float percent, object value )
+                                {
+                                    PrayerActionCircle.Color = Rock.Mobile.PlatformUI.Util.GetUIColor( (uint)value );
+                                    PrayerActionCircle.Invalidate( );
+                                }, null );
+                            colorAnim.Start( );
                         }
+                    }
+
+                    void PositionPrayedLabel( )
+                    {
+                        PrayerActionLabel.Measure( 0, 0 );
+                        PrayerActionLabel.SetX( (PrayerActionSize.Width / 2) - (PrayerActionLabel.MeasuredWidth / 1.25f) );
+                        PrayerActionLabel.SetY( (PrayerActionSize.Height / 2) - PrayerActionLabel.MeasuredHeight );
                     }
 
                     public void Scroll( float distanceY )
