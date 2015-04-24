@@ -54,7 +54,8 @@ namespace Droid
                         {
                             if ( buttonId == 0 )
                             {
-                                // launch group finder
+                                // launch group finder (and have it auto-show the search)
+                                GroupFinder.ShowSearchOnAppear = true;
                                 PresentFragment( GroupFinder, true );
                             }
                             else
@@ -66,6 +67,9 @@ namespace Droid
                         }
                         else if ( source == GroupFinder )
                         {
+                            // turn off auto-show search so that if the user presses 'back', we don't pop it up again.
+                            GroupFinder.ShowSearchOnAppear = false;
+                            
                             CCVApp.Shared.GroupFinder.GroupEntry entry = (CCVApp.Shared.GroupFinder.GroupEntry)context;
 
                             JoinGroup.GroupTitle = entry.Title;

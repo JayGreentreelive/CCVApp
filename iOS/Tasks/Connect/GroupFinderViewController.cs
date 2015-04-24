@@ -101,7 +101,7 @@ namespace iOS
 
             public override nint RowsInSection (UITableView tableview, nint section)
             {
-                return Parent.GroupEntries.Count;
+                return Parent.GroupEntries.Count + 1;
             }
 
             public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
@@ -127,73 +127,96 @@ namespace iOS
 
             public override UITableViewCell GetCell (UITableView tableView, NSIndexPath indexPath)
             {
-                GroupCell cell = tableView.DequeueReusableCell( GroupCell.Identifier ) as GroupCell;
-
-                // if there are no cells to reuse, create a new one
-                if (cell == null)
+                if ( indexPath.Row < Parent.GroupEntries.Count )
                 {
-                    cell = new GroupCell( UITableViewCellStyle.Default, GroupCell.Identifier );
-                    cell.TableSource = this;
+                    GroupCell cell = tableView.DequeueReusableCell( GroupCell.Identifier ) as GroupCell;
 
-                    // take the parent table's width so we inherit its width constraint
-                    cell.Bounds = new CGRect( cell.Bounds.X, cell.Bounds.Y, tableView.Bounds.Width, cell.Bounds.Height );
+                    // if there are no cells to reuse, create a new one
+                    if (cell == null)
+                    {
+                        cell = new GroupCell( UITableViewCellStyle.Default, GroupCell.Identifier );
+                        cell.TableSource = this;
 
-                    // remove the selection highlight
-                    cell.SelectionStyle = UITableViewCellSelectionStyle.None;
-                    cell.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
-                }
+                        // take the parent table's width so we inherit its width constraint
+                        cell.Bounds = new CGRect( cell.Bounds.X, cell.Bounds.Y, tableView.Bounds.Width, cell.Bounds.Height );
 
-                // if it's the group nearest the user, color it different. (we always sort by distance)
-                if ( SelectedIndex == indexPath.Row )
-                {
-                    cell.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
+                        // remove the selection highlight
+                        cell.SelectionStyle = UITableViewCellSelectionStyle.None;
+                        cell.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
+                    }
+
+                    // if it's the group nearest the user, color it different. (we always sort by distance)
+                    if ( SelectedIndex == indexPath.Row )
+                    {
+                        cell.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
+                    }
+                    else
+                    {
+                        cell.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
+                    }
+
+                    cell.RowIndex = indexPath.Row;
+
+                    // Create the title
+                    cell.Title.Text = Parent.GroupEntries[ indexPath.Row ].Title;
+                    cell.Title.SizeToFit( );
+
+                    // Meeting time - If it isn't set, just blank it out and we wont' show anything for that row.
+                    if ( string.IsNullOrEmpty( Parent.GroupEntries[ indexPath.Row ].MeetingTime ) == false )
+                    {
+                        cell.MeetingTime.Text = Parent.GroupEntries[ indexPath.Row ].MeetingTime;
+                    }
+                    else
+                    {
+                        cell.MeetingTime.Text = ConnectStrings.GroupFinder_ContactForTime;
+                    }
+                    cell.MeetingTime.SizeToFit( );
+
+                    // Distance
+                    cell.Distance.Text = string.Format( "{0:##.0} {1}", Parent.GroupEntries[ indexPath.Row ].Distance, ConnectStrings.GroupFinder_MilesSuffix );
+                    if ( indexPath.Row == 0 )
+                    {
+                        cell.Distance.Text += " " + ConnectStrings.GroupFinder_ClosestTag;
+                    }
+                    cell.Distance.SizeToFit( );
+
+                    // Position the Title & Address in the center to the right of the image
+                    cell.Title.Frame = new CGRect( 10, 5, cell.Frame.Width - 5, cell.Title.Frame.Height );
+                    cell.MeetingTime.Frame = new CGRect( 10, cell.Title.Frame.Bottom, cell.Frame.Width - 5, cell.MeetingTime.Frame.Height + 5 );
+                    cell.Distance.Frame = new CGRect( 10, cell.MeetingTime.Frame.Bottom - 6, cell.Frame.Width - 5, cell.Distance.Frame.Height + 5 );
+
+                    // add the seperator to the bottom
+                    cell.Seperator.Frame = new CGRect( 0, cell.Distance.Frame.Bottom + 5, cell.Bounds.Width, 1 );
+
+                    PendingCellHeight = cell.Seperator.Frame.Bottom;
+
+                    cell.JoinButton.Frame = new CGRect( cell.Bounds.Width - cell.JoinButton.Bounds.Width, 
+                        ( PendingCellHeight - cell.JoinButton.Bounds.Height ) / 2, 
+                        cell.JoinButton.Bounds.Width, 
+                        cell.JoinButton.Bounds.Height );
+
+                    return cell;
                 }
                 else
                 {
-                    cell.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
+                    // simply create a dummy cell that acts as padding
+                    UITableViewCell cell = tableView.DequeueReusableCell( "dummy" ) as GroupCell;
+
+                    // if there are no cells to reuse, create a new one
+                    if (cell == null)
+                    {
+                        cell = new UITableViewCell( UITableViewCellStyle.Default, "dummy" );
+
+                        // take the parent table's width so we inherit its width constraint
+                        cell.Bounds = new CGRect( cell.Bounds.X, cell.Bounds.Y, tableView.Bounds.Width, 44 );
+
+                        // remove the selection highlight
+                        cell.SelectionStyle = UITableViewCellSelectionStyle.None;
+                        cell.BackgroundColor = UIColor.Clear;
+                    }
+
+                    return cell;
                 }
-
-                cell.RowIndex = indexPath.Row;
-
-                // Create the title
-                cell.Title.Text = Parent.GroupEntries[ indexPath.Row ].Title;
-                cell.Title.SizeToFit( );
-
-                // Meeting time - If it isn't set, just blank it out and we wont' show anything for that row.
-                if ( string.IsNullOrEmpty( Parent.GroupEntries[ indexPath.Row ].MeetingTime ) == false )
-                {
-                    cell.MeetingTime.Text = Parent.GroupEntries[ indexPath.Row ].MeetingTime;
-                }
-                else
-                {
-                    cell.MeetingTime.Text = ConnectStrings.GroupFinder_ContactForTime;
-                }
-                cell.MeetingTime.SizeToFit( );
-
-                // Distance
-                cell.Distance.Text = string.Format( "{0:##.0} {1}", Parent.GroupEntries[ indexPath.Row ].Distance, ConnectStrings.GroupFinder_MilesSuffix );
-                if ( indexPath.Row == 0 )
-                {
-                    cell.Distance.Text += " " + ConnectStrings.GroupFinder_ClosestTag;
-                }
-                cell.Distance.SizeToFit( );
-
-                // Position the Title & Address in the center to the right of the image
-                cell.Title.Frame = new CGRect( 10, 5, cell.Frame.Width - 5, cell.Title.Frame.Height );
-                cell.MeetingTime.Frame = new CGRect( 10, cell.Title.Frame.Bottom, cell.Frame.Width - 5, cell.MeetingTime.Frame.Height + 5 );
-                cell.Distance.Frame = new CGRect( 10, cell.MeetingTime.Frame.Bottom - 6, cell.Frame.Width - 5, cell.Distance.Frame.Height + 5 );
-
-                // add the seperator to the bottom
-                cell.Seperator.Frame = new CGRect( 0, cell.Distance.Frame.Bottom + 5, cell.Bounds.Width, 1 );
-
-                PendingCellHeight = cell.Seperator.Frame.Bottom;
-
-                cell.JoinButton.Frame = new CGRect( cell.Bounds.Width - cell.JoinButton.Bounds.Width, 
-                    (PendingCellHeight - cell.JoinButton.Bounds.Height) / 2, 
-                    cell.JoinButton.Bounds.Width, 
-                    cell.JoinButton.Bounds.Height );
-
-                return cell;
             }
 
             public void RowButtonClicked( int row )
@@ -203,10 +226,14 @@ namespace iOS
 
             public override void RowSelected (UITableView tableView, NSIndexPath indexPath)
             {
-                SetSelectedRow( tableView, indexPath.Row );
+                // if they clicked a valid row (and not the dummy)
+                if ( indexPath.Row < Parent.GroupEntries.Count )
+                {
+                    SetSelectedRow( tableView, indexPath.Row );
 
-                // let the parent know it should reveal the nav bar
-                Parent.RowClicked( indexPath.Row );
+                    // notify the parent
+                    Parent.RowClicked( indexPath.Row );
+                }
             }
 
             public void SetSelectedRow( UITableView tableView, int row )
@@ -259,7 +286,7 @@ namespace iOS
         public UILabel SearchResultsNeighborhood { get; set; }
         public UIView Seperator { get; set; }
 
-        UIButton CurrentAddress { get; set; }
+        UIButton SearchAddressButton { get; set; }
 
         UIGroupFinderSearch SearchPage { get; set; }
 
@@ -362,11 +389,11 @@ namespace iOS
             SourceLocation = null;
             GroupEntries = new List<GroupFinder.GroupEntry>();
 
-            CurrentAddress = UIButton.FromType( UIButtonType.System );
-            View.AddSubview( CurrentAddress );
-            CurrentAddress.Layer.AnchorPoint = CGPoint.Empty;
-            ControlStyling.StyleButton( CurrentAddress, ConnectStrings.GroupFinder_SearchButtonLabel, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-            CurrentAddress.TouchUpInside += (object sender, EventArgs e ) =>
+            SearchAddressButton = UIButton.FromType( UIButtonType.System );
+            View.AddSubview( SearchAddressButton );
+            SearchAddressButton.Layer.AnchorPoint = CGPoint.Empty;
+            ControlStyling.StyleButton( SearchAddressButton, ConnectStrings.GroupFinder_SearchButtonLabel, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            SearchAddressButton.TouchUpInside += (object sender, EventArgs e ) =>
                 {
                     SearchPage.Show( );
                     Task.NavToolbar.Reveal( false );
@@ -434,6 +461,24 @@ namespace iOS
                     Task.NavToolbar.Reveal( true );
                 } );
             SearchPage.SetTitle( ConnectStrings.GroupFinder_SearchPageHeader, ConnectStrings.GroupFinder_SearchPageDetails );
+            SearchPage.Hide( false );
+
+            // don't allow them to tap the address button until we reveal the search page.
+            SearchAddressButton.Enabled = false;
+
+            // wait a couple seconds before revealing the search page.
+            System.Timers.Timer timer = new System.Timers.Timer();
+            timer.AutoReset = false;
+            timer.Interval = 1000;
+            timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>
+                {
+                    Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                        {
+                            SearchAddressButton.Enabled = true;
+                            SearchPage.Show( );                
+                        } );
+                };
+            timer.Start( );
 
             // hook in delegates so we can handle return
             ((UITextField)SearchPage.Street.PlatformNativeObject).Delegate = new AddressDelegate( ) { Parent = this };
@@ -456,7 +501,7 @@ namespace iOS
             // Map
             MapView.Frame = new CGRect( 0, 0, View.Frame.Width, View.Frame.Height * .40f );
 
-            CurrentAddress.Frame = new CGRect( 0, MapView.Frame.Bottom, View.Frame.Width, 33 );
+            SearchAddressButton.Frame = new CGRect( 0, MapView.Frame.Bottom, View.Frame.Width, 33 );
 
             // Search Results Banner
             UpdateResultsBanner( );
@@ -532,8 +577,8 @@ namespace iOS
             nfloat resultTotalWidth = SearchResultsPrefix.Bounds.Width + SearchResultsNeighborhood.Bounds.Width;
             nfloat xStartPos = ( View.Bounds.Width - resultTotalWidth ) / 2;
 
-            SearchResultsPrefix.Frame = new CGRect( xStartPos, CurrentAddress.Frame.Bottom, SearchResultsPrefix.Frame.Width, SearchResultsPrefix.Frame.Height );
-            SearchResultsNeighborhood.Frame = new CGRect( SearchResultsPrefix.Frame.Right, CurrentAddress.Frame.Bottom, SearchResultsNeighborhood.Frame.Width, SearchResultsNeighborhood.Frame.Height );
+            SearchResultsPrefix.Frame = new CGRect( xStartPos, SearchAddressButton.Frame.Bottom, SearchResultsPrefix.Frame.Width, SearchResultsPrefix.Frame.Height );
+            SearchResultsNeighborhood.Frame = new CGRect( SearchResultsPrefix.Frame.Right, SearchAddressButton.Frame.Bottom, SearchResultsNeighborhood.Frame.Width, SearchResultsNeighborhood.Frame.Height );
         }
 
         public void RowButtonClicked( int row )

@@ -12,6 +12,7 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using Android.Animation;
+using Java.Lang.Reflect;
 
 namespace Droid
 {
@@ -94,6 +95,29 @@ namespace Droid
                 // let the navbar know we're scrolling
                 ParentTask.NavbarFragment.OnScroll( e1, e2, distanceX, distanceY );
                 return false;
+            }
+
+            public override void OnDetach()
+            {
+                base.OnDetach();
+
+                // See http://stackoverflow.com/questions/15207305/getting-the-error-java-lang-illegalstateexception-activity-has-been-destroyed
+                // This seems to be a bug in the newly added support for nested fragments. 
+                // Basically, the child FragmentManager ends up with a broken internal state when it is detached from the activity. 
+                // A short-term workaround that fixed it for me is to add the following to onDetach() of every Fragment which you call getChildFragmentManager() on:
+                // If you look at the implementation of Fragment, you'll see that when moving to the detached state, it'll reset its internal state.
+                // However, it doesn't reset mChildFragmentManager (this is a bug in the current version of the support library). 
+                // This causes it to not reattach the child fragment manager when the Fragment is reattached, causing the exception you saw. 
+                try
+                {
+                    Field childFragmentManager = Java.Lang.Class.ForName( "android.app.Fragment" ).GetDeclaredField( "mChildFragmentManager" );
+                    childFragmentManager.Accessible = true;
+                    childFragmentManager.Set( this, null );
+                }
+                catch( Exception e )
+                {
+                }
+                Console.WriteLine( "Detaching" );
             }
 
             /// <summary>

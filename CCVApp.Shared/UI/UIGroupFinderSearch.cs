@@ -153,9 +153,6 @@ namespace CCVApp.Shared.UI
                 {
                     // treat the search button as if Return was pressed
                     ShouldReturn( );
-
-                    // ensure the keyboard hides
-                    TouchesEnded( );
                 };
 
             LayoutChanged( frame );
@@ -165,6 +162,9 @@ namespace CCVApp.Shared.UI
         {
             if( ValidateInput( ) )
             {
+                // ensure the keyboard hides
+                TouchesEnded( );
+
                 SearchClicked( null );
             }
         }

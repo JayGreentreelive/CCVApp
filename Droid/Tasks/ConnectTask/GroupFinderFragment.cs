@@ -24,6 +24,7 @@ using CCVApp.Shared.Analytics;
 using Rock.Mobile.Animation;
 using Android.Gms.Maps.Model;
 using CCVApp.Shared.UI;
+using Android.Views.InputMethods;
 
 namespace Droid
 {
@@ -211,7 +212,14 @@ namespace Droid
 
                 public Android.Gms.Maps.MapView MapView { get; set; }
                 public GoogleMap Map { get; set; }
-                public Button SearchButton { get; set; }
+                public Button SearchAddressButton { get; set; }
+
+                UIBlockerView BlockerView { get; set; }
+
+                /// <summary>
+                /// If true, OnCreateView will automatically show the search.
+                /// </summary>
+                public bool ShowSearchOnAppear { get; set; }
 
                 LinearLayout SearchLayout { get; set; }
                 public TextView SearchResultNeighborhood { get; set; }
@@ -271,10 +279,10 @@ namespace Droid
                     MapView.OnCreate( savedInstanceState );
 
 
-                    SearchButton = new Button( Rock.Mobile.PlatformSpecific.Android.Core.Context );
-                    SearchButton.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
-                    ControlStyling.StyleButton( SearchButton, ConnectStrings.GroupFinder_SearchButtonLabel, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-                    SearchButton.Click += (object sender, EventArgs e ) =>
+                    SearchAddressButton = new Button( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    SearchAddressButton.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
+                    ControlStyling.StyleButton( SearchAddressButton, ConnectStrings.GroupFinder_SearchButtonLabel, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+                    SearchAddressButton.Click += (object sender, EventArgs e ) =>
                     {
                             SearchPage.Show( );
                     };
@@ -324,7 +332,7 @@ namespace Droid
 
                     // setup the address layout, which has the address text, padding, and finally the progress bar.
                     ((LinearLayout)groupLayout).AddView( MapView );
-                    ((LinearLayout)groupLayout).AddView( SearchButton );
+                    ((LinearLayout)groupLayout).AddView( SearchAddressButton );
 
                     ((LinearLayout)groupLayout).AddView( SearchLayout );
                     ((LinearLayout)SearchLayout).AddView( SearchResultPrefix );
@@ -333,8 +341,9 @@ namespace Droid
                     ((LinearLayout)groupLayout).AddView( Seperator );
                     ((LinearLayout)groupLayout).AddView( ListView );
 
-                    SearchPage = new UIGroupFinderSearch();
+                    BlockerView = new UIBlockerView( view, new System.Drawing.RectangleF( 0, 0, NavbarFragment.GetContainerDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels ) );
 
+                    SearchPage = new UIGroupFinderSearch();
                     SearchPage.Create( view, new System.Drawing.RectangleF( 0, 0, NavbarFragment.GetContainerDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels ), 
                         delegate
                         {
@@ -343,6 +352,33 @@ namespace Droid
                         } );
                     SearchPage.SetTitle( ConnectStrings.GroupFinder_SearchPageHeader, ConnectStrings.GroupFinder_SearchPageDetails );
                     SearchPage.LayoutChanged( new System.Drawing.RectangleF( 0, 0, NavbarFragment.GetContainerDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels ) );
+                    SearchPage.Hide( false );
+
+                    // if we should automatically show the search page...
+                    if ( ShowSearchOnAppear == true )
+                    {
+                        // don't allow them to tap the address button until we reveal the search page.
+                        SearchAddressButton.Enabled = false;
+
+                        // wait a couple seconds before revealing the search page.
+                        System.Timers.Timer timer = new System.Timers.Timer();
+                        timer.AutoReset = false;
+                        timer.Interval = 1000;
+                        timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>
+                        {
+                            Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                                {
+                                    SearchAddressButton.Enabled = true;
+                                    SearchPage.Show( );
+                                } );
+                        };
+                        timer.Start( );
+                    }
+                    else
+                    {
+                        // otherwise, just allow the seach button
+                        SearchAddressButton.Enabled = true;
+                    }
 
                     // hook into the search page as its listener
                     ((View)SearchPage.View.PlatformNativeObject).SetOnTouchListener( this );
@@ -463,6 +499,8 @@ namespace Droid
 
                     // restore saved values
                     SearchPage.SetAddress( StreetValue, CityValue, StateValue, ZipValue );
+
+
                 }
 
                 public override void OnConfigurationChanged(Android.Content.Res.Configuration newConfig)
@@ -472,6 +510,8 @@ namespace Droid
                     Point displaySize = new Point( );
                     Activity.WindowManager.DefaultDisplay.GetSize( displaySize );
                     MapView.LayoutParameters.Height = (int) (displaySize.Y * .50f);
+
+                    BlockerView.SetBounds( new System.Drawing.RectangleF( 0, 0, NavbarFragment.GetContainerDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels ) );
 
                     SearchPage.LayoutChanged( new System.Drawing.RectangleF( 0, 0, NavbarFragment.GetContainerDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels ) );
                 }
@@ -610,22 +650,29 @@ namespace Droid
                              string.IsNullOrEmpty( stateValue ) == false &&
                              string.IsNullOrEmpty( zipValue) == false )
                         {
-                            RetrievingGroups = true;
-
-                            CCVApp.Shared.GroupFinder.GetGroups( streetValue, cityValue, stateValue, zipValue, delegate( GroupFinder.GroupEntry sourceLocation, List<GroupFinder.GroupEntry> groupEntries )
+                            BlockerView.Show( delegate
                                 {
-                                    SourceLocation = sourceLocation;
+                                    RetrievingGroups = true;
 
-                                    groupEntries.Sort( delegate(GroupFinder.GroupEntry x, GroupFinder.GroupEntry y )
+                                    CCVApp.Shared.GroupFinder.GetGroups( streetValue, cityValue, stateValue, zipValue, 
+                                        delegate( GroupFinder.GroupEntry sourceLocation, List<GroupFinder.GroupEntry> groupEntries )
                                         {
-                                            return x.Distance < y.Distance ? -1 : 1;
+                                            BlockerView.Hide( delegate
+                                                {
+                                                    SourceLocation = sourceLocation;
+
+                                                    groupEntries.Sort( delegate(GroupFinder.GroupEntry x, GroupFinder.GroupEntry y )
+                                                        {
+                                                            return x.Distance < y.Distance ? -1 : 1;
+                                                        } );
+
+                                                    GroupEntries = groupEntries;
+
+                                                    UpdateMap( );
+
+                                                    RetrievingGroups = false;
+                                                });
                                         } );
-
-                                    GroupEntries = groupEntries;
-
-                                    UpdateMap( );
-
-                                    RetrievingGroups = false;
                                 } );
                         }
                     }

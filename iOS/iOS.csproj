@@ -521,7 +521,6 @@
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
     <InterfaceDefinition Include="MainStoryboard.storyboard" />
-    <InterfaceDefinition Include="Tasks\About\AboutStoryboard_iPhone.storyboard" />
     <InterfaceDefinition Include="Tasks\News\NewsStoryboard_iPhone.storyboard" />
     <InterfaceDefinition Include="Tasks\Give\GiveStoryboard_iPhone.storyboard" />
     <InterfaceDefinition Include="UserManagement\UserManagement.storyboard" />

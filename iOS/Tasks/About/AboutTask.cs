@@ -2,17 +2,17 @@ using System;
 using UIKit;
 using CoreGraphics;
 using Foundation;
+using CCVApp.Shared.Config;
 
 namespace iOS
 {
     public class AboutTask : Task
     {
-        protected TaskUIViewController MainPageVC { get; set; }
+        TaskWebViewController MainPageVC { get; set; }
 
         public AboutTask( string storyboardName ) : base( storyboardName )
         {
-            MainPageVC = Storyboard.InstantiateViewController( "MainPageViewController" ) as TaskUIViewController;
-            MainPageVC.Task = this;
+            MainPageVC = new TaskWebViewController( AboutConfig.Url, this );
         }
 
         public override void MakeActive( TaskUINavigationController parentViewController, NavToolbar navToolbar, CGRect containerBounds )
@@ -32,24 +32,12 @@ namespace iOS
             // turn off the share & create buttons
             NavToolbar.SetShareButtonEnabled( false, null );
             NavToolbar.SetCreateButtonEnabled( false, null );
-
-            // if it's the main page, disable the back button on the toolbar
-            if ( viewController == MainPageVC )
-            {
-                NavToolbar.Reveal( false );
-            }
-            else
-            {
-                NavToolbar.RevealForTime( 3.0f );
-            }
+            NavToolbar.Reveal( false );
         }
 
         public override void TouchesEnded(TaskUIViewController taskUIViewController, NSSet touches, UIEvent evt)
         {
             base.TouchesEnded(taskUIViewController, touches, evt);
-
-            // if they touched a dead area, reveal the nav toolbar again.
-            NavToolbar.RevealForTime( 3.0f );
         }
 
         public override void MakeInActive( )

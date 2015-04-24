@@ -87,7 +87,6 @@
     <Compile Include="UserManagement\LoginFragment.cs" />
     <Compile Include="UserManagement\ProfileFragment.cs" />
     <Compile Include="UserManagement\ImageCropFragment.cs" />
-    <Compile Include="Tasks\AboutTask\AboutPrimaryFragment.cs" />
     <Compile Include="Tasks\AboutTask\AboutTask.cs" />
     <Compile Include="Tasks\PrayerTask\PrayerPrimaryFragment.cs" />
     <Compile Include="Tasks\PrayerTask\PrayerTask.cs" />
@@ -130,7 +129,6 @@
     <AndroidResource Include="Resources\layout\Prayer_Create.axml" />
     <AndroidResource Include="Resources\layout\Profile.axml" />
     <AndroidResource Include="Resources\layout\Notes.axml" />
-    <AndroidResource Include="Resources\layout\About_Primary.axml" />
     <AndroidResource Include="Resources\layout\Main.axml" />
     <AndroidResource Include="Resources\layout\ImageCrop.axml" />
     <AndroidResource Include="Resources\layout\navbar.axml" />

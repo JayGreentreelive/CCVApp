@@ -260,6 +260,10 @@ namespace Droid
                             Springboard.DisplayError( "Note Refresh Button", 
                                 string.Format( "Note refresh button has been toggled {0}", CCVApp.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled == true ? "ON" : "OFF" ) );
                         }
+                        else if ( RequestText.Text == "version" )
+                        {
+                            Springboard.DisplayError( "Current Version", BuildStrings.Version );
+                        }
                         // fun bonus!
                         else if ( RequestText.Text == CCVApp.Shared.ConnectLink.CheatException.CheatString )
                         {

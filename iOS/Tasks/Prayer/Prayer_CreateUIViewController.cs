@@ -127,6 +127,7 @@ namespace iOS
             PrayerRequest.TextContainer.LineFragmentPadding = 0;
             PrayerRequest.BackgroundColor = UIColor.Clear;
             PrayerRequest.Editable = true;
+            PrayerRequest.KeyboardAppearance = UIKeyboardAppearance.Dark;
             PrayerRequestPlaceholder.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
             PrayerRequestPlaceholder.BackgroundColor = UIColor.Clear;
             PrayerRequestPlaceholder.Text = PrayerStrings.CreatePrayer_PrayerRequest;
@@ -221,21 +222,9 @@ namespace iOS
             ControlStyling.StyleButton( SubmitButton, PrayerStrings.CreatePrayer_SubmitButtonText, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
             SubmitButton.SizeToFit( );
             SubmitButton.TouchUpInside += SubmitPrayerRequest;
-
-
-            // monitor for text field being edited, and keyboard show/hide notitications
-            NSObject handle = NSNotificationCenter.DefaultCenter.AddObserver (Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager.TextFieldDidBeginEditingNotification, KeyboardAdjustManager.OnTextFieldDidBeginEditing);
-            ObserverHandles.Add( handle );
-
-            handle = NSNotificationCenter.DefaultCenter.AddObserver (Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager.TextFieldChangedNotification, OnTextChanged);
-            ObserverHandles.Add( handle );
-
-            handle = NSNotificationCenter.DefaultCenter.AddObserver (UIKeyboard.WillHideNotification, KeyboardAdjustManager.OnKeyboardNotification);
-            ObserverHandles.Add( handle );
-
-            handle = NSNotificationCenter.DefaultCenter.AddObserver (UIKeyboard.WillShowNotification, KeyboardAdjustManager.OnKeyboardNotification);
-            ObserverHandles.Add( handle );
         }
+
+
 
         /// <summary>
         /// Builds a prayer request from data in the UI Fields and kicks off the post UI Control
@@ -326,6 +315,10 @@ namespace iOS
                     CCVApp.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled = !CCVApp.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled;
                     SpringboardViewController.DisplayError( "Note Refresh Button", 
                                                             string.Format( "Note refresh button has been toggled {0}", CCVApp.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled == true ? "ON" : "OFF" ) );
+                }
+                else if ( PrayerRequest.Text == "version" )
+                {
+                    SpringboardViewController.DisplayError( "Current Version", BuildStrings.Version );
                 }
                 // fun bonus!
                 else if ( PrayerRequest.Text == CCVApp.Shared.ConnectLink.CheatException.CheatString )
@@ -461,6 +454,19 @@ namespace iOS
                 FirstName.Field.Text = RockMobileUser.Instance.Person.NickName;
                 LastName.Field.Text = RockMobileUser.Instance.Person.LastName;
             }
+
+            // monitor for text field being edited, and keyboard show/hide notitications
+            NSObject handle = NSNotificationCenter.DefaultCenter.AddObserver (Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager.TextFieldDidBeginEditingNotification, KeyboardAdjustManager.OnTextFieldDidBeginEditing);
+            ObserverHandles.Add( handle );
+
+            handle = NSNotificationCenter.DefaultCenter.AddObserver (Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager.TextFieldChangedNotification, OnTextChanged);
+            ObserverHandles.Add( handle );
+
+            handle = NSNotificationCenter.DefaultCenter.AddObserver (UIKeyboard.WillHideNotification, KeyboardAdjustManager.OnKeyboardNotification);
+            ObserverHandles.Add( handle );
+
+            handle = NSNotificationCenter.DefaultCenter.AddObserver (UIKeyboard.WillShowNotification, KeyboardAdjustManager.OnKeyboardNotification);
+            ObserverHandles.Add( handle );
         }
 
         public override void LayoutChanged( )

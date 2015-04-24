@@ -1,6 +1,7 @@
 ﻿using System;
 using Android.App;
 using Android.Views;
+using CCVApp.Shared.Config;
 
 namespace Droid
 {
@@ -10,12 +11,12 @@ namespace Droid
         {
             public class AboutTask : Task
             {
-                AboutPrimaryFragment MainPage { get; set; }
+                TaskWebFragment MainPage { get; set; }
 
                 public AboutTask( NavbarFragment navFragment ) : base( navFragment )
                 {
                     // create our fragments (which are basically equivalent to iOS ViewControllers)
-                    MainPage = new AboutPrimaryFragment( );
+                    MainPage = new TaskWebFragment( );
                     MainPage.ParentTask = this;
                 }
 
@@ -24,9 +25,14 @@ namespace Droid
                     return MainPage;
                 }
 
-                public override void OnUp( MotionEvent e )
+                public override void Activate(bool forResume)
                 {
-                    base.OnUp( e );
+                    base.Activate(forResume);
+
+                    if ( forResume == false )
+                    {
+                        MainPage.DisplayUrl( AboutConfig.Url );
+                    }
                 }
             }
         }
