@@ -172,6 +172,11 @@ namespace Droid
         /// <value>The last rock sync.</value>
         DateTime LastRockSync { get; set; }
 
+        /// <summary>
+        /// True if we've run the splash intro.
+        /// </summary>
+        bool IsSplashDone { get; set; }
+
         public override void OnCreate( Bundle savedInstanceState )
         {
             base.OnCreate( savedInstanceState );
@@ -725,7 +730,8 @@ namespace Droid
                                     {
                                         if( Rock.Mobile.Media.PlatformCamera.Instance.IsAvailable( ) )
                                         {
-                                            // start up the camera and get our picture.
+                                            // start up the camera and get our picture. 
+                                            // JHM 4-24-15 - The camera requires an SD Card, so use that path for our temp file.
                                             string jpgFilename = Rock.Mobile.PlatformSpecific.Android.Core.Context.GetExternalFilesDir( null ).ToString( ) + "cameratemp.jpg";
                                             Rock.Mobile.Media.PlatformCamera.Instance.CaptureImage( new Java.IO.File( jpgFilename ), null, 
 
@@ -840,8 +846,10 @@ namespace Droid
                 IsOOBERunning = true;
                 StartModalFragment( OOBEFragment, true );
             }
-            else
+            // otherwise if the splash hasn't been shown, show it.
+            else if ( IsSplashDone == false )
             {
+                IsSplashDone = true;
                 SplashFragment.ContainerView = FullScreenLayout;
                 StartModalFragment( SplashFragment, true );
             }

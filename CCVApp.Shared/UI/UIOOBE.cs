@@ -17,7 +17,9 @@ namespace CCVApp.Shared.UI
         public PlatformLabel WelcomeLabel { get; set; }
 
         public PlatformButton RegisterButton { get; set; }
+        public PlatformView RegisterSeperator { get; set; }
         public PlatformButton LoginButton { get; set; }
+        public PlatformView LoginSeperator { get; set; }
         public PlatformButton SkipButton { get; set; }
 
         public UIOOBE( )
@@ -28,7 +30,8 @@ namespace CCVApp.Shared.UI
         {
             Startup,
             Welcome,
-            RevealControls
+            RevealControls,
+            Done
         }
         OOBE_State State { get; set; }
 
@@ -41,7 +44,7 @@ namespace CCVApp.Shared.UI
             View.AddAsSubview( masterView );
 
             ImageBG = PlatformImageView.Create( );
-            ImageBG.AddAsSubview( masterView );
+            ImageBG.AddAsSubview( View.PlatformNativeObject );
             MemoryStream stream = Rock.Mobile.Util.FileIO.AssetConvert.AssetToStream( bgLayerImageName );
             stream.Position = 0;
             ImageBG.Opacity = 0;
@@ -50,13 +53,12 @@ namespace CCVApp.Shared.UI
             ImageBG.ImageScaleType = PlatformImageView.ScaleType.ScaleAspectFill;
 
             WelcomeLabel = PlatformLabel.Create( );
-            WelcomeLabel.SetFont( ControlStylingConfig.Large_Font_Light, ControlStylingConfig.Large_FontSize );
+            WelcomeLabel.SetFont( ControlStylingConfig.Large_Font_Bold, 85 );
             WelcomeLabel.TextColor = 0xCCCCCCFF;
             WelcomeLabel.Text = OOBEConfig.Welcome;
             WelcomeLabel.Opacity = 0;
             WelcomeLabel.SizeToFit( );
-            WelcomeLabel.AddAsSubview( masterView );
-
+            WelcomeLabel.AddAsSubview( View.PlatformNativeObject );
 
             RegisterButton = PlatformButton.Create( );
             RegisterButton.SetFont( ControlStylingConfig.Large_Font_Light, ControlStylingConfig.Large_FontSize );
@@ -64,12 +66,17 @@ namespace CCVApp.Shared.UI
             RegisterButton.Text = string.Format( OOBEConfig.WantAccount, GeneralConfig.OrganizationShortName );
             RegisterButton.Opacity = 0;
             RegisterButton.SizeToFit( );
-            RegisterButton.BackgroundColor = 0;
             RegisterButton.ClickEvent = (PlatformButton button ) =>
             {
                 onClick( 0 );
             };
-            RegisterButton.AddAsSubview( masterView );
+            RegisterButton.AddAsSubview( View.PlatformNativeObject );
+
+
+            RegisterSeperator = PlatformView.Create( );
+            RegisterSeperator.BackgroundColor = ControlStylingConfig.BG_Layer_BorderColor;
+            RegisterSeperator.Bounds = new RectangleF( 0, 0, 0, 1 );
+            RegisterSeperator.AddAsSubview( View.PlatformNativeObject );
 
 
             LoginButton = PlatformButton.Create( );
@@ -78,12 +85,16 @@ namespace CCVApp.Shared.UI
             LoginButton.Text = string.Format( OOBEConfig.HaveAccount, GeneralConfig.OrganizationShortName );
             LoginButton.Opacity = 0;
             LoginButton.SizeToFit( );
-            LoginButton.BackgroundColor = 0;
             LoginButton.ClickEvent = (PlatformButton button ) =>
                 {
                     onClick( 1 );
                 };
-            LoginButton.AddAsSubview( masterView );
+            LoginButton.AddAsSubview( View.PlatformNativeObject );
+
+            LoginSeperator = PlatformView.Create( );
+            LoginSeperator.BackgroundColor = ControlStylingConfig.BG_Layer_BorderColor;
+            LoginSeperator.Bounds = new RectangleF( 0, 0, 0, 1 );
+            LoginSeperator.AddAsSubview( View.PlatformNativeObject );
 
 
             SkipButton = PlatformButton.Create( );
@@ -92,18 +103,16 @@ namespace CCVApp.Shared.UI
             SkipButton.Text = OOBEConfig.SkipAccount;
             SkipButton.Opacity = 0;
             SkipButton.SizeToFit( );
-            SkipButton.BackgroundColor = 0;
             SkipButton.ClickEvent = (PlatformButton button ) =>
                 {
                     onClick( 2 );
                 };
-            SkipButton.AddAsSubview( masterView );
-
+            SkipButton.AddAsSubview( View.PlatformNativeObject );
 
             stream = Rock.Mobile.Util.FileIO.AssetConvert.AssetToStream( logoImageName );
             stream.Position = 0;
             ImageLogo = PlatformImageView.Create( );
-            ImageLogo.AddAsSubview( masterView );
+            ImageLogo.AddAsSubview( View.PlatformNativeObject );
             ImageLogo.Image = stream;
             ImageLogo.SizeToFit( );
             ImageLogo.ImageScaleType = PlatformImageView.ScaleType.ScaleAspectFit;
@@ -124,13 +133,25 @@ namespace CCVApp.Shared.UI
 
             ImageBG.Frame = View.Frame;
 
-            WelcomeLabel.Position = new PointF( (( View.Frame.Width - WelcomeLabel.Frame.Width ) / 2), View.Frame.Height * .35f );
+            if ( State == OOBE_State.Done )
+            {
+                WelcomeLabel.Position = new PointF( ( ( View.Frame.Width - WelcomeLabel.Frame.Width ) / 2 ), View.Frame.Height * .25f );
+            }
+            else
+            {
+                WelcomeLabel.Position = new PointF( ( ( View.Frame.Width - WelcomeLabel.Frame.Width ) / 2 ), View.Frame.Height * .35f );
+            }
 
-            RegisterButton.Position = new PointF( ( ( View.Frame.Width - RegisterButton.Frame.Width ) / 2 ), WelcomeLabel.Frame.Bottom + Rock.Mobile.Graphics.Util.UnitToPx( 33 ) );
+            float welcomeFinalBottom = ( View.Frame.Height * .25f ) + WelcomeLabel.Bounds.Height;
+            RegisterButton.Position = new PointF( ( ( View.Frame.Width - RegisterButton.Frame.Width ) / 2 ), welcomeFinalBottom + Rock.Mobile.Graphics.Util.UnitToPx( 16 ) );
 
-            LoginButton.Position = new PointF( ( ( View.Frame.Width - LoginButton.Frame.Width ) / 2 ), RegisterButton.Frame.Bottom + Rock.Mobile.Graphics.Util.UnitToPx( 33 ) );
+            RegisterSeperator.Position = new PointF( RegisterButton.Position.X + (( RegisterButton.Frame.Width - RegisterSeperator.Bounds.Width ) / 2), RegisterButton.Frame.Bottom + Rock.Mobile.Graphics.Util.UnitToPx( 16 ) );
 
-            SkipButton.Position = new PointF( ( ( View.Frame.Width - SkipButton.Frame.Width ) / 2 ), LoginButton.Frame.Bottom + Rock.Mobile.Graphics.Util.UnitToPx( 33 ) );
+            LoginButton.Position = new PointF( ( ( View.Frame.Width - LoginButton.Frame.Width ) / 2 ), RegisterSeperator.Frame.Bottom + Rock.Mobile.Graphics.Util.UnitToPx( 16 ) );
+
+            LoginSeperator.Position = new PointF( LoginButton.Position.X + (( LoginButton.Frame.Width - LoginSeperator.Bounds.Width ) / 2), LoginButton.Frame.Bottom + Rock.Mobile.Graphics.Util.UnitToPx( 16 ) );
+
+            SkipButton.Position = new PointF( ( ( View.Frame.Width - SkipButton.Frame.Width ) / 2 ), LoginSeperator.Frame.Bottom + Rock.Mobile.Graphics.Util.UnitToPx( 16 ) );
 
             ImageLogo.Frame = new RectangleF( (( View.Frame.Width - ImageLogo.Frame.Width ) / 2), (( View.Frame.Height - ImageLogo.Frame.Height ) / 2) + 2, ImageLogo.Frame.Width, ImageLogo.Frame.Height );
         }
@@ -196,6 +217,7 @@ namespace CCVApp.Shared.UI
                             // do this ON the UI thread
                             Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
                             {
+                                //AnimateRegSeperator( );
                                 EnterNextState( OOBE_State.RevealControls );
                             });
                         };
@@ -207,7 +229,14 @@ namespace CCVApp.Shared.UI
         void PerformRevealControls( )
         {
             // this will be fun. Chain the animations so they go serially. Start with moving up Welcome
-            SimpleAnimator_PointF posAnim = new SimpleAnimator_PointF( WelcomeLabel.Position, new PointF( WelcomeLabel.Position.X, View.Frame.Height * .25f ), .25f,
+            // now animate it down to a lighter color
+            SimpleAnimator_Float animDown = new SimpleAnimator_Float( 1.00f, .15f, 1.10f, delegate(float percent, object value )
+                {
+                    WelcomeLabel.Opacity = (float)value;
+                }, null );
+            animDown.Start( );
+
+            SimpleAnimator_PointF posAnim = new SimpleAnimator_PointF( WelcomeLabel.Position, new PointF( WelcomeLabel.Position.X, View.Frame.Height * .25f ), .55f,
                 delegate(float posPercent, object posValue )
                 {
                     WelcomeLabel.Position = (PointF) posValue;
@@ -218,7 +247,6 @@ namespace CCVApp.Shared.UI
                     SimpleAnimator_Float regAnim = new SimpleAnimator_Float( 0.00f, 1.00f, .50f, delegate(float percent, object value )
                         {
                             RegisterButton.Opacity = (float)value;
-
                         },
                         delegate
                         {
@@ -236,6 +264,8 @@ namespace CCVApp.Shared.UI
                                         },
                                         delegate
                                         {
+                                            EnterNextState( OOBE_State.Done );
+                                            AnimateRegSeperator( );
                                         });
                                     skipAnim.Start( );
                                 });
@@ -245,6 +275,43 @@ namespace CCVApp.Shared.UI
                     
                 });
             posAnim.Start( );
+        }
+
+        void AnimateRegSeperator( )
+        {
+            RectangleF startRegBorder = new RectangleF( RegisterButton.Position.X + RegisterButton.Frame.Width / 2, 
+                RegisterButton.Frame.Bottom + Rock.Mobile.Graphics.Util.UnitToPx( 16 ),
+                0, 1 );
+
+            RectangleF finalRegBorder = new RectangleF( RegisterButton.Position.X + ( ( RegisterButton.Frame.Width - (View.Bounds.Width * .75f) ) / 2 ), 
+                RegisterButton.Frame.Bottom + Rock.Mobile.Graphics.Util.UnitToPx( 16 ),
+                View.Bounds.Width * .75f, 1 );
+            
+            SimpleAnimator_RectF regBorderAnim = new SimpleAnimator_RectF( startRegBorder, finalRegBorder, .25f, delegate(float percent, object value )
+                {
+                     RegisterSeperator.Frame = (RectangleF)value;
+                     Console.WriteLine( "{0}", RegisterSeperator.Frame );
+                }, delegate { AnimateLoginSeperator( ); } );
+
+            regBorderAnim.Start( );
+        }
+
+        void AnimateLoginSeperator( )
+        {
+            RectangleF startBorder = new RectangleF( LoginButton.Position.X + LoginButton.Frame.Width / 2, 
+                LoginButton.Frame.Bottom + Rock.Mobile.Graphics.Util.UnitToPx( 16 ),
+                0, 1 );
+
+            RectangleF finalBorder = new RectangleF( LoginButton.Position.X + ( ( LoginButton.Frame.Width - (View.Bounds.Width * .75f) ) / 2 ), 
+                LoginButton.Frame.Bottom + Rock.Mobile.Graphics.Util.UnitToPx( 16 ),
+                View.Bounds.Width * .75f, 1 );
+
+            SimpleAnimator_RectF borderAnim = new SimpleAnimator_RectF( startBorder, finalBorder, .25f, delegate(float percent, object value )
+                {
+                    LoginSeperator.Frame = (RectangleF)value;
+                }, null );
+
+            borderAnim.Start( );
         }
 
         void EnterNextState( OOBE_State nextState )
@@ -266,6 +333,11 @@ namespace CCVApp.Shared.UI
                 case OOBE_State.RevealControls:
                 {
                     PerformRevealControls( );
+                    break;
+                }
+
+                case OOBE_State.Done:
+                {
                     break;
                 }
             }

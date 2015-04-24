@@ -385,8 +385,8 @@
     <AndroidAsset Include="..\Assets\serve_thumb.png">
       <Link>Assets\serve_thumb.png</Link>
     </AndroidAsset>
-    <AndroidAsset Include="..\Assets\Fonts\DINOffc-CondBold.ttf">
-      <Link>Assets\Fonts\DINOffc-CondBold.ttf</Link>
+    <AndroidAsset Include="..\Assets\Fonts\DINOffc-CondBlack.ttf">
+      <Link>Assets\Fonts\DINOffc-CondBlack.ttf</Link>
     </AndroidAsset>
   </ItemGroup>
   <ItemGroup>

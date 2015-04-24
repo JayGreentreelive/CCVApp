@@ -13,7 +13,7 @@ namespace CCVApp
         {
             public class OOBEConfig
             {
-                public const string Welcome = "Welcome";
+                public const string Welcome = "WELCOME";
                 public const string HaveAccount = "I have a {0} Account";
                 public const string WantAccount = "Create a {0} Account";
                 public const string SkipAccount = "Do this Later";
@@ -651,7 +651,7 @@ namespace CCVApp
                 /// <summary>
                 /// The font to use representing a large bold font throughout the app.
                 /// </summary>
-                public const string Large_Font_Bold = "DINOffc-CondBold";
+                public const string Large_Font_Bold = "DINOffc-CondBlack";
 
                 /// <summary>
                 /// The font to use representing a large regular font throughout the app.
@@ -671,7 +671,7 @@ namespace CCVApp
                 /// <summary>
                 /// The font to use representing a medium bold font throughout the app.
                 /// </summary>
-                public const string Medium_Font_Bold = "DINOffc-CondBold";
+                public const string Medium_Font_Bold = "DINOffc-CondBlack";
 
                 /// <summary>
                 /// The font to use representing a medium regular font throughout the app.
@@ -691,7 +691,7 @@ namespace CCVApp
                 /// <summary>
                 /// The font to use representing a small bold font throughout the app.
                 /// </summary>
-                public const string Small_Font_Bold = "DINOffc-CondBold";
+                public const string Small_Font_Bold = "DINOffc-CondBlack";
 
                 /// <summary>
                 /// The font to use representing a small regular font throughout the app.

@@ -1,36 +1,51 @@
-﻿<Properties StartupItem="iOS/iOS.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhone6.8.3" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Tasks/PrayerTask/PrayerPrimaryFragment.cs">
+﻿<Properties StartupItem="Droid/Droid.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.094c904b" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="../Rock.Mobile/PlatformUI/Droid/DroidNative/BorderedRectViews.cs">
     <Files>
-      <File FileName="Droid/Tasks/ConnectTask/JoinGroupFragment.cs" Line="1" Column="1" />
-      <File FileName="Droid/Tasks/PrayerTask/PrayerPrimaryFragment.cs" Line="269" Column="36" />
-      <File FileName="Droid/Springboard.cs" Line="346" Column="13" />
+      <File FileName="Droid/Springboard.cs" Line="706" Column="30" />
+      <File FileName="CCVApp.Shared/Notes/Controls/UserNote.cs" Line="25" Column="31" />
+      <File FileName="Droid/UserManagement/ImageCropFragment.cs" Line="404" Column="1" />
+      <File FileName="Droid/Tasks/NotesTask/NotesPrimaryFragment.cs" Line="278" Column="45" />
+      <File FileName="../Rock.Mobile/PlatformUI/Droid/DroidView.cs" Line="22" Column="36" />
+      <File FileName="../Rock.Mobile/PlatformUI/Droid/DroidNative/BorderedRectViews.cs" Line="80" Column="21" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="CCVApp.Shared" expanded="True" />
+          <Node name="CCVApp.Shared" expanded="True">
+            <Node name="Notes" expanded="True">
+              <Node name="Controls" expanded="True" />
+            </Node>
+            <Node name="RockApi" expanded="True" />
+            <Node name="UI" expanded="True" />
+          </Node>
           <Node name="Droid" expanded="True">
+            <Node name="Properties" expanded="True" />
+            <Node name="Resources" expanded="True" />
             <Node name="Tasks" expanded="True">
-              <Node name="PrayerTask" expanded="True">
-                <Node name="PrayerPrimaryFragment.cs" selected="True" />
-              </Node>
+              <Node name="NewsTask" expanded="True" />
+              <Node name="NotesTask" expanded="True" />
             </Node>
+            <Node name="UserManagement" expanded="True" />
           </Node>
-          <Node name="iOS" expanded="True">
-            <Node name="Tasks" expanded="True">
-              <Node name="Prayer" expanded="True" />
-            </Node>
-          </Node>
+          <Node name="iOS" expanded="True" />
           <Node name="Rock.Mobile" expanded="True">
-            <Node name="PlatformSpecific" expanded="True">
-              <Node name="Android" expanded="True" />
+            <Node name="PlatformIO" expanded="True" />
+            <Node name="PlatformMedia" expanded="True" />
+            <Node name="PlatformUI" expanded="True">
+              <Node name="Droid" expanded="True">
+                <Node name="DroidNative" expanded="True">
+                  <Node name="BorderedRectViews.cs" selected="True" />
+                </Node>
+              </Node>
             </Node>
           </Node>
         </State>
       </Pad>
       <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
+        <State>
+          <Value>this</Value>
+        </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>

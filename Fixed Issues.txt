@@ -11,3 +11,4 @@ iOS
 
 Android
 	Rounded buttons
+	Fixed a crash if no SD Card was installed

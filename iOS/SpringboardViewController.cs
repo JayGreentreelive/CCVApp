@@ -619,7 +619,7 @@ namespace iOS
 
             // only do the OOBE if the user hasn't seen it yet
             if ( RockMobileUser.Instance.OOBEComplete == false )
-                //if( RanOOBE == false )
+            //if( RanOOBE == false )
             {
                 // sanity check for testers that didn't listen to me and delete / reinstall.
                 // This will force them to be logged out so they experience the OOBE properly.
@@ -637,6 +637,7 @@ namespace iOS
                 View.AddSubview( SplashViewController.View );
             }
         }
+        //static bool RanOOBE { get; set; }
 
         public void SplashComplete( )
         {

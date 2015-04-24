@@ -53,7 +53,7 @@ namespace Droid
             Point displaySize = new Point( );
             Activity.WindowManager.DefaultDisplay.GetSize( displaySize );
 
-            OOBEView.Create( view, "oobe_splash_bg.png", imageName, new System.Drawing.RectangleF( 0, 0, displaySize.X, displaySize.Y ), 
+            OOBEView.Create( view, "oobe_splash_bg.png", imageName, new System.Drawing.RectangleF( 0, 0, NavbarFragment.GetContainerDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels ), 
 
                 delegate(int index) 
                 {
@@ -89,7 +89,7 @@ namespace Droid
 
             Point displaySize = new Point( );
             Activity.WindowManager.DefaultDisplay.GetSize( displaySize );
-            OOBEView.LayoutChanged( new System.Drawing.RectangleF( 0, 0, displaySize.X, displaySize.Y ) );
+            OOBEView.LayoutChanged( new System.Drawing.RectangleF( 0, 0, NavbarFragment.GetContainerDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels ) );
         }
 
         public override void OnConfigurationChanged(Android.Content.Res.Configuration newConfig)

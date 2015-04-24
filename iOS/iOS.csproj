@@ -425,8 +425,8 @@
     <BundleResource Include="..\Assets\serve_thumb.png">
       <Link>Resources\serve_thumb.png</Link>
     </BundleResource>
-    <BundleResource Include="..\Assets\Fonts\DINOffc-CondBold.ttf">
-      <Link>Resources\Fonts\DINOffc-CondBold.ttf</Link>
+    <BundleResource Include="..\Assets\Fonts\DINOffc-CondBlack.ttf">
+      <Link>Resources\Fonts\DINOffc-CondBlack.ttf</Link>
     </BundleResource>
   </ItemGroup>
   <ItemGroup>
