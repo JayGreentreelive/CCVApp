@@ -40,9 +40,9 @@ namespace Droid
                         public TextView Category { get; set; }
                         public TextView Prayer { get; set; }
 
-                        int PrayerMaxScroll { get; set; }
+                        float MaxPrayerLayoutHeight { get; set; }
 
-                        public PrayerLayoutRender( RectangleF bounds, Rock.Client.PrayerRequest prayer )
+                        public PrayerLayoutRender( RectangleF bounds, float prayerActionHeight, Rock.Client.PrayerRequest prayer )
                         {
                             // Create the core layout that stores the prayer
                             LinearLayout = new LinearLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
@@ -62,7 +62,7 @@ namespace Droid
                             Name.Text = prayer.FirstName.ToUpper( );
                             LinearLayout.AddView( Name );
 
-
+                            MaxPrayerLayoutHeight = bounds.Height;
 
                             // create the layout for managing the category / date
                             LinearLayout detailsLayout = new LinearLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
@@ -104,7 +104,7 @@ namespace Droid
                             ((LinearLayout.LayoutParams)Prayer.LayoutParameters).TopMargin = 30;
                             ((LinearLayout.LayoutParams)Prayer.LayoutParameters).LeftMargin = 20;
                             ((LinearLayout.LayoutParams)Prayer.LayoutParameters).RightMargin = 20;
-                            ((LinearLayout.LayoutParams)Prayer.LayoutParameters).BottomMargin = 80;
+                            ((LinearLayout.LayoutParams)Prayer.LayoutParameters).BottomMargin = (int)prayerActionHeight;
                             Prayer.SetMinWidth( (int)bounds.Width - 40 );
                             Prayer.SetMaxWidth( (int)bounds.Width - 40 );
                             Prayer.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
@@ -128,8 +128,8 @@ namespace Droid
                                 Prayer.ScrollY += (int)distanceY;
 
                                 // allow scrolling enough to show all the content of the prayer, but no more than that.
-                                int availableHeight = LinearLayout.Height - (int)Prayer.GetY( );
-                                Prayer.ScrollY = Math.Max( 0, Math.Min( Prayer.ScrollY, Prayer.MeasuredHeight - availableHeight ) );
+                                float availableHeight = MaxPrayerLayoutHeight - Prayer.GetY( );
+                                Prayer.ScrollY = Math.Max( 0, Math.Min( Prayer.ScrollY, Prayer.MeasuredHeight - (int)availableHeight ) );
                             }
                         }
 
@@ -137,6 +137,8 @@ namespace Droid
                         {
                             Prayer.SetMinWidth( (int)bounds.Width - 40 );
                             Prayer.SetMaxWidth( (int)bounds.Width - 40 );
+
+                            MaxPrayerLayoutHeight = bounds.Height;
                         }
                     }
 
@@ -149,6 +151,7 @@ namespace Droid
                     CircleView PrayerActionCircle { get; set; }
                     TextView PrayerActionLabel { get; set; }
                     System.Drawing.SizeF PrayerActionSize { get; set; }
+                    RelativeLayout PrayerActionLayout { get; set; }
                     bool Prayed { get; set; }
 
                     static float PrayerActionDimension = 100;
@@ -168,14 +171,6 @@ namespace Droid
                         RelativeLayout root = new RelativeLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                         //root.SetBackgroundColor( Android.Graphics.Color.GreenYellow );
                         root.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent );
-                        //root.Orientation = Orientation.Vertical;
-
-                        // use a dummy view to pad the root and force the "I Prayed" label to the bottom area
-                        /*View dummyView = new View( Rock.Mobile.PlatformSpecific.Android.Core.Context );
-                        //dummyView.SetBackgroundColor( Android.Graphics.Color.Orange );
-                        dummyView.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, 0 );
-                        ( (LinearLayout.LayoutParams)dummyView.LayoutParameters ).Weight = 10;
-                        root.AddView( dummyView );*/
 
 
                         // create the bottom prayer layout
@@ -184,13 +179,13 @@ namespace Droid
 
 
                         // create the layout that will contain the circle, button and label
-                        RelativeLayout frameLayout = new RelativeLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                        PrayerActionLayout = new RelativeLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                         //frameLayout.SetBackgroundColor( Android.Graphics.Color.Aqua );
-                        frameLayout.LayoutParameters = new LinearLayout.LayoutParams( (int)PrayerActionSize.Width, (int)PrayerActionSize.Height );
-                        frameLayout.SetX( bounds.Width - PrayerActionSize.Width / 1.5f );
-                        frameLayout.SetY( bounds.Height - PrayerActionSize.Height / 1.5f );
-                        ((LinearLayout.LayoutParams)frameLayout.LayoutParameters).Weight = 1;
-                        root.AddView( frameLayout );
+                        PrayerActionLayout.LayoutParameters = new LinearLayout.LayoutParams( (int)PrayerActionSize.Width, (int)PrayerActionSize.Height );
+                        PrayerActionLayout.SetX( bounds.Width - PrayerActionSize.Width / 1.5f );
+                        PrayerActionLayout.SetY( bounds.Height - PrayerActionSize.Height / 1.5f );
+                        ((LinearLayout.LayoutParams)PrayerActionLayout.LayoutParameters).Weight = 1;
+                        root.AddView( PrayerActionLayout );
 
 
                         // Pray Button
@@ -199,7 +194,7 @@ namespace Droid
                         PrayerActionButton.SetBackgroundDrawable( null );
                         PrayerActionButton.LayoutParameters = new RelativeLayout.LayoutParams( (int)PrayerActionSize.Width, (int)PrayerActionSize.Height );
                         //Pray.SetBackgroundColor( Android.Graphics.Color.Green );
-                        frameLayout.AddView( PrayerActionButton );
+                        PrayerActionLayout.AddView( PrayerActionButton );
 
 
                         // Layout for the text and circle
@@ -208,7 +203,7 @@ namespace Droid
                         PrayerActionCircle.StrokeWidth = 1;
                         //PrayerActionCircle.SetBackgroundColor( Android.Graphics.Color.Blue );
                         PrayerActionCircle.LayoutParameters = new RelativeLayout.LayoutParams( (int)PrayerActionSize.Width, (int)PrayerActionSize.Height );
-                        frameLayout.AddView( PrayerActionCircle );
+                        PrayerActionLayout.AddView( PrayerActionCircle );
 
                         // Setup the "I Prayed" label
                         PrayerActionLabel = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
@@ -217,7 +212,7 @@ namespace Droid
                         PrayerActionLabel.Gravity = GravityFlags.Center;
                         //PrayerActionLabel.SetBackgroundColor( Android.Graphics.Color.Orange );
                         PrayerActionLabel.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
-                        frameLayout.AddView( PrayerActionLabel );
+                        PrayerActionLayout.AddView( PrayerActionLabel );
 
                         PositionPrayedLabel( );
 
@@ -233,7 +228,7 @@ namespace Droid
 
 
                         // add it to this view
-                        PrayerLayout = new PrayerLayoutRender( bounds, prayer );
+                        PrayerLayout = new PrayerLayoutRender( new RectangleF( bounds.Left, bounds.Top, bounds.Width, bounds.Height - PrayerActionSize.Height ), PrayerActionSize.Height, prayer );
                         nativeView.AddView( PrayerLayout.LinearLayout );
 
                         PrayerActionButton.Enabled = true;
@@ -307,7 +302,11 @@ namespace Droid
                     {
                         View.Bounds = bounds;
 
-                        PrayerLayout.LayoutChanged( bounds );
+                        PrayerLayout.LayoutChanged( new RectangleF( bounds.Left, bounds.Top, bounds.Width, bounds.Height - PrayerActionSize.Height ) );
+
+                        // set the prayer action area correctly
+                        PrayerActionLayout.SetX( bounds.Width - PrayerActionSize.Width / 1.5f );
+                        PrayerActionLayout.SetY( bounds.Height - PrayerActionSize.Height / 1.5f );
                     }
                 }
 
@@ -339,6 +338,24 @@ namespace Droid
                     PrayerRequestCards = new List<PrayerCard>();
                 }
 
+                static float PrayerCardSizePerc = .80f;
+
+                float GetPrayerRegionHeight( )
+                {
+                    // take the valid height of the area a prayer can display (the space between the top header and the bottom navToolbar)
+                    return Resources.DisplayMetrics.HeightPixels - ParentTask.NavbarFragment.NavToolbar.ButtonLayout.Height - ParentTask.NavbarFragment.ActiveTaskFrame.GetY( );
+                }
+
+                float GetCardWidth( )
+                {
+                    return NavbarFragment.GetContainerDisplayWidth( ) * PrayerCardSizePerc;
+                }
+
+                float GetCardHeight( )
+                {
+                    return GetPrayerRegionHeight( ) * PrayerCardSizePerc;
+                }
+
                 public override void OnCreate( Bundle savedInstanceState )
                 {
                     base.OnCreate( savedInstanceState );
@@ -361,16 +378,18 @@ namespace Droid
                     ActivityIndicator.Visibility = ViewStates.Invisible;
 
                     // create the carousel
-                    float viewRealHeight = this.Resources.DisplayMetrics.HeightPixels;
+                    float prayerRegionHeight = GetPrayerRegionHeight( );
 
-                    float cardSizePerc = .80f;
-                    float cardWidth = NavbarFragment.GetContainerDisplayWidth( ) * cardSizePerc;
-                    float cardHeight = viewRealHeight * cardSizePerc;
+                    float cardWidth = GetCardWidth( );
+                    float cardHeight = GetCardHeight( );
+
+                    // setup the card positions to be to the offscreen to the left, centered on screen, and offscreen to the right
+                    float cardYOffset = (prayerRegionHeight - cardHeight) / 2;
+
                     PrayerCardSize = new RectangleF( 0, 0, cardWidth, cardHeight );
 
                     // setup the card positions to be to the offscreen to the left, centered on screen, and offscreen to the right
-                    float cardYOffset = viewRealHeight * .03f;
-                    Carousel = PlatformCardCarousel.Create( view, cardWidth, cardHeight, new RectangleF( 0, cardYOffset, NavbarFragment.GetContainerDisplayWidth( ), viewRealHeight ), PrayerConfig.Card_AnimationDuration );
+                    Carousel = PlatformCardCarousel.Create( view, cardWidth, cardHeight, new RectangleF( 0, cardYOffset, NavbarFragment.GetContainerDisplayWidth( ), prayerRegionHeight ), PrayerConfig.Card_AnimationDuration );
 
 
                     // setup our error UI
@@ -417,18 +436,17 @@ namespace Droid
 
                 void LayoutChanged( )
                 {
-                    float viewRealHeight = this.Resources.DisplayMetrics.HeightPixels;
+                    float prayerRegionHeight = GetPrayerRegionHeight( );
 
-                    float cardSizePerc = .80f;
-                    float cardWidth = NavbarFragment.GetContainerDisplayWidth( ) * cardSizePerc;
-                    float cardHeight = viewRealHeight * cardSizePerc;
-
+                    float cardWidth = GetCardWidth( );
+                    float cardHeight = GetCardHeight( );
+                    
                     // setup the card positions to be to the offscreen to the left, centered on screen, and offscreen to the right
-                    float cardYOffset = viewRealHeight * .03f;
+                    float cardYOffset = (prayerRegionHeight - cardHeight) / 2;
 
                     PrayerCardSize = new RectangleF( 0, 0, cardWidth, cardHeight );
 
-                    Carousel.LayoutChanged( cardWidth, cardHeight, new RectangleF( 0, cardYOffset, NavbarFragment.GetContainerDisplayWidth( ), viewRealHeight ) );
+                    Carousel.LayoutChanged( cardWidth, cardHeight, new RectangleF( 0, cardYOffset, NavbarFragment.GetContainerDisplayWidth( ), prayerRegionHeight ) );
 
                     // now update the layout for each prayer card
                     foreach ( PrayerCard prayerCard in PrayerRequestCards )

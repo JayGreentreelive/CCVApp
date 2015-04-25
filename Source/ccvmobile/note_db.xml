@@ -6,6 +6,13 @@
 		<!--Start Series-->
 		<Series>
 			<Message>
+				<Name>HIDDEN SINS</Name>
+				<Speaker>Ashley Wooldridge</Speaker>
+				<Date>4/26/2015</Date>
+				<NoteUrl>xml/message_4_25_2015.xml</NoteUrl>
+			</Message>
+
+			<Message>
 				<Name>COMPARISON</Name>
 				<Speaker>Ashley Wooldridge</Speaker>
 				<Date>4/19/2015</Date>

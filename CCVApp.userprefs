@@ -1,23 +1,9 @@
 ﻿<Properties StartupItem="Droid/Droid.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.094c904b" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Tasks/NewsTask/NewsTask.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Tasks/PrayerTask/PrayerPrimaryFragment.cs">
     <Files>
-      <File FileName="Droid/Tasks/NewsTask/NewsTask.cs" Line="73" Column="18" />
+      <File FileName="Droid/Tasks/PrayerTask/PrayerPrimaryFragment.cs" Line="120" Column="20" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="Droid" expanded="True" selected="True" />
-          <Node name="iOS" expanded="True" />
-          <Node name="Rock.Mobile" expanded="True" />
-        </State>
-      </Pad>
-      <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State>
-          <Value>word</Value>
-        </State>
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
