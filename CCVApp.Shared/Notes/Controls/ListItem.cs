@@ -168,7 +168,7 @@ namespace CCVApp
                     htmlStream += "</li>";
                 }
 
-                public static bool ElementTagMatches(string elementTag)
+                public static new bool ElementTagMatches(string elementTag)
                 {
                     if ( elementTag == "LI" || elementTag == "ListItem" )
                     {

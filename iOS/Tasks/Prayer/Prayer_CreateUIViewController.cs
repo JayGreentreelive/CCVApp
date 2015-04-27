@@ -258,6 +258,7 @@ namespace iOS
                 prayerRequest.IsPublic = UIPublicSwitch.On; // use the public switch's state to determine whether it's a public prayer or not.
                 prayerRequest.Guid = Guid.NewGuid( );
                 prayerRequest.IsApproved = false;
+                prayerRequest.CreatedByPersonAliasId = UISwitchAnonymous.On == true ? -1 : CCVApp.Shared.Network.RockMobileUser.Instance.Person.PrimaryAliasId;
 
                 // launch the post view controller
                 Prayer_PostUIViewController postPrayerVC = new Prayer_PostUIViewController();

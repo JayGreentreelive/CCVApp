@@ -1,4 +1,4 @@
-﻿<Properties StartupItem="Droid/Droid.csproj">
+﻿<Properties StartupItem="iOS/iOS.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.094c904b" />
   <MonoDevelop.Ide.Workbench ActiveDocument="CCVApp.Shared/Notes/Controls/BaseControl.cs">
     <Files>

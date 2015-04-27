@@ -210,6 +210,7 @@ namespace Droid
                         prayerRequest.Guid = Guid.NewGuid( );
                         prayerRequest.IsPublic = PublicSwitch.Checked;
                         prayerRequest.IsApproved = false;
+                        prayerRequest.CreatedByPersonAliasId = AnonymousSwitch.Checked == true ? -1 : CCVApp.Shared.Network.RockMobileUser.Instance.Person.PrimaryAliasId;
 
 
                         ParentTask.OnClick( this, 0, prayerRequest );

@@ -114,7 +114,7 @@ namespace Droid
                     childFragmentManager.Accessible = true;
                     childFragmentManager.Set( this, null );
                 }
-                catch( Exception e )
+                catch
                 {
                 }
                 Console.WriteLine( "Detaching" );

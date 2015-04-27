@@ -375,12 +375,28 @@ namespace CCVApp
                         } );*/
                 }
 
-                public void JoinGroup( int personAliasId, string firstName, string lastName, string spouseName, string email, string phone, int groupId, string groupName, HttpRequest.RequestResult resultHandler )
+                public void JoinGroup( Rock.Client.Person person, string firstName, string lastName, string spouseName, string email, string phone, int groupId, string groupName, HttpRequest.RequestResult resultHandler )
                 {
-                    RestRequest request = GetRockRestRequest( Method.POST );
+                    if ( person.PrimaryAliasId.HasValue && person.PrimaryAliasId.Value != 0 )
+                    {
+                        ResolvePersonAliasId( person, 
+                            delegate(int personId )
+                            {
+                                // resolve the alias ID
+                                RestRequest request = GetRockRestRequest( Method.POST );
 
-                    string requestString = string.Format( JoinGroupEndPoint, Config.GeneralConfig.GroupRegistrationValueId, personAliasId, firstName, lastName, spouseName, email, phone, groupId, groupName );
-                    Request.ExecuteAsync( BaseUrl + requestString, request, resultHandler );
+                                string requestString = string.Format( JoinGroupEndPoint, Config.GeneralConfig.GroupRegistrationValueId, personId, firstName, lastName, spouseName, email, phone, groupId, groupName );
+                                Request.ExecuteAsync( BaseUrl + requestString, request, resultHandler );    
+                            } );
+                    }
+                    else
+                    {
+                        // no ID, so just send the info
+                        RestRequest request = GetRockRestRequest( Method.POST );
+
+                        string requestString = string.Format( JoinGroupEndPoint, Config.GeneralConfig.GroupRegistrationValueId, 0, firstName, lastName, spouseName, email, phone, groupId, groupName );
+                        Request.ExecuteAsync( BaseUrl + requestString, request, resultHandler );    
+                    }
                 }
 
                 void CreateProfile( Rock.Client.Person person, HttpRequest.RequestResult resultHandler )
@@ -504,24 +520,32 @@ namespace CCVApp
                     Request.ExecuteAsync<List<Rock.Client.DefinedValue>>( requestUrl, request, resultHandler );
                 }
 
-                public void UpdatePhoneNumber( Rock.Client.PhoneNumber phoneNumber, bool isNew, HttpRequest.RequestResult resultHandler )
+                public void UpdatePhoneNumber( Rock.Client.Person person, Rock.Client.PhoneNumber phoneNumber, bool isNew, HttpRequest.RequestResult resultHandler )
                 {
-                    RestRequest request = null;
-                    string requestUrl = PutPhoneNumberEndPoint;
-                    if ( isNew )
-                    {
-                        request = GetRockRestRequest( Method.POST );
-                    }
-                    else
-                    {
-                        // if we're updating an existing number, put the ID
-                        request = GetRockRestRequest( Method.PUT );
-                        requestUrl += phoneNumber.Id;
-                    }
-                    request.AddBody( phoneNumber );
+                    // first, get the latest person ID
+                    ResolvePersonAliasId( person, 
+                        delegate(int personId )
+                        {
+                            phoneNumber.PersonId = personId;
 
-                    // fire off the request
-                    Request.ExecuteAsync( BaseUrl + requestUrl, request, resultHandler);
+                            // now we can upload it.
+                            RestRequest request = null;
+                            string requestUrl = PutPhoneNumberEndPoint;
+                            if ( isNew )
+                            {
+                                request = GetRockRestRequest( Method.POST );
+                            }
+                            else
+                            {
+                                // if we're updating an existing number, put the ID
+                                request = GetRockRestRequest( Method.PUT );
+                                requestUrl += phoneNumber.Id;
+                            }
+                            request.AddBody( phoneNumber );
+
+                            // fire off the request
+                            Request.ExecuteAsync( BaseUrl + requestUrl, request, resultHandler);
+                        } );
                 }
 
                 public void GetProfilePicture( string photoId, uint dimensionSize, HttpRequest.RequestResult<MemoryStream> resultHandler )

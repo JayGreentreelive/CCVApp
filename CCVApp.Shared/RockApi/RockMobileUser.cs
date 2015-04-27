@@ -237,7 +237,6 @@ namespace CCVApp
                         _CellPhoneNumber.Number = digits;
                         _CellPhoneNumber.NumberFormatted = digits.AsPhoneNumber( );
                         _CellPhoneNumber.NumberTypeValueId = GeneralConfig.CellPhoneValueId;
-                        _CellPhoneNumber.PersonId = Person.Id;
                         _CellPhoneNumber.Guid = Guid.NewGuid( );
                     }
                     else
@@ -546,7 +545,7 @@ namespace CCVApp
                     bool addNewPhoneNumber = string.IsNullOrEmpty( LastSyncdCellPhoneNumberJson ) ? true : false;
 
                     // send it to the server
-                    RockApi.Instance.UpdatePhoneNumber( _CellPhoneNumber, addNewPhoneNumber, 
+                    RockApi.Instance.UpdatePhoneNumber( Person, _CellPhoneNumber, addNewPhoneNumber, 
 
                         delegate(System.Net.HttpStatusCode statusCode, string statusDescription)
                         {
