@@ -718,7 +718,7 @@ namespace CCVApp
                     Request.ExecuteAsync< List<DateTimeModel> >( requestUrl, request, delegate(HttpStatusCode statusCode, string statusDescription, List<DateTimeModel> model) 
                         {
                             DateTime dateTime = DateTime.MinValue;
-                            if( model != null )
+                            if( model != null && model.Count > 0 )
                             {
                                 dateTime = DateTime.Parse( model[ 0 ].ValueAsDateTime );
                             }
@@ -753,10 +753,10 @@ namespace CCVApp
                 void ResolvePersonAliasId( Rock.Client.Person person, OnPersonAliasIdResolved onComplete )
                 {
                     // note: aliasId is being returned as null right now.
-                    onComplete( person.Id );
-                    return;
+                    //onComplete( person.Id );
+                    //return;
 
-                    /*
+
                     // make the request for the ID
                     RestRequest request = GetRockRestRequest( Method.GET );
                     Request.ExecuteAsync<PersonIdObj>( BaseUrl + GetPersonAliasId + person.PrimaryAliasId, request, 
@@ -771,7 +771,7 @@ namespace CCVApp
                                 onComplete( -1 );
                             }
                         } );
-                    */
+                    
                 }
 
                 /*private void SaveCookieToDevice( )

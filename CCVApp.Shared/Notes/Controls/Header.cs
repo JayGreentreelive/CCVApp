@@ -161,7 +161,8 @@ namespace CCVApp
 
                             case XmlNodeType.EndElement:
                             {
-                                    if( reader.Name == "Header" || reader.Name == "H" )
+                                //if( reader.Name == "Header" || reader.Name == "H" )
+                                if( ElementTagMatches( reader.Name ) )
                                 {
                                     // flag that we're done reading the header
                                     finishedHeader = true;
@@ -183,12 +184,12 @@ namespace CCVApp
                                                     mTitle.Frame.Bottom + mSpeaker.Position.Y + bounds.Y + padding.Top );
 
 
-                    // verify that the speaker won't overlap date. if it will, we're going to have to center and lower them.
+                    // verify that the speaker won't overlap date. if it will, left justify them under each other beneath the title.
                     if ( mSpeaker.Position.X < mDate.Frame.Right )
                     {
-                        mDate.Position = new PointF( ( mTitle.Bounds.Width - mDate.Bounds.Width ) / 2, mTitle.Frame.Bottom );
+                        mDate.Position = new PointF( mTitle.Position.X, mTitle.Frame.Bottom );
                         
-                        mSpeaker.Position = new PointF( ( mTitle.Bounds.Width - mSpeaker.Bounds.Width ) / 2, mDate.Frame.Bottom );
+                        mSpeaker.Position = new PointF( mTitle.Position.X, mDate.Frame.Bottom );
                     }
 
                     // determine the lowest control
@@ -337,6 +338,15 @@ namespace CCVApp
 
                     // handle user notes
                     EmbedIntersectingUserNotes( ref htmlStream, userNotes );
+                }
+
+                public static bool ElementTagMatches(string elementTag)
+                {
+                    if ( elementTag == "H" || elementTag == "Header" )
+                    {
+                        return true;
+                    }
+                    return false;
                 }
 
                 public override bool ShouldShowBulletPoint( )

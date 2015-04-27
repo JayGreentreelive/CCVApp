@@ -159,7 +159,8 @@ namespace CCVApp
                             case XmlNodeType.EndElement:
                                 {
                                     // if we hit the end of our label, we're done.
-                                    if( reader.Name == "Canvas" || reader.Name == "C" )
+                                    //if( reader.Name == "Canvas" || reader.Name == "C" )
+                                    if( ElementTagMatches( reader.Name ) )
                                     {
                                         finishedParsing = true;
                                     }
@@ -310,6 +311,15 @@ namespace CCVApp
 
                     // handle user notes
                     EmbedIntersectingUserNotes( ref htmlStream, userNotes );
+                }
+
+                public static bool ElementTagMatches(string elementTag)
+                {
+                    if ( elementTag == "C" || elementTag == "Canvas" )
+                    {
+                        return true;
+                    }
+                    return false;
                 }
 
                 protected override List<IUIControl> GetChildControls( )

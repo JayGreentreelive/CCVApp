@@ -2,13 +2,9 @@ Changes
 -------
 
 Both
-	Fixed an issue that would cause exported notes to have words in the wrong order.
-	Reworked Group Finder to have a modal search window instead of a search bar up top
-	Tons of UI polish and bug fixing
-	Fixed an issue causing the title and author of a note to overlap in certain cases
+	Data will now update anytime the app is backgrounded and resumed.
+	-Fixes an issue where you might not see the latest sermon notes.
 
 iOS
 
 Android
-	Rounded buttons
-	Fixed a crash if no SD Card was installed

@@ -208,6 +208,10 @@ namespace CCVApp
                                         Data.GeneralDataServerTime = generalDataTime;
                                     }
                                 }
+                                else
+                                {
+                                    Console.WriteLine( "GeneralDateTime request failed with status {0}. Using existing.", statusDescription );
+                                }
 
                                 // now get the news.
                                 GetNews( delegate 

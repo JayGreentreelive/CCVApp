@@ -109,7 +109,7 @@ namespace iOS
 
             PrayerActionButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
-                    TogglePrayed( !Prayed );
+                    TogglePrayed( true );
                 };
 
 

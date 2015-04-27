@@ -218,7 +218,7 @@ namespace Droid
 
                         PrayerActionButton.Click += (object sender, EventArgs e) => 
                             {
-                                TogglePrayed( !Prayed );
+                                TogglePrayed( true );
                             };
                         //
 
@@ -228,7 +228,7 @@ namespace Droid
 
 
                         // add it to this view
-                        PrayerLayout = new PrayerLayoutRender( new RectangleF( bounds.Left, bounds.Top, bounds.Width, bounds.Height - PrayerActionSize.Height ), PrayerActionSize.Height, prayer );
+                        PrayerLayout = new PrayerLayoutRender( new RectangleF( bounds.Left, bounds.Top, bounds.Width, bounds.Height - PrayerActionSize.Height ), PrayerActionSize.Height * .75f, prayer );
                         nativeView.AddView( PrayerLayout.LinearLayout );
 
                         PrayerActionButton.Enabled = true;

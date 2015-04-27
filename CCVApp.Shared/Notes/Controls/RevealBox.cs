@@ -105,7 +105,8 @@ namespace CCVApp
                                 case XmlNodeType.EndElement:
                                 {
                                     // if we hit the end of our label, we're done.
-                                        if( reader.Name == "RevealBox" || reader.Name == "RB" )
+                                    //if( reader.Name == "RevealBox" || reader.Name == "RB" )
+                                    if( ElementTagMatches( reader.Name ) )
                                     {
                                         finishedLabel = true;
                                     }
@@ -171,6 +172,15 @@ namespace CCVApp
                 public override void BuildHTMLContent( ref string htmlStream, List<IUIControl> userNotes )
                 {
                     htmlStream += string.Format( "<U>{0}</U>", PlatformLabel.Text );
+                }
+
+                public static bool ElementTagMatches(string elementTag)
+                {
+                    if ( elementTag == "RB" || elementTag == "RevealBox" )
+                    {
+                        return true;
+                    }
+                    return false;
                 }
 
                 public void SetRevealed( bool revealed )

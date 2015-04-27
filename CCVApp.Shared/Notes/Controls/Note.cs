@@ -318,6 +318,15 @@ namespace CCVApp
                     // now calculate the available width based on padding. (Don't actually change our width)
                     float availableWidth = parentWidth - leftPadding - rightPadding;
 
+                    // A "special" (we won't call this a hack) attribute that will enable the user
+                    // to have a header container that spans the full width of the note, which allows
+                    // it to be unaffected by the padding.
+                    string result = reader.GetAttribute( "FullWidthHeader" );
+                    if ( string.IsNullOrEmpty( result ) == false )
+                    {
+                        mStyle.mFullWidthHeader = bool.Parse( result );
+                    }
+
                     // begin reading the xml stream
                     bool finishedReading = false;
                     while( finishedReading == false && reader.Read( ) )
@@ -326,7 +335,14 @@ namespace CCVApp
                         {
                             case XmlNodeType.Element:
                             {
-                                IUIControl control = Parser.TryParseControl( new BaseControl.CreateParams( this, availableWidth, parentHeight, ref mStyle ), reader );
+                                float workingWidth = availableWidth;
+                                if ( Header.ElementTagMatches( reader.Name ) == true && mStyle.mFullWidthHeader == true )
+                                {
+                                    workingWidth = parentWidth;
+                                }
+
+                                IUIControl control = Parser.TryParseControl( new BaseControl.CreateParams( this, workingWidth, parentHeight, ref mStyle ), reader );
+
                                 ChildControls.Add( control );
                                 break;
                             }
@@ -377,8 +393,18 @@ namespace CCVApp
                             }
                         }
 
+
                         // adjust the next sibling by yOffset
-                        control.AddOffset( xAdjust + leftPadding, yOffset );
+
+                        // if it's the header and full width is specified, don't apply padding.
+                        if ( control as Header != null && mStyle.mFullWidthHeader == true )
+                        {
+                            control.AddOffset( xAdjust, yOffset );
+                        }
+                        else
+                        {
+                            control.AddOffset( xAdjust + leftPadding, yOffset );
+                        }
 
                         // and the next sibling must begin there
                         yOffset = control.GetFrame( ).Bottom + controlMargin.Height;

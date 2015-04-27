@@ -190,7 +190,8 @@ namespace CCVApp
                             case XmlNodeType.EndElement:
                             {
                                 // if we hit the end of our label, we're done.
-                                if( reader.Name == "Quote" || reader.Name == "Q" )
+                                //if( reader.Name == "Quote" || reader.Name == "Q" )
+                                if( ElementTagMatches( reader.Name ) )
                                 {
                                     finishedScripture = true;
                                 }
@@ -351,6 +352,15 @@ namespace CCVApp
 
                     // handle user notes
                     EmbedIntersectingUserNotes( ref htmlStream, userNotes );
+                }
+
+                public static bool ElementTagMatches(string elementTag)
+                {
+                    if ( elementTag == "Q" || elementTag == "Quote" )
+                    {
+                        return true;
+                    }
+                    return false;
                 }
 
                 public override RectangleF GetFrame( )

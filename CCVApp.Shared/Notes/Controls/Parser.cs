@@ -19,7 +19,7 @@ namespace CCVApp
                 public static IUIControl TryParseControl( Notes.BaseControl.CreateParams parentParams, XmlReader reader )
                 {
                     // either create/parse a new control, or return null.
-                    switch( reader.Name )
+                    /*switch( reader.Name )
                     {
                         case "P":
                         case "Paragraph": return new Paragraph( parentParams, reader );
@@ -46,7 +46,44 @@ namespace CCVApp
                         case "TextInput": return new TextInput( parentParams, reader );
 
                         case "H":
-                        case "Header": return new Header(parentParams, reader);
+                        case "Header": return new Header( parentParams, reader );
+                    }*/
+
+                    if ( Paragraph.ElementTagMatches( reader.Name ) )
+                    {
+                        return new Paragraph( parentParams, reader );
+                    }
+                    else if ( Canvas.ElementTagMatches( reader.Name ) )
+                    {
+                        return new Canvas( parentParams, reader );
+                    }
+                    else if ( StackPanel.ElementTagMatches( reader.Name ) )
+                    {
+                        return new StackPanel( parentParams, reader );
+                    }
+                    else if ( List.ElementTagMatches( reader.Name ) )
+                    {
+                        return new List( parentParams, reader );
+                    }
+                    else if ( ListItem.ElementTagMatches( reader.Name ) )
+                    {
+                        return new ListItem( parentParams, reader );
+                    }
+                    else if ( RevealBox.ElementTagMatches( reader.Name ) )
+                    {
+                        return new RevealBox( parentParams, reader );
+                    }
+                    else if ( Quote.ElementTagMatches( reader.Name ) )
+                    {
+                        return new Quote( parentParams, reader );
+                    }
+                    else if ( TextInput.ElementTagMatches( reader.Name ) )
+                    {
+                        return new TextInput( parentParams, reader );
+                    }
+                    else if ( Header.ElementTagMatches( reader.Name ) )
+                    {
+                        return new Header( parentParams, reader );
                     }
 
                     throw new Exception( String.Format( "Control of type {0} does not exist.", reader.Name ) );

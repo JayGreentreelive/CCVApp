@@ -255,7 +255,8 @@ namespace CCVApp
                             case XmlNodeType.EndElement:
                             {
                                 // if we hit the end of our label, we're done.
-                                if( reader.Name == "Paragraph" || reader.Name == "P" )
+                                //if( reader.Name == "Paragraph" || reader.Name == "P" )
+                                if( ElementTagMatches( reader.Name ) )
                                 {
                                     finishedReading = true;
                                 }
@@ -520,6 +521,15 @@ namespace CCVApp
                 public override RectangleF GetFrame( )
                 {
                     return Frame;
+                }
+
+                public static bool ElementTagMatches(string elementTag)
+                {
+                    if ( elementTag == "P" || elementTag == "Paragraph" )
+                    {
+                        return true;
+                    }
+                    return false;
                 }
 
                 protected override List<IUIControl> GetChildControls( )

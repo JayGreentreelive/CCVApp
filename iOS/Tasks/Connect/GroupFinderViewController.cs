@@ -517,7 +517,7 @@ namespace iOS
             BlockerView.SetBounds( View.Frame.ToRectF( ) );
         }
 
-        public void UpdateMap( )
+        public void UpdateMap( bool result )
         {
             GroupTableSource.SelectedIndex = -1;
 
@@ -552,16 +552,24 @@ namespace iOS
             }
             else
             {
-                SearchResultsPrefix.Text = ConnectStrings.GroupFinder_NoGroupsFound;
-                SearchResultsNeighborhood.Text = string.Empty;
+                if ( result == true )
+                {
+                    SearchResultsPrefix.Text = ConnectStrings.GroupFinder_NoGroupsFound;
+                    SearchResultsNeighborhood.Text = string.Empty;
 
-                // since there were no groups, revert the map to whatever specified area
-                MKCoordinateRegion region = MKCoordinateRegion.FromDistance( new CLLocationCoordinate2D( 
-                    ConnectConfig.GroupFinder_DefaultLatitude, 
-                    ConnectConfig.GroupFinder_DefaultLongitude ), 
-                    ConnectConfig.GroupFinder_DefaultScale_iOS, 
-                    ConnectConfig.GroupFinder_DefaultScale_iOS );
-                MapView.SetRegion( region, true );
+                    // since there were no groups, revert the map to whatever specified area
+                    MKCoordinateRegion region = MKCoordinateRegion.FromDistance( new CLLocationCoordinate2D( 
+                                                        ConnectConfig.GroupFinder_DefaultLatitude, 
+                                                        ConnectConfig.GroupFinder_DefaultLongitude ), 
+                                                    ConnectConfig.GroupFinder_DefaultScale_iOS, 
+                                                    ConnectConfig.GroupFinder_DefaultScale_iOS );
+                    MapView.SetRegion( region, true );
+                }
+                else
+                {
+                    SearchResultsPrefix.Text = "There was a problem reaching the server. Please try again.";
+                    SearchResultsNeighborhood.Text = string.Empty;
+                }
             }
 
             UpdateResultsBanner( );
@@ -738,7 +746,7 @@ namespace iOS
                     BlockerView.Show( delegate
                         {
                             GroupFinder.GetGroups( street, city, state, zip, 
-                                delegate( GroupFinder.GroupEntry sourceLocation, List<GroupFinder.GroupEntry> groupEntries )
+                                delegate( GroupFinder.GroupEntry sourceLocation, List<GroupFinder.GroupEntry> groupEntries, bool result )
                                 {
                                     BlockerView.Hide( delegate
                                         {
@@ -751,7 +759,7 @@ namespace iOS
 
                                             SourceLocation = sourceLocation;
                                             GroupEntries = groupEntries;
-                                            UpdateMap( );
+                                            UpdateMap( result );
                                             GroupFinderTableView.ReloadData( );
 
                                             // flag that our group list was updated so that
@@ -763,17 +771,21 @@ namespace iOS
                                             // which neighborhoods get the most hits.
                                             string address = street + " " + city + ", " + state + ", " + zip;
 
-                                            if ( groupEntries.Count > 0 )
+                                            // send an analytic if the request went thru ok
+                                            if( result )
                                             {
-                                                // record an analytic that they searched
-                                                GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.Location, address );
+                                                if ( groupEntries.Count > 0 )
+                                                {
+                                                    // record an analytic that they searched
+                                                    GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.Location, address );
 
-                                                GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.Neighborhood, groupEntries[ 0 ].NeighborhoodArea );
-                                            }
-                                            else
-                                            {
-                                                // record that this address failed
-                                                GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.OutOfBounds, address );
+                                                    GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.Neighborhood, groupEntries[ 0 ].NeighborhoodArea );
+                                                }
+                                                else
+                                                {
+                                                    // record that this address failed
+                                                    GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.OutOfBounds, address );
+                                                }
                                             }
                                         } );
                                 } );

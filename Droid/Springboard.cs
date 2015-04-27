@@ -805,10 +805,16 @@ namespace Droid
             System.Console.WriteLine( "Springboard OnResume()" );
 
             // if it's been longer than N hours, resync rock.
-            if ( DateTime.Now.Subtract( LastRockSync ).TotalHours > SpringboardConfig.SyncRockHoursFrequency )
+            // JHM 4-27-15: Now we will always sync on resume. We do this to avoid issues like Christopher had,
+            // where he ran the app early Saturday, and then didn't see the sermon notes Saturday evening.
+            //if ( DateTime.Now.Subtract( LastRockSync ).TotalHours > SpringboardConfig.SyncRockHoursFrequency )
             {
                 SyncRockData( );
             }
+            /*else
+            {
+                RockLaunchData.Instance.GetNoteDB( null );
+            }*/
 
             // refresh the viewing campus
             RefreshCampusSelection( );

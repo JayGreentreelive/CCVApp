@@ -569,7 +569,7 @@ namespace Droid
                     ZipValue = SearchPage.ZipCode.Text;
                 }
 
-                void UpdateMap( )
+                void UpdateMap( bool result )
                 {
                     Map.Clear( );
                     MarkerList.Clear( );
@@ -624,18 +624,27 @@ namespace Droid
                     }
                     else
                     {
-                        SearchResultPrefix.Text = ConnectStrings.GroupFinder_NoGroupsFound;
-                        SearchResultNeighborhood.Text = string.Empty;
+                        if ( result == true )
+                        {
+                            SearchResultPrefix.Text = ConnectStrings.GroupFinder_NoGroupsFound;
+                            SearchResultNeighborhood.Text = string.Empty;
 
-                        // no groups found, so move the camera to the default position
-                        Android.Gms.Maps.Model.LatLng defaultPos = new Android.Gms.Maps.Model.LatLng( ConnectConfig.GroupFinder_DefaultLatitude, ConnectConfig.GroupFinder_DefaultLongitude );
-                        CameraUpdate camPos = CameraUpdateFactory.NewLatLngZoom( defaultPos,  ConnectConfig.GroupFinder_DefaultScale_Android );
-                        Map.AnimateCamera( camPos );
+                            // no groups found, so move the camera to the default position
+                            Android.Gms.Maps.Model.LatLng defaultPos = new Android.Gms.Maps.Model.LatLng( ConnectConfig.GroupFinder_DefaultLatitude, ConnectConfig.GroupFinder_DefaultLongitude );
+                            CameraUpdate camPos = CameraUpdateFactory.NewLatLngZoom( defaultPos, ConnectConfig.GroupFinder_DefaultScale_Android );
+                            Map.AnimateCamera( camPos );
 
-                        // record that this address failed
-                        GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.OutOfBounds, address );
+                            // record that this address failed
+                            GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.OutOfBounds, address );
 
-                        ( ListView.Adapter as GroupArrayAdapter ).SetSelectedRow( -1 );
+                            ( ListView.Adapter as GroupArrayAdapter ).SetSelectedRow( -1 );
+                        }
+                        else
+                        {
+                            // there was actually an error. Let them know.
+                            SearchResultPrefix.Text = "There was a problem reaching the server. Please try again.";
+                            SearchResultNeighborhood.Text = string.Empty;
+                        }
                     }
                 }
 
@@ -655,7 +664,7 @@ namespace Droid
                                     RetrievingGroups = true;
 
                                     CCVApp.Shared.GroupFinder.GetGroups( streetValue, cityValue, stateValue, zipValue, 
-                                        delegate( GroupFinder.GroupEntry sourceLocation, List<GroupFinder.GroupEntry> groupEntries )
+                                        delegate( GroupFinder.GroupEntry sourceLocation, List<GroupFinder.GroupEntry> groupEntries, bool result )
                                         {
                                             BlockerView.Hide( delegate
                                                 {
@@ -668,7 +677,7 @@ namespace Droid
 
                                                     GroupEntries = groupEntries;
 
-                                                    UpdateMap( );
+                                                    UpdateMap( result );
 
                                                     RetrievingGroups = false;
                                                 });

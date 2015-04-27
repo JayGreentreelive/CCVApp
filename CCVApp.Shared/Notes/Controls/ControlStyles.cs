@@ -147,6 +147,13 @@ namespace CCVApp
                     /// </summary>
                     public float? mBorderRadius;
 
+                    /// <summary>
+                    /// Used only by the main Note element. If true, causes the
+                    /// note container to span the entire width of the screen,
+                    /// rather than be affected by the note's padding.
+                    /// </summary>
+                    public bool? mFullWidthHeader;
+
                     public void Initialize( )
                     {
                         mFont = new FontParams( );
@@ -256,7 +263,7 @@ namespace CCVApp
                             }
                         }
 
-                        // check for background color
+                        // check for background color: DOES NOT INHERIT
                         result = reader.GetAttribute( "BackgroundColor" );
                         if ( string.IsNullOrEmpty( result ) == false )
                         {
@@ -272,6 +279,13 @@ namespace CCVApp
                         if( string.IsNullOrEmpty( result ) == false )
                         {
                             style.mTextInputBackgroundColor = ParseColor( result );
+                        }
+
+                        // check for full width header (note only)
+                        result = reader.GetAttribute( "FullWidthHeader" );
+                        if ( string.IsNullOrEmpty( result ) == false )
+                        {
+                            style.mFullWidthHeader = bool.Parse( result );
                         }
 
                         // check for list bullet point (lists only)
@@ -476,6 +490,12 @@ namespace CCVApp
                         if( style.mTextInputBackgroundColor.HasValue == false )
                         {
                             style.mTextInputBackgroundColor = defaultStyle.mTextInputBackgroundColor;
+                        }
+
+                        // check for note specific
+                        if ( style.mFullWidthHeader == null )
+                        {
+                            style.mFullWidthHeader = defaultStyle.mFullWidthHeader;
                         }
 
                         // check for list specifics
@@ -683,6 +703,7 @@ namespace CCVApp
                     mMainNote.Initialize();
 
                     mMainNote.mBackgroundColor = 0x000000FF;
+                    mMainNote.mFullWidthHeader = false;
                 }
 
                 static void CreateParagraphStyle()

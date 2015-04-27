@@ -178,7 +178,8 @@ namespace CCVApp
                             case XmlNodeType.EndElement:
                             {
                                 // if we hit the end of our label, we're done.
-                                if( reader.Name == "List" || reader.Name == "L" )
+                                //if( reader.Name == "List" || reader.Name == "L" )
+                                if( ElementTagMatches( reader.Name ) )
                                 {
                                     finishedParsing = true;
                                 }
@@ -336,6 +337,15 @@ namespace CCVApp
                         htmlStream += "</ul>";
                     }
                     // closing markup
+                }
+
+                public static bool ElementTagMatches(string elementTag)
+                {
+                    if ( elementTag == "L" || elementTag == "List" )
+                    {
+                        return true;
+                    }
+                    return false;
                 }
 
                 public override bool ShouldShowBulletPoint( )

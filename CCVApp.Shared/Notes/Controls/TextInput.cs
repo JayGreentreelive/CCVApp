@@ -121,7 +121,8 @@ namespace CCVApp
                                 case XmlNodeType.EndElement:
                                 {
                                     // if we hit the end of our label, we're done.
-                                    if( reader.Name == "TextInput" || reader.Name == "TI" )
+                                    //if( reader.Name == "TextInput" || reader.Name == "TI" )
+                                    if( ElementTagMatches( reader.Name ) )
                                     {
                                         finishedLabel = true;
                                     }
@@ -203,6 +204,15 @@ namespace CCVApp
                 public override RectangleF GetFrame( )
                 {
                     return TextView.Frame;
+                }
+
+                public static bool ElementTagMatches(string elementTag)
+                {
+                    if ( elementTag == "TI" || elementTag == "TextInput" )
+                    {
+                        return true;
+                    }
+                    return false;
                 }
 
                 public NoteState.TextInputState GetState()

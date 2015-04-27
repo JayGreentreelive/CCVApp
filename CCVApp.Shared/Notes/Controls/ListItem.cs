@@ -131,7 +131,8 @@ namespace CCVApp
                             case XmlNodeType.EndElement:
                             {
                                 // if we hit the end of our label, we're done.
-                                    if( reader.Name == "ListItem" || reader.Name == "LI" )
+                                //if( reader.Name == "ListItem" || reader.Name == "LI" )
+                                if( ElementTagMatches( reader.Name ) )
                                 {
                                     finishedParsing = true;
                                 }
@@ -165,6 +166,15 @@ namespace CCVApp
 
                     // closing markup
                     htmlStream += "</li>";
+                }
+
+                public static bool ElementTagMatches(string elementTag)
+                {
+                    if ( elementTag == "LI" || elementTag == "ListItem" )
+                    {
+                        return true;
+                    }
+                    return false;
                 }
 
                 protected override List<IUIControl> GetChildControls( )

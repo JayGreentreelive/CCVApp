@@ -32,7 +32,7 @@ namespace CCVApp.Shared
             public int Id { get; set; }
         }
 
-        public delegate void GetGroupsComplete( GroupEntry sourceLocation, List<GroupEntry> groupEntry );
+        public delegate void GetGroupsComplete( GroupEntry sourceLocation, List<GroupEntry> groupEntry, bool result );
         public static void GetGroups( string street, string city, string state, string zip, GetGroupsComplete onCompletion )
         {
             List<GroupEntry> groupEntries = new List<GroupEntry>();
@@ -58,6 +58,8 @@ namespace CCVApp.Shared
                             model.Id,
                             delegate(System.Net.HttpStatusCode groupStatusCode, string groupStatusDescription, List<Rock.Client.Group> rockGroupList )
                             {
+                                bool result = false;
+
                                 if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
                                 {
                                     // first thing we receive is the "area" group(s)
@@ -105,17 +107,19 @@ namespace CCVApp.Shared
                                             entry.Longitude = location.Longitude.Value;
 
                                             groupEntries.Add( entry );
+
+                                            result = true;
                                         }
                                     }
                                 }
 
                                 // our network delegate has been invoked and compelted, so now call whoever called us.
-                                onCompletion( sourceLocation, groupEntries );
+                                onCompletion( sourceLocation, groupEntries, result );
                             } );
                     }
                     else
                     {
-                        onCompletion( sourceLocation, groupEntries );
+                        onCompletion( sourceLocation, groupEntries, false );
                     }
                 } );
         }
