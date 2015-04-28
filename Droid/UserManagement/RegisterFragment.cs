@@ -290,19 +290,22 @@ namespace Droid
 
                     // create a new user and submit them
                     Rock.Client.Person newPerson = new Rock.Client.Person();
-                    Rock.Client.PhoneNumber newPhoneNumber = new Rock.Client.PhoneNumber();
+                    Rock.Client.PhoneNumber newPhoneNumber = null;
 
                     // copy all the edited fields into the person object
                     newPerson.Email = EmailText.Text;
 
                     newPerson.NickName = NickNameText.Text;
                     newPerson.LastName = LastNameText.Text;
+                    newPerson.ConnectionStatusValueId = GeneralConfig.PersonConnectionStatusValueId;
+                    newPerson.RecordStatusValueId = GeneralConfig.PersonRecordStatusValueId;
 
                     // Update their cell phone. 
                     if ( string.IsNullOrEmpty( CellPhoneText.Text ) == false )
                     {
                         // update the phone number
                         string digits = CellPhoneText.Text.AsNumeric( );
+                        newPhoneNumber = new Rock.Client.PhoneNumber();
                         newPhoneNumber.Number = digits;
                         newPhoneNumber.NumberFormatted = digits.AsPhoneNumber( );
                         newPhoneNumber.NumberTypeValueId = GeneralConfig.CellPhoneValueId;
@@ -327,7 +330,7 @@ namespace Droid
                                 State = RegisterState.Fail;
                                 ResultView.Show( RegisterStrings.RegisterStatus_Failed, 
                                     ControlStylingConfig.Result_Symbol_Failed, 
-                                    RegisterStrings.RegisterResult_Failed,
+                                    statusDescription == RegisterStrings.RegisterResult_BadLogin ? RegisterStrings.RegisterResult_LoginUsed : RegisterStrings.RegisterResult_Failed,
                                     GeneralStrings.Done );
                             }
 
@@ -397,6 +400,13 @@ namespace Droid
                 emailTargetColor = ControlStylingConfig.BadInput_BG_Layer_Color;
                 result = false;
             }
+            // otherwise, if they used email and didn't give it a proper format, they also fail.
+            else if ( string.IsNullOrEmpty( EmailText.Text ) == false && EmailText.Text.IsEmailFormat( ) == false )
+            {
+                emailTargetColor = ControlStylingConfig.BadInput_BG_Layer_Color;
+                result = false;
+            }
+
             Rock.Mobile.PlatformSpecific.Android.UI.Util.AnimateViewColor( EmailBGColor, emailTargetColor, CellPhoneLayer, delegate { EmailBGColor = emailTargetColor; } );
             Rock.Mobile.PlatformSpecific.Android.UI.Util.AnimateViewColor( EmailBGColor, emailTargetColor, EmailLayer, delegate { EmailBGColor = emailTargetColor; } );
 

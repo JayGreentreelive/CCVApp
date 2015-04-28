@@ -310,7 +310,6 @@ namespace CCVApp.Shared.UI
             targetColor = ControlStylingConfig.BG_Layer_Color;
             if ( string.IsNullOrEmpty( ZipCode.Text ) == true )
             {
-                // if failure, only color email
                 targetColor = ControlStylingConfig.BadInput_BG_Layer_Color;
                 result = false;
             }

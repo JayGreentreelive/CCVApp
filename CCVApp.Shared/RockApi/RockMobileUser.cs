@@ -234,16 +234,10 @@ namespace CCVApp
                     if ( _CellPhoneNumber == null )
                     {
                         _CellPhoneNumber = new Rock.Client.PhoneNumber();
-                        _CellPhoneNumber.Number = digits;
-                        _CellPhoneNumber.NumberFormatted = digits.AsPhoneNumber( );
-                        _CellPhoneNumber.NumberTypeValueId = GeneralConfig.CellPhoneValueId;
-                        _CellPhoneNumber.Guid = Guid.NewGuid( );
                     }
-                    else
-                    {
-                        _CellPhoneNumber.Number = digits;
-                        _CellPhoneNumber.NumberFormatted = digits.AsPhoneNumber( );
-                    }
+
+                    _CellPhoneNumber.Number = digits;
+                    _CellPhoneNumber.NumberFormatted = digits.AsPhoneNumber( );
                 }
 
                 private RockMobileUser( )

@@ -237,30 +237,40 @@ namespace CCVApp
                             {
                                 Console.WriteLine( "Got news from Rock." );
 
-                                // sort it by priority
-                                model.Sort( delegate(Rock.Client.ContentChannelItem x, Rock.Client.ContentChannelItem y )
-                                    {
-                                        return x.Priority > y.Priority ? -1 : 1;
-                                    } );
-
-                                // setup the new rock news
-                                Data.News.Clear( );
-                                foreach( Rock.Client.ContentChannelItem item in model )
+                                // before comitting to this news, make sure there's at least one valid news item.
+                                if( model.Count > 0 && model[ 0 ].AttributeValues != null )
                                 {
-                                    string featuredGuid = item.AttributeValues[ "FeatureImage" ].Value;
-                                    string imageUrl = "http://rock.ccvonline.com/GetImage.ashx?Guid=" + featuredGuid;
+                                    // sort it by priority
+                                    model.Sort( delegate(Rock.Client.ContentChannelItem x, Rock.Client.ContentChannelItem y )
+                                        {
+                                            return x.Priority > y.Priority ? -1 : 1;
+                                        } );
+                                    
+                                    // clear existing news
+                                    Data.News.Clear( );
 
-                                    string bannerGuid = item.AttributeValues[ "PromotionImage" ].Value;
-                                    string bannerUrl = "http://rock.ccvonline.com/GetImage.ashx?Guid=" + bannerGuid;
+                                    // parse and take the new items
+                                    foreach( Rock.Client.ContentChannelItem item in model )
+                                    {
+                                        // it's possible rock sent us bad data, so guard against any incomplete news items
+                                        if( item.AttributeValues != null )
+                                        {
+                                            string featuredGuid = item.AttributeValues[ "FeatureImage" ].Value;
+                                            string imageUrl = "http://rock.ccvonline.com/GetImage.ashx?Guid=" + featuredGuid;
 
-                                    string detailUrl = item.AttributeValues[ "DetailsURL" ].Value;
+                                            string bannerGuid = item.AttributeValues[ "PromotionImage" ].Value;
+                                            string bannerUrl = "http://rock.ccvonline.com/GetImage.ashx?Guid=" + bannerGuid;
 
-                                    // take either the campus guid or empty, if there is no campus assigned (meaning the news should be displayed for ALL campuses)
-                                    string guidStr = item.AttributeValues[ "Campus" ].Value;
-                                    Guid campusGuid = string.IsNullOrEmpty( guidStr ) == false ? new Guid( guidStr ) : Guid.Empty;
+                                            string detailUrl = item.AttributeValues[ "DetailsURL" ].Value;
 
-                                    RockNews newsItem = new RockNews( item.Title, item.Content, detailUrl, imageUrl, item.Title + "_main.png", bannerUrl, item.Title + "_banner.png", campusGuid );
-                                    Data.News.Add( newsItem );
+                                            // take either the campus guid or empty, if there is no campus assigned (meaning the news should be displayed for ALL campuses)
+                                            string guidStr = item.AttributeValues[ "Campus" ].Value;
+                                            Guid campusGuid = string.IsNullOrEmpty( guidStr ) == false ? new Guid( guidStr ) : Guid.Empty;
+
+                                            RockNews newsItem = new RockNews( item.Title, item.Content, detailUrl, imageUrl, item.Title + "_main.png", bannerUrl, item.Title + "_banner.png", campusGuid );
+                                            Data.News.Add( newsItem );
+                                        }
+                                    }
                                 }
                             }
                             else

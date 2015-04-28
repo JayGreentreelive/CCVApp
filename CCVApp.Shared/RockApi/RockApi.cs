@@ -6,6 +6,7 @@ using System.Net;
 using System.Collections.Generic;
 using Rock.Mobile.Network;
 using CCVApp.Shared.Config;
+using CCVApp.Shared.Strings;
 
 namespace CCVApp
 {
@@ -279,12 +280,12 @@ namespace CCVApp
                 public void UpdateProfile( Rock.Client.Person person, HttpRequest.RequestResult resultHandler )
                 {
                     // update the profile by the personID
-                    RestRequest request = GetRockRestRequest( Method.PUT );
-                    request.AddBody( person );
-
                     ResolvePersonAliasId( person, 
                         delegate(int personId )
                         {
+                            RestRequest request = GetRockRestRequest( Method.PUT );
+                            request.AddBody( person );
+
                             Request.ExecuteAsync( BaseUrl + PutPostProfileEndPoint + personId, request, resultHandler );
                         } );
                 }
@@ -293,15 +294,15 @@ namespace CCVApp
                 {
                     //JHM 3-11-15 ALMOST FRIDAY THE 13th SIX YEARS LATER YAAAHH!!!!!
                     //Until we release, or at least are nearly done testing, do not allow actual user registrations.
-                    resultHandler( HttpStatusCode.OK, "" );
-                    return;
+                    //resultHandler( HttpStatusCode.OK, "" );
+                    //return;
                     
                     // this is a complex end point. To register a user is a multiple step process.
                     //1. Create a new Person on Rock
                     //2. Request that Person back
                     //3. Create a new Login for that person
                     //4. Post the location, phone number and home campus
-                    /*person.Guid = Guid.NewGuid( );
+                    person.Guid = Guid.NewGuid( );
 
                     CreateProfile( person, 
                         delegate(System.Net.HttpStatusCode statusCode, string statusDescription )
@@ -309,12 +310,12 @@ namespace CCVApp
                             if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) )
                             {
                                 GetProfileByGuid( person.Guid,
-                                    delegate(System.Net.HttpStatusCode personStatusCode, string personStatusDescription, Rock.Client.Person model) 
+                                    delegate(System.Net.HttpStatusCode personStatusCode, string personStatusDescription, Rock.Client.Person createdPerson ) 
                                     {
                                         if ( Rock.Mobile.Network.Util.StatusInSuccessRange( personStatusCode ) )
                                         {
                                             // it worked. now put their login info. Waiting for mike to give me a handy model. yay.
-                                            CreateLogin( model.Id, username, password, 
+                                            CreateLogin( createdPerson.Id, username, password, 
                                                 delegate(System.Net.HttpStatusCode loginStatusCode, string loginStatusDescription) 
                                                 {
                                                     // if this worked, we are home free
@@ -323,15 +324,15 @@ namespace CCVApp
                                                         // now update their phone number, if valid
                                                         if( phoneNumber != null )
                                                         {
-                                                            phoneNumber.PersonId = model.Id;
-                                                            phoneNumber.Guid = Guid.NewGuid( );
-
-                                                            UpdatePhoneNumber( phoneNumber, true, 
+                                                            UpdatePhoneNumber( createdPerson, phoneNumber, true, 
                                                                 delegate(HttpStatusCode phoneStatusCode, string phoneStatusDescription) 
                                                                 {
+                                                                    // NOTICE: We are passing back the loginStatus, not the phone status.
+                                                                    // This is because if the login was created, we're DONE and they can login.
+                                                                    // Updating their phone number is purely a bonus.
                                                                     if( resultHandler != null )
                                                                     {
-                                                                        resultHandler( phoneStatusCode, phoneStatusDescription );
+                                                                        resultHandler( loginStatusCode, loginStatusDescription );
                                                                     }
                                                                 });
                                                         }
@@ -340,7 +341,7 @@ namespace CCVApp
                                                             // phone number not provided, go with the result of the login creation
                                                             if( resultHandler != null )
                                                             {
-                                                                resultHandler( loginStatusCode, loginStatusDescription );
+                                                                resultHandler( loginStatusCode, RegisterStrings.RegisterResult_BadLogin );
                                                             }
                                                         }
                                                     }
@@ -349,7 +350,7 @@ namespace CCVApp
                                                         // Failed
                                                         if( resultHandler != null )
                                                         {
-                                                            resultHandler( loginStatusCode, loginStatusDescription );
+                                                            resultHandler( loginStatusCode, RegisterStrings.RegisterResult_BadLogin );
                                                         }
                                                     }
                                                 });
@@ -372,7 +373,7 @@ namespace CCVApp
                                     resultHandler( statusCode, statusDescription );
                                 }
                             }
-                        } );*/
+                        } );
                 }
 
                 public void JoinGroup( Rock.Client.Person person, string firstName, string lastName, string spouseName, string email, string phone, int groupId, string groupName, HttpRequest.RequestResult resultHandler )
@@ -533,6 +534,10 @@ namespace CCVApp
                             string requestUrl = PutPhoneNumberEndPoint;
                             if ( isNew )
                             {
+                                // set the required values for a new phone number
+                                phoneNumber.Guid = Guid.NewGuid( );
+                                phoneNumber.NumberTypeValueId = GeneralConfig.CellPhoneValueId;
+
                                 request = GetRockRestRequest( Method.POST );
                             }
                             else
@@ -786,8 +791,11 @@ namespace CCVApp
                     Request.ExecuteAsync<PersonIdObj>( BaseUrl + GetPersonAliasId + person.PrimaryAliasId, request, 
                         delegate(HttpStatusCode statusCode, string statusDescription, PersonIdObj model )
                         {
-                            if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
+                            if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true && model != null )
                             {
+                                // sync the new person ID.
+                                person.Id = model.PersonId;
+
                                 onComplete( model.PersonId );
                             }
                             else

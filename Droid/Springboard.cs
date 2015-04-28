@@ -24,6 +24,8 @@ using Android.Graphics.Drawables;
 using Rock.Mobile.PlatformSpecific.Android.Graphics;
 using Rock.Mobile.PlatformSpecific.Android.UI;
 using Rock.Mobile.Animation;
+using Droid.Tasks.Give;
+using CCVApp.Shared.Analytics;
 
 
 namespace Droid
@@ -1110,16 +1112,29 @@ namespace Droid
 
         void ActivateElement( SpringboardElement activeElement )
         {
-            foreach( SpringboardElement element in Elements )
+            // total hack - If they tap Give, we'll kick them out to the give URL, leaving the app
+            // in this state.
+            if ( activeElement.Task as GiveTask != null )
             {
-                if( activeElement != element )
-                {
-                    element.Deactivate( );
-                }
-            }
+                GiveAnalytic.Instance.Trigger( GiveAnalytic.Give );
 
-            activeElement.Activate( );
-            NavbarFragment.SetActiveTask( activeElement.Task );
+                var uri = Android.Net.Uri.Parse( GiveConfig.GiveUrl );
+                var intent = new Intent( Intent.ActionView, uri ); 
+                ((Activity)Rock.Mobile.PlatformSpecific.Android.Core.Context).StartActivity( intent );
+            }
+            else
+            {
+                foreach ( SpringboardElement element in Elements )
+                {
+                    if ( activeElement != element )
+                    {
+                        element.Deactivate( );
+                    }
+                }
+
+                activeElement.Activate( );
+                NavbarFragment.SetActiveTask( activeElement.Task );
+            }
         }
 
         public override void OnStop()

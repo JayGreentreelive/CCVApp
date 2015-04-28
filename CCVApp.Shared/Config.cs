@@ -73,6 +73,8 @@ namespace CCVApp
                 public const int GeneralDataTimeValueId = 2623;
                 public const int UserLoginEntityTypeId = 27;
                 public const int GroupRegistrationValueId = 52;
+                public const int PersonConnectionStatusValueId = 146;
+                public const int PersonRecordStatusValueId = 5;
 
                 /// <summary>
                 /// iOS only, this controls what style of keyboard is used for PLATFORM textFields.

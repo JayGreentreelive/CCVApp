@@ -103,6 +103,8 @@ namespace iOS
             SourceImage = image;
 
             OrientationState = -1;
+
+            View.SetNeedsLayout( );
         }
 
         public override bool ShouldAutorotate()

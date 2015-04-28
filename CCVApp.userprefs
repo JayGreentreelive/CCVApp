@@ -1,37 +1,44 @@
-﻿<Properties StartupItem="iOS/iOS.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhone4s.8.3" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/AppDelegate.cs">
+﻿<Properties StartupItem="Droid/Droid.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.192.168.56.101:5555" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="CCVApp.Shared/Config.cs">
     <Files>
-      <File FileName="Droid/MainActivity.cs" Line="56" Column="53" />
-      <File FileName="iOS/Tasks/Notes/NotesViewController.cs" Line="647" Column="80" />
-      <File FileName="Droid/Tasks/ConnectTask/ConnectPrimaryFragment.cs" Line="242" Column="18" />
-      <File FileName="iOS/AppDelegate.cs" Line="25" Column="21" />
-      <File FileName="CCVApp.Shared/Analytics.cs" Line="71" Column="13" />
+      <File FileName="CCVApp.Shared/Config.cs" Line="77" Column="63" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="CCVApp.Shared" expanded="True" />
+          <Node name="CCVApp.Shared" expanded="True">
+            <Node name="Notes" expanded="True" />
+            <Node name="RockApi" expanded="True" />
+            <Node name="Config.cs" selected="True" />
+          </Node>
           <Node name="Droid" expanded="True">
-            <Node name="Properties" expanded="True" />
-            <Node name="Tasks" expanded="True">
-              <Node name="ConnectTask" expanded="True" />
-            </Node>
+            <Node name="Tasks" expanded="True" />
+            <Node name="UserManagement" expanded="True" />
           </Node>
           <Node name="iOS" expanded="True">
             <Node name="Tasks" expanded="True">
               <Node name="Notes" expanded="True" />
             </Node>
-            <Node name="AppDelegate.cs" selected="True" />
+            <Node name="UserManagement" expanded="True" />
+          </Node>
+          <Node name="Rock.Client.Models" expanded="True" />
+          <Node name="Rock.Mobile" expanded="True">
+            <Node name="Network" expanded="True" />
+            <Node name="PlatformSpecific" expanded="True">
+              <Node name="Android" expanded="True" />
+            </Node>
+            <Node name="PlatformUtil" expanded="True" />
           </Node>
         </State>
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="/Users/jered/Projects/CCVApp/iOS/Tasks/Notes/NotesViewController.cs" line="645" column="44" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches>
     <Watch file="CCVApp.Shared/Notes/Controls/Note.cs" line="533" offsetX="1058" offsetY="7980" expression="state" liveUpdate="False" />

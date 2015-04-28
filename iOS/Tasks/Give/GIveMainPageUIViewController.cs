@@ -37,14 +37,5 @@ namespace iOS
             GiveButton.Frame = new CoreGraphics.CGRect( ( View.Bounds.Width - GiveButton.Bounds.Width ) / 2, ( View.Bounds.Height - GiveButton.Bounds.Height ) / 2, GiveButton.Bounds.Width, GiveButton.Bounds.Height );
             View.AddSubview( GiveButton );
         }
-
-        public override void ViewWillAppear(bool animated)
-        {
-            base.ViewWillAppear(animated);
-
-            // hack - simply kick them out to the site when they tap Give. 
-            // not fully implementing nicely until we decide if we want to do this or not.
-            UIApplication.SharedApplication.OpenUrl( new NSUrl( GiveConfig.GiveUrl ) );
-        }
 	}
 }

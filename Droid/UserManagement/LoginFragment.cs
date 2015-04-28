@@ -232,16 +232,16 @@ namespace Droid
                         WebLayout.ResetCookies( );
 
                         WebLayout.LoadUrl( fromUri, 
-                            delegate( bool result )
+                            delegate( bool result, string forwardUrl )
                             {
                                 // either way, wait for a facebook response
-                                if ( RockMobileUser.Instance.HasFacebookResponse( fromUri, Session ) )
+                                if ( RockMobileUser.Instance.HasFacebookResponse( forwardUrl, Session ) )
                                 {
                                     BindingFacebook = false;
 
                                     SetUIState( LoginState.Trying );
                                     ( View as RelativeLayout ).RemoveView( WebLayout );
-                                    RockMobileUser.Instance.FacebookCredentialResult( fromUri, Session, BindComplete );
+                                    RockMobileUser.Instance.FacebookCredentialResult( forwardUrl, Session, BindComplete );
                                 }
                             } );
                         //

@@ -16,6 +16,7 @@ using Rock.Mobile.PlatformSpecific.iOS.Graphics;
 using Rock.Mobile.PlatformSpecific.iOS.UI;
 using CCVApp.Shared;
 using Rock.Mobile.Animation;
+using CCVApp.Shared.Analytics;
 
 namespace iOS
 {
@@ -900,25 +901,35 @@ namespace iOS
 
         protected void ActivateElement( SpringboardElement activeElement, bool forceActivate = false )
         {
-            // don't allow any navigation while the login controller is active.
-            // If forceOpen is enabled, we'll allow it regardless.
-            if ( (ModalControllerVisible == false && NavViewController.IsSpringboardOpen( ) == true) || forceActivate == true )
+            // total hack - If they tap Give, we'll kick them out to the give URL, leaving the app
+            // in this state.
+            if ( activeElement.Task as GiveTask != null )
             {
-                // make sure we're allowed to switch activities
-                if ( NavViewController.ActivateTask( activeElement.Task ) == true )
+                GiveAnalytic.Instance.Trigger( GiveAnalytic.Give );
+                UIApplication.SharedApplication.OpenUrl( new NSUrl( GiveConfig.GiveUrl ) );
+            }
+            else
+            {
+                // don't allow any navigation while the login controller is active.
+                // If forceOpen is enabled, we'll allow it regardless.
+                if ( ( ModalControllerVisible == false && NavViewController.IsSpringboardOpen( ) == true ) || forceActivate == true )
                 {
-                    // first turn "off" the backingView selection for all but the element
-                    // becoming active.
-                    foreach ( SpringboardElement element in Elements )
+                    // make sure we're allowed to switch activities
+                    if ( NavViewController.ActivateTask( activeElement.Task ) == true )
                     {
-                        if ( element != activeElement )
+                        // first turn "off" the backingView selection for all but the element
+                        // becoming active.
+                        foreach ( SpringboardElement element in Elements )
                         {
-                            element.Deactivate( );
+                            if ( element != activeElement )
+                            {
+                                element.Deactivate( );
+                            }
                         }
-                    }
 
-                    // activate the element and its associated task
-                    activeElement.Activate( );
+                        // activate the element and its associated task
+                        activeElement.Activate( );
+                    }
                 }
             }
         }
@@ -1246,6 +1257,7 @@ namespace iOS
             //if ( DateTime.Now.Subtract( LastRockSync ).TotalHours > SpringboardConfig.SyncRockHoursFrequency )
             {
                 SyncRockData( );
+                UpdateLoginState( );
             }
         }
 

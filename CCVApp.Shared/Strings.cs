@@ -111,6 +111,8 @@ namespace CCVApp.Shared
 
             public const string RegisterResult_Success = "All set! You're now registered with CCV.";
             public const string RegisterResult_Failed = "Looks like there was a problem registering. Make sure you're connected to the internet and try again.";
+            public const string RegisterResult_LoginUsed = "This username is already taken. Please try a different one.";
+            public const string RegisterResult_BadLogin = "CreateLoginError";
         }
 
         public class ProfileStrings

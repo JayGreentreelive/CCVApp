@@ -26,8 +26,6 @@ namespace iOS
 
             // set our current page as root
             parentViewController.PushViewController(MainPageVC, false);
-
-            GiveAnalytic.Instance.Trigger( GiveAnalytic.Give );
         }
 
         public override void MakeInActive( )

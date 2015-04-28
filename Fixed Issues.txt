@@ -4,10 +4,16 @@ Changes
 Both
 	Data will now update anytime the app is backgrounded and resumed.
 	-Fixes an issue where you might not see the latest sermon notes.
+	-Fixes an issue where profile changes made outside the app would not be seen.
 
 	Use the person's alias ID where appropriate. (Fixes duplicate person issues.)
+
+	Fixed lots of issues with user registration
 
 iOS
 	Fixed an issue causing prayer cards to glitch if swiped near the Prayer button.
 
+	Fixed an issue causing the Image Cropper to only work once per run.
+
 Android
+	Fixed an issue preventing Facebook login from working

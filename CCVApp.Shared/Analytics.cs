@@ -90,7 +90,9 @@ namespace CCVApp.Shared
                     System.Collections.Generic.Dictionary<string, string> attribs = new System.Collections.Generic.Dictionary<string, string>( );
                     attribs.Add( categoryObj.Name, action );
 
+                    #if !DEBUG
                     Localytics.TagEvent( Name, attribs );
+                    #endif
                     #endif
                 }
             }

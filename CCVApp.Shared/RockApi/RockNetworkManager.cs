@@ -1,6 +1,7 @@
 using System;
 using CCVApp.Shared.Network;
 using Rock.Mobile.Network;
+using CCVApp.Shared.Config;
 
 namespace CCVApp
 {
@@ -41,9 +42,23 @@ namespace CCVApp
                                 //( this includes notes, profile changes, etc.)
                                 RockApi.Instance.SyncWithServer( delegate 
                                     {
-                                        // failure or not, server syncing is finished, so let's go ahead and 
-                                        // get launch data.
-                                        RockLaunchData.Instance.GetLaunchData( LaunchDataReceived );
+                                        // now get their profile. Assuming there weren't any profile changes, this will download
+                                        // their latest profile. That way if someone made a change directly in Rock, it'll be reflected here.
+                                        RockMobileUser.Instance.GetProfileAndCellPhone( delegate 
+                                            {
+                                                // get the address, which is certainly part
+                                                RockMobileUser.Instance.GetFamilyAndAddress( delegate 
+                                                    {
+                                                        // and hey, why not their profile picture too
+                                                        // if they have a profile picture, grab it.
+                                                        RockMobileUser.Instance.TryDownloadProfilePicture( GeneralConfig.ProfileImageSize, delegate 
+                                                            {
+                                                                // failure or not, server syncing is finished, so let's go ahead and 
+                                                                // get launch data.
+                                                                RockLaunchData.Instance.GetLaunchData( LaunchDataReceived );     
+                                                            });
+                                                    });
+                                            });
                                     });
                             }
                             else

@@ -280,11 +280,17 @@ namespace CCVApp.Shared.UI
             targetColor = ControlStylingConfig.BG_Layer_Color;
             if ( string.IsNullOrEmpty( Email.Text ) == true && string.IsNullOrEmpty( CellPhone.Text ) == true )
             {
-                // if failure, only color email
                 targetColor = ControlStylingConfig.BadInput_BG_Layer_Color;
                 result = false;
             }
+            else if ( string.IsNullOrEmpty( Email.Text ) == false && Email.Text.IsEmailFormat( ) == false )
+            {
+                targetColor = ControlStylingConfig.BadInput_BG_Layer_Color;
+                result = false;
+            }
+
             Util.AnimateBackgroundColor( EmailLayer, targetColor );
+            Util.AnimateBackgroundColor( CellPhoneLayer, targetColor );
 
             return result;
         }

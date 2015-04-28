@@ -208,12 +208,6 @@ namespace iOS
         {
             base.ViewDidLayoutSubviews();
 
-            // for the scroll size, if the content is larger than the screen, we'll take the bottom
-            // of the content plus some padding. Otherwise, we'll just use the window height plus a tiny bit so there's
-            // a subtle scroll effect
-            nfloat controlBottom = DoneButton.Frame.Bottom + ( View.Bounds.Height * .25f );
-            ScrollView.ContentSize = new CGSize( 0, (nfloat) Math.Max( controlBottom, View.Bounds.Height * 1.05f ) );
-
             HeaderView.Frame = new CGRect( View.Frame.Left, View.Frame.Top, View.Frame.Width, StyledTextField.StyledFieldHeight );
 
             ScrollView.Frame = new CGRect( View.Frame.Left, HeaderView.Frame.Bottom, View.Frame.Width, View.Frame.Height - HeaderView.Frame.Height );
@@ -231,6 +225,11 @@ namespace iOS
             DoneButton.Frame = new CGRect( View.Frame.Left + 10, CellPhoneText.Background.Frame.Bottom + 20, View.Bounds.Width - 20, ControlStyling.ButtonHeight );
             CancelButton.Frame = new CGRect( ( View.Frame.Width - ControlStyling.ButtonWidth) / 2, DoneButton.Frame.Bottom + 20, ControlStyling.ButtonWidth, ControlStyling.ButtonHeight );
 
+            // for the scroll size, if the content is larger than the screen, we'll take the bottom
+            // of the content plus some padding. Otherwise, we'll just use the window height plus a tiny bit so there's
+            // a subtle scroll effect
+            nfloat controlBottom = CancelButton.Frame.Bottom + ( View.Bounds.Height * .25f );
+            ScrollView.ContentSize = new CGSize( 0, (nfloat) Math.Max( controlBottom, View.Bounds.Height * 1.05f ) );
 
             // setup the header shadow
             UIBezierPath shadowPath = UIBezierPath.FromRect( HeaderView.Bounds );
@@ -347,6 +346,13 @@ namespace iOS
                 targetColor = ControlStylingConfig.BadInput_BG_Layer_Color;
                 result = false;
             }
+            // otherwise, if they used email and didn't give it a proper format, they also fail.
+            else if ( string.IsNullOrEmpty( EmailText.Field.Text ) == false && EmailText.Field.Text.IsEmailFormat( ) == false)
+            {
+                // if failure, only color email
+                targetColor = ControlStylingConfig.BadInput_BG_Layer_Color;
+                result = false;
+            }
             Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetColor, EmailText.Background );
             Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetColor, CellPhoneText.Background );
 
@@ -371,22 +377,24 @@ namespace iOS
 
                             // create a new user and submit them
                             Rock.Client.Person newPerson = new Rock.Client.Person();
-                            Rock.Client.PhoneNumber newPhoneNumber = new Rock.Client.PhoneNumber();
+                            Rock.Client.PhoneNumber newPhoneNumber = null;
 
                             // copy all the edited fields into the person object
                             newPerson.Email = EmailText.Field.Text;
 
                             newPerson.NickName = NickNameText.Field.Text;
                             newPerson.LastName = LastNameText.Field.Text;
+                            newPerson.ConnectionStatusValueId = GeneralConfig.PersonConnectionStatusValueId;
+                            newPerson.RecordStatusValueId = GeneralConfig.PersonRecordStatusValueId;
 
                             // Update their cell phone. 
                             if ( string.IsNullOrEmpty( CellPhoneText.Field.Text ) == false )
                             {
                                 // update the phone number
                                 string digits = CellPhoneText.Field.Text.AsNumeric( );
+                                newPhoneNumber = new Rock.Client.PhoneNumber();
                                 newPhoneNumber.Number = digits;
                                 newPhoneNumber.NumberFormatted = digits.AsPhoneNumber( );
-                                newPhoneNumber.NumberTypeValueId = GeneralConfig.CellPhoneValueId;
                             }
 
                             RockApi.Instance.RegisterNewUser( newPerson, newPhoneNumber, UserNameText.Field.Text, PasswordText.Field.Text,
@@ -405,7 +413,7 @@ namespace iOS
                                         State = RegisterState.Fail;
                                         ResultView.Show( RegisterStrings.RegisterStatus_Failed, 
                                             ControlStylingConfig.Result_Symbol_Failed, 
-                                            RegisterStrings.RegisterResult_Failed,
+                                            statusDescription == RegisterStrings.RegisterResult_BadLogin ? RegisterStrings.RegisterResult_LoginUsed : RegisterStrings.RegisterResult_Failed,
                                             GeneralStrings.Done );
                                     }
 

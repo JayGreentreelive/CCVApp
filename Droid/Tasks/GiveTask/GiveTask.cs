@@ -34,14 +34,6 @@ namespace Droid
                 public override void Activate(bool forResume)
                 {
                     base.Activate(forResume);
-
-                    if ( forResume == false )
-                    {
-                        // temp hack to see if we like Give auto launching or not
-                        MainPage.LaunchGive( );
-
-                        GiveAnalytic.Instance.Trigger( GiveAnalytic.Give );
-                    }
                 }
             }
         }

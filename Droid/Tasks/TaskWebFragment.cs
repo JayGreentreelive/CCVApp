@@ -92,7 +92,7 @@ namespace Droid
                 }
             }
 
-            void PageLoaded( bool result )
+            void PageLoaded( bool result, string forwardUrl )
             {
                 if ( IsActive == true )
                 {
