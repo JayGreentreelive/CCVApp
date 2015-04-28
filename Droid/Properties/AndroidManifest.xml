@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="2.0" package="com.jered.ccvmobile2" android:versionCode="16">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="2.0" package="com.ccvonline.CCVMobileApp" android:versionCode="16">
 	<uses-sdk android:minSdkVersion="16" android:targetSdkVersion="21" />
-	<application android:label="CCV Mobile 2" android:icon="@drawable/icon" android:theme="@style/CCVMobileTheme">
+	<application android:label="CCV Mobile" android:icon="@drawable/icon" android:theme="@style/CCVMobileTheme">
 		<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyDEIysN9LbLqYDx8-pvQePayzP0YIwIRPM" />
 		<meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
-		<meta-data android:name="LOCALYTICS_APP_KEY" android:value="9fc62c2f31d6151d89cbd7c-68f09436-a8cb-11e4-a7f7-005cf8cbabd8" />
+		<meta-data android:name="LOCALYTICS_APP_KEY" android:value="b5da9a8d5e23b54319b5903-4d60e47a-edc4-11e4-adb1-005cf8cbabd8" />
 	</application>
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

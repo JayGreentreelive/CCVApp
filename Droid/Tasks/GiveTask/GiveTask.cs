@@ -2,6 +2,7 @@
 using Android.App;
 using Android.Views;
 using CCVApp.Shared.Config;
+using CCVApp.Shared.Analytics;
 
 namespace Droid
 {
@@ -38,6 +39,8 @@ namespace Droid
                     {
                         // temp hack to see if we like Give auto launching or not
                         MainPage.LaunchGive( );
+
+                        GiveAnalytic.Instance.Trigger( GiveAnalytic.Give );
                     }
                 }
             }

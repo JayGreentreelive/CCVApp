@@ -12,7 +12,7 @@ using Com.Localytics.Android;
 
 namespace Droid
 {
-    [Activity( Label = "CCV Mobile 2", NoHistory = true, MainLauncher = true, Icon = "@drawable/icon", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize )]
+    [Activity( Label = "CCV Mobile", NoHistory = true, MainLauncher = true, Icon = "@drawable/icon", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize )]
     public class Splash : Activity
     {
         protected override void OnCreate( Bundle bundle )
@@ -53,7 +53,10 @@ namespace Droid
         }
     }
 
-    [Activity( Label = "CCV Mobile 2", Icon = "@drawable/icon", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize )]
+    //JHM 4-28 - In case we need to change the Localytics key on a per-config basis.
+    //[Application]
+    //[MetaData ("LOCALYTICS_APP_KEY", Value="b5da9a8d5e23b54319b5903-4d60e47a-edc4-11e4-adb1-005cf8cbabd8")]
+    [Activity( Label = "CCV Mobile", Icon = "@drawable/icon", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize )]
     public class MainActivity : Activity
     {
         Springboard Springboard { get; set; }
@@ -62,8 +65,10 @@ namespace Droid
         {
             base.OnCreate( bundle );
 
+            #if !DEBUG
             LocalyticsActivityLifecycleCallbacks callback = new LocalyticsActivityLifecycleCallbacks( this );
             Application.RegisterActivityLifecycleCallbacks( callback );
+            #endif
 
             Window.AddFlags(WindowManagerFlags.Fullscreen);
 

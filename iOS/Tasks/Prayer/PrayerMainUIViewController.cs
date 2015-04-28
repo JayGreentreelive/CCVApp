@@ -111,7 +111,7 @@ namespace iOS
                 {
                     TogglePrayed( true );
                 };
-
+            
 
             // setup the name field
             Name = new UILabel( );

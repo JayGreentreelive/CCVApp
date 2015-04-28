@@ -27,6 +27,8 @@
     <MtouchI18n>
     </MtouchI18n>
     <MtouchArch>i386</MtouchArch>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchUseRefCounting>true</MtouchUseRefCounting>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>full</DebugType>
@@ -50,14 +52,14 @@
     <ConsolePause>false</ConsolePause>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <MtouchDebug>true</MtouchDebug>
-    <CodesignKey>iPhone Developer: Jered McFerron (5U8BJ9M783)</CodesignKey>
+    <CodesignKey>iPhone Developer: Jon Edmiston (H9Y636R8ZP)</CodesignKey>
     <MtouchI18n>
     </MtouchI18n>
     <MtouchArch>ARMv7</MtouchArch>
-    <CodesignProvision>7a22a980-d968-4650-83c9-cd75d0c4964d</CodesignProvision>
     <BuildIpa>true</BuildIpa>
     <IpaPackageName>
     </IpaPackageName>
+    <MtouchUseRefCounting>true</MtouchUseRefCounting>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>full</DebugType>
@@ -68,8 +70,7 @@
     <WarningLevel>4</WarningLevel>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <ConsolePause>false</ConsolePause>
-    <CodesignKey>iPhone Developer: Jered McFerron (5U8BJ9M783)</CodesignKey>
-    <CodesignProvision>7a22a980-d968-4650-83c9-cd75d0c4964d</CodesignProvision>
+    <CodesignKey>iPhone Developer: Jon Edmiston (H9Y636R8ZP)</CodesignKey>
     <MtouchI18n>
     </MtouchI18n>
     <MtouchArch>ARMv7, ARM64</MtouchArch>

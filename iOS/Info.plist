@@ -21,14 +21,12 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>CFBundleDisplayName</key>
-	<string>CCV Mobile 2.0</string>
 	<key>UIMainStoryboardFile</key>
 	<string>MainStoryboard</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
 	<key>CFBundleIdentifier</key>
-	<string>com.jered.ccvmobile2</string>
+	<string>com.ccvonline.CCVMobileApp</string>
 	<key>CFBundleShortVersionString</key>
 	<string>2.0</string>
 	<key>XSLaunchImageAssets</key>
@@ -51,5 +49,7 @@
 	</array>
 	<key>UIStatusBarHidden</key>
 	<true/>
+	<key>CFBundleDisplayName</key>
+	<string>CCV Mobile</string>
 </dict>
 </plist>

@@ -116,6 +116,20 @@ namespace CCVApp.Shared
             public static MessageAnalytic Instance = new MessageAnalytic( );
         }
 
+        public class GiveAnalytic : EventAnalytic
+        {
+            public const string Give = "Give";
+
+            protected GiveAnalytic( ) : base( )
+            {
+                Name = "Give";
+
+                Categories.Add( new Category( Give, true ) );
+            }
+
+            public static GiveAnalytic Instance = new GiveAnalytic( );
+        }
+
         public class PrayerAnalytic : EventAnalytic
         {
             public const string Read = "Read";

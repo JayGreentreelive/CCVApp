@@ -2,6 +2,7 @@ using System;
 using UIKit;
 using CoreGraphics;
 using Foundation;
+using CCVApp.Shared.Analytics;
 
 namespace iOS
 {
@@ -25,6 +26,8 @@ namespace iOS
 
             // set our current page as root
             parentViewController.PushViewController(MainPageVC, false);
+
+            GiveAnalytic.Instance.Trigger( GiveAnalytic.Give );
         }
 
         public override void MakeInActive( )

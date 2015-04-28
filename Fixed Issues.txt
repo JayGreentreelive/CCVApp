@@ -5,6 +5,9 @@ Both
 	Data will now update anytime the app is backgrounded and resumed.
 	-Fixes an issue where you might not see the latest sermon notes.
 
+	Use the person's alias ID where appropriate. (Fixes duplicate person issues.)
+
 iOS
+	Fixed an issue causing prayer cards to glitch if swiped near the Prayer button.
 
 Android

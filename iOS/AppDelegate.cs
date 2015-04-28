@@ -30,7 +30,9 @@ namespace iOS
         //
         public override bool FinishedLaunching( UIApplication app, NSDictionary options )
         {
-            Localytics.AutoIntegrate( "9fc62c2f31d6151d89cbd7c-68f09436-a8cb-11e4-a7f7-005cf8cbabd8", options );
+            #if !DEBUG
+            Localytics.AutoIntegrate( "a9722e06e0ab3ca14721105-4aada4e8-edc0-11e4-314a-004a77f8b47f", options );
+            #endif
 
             // create a new window instance based on the screen size
             window = new UIWindow( UIScreen.MainScreen.Bounds );
