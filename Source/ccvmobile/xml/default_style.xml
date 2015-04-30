@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Styles>
-     <Note FullWidthHeader="true" PaddingLeft="15" PaddingRight="15" BackgroundColor="#262626FF"/>
+     <Note FullWidthHeader="false" PaddingLeft="5%" PaddingRight="5%" BackgroundColor="#262626FF"/>
      <Paragraph/>
      <RevealBox FontName="OpenSans-Bold" FontSize="18" FontColor="#c8c8c8FF"/>
      <Quote BorderWidth="1" BorderColor="#3d3d3dFF" Padding="10" MarginTop="5%" MarginBottom="5%" FontName="OpenSans-Italic" FontSize="18" FontColor="#a7a7a7FF" BackgroundColor="#2d2d2dFF"/>
@@ -9,7 +9,7 @@
      
      <UserNote FontColor="#9a9a9aFF" FontName="OpenSans-Regular" FontSize="16" BorderWidth="2" BorderRadius="5" BorderColor="#323232FF" TextInputBackgroundColor="#505050FF"/>
      
-     <Header.Container PaddingLeft="15" PaddingRight="15" BackgroundColor="#3E3E3EFF" MarginTop="2%" MarginBottom="5%" Alignment="Left"/>
+     <Header.Container PaddingLeft="2%" PaddingRight="2%" BackgroundColor="#3E3E3EFF" MarginTop="2%" MarginBottom="5%" Alignment="Left"/>
      <Header.Title Alignment="Left" FontName="OpenSans-Bold" FontSize="24" FontColor="#AFAFAFFF"/>
      <Header.Speaker FontName="OpenSans-Light" FontSize="16" FontColor="#AFAFAFFF"/>
      <Header.Date FontName="OpenSans-Light" FontSize="16" FontColor="#AFAFAFFF"/>

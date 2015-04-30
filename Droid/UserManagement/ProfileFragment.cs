@@ -31,7 +31,10 @@ namespace Droid
         EditText LastNameField { get; set; }
 
         EditText CellPhoneField { get; set; }
+
         EditText EmailField { get; set; }
+        RelativeLayout EmailLayer { get; set; }
+        uint EmailBGColor { get; set; }
 
         EditText StreetField { get; set; }
         EditText CityField { get; set; }
@@ -88,20 +91,24 @@ namespace Droid
 
 
             // setup the contact section
-            backgroundView = view.FindViewById<RelativeLayout>( Resource.Id.contact_background );
+            EmailLayer = view.FindViewById<RelativeLayout>( Resource.Id.email_background );
+            ControlStyling.StyleBGLayer( EmailLayer );
+            EmailBGColor = ControlStylingConfig.BG_Layer_Color;
+
+            EmailField = EmailLayer.FindViewById<EditText>( Resource.Id.emailAddressText );
+            ControlStyling.StyleTextField( EmailField, ProfileStrings.EmailPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            EmailField.AfterTextChanged += (sender, e) => { Dirty = true; };
+
+            backgroundView = view.FindViewById<RelativeLayout>( Resource.Id.cellphone_background );
             ControlStyling.StyleBGLayer( backgroundView );
+
+            borderView = backgroundView.FindViewById<View>( Resource.Id.middle_border );
+            borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
             CellPhoneField = backgroundView.FindViewById<EditText>( Resource.Id.cellPhoneText );
             ControlStyling.StyleTextField( CellPhoneField, ProfileStrings.CellPhonePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
             CellPhoneField.AfterTextChanged += (sender, e) => { Dirty = true; };
             CellPhoneField.AddTextChangedListener(new PhoneNumberFormattingTextWatcher());
-
-            borderView = backgroundView.FindViewById<View>( Resource.Id.middle_border );
-            borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
-
-            EmailField = backgroundView.FindViewById<EditText>( Resource.Id.emailAddressText );
-            ControlStyling.StyleTextField( EmailField, ProfileStrings.EmailPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
-            EmailField.AfterTextChanged += (sender, e) => { Dirty = true; };
 
 
             // setup the address section
@@ -239,31 +246,34 @@ namespace Droid
                 {
                     if( Dirty == true )
                     {
-                        // Since they made changes, confirm they want to save them.
-                        AlertDialog.Builder builder = new AlertDialog.Builder( Activity );
-                        builder.SetTitle( ProfileStrings.SubmitChangesTitle );
+                        if ( ValidateInput( ) )
+                        {
+                            // Since they made changes, confirm they want to save them.
+                            AlertDialog.Builder builder = new AlertDialog.Builder( Activity );
+                            builder.SetTitle( ProfileStrings.SubmitChangesTitle );
 
-                        Java.Lang.ICharSequence [] strings = new Java.Lang.ICharSequence[]
-                            {
-                                new Java.Lang.String( GeneralStrings.Yes ),
-                                new Java.Lang.String( GeneralStrings.No ),
-                                new Java.Lang.String( GeneralStrings.Cancel )
-                            };
+                            Java.Lang.ICharSequence [] strings = new Java.Lang.ICharSequence[]
+                                {
+                                    new Java.Lang.String( GeneralStrings.Yes ),
+                                    new Java.Lang.String( GeneralStrings.No ),
+                                    new Java.Lang.String( GeneralStrings.Cancel )
+                                };
 
-                        builder.SetItems( strings, delegate(object s, DialogClickEventArgs clickArgs) 
-                            {
-                                Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
-                                    {
-                                        switch( clickArgs.Which )
+                            builder.SetItems( strings, delegate(object s, DialogClickEventArgs clickArgs) 
+                                {
+                                    Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
                                         {
-                                            case 0: SubmitChanges( ); SpringboardParent.ModalFragmentDone( null ); break;
-                                            case 1: SpringboardParent.ModalFragmentDone( null ); break;
-                                            case 2: break;
-                                        }
-                                    });
-                            });
+                                            switch( clickArgs.Which )
+                                            {
+                                                case 0: SubmitChanges( ); SpringboardParent.ModalFragmentDone( null ); break;
+                                                case 1: SpringboardParent.ModalFragmentDone( null ); break;
+                                                case 2: break;
+                                            }
+                                        });
+                                });
 
-                        builder.Show( );
+                            builder.Show( );
+                        }
                     }
                     else
                     {
@@ -299,6 +309,24 @@ namespace Droid
                 };
 
             return view;
+        }
+
+        bool ValidateInput( )
+        {
+            bool result = true;
+
+            // the only one we really care about is email, to ensure they put a valid address
+            uint targetColor = ControlStylingConfig.BG_Layer_Color;
+            if ( string.IsNullOrEmpty( EmailField.Text ) == false && EmailField.Text.IsEmailFormat( ) == false )
+            {
+                // if failure, only color email
+                targetColor = ControlStylingConfig.BadInput_BG_Layer_Color;
+                result = false;
+            }
+
+            Rock.Mobile.PlatformSpecific.Android.UI.Util.AnimateViewColor( EmailBGColor, targetColor, EmailLayer, delegate { EmailBGColor = targetColor; } );
+
+            return result;
         }
 
         public void OnDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth )

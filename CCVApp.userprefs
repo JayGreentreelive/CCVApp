@@ -1,34 +1,38 @@
-﻿<Properties StartupItem="Droid/Droid.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.192.168.56.101:5555" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="CCVApp.Shared/Config.cs">
+﻿<Properties StartupItem="iOS/iOS.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhone4s.8.3" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="CCVApp.Shared/Notes/Controls/UserNote.cs">
     <Files>
-      <File FileName="CCVApp.Shared/Config.cs" Line="77" Column="63" />
+      <File FileName="../Rock.Mobile/PlatformGraphics/Util.cs" Line="1" Column="1" />
+      <File FileName="Droid/Tasks/NotesTask/NotesFragment.cs" Line="592" Column="36" />
+      <File FileName="CCVApp.Shared/Notes/Controls/UserNote.cs" Line="484" Column="45" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="CCVApp.Shared" expanded="True">
-            <Node name="Notes" expanded="True" />
-            <Node name="RockApi" expanded="True" />
-            <Node name="Config.cs" selected="True" />
+            <Node name="Notes" expanded="True">
+              <Node name="Controls" expanded="True">
+                <Node name="UserNote.cs" selected="True" />
+              </Node>
+            </Node>
           </Node>
           <Node name="Droid" expanded="True">
-            <Node name="Tasks" expanded="True" />
-            <Node name="UserManagement" expanded="True" />
+            <Node name="Tasks" expanded="True">
+              <Node name="NotesTask" expanded="True" />
+            </Node>
           </Node>
           <Node name="iOS" expanded="True">
             <Node name="Tasks" expanded="True">
               <Node name="Notes" expanded="True" />
             </Node>
-            <Node name="UserManagement" expanded="True" />
           </Node>
-          <Node name="Rock.Client.Models" expanded="True" />
           <Node name="Rock.Mobile" expanded="True">
-            <Node name="Network" expanded="True" />
-            <Node name="PlatformSpecific" expanded="True">
-              <Node name="Android" expanded="True" />
+            <Node name="PlatformGraphics" expanded="True" />
+            <Node name="PlatformUI" expanded="True">
+              <Node name="Droid" expanded="True" />
+              <Node name="iOS" expanded="True" />
             </Node>
-            <Node name="PlatformUtil" expanded="True" />
+            <Node name="Threading" expanded="True" />
           </Node>
         </State>
       </Pad>

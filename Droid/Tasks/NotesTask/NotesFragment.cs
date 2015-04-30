@@ -579,6 +579,25 @@ namespace Droid
                     }
                 }
 
+                void DisplayMessageBox( string title, string message, Note.MessageBoxResult onResult )
+                {
+                    Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                        {
+                            AlertDialog.Builder dlgAlert = new AlertDialog.Builder( Rock.Mobile.PlatformSpecific.Android.Core.Context );                      
+                            dlgAlert.SetTitle( title ); 
+                            dlgAlert.SetMessage( message ); 
+                            dlgAlert.SetNeutralButton( GeneralStrings.Yes, delegate
+                                {
+                                    onResult( 0 );
+                                });
+                            dlgAlert.SetPositiveButton( GeneralStrings.No, delegate(object sender, DialogClickEventArgs ev )
+                                {
+                                    onResult( 1 );
+                                } );
+                            dlgAlert.Create( ).Show( );
+                        } );
+                }
+
                 protected void CreateNotes( )
                 {
                     try
@@ -599,7 +618,7 @@ namespace Droid
 
                         // Use the metrics and not ScrollView for dimensions, because depending on when this gets called the ScrollView
                         // may not have its dimensions set yet.
-                        Note.Create( NavbarFragment.GetContainerDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels, ScrollViewLayout, NoteFileName + NoteConfig.UserNoteSuffix );
+                        Note.Create( this.Resources.DisplayMetrics.WidthPixels, this.Resources.DisplayMetrics.HeightPixels, ScrollViewLayout, NoteFileName + NoteConfig.UserNoteSuffix, DisplayMessageBox );
 
                         // set the requested background color
                         ScrollView.SetBackgroundColor( ( Android.Graphics.Color )Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value ) );

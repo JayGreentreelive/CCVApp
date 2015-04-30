@@ -74,7 +74,7 @@
                 android:layout_height="30dp" />
         <!--Contact-->
             <RelativeLayout
-                android:id="@+id/contact_background"
+                android:id="@+id/email_background"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <View
@@ -83,12 +83,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="#FFFFFFFF" />
-                <View
-                    android:id="@+id/bottom_border"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#FFFFFFFF"
-                    android:layout_alignParentBottom="true" />
                 <EditText
                     android:hint="Email Address"
                     android:textAppearance="?android:attr/textAppearanceMedium"
@@ -99,11 +93,22 @@
                     android:inputType="textEmailAddress"
                     android:layout_marginLeft="10dp"
                     android:maxLines="1" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/cellphone_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
                 <View
                     android:id="@+id/middle_border"
                     android:layout_below="@+id/emailAddressText"
                     android:layout_width="match_parent"
                     android:layout_height="1dp" />
+                <View
+                    android:id="@+id/bottom_border"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#FFFFFFFF"
+                    android:layout_alignParentBottom="true" />
                 <EditText
                     android:hint="Cell Phone"
                     android:textAppearance="?android:attr/textAppearanceMedium"

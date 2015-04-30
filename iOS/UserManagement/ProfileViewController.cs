@@ -325,17 +325,21 @@ namespace iOS
                     {
                         if( Dirty == true )
                         {
-                            // if there were changes, create an action sheet for them to confirm.
-                            var actionSheet = new UIActionSheet( ProfileStrings.SubmitChangesTitle );
-                            actionSheet.AddButton( GeneralStrings.Yes );
-                            actionSheet.AddButton( GeneralStrings.No );
-                            actionSheet.AddButton( GeneralStrings.Cancel );
+                            // make sure the input is valid before asking them what they want to do.
+                            if ( ValidateInput( ) )
+                            {
+                                // if there were changes, create an action sheet for them to confirm.
+                                var actionSheet = new UIActionSheet( ProfileStrings.SubmitChangesTitle );
+                                actionSheet.AddButton( GeneralStrings.Yes );
+                                actionSheet.AddButton( GeneralStrings.No );
+                                actionSheet.AddButton( GeneralStrings.Cancel );
 
-                            actionSheet.CancelButtonIndex = 2;
+                                actionSheet.CancelButtonIndex = 2;
 
-                            actionSheet.Clicked += SubmitActionSheetClicked;
+                                actionSheet.Clicked += SubmitActionSheetClicked;
 
-                            actionSheet.ShowInView( View );
+                                actionSheet.ShowInView( View );
+                            }
                         }
                         else
                         {
@@ -504,6 +508,23 @@ namespace iOS
             }
 
             return false;
+        }
+
+        bool ValidateInput( )
+        {
+            bool result = true;
+
+            // the only one we really care about is email, to ensure they put a valid address
+            uint targetColor = ControlStylingConfig.BG_Layer_Color;
+            if ( string.IsNullOrEmpty( Email.Field.Text ) == false && Email.Field.Text.IsEmailFormat( ) == false )
+            {
+                // if failure, only color email
+                targetColor = ControlStylingConfig.BadInput_BG_Layer_Color;
+                result = false;
+            }
+            Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetColor, Email.Background );
+
+            return result;
         }
 
         void SubmitChanges()

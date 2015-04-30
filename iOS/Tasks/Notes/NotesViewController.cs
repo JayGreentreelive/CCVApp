@@ -610,6 +610,23 @@ namespace iOS
             }
         }
 
+        void DisplayMessageBox( string title, string message, Note.MessageBoxResult onResult )
+        {
+            Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                {
+                    UIAlertView alert = new UIAlertView();
+                    alert.Title = title;
+                    alert.Message = message;
+                    alert.AddButton( GeneralStrings.Yes );
+                    alert.AddButton( GeneralStrings.No );
+                    alert.Show( ); 
+                    alert.Clicked += (object sender, UIButtonEventArgs e) => 
+                        {
+                            onResult( (int)e.ButtonIndex );
+                        };
+                } );
+        }
+
         protected void CreateNotes( )
         {
             try
@@ -626,7 +643,7 @@ namespace iOS
 
                 Note = new Note( noteXML, styleXML );
 
-                Note.Create( (float)UIScrollView.Bounds.Width, (float)UIScrollView.Bounds.Height, this.UIScrollView, NoteFileName + NoteConfig.UserNoteSuffix );
+                Note.Create( (float)UIScrollView.Bounds.Width, (float)UIScrollView.Bounds.Height, this.UIScrollView, NoteFileName + NoteConfig.UserNoteSuffix, DisplayMessageBox );
 
                 // enable scrolling
                 UIScrollView.ScrollEnabled = true;

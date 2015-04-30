@@ -249,18 +249,18 @@ namespace Droid
                 {
                     if( string.IsNullOrEmpty( FirstNameText.Text ) == true && string.IsNullOrEmpty( LastNameText.Text ) == true )
                     {
-                        if ( RequestText.Text == "clear cache" )
+                        if ( RequestText.Text.ToLower( ) == "clear cache" )
                         {
                             FileCache.Instance.CleanUp( true );
                             Springboard.DisplayError( "Cache Cleared", "All cached items have been deleted" );
                         }
-                        else if ( RequestText.Text == "note refresh" )
+                        else if ( RequestText.Text.ToLower( ) == "note refresh" )
                         {
                             CCVApp.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled = !CCVApp.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled;
                             Springboard.DisplayError( "Note Refresh Button", 
                                 string.Format( "Note refresh button has been toggled {0}", CCVApp.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled == true ? "ON" : "OFF" ) );
                         }
-                        else if ( RequestText.Text == "version" )
+                        else if ( RequestText.Text.ToLower( ) == "version" )
                         {
                             Springboard.DisplayError( "Current Version", BuildStrings.Version );
                         }

@@ -10,6 +10,10 @@ Both
 
 	Fixed lots of issues with user registration
 
+	Fixed an issue allowing invalid email addresses to submitted.
+
+	Added a tool strip to the User Note with delete and close buttons.
+
 iOS
 	Fixed an issue causing prayer cards to glitch if swiped near the Prayer button.
 
@@ -17,3 +21,5 @@ iOS
 
 Android
 	Fixed an issue preventing Facebook login from working
+
+	Fixed Note Layout issues on high dpi devices

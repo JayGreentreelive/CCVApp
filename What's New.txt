@@ -5,6 +5,12 @@ Sermons
 	Stream an audio-only feed of the sermon.
 	Sermons resume where you left off.
 
+Improved Group Finder
+	
 Notes
 	Custom User Notes
 	User can export them via email.
+	More Natural experience
+
+Simplifies Future Registration
+	With their login information, we can streamline registration

@@ -306,18 +306,18 @@ namespace iOS
         {
             if( string.IsNullOrEmpty( FirstName.Field.Text ) == true && string.IsNullOrEmpty( LastName.Field.Text ) == true )
             {
-                if ( PrayerRequest.Text == "clear cache" )
+                if ( PrayerRequest.Text.ToLower( ) == "clear cache" )
                 {
                     FileCache.Instance.CleanUp( true );
                     SpringboardViewController.DisplayError( "Cache Cleared", "All cached items have been deleted" );
                 }
-                else if ( PrayerRequest.Text == "note refresh" )
+                else if ( PrayerRequest.Text.ToLower( ) == "note refresh" )
                 {
                     CCVApp.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled = !CCVApp.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled;
                     SpringboardViewController.DisplayError( "Note Refresh Button", 
                                                             string.Format( "Note refresh button has been toggled {0}", CCVApp.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled == true ? "ON" : "OFF" ) );
                 }
-                else if ( PrayerRequest.Text == "version" )
+                else if ( PrayerRequest.Text.ToLower( ) == "version" )
                 {
                     SpringboardViewController.DisplayError( "Current Version", BuildStrings.Version );
                 }

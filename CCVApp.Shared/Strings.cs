@@ -12,7 +12,7 @@ namespace CCVApp.Shared
             {
                 get
                 {
-                    return "Beta (Build 16)";
+                    return "Beta (Build 17)";
                 }
             }
         }
@@ -244,6 +244,9 @@ namespace CCVApp.Shared
             public const string Read_Share_Notes = "Message - {0}";
 
             public const string TooManyNotes = "Are you really taking notes, or are you just goofing off?\nPay attention to the service!";
+
+            public const string UserNote_DeleteTitle = "Delete Note";
+            public const string UserNote_DeleteMessage = "Are you sure you want to delete this note?";
 
         }
 

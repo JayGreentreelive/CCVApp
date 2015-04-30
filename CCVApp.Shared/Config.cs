@@ -406,18 +406,25 @@ namespace CCVApp
                 /// <summary>
                 /// The icon to use for displaying the delete icon on user notes.
                 /// </summary>
-                public const string UserNote_DeleteIcon = "X";//"";
-
-                /// <summary>
-                /// The color of the font/icon when displaying the delete icon on user notes.
-                /// </summary>
-                public const uint UserNote_DeleteIconColor = 0xFFFFFFFF;
+                public const string UserNote_DeleteIcon = "";//"";
 
                 /// <summary>
                 /// The size of the font/icon when displaying the delete icon on user notes.
                 /// </summary>
                 /// 
-                public const int UserNote_DeleteIconSize = 32;
+                public const int UserNote_DeleteIconSize = 25;
+
+
+                /// <summary>
+                /// The icon to use for displaying the delete icon on user notes.
+                /// </summary>
+                public const string UserNote_CloseIcon = "";
+
+                /// <summary>
+                /// The size of the font/icon when displaying the delete icon on user notes.
+                /// </summary>
+                /// 
+                public const int UserNote_CloseIconSize = 25;
 
                 /// <summary>
                 /// The icon to use representing "Listen to this Message"
@@ -486,9 +493,13 @@ namespace CCVApp
             {
                 public static string[] WebViews = 
                     {
-                        "Starting Point", "http://www.ccvonline.com/Arena/default.aspx?page=17400&campus=1", "starting_point_thumb.png",
-                        "Baptisms", "http://www.ccvonline.com/Arena/default.aspx?page=17655&campus=1", "baptism_thumb.png",
-                        "Serve", "http://www.ccvonline.com/Arena/default.aspx?page=17659&campus=1", "serve_thumb.png"
+                        //"Starting Point", "http://www.ccvonline.com/Arena/default.aspx?page=17400&campus=1", "starting_point_thumb.png",
+                        //"Baptisms", "http://www.ccvonline.com/Arena/default.aspx?page=17655&campus=1", "baptism_thumb.png",
+                        //"Serve", "http://www.ccvonline.com/Arena/default.aspx?page=17659&campus=1", "serve_thumb.png"
+                        "Starting Point", "http://www.jeredmcferron.com/ccv/placeholder.html", "starting_point_thumb.png",
+                        "Baptisms", "http://www.jeredmcferron.com/ccv/placeholder.html", "baptism_thumb.png",
+                        "Serve", "http://www.jeredmcferron.com/ccv/placeholder.html", "serve_thumb.png"
+
                     };
 
                 public const string GroupFinder_IconImage = "groupfinder_thumb.png";
@@ -550,7 +561,8 @@ namespace CCVApp
 
             public class GiveConfig
             {
-                public const string GiveUrl = "https://www.ccvonline.com/Arena/default.aspx?page=18485&campus=1";
+                //public const string GiveUrl = "https://www.ccvonline.com/Arena/default.aspx?page=18485&campus=1";
+                public const string GiveUrl = "http://www.jeredmcferron.com/ccv/placeholder.html";
             }
 
             public class ControlStylingConfig
@@ -716,7 +728,8 @@ namespace CCVApp
                 /// <summary>
                 /// The page to navigate to in the About's embedded webview.
                 /// </summary>
-                public const string Url = "http://www.ccvonline.com/Arena/default.aspx?page=17623&campus=1";
+                //public const string Url = "http://www.ccvonline.com/Arena/default.aspx?page=17623&campus=1";
+                public const string Url = "http://www.jeredmcferron.com/ccv/placeholder.html";
             }
         }
     }

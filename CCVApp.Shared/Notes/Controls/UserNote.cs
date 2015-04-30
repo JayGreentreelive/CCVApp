@@ -36,7 +36,9 @@ namespace CCVApp
                 /// Delete button
                 /// </summary>
                 /// <value>The anchor.</value>
+                protected PlatformView UtilityLayer { get; set; }
                 protected PlatformLabel DeleteButton { get; set; }
+                protected PlatformLabel CloseButton { get; set; }
 
                 /// <summary>
                 /// Tracks the movement of the note as a user repositions it.
@@ -88,6 +90,7 @@ namespace CCVApp
                     Hold,
                     Moving,
                     Delete,
+                    Close,
                 };
                 public TouchState State { get; set; }
 
@@ -119,7 +122,6 @@ namespace CCVApp
                 SizeF NoteIconOpenSize { get; set; }
                 SizeF NoteIconClosedSize { get; set; }
 
-
                 protected override void Initialize( )
                 {
                     base.Initialize( );
@@ -127,7 +129,9 @@ namespace CCVApp
                     TextView = PlatformTextView.Create( );
                     Anchor = PlatformCircleView.Create( );
                     NoteIcon = PlatformLabel.Create( );
+                    UtilityLayer = PlatformView.Create( );
                     DeleteButton = PlatformLabel.Create( );
+                    CloseButton = PlatformLabel.Create( );
                 }
 
                 public UserNote( BaseControl.CreateParams createParams, float deviceHeight, Model.NoteState.UserNoteContent userNoteContent )
@@ -165,6 +169,8 @@ namespace CCVApp
                     Create( parentParams, deviceHeight, startPos, null );
                 }
 
+                const float UtilityLayerHeight = 25;
+
                 public void Create( CreateParams parentParams, float deviceHeight, PointF startPos, string startingText )
                 {
                     Initialize( );
@@ -172,10 +178,10 @@ namespace CCVApp
                     PositionTransform = new PointF( parentParams.Width, parentParams.Height );
 
                     //setup our timer for allowing movement/
-                    DeleteTimer = new System.Timers.Timer();
+                    /*DeleteTimer = new System.Timers.Timer();
                     DeleteTimer.Interval = 1000;
                     DeleteTimer.Elapsed += DeleteTimerDidFire;
-                    DeleteTimer.AutoReset = false;
+                    DeleteTimer.AutoReset = false;*/
 
                     // take our parent's style or in defaults
                     mStyle = parentParams.Style;
@@ -239,8 +245,7 @@ namespace CCVApp
                     NoteIcon.Bounds = new RectangleF( 0, 0, area, 0 );
                     NoteIcon.SizeToFit( );
                     NoteIconClosedSize = NoteIcon.Bounds.Size;
-
-                    //NoteIcon.BackgroundColor = 0xFFFF00FF;
+                    ////
 
 
                     // store the width of the screen so we know
@@ -256,47 +261,58 @@ namespace CCVApp
                     MaxNoteWidth = Math.Min( ScreenWidth - MinNoteWidth, (MinNoteWidth * 6) );
 
                     // set the allowed X/Y so we don't let the user move the note off-screen.
-                    MaxAllowedX = ( ScreenWidth - MinNoteWidth - (Anchor.Bounds.Width / 2) );
+                    MaxAllowedX = ( ScreenWidth - MinNoteWidth - Anchor.Bounds.Width );
                     MaxAllowedY = ( parentParams.Height - Anchor.Bounds.Height );
 
                     float width = Math.Max( MinNoteWidth, Math.Min( MaxNoteWidth, MaxAllowedX - startPos.X ) );
                     TextView.Bounds = new RectangleF( 0, 0, width, 0 );
 
+                    UtilityLayer.BackgroundColor = TextView.BackgroundColor;
+                    UtilityLayer.CornerRadius = TextView.CornerRadius;
+                    UtilityLayer.BorderWidth = TextView.BorderWidth;
+                    UtilityLayer.BorderColor = TextView.BorderColor;
+                    UtilityLayer.Bounds = new RectangleF( 0, 0, MinNoteWidth, Rock.Mobile.Graphics.Util.UnitToPx( UtilityLayerHeight ) );
 
                     // setup the delete button
-                    DeleteButton.Text = "";
+                    DeleteButton.Text = NoteConfig.UserNote_DeleteIcon;
                     DeleteButton.TextColor = NoteConfig.UserNote_IconColor;
-                    DeleteButton.SetFont( ControlStylingConfig.Icon_Font_Primary, NoteConfig.UserNote_DeleteIconSize );
-                    //DeleteButton.Hidden = true;
+                    DeleteButton.SetFont( ControlStylingConfig.Icon_Font_Secondary, NoteConfig.UserNote_DeleteIconSize );
                     DeleteButton.SizeToFit( );
-                    DeleteButton.BackgroundColor = 0;
+
+                    // setup the close button
+                    CloseButton.Text = NoteConfig.UserNote_CloseIcon;
+                    CloseButton.TextColor = NoteConfig.UserNote_IconColor;
+                    CloseButton.SetFont( ControlStylingConfig.Icon_Font_Secondary, NoteConfig.UserNote_CloseIconSize );
+                    CloseButton.SizeToFit( );
 
 
 
-                    // Setup the position
+                    // Setup the initial positions
                     Anchor.Position = startPos;
                     AnchorFrame = Anchor.Frame;
 
                     AnchorTouchMaxDist = AnchorFrame.Width / 2;
                     AnchorTouchMaxDist *= AnchorTouchMaxDist;
 
-
-
-
                     NoteIcon.Position = new PointF( Anchor.Frame.Left + (Anchor.Frame.Width - NoteIconClosedSize.Width) / 2, 
-                                                    Anchor.Frame.Top + (Anchor.Frame.Height - NoteIconClosedSize.Height) / 2 );
-                    
+                        Anchor.Frame.Top + (Anchor.Frame.Height - NoteIconClosedSize.Height) / 2 );
+
                     // set the actual note TextView relative to the anchor
                     TextView.Position = new PointF( AnchorFrame.Left + AnchorFrame.Width / 2, 
-                                                     AnchorFrame.Top + AnchorFrame.Height / 2 );
+                        AnchorFrame.Top + AnchorFrame.Height / 2 );
+                    
+                    UtilityLayer.Position = new PointF( (TextView.Position.X + width) - UtilityLayer.Bounds.Width, 
+                        TextView.Position.Y - Rock.Mobile.Graphics.Util.UnitToPx( UtilityLayerHeight ) );
 
                     // set the position for the delete button
-                    DeleteButton.Position = new PointF( AnchorFrame.Left + width - DeleteButton.Bounds.Width / 2, 
-                        TextView.Position.Y - DeleteButton.Bounds.Height );
+                    DeleteButton.Position = new PointF( UtilityLayer.Position.X + DeleteButton.Bounds.Width / 2, 
+                        UtilityLayer.Position.Y + (Rock.Mobile.Graphics.Util.UnitToPx( UtilityLayerHeight ) - DeleteButton.Bounds.Height) / 2 );
+
+                    CloseButton.Position = new PointF( UtilityLayer.Frame.Right - (CloseButton.Bounds.Width + (CloseButton.Bounds.Width / 2)), 
+                        UtilityLayer.Position.Y + (Rock.Mobile.Graphics.Util.UnitToPx( UtilityLayerHeight ) - CloseButton.Bounds.Height) / 2 );
 
                     // validate its bounds
                     ValidateBounds( );
-
 
 
                     // set the starting text if it was provided
@@ -308,6 +324,21 @@ namespace CCVApp
                     TextView.Hidden = true;
 
                     SetDebugFrame( TextView.Frame );
+                }
+
+                public bool TouchInCloseButtonRange( PointF touch )
+                {
+                    // create a vector from the note anchor's center to the touch
+                    PointF labelToTouch = new PointF( touch.X - (CloseButton.Frame.X + CloseButton.Frame.Width / 2), 
+                                                      touch.Y - (CloseButton.Frame.Y + CloseButton.Frame.Height / 2));
+
+                    float distSquared = Rock.Mobile.Math.Util.MagnitudeSquared( labelToTouch );
+                    if( distSquared < AnchorTouchMaxDist )
+                    {
+                        return true;
+                    }
+
+                    return false;
                 }
 
                 public bool TouchInDeleteButtonRange( PointF touch )
@@ -366,12 +397,18 @@ namespace CCVApp
                             State = TouchState.Delete;
                         }
                     }*/
-                    if( DeleteButton.Hidden == false && TouchInDeleteButtonRange( touch ) )
+                    if ( DeleteButton.Hidden == false && TouchInDeleteButtonRange( touch ) )
                     {
                         // if they did, we consume this and bye bye note.
                         consumed = true;
 
                         State = TouchState.Delete;
+                    }
+                    else if ( CloseButton.Hidden == false && TouchInCloseButtonRange( touch ) )
+                    {
+                        consumed = true;
+
+                        State = TouchState.Close;
                     }
                     // if the touch is in our region, begin tracking
                     else if( TouchInAnchorRange( touch ) )
@@ -462,7 +499,7 @@ namespace CCVApp
                             //if( DeleteEnabled == false )
                             {
                                 // if it's open and they tapped in the note anchor, close it.
-                                if( TextView.Hidden == false )
+                                /*if( TextView.Hidden == false )
                                 {
                                     CloseNote();
                                 }
@@ -470,8 +507,24 @@ namespace CCVApp
                                 else
                                 {
                                     OpenNote( );
+                                }*/
+
+                                // JHM 4-29-15 In support of the utility bar, only let a tap on the anchor OPEN the note.
+                                // Require them to use the close button to close it
+                                if ( TextView.Hidden == true )
+                                {
+                                    OpenNote( );
                                 }
                             }
+                            break;
+                        }
+
+                        case TouchState.Close:
+                        {
+                            consumed = true;
+                            State = TouchState.None;
+
+                            CloseNote();
                             break;
                         }
 
@@ -487,7 +540,7 @@ namespace CCVApp
                     return consumed == true ? this : null;
                 }
 
-                protected void DeleteTimerDidFire(object sender, System.Timers.ElapsedEventArgs e)
+                /*protected void DeleteTimerDidFire(object sender, System.Timers.ElapsedEventArgs e)
                 {
                     // if they're still in range and haven't moved the note yet, activate delete mode.
                     if ( TouchInAnchorRange( TrackingLastPos ) && State == TouchState.Hold )
@@ -496,9 +549,9 @@ namespace CCVApp
                         Rock.Mobile.Threading.Util.PerformOnUIThread( delegate {  ShowDeleteUI( ); } );
                         DeleteEnabled = true;
                     }
-                }
+                }*/
 
-                void ShowDeleteUI( )
+                /*void ShowDeleteUI( )
                 {
                     DeleteButton.Hidden = false;
                     TextView.UserInteractionEnabled = false;
@@ -513,7 +566,7 @@ namespace CCVApp
                         {
                         } );
                     colorAnimator.Start( );
-                }
+                }*/
 
                 public void Dispose( object masterView )
                 {
@@ -595,9 +648,15 @@ namespace CCVApp
                     float width = Math.Max( MinNoteWidth, Math.Min( MaxNoteWidth, ScreenWidth - (AnchorFrame.X + (AnchorFrame.Width / 2)) ) );
                     TextView.Bounds = new RectangleF( 0, 0, width, TextView.Bounds.Height);
 
+                    UtilityLayer.Position = new PointF( (TextView.Position.X + width) - UtilityLayer.Bounds.Width, 
+                        TextView.Position.Y - Rock.Mobile.Graphics.Util.UnitToPx( UtilityLayerHeight ) );
+
                     // set the position for the delete button
-                    DeleteButton.Position = new PointF( AnchorFrame.Left + width - DeleteButton.Bounds.Width / 2, 
-                                                        TextView.Position.Y - DeleteButton.Bounds.Height );
+                    DeleteButton.Position = new PointF( UtilityLayer.Position.X + DeleteButton.Bounds.Width / 2, 
+                        UtilityLayer.Position.Y + (Rock.Mobile.Graphics.Util.UnitToPx( UtilityLayerHeight ) - DeleteButton.Bounds.Height) / 2 );
+
+                    CloseButton.Position = new PointF( UtilityLayer.Frame.Right - (CloseButton.Bounds.Width + (CloseButton.Bounds.Width / 2)), 
+                        UtilityLayer.Position.Y + (Rock.Mobile.Graphics.Util.UnitToPx( UtilityLayerHeight ) - CloseButton.Bounds.Height) / 2 );
                 }
 
                 void ValidateBounds()
@@ -610,13 +669,25 @@ namespace CCVApp
                     Anchor.Position = new PointF( xPos, yPos );
                     AnchorFrame = Anchor.Frame;
 
+                    TextView.Position = new PointF( AnchorFrame.Left + AnchorFrame.Width / 2, 
+                        AnchorFrame.Top + AnchorFrame.Height / 2 );
+
+                    NoteIcon.Position = new PointF( Anchor.Frame.Left + (Anchor.Frame.Width - NoteIconClosedSize.Width) / 2, 
+                        Anchor.Frame.Top + (Anchor.Frame.Height - NoteIconClosedSize.Height) / 2 );
+
                     // Scale the TextView to no larger than the remaining width of the screen 
                     float width = Math.Max( MinNoteWidth, Math.Min( MaxNoteWidth, ScreenWidth - (AnchorFrame.X + (AnchorFrame.Width / 2)) ) );
                     TextView.Bounds = new RectangleF( 0, 0, width, TextView.Bounds.Height);
 
+                    UtilityLayer.Position = new PointF( (TextView.Position.X + width) - UtilityLayer.Bounds.Width, 
+                        TextView.Position.Y - Rock.Mobile.Graphics.Util.UnitToPx( UtilityLayerHeight ) );
+
                     // set the position for the delete button
-                    DeleteButton.Position = new PointF( AnchorFrame.Left + width - DeleteButton.Bounds.Width / 2, 
-                                                        TextView.Position.Y - DeleteButton.Bounds.Height );
+                    DeleteButton.Position = new PointF( UtilityLayer.Position.X + DeleteButton.Bounds.Width / 2, 
+                        UtilityLayer.Position.Y + (Rock.Mobile.Graphics.Util.UnitToPx( UtilityLayerHeight ) - DeleteButton.Bounds.Height) / 2 );
+
+                    CloseButton.Position = new PointF( UtilityLayer.Frame.Right - (CloseButton.Bounds.Width + (CloseButton.Bounds.Width / 2)), 
+                        UtilityLayer.Position.Y + (Rock.Mobile.Graphics.Util.UnitToPx( UtilityLayerHeight ) - CloseButton.Bounds.Height) / 2 );
                 }
 
                 public override void AddToView( object obj )
@@ -624,7 +695,9 @@ namespace CCVApp
                     Anchor.AddAsSubview( obj );
                     TextView.AddAsSubview( obj );
                     NoteIcon.AddAsSubview( obj );
+                    UtilityLayer.AddAsSubview( obj );
                     DeleteButton.AddAsSubview( obj );
+                    CloseButton.AddAsSubview( obj );
 
                     TryAddDebugLayer( obj );
                 }
@@ -634,15 +707,19 @@ namespace CCVApp
                     Anchor.RemoveAsSubview( obj );
                     TextView.RemoveAsSubview( obj );
                     NoteIcon.RemoveAsSubview( obj );
+                    UtilityLayer.RemoveAsSubview( obj );
                     DeleteButton.RemoveAsSubview( obj );
+                    CloseButton.RemoveAsSubview( obj );
 
                     TryRemoveDebugLayer( obj );
                 }
 
                 bool Animating { get; set; }
+                bool AnimatingUtilityView { get; set; }
                 public void OpenNote()
                 {
                     AnimateNoteIcon( true );
+                    AnimateUtilityView( true );
 
                     // open the text field
                     TextView.AnimateOpen( );
@@ -652,6 +729,7 @@ namespace CCVApp
                 public void CloseNote()
                 {
                     AnimateNoteIcon( false );
+                    AnimateUtilityView( false );
 
                     // close the text field
                     TextView.AnimateClosed( );
@@ -708,8 +786,6 @@ namespace CCVApp
                             endTypeSize = NoteConfig.UserNote_IconOpenSize;
 
                             sizeAnimTimeScalar = .95f;
-
-                            DeleteButton.Hidden = false;
                         }
                         else
                         {
@@ -719,8 +795,6 @@ namespace CCVApp
                             endTypeSize = NoteConfig.UserNote_IconClosedSize;
 
                             sizeAnimTimeScalar = 1.05f;
-
-                            DeleteButton.Hidden = true;
                         }
 
                         // size...
@@ -748,6 +822,58 @@ namespace CCVApp
                                 NoteIcon.SetFont( ControlStylingConfig.Icon_Font_Secondary, (float)value );
                             }, delegate { Animating = false; } );
                         floatAnimator.Start( );
+                    }
+                }
+
+                void AnimateUtilityView( bool open )
+                {
+                    if ( AnimatingUtilityView == false )
+                    {
+                        AnimatingUtilityView = true;
+
+                        SizeF startSize = UtilityLayer.Bounds.Size;
+                        SizeF endSize;
+
+                        float animTime = .2f;
+
+                        // setup the target values based on whether we're opening or closing
+                        if ( open == true )
+                        {
+                            UtilityLayer.Hidden = false;
+                            endSize = new SizeF( MinNoteWidth, Rock.Mobile.Graphics.Util.UnitToPx( 25 ) );
+                        }
+                        else
+                        {
+                            DeleteButton.Hidden = true;
+                            CloseButton.Hidden = true;
+                            endSize = new SizeF( MinNoteWidth, 0 );
+                        }
+
+                        // size...
+                        SimpleAnimator_SizeF sizeAnimator = new SimpleAnimator_SizeF( startSize, endSize, animTime, 
+                            delegate(float percent, object value )
+                            {
+                                SizeF currSize = (SizeF)value;
+                                UtilityLayer.Bounds = new RectangleF( 0, 0, currSize.Width, currSize.Height );
+                            }, 
+                            delegate
+                            { 
+                                // if we CLOSED, hide the utility layer
+                                if ( open == false )
+                                {
+                                    UtilityLayer.Hidden = true;
+                                }
+                                // and if we OPENED, unhide the DELETE button
+                                else
+                                {
+                                    // 
+                                    DeleteButton.Hidden = false;
+                                    CloseButton.Hidden = false;
+                                }
+                                AnimatingUtilityView = false; 
+                            } );
+
+                        sizeAnimator.Start( );
                     }
                 }
 

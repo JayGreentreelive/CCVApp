@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Rock.Mobile.PlatformUI;
 using System.Drawing;
 using System.Text;
+using CCVApp.Shared.Strings;
 
 namespace CCVApp
 {
@@ -26,6 +27,9 @@ namespace CCVApp
                 /// Delegate for notifying the caller when a note is ready to be created via Note.Create()
                 /// </summary>
                 public delegate void OnPreReqsComplete( Note note, Exception e );
+
+                public delegate void MessageBoxResult( int result );
+                public delegate void DisplayMessageBoxDelegate( string title, string message, MessageBoxResult onResult );
 
                 /// <summary>
                 /// A list of all immediate child controls of the Note. (This list is hierchical and not flat)
@@ -80,6 +84,8 @@ namespace CCVApp
                 /// </summary>
                 /// <value>The height of the device.</value>
                 protected float DeviceHeight { get; set; }
+
+                protected DisplayMessageBoxDelegate RequestDisplayMessageBox { get; set; }
 
                 /// <summary>
                 /// When true we're waiting for our timer to tick and load notes.
@@ -210,7 +216,7 @@ namespace CCVApp
                     ControlStyles.Initialize( styleXml );
                 }
 
-                public void Create( float parentWidth, float parentHeight, object masterView, string userNoteFileName )
+                public void Create( float parentWidth, float parentHeight, object masterView, string userNoteFileName, DisplayMessageBoxDelegate displayMessageBoxDelegate )
                 {
                     // setup our note timer that will wait to load our notes until AFTER the notes are created,
                     // as opposed to the same tick. This cuts down 500ms from the create time.
@@ -224,6 +230,8 @@ namespace CCVApp
                             // on the main (UI) thread, we don't have to worry about race conditions.
                             Rock.Mobile.Threading.Util.PerformOnUIThread( delegate { LoadState( UserNotePath ); } );
                         };*/
+
+                    RequestDisplayMessageBox = displayMessageBoxDelegate;
 
                     UserNotePath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), userNoteFileName);
 
@@ -295,28 +303,28 @@ namespace CCVApp
                     NoteXml = null;
                 }
 
-                void ParseNote( XmlReader reader, float parentWidth, float parentHeight )
+                void ParseNote( XmlReader reader, float parentWidthUnits, float parentHeightUnits )
                 {
-                    DeviceHeight = parentHeight;
+                    DeviceHeight = parentHeightUnits;
 
                     // get the style first
                     Styles.Style.ParseStyleAttributesWithDefaults( reader, ref mStyle, ref ControlStyles.mMainNote );
 
                     // check for attributes we support
                     RectangleF bounds = new RectangleF( );
-                    SizeF parentSize = new SizeF( parentWidth, parentHeight );
+                    SizeF parentSize = new SizeF( parentWidthUnits, parentHeightUnits );
                     Parser.ParseBounds( reader, ref parentSize, ref bounds );
 
                     // Parent note doesn't support margins.
 
                     // PADDING
-                    float leftPadding = Styles.Style.GetValueForNullable( mStyle.mPaddingLeft, parentWidth, 0 );
-                    float rightPadding = Styles.Style.GetValueForNullable( mStyle.mPaddingRight, parentWidth, 0 );
-                    float topPadding = Styles.Style.GetValueForNullable( mStyle.mPaddingTop, parentHeight, 0 );
-                    float bottomPadding = Styles.Style.GetValueForNullable( mStyle.mPaddingBottom, parentHeight, 0 );
+                    float leftPadding = Styles.Style.GetValueForNullable( mStyle.mPaddingLeft, parentWidthUnits, 0 );
+                    float rightPadding = Styles.Style.GetValueForNullable( mStyle.mPaddingRight, parentWidthUnits, 0 );
+                    float topPadding = Styles.Style.GetValueForNullable( mStyle.mPaddingTop, parentHeightUnits, 0 );
+                    float bottomPadding = Styles.Style.GetValueForNullable( mStyle.mPaddingBottom, parentHeightUnits, 0 );
 
                     // now calculate the available width based on padding. (Don't actually change our width)
-                    float availableWidth = parentWidth - leftPadding - rightPadding;
+                    float availableWidth = parentWidthUnits - leftPadding - rightPadding;
 
                     // A "special" (we won't call this a hack) attribute that will enable the user
                     // to have a header container that spans the full width of the note, which allows
@@ -338,10 +346,10 @@ namespace CCVApp
                                 float workingWidth = availableWidth;
                                 if ( Header.ElementTagMatches( reader.Name ) == true && mStyle.mFullWidthHeader == true )
                                 {
-                                    workingWidth = parentWidth;
+                                    workingWidth = parentWidthUnits;
                                 }
 
-                                IUIControl control = Parser.TryParseControl( new BaseControl.CreateParams( this, workingWidth, parentHeight, ref mStyle ), reader );
+                                IUIControl control = Parser.TryParseControl( new BaseControl.CreateParams( this, workingWidth, parentHeightUnits, ref mStyle ), reader );
 
                                 ChildControls.Add( control );
                                 break;
@@ -410,7 +418,7 @@ namespace CCVApp
                         yOffset = control.GetFrame( ).Bottom + controlMargin.Height;
                     }
 
-                    bounds.Width = parentWidth;
+                    bounds.Width = parentWidthUnits;
                     bounds.Height = ( yOffset - bounds.Y ) + bottomPadding;
                     Frame = bounds;
 
@@ -531,11 +539,26 @@ namespace CCVApp
                         // does this note want to be deleted?
                         if( ActiveUserNoteAnchor.State == UserNote.TouchState.Delete )
                         {
-                            ActiveUserNoteAnchor.Dispose( MasterView );
+                            // reset its state, and we'll let the messagebox result decide
+                            ActiveUserNoteAnchor.State = UserNote.TouchState.None;
 
-                            // remove it from our list. Because our next step will be
-                            // to clear the anchor ref, that will effectively delete the note (eligible for garbage collection)
-                            UserNoteControls.Remove( ActiveUserNoteAnchor );
+                            // then store a pointer to this note
+                            UserNote activeNote = ActiveUserNoteAnchor;
+
+                            // and have the system prompt the user for confirmation
+                            RequestDisplayMessageBox( MessagesStrings.UserNote_DeleteTitle, MessagesStrings.UserNote_DeleteMessage, 
+                                delegate( int result )
+                                {
+                                    // if they said yes, do it.
+                                    if ( result == 0 )
+                                    {
+                                        activeNote.Dispose( MasterView );
+
+                                        // remove it from our list. Because our next step will be
+                                        // to clear the anchor ref, that will effectively delete the note (eligible for garbage collection)
+                                        UserNoteControls.Remove( activeNote );
+                                    }
+                                } );
                         }
 
                         // clear the user note
