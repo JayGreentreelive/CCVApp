@@ -51,6 +51,7 @@ namespace CCVApp.Shared.UI
             ImageBG.Image = stream;
             ImageBG.SizeToFit( );
             ImageBG.ImageScaleType = PlatformImageView.ScaleType.ScaleAspectFill;
+            stream.Dispose( );
 
             WelcomeLabel = PlatformLabel.Create( );
             WelcomeLabel.SetFont( ControlStylingConfig.Large_Font_Bold, 85 );
@@ -116,6 +117,7 @@ namespace CCVApp.Shared.UI
             ImageLogo.Image = stream;
             ImageLogo.SizeToFit( );
             ImageLogo.ImageScaleType = PlatformImageView.ScaleType.ScaleAspectFit;
+            stream.Dispose( );
 
             State = OOBE_State.Startup;
         }

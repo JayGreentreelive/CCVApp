@@ -23,3 +23,5 @@ Android
 	Fixed an issue preventing Facebook login from working
 
 	Fixed Note Layout issues on high dpi devices
+
+	Fixed a massive memory leak in the Connect page.

@@ -62,6 +62,8 @@ namespace CCVApp.Shared
 
                                 if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
                                 {
+                                    result = true;
+
                                     // first thing we receive is the "area" group(s)
                                     foreach ( Rock.Client.Group areaGroup in rockGroupList )
                                     {
@@ -107,8 +109,6 @@ namespace CCVApp.Shared
                                             entry.Longitude = location.Longitude.Value;
 
                                             groupEntries.Add( entry );
-
-                                            result = true;
                                         }
                                     }
                                 }
@@ -119,7 +119,7 @@ namespace CCVApp.Shared
                     }
                     else
                     {
-                        onCompletion( sourceLocation, groupEntries, false );
+                        onCompletion( sourceLocation, groupEntries, Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true ? true : false );
                     }
                 } );
         }

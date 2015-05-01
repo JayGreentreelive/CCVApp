@@ -24,7 +24,7 @@ namespace iOS
     /// The springboard acts as the core navigation for the user. From here
     /// they may launch any of the app's activities.
     /// </summary>
-	partial class SpringboardViewController : UIViewController
+	public partial class SpringboardViewController : UIViewController
 	{
         /// <summary>
         /// Represents a selectable element on the springboard.
@@ -156,33 +156,33 @@ namespace iOS
         /// Controller managing a user logging in or out
         /// </summary>
         /// <value>The login view controller.</value>
-        protected LoginViewController LoginViewController { get; set; }
+        LoginViewController LoginViewController { get; set; }
 
         /// <summary>
         /// Controller for managing user registration
         /// </summary>
         /// <value>The register view controller.</value>
-        protected RegisterViewController RegisterViewController { get; set; }
+        RegisterViewController RegisterViewController { get; set; }
 
         /// <summary>
         /// Controller managing the user's profile. Lets a user view or edit their profile.
         /// </summary>
         /// <value>The profile view controller.</value>
-        protected ProfileViewController ProfileViewController { get; set; }
+        ProfileViewController ProfileViewController { get; set; }
 
         /// <summary>
         /// Controller used for copping an image to our requirements (1:1 aspect ratio)
         /// </summary>
         /// <value>The image crop view controller.</value>
-        protected ImageCropViewController ImageCropViewController { get; set; }
+        ImageCropViewController ImageCropViewController { get; set; }
 
         /// <summary>
         /// The out of box experience view controller, used for first time setup.
         /// </summary>
         /// <value>The OOBE view controller.</value>
-        protected OOBEViewController OOBEViewController { get; set; }
+        OOBEViewController OOBEViewController { get; set; }
 
-        protected SplashViewController SplashViewController { get; set; }
+        SplashViewController SplashViewController { get; set; }
 
         /// <summary>
         /// True while the user is still being guided through the OOBE. This includes
@@ -239,7 +239,7 @@ namespace iOS
 		{
             UserManagementStoryboard = UIStoryboard.FromName( "UserManagement", null );
 
-            NavViewController = Storyboard.InstantiateViewController( "MainUINavigationController" ) as MainUINavigationController;
+            NavViewController = new MainUINavigationController();
             NavViewController.ParentSpringboard = this;
 
             Elements = new List<SpringboardElement>( );
@@ -589,7 +589,8 @@ namespace iOS
             // seed the last sync time with now, so that when OnActivated gets called we don't do it again.
             LastRockSync = DateTime.Now;
 
-            SyncRockData( );
+            // don't sync here, because OnActivated will do it.
+            //SyncRockData( );
 
             // setup the Notification Banner for Taking Notes
             Billboard = new NotificationBillboard( View.Bounds.Width, View.Bounds.Height );

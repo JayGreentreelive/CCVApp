@@ -562,11 +562,18 @@ namespace CCVApp
                     // get the raw response
                     Request.ExecuteAsync( requestUrl, request, delegate(HttpStatusCode statusCode, string statusDescription, byte[] model) 
                         {
-                            MemoryStream memoryStream = new MemoryStream( model );
+                            if ( model != null )
+                            {
+                                MemoryStream memoryStream = new MemoryStream( model );
 
-                            resultHandler( statusCode, statusDescription, memoryStream );
+                                resultHandler( statusCode, statusDescription, memoryStream );
 
-                            memoryStream.Dispose( );
+                                memoryStream.Dispose( );
+                            }
+                            else
+                            {
+                                resultHandler( statusCode, statusDescription, null );
+                            }
                         });
                 }
 
@@ -580,11 +587,13 @@ namespace CCVApp
                 {
                     // send up the image for the user
                     RestRequest request = GetRockRestRequest( Method.POST );
-                    request.AddFile( "file0", image.GetBuffer( ), "profilePic.jpg" );
+                    request.AddFile( "file0", image.ToArray( ), "profilePic.jpg" );
 
                     string requestUrl = BaseUrl + PutProfilePictureEndPoint;
 
-                    Request.ExecuteAsync( requestUrl, request, delegate(HttpStatusCode statusCode, string statusDescription, byte[] responseBytes )
+                    Request.ExecuteAsync( requestUrl, request, 
+
+                        delegate(HttpStatusCode statusCode, string statusDescription, byte[] responseBytes )
                         {
                             if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
                             {

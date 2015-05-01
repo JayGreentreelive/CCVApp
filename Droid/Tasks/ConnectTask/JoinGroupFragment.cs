@@ -16,7 +16,6 @@ using Android.Webkit;
 using CCVApp.Shared.Config;
 using CCVApp.Shared.Strings;
 using Android.Graphics;
-using Android.GoogleMaps;
 using Android.Gms.Maps;
 using CCVApp.Shared;
 using CCVApp.Shared.Network;

@@ -805,6 +805,9 @@ namespace CCVApp
                     string currFamilyJson = JsonConvert.SerializeObject( PrimaryFamily );
                     string currAddressJson = JsonConvert.SerializeObject( PrimaryAddress );
 
+                    // assume things will work
+                    System.Net.HttpStatusCode returnCode = System.Net.HttpStatusCode.OK;
+
                     if( string.Compare( LastSyncdPersonJson, currPersonJson ) != 0 || 
                         string.Compare( LastSyncdCellPhoneNumberJson, currPhoneNumbersJson ) != 0 ||
                         string.Compare( LastSyncdFamilyJson, currFamilyJson ) != 0 ||
@@ -812,14 +815,42 @@ namespace CCVApp
                         ProfileImageDirty == true )
                     {
                         Console.WriteLine( "RockMobileUser: Syncing Profile" );
-                        UpdateProfile( delegate
+
+                        // PROFILE
+                        UpdateProfile( delegate( System.Net.HttpStatusCode profileCode, string profileResult )
                             {
-                                UpdateOrAddPhoneNumber( delegate
+                                // if there's a failure, flag it and continue so the caller can know there was a problem.
+                                if( Rock.Mobile.Network.Util.StatusInSuccessRange( profileCode ) == false )
                                 {
-                                    UpdateAddress( delegate
+                                    returnCode = System.Net.HttpStatusCode.BadRequest;
+                                }
+
+                                // PHONE NUMBER
+                                UpdateOrAddPhoneNumber( delegate( System.Net.HttpStatusCode phoneCode, string phoneResult )
+                                {
+                                    // if there's a failure, flag it and continue so the caller can know there was a problem.
+                                    if( Rock.Mobile.Network.Util.StatusInSuccessRange( phoneCode ) == false )
+                                    {
+                                        returnCode = System.Net.HttpStatusCode.BadRequest;
+                                    }
+
+                                    // ADDRESS
+                                    UpdateAddress( delegate( System.Net.HttpStatusCode addressCode, string addressResult )
                                         {
-                                            UpdateHomeCampus( delegate
+                                            // if there's a failure, flag it and continue so the caller can know there was a problem.
+                                            if( Rock.Mobile.Network.Util.StatusInSuccessRange( addressCode ) == false )
+                                            {
+                                                returnCode = System.Net.HttpStatusCode.BadRequest;
+                                            }
+
+                                            // HOME CAMPUS
+                                            UpdateHomeCampus( delegate( System.Net.HttpStatusCode campusCode, string campusResult )
                                                 {
+                                                    // if there's a failure, flag it and continue so the caller can know there was a problem.
+                                                    if( Rock.Mobile.Network.Util.StatusInSuccessRange( campusCode ) == false )
+                                                    {
+                                                        returnCode = System.Net.HttpStatusCode.BadRequest;
+                                                    }
                                                     // If needed, make other calls here, chained, and finally.
 
 
@@ -829,17 +860,23 @@ namespace CCVApp
                                                     if ( ProfileImageDirty == true )
                                                     {
                                                             UploadSavedProfilePicture( 
-                                                                delegate( System.Net.HttpStatusCode statusCode, string statusDesc )
+                                                                delegate( System.Net.HttpStatusCode pictureCode, string pictureDesc )
                                                                 {
+                                                                    // if there's a failure, flag it and continue so the caller can know there was a problem.
+                                                                    if( Rock.Mobile.Network.Util.StatusInSuccessRange( pictureCode ) == false )
+                                                                    {
+                                                                        returnCode = System.Net.HttpStatusCode.BadRequest;
+                                                                    }
+
                                                                     // return finished. just tell them OK, because it really doesn't matter if it worked or not.
-                                                                    resultCallback( System.Net.HttpStatusCode.OK, "" );
+                                                                    resultCallback( returnCode, "" );
                                                                 } );
                                                         
                                                     }
                                                     else
                                                     {
                                                         // return finished. just tell them OK, because it really doesn't matter if it worked or not.
-                                                        resultCallback( System.Net.HttpStatusCode.OK, "" );
+                                                            resultCallback( returnCode, "" );
                                                     }
                                                 });
                                         });

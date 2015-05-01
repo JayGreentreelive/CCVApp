@@ -168,6 +168,7 @@ namespace CCVApp.Shared
 
             public const string GroupFinder_GroupsFound = "Groups Nearest Your Location";
             public const string GroupFinder_NoGroupsFound = "No Groups Found Near Your Location";
+            public const string GroupFinder_NetworkError = "Network problem. Please try again.";
 
             public const string GroupFinder_SearchButtonLabel = "Touch to Search an Address";
 

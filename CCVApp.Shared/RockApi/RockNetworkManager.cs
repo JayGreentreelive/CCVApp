@@ -40,25 +40,40 @@ namespace CCVApp
                                 Console.WriteLine( "Logged in. Syncing out-of-sync data." );
 
                                 //( this includes notes, profile changes, etc.)
-                                RockApi.Instance.SyncWithServer( delegate 
+                                RockApi.Instance.SyncWithServer( 
+                                    delegate(System.Net.HttpStatusCode statusCode, string statusDescription) 
                                     {
-                                        // now get their profile. Assuming there weren't any profile changes, this will download
-                                        // their latest profile. That way if someone made a change directly in Rock, it'll be reflected here.
-                                        RockMobileUser.Instance.GetProfileAndCellPhone( delegate 
-                                            {
-                                                // get the address, which is certainly part
-                                                RockMobileUser.Instance.GetFamilyAndAddress( delegate 
-                                                    {
-                                                        // and hey, why not their profile picture too
-                                                        // if they have a profile picture, grab it.
-                                                        RockMobileUser.Instance.TryDownloadProfilePicture( GeneralConfig.ProfileImageSize, delegate 
-                                                            {
-                                                                // failure or not, server syncing is finished, so let's go ahead and 
-                                                                // get launch data.
-                                                                RockLaunchData.Instance.GetLaunchData( LaunchDataReceived );     
-                                                            });
-                                                    });
-                                            });
+                                        // IF THERE WAS A PROBLEM SYNCING, DO NOT PULL DOWN THE LATEST PROFILE.
+                                        // That would cause pending changes to be lost.
+                                        if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
+                                        {
+                                            Console.WriteLine( "Syncing with server worked. Pulling down latest data." );
+                                            // now get their profile. Assuming there weren't any profile changes, this will download
+                                            // their latest profile. That way if someone made a change directly in Rock, it'll be reflected here.
+                                            RockMobileUser.Instance.GetProfileAndCellPhone( delegate 
+                                                {
+                                                    // get the address, which is certainly part
+                                                    RockMobileUser.Instance.GetFamilyAndAddress( delegate 
+                                                        {
+                                                            // and hey, why not their profile picture too
+                                                            // if they have a profile picture, grab it.
+                                                            RockMobileUser.Instance.TryDownloadProfilePicture( GeneralConfig.ProfileImageSize, delegate 
+                                                                {
+                                                                    // failure or not, server syncing is finished, so let's go ahead and 
+                                                                    // get launch data.
+                                                                    RockLaunchData.Instance.GetLaunchData( LaunchDataReceived );
+                                                                });
+                                                        });
+                                                });
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine( "Syncing with server FAILED. Skipping profile download to protect dirty data." );
+
+                                            // failure or not, server syncing is finished, so let's go ahead and 
+                                            // get launch data.
+                                            RockLaunchData.Instance.GetLaunchData( LaunchDataReceived );
+                                        }
                                     });
                             }
                             else

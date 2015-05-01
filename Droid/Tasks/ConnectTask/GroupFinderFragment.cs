@@ -16,7 +16,6 @@ using Android.Webkit;
 using CCVApp.Shared.Config;
 using CCVApp.Shared.Strings;
 using Android.Graphics;
-using Android.GoogleMaps;
 using Android.Gms.Maps;
 using CCVApp.Shared;
 using CCVApp.Shared.Network;
@@ -642,7 +641,7 @@ namespace Droid
                         else
                         {
                             // there was actually an error. Let them know.
-                            SearchResultPrefix.Text = "There was a problem reaching the server. Please try again.";
+                            SearchResultPrefix.Text = ConnectStrings.GroupFinder_NetworkError;
                             SearchResultNeighborhood.Text = string.Empty;
                         }
                     }

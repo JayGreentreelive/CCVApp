@@ -25,6 +25,7 @@ using CCVApp.Shared;
 using Rock.Mobile.PlatformUI.DroidNative;
 using System.Threading;
 using CCVApp.Shared.UI;
+using Rock.Mobile.PlatformSpecific.Android.UI;
 
 namespace Droid
 {
@@ -32,53 +33,37 @@ namespace Droid
     {
         namespace Notes
         {
-            public class NotesArrayAdapter : BaseAdapter
+            public class NotesArrayAdapter : ListAdapter
             {
-                List<SeriesEntry> SeriesEntries { get; set; }
                 NotesPrimaryFragment ParentFragment { get; set; }
-                Bitmap ImageMainPlaceholder { get; set; }
-                Bitmap ImageThumbPlaceholder { get; set; }
 
-                public NotesArrayAdapter( NotesPrimaryFragment parentFragment, List<SeriesEntry> series, Bitmap imageMainPlaceholder, Bitmap imageThumbPlaceholder )
+                public NotesArrayAdapter( NotesPrimaryFragment parentFragment )
                 {
                     ParentFragment = parentFragment;
-
-                    SeriesEntries = series;
-
-                    ImageMainPlaceholder = imageMainPlaceholder;
-                    ImageThumbPlaceholder = imageThumbPlaceholder;
                 }
 
                 public override int Count 
                 {
-                    get { return SeriesEntries.Count + 1; }
-                }
-
-                public override Java.Lang.Object GetItem (int position) 
-                {
-                    // could wrap a Contact in a Java.Lang.Object
-                    // to return it here if needed
-                    return null;
-                }
-
-                public override long GetItemId (int position) 
-                {
-                    return 0;
+                    get { return ParentFragment.SeriesEntries.Count + 1; }
                 }
 
                 public override View GetView(int position, View convertView, ViewGroup parent)
                 {
+                    ListItemView newItem = null;
+
                     if ( position == 0 )
                     {
-                        return GetPrimaryView( convertView, parent );
+                        newItem = GetPrimaryView( convertView, parent );
                     }
                     else
                     {
-                        return GetStandardView( position - 1, convertView, parent );
+                        newItem = GetStandardView( position - 1, convertView, parent );
                     }
+
+                    return AddView( newItem );
                 }
 
-                View GetPrimaryView( View convertView, ViewGroup parent )
+                ListItemView GetPrimaryView( View convertView, ViewGroup parent )
                 {
                     SeriesPrimaryListItem primaryItem = convertView as SeriesPrimaryListItem;
                     if ( primaryItem == null )
@@ -88,17 +73,17 @@ namespace Droid
 
                     primaryItem.ParentAdapter = this;
 
-                    primaryItem.Billboard.SetImageBitmap( SeriesEntries[ 0 ].Billboard != null ? SeriesEntries[ 0 ].Billboard : ImageMainPlaceholder );
+                    primaryItem.Billboard.SetImageBitmap( ParentFragment.SeriesEntries[ 0 ].Billboard != null ? ParentFragment.SeriesEntries[ 0 ].Billboard : ParentFragment.ImageMainPlaceholder );
                     primaryItem.Billboard.SetScaleType( ImageView.ScaleType.CenterCrop );
 
-                    if ( SeriesEntries[ 0 ].Series.Messages.Count > 0 )
+                    if ( ParentFragment.SeriesEntries[ 0 ].Series.Messages.Count > 0 )
                     {
-                        primaryItem.Title.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Name;
-                        primaryItem.Speaker.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Speaker;
-                        primaryItem.Date.Text = SeriesEntries[ 0 ].Series.Messages[ 0 ].Date;
+                        primaryItem.Title.Text = ParentFragment.SeriesEntries[ 0 ].Series.Messages[ 0 ].Name;
+                        primaryItem.Speaker.Text = ParentFragment.SeriesEntries[ 0 ].Series.Messages[ 0 ].Speaker;
+                        primaryItem.Date.Text = ParentFragment.SeriesEntries[ 0 ].Series.Messages[ 0 ].Date;
 
                         // toggle the Take Notes button
-                        if ( string.IsNullOrEmpty( SeriesEntries[ 0 ].Series.Messages[ 0 ].NoteUrl ) == false )
+                        if ( string.IsNullOrEmpty( ParentFragment.SeriesEntries[ 0 ].Series.Messages[ 0 ].NoteUrl ) == false )
                         {
                             primaryItem.ToggleTakeNotesButton( true );
                         }
@@ -108,7 +93,7 @@ namespace Droid
                         }
 
                         // toggle the Watch button
-                        if ( string.IsNullOrEmpty( SeriesEntries[ 0 ].Series.Messages[ 0 ].WatchUrl ) == false )
+                        if ( string.IsNullOrEmpty( ParentFragment.SeriesEntries[ 0 ].Series.Messages[ 0 ].WatchUrl ) == false )
                         {
                             primaryItem.ToggleWatchButton( true );
                         }
@@ -126,7 +111,7 @@ namespace Droid
                     return primaryItem;
                 }
 
-                View GetStandardView( int position, View convertView, ViewGroup parent )
+                ListItemView GetStandardView( int position, View convertView, ViewGroup parent )
                 {
                     SeriesListItem seriesItem = convertView as SeriesListItem;
                     if ( seriesItem == null )
@@ -134,11 +119,11 @@ namespace Droid
                         seriesItem = new SeriesListItem( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     }
 
-                    seriesItem.Thumbnail.SetImageBitmap( SeriesEntries[ position ].Thumbnail != null ? SeriesEntries[ position ].Thumbnail : ImageThumbPlaceholder );
+                    seriesItem.Thumbnail.SetImageBitmap( ParentFragment.SeriesEntries[ position ].Thumbnail != null ? ParentFragment.SeriesEntries[ position ].Thumbnail : ParentFragment.ImageThumbPlaceholder );
                     seriesItem.Thumbnail.SetScaleType( ImageView.ScaleType.CenterCrop );
 
-                    seriesItem.Title.Text = SeriesEntries[ position ].Series.Name;
-                    seriesItem.DateRange.Text = SeriesEntries[ position ].Series.DateRanges;
+                    seriesItem.Title.Text = ParentFragment.SeriesEntries[ position ].Series.Name;
+                    seriesItem.DateRange.Text = ParentFragment.SeriesEntries[ position ].Series.DateRanges;
 
                     return seriesItem;
                 }
@@ -192,7 +177,7 @@ namespace Droid
                 }
             }
 
-            public class SeriesPrimaryListItem : LinearLayout
+            public class SeriesPrimaryListItem : ListAdapter.ListItemView
             {
                 public NotesArrayAdapter ParentAdapter { get; set; }
 
@@ -378,9 +363,14 @@ namespace Droid
                         TakeNotesButton.Label.SetTextColor( Color.DimGray );
                     }
                 }
+
+                public override void Destroy()
+                {
+                    Billboard.SetImageBitmap( null );   
+                }
             }
 
-            public class SeriesListItem : LinearLayout
+            public class SeriesListItem : ListAdapter.ListItemView
             {
                 public Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView Thumbnail { get; set; }
 
@@ -455,6 +445,11 @@ namespace Droid
                     Seperator.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
                     AddView( Seperator );
                 }
+
+                public override void Destroy()
+                {
+                    Thumbnail.SetImageBitmap( null );
+                }
             }
 
             /// <summary>
@@ -474,8 +469,8 @@ namespace Droid
                 ProgressBar ProgressBar { get; set; }
                 ListView ListView { get; set; }
 
-                Bitmap ImageMainPlaceholder { get; set; }
-                Bitmap ImageThumbPlaceholder { get; set; }
+                public Bitmap ImageMainPlaceholder { get; set; }
+                public Bitmap ImageThumbPlaceholder { get; set; }
 
                 bool FragmentActive { get; set; }
 
@@ -486,15 +481,17 @@ namespace Droid
                     SeriesEntries = new List<SeriesEntry>();
                 }
 
-                public override void OnCreate(Bundle savedInstanceState)
+                public override void OnDestroyView()
                 {
-                    base.OnCreate(savedInstanceState);
+                    base.OnDestroyView();
 
-                    System.IO.Stream thumbnailStream = Activity.BaseContext.Assets.Open( GeneralConfig.NotesThumbPlaceholder );
-                    ImageThumbPlaceholder = BitmapFactory.DecodeStream( thumbnailStream );
+                    ImageMainPlaceholder.Dispose( );
+                    ImageMainPlaceholder = null;
 
-                    System.IO.Stream mainImageStream = Activity.BaseContext.Assets.Open( GeneralConfig.NotesMainPlaceholder );
-                    ImageMainPlaceholder = BitmapFactory.DecodeStream( mainImageStream );
+                    ImageThumbPlaceholder.Dispose( );
+                    ImageThumbPlaceholder = null;
+
+                    ( (ListAdapter)ListView.Adapter ).Destroy( );
                 }
 
                 public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -504,6 +501,14 @@ namespace Droid
                         // Currently in a layout without a container, so no reason to create our view.
                         return null;
                     }
+
+                    System.IO.Stream thumbnailStream = Activity.BaseContext.Assets.Open( GeneralConfig.NotesThumbPlaceholder );
+                    ImageThumbPlaceholder = BitmapFactory.DecodeStream( thumbnailStream );
+                    thumbnailStream.Dispose( );
+
+                    System.IO.Stream mainImageStream = Activity.BaseContext.Assets.Open( GeneralConfig.NotesMainPlaceholder );
+                    ImageMainPlaceholder = BitmapFactory.DecodeStream( mainImageStream );
+                    mainImageStream.Dispose( );
 
 					View view = inflater.Inflate(Resource.Layout.Notes_Primary, container, false);
                     view.SetOnTouchListener( this );
@@ -621,7 +626,7 @@ namespace Droid
                             {
                                 if( FragmentActive == true )
                                 {
-                                    ListView.Adapter = new NotesArrayAdapter( this, SeriesEntries, ImageMainPlaceholder, ImageThumbPlaceholder );
+                                    ListView.Adapter = new NotesArrayAdapter( this );
                                 }
 
                                 // setup the series entries either way, because that doesn't require the fragment to be active

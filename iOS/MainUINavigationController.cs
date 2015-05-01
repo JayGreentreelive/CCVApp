@@ -13,7 +13,7 @@ namespace iOS
     /// The entire app lives underneath a main navigation bar. This is the control
     /// that drives that navigation bar and manages sliding in and out to reveal the springboard.
     /// </summary>
-	partial class MainUINavigationController : UINavigationController
+	public class MainUINavigationController : UINavigationController
 	{
         /// <summary>
         /// Flag determining whether the springboard is revealed. Revealed means
@@ -56,8 +56,8 @@ namespace iOS
 
         protected UIView DarkPanel { get; set; }
 
-		public MainUINavigationController (IntPtr handle) : base (handle)
-		{
+        public MainUINavigationController ( ) : base ()
+        {
         }
 
         /// <summary>

@@ -567,7 +567,7 @@ namespace iOS
                 }
                 else
                 {
-                    SearchResultsPrefix.Text = "There was a problem reaching the server. Please try again.";
+                    SearchResultsPrefix.Text = ConnectStrings.GroupFinder_NetworkError;
                     SearchResultsNeighborhood.Text = string.Empty;
                 }
             }

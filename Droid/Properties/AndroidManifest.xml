@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="2.0" package="com.ccvonline.CCVMobileApp" android:versionCode="17">
 	<uses-sdk android:minSdkVersion="16" android:targetSdkVersion="21" />
 	<application android:label="CCV Mobile" android:icon="@drawable/icon" android:theme="@style/CCVMobileTheme">
-		<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyDEIysN9LbLqYDx8-pvQePayzP0YIwIRPM" />
+		<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyCzDzkK-zhL-T6MYT_7FQposbp73u0TVMY" />
 		<meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
 		<meta-data android:name="LOCALYTICS_APP_KEY" android:value="b5da9a8d5e23b54319b5903-4d60e47a-edc4-11e4-adb1-005cf8cbabd8" />
 	</application>

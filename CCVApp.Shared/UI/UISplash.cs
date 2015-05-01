@@ -39,6 +39,7 @@ namespace CCVApp.Shared.UI
                 ImageBG.Image = stream;
                 ImageBG.SizeToFit( );
                 ImageBG.ImageScaleType = PlatformImageView.ScaleType.ScaleAspectFit;
+                stream.Dispose( );
             }
 
             MemoryStream logoStream = Rock.Mobile.Util.FileIO.AssetConvert.AssetToStream( logoImageName );
@@ -48,6 +49,7 @@ namespace CCVApp.Shared.UI
             ImageLogo.Image = logoStream;
             ImageLogo.SizeToFit( );
             ImageLogo.ImageScaleType = PlatformImageView.ScaleType.ScaleAspectFit;
+            logoStream.Dispose( );
 
             OnCompletionCallback = onCompletion;
         }

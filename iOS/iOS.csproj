@@ -443,9 +443,6 @@
       <DependentUpon>SpringboardViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="MainUINavigationController.cs" />
-    <Compile Include="MainUINavigationController.designer.cs">
-      <DependentUpon>MainUINavigationController.cs</DependentUpon>
-    </Compile>
     <Compile Include="ContainerViewController.cs" />
     <Compile Include="ContainerViewController.designer.cs">
       <DependentUpon>ContainerViewController.cs</DependentUpon>
