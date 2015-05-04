@@ -244,7 +244,7 @@ namespace Droid
 
                     LeftButton = new Button( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     LeftButton.LayoutParameters = LeftImage.LayoutParameters;
-                    LeftButton.SetBackgroundDrawable( null );
+                    LeftButton.Background = null;
                     LeftButton.Click += (object sender, EventArgs e ) =>
                         {
                             // notify our parent that the image index was clicked
@@ -265,7 +265,7 @@ namespace Droid
 
                     RightButton = new Button( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     RightButton.LayoutParameters = RightImage.LayoutParameters;
-                    RightButton.SetBackgroundDrawable( null );
+                    RightButton.Background = null;
                     RightButton.Click += (object sender, EventArgs e ) =>
                         {
                             // notify our parent that the image index was clicked

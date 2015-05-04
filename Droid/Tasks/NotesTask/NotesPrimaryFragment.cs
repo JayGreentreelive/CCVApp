@@ -162,7 +162,7 @@ namespace Droid
                     // add the button, which is just a frame wrapping the entire layout
                     Button = new Button( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     Button.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent );
-                    Button.SetBackgroundDrawable( null );
+                    Button.Background = null;
                     Layout.AddView( Button );
 
                     // now set the icon

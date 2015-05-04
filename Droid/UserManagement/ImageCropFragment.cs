@@ -220,7 +220,7 @@ namespace Droid
             border.Paint.SetStyle( Paint.Style.Stroke );
             border.Paint.StrokeWidth = 8;
             border.Paint.Color = Color.WhiteSmoke;
-            CropView.SetBackgroundDrawable( border );
+            CropView.Background = border;
 
 
             // set our clamp values

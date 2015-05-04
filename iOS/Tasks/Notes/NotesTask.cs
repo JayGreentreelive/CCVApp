@@ -39,7 +39,7 @@ namespace iOS
 
             switch( action )
             {
-                case "Page.Read":
+                case GeneralConfig.TaskAction_NotesRead:
                 {
                     if ( CCVApp.Shared.Network.RockLaunchData.Instance.Data.NoteDB.SeriesList.Count > 0 )
                     {
@@ -56,7 +56,7 @@ namespace iOS
                     break;
                 }
 
-                case "Notes.DownloadImages":
+                case GeneralConfig.TaskAction_NotesDownloadImages:
                 {
                     MainViewController.DownloadImages( );
                     break;

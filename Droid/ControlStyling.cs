@@ -16,7 +16,7 @@ namespace Droid
             Drawable buttonDrawable = (Drawable)Rock.Mobile.PlatformSpecific.Android.Core.Context.Resources.GetDrawable( Resource.Drawable.RoundButton );
             buttonDrawable.SetColorFilter( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Button_BGColor ), PorterDuff.Mode.Src );
 
-            button.SetBackgroundDrawable( buttonDrawable );
+            button.Background = buttonDrawable;
             button.Text = text;
 
             button.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( font ), TypefaceStyle.Normal );
@@ -51,7 +51,7 @@ namespace Droid
 
         public static void StyleTextField( EditText textField, string placeholderText, string font, uint size )
         {
-            textField.SetBackgroundDrawable( null );
+            textField.Background = null;
             textField.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
 
             textField.Hint = placeholderText;

@@ -6,10 +6,20 @@
 		<!--Start Series-->
 		<Series>
 			<Message>
+				<Name>RELIGION</Name>
+				<Speaker>Dr. Mark Moore</Speaker>
+				<Date>5/3/2015</Date>
+				<NoteUrl>xml/message_5_2_2015.xml</NoteUrl>
+			</Message>
+
+			<Message>
 				<Name>HIDDEN SINS</Name>
 				<Speaker>Ashley Wooldridge</Speaker>
 				<Date>4/26/2015</Date>
 				<NoteUrl>xml/message_4_25_2015.xml</NoteUrl>
+				<WatchUrl>http://player.vimeo.com/external/126318868.m3u8?p=high,standard,mobile&amp;s=1c40c66636fcc1e3fe19b091e2afe2fc</WatchUrl>
+				<AudioUrl>http://podcasts.ccvonline.com.s3.amazonaws.com/contemporaryaudio/Detox/Detox_Wk3_HiddenSins.mp3</AudioUrl>
+				<ShareUrl>http://ccv.church/Arena/default.aspx?page=17529&amp;item=505</ShareUrl>
 			</Message>
 
 			<Message>
@@ -17,6 +27,9 @@
 				<Speaker>Ashley Wooldridge</Speaker>
 				<Date>4/19/2015</Date>
 				<NoteUrl>xml/message_4_18_2015.xml</NoteUrl>
+				<AudioUrl>http://podcasts.ccvonline.com.s3.amazonaws.com/contemporaryaudio/Detox/Detox_Wk2_ComparisonEnvy.mp3</AudioUrl>
+				<WatchUrl>http://player.vimeo.com/external/125484474.m3u8?p=high,standard,mobile&amp;s=23c06443a0ef9f0a668c669f63f8380f</WatchUrl>
+				<ShareUrl>http://ccv.church/Arena/default.aspx?page=17529&amp;item=504</ShareUrl>
 			</Message>
 
 			<Message>
@@ -26,13 +39,14 @@
 				<NoteUrl>xml/message_4_11_2015.xml</NoteUrl>
 				<WatchUrl>http://player.vimeo.com/external/124855889.m3u8?p=high,standard,mobile&amp;s=5a20cbfadb3301a1ac8e6d19373c8fbe</WatchUrl>
 				<ShareUrl>http://ccv.church/Arena/default.aspx?page=17529&amp;item=503</ShareUrl>
+				<AudioUrl>http://podcasts.ccvonline.com.s3.amazonaws.com/contemporaryaudio/Detox/Detox_Wk1_Doubt.mp3</AudioUrl>
 			</Message>
 
 			<Name>DETOX</Name>
 			<Description>
 				Detox Description
 			</Description>
-			<DateRanges>4/12/2015 - 5/1/2015</DateRanges>
+			<DateRanges>4/12/2015 - 5/3/2015</DateRanges>
 			<BillboardUrl>images/detox.png</BillboardUrl>
 			<ThumbnailUrl>images/detox_thumb.png</ThumbnailUrl>
 		</Series>
@@ -274,7 +288,6 @@
 				<Name>Christmas at CCV</Name>
 				<Speaker>Teaching Pastors</Speaker>
 				<Date>12/24/2014</Date>
-				<NoteUrl></NoteUrl>
 				<WatchUrl>http://player.vimeo.com/external/115491810.m3u8?p=high,standard,mobile&amp;s=d50d4a828cab06dfb1e970e122f0baea</WatchUrl>
 				<ShareUrl>http://ccv.church/Arena/default.aspx?page=17529&amp;item=485</ShareUrl>
 			</Message>
@@ -340,6 +353,7 @@
 				<NoteUrl>xml/message_11_29_2014.xml</NoteUrl>
 				<WatchUrl>http://player.vimeo.com/external/113338811.m3u8?p=high,standard,mobile&amp;s=29aec2037f545e21dee13b067c0752bb</WatchUrl>
 				<ShareUrl>http://www.ccvonline.com/Arena/default.aspx?page=17529&amp;item=481</ShareUrl>
+				<AudioUrl>http://podcasts.ccvonline.com.s3.amazonaws.com/contemporaryaudio/ThereIsHope/ThereIsHope_WK5_HopeForOurCulture.mp3</AudioUrl>
 			</Message>
 			<Message>
 				<Name>There Is Hope - For Your Finances</Name>
@@ -348,6 +362,7 @@
 				<NoteUrl>xml/message_11_22_2014.xml</NoteUrl>
 				<WatchUrl>http://player.vimeo.com/external/112712667.m3u8?p=high,standard,mobile&amp;s=cdfa965739fed7f1cab1601a8fce1a78</WatchUrl>
 				<ShareUrl>http://www.ccvonline.com/Arena/default.aspx?page=17529&amp;item=480</ShareUrl>
+				<AudioUrl>http://podcasts.ccvonline.com.s3.amazonaws.com/contemporaryaudio/ThereIsHope/There_Is_Hope_WK4_Hope_For_Your_Finances.mp3</AudioUrl>
 			</Message>
 			<Message>
 				<Name>There Is Hope - For Your Workplace</Name>
@@ -356,6 +371,7 @@
 				<NoteUrl>xml/message_11_15_2014.xml</NoteUrl>
 				<WatchUrl>http://player.vimeo.com/external/112065685.m3u8?p=high,standard,mobile&amp;s=fe6376dc9d3881f989648737cf592ef3</WatchUrl>
 				<ShareUrl>http://www.ccvonline.com/Arena/default.aspx?page=17529&amp;item=479</ShareUrl>
+				<AudioUrl>http://podcasts.ccvonline.com.s3.amazonaws.com/contemporaryaudio/ThereIsHope/There_Is_Hope_WK3_Hope_For_Your_Workplace.mp3</AudioUrl>
 			</Message>
 			<Message>
 				<Name>There Is Hope - Marriage</Name>
@@ -364,6 +380,7 @@
 				<NoteUrl>xml/message_11_8_2014.xml</NoteUrl>
 				<WatchUrl>http://player.vimeo.com/external/111342574.m3u8?p=high,standard,mobile&amp;s=0a5e0dbcb44d80e60baa53b16c3e845e</WatchUrl>
 				<ShareUrl>http://www.ccvonline.com/Arena/default.aspx?page=17529&amp;item=478</ShareUrl>
+				<AudioUrl>http://podcasts.ccvonline.com.s3.amazonaws.com/contemporaryaudio/ThereIsHope/ThereIsHope_WK2_HopeForYourMarriage.mp3</AudioUrl>
 			</Message>
 			<Message>
 				<Name>There Is Hope - Family</Name>
@@ -372,6 +389,7 @@
 				<NoteUrl>xml/message_11_1_2014.xml</NoteUrl>
 				<WatchUrl>http://player.vimeo.com/external/110803854.m3u8?p=high,standard,mobile&amp;s=710549d248d633dc466f777cc4a2d42b</WatchUrl>
 				<ShareUrl>http://www.ccvonline.com/Arena/default.aspx?page=17529&amp;item=477</ShareUrl>
+				<AudioUrl>http://podcasts.ccvonline.com.s3.amazonaws.com/contemporaryaudio/ThereIsHope/ThereIsHope_WK1_HopeForYourFamilySermon.mp3</AudioUrl>
 			</Message>
 
 			<Name>There Is Hope</Name>
@@ -392,6 +410,8 @@
 				<Date>10/26/2014</Date>
 				<NoteUrl>xml/message_10_25_2014.xml</NoteUrl>
 				<WatchUrl>http://player.vimeo.com/external/110150296.m3u8?p=high,standard,mobile&amp;s=2a58d2404936be3a2358a53ce1dda48c</WatchUrl>
+				<AudioUrl>http://podcasts.ccvonline.com.s3.amazonaws.com/contemporaryaudio/Wisdom/Wisdom_WK8_SpeakingTruthHonesty.mp3</AudioUrl>
+				<ShareUrl>http://ccv.church/Arena/default.aspx?page=17529&amp;item=476</ShareUrl>
 			</Message>
 
 			<Message>
@@ -400,6 +420,8 @@
 				<Date>10/19/2014</Date>
 				<NoteUrl>xml/message_10_18_2014.xml</NoteUrl>
 				<WatchUrl>http://player.vimeo.com/external/109377228.m3u8?p=high,standard,mobile&amp;s=326cbe8841cdea2bf134bc3f733e8e45</WatchUrl>
+				<AudioUrl>http://podcasts.ccvonline.com.s3.amazonaws.com/contemporaryaudio/Wisdom/Wisdom_WK7_Lazyness_Taking_Initiative.mp3</AudioUrl>
+				<ShareUrl>http://ccv.church/Arena/default.aspx?page=17529&amp;item=475</ShareUrl>
 			</Message>
 
 			<Message>
@@ -408,6 +430,8 @@
 				<Date>10/12/2014</Date>
 				<NoteUrl>xml/message_10_11_2014.xml</NoteUrl>
 				<WatchUrl>http://player.vimeo.com/external/108744882.m3u8?p=high,standard,mobile&amp;s=8e34de4873d2258550c1367f174c2c6b</WatchUrl>
+				<AudioUrl>http://podcasts.ccvonline.com.s3.amazonaws.com/contemporaryaudio/Wisdom/Wisdom_WK6_Conflict.mp3</AudioUrl>
+				<ShareUrl>http://ccv.church/Arena/default.aspx?page=17529&amp;item=474</ShareUrl>
 			</Message>
 
 			<Message>
@@ -415,7 +439,9 @@
 				<Speaker>Todd Clark</Speaker>
 				<Date>10/5/2014</Date>
 				<NoteUrl>xml/message_10_4_2014.xml</NoteUrl>
-				<WatchUrl></WatchUrl>
+				<AudioUrl>http://podcasts.ccvonline.com.s3.amazonaws.com/contemporaryaudio/Wisdom/Wisdom_WK5_Soul.mp3</AudioUrl>
+				<WatchUrl>http://player.vimeo.com/external/108133114.m3u8?p=high,standard,mobile&amp;s=ac35ce787137398450f30809522d74f5</WatchUrl>
+				<ShareUrl>http://ccv.church/Arena/default.aspx?page=17529&amp;item=473</ShareUrl>
 			</Message>
 
 			<Message>
@@ -424,6 +450,8 @@
 				<Date>9/28/2014</Date>
 				<NoteUrl>xml/message_9_27_2014.xml</NoteUrl>
 				<WatchUrl>http://player.vimeo.com/external/107767528.m3u8?p=high,standard,mobile&amp;s=91461a3e46627b8212ae39605f51377f</WatchUrl>
+				<AudioUrl>http://podcasts.ccvonline.com.s3.amazonaws.com/contemporaryaudio/Wisdom/Wisdom_WK4_Pride.mp3</AudioUrl>
+				<ShareUrl>http://ccv.church/Arena/default.aspx?page=17529&amp;item=472</ShareUrl>
 			</Message>
 
 			<Message>
@@ -432,6 +460,8 @@
 				<Date>9/21/2014</Date>
 				<NoteUrl>xml/message_9_20_2014.xml</NoteUrl>
 				<WatchUrl>http://player.vimeo.com/external/106738802.m3u8?p=high,standard,mobile&amp;s=cdce5b8ff22a0fa6964d6cc7d1deb40d</WatchUrl>
+				<AudioUrl>http://podcasts.ccvonline.com.s3.amazonaws.com/contemporaryaudio/Wisdom/Wisdom_WK3_Anger.mp3</AudioUrl>
+				<ShareUrl>http://ccv.church/Arena/default.aspx?page=17529&amp;item=471</ShareUrl>
 			</Message>
 
 			<Message>
@@ -440,6 +470,8 @@
 				<Date>9/14/2014</Date>
 				<NoteUrl>xml/message_9_13_2014.xml</NoteUrl>
 				<WatchUrl>http://player.vimeo.com/external/106189969.m3u8?p=high,standard,mobile&amp;s=fd8605ffefc0220498c817e5dfa8176d</WatchUrl>
+				<AudioUrl>http://podcasts.ccvonline.com.s3.amazonaws.com/contemporaryaudio/Wisdom/Wisdom_WK2_GettingDirections.mp3</AudioUrl>
+				<ShareUrl>http://ccv.church/Arena/default.aspx?page=17529&amp;item=470</ShareUrl>
 			</Message>
 
 			<Message>
@@ -448,6 +480,8 @@
 				<Date>9/7/2014</Date>
 				<NoteUrl>xml/message_9_6_2014.xml</NoteUrl>
 				<WatchUrl>http://player.vimeo.com/external/105602163.m3u8?p=high,standard,mobile&amp;s=15b75063ee27bd391e13deb5139d9a76</WatchUrl>
+				<AudioUrl>http://podcasts.ccvonline.com.s3.amazonaws.com/contemporaryaudio/Wisdom/14090618_Wisdom_WK1_Get_Wisdom_An-Introduction_to_Proverbs.mp3</AudioUrl>
+				<ShareUrl>http://ccv.church/Arena/default.aspx?page=17529&amp;item=469</ShareUrl>
 			</Message>
 
 			<Name>#Wisdom</Name>
@@ -468,6 +502,8 @@
 				<Date>8/31/2014</Date>
 				<NoteUrl>xml/message_8_31_2014.xml</NoteUrl>
 				<WatchUrl>http://player.vimeo.com/external/104860435.m3u8?p=high,standard,mobile&amp;s=b2f06d32c18f54c306478f289078f4c2</WatchUrl>
+				<AudioUrl>http://podcasts.ccvonline.com.s3.amazonaws.com/contemporaryaudio/LivingOnTheEdge/LivingOnTheEdge_wk5_Worry_WhenLifeSpinsOutOfControl.mp3</AudioUrl>
+				<ShareUrl>http://ccv.church/Arena/default.aspx?page=17529&amp;item=468</ShareUrl>
 			</Message>
 
 			<Message>
@@ -476,6 +512,8 @@
 				<Date>8/24/2014</Date>
 				<NoteUrl>xml/message_8_24_2014.xml</NoteUrl>
 				<WatchUrl>http://player.vimeo.com/external/104337503.m3u8?p=high,standard,mobile&amp;s=3c6ad520722f1597a1e61a2f074dad5c</WatchUrl>
+				<AudioUrl>http://podcasts.ccvonline.com.s3.amazonaws.com/contemporaryaudio/LivingOnTheEdge/LivingOnTheEdge_WK4_ChangeWhenLifeNeedstoChange.mp3</AudioUrl>
+				<ShareUrl>http://ccv.church/Arena/default.aspx?page=17529&amp;item=467</ShareUrl>
 			</Message>
 
 			<Message>
@@ -484,6 +522,8 @@
 				<Date>8/17/2014</Date>
 				<NoteUrl>xml/message_8_17_2014.xml</NoteUrl>
 				<WatchUrl>http://player.vimeo.com/external/103646977.m3u8?p=high,standard,mobile&amp;s=8cd1b5594ddfc7fbb16d994dea7ee63b</WatchUrl>
+				<AudioUrl>http://podcasts.ccvonline.com.s3.amazonaws.com/contemporaryaudio/LivingOnTheEdge/LivingOnTheEdge_WK3_Priorities_WhenLifeIsOutOfControl.mp3</AudioUrl>
+				<ShareUrl>http://ccv.church/Arena/default.aspx?page=17529&amp;item=466</ShareUrl>
 			</Message>
 
 			<Name>Living on the Edge</Name>

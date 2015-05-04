@@ -53,7 +53,6 @@
     <Reference Include="Facebook">
       <HintPath>..\Components\facebook-sdk-6.2.1\lib\android\Facebook.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.Android.GoogleMaps" />
     <Reference Include="Xamarin.Android.Support.v4">
       <HintPath>..\packages\Xamarin.Android.Support.v4.21.0.3.0\lib\MonoAndroid10\Xamarin.Android.Support.v4.dll</HintPath>
     </Reference>

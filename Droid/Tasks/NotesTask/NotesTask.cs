@@ -1,6 +1,7 @@
 ﻿using System;
 using Android.Views;
 using CCVApp.Shared.Network;
+using CCVApp.Shared.Config;
 
 namespace Droid
 {
@@ -60,7 +61,7 @@ namespace Droid
 
                     switch ( action )
                     {
-                        case "Page.Read":
+                        case GeneralConfig.TaskAction_NotesRead:
                         {
                             if ( RockLaunchData.Instance.Data.NoteDB.SeriesList.Count > 0 )
                             {
@@ -73,7 +74,7 @@ namespace Droid
                             break;
                         }
 
-                        case "Notes.DownloadImages":
+                        case GeneralConfig.TaskAction_NotesDownloadImages:
                         {
                             MainPage.DownloadImages( );
                             break;

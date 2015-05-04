@@ -610,7 +610,7 @@ namespace iOS
                         if ( element.Task as NotesTask != null )
                         {
                             ActivateElement( element, true );
-                            PerformTaskAction( "Page.Read" );
+                            PerformTaskAction( GeneralConfig.TaskAction_NotesRead );
                         }
                     }
                 } 
@@ -707,6 +707,10 @@ namespace iOS
                                 // reveal the springboard
                                 NavViewController.RevealSpringboard( true );
                             }
+
+                            // NOW go ahead and start downloads.
+                            PerformTaskAction( GeneralConfig.TaskAction_NewsReload );
+                            PerformTaskAction( GeneralConfig.TaskAction_NotesDownloadImages );
                         } );
                 };
             timer.Start( );
@@ -729,10 +733,14 @@ namespace iOS
                     // here we know whether the initial handshake with Rock went ok or not
                     LastRockSync = DateTime.Now;
 
-                    // we now have the latest news and all initial downloading.
-                    // Tell the news it's safe to reload.
-                    PerformTaskAction( "News.Reload" );
-                    PerformTaskAction( "Notes.DownloadImages" );
+                    //If the OOBE isn't running
+                    if( IsOOBERunning == false )
+                    {
+                        // Allow the news to update, and begin downloading all
+                        // news and note images we need.
+                        PerformTaskAction( GeneralConfig.TaskAction_NewsReload );
+                        PerformTaskAction( GeneralConfig.TaskAction_NotesDownloadImages );
+                    }
                 });
         }
 
@@ -966,7 +974,7 @@ namespace iOS
                 UpdateCampusViews( );
 
                 // let the news know it should reload
-                PerformTaskAction( "News.Reload" );
+                PerformTaskAction( GeneralConfig.TaskAction_NewsReload );
             }
         }
 

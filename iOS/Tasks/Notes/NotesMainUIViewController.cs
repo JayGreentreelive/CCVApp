@@ -808,7 +808,7 @@ namespace iOS
             NotesTask noteTask = Task as NotesTask;
             if ( noteTask != null )
             {
-                noteTask.NoteController.NoteName = string.Format( "Message - {0}", SeriesEntries[ 0 ].Series.Messages[ 0 ].Name );
+                noteTask.NoteController.NoteName = SeriesEntries[ 0 ].Series.Messages[ 0 ].Name;
                 noteTask.NoteController.NoteUrl = SeriesEntries[ 0 ].Series.Messages[ 0 ].NoteUrl;
                 noteTask.NoteController.StyleSheetDefaultHostDomain = RockLaunchData.Instance.Data.NoteDB.HostDomain;
 

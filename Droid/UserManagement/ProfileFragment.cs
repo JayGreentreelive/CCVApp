@@ -20,6 +20,7 @@ using Rock.Mobile.PlatformUI;
 using Android.Telephony;
 using Rock.Mobile.Util.Strings;
 using Java.Lang.Reflect;
+using CCVApp.Shared.Analytics;
 
 namespace Droid
 {
@@ -240,7 +241,7 @@ namespace Droid
 
             LogoutButton = view.FindViewById<Button>( Resource.Id.logoutButton );
             ControlStyling.StyleButton( LogoutButton, ProfileStrings.LogoutButtonTitle, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-            LogoutButton.SetBackgroundDrawable( null );
+            LogoutButton.Background = null;
 
             DoneButton.Click += (object sender, EventArgs e) => 
                 {
@@ -451,6 +452,8 @@ namespace Droid
             RockMobileUser.Instance.UpdateAddress( null );
             RockMobileUser.Instance.UpdateHomeCampus( null );
             RockMobileUser.Instance.UpdateOrAddPhoneNumber( null );
+
+            ProfileAnalytic.Instance.Trigger( ProfileAnalytic.Update );
         }
     }
 }

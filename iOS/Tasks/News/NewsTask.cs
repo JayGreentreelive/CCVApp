@@ -4,6 +4,7 @@ using CoreGraphics;
 using Foundation;
 using CCVApp.Shared.Network;
 using System.Collections.Generic;
+using CCVApp.Shared.Config;
 
 namespace iOS
 {
@@ -84,7 +85,7 @@ namespace iOS
 
             switch ( action )
             {
-                case "News.Reload":
+                case GeneralConfig.TaskAction_NewsReload:
                 {
                     ReloadNews( );
 

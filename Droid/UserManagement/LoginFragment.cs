@@ -20,6 +20,7 @@ using Rock.Mobile.Threading;
 using Android.Views.InputMethods;
 using Rock.Mobile.PlatformSpecific.Android.UI;
 using Rock.Mobile.Animation;
+using CCVApp.Shared.Analytics;
 
 namespace Droid
 {
@@ -106,7 +107,7 @@ namespace Droid
 
             CancelButton = view.FindViewById<Button>( Resource.Id.cancelButton );
             ControlStyling.StyleButton( CancelButton, GeneralStrings.Cancel, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-            CancelButton.SetBackgroundDrawable( null );
+            CancelButton.Background = null;
             CancelButton.Click += (object sender, EventArgs e) => 
                 {
                     SpringboardParent.ModalFragmentDone( null );
@@ -146,7 +147,7 @@ namespace Droid
 
             // Setup the facebook button
             FacebookButton = view.FindViewById<ImageButton>( Resource.Id.facebookButton );
-            FacebookButton.SetBackgroundDrawable( null );
+            FacebookButton.Background = null;
             FacebookButton.Click += (object sender, EventArgs e ) =>
             {
                 TryFacebookBind( );
@@ -212,6 +213,8 @@ namespace Droid
                 SetUIState( LoginState.Trying );
 
                 RockMobileUser.Instance.BindRockAccount( UsernameField.Text, PasswordField.Text, BindComplete );
+
+                ProfileAnalytic.Instance.Trigger( ProfileAnalytic.Login, "Rock" );
             }
         }
 
@@ -242,6 +245,8 @@ namespace Droid
                                     SetUIState( LoginState.Trying );
                                     ( View as RelativeLayout ).RemoveView( WebLayout );
                                     RockMobileUser.Instance.FacebookCredentialResult( forwardUrl, Session, BindComplete );
+
+                                    ProfileAnalytic.Instance.Trigger( ProfileAnalytic.Login, "Facebook" );
                                 }
                             } );
                         //

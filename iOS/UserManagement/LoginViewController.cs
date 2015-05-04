@@ -16,6 +16,7 @@ using Rock.Mobile.Animation;
 using CoreGraphics;
 using CCVApp.Shared.UI;
 using Rock.Mobile.PlatformSpecific.Util;
+using CCVApp.Shared.Analytics;
 
 namespace iOS
 {
@@ -298,6 +299,8 @@ namespace iOS
                 BlockerView.BringToFront( );
 
                 RockMobileUser.Instance.BindRockAccount( UserNameField.Field.Text, PasswordField.Field.Text, BindComplete );
+
+                ProfileAnalytic.Instance.Trigger( ProfileAnalytic.Login, "Rock" );
             }
         }
 
@@ -372,6 +375,8 @@ namespace iOS
                                             // it is, continue the bind process
                                             WebLayout.ContainerView.RemoveFromSuperview( );
                                             RockMobileUser.Instance.FacebookCredentialResult( url, session, BindComplete );
+
+                                            ProfileAnalytic.Instance.Trigger( ProfileAnalytic.Login, "Facebook" );
                                         }
                                     }
                                     else

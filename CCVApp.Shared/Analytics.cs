@@ -83,14 +83,13 @@ namespace CCVApp.Shared
                     // add it, which will fail if it's alread in the list
                     categoryObj.PerformedActions.Add( action );
 
+                    #if !DEBUG
                     #if __IOS__
                     NSDictionary attribs = NSDictionary.FromObjectAndKey( new NSString( action ), new NSString( categoryObj.Name ) );
                     Localytics.TagEvent( Name, attribs );
                     #elif __ANDROID__
                     System.Collections.Generic.Dictionary<string, string> attribs = new System.Collections.Generic.Dictionary<string, string>( );
                     attribs.Add( categoryObj.Name, action );
-
-                    #if !DEBUG
                     Localytics.TagEvent( Name, attribs );
                     #endif
                     #endif
@@ -164,6 +163,24 @@ namespace CCVApp.Shared
             }
 
             public static GroupFinderAnalytic Instance = new GroupFinderAnalytic( );
+        }
+
+        public class ProfileAnalytic : EventAnalytic
+        {
+            public const string Login = "Login";
+            public const string Register = "Register";
+            public const string Update = "Update";
+
+            protected ProfileAnalytic( ) : base( )
+            {
+                Name = "Profile";
+
+                Categories.Add( new Category( Login, false ) );
+                Categories.Add( new Category( Register, false ) );
+                Categories.Add( new Category( Update, false ) );
+            }
+
+            public static ProfileAnalytic Instance = new ProfileAnalytic( );
         }
     }
 }

@@ -332,7 +332,7 @@ namespace iOS
             NoteDownloadRetries = MaxDownloadAttempts;
             Console.WriteLine( "Resetting Download Attempts" );
 
-            PrepareCreateNotes( );
+            //PrepareCreateNotes( );
         }
 
         public override void ViewDidAppear(bool animated)
@@ -413,6 +413,8 @@ namespace iOS
         public void ViewResigning()
         {
             SaveNoteState( );
+
+            OrientationState = -1;
 
             UIApplication.SharedApplication.IdleTimerDisabled = false;
             Console.WriteLine( "Turning idle timer ON" );
@@ -771,19 +773,22 @@ namespace iOS
                             errorMsg += "\n" + e.Message;
                         }
 
-                        #if DEBUG
-                        // explain that we couldn't generate notes
-                        UIAlertView alert = new UIAlertView( );
-                        alert.Title = "Note Error";
-                        alert.Message = errorMsg;
-                        alert.AddButton( "Ok" );
-                        alert.Show( );
-                        #else
-                        ResultView.Show( MessagesStrings.Error_Title, 
-                                         ControlStylingConfig.Result_Symbol_Failed, 
-                                         MessagesStrings.Error_Message, 
-                                         GeneralStrings.Retry );
-                        #endif
+                        if ( CCVApp.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled == true )
+                        {
+                            // explain that we couldn't generate notes
+                            UIAlertView alert = new UIAlertView( );
+                            alert.Title = "Note Error";
+                            alert.Message = errorMsg;
+                            alert.AddButton( "Ok" );
+                            alert.Show( );
+                        }
+                        else
+                        {
+                            ResultView.Show( MessagesStrings.Error_Title, 
+                                             ControlStylingConfig.Result_Symbol_Failed, 
+                                             MessagesStrings.Error_Message, 
+                                             GeneralStrings.Retry );
+                        }
                     }
                 } );
         }

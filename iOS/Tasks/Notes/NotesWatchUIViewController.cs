@@ -8,6 +8,9 @@ using System.Collections.Generic;
 using CCVApp.Shared.Strings;
 using CCVApp.Shared;
 using CCVApp.Shared.Analytics;
+using CCVApp.Shared.UI;
+using Rock.Mobile.PlatformSpecific.Util;
+using CCVApp.Shared.Config;
 
 namespace iOS
 {
@@ -28,6 +31,8 @@ namespace iOS
         List<NSObject> ObserverHandles { get; set; }
         bool EnteringFullscreen { get; set; }
         bool ExitingFullscreen { get; set; }
+
+        UIResultView ResultView { get; set; }
 
 		public NotesWatchUIViewController ( )
 		{
@@ -57,6 +62,8 @@ namespace iOS
             View.AddSubview( MoviePlayer.View );
 
             View.AddSubview( ActivityIndicator );
+
+            ResultView = new UIResultView( View, View.Frame.ToRectF( ), delegate { TryPlayMedia( ); } );
         }
 
         public override void ViewWillAppear(bool animated)
@@ -90,6 +97,8 @@ namespace iOS
 
                 handle = NSNotificationCenter.DefaultCenter.AddObserver( MPMoviePlayerController.DidExitFullscreenNotification, DidExitFullscreen );
                 ObserverHandles.Add( handle );
+
+                ResultView.Hide( );
             }
         }
 
@@ -100,23 +109,30 @@ namespace iOS
             // don't do anything if we're simply exiting fullscreen
             if ( ExitingFullscreen == false )
             {
-                ActivityIndicator.Hidden = false;
-
-                DidDisplayError = false;
-
-                // if we're watching the same video we last watched, resume
-                if ( MediaUrl == CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaUrl )
-                {
-                    MoviePlayer.InitialPlaybackTime = CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaPos;
-                }
-
-                MoviePlayer.ContentUrl = new NSUrl( MediaUrl );
-                MoviePlayer.PrepareToPlay( );
+                TryPlayMedia( );
             }
             else
             {
                 ActivityIndicator.Hidden = true;
             }
+        }
+
+        void TryPlayMedia( )
+        {
+            ResultView.Hide( );
+
+            ActivityIndicator.Hidden = false;
+
+            DidDisplayError = false;
+
+            // if we're watching the same video we last watched, resume
+            if ( MediaUrl == CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaUrl )
+            {
+                MoviePlayer.InitialPlaybackTime = CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaPos;
+            }
+
+            MoviePlayer.ContentUrl = new NSUrl( MediaUrl );
+            MoviePlayer.PrepareToPlay( );
         }
 
         public override void LayoutChanged()
@@ -173,6 +189,8 @@ namespace iOS
                 Task.NavToolbar.RevealForTime( 3.0f );
                 Task.NavToolbar.SetBackButtonEnabled( true );
             }
+
+            ResultView.SetBounds( View.Frame.ToRectF( ) );
         }
 
         public override void ViewWillDisappear(bool animated)
@@ -316,12 +334,21 @@ namespace iOS
             // more than once
             if( (int)MPMovieFinishReason.PlaybackError == error && DidDisplayError == false )
             {
-                DidDisplayError = true;
-
-                SpringboardViewController.DisplayError( MessagesStrings.Error_Title, MessagesStrings.Error_Watch_Playback );
-                MoviePlayer.Stop( );
-                ActivityIndicator.Hidden = true;
+                DisplayError( );
             }
+        }
+
+        void DisplayError( )
+        {
+            DidDisplayError = true;
+
+            ResultView.Show( MessagesStrings.Error_Title, 
+                ControlStylingConfig.Result_Symbol_Failed, 
+                MessagesStrings.Error_Watch_Playback,
+                GeneralStrings.Retry );
+
+            MoviePlayer.Stop( );
+            ActivityIndicator.Hidden = true;
         }
 	}
 }

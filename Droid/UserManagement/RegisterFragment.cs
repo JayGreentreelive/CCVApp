@@ -21,6 +21,7 @@ using Android.Telephony;
 using Rock.Mobile.Util.Strings;
 using Java.Lang.Reflect;
 using CCVApp.Shared.UI;
+using CCVApp.Shared.Analytics;
 
 namespace Droid
 {
@@ -189,7 +190,7 @@ namespace Droid
 
             CancelButton = view.FindViewById<Button>( Resource.Id.cancelButton );
             ControlStyling.StyleButton( CancelButton, GeneralStrings.Cancel, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
-            CancelButton.SetBackgroundDrawable( null );
+            CancelButton.Background = null;
 
             RegisterButton.Click += (object sender, EventArgs e) => 
                 {
@@ -319,6 +320,8 @@ namespace Droid
 
                             if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
                             {
+                                ProfileAnalytic.Instance.Trigger( ProfileAnalytic.Register );
+                                
                                 State = RegisterState.Success;
                                 ResultView.Show( RegisterStrings.RegisterStatus_Success, 
                                     ControlStylingConfig.Result_Symbol_Success, 

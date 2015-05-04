@@ -143,9 +143,13 @@ namespace CCVApp
 
                     // new notes are open by default. So if we're restoring one that was closed,
                     // keep it closed.
-                    if( userNoteContent.WasOpen == false )
+                    if ( userNoteContent.WasOpen == false )
                     {
                         CloseNote( );
+                    }
+                    else
+                    {
+                        OpenNote( );
                     }
 
                     // since we're restoring an existing user note,
@@ -271,7 +275,7 @@ namespace CCVApp
                     UtilityLayer.CornerRadius = TextView.CornerRadius;
                     UtilityLayer.BorderWidth = TextView.BorderWidth;
                     UtilityLayer.BorderColor = TextView.BorderColor;
-                    UtilityLayer.Bounds = new RectangleF( 0, 0, MinNoteWidth, Rock.Mobile.Graphics.Util.UnitToPx( UtilityLayerHeight ) );
+                    UtilityLayer.Bounds = new RectangleF( 0, 0, MinNoteWidth, 0 );
 
                     // setup the delete button
                     DeleteButton.Text = NoteConfig.UserNote_DeleteIcon;

@@ -550,6 +550,13 @@
     <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splashLarge.png" />
     <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splash35Retina.png" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Contents.json" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splashiphone6plus.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splashiphone6.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splash35.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splash_ipad_portrait.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splash_ipad_portrait_2x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splash_ipad_landscape.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splash_ipad_landscape_2x.png" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-Small.png" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-Small%402x.png" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-Small%403x.png" />
@@ -557,20 +564,14 @@
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-Small-40%403x.png" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon.png" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-60%402x.png" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-60%403x.png" />
-    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splashiphone6plus.png" />
-    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splashiphone6.png" />
-    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splash35.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-76.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-76%402x.png" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-Small-40.png" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-Small-50.png" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-Small-50%402x.png" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-72.png" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-72%402x.png" />
-    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-76.png" />
-    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-76%402x.png" />
-    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splash_ipad_portrait.png" />
-    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splash_ipad_portrait_2x.png" />
-    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splash_ipad_landscape.png" />
-    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splash_ipad_landscape_2x.png" />
   </ItemGroup>
 </Project>

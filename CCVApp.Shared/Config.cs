@@ -89,6 +89,13 @@ namespace CCVApp
 
                 public const string NotesMainPlaceholder = "placeholder_notes_main.png";
                 public const string NotesThumbPlaceholder = "placeholder_notes_thumb.png";
+
+                /// <summary>
+                /// Actions sent via our super basic "event" system.
+                /// </summary>
+                public const string TaskAction_NewsReload = "News.Reload";
+                public const string TaskAction_NotesDownloadImages = "Notes.DownloadImages";
+                public const string TaskAction_NotesRead = "Page.Read";
             }
 
             public class SpringboardConfig

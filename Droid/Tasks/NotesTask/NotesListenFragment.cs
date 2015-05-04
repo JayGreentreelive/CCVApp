@@ -16,6 +16,8 @@ using CCVApp.Shared.Strings;
 using Rock.Mobile.PlatformUI;
 using CCVApp.Shared;
 using CCVApp.Shared.Analytics;
+using CCVApp.Shared.UI;
+using CCVApp.Shared.Config;
 
 namespace Droid
 {
@@ -119,6 +121,8 @@ namespace Droid
                 public string ShareUrl { get; set; }
                 public string Name { get; set; }
 
+                UIResultView ResultView { get; set; }
+
                 // used so that we know how to setup the UI / service
                 // when being created or resumed.
                 enum MediaPlayerState
@@ -156,6 +160,7 @@ namespace Droid
                     {
                         AudioServiceBinder.Service.MediaPlayer.SetDataSource( Rock.Mobile.PlatformSpecific.Android.Core.Context, Android.Net.Uri.Parse( MediaUrl ) );
                         AudioServiceBinder.Service.MediaPlayer.SetOnPreparedListener( this );
+                        AudioServiceBinder.Service.MediaPlayer.SetOnErrorListener( this );
                         AudioServiceBinder.Service.MediaPlayer.PrepareAsync( );
                     }
                 }
@@ -210,6 +215,17 @@ namespace Droid
                     MediaController = new MediaController( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     MediaController.SetAnchorView( view );
                     MediaController.SetMediaPlayer( this );
+
+                    ResultView = new UIResultView( view, new System.Drawing.RectangleF( 0, 0, NavbarFragment.GetFullDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels ), 
+                        delegate 
+                        { 
+                            // we know we're bound, so now just retry.
+
+                            ResultView.Hide( );
+                            PlayerState = MediaPlayerState.Preparing; 
+                            StartAudio( );
+                            SyncUI( );
+                        });
 
                     return view;
                 }
@@ -332,7 +348,6 @@ namespace Droid
                             // hide the progress bar
                             ProgressBar.Visibility = ViewStates.Gone;
 
-                            //todo: bring up media controls
                             MediaController.Show( );
                             break;
                         }
@@ -377,7 +392,17 @@ namespace Droid
                 public bool OnError( MediaPlayer mp, MediaError error, int extra )
                 {
                     ProgressBar.Visibility = ViewStates.Gone;
-                    Springboard.DisplayError( MessagesStrings.Error_Title, MessagesStrings.Error_Watch_Playback );
+
+                    ResultView.Show( MessagesStrings.Error_Title, 
+                        ControlStylingConfig.Result_Symbol_Failed, 
+                        MessagesStrings.Error_Watch_Playback,
+                        GeneralStrings.Retry );
+                    
+                    ResultView.SetBounds( new System.Drawing.RectangleF( 0, 0, NavbarFragment.GetFullDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels ) );
+
+                    mp.Stop( );
+                    mp.Reset( );
+                    //Activity.UnbindService( AudioServiceConnection );
 
                     PlayerState = MediaPlayerState.Stopped;
 
@@ -385,6 +410,34 @@ namespace Droid
 
                     return true;
                 }
+
+                public override void OnConfigurationChanged(Android.Content.Res.Configuration newConfig)
+                {
+                    base.OnConfigurationChanged(newConfig);
+
+                    // if we're entering landscape (wide or regular, we don't care)
+                    if( newConfig.Orientation == Android.Content.Res.Orientation.Landscape )
+                    {
+                        // go fullscreen
+                        ParentTask.NavbarFragment.EnableSpringboardRevealButton( false );
+                        ParentTask.NavbarFragment.ToggleFullscreen( true );
+                        ParentTask.NavbarFragment.NavToolbar.Reveal( false );
+                    }
+                    else
+                    {
+                        // if we're going portrait, turn off fullscreen
+                        ParentTask.NavbarFragment.ToggleFullscreen( false );
+
+                        // and if we're NOT in wide, enable the reveal button.
+                        if ( MainActivity.IsLandscapeWide( ) == false )
+                        {
+                            ParentTask.NavbarFragment.EnableSpringboardRevealButton( true );
+                        }
+                    }
+
+                    ResultView.SetBounds( new System.Drawing.RectangleF( 0, 0, NavbarFragment.GetFullDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels ) );
+                }
+
 
                 public bool CanPause( )
                 {

@@ -262,11 +262,14 @@ namespace Droid
                 {
                     LastRockSync = DateTime.Now;
 
-                    // All launch data is obtained. We now have the latest news, 
-                    // so let the news manager update the news items and download
-                    // whatever it needs.
-                    PerformTaskAction( "News.Reload" );
-                    PerformTaskAction( "Notes.DownloadImages" );
+                    //If the OOBE isn't running
+                    if( IsOOBERunning == false )
+                    {
+                        // Allow the news to update, and begin downloading all
+                        // news and note images we need.
+                        PerformTaskAction( GeneralConfig.TaskAction_NewsReload );
+                        PerformTaskAction( GeneralConfig.TaskAction_NotesDownloadImages );
+                    }
                 });
         }
 
@@ -477,7 +480,7 @@ namespace Droid
                         if ( element.Task as Droid.Tasks.Notes.NotesTask != null )
                         {
                             ActivateElement( element );
-                            PerformTaskAction( "Page.Read" );
+                            PerformTaskAction( GeneralConfig.TaskAction_NotesRead );
                         }
                     }
                 } );
@@ -496,7 +499,7 @@ namespace Droid
                 CampusText.Text = newCampusText;
 
                 // let the news know it should reload
-                PerformTaskAction( "News.Reload" );
+                PerformTaskAction( GeneralConfig.TaskAction_NewsReload );
             }
         }
 
@@ -920,6 +923,10 @@ namespace Droid
                                 // reveal the springboard
                                 NavbarFragment.RevealSpringboard( true );
                             }
+
+                            // NOW go ahead and start downloads.
+                            PerformTaskAction( GeneralConfig.TaskAction_NewsReload );
+                            PerformTaskAction( GeneralConfig.TaskAction_NotesDownloadImages );
                         } );
                 };
             timer.Start( );
@@ -1001,7 +1008,7 @@ namespace Droid
 
         public void SetProfileImage( )
         {
-            ProfileImageButton.SetBackgroundDrawable( null );
+            ProfileImageButton.Background = null;
 
             // the image depends on the user's status.
             if( RockMobileUser.Instance.LoggedIn )
@@ -1043,7 +1050,7 @@ namespace Droid
 
                                 // set the final result
                                 ProfileImageButton.Text = "";
-                                ProfileImageButton.SetBackgroundDrawable( new BitmapDrawable( ProfileMaskedImage ) );
+                                ProfileImageButton.Background = new BitmapDrawable( ProfileMaskedImage );
                             }
                         }
                         catch( Exception )

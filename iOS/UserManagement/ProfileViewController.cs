@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using Rock.Mobile.Util.Strings;
 using Rock.Mobile.PlatformSpecific.iOS.UI;
 using Rock.Mobile.PlatformSpecific.Util;
+using CCVApp.Shared.Analytics;
 
 namespace iOS
 {
@@ -576,6 +577,8 @@ namespace iOS
             RockMobileUser.Instance.UpdateAddress( null );
             RockMobileUser.Instance.UpdateHomeCampus( null );
             RockMobileUser.Instance.UpdateOrAddPhoneNumber( null );
+
+            ProfileAnalytic.Instance.Trigger( ProfileAnalytic.Update );
         }
 
         public override void TouchesEnded(NSSet touches, UIEvent evt)

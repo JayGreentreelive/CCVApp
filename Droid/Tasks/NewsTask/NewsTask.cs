@@ -4,6 +4,7 @@ using Android.Content;
 using Android.Views;
 using CCVApp.Shared.Network;
 using System.Collections.Generic;
+using CCVApp.Shared.Config;
 
 namespace Droid
 {
@@ -80,7 +81,7 @@ namespace Droid
 
                     switch ( action )
                     {
-                        case "News.Reload":
+                        case GeneralConfig.TaskAction_NewsReload:
                         {
                             // for this action, we want to reload our news,
                             ReloadNews( );

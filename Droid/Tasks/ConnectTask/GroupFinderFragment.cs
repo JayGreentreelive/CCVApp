@@ -172,7 +172,7 @@ namespace Droid
                     JoinButton.SetTextSize( Android.Util.ComplexUnitType.Dip, ConnectConfig.GroupFinder_Join_IconSize );
                     JoinButton.Text = ConnectConfig.GroupFinder_JoinIcon;
                     JoinButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
-                    JoinButton.SetBackgroundDrawable( null );
+                    JoinButton.Background = null;
                     JoinButton.FocusableInTouchMode = false;
                     JoinButton.Focusable = false;
                     contentLayout.AddView( JoinButton );
@@ -391,38 +391,42 @@ namespace Droid
 
                 public void OnMapReady( GoogleMap map )
                 {
-                    Map = map;
-
-                    Map.SetOnMarkerClickListener( this );
-
-                    // set the map to a default position
-                    // additionally, set the default position for the map to whatever specified area.
-                    Android.Gms.Maps.Model.LatLng defaultPos = new Android.Gms.Maps.Model.LatLng( ConnectConfig.GroupFinder_DefaultLatitude, ConnectConfig.GroupFinder_DefaultLongitude );
-
-                    CameraUpdate camPos = CameraUpdateFactory.NewLatLngZoom( defaultPos,  ConnectConfig.GroupFinder_DefaultScale_Android );
-                    map.MoveCamera( camPos );
-
-                    // see if there's an address for this person that we can automatically use.
-                    if ( RockMobileUser.Instance.HasFullAddress( ) == true )
+                    // sanity checks in case loading the map fails (Google Play can error)
+                    if ( map != null )
                     {
-                        // if they don't already have any value, use their address
-                        if ( string.IsNullOrEmpty( StreetValue ) == true &&
-                             string.IsNullOrEmpty( CityValue ) == true &&
-                             string.IsNullOrEmpty( StateValue ) == true &&
-                             string.IsNullOrEmpty( ZipValue ) == true )
+                        Map = map;
+
+                        Map.SetOnMarkerClickListener( this );
+
+                        // set the map to a default position
+                        // additionally, set the default position for the map to whatever specified area.
+                        Android.Gms.Maps.Model.LatLng defaultPos = new Android.Gms.Maps.Model.LatLng( ConnectConfig.GroupFinder_DefaultLatitude, ConnectConfig.GroupFinder_DefaultLongitude );
+
+                        CameraUpdate camPos = CameraUpdateFactory.NewLatLngZoom( defaultPos, ConnectConfig.GroupFinder_DefaultScale_Android );
+                        map.MoveCamera( camPos );
+
+                        // see if there's an address for this person that we can automatically use.
+                        if ( RockMobileUser.Instance.HasFullAddress( ) == true )
                         {
-                            SearchPage.SetAddress( RockMobileUser.Instance.Street1( ), RockMobileUser.Instance.City( ), RockMobileUser.Instance.State( ), RockMobileUser.Instance.Zip( ) );    
+                            // if they don't already have any value, use their address
+                            if ( string.IsNullOrEmpty( StreetValue ) == true &&
+                                 string.IsNullOrEmpty( CityValue ) == true &&
+                                 string.IsNullOrEmpty( StateValue ) == true &&
+                                 string.IsNullOrEmpty( ZipValue ) == true )
+                            {
+                                SearchPage.SetAddress( RockMobileUser.Instance.Street1( ), RockMobileUser.Instance.City( ), RockMobileUser.Instance.State( ), RockMobileUser.Instance.Zip( ) );    
+                            }
+                            else
+                            {
+                                // otherwise use what they last had.
+                                SearchPage.SetAddress( StreetValue, CityValue, StateValue, ZipValue );
+                            }
                         }
                         else
                         {
-                            // otherwise use what they last had.
-                            SearchPage.SetAddress( StreetValue, CityValue, StateValue, ZipValue );
+                            // otherwise, if there are values from a previous session, use those.
+                            SearchPage.SetAddress( StreetValue, CityValue, string.IsNullOrEmpty( StateValue ) ? ConnectStrings.GroupFinder_DefaultState : StateValue, ZipValue );
                         }
-                    }
-                    else
-                    {
-                        // otherwise, if there are values from a previous session, use those.
-                        SearchPage.SetAddress( StreetValue, CityValue, string.IsNullOrEmpty( StateValue ) ? ConnectStrings.GroupFinder_DefaultState : StateValue, ZipValue );
                     }
                 }
 
@@ -570,79 +574,83 @@ namespace Droid
 
                 void UpdateMap( bool result )
                 {
-                    Map.Clear( );
-                    MarkerList.Clear( );
-
-                    string address = SearchPage.Street.Text + " " + SearchPage.City.Text + ", " + SearchPage.State.Text + ", " + SearchPage.ZipCode.Text;
-
-                    if ( GroupEntries.Count > 0 )
+                    // sanity checks in case loading the map fails (Google Play can error)
+                    if ( Map != null )
                     {
-                        Android.Gms.Maps.Model.LatLngBounds.Builder builder = new Android.Gms.Maps.Model.LatLngBounds.Builder();
+                        Map.Clear( );
+                        MarkerList.Clear( );
 
-                        // add the source position
-                        Android.Gms.Maps.Model.MarkerOptions markerOptions = new Android.Gms.Maps.Model.MarkerOptions();
-                        Android.Gms.Maps.Model.LatLng pos = new Android.Gms.Maps.Model.LatLng( SourceLocation.Latitude, SourceLocation.Longitude );
-                        markerOptions.SetPosition( pos );
-                        markerOptions.InvokeIcon( BitmapDescriptorFactory.DefaultMarker( BitmapDescriptorFactory.HueGreen ) );
-                        builder.Include( pos );
+                        string address = SearchPage.Street.Text + " " + SearchPage.City.Text + ", " + SearchPage.State.Text + ", " + SearchPage.ZipCode.Text;
 
-                        Android.Gms.Maps.Model.Marker marker = Map.AddMarker( markerOptions );
-                        MarkerList.Add( marker );
-
-                        for ( int i = 0; i < GroupEntries.Count; i++ )
+                        if ( GroupEntries.Count > 0 )
                         {
-                            // add the positions to the map
-                            markerOptions = new Android.Gms.Maps.Model.MarkerOptions();
-                            pos = new Android.Gms.Maps.Model.LatLng( GroupEntries[ i ].Latitude, GroupEntries[ i ].Longitude );
-                            markerOptions.SetPosition( pos );
-                            markerOptions.SetTitle( GroupEntries[ i ].Title );
-                            markerOptions.SetSnippet( string.Format( "{0:##.0} {1}", GroupEntries[ i ].Distance, ConnectStrings.GroupFinder_MilesSuffix ) );
+                            Android.Gms.Maps.Model.LatLngBounds.Builder builder = new Android.Gms.Maps.Model.LatLngBounds.Builder();
 
+                            // add the source position
+                            Android.Gms.Maps.Model.MarkerOptions markerOptions = new Android.Gms.Maps.Model.MarkerOptions();
+                            Android.Gms.Maps.Model.LatLng pos = new Android.Gms.Maps.Model.LatLng( SourceLocation.Latitude, SourceLocation.Longitude );
+                            markerOptions.SetPosition( pos );
+                            markerOptions.InvokeIcon( BitmapDescriptorFactory.DefaultMarker( BitmapDescriptorFactory.HueGreen ) );
                             builder.Include( pos );
 
-                            marker = Map.AddMarker( markerOptions );
+                            Android.Gms.Maps.Model.Marker marker = Map.AddMarker( markerOptions );
                             MarkerList.Add( marker );
-                        }
 
-                        Android.Gms.Maps.Model.LatLngBounds bounds = builder.Build( );
+                            for ( int i = 0; i < GroupEntries.Count; i++ )
+                            {
+                                // add the positions to the map
+                                markerOptions = new Android.Gms.Maps.Model.MarkerOptions();
+                                pos = new Android.Gms.Maps.Model.LatLng( GroupEntries[ i ].Latitude, GroupEntries[ i ].Longitude );
+                                markerOptions.SetPosition( pos );
+                                markerOptions.SetTitle( GroupEntries[ i ].Title );
+                                markerOptions.SetSnippet( string.Format( "{0:##.0} {1}", GroupEntries[ i ].Distance, ConnectStrings.GroupFinder_MilesSuffix ) );
 
-                        CameraUpdate camPos = CameraUpdateFactory.NewLatLngBounds( bounds, 200 );
-                        Map.AnimateCamera( camPos );
+                                builder.Include( pos );
 
-                        // show the info window for the first (closest) group
-                        MarkerList[ 1 ].ShowInfoWindow( );
+                                marker = Map.AddMarker( markerOptions );
+                                MarkerList.Add( marker );
+                            }
 
-                        SearchResultPrefix.Text = ConnectStrings.GroupFinder_Neighborhood;
-                        SearchResultNeighborhood.Text = GroupEntries[ 0 ].NeighborhoodArea;
+                            Android.Gms.Maps.Model.LatLngBounds bounds = builder.Build( );
 
-                        // record an analytic that they searched
-                        GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.Location, address );
-                        GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.Neighborhood, GroupEntries[ 0 ].NeighborhoodArea );
-
-                        ( ListView.Adapter as GroupArrayAdapter ).SetSelectedRow( 0 );
-                    }
-                    else
-                    {
-                        if ( result == true )
-                        {
-                            SearchResultPrefix.Text = ConnectStrings.GroupFinder_NoGroupsFound;
-                            SearchResultNeighborhood.Text = string.Empty;
-
-                            // no groups found, so move the camera to the default position
-                            Android.Gms.Maps.Model.LatLng defaultPos = new Android.Gms.Maps.Model.LatLng( ConnectConfig.GroupFinder_DefaultLatitude, ConnectConfig.GroupFinder_DefaultLongitude );
-                            CameraUpdate camPos = CameraUpdateFactory.NewLatLngZoom( defaultPos, ConnectConfig.GroupFinder_DefaultScale_Android );
+                            CameraUpdate camPos = CameraUpdateFactory.NewLatLngBounds( bounds, 200 );
                             Map.AnimateCamera( camPos );
 
-                            // record that this address failed
-                            GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.OutOfBounds, address );
+                            // show the info window for the first (closest) group
+                            MarkerList[ 1 ].ShowInfoWindow( );
 
-                            ( ListView.Adapter as GroupArrayAdapter ).SetSelectedRow( -1 );
+                            SearchResultPrefix.Text = ConnectStrings.GroupFinder_Neighborhood;
+                            SearchResultNeighborhood.Text = GroupEntries[ 0 ].NeighborhoodArea;
+
+                            // record an analytic that they searched
+                            GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.Location, address );
+                            GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.Neighborhood, GroupEntries[ 0 ].NeighborhoodArea );
+
+                            ( ListView.Adapter as GroupArrayAdapter ).SetSelectedRow( 0 );
                         }
                         else
                         {
-                            // there was actually an error. Let them know.
-                            SearchResultPrefix.Text = ConnectStrings.GroupFinder_NetworkError;
-                            SearchResultNeighborhood.Text = string.Empty;
+                            if ( result == true )
+                            {
+                                SearchResultPrefix.Text = ConnectStrings.GroupFinder_NoGroupsFound;
+                                SearchResultNeighborhood.Text = string.Empty;
+
+                                // no groups found, so move the camera to the default position
+                                Android.Gms.Maps.Model.LatLng defaultPos = new Android.Gms.Maps.Model.LatLng( ConnectConfig.GroupFinder_DefaultLatitude, ConnectConfig.GroupFinder_DefaultLongitude );
+                                CameraUpdate camPos = CameraUpdateFactory.NewLatLngZoom( defaultPos, ConnectConfig.GroupFinder_DefaultScale_Android );
+                                Map.AnimateCamera( camPos );
+
+                                // record that this address failed
+                                GroupFinderAnalytic.Instance.Trigger( GroupFinderAnalytic.OutOfBounds, address );
+
+                                ( ListView.Adapter as GroupArrayAdapter ).SetSelectedRow( -1 );
+                            }
+                            else
+                            {
+                                // there was actually an error. Let them know.
+                                SearchResultPrefix.Text = ConnectStrings.GroupFinder_NetworkError;
+                                SearchResultNeighborhood.Text = string.Empty;
+                            }
                         }
                     }
                 }

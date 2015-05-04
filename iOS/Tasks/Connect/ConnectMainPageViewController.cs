@@ -239,7 +239,7 @@ namespace iOS
                 nfloat availableTextWidth = cell.Bounds.Width - cell.Chevron.Bounds.Width - cell.Image.Bounds.Width - 10;
 
                 // Chevron
-                cell.Chevron.Layer.Position = new CGPoint( cell.Bounds.Width - (cell.Chevron.Bounds.Width / 2) - 5, (ConnectConfig.MainPage_ThumbnailDimension) / 2 );
+                cell.Chevron.Layer.Position = new CGPoint( cell.Bounds.Width - (cell.Chevron.Bounds.Width / 2) - 5, (ConnectConfig.MainPage_ThumbnailDimension + 10) / 2 );
 
                 // Create the title
                 cell.Title.Text = Parent.LinkEntries[ row ].Title;
@@ -247,7 +247,7 @@ namespace iOS
 
                 // Position the Title & Date in the center to the right of the image
                 nfloat totalTextHeight = cell.Title.Bounds.Height - 1;
-                cell.Title.Frame = new CGRect( cell.Image.Frame.Right + 10, (ConnectConfig.MainPage_ThumbnailDimension - totalTextHeight) / 2, availableTextWidth - 5, cell.Title.Frame.Height );
+                cell.Title.Frame = new CGRect( cell.Image.Frame.Right + 10, ((ConnectConfig.MainPage_ThumbnailDimension + 10) - totalTextHeight) / 2, availableTextWidth - 5, cell.Title.Frame.Height );
 
                 // add the seperator to the bottom
                 cell.Seperator.Frame = new CGRect( 0, cell.Image.Frame.Bottom + 10, cell.Bounds.Width, 1 );

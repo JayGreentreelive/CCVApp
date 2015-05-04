@@ -16,6 +16,8 @@ using CCVApp.Shared.Strings;
 using Rock.Mobile.PlatformUI;
 using CCVApp.Shared;
 using CCVApp.Shared.Analytics;
+using CCVApp.Shared.UI;
+using CCVApp.Shared.Config;
 
 namespace Droid
 {
@@ -36,6 +38,8 @@ namespace Droid
                 public string MediaUrl { get; set; }
                 public string ShareUrl { get; set; }
                 public string Name { get; set; }
+
+                UIResultView ResultView { get; set; }
 
                 public override void OnCreate( Bundle savedInstanceState )
                 {
@@ -74,6 +78,8 @@ namespace Droid
                     ( (RelativeLayout.LayoutParams)ProgressBar.LayoutParameters ).AddRule( LayoutRules.CenterInParent );
                     view.AddView( ProgressBar );
                     ProgressBar.BringToFront();
+
+                    ResultView = new UIResultView( view, new System.Drawing.RectangleF( 0, 0, NavbarFragment.GetFullDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels ), delegate { TryPlayMedia( ); } );
 
                     return view;
                 }
@@ -124,7 +130,13 @@ namespace Droid
                 public bool OnError( MediaPlayer mp, MediaError error, int extra )
                 {
                     ProgressBar.Visibility = ViewStates.Gone;
-                    Springboard.DisplayError( MessagesStrings.Error_Title, MessagesStrings.Error_Watch_Playback );
+
+                    ResultView.Show( MessagesStrings.Error_Title, 
+                        ControlStylingConfig.Result_Symbol_Failed, 
+                        MessagesStrings.Error_Watch_Playback,
+                        GeneralStrings.Retry );
+
+                    ResultView.SetBounds( new System.Drawing.RectangleF( 0, 0, NavbarFragment.GetFullDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels ) );
 
                     return true;
                 }
@@ -170,8 +182,15 @@ namespace Droid
                         throw new Exception( "MediaUrl must be valid." );
                     }
 
-                    ProgressBar.Visibility = ViewStates.Visible;
+                    TryPlayMedia( );
+                }
 
+                void TryPlayMedia( )
+                {
+                    ProgressBar.Visibility = ViewStates.Visible;
+                    ResultView.Hide( );
+
+                    VideoPlayer.StopPlayback( );
                     VideoPlayer.SetVideoURI( Android.Net.Uri.Parse( MediaUrl ) );
                     VideoPlayer.Pause( );
                 }
@@ -233,6 +252,8 @@ namespace Droid
                             ParentTask.NavbarFragment.EnableSpringboardRevealButton( true );
                         }
                     }
+
+                    ResultView.SetBounds( new System.Drawing.RectangleF( 0, 0, NavbarFragment.GetFullDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels ) );
                 }
             }
         }

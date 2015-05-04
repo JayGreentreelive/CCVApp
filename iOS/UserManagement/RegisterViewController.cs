@@ -15,6 +15,7 @@ using Rock.Mobile.PlatformSpecific.iOS.UI;
 using Rock.Mobile.PlatformSpecific.Util;
 using Rock.Mobile.Animation;
 using CCVApp.Shared.UI;
+using CCVApp.Shared.Analytics;
 
 namespace iOS
 {
@@ -402,6 +403,8 @@ namespace iOS
                                 {
                                     if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
                                     {
+                                        ProfileAnalytic.Instance.Trigger( ProfileAnalytic.Register );
+
                                         State = RegisterState.Success;
                                         ResultView.Show( RegisterStrings.RegisterStatus_Success, 
                                             ControlStylingConfig.Result_Symbol_Success, 

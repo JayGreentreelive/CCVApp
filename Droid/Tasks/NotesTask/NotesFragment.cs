@@ -742,15 +742,17 @@ namespace Droid
                                     errorMsg += e.Message;
                                 }
 
-                                #if DEBUG
-                                Springboard.DisplayError( "Note Error", errorMsg );
-                                #else
-                                ResultView.Show( MessagesStrings.Error_Title, 
-                                                 ControlStylingConfig.Result_Symbol_Failed, 
-                                                 MessagesStrings.Error_Message, 
-                                                 GeneralStrings.Retry );
-                                #endif
-                                
+                                if ( CCVApp.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled == true )
+                                {
+                                    Springboard.DisplayError( "Note Error", errorMsg );
+                                }
+                                else
+                                {
+                                    ResultView.Show( MessagesStrings.Error_Title, 
+                                                     ControlStylingConfig.Result_Symbol_Failed, 
+                                                     MessagesStrings.Error_Message, 
+                                                     GeneralStrings.Retry );
+                                }
                             }
                         } );
                 }

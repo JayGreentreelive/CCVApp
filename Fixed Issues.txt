@@ -2,26 +2,22 @@ Changes
 -------
 
 Both
-	Data will now update anytime the app is backgrounded and resumed.
-	-Fixes an issue where you might not see the latest sermon notes.
-	-Fixes an issue where profile changes made outside the app would not be seen.
+	When Note refreshing is enabled, actual parsing errors will be displayed, rather than the normal network error screen.
 
-	Use the person's alias ID where appropriate. (Fixes duplicate person issues.)
+	Fixed an issue causing the login process to sometimes take over a minute.
 
-	Fixed lots of issues with user registration
+	Added analytics for logging in (via Rock or Facebook), updating a profile and registering a new account.
 
-	Fixed an issue allowing invalid email addresses to submitted.
+	When rotating the device, user notes that were open will remain open.
 
-	Added a tool strip to the User Note with delete and close buttons.
+	Fixed an issue causing the user note utility bar to sometimes remain open when the note was closed.
+
+	Podcasts now use a nicer error screen when playback fails.
 
 iOS
-	Fixed an issue causing prayer cards to glitch if swiped near the Prayer button.
+	Fixed various UI layout issues.
 
-	Fixed an issue causing the Image Cropper to only work once per run.
+	Fixed an analytic that was sending the wrong message event name.
 
 Android
-	Fixed an issue preventing Facebook login from working
-
-	Fixed Note Layout issues on high dpi devices
-
-	Fixed a massive memory leak in the Connect page.
+	Fixed issues when audio podcasts failed to play.

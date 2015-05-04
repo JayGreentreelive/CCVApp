@@ -288,7 +288,7 @@ namespace Droid
                     ListenButton.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Details_Table_IconSize );
                     ListenButton.Text = NoteConfig.Series_Table_Listen_Icon;
                     ListenButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
-                    ListenButton.SetBackgroundDrawable( null );
+                    ListenButton.Background = null;
                     buttonLayout.AddView( ListenButton );
 
                     WatchButton = new Button( Rock.Mobile.PlatformSpecific.Android.Core.Context );
@@ -299,7 +299,7 @@ namespace Droid
                     WatchButton.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Details_Table_IconSize );
                     WatchButton.Text = NoteConfig.Series_Table_Watch_Icon;
                     WatchButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
-                    WatchButton.SetBackgroundDrawable( null );
+                    WatchButton.Background = null;
                     buttonLayout.AddView( WatchButton );
 
                     TakeNotesButton = new Button( Rock.Mobile.PlatformSpecific.Android.Core.Context );
@@ -310,7 +310,7 @@ namespace Droid
                     TakeNotesButton.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Details_Table_IconSize );
                     TakeNotesButton.Text = NoteConfig.Series_Table_TakeNotes_Icon;
                     TakeNotesButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
-                    TakeNotesButton.SetBackgroundDrawable( null );
+                    TakeNotesButton.Background = null;
                     buttonLayout.AddView( TakeNotesButton );
 
                     ListenButton.Click += (object sender, EventArgs e ) =>

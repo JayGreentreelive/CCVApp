@@ -427,7 +427,7 @@ namespace Droid
             SpringboardRevealButton = new Button( Activity );
 
             // clear the background outline
-            SpringboardRevealButton.SetBackgroundDrawable( null );
+            SpringboardRevealButton.Background = null;
 
             // position it vertically centered and a little right indented
             SpringboardRevealButton.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );

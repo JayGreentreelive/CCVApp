@@ -191,7 +191,7 @@ namespace Droid
                         // Pray Button
                         PrayerActionButton = new Button( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                         PrayerActionButton.Enabled = false;
-                        PrayerActionButton.SetBackgroundDrawable( null );
+                        PrayerActionButton.Background = null;
                         PrayerActionButton.LayoutParameters = new RelativeLayout.LayoutParams( (int)PrayerActionSize.Width, (int)PrayerActionSize.Height );
                         //Pray.SetBackgroundColor( Android.Graphics.Color.Green );
                         PrayerActionLayout.AddView( PrayerActionButton );
