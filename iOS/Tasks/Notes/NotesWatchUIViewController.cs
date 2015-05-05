@@ -310,11 +310,11 @@ namespace iOS
             // store the last video we watched.
             CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaUrl = MediaUrl;
 
-            // see where we are in playback. If it's > 10 and < 90, we'll save the time.
+            // see where we are in playback. If it's > 1 and < 98, we'll save the time.
             if ( MoviePlayer.Duration > 0.00f )
             {
                 double playbackPerc = MoviePlayer.CurrentPlaybackTime / MoviePlayer.Duration;
-                if ( playbackPerc > .10f && playbackPerc < .95f )
+                if ( playbackPerc > .01f && playbackPerc < .98f )
                 {
                     CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaPos = MoviePlayer.CurrentPlaybackTime;
                 }

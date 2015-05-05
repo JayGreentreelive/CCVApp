@@ -211,9 +211,9 @@ namespace Droid
                     // see if we should store the playback position for resuming
                     if ( VideoPlayer.Duration > 0 )
                     {
-                        // if we're within 10 and 90 percent, do it
+                        // if we're within 1 and 98 percent, do it
                         float playbackPerc = (float)VideoPlayer.CurrentPosition / (float)VideoPlayer.Duration;
-                        if ( playbackPerc > .10f && playbackPerc < .95f )
+                        if ( playbackPerc > .01f && playbackPerc < .98f )
                         {
                             CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaPos = VideoPlayer.CurrentPosition;
                         }

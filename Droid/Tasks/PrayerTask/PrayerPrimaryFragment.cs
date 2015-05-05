@@ -604,28 +604,40 @@ namespace Droid
                 public override bool OnDownGesture( MotionEvent e )
                 {
                     //Console.WriteLine( "OnDownGesture" );
-                    Carousel.TouchesBegan( );
+                    if ( IsRequesting == false )
+                    {
+                        Carousel.TouchesBegan( );
+                    }
                     return false;
                 }
 
                 public override bool OnTouch( View v, MotionEvent e )
                 {
                     //Console.WriteLine( "OnTouch" );
-                    if ( base.OnTouch( v, e ) == true )
+
+                    // if we're downloading prayers, don't process touch, because it causes a crash in android's gesture detector.
+                    if ( IsRequesting == false )
                     {
-                        return true;
+                        if ( base.OnTouch( v, e ) == true )
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            switch ( e.Action )
+                            {
+                                case MotionEventActions.Up:
+                                {
+                                    Carousel.TouchesEnded( );
+                                    break;
+                                }
+                            }
+
+                            return false;
+                        }
                     }
                     else
                     {
-                        switch ( e.Action )
-                        {
-                            case MotionEventActions.Up:
-                            {
-                                Carousel.TouchesEnded( );
-                                break;
-                            }
-                        }
-
                         return false;
                     }
                 }

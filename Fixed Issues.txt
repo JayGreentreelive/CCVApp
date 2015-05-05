@@ -2,22 +2,10 @@ Changes
 -------
 
 Both
-	When Note refreshing is enabled, actual parsing errors will be displayed, rather than the normal network error screen.
-
-	Fixed an issue causing the login process to sometimes take over a minute.
-
-	Added analytics for logging in (via Rock or Facebook), updating a profile and registering a new account.
-
-	When rotating the device, user notes that were open will remain open.
-
-	Fixed an issue causing the user note utility bar to sometimes remain open when the note was closed.
-
-	Podcasts now use a nicer error screen when playback fails.
+	Fixed an issue preventing the playback position of podcasts to be saved.
 
 iOS
-	Fixed various UI layout issues.
-
-	Fixed an analytic that was sending the wrong message event name.
+	
 
 Android
-	Fixed issues when audio podcasts failed to play.
+	

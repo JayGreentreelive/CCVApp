@@ -548,20 +548,19 @@ namespace Droid
         /// </summary>
         public static int GetContainerDisplayWidth( )
         {
-            Point displaySize = new Point();
-            ( (Activity)Rock.Mobile.PlatformSpecific.Android.Core.Context ).WindowManager.DefaultDisplay.GetSize( displaySize );
+            float displayWidthPixels = Rock.Mobile.PlatformSpecific.Android.Core.Context.Resources.DisplayMetrics.WidthPixels;
 
             // if we're in landscape wide mode, return the container viewing width
             if ( MainActivity.IsLandscapeWide( ) == true )
             {
-                float displayWidth = displaySize.X;
+                float displayWidth = displayWidthPixels;
 
                 return (int)( displayWidth - ( displayWidth * PrimaryNavBarConfig.Landscape_RevealPercentage ) );
             }
             // otherwise, for portrait, just return the full display width
             else
             {
-                return displaySize.X;
+                return (int)displayWidthPixels;
             }
         }
 
