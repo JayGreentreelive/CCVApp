@@ -6,7 +6,7 @@ using CoreGraphics;
 using System.Collections.Generic;
 using System.Threading;
 using App.Shared.Config;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using App.Shared.PrivateConfig;
 
 namespace iOS
@@ -80,7 +80,7 @@ namespace iOS
 
             // container view must have a black background so that the ticks
             // before the task displays don't cause a flash
-            View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
+            View.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
             View.Layer.AnchorPoint = CGPoint.Empty;
             View.Layer.Position = CGPoint.Empty;
 
@@ -133,7 +133,7 @@ namespace iOS
             // setup the toolbar that will manage task navigation and any other tasks the task needs
             SubNavToolbar = new NavToolbar();
 
-            SubNavToolbar.BarTintColor = Rock.Mobile.PlatformUI.Util.GetUIColor( PrivateSubNavToolbarConfig.BackgroundColor );
+            SubNavToolbar.BarTintColor = Rock.Mobile.UI.Util.GetUIColor( PrivateSubNavToolbarConfig.BackgroundColor );
             SubNavToolbar.Layer.Opacity = PrivateSubNavToolbarConfig.Opacity;
             SubNavigationController.View.AddSubview( SubNavToolbar );
 

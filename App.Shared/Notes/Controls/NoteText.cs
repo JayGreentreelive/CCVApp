@@ -1,7 +1,7 @@
 using System;
 using System.Xml;
 using System.Collections.Generic;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using System.Drawing;
 
 namespace App

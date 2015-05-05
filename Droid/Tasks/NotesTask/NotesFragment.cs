@@ -16,7 +16,7 @@ using Rock.Mobile.Network;
 using App.Shared.Notes;
 using App.Shared.Config;
 using RestSharp;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using App.Shared;
 using App.Shared.Strings;
 using App.Shared.Analytics;
@@ -24,6 +24,7 @@ using App.Shared.UI;
 using Rock.Mobile.Animation;
 using Android.Graphics;
 using App.Shared.PrivateConfig;
+using Rock.Mobile.IO;
 
 namespace Droid
 {
@@ -243,7 +244,7 @@ namespace Droid
 
                     Indicator = layout.FindViewById<ProgressBar>( Resource.Id.progressBar );
                     Indicator.Visibility = ViewStates.Gone;
-                    Indicator.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( 0 ) );
+                    Indicator.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( 0 ) );
                     Indicator.BringToFront();
 
                     // create the layout that will contain the notes
@@ -622,7 +623,7 @@ namespace Droid
                         Note.Create( NavbarFragment.GetContainerDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels, ScrollViewLayout, NoteFileName + PrivateNoteConfig.UserNoteSuffix, DisplayMessageBox );
 
                         // set the requested background color
-                        ScrollView.SetBackgroundColor( ( Android.Graphics.Color )Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value ) );
+                        ScrollView.SetBackgroundColor( ( Android.Graphics.Color )Rock.Mobile.UI.Util.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value ) );
 
                         // update the height of the scroll view to fit all content
                         RectangleF frame = Note.GetFrame( );

@@ -2,7 +2,7 @@ using System;
 using System.Xml;
 
 using App.Shared.Notes.Styles;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using System.Collections.Generic;
 using System.Drawing;
 

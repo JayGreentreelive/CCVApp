@@ -59,7 +59,7 @@ namespace Droid
                     View view = inflater.Inflate(Resource.Layout.JoinGroup, container, false);
                     view.SetOnTouchListener( this );
 
-                    view.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
+                    view.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
 
                     RelativeLayout backgroundView = view.FindViewById<RelativeLayout>( Resource.Id.view_background );
 

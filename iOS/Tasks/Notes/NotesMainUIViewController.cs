@@ -12,7 +12,7 @@ using System.IO;
 using RestSharp;
 using App.Shared.Config;
 using App.Shared.Strings;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using System.Net;
 using App.Shared;
 using System.Threading.Tasks;
@@ -20,6 +20,7 @@ using System.Threading;
 using App.Shared.UI;
 using Rock.Mobile.PlatformSpecific.Util;
 using App.Shared.PrivateConfig;
+using Rock.Mobile.IO;
 
 namespace iOS
 {
@@ -56,7 +57,7 @@ namespace iOS
 
                 public SeriesPrimaryCell( CGRect parentSize, UITableViewCellStyle style, string cellIdentifier, UIImage imagePlaceholder ) : base( style, cellIdentifier )
                 {
-                    BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
+                    BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
 
                     Image = new UIImageView( );
                     Image.ContentMode = UIViewContentMode.ScaleAspectFit;
@@ -76,7 +77,7 @@ namespace iOS
                     Title = new UILabel( );
                     Title.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Bold, ControlStylingConfig.Large_FontSize );
                     Title.Layer.AnchorPoint = CGPoint.Empty;
-                    Title.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
+                    Title.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
                     Title.BackgroundColor = UIColor.Clear;
                     Title.LineBreakMode = UILineBreakMode.TailTruncation;
                     Title.Text = "PLACEHOLDER PLACEHOLDER";
@@ -88,7 +89,7 @@ namespace iOS
                     Date = new UILabel( );
                     Date.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Regular, ControlStylingConfig.Small_FontSize );
                     Date.Layer.AnchorPoint = CGPoint.Empty;
-                    Date.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+                    Date.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
                     Date.BackgroundColor = UIColor.Clear;
                     Date.LineBreakMode = UILineBreakMode.TailTruncation;
                     Date.Text = "88/88/8888";
@@ -99,7 +100,7 @@ namespace iOS
                     Speaker = new UILabel( );
                     Speaker.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Regular, ControlStylingConfig.Small_FontSize );
                     Speaker.Layer.AnchorPoint = CGPoint.Empty;
-                    Speaker.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+                    Speaker.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
                     Speaker.BackgroundColor = UIColor.Clear;
                     Speaker.LineBreakMode = UILineBreakMode.TailTruncation;
                     Speaker.Text = "PLACEHOLDER";
@@ -113,7 +114,7 @@ namespace iOS
                     WatchButton.TouchUpInside += (object sender, EventArgs e) => { Parent.WatchButtonClicked( ); };
                     WatchButton.Layer.AnchorPoint = CGPoint.Empty;
                     WatchButton.BackgroundColor = UIColor.Clear;
-                    WatchButton.Layer.BorderColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ).CGColor;
+                    WatchButton.Layer.BorderColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ).CGColor;
                     WatchButton.Layer.BorderWidth = 1;
                     WatchButton.SizeToFit( );
                     WatchButton.Bounds = new CGRect( 0, 0, parentSize.Width / 2 + 6, WatchButton.Bounds.Height + 10 );
@@ -142,7 +143,7 @@ namespace iOS
                     TakeNotesButton.TouchUpInside += (object sender, EventArgs e) => { Parent.TakeNotesButtonClicked( ); };
                     TakeNotesButton.Layer.AnchorPoint = CGPoint.Empty;
                     TakeNotesButton.BackgroundColor = UIColor.Clear;
-                    TakeNotesButton.Layer.BorderColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ).CGColor;
+                    TakeNotesButton.Layer.BorderColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ).CGColor;
                     TakeNotesButton.Layer.BorderWidth = 1;
                     TakeNotesButton.SizeToFit( );
                     AddSubview( TakeNotesButton );
@@ -173,8 +174,8 @@ namespace iOS
                     BottomBanner.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Regular, ControlStylingConfig.Small_FontSize );
                     BottomBanner.Layer.AnchorPoint = new CGPoint( 0, 0 );
                     BottomBanner.Text = MessagesStrings.Series_Table_PreviousMessages;
-                    BottomBanner.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
-                    BottomBanner.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Table_Footer_Color );
+                    BottomBanner.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+                    BottomBanner.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Table_Footer_Color );
                     BottomBanner.TextAlignment = UITextAlignment.Center;
 
                     BottomBanner.SizeToFit( );
@@ -188,8 +189,8 @@ namespace iOS
                     if ( enabled == true )
                     {
                         WatchButton.Enabled = true;
-                        WatchButtonIcon.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
-                        WatchButtonLabel.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
+                        WatchButtonIcon.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
+                        WatchButtonLabel.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
                     }
                     else
                     {
@@ -204,8 +205,8 @@ namespace iOS
                     if ( enabled == true )
                     {
                         TakeNotesButton.Enabled = true;
-                        TakeNotesButtonIcon.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
-                        TakeNotesButtonLabel.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
+                        TakeNotesButtonIcon.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
+                        TakeNotesButtonLabel.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
                     }
                     else
                     {
@@ -242,7 +243,7 @@ namespace iOS
                     Title = new UILabel( );
                     Title.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
                     Title.Layer.AnchorPoint = CGPoint.Empty;
-                    Title.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
+                    Title.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
                     Title.BackgroundColor = UIColor.Clear;
                     Title.LineBreakMode = UILineBreakMode.TailTruncation;
                     AddSubview( Title );
@@ -250,7 +251,7 @@ namespace iOS
                     Date = new UILabel( );
                     Date.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Regular, ControlStylingConfig.Small_FontSize );
                     Date.Layer.AnchorPoint = CGPoint.Empty;
-                    Date.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+                    Date.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
                     Date.BackgroundColor = UIColor.Clear;
                     Date.LineBreakMode = UILineBreakMode.TailTruncation;
                     AddSubview( Date );
@@ -258,14 +259,14 @@ namespace iOS
                     Chevron = new UILabel( );
                     AddSubview( Chevron );
                     Chevron.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.Series_Table_IconSize );
-                    Chevron.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+                    Chevron.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
                     Chevron.Text = PrivateNoteConfig.Series_Table_Navigate_Icon;
                     Chevron.SizeToFit( );
 
                     Seperator = new UIView( );
                     AddSubview( Seperator );
                     Seperator.Layer.BorderWidth = 1;
-                    Seperator.Layer.BorderColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ).CGColor;
+                    Seperator.Layer.BorderColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ).CGColor;
                 }
             }
 
@@ -359,7 +360,7 @@ namespace iOS
                     cell.Bounds = new CGRect( cell.Bounds.X, cell.Bounds.Y, tableView.Bounds.Width, cell.Bounds.Height );
 
                     // configure the cell colors
-                    cell.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
+                    cell.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
                     cell.SelectionStyle = UITableViewCellSelectionStyle.None;
                 }
 
@@ -434,7 +435,7 @@ namespace iOS
                     cell.Bounds = new CGRect( cell.Bounds.X, cell.Bounds.Y, tableView.Bounds.Width, cell.Bounds.Height );
 
                     // configure the cell colors
-                    cell.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
+                    cell.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
                     cell.SelectionStyle = UITableViewCellSelectionStyle.None;
                 }
 
@@ -521,7 +522,7 @@ namespace iOS
             base.ViewDidLoad();
 
             // setup our table
-            NotesTableView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
+            NotesTableView.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
             NotesTableView.SeparatorStyle = UITableViewCellSeparatorStyle.None;
 
             ActivityIndicator = new UIActivityIndicatorView( new CGRect( View.Frame.Width / 2, View.Frame.Height / 2, 0, 0 ) );

@@ -19,6 +19,7 @@ using Rock.Mobile.PlatformSpecific.Android.Graphics;
 using App.Shared.Config;
 using Rock.Mobile.PlatformSpecific.Android.UI;
 using App.Shared.PrivateConfig;
+using Rock.Mobile.IO;
 
 namespace Droid
 {
@@ -231,7 +232,7 @@ namespace Droid
                 {
                     Orientation = Orientation.Horizontal;
 
-                    SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+                    SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
 
                     LeftLayout = new RelativeLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     LeftLayout.LayoutParameters = new LinearLayout.LayoutParams( LayoutParams.WrapContent, LayoutParams.WrapContent );

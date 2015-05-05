@@ -15,7 +15,7 @@ using Android.Animation;
 using Droid.Tasks;
 using Android.Graphics;
 using App.Shared.Config;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using App.Shared.PrivateConfig;
 
 namespace Droid
@@ -337,7 +337,7 @@ namespace Droid
 
             //The navbar should basically be a background with logo and a springboard reveal button in the upper left.
             Navbar = inflater.Inflate(Resource.Layout.navbar, container, false) as RelativeLayout;
-            Navbar.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( PrimaryNavBarConfig.BackgroundColor ) );
+            Navbar.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( PrimaryNavBarConfig.BackgroundColor ) );
 
             // create the springboard reveal button
             CreateSpringboardButton( Navbar );
@@ -455,9 +455,9 @@ namespace Droid
 
             int [] colors = new int[]
                 {
-                    Rock.Mobile.PlatformUI.Util.GetUIColor( mutedColor ),
-                    Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ),
-                    Rock.Mobile.PlatformUI.Util.GetUIColor( mutedColor ),
+                    Rock.Mobile.UI.Util.GetUIColor( mutedColor ),
+                    Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ),
+                    Rock.Mobile.UI.Util.GetUIColor( mutedColor ),
                 };
             SpringboardRevealButton.SetTextColor( new Android.Content.Res.ColorStateList( states, colors ) );
 

@@ -1,6 +1,6 @@
 using System;
 using System.Drawing;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 
 namespace App
 {

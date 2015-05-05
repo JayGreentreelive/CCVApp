@@ -6,10 +6,11 @@ using System.Collections.Generic;
 using App.Shared.Network;
 using CoreGraphics;
 using App.Shared.Config;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using App.Shared;
 using System.IO;
 using App.Shared.PrivateConfig;
+using Rock.Mobile.IO;
 
 namespace iOS
 {
@@ -69,7 +70,7 @@ namespace iOS
                 {
                     cell = new UITableViewCell (UITableViewCellStyle.Default, cellIdentifier);
                     cell.SelectionStyle = UITableViewCellSelectionStyle.None;
-                    cell.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
+                    cell.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
                 }
                 cell.Bounds = new CGRect( cell.Bounds.X, cell.Bounds.Y, tableView.Bounds.Width, cell.Bounds.Height );
 
@@ -186,7 +187,7 @@ namespace iOS
                 {
                     cell = new UITableViewCell (UITableViewCellStyle.Default, primaryCellIdentifier);
                     cell.SelectionStyle = UITableViewCellSelectionStyle.Default;
-                    cell.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
+                    cell.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
                 }
                 cell.Bounds = new CGRect( cell.Bounds.X, cell.Bounds.Y, tableView.Bounds.Width, cell.Bounds.Height );
 
@@ -224,7 +225,7 @@ namespace iOS
                 {
                     cell = new StandardCell (UITableViewCellStyle.Default, standardCellIdentifier);
                     cell.SelectionStyle = UITableViewCellSelectionStyle.Default;
-                    cell.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
+                    cell.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
                     cell.ParentSource = this;
                 }
                 cell.Bounds = new CGRect( cell.Bounds.X, cell.Bounds.Y, tableView.Bounds.Width, cell.Bounds.Height );
@@ -385,7 +386,7 @@ namespace iOS
             LandscapeSource = new LandscapeTableSource( this, News, ImagePlaceholder );
             PortraitSource = new PortraitTableSource( this, News, ImagePlaceholder );
 
-            NewsTableView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
+            NewsTableView.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
             NewsTableView.SeparatorStyle = UITableViewCellSeparatorStyle.None;
         }
 

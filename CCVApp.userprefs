@@ -1,32 +1,9 @@
-﻿<Properties StartupItem="iOS/iOS.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhone4s.8.3" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Springboard.cs">
+﻿<Properties StartupItem="Droid/Droid.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.094c904b" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Tasks/PrayerTask/PrayerCreateFragment.cs">
     <Files>
-      <File FileName="Droid/Springboard.cs" Line="922" Column="66" />
+      <File FileName="Droid/Tasks/PrayerTask/PrayerCreateFragment.cs" Line="260" Column="67" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State name="__root__">
-          <Node name="CCVApp" expanded="True">
-            <Node name="App.Shared" expanded="True">
-              <Node name="RockApi" expanded="True" />
-            </Node>
-            <Node name="Droid" expanded="True">
-              <Node name="Resources" expanded="True">
-                <Node name="drawable-hdpi" expanded="True" />
-                <Node name="layout" expanded="True" />
-              </Node>
-              <Node name="UserManagement" expanded="True" />
-              <Node name="Springboard.cs" selected="True" />
-            </Node>
-            <Node name="iOS" expanded="True">
-              <Node name="Resources" expanded="True" />
-              <Node name="UserManagement" expanded="True" />
-            </Node>
-          </Node>
-        </State>
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />

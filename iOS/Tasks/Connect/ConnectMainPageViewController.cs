@@ -29,7 +29,7 @@ namespace iOS
 
                 public PrimaryCell( CGSize parentSize, UITableViewCellStyle style, string cellIdentifier ) : base( style, cellIdentifier )
                 {
-                    BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
+                    BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
 
                     Image = new UIImageView( );
                     Image.BackgroundColor = UIColor.Yellow;
@@ -50,7 +50,7 @@ namespace iOS
                     Title.Text = ConnectStrings.Main_Connect_Header;
                     Title.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Bold, ControlStylingConfig.Large_FontSize );
                     Title.Layer.AnchorPoint = CGPoint.Empty;
-                    Title.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
+                    Title.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
                     Title.LineBreakMode = UILineBreakMode.TailTruncation;
                     Title.SizeToFit( );
                     Title.Frame = new CGRect( 5, Image.Frame.Bottom, Frame.Width - 10, Title.Frame.Height );
@@ -61,8 +61,8 @@ namespace iOS
                     BottomBanner.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Regular, ControlStylingConfig.Small_FontSize );
                     BottomBanner.Layer.AnchorPoint = new CGPoint( 0, 0 );
                     BottomBanner.Text = ConnectStrings.Main_Connect_OtherWays;
-                    BottomBanner.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
-                    BottomBanner.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Table_Footer_Color );
+                    BottomBanner.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+                    BottomBanner.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Table_Footer_Color );
                     BottomBanner.TextAlignment = UITextAlignment.Center;
 
                     BottomBanner.SizeToFit( );
@@ -97,7 +97,7 @@ namespace iOS
                     Title = new UILabel( );
                     Title.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
                     Title.Layer.AnchorPoint = CGPoint.Empty;
-                    Title.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
+                    Title.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
                     Title.BackgroundColor = UIColor.Clear;
                     Title.LineBreakMode = UILineBreakMode.TailTruncation;
                     AddSubview( Title );
@@ -105,14 +105,14 @@ namespace iOS
                     Chevron = new UILabel( );
                     AddSubview( Chevron );
                     Chevron.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateConnectConfig.MainPage_Table_IconSize );
-                    Chevron.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+                    Chevron.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
                     Chevron.Text = PrivateConnectConfig.MainPage_Table_Navigate_Icon;
                     Chevron.SizeToFit( );
 
                     Seperator = new UIView( );
                     AddSubview( Seperator );
                     Seperator.Layer.BorderWidth = 1;
-                    Seperator.Layer.BorderColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ).CGColor;
+                    Seperator.Layer.BorderColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ).CGColor;
                 }
             }
             ConnectMainPageViewController Parent { get; set; }
@@ -133,7 +133,7 @@ namespace iOS
                 PrimaryTableCell.Bounds = parent.View.Bounds;
 
                 // configure the cell colors
-                PrimaryTableCell.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
+                PrimaryTableCell.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
                 PrimaryTableCell.SelectionStyle = UITableViewCellSelectionStyle.None;
 
                 //PendingPrimaryCellHeight = PrimaryTableCell.BottomBanner.Frame.Bottom;
@@ -223,7 +223,7 @@ namespace iOS
                     cell.Bounds = new CGRect( cell.Bounds.X, cell.Bounds.Y, tableView.Bounds.Width, cell.Bounds.Height );
 
                     // configure the cell colors
-                    cell.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
+                    cell.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
                     cell.SelectionStyle = UITableViewCellSelectionStyle.None;
                 }
 
@@ -282,7 +282,7 @@ namespace iOS
         {
             base.ViewDidLoad();
 
-            View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( App.Shared.Config.ControlStylingConfig.BackgroundColor );
+            View.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( App.Shared.Config.ControlStylingConfig.BackgroundColor );
 
             LinkEntries = ConnectLink.BuildList( );
 

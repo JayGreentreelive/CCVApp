@@ -6,6 +6,7 @@ using Rock.Mobile.Network;
 using App.Shared.Notes.Model;
 using RestSharp;
 using App.Shared.Config;
+using Rock.Mobile.IO;
 
 namespace App
 {

@@ -30,7 +30,7 @@ namespace iOS
         {
             base.ViewDidLoad();
 
-            View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
+            View.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             ScrollView = new UIScrollViewWrapper();
             ScrollView.Layer.AnchorPoint = CGPoint.Empty;

@@ -6,10 +6,11 @@ using System.IO;
 using App.Shared.Notes.Styles;
 using App.Shared.Notes.Model;
 using Newtonsoft.Json;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using System.Drawing;
 using System.Text;
 using App.Shared.Strings;
+using Rock.Mobile.IO;
 
 namespace App
 {

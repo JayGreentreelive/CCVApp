@@ -5,7 +5,7 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using CoreGraphics;
 using CoreAnimation;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using App.Shared.Config;
 using App.Shared.Strings;
 using App.Shared.Analytics;
@@ -84,7 +84,7 @@ namespace iOS
             PrayerText.BackgroundColor = UIColor.Clear;
             PrayerText.Layer.AnchorPoint = new CGPoint( 0, 0 );
             PrayerText.DelaysContentTouches = false; // don't allow delaying touch, we need to forward it
-            PrayerText.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+            PrayerText.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
             PrayerText.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             PrayerText.TextContainerInset = UIEdgeInsets.Zero;
             PrayerText.TextContainer.LineFragmentPadding = 0;
@@ -95,8 +95,8 @@ namespace iOS
             PrayerActionButton.Layer.AnchorPoint = new CGPoint( 0, 0 );
             PrayerActionButton.SetTitle( PrayerStrings.Prayer_Before, UIControlState.Normal );
 
-            PrayerActionButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
-            PrayerActionButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( Rock.Mobile.Graphics.Util.ScaleRGBAColor( ControlStylingConfig.TextField_PlaceholderTextColor, 2, false ) ), UIControlState.Highlighted );
+            PrayerActionButton.SetTitleColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
+            PrayerActionButton.SetTitleColor( Rock.Mobile.UI.Util.GetUIColor( Rock.Mobile.Graphics.Util.ScaleRGBAColor( ControlStylingConfig.TextField_PlaceholderTextColor, 2, false ) ), UIControlState.Highlighted );
 
             PrayerActionButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Regular, ControlStylingConfig.Small_FontSize );
             PrayerActionButton.SizeToFit( );
@@ -105,7 +105,7 @@ namespace iOS
             PrayerActionCircle.Bounds = new CGRect( 0, 0, 100, 100 );
             PrayerActionCircle.Layer.CornerRadius = PrayerActionCircle.Bounds.Width / 2;
             PrayerActionCircle.Layer.BorderWidth = 1;
-            PrayerActionCircle.Layer.BorderColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ).CGColor;
+            PrayerActionCircle.Layer.BorderColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ).CGColor;
             PrayerActionCircle.Layer.AnchorPoint = new CGPoint( 0, 0 );
 
             PrayerActionButton.TouchUpInside += (object sender, EventArgs e) => 
@@ -117,20 +117,20 @@ namespace iOS
             // setup the name field
             Name = new UILabel( );
             Name.Layer.AnchorPoint = new CGPoint( 0, 0 );
-            Name.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
+            Name.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
             Name.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Bold, ControlStylingConfig.Medium_FontSize );
 
             // setup the date field
             Date = new UILabel( );
             Date.Layer.AnchorPoint = new CGPoint( 0, 0 );
-            Date.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+            Date.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
             Date.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Light, ControlStylingConfig.Small_FontSize );
 
 
             // setup the category field
             Category = new UILabel( );
             Category.Layer.AnchorPoint = new CGPoint( 0, 0 );
-            Category.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+            Category.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
             Category.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Light, ControlStylingConfig.Small_FontSize );
 
 
@@ -168,7 +168,7 @@ namespace iOS
                     targetColor = PrayerConfig.PrayedForColor;
                     PrayerActionCircle.Layer.BorderWidth = 0;
 
-                    PrayerActionButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( 0xFFFFFFFF ), UIControlState.Normal );
+                    PrayerActionButton.SetTitleColor( Rock.Mobile.UI.Util.GetUIColor( 0xFFFFFFFF ), UIControlState.Normal );
                     PrayerActionButton.SetTitle( PrayerStrings.Prayer_After, UIControlState.Normal );
                 }
                 else
@@ -178,7 +178,7 @@ namespace iOS
                     targetColor = 0;
                     PrayerActionCircle.Layer.BorderWidth = 1;
 
-                    PrayerActionButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
+                    PrayerActionButton.SetTitleColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
                     PrayerActionButton.SetTitle( PrayerStrings.Prayer_Before, UIControlState.Normal );
                 }
 
@@ -189,7 +189,7 @@ namespace iOS
                 SimpleAnimator_Color colorAnim = new SimpleAnimator_Color( currColor, targetColor, .35f, 
                     delegate(float percent, object value )
                     {
-                        PrayerActionCircle.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( (uint)value );
+                        PrayerActionCircle.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( (uint)value );
                     }, null );
                 colorAnim.Start( );
             }
@@ -280,7 +280,7 @@ namespace iOS
 
             BlockerView = new UIBlockerView( View, View.Frame.ToRectF( ) );
 
-            View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
+            View.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             float viewRealHeight = (float)( View.Bounds.Height - Task.NavToolbar.Frame.Height);
 
@@ -297,7 +297,7 @@ namespace iOS
 
             // Setup the request prayers layer
             //setup our appearance
-            RetrievingPrayersView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
+            RetrievingPrayersView.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             StatusLabel.Text = PrayerStrings.ViewPrayer_StatusText_Retrieving;
             ControlStyling.StyleUILabel( StatusLabel, ControlStylingConfig.Font_Regular, ControlStylingConfig.Small_FontSize );

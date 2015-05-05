@@ -13,7 +13,7 @@ using Android.Views;
 using Android.Widget;
 using App.Shared.Network;
 using Android.Graphics;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using System.Drawing;
 using App.Shared.Config;
 using App.Shared.Strings;
@@ -57,7 +57,7 @@ namespace Droid
                             Name.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                             ((LinearLayout.LayoutParams)Name.LayoutParameters).TopMargin = 20;
                             ((LinearLayout.LayoutParams)Name.LayoutParameters).LeftMargin = 20;
-                            Name.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
+                            Name.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
                             Name.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Font_Bold ), TypefaceStyle.Normal );
                             Name.SetTextSize( ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
                             Name.Text = prayer.FirstName.ToUpper( );
@@ -76,7 +76,7 @@ namespace Droid
                             Category.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                             ((LinearLayout.LayoutParams)Category.LayoutParameters).TopMargin = 10;
                             ((LinearLayout.LayoutParams)Category.LayoutParameters).LeftMargin = 20;
-                            Category.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                            Category.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                             Category.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Font_Light ), TypefaceStyle.Normal );
                             Category.SetTextSize( ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
                             Category.Text = prayer.CategoryId.HasValue ? RockGeneralData.Instance.Data.PrayerIdToCategory( prayer.CategoryId.Value ) : RockGeneralData.Instance.Data.PrayerCategories[ 0 ].Name;
@@ -93,7 +93,7 @@ namespace Droid
                             Date.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                             ((LinearLayout.LayoutParams)Date.LayoutParameters).TopMargin = 10;
                             ((LinearLayout.LayoutParams)Date.LayoutParameters).RightMargin = 20;
-                            Date.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                            Date.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                             Date.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Font_Light ), TypefaceStyle.Normal );
                             Date.SetTextSize( ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
                             Date.Text = string.Format( "{0:MM/dd/yy}", prayer.EnteredDateTime );
@@ -108,7 +108,7 @@ namespace Droid
                             ((LinearLayout.LayoutParams)Prayer.LayoutParameters).BottomMargin = (int)prayerActionHeight;
                             Prayer.SetMinWidth( (int)bounds.Width - 40 );
                             Prayer.SetMaxWidth( (int)bounds.Width - 40 );
-                            Prayer.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                            Prayer.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                             Prayer.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Font_Regular ), TypefaceStyle.Normal );
                             Prayer.SetTextSize( ComplexUnitType.Dip, ControlStylingConfig.Medium_FontSize );
                             Prayer.Text = prayer.Text;
@@ -200,7 +200,7 @@ namespace Droid
 
                         // Layout for the text and circle
                         PrayerActionCircle = new Rock.Mobile.PlatformSpecific.Android.Graphics.CircleView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
-                        PrayerActionCircle.Color = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor );
+                        PrayerActionCircle.Color = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor );
                         PrayerActionCircle.StrokeWidth = 1;
                         //PrayerActionCircle.SetBackgroundColor( Android.Graphics.Color.Blue );
                         PrayerActionCircle.LayoutParameters = new RelativeLayout.LayoutParams( (int)PrayerActionSize.Width, (int)PrayerActionSize.Height );
@@ -212,7 +212,7 @@ namespace Droid
                         PrayerActionLabel.Text = PrayerStrings.Prayer_Before;
                         PrayerActionLabel.Gravity = GravityFlags.Center;
                         //PrayerActionLabel.SetBackgroundColor( Android.Graphics.Color.Orange );
-                        PrayerActionLabel.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                        PrayerActionLabel.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                         PrayerActionLayout.AddView( PrayerActionLabel );
 
                         PositionPrayedLabel( );
@@ -252,7 +252,7 @@ namespace Droid
                                 App.Shared.Network.RockApi.Instance.IncrementPrayerCount( PrayerRequest.Id, null );
 
                                 // and fill in the circle
-                                PrayerActionLabel.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
+                                PrayerActionLabel.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
                                 PrayerActionLabel.Text = PrayerStrings.Prayer_After;
 
                                 currColor = ControlStylingConfig.BG_Layer_BorderColor;
@@ -262,7 +262,7 @@ namespace Droid
                             else
                             {
                                 // on deactivation, clear the circle
-                                PrayerActionLabel.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                                PrayerActionLabel.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                                 PrayerActionLabel.Text = PrayerStrings.Prayer_Before;
 
                                 currColor = PrayerConfig.PrayedForColor;
@@ -276,7 +276,7 @@ namespace Droid
                             SimpleAnimator_Color colorAnim = new SimpleAnimator_Color( currColor, targetColor, .35f, 
                                 delegate(float percent, object value )
                                 {
-                                    PrayerActionCircle.Color = Rock.Mobile.PlatformUI.Util.GetUIColor( (uint)value );
+                                    PrayerActionCircle.Color = Rock.Mobile.UI.Util.GetUIColor( (uint)value );
                                     PrayerActionCircle.Invalidate( );
                                 }, null );
                             colorAnim.Start( );
@@ -373,7 +373,7 @@ namespace Droid
                     View view = inflater.Inflate(Resource.Layout.Prayer_Primary, container, false);
                     view.SetOnTouchListener( this );
 
-                    view.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+                    view.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
 
                     ActivityIndicator = (ProgressBar)view.FindViewById<ProgressBar>( Resource.Id.prayer_primary_activityIndicator );
                     ActivityIndicator.Visibility = ViewStates.Invisible;
@@ -406,7 +406,7 @@ namespace Droid
                     ResultSymbol = ResultLayer.FindViewById<TextView>( Resource.Id.resultSymbol );
                     ResultSymbol.SetTypeface( FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary ), TypefaceStyle.Normal );
                     ResultSymbol.SetTextSize( ComplexUnitType.Dip, PrivatePrayerConfig.PostPrayer_ResultSymbolSize_Droid );
-                    ResultSymbol.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
+                    ResultSymbol.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
                     ResultSymbol.Text = ControlStylingConfig.Result_Symbol_Failed;
 
                     ResultText = ResultLayer.FindViewById<TextView>( Resource.Id.text );

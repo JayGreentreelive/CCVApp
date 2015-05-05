@@ -13,7 +13,7 @@ using Android.Views;
 using Android.Widget;
 using App.Shared.Network;
 using Android.Graphics;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using System.Drawing;
 using App.Shared.Strings;
 using App.Shared.Config;
@@ -53,7 +53,7 @@ namespace Droid
                     View view = inflater.Inflate(Resource.Layout.Prayer_Post, container, false);
                     view.SetOnTouchListener( this );
 
-                    view.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+                    view.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
 
                     ResultView = new UIResultView( view, new System.Drawing.RectangleF( 0, 0, NavbarFragment.GetContainerDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels ), 
                         delegate 

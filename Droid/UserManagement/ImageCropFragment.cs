@@ -16,7 +16,7 @@ using Android.Graphics.Drawables;
 using Android.Graphics.Drawables.Shapes;
 using Java.IO;
 using App.Shared.Config;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using Rock.Mobile.PlatformSpecific.Android.Graphics;
 using Rock.Mobile.Animation;
 using App.Shared.PrivateConfig;
@@ -247,7 +247,7 @@ namespace Droid
             ((RelativeLayout.LayoutParams)bottomBarLayout.LayoutParameters).AddRule( LayoutRules.AlignParentBottom );
 
             // set the nav subBar color (including opacity)
-            Color navColor = Rock.Mobile.PlatformUI.Util.GetUIColor( PrivateSubNavToolbarConfig.BackgroundColor );
+            Color navColor = Rock.Mobile.UI.Util.GetUIColor( PrivateSubNavToolbarConfig.BackgroundColor );
             navColor.A = (Byte) ( (float) navColor.A * PrivateSubNavToolbarConfig.Opacity );
             bottomBarLayout.SetBackgroundColor( navColor );
 

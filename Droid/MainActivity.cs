@@ -93,7 +93,7 @@ namespace Droid
             // get the active task frame and give it to the springboard
             FrameLayout layout = FindViewById<FrameLayout>(Resource.Id.activetask);
 
-            Rock.Mobile.PlatformUI.PlatformBaseUI.Init( );
+            Rock.Mobile.UI.PlatformBaseUI.Init( );
             MapsInitializer.Initialize( this );
 
             Springboard = FragmentManager.FindFragmentById(Resource.Id.springboard) as Springboard;

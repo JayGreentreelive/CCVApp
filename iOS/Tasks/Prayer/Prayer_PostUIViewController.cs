@@ -3,7 +3,7 @@ using Foundation;
 using UIKit;
 using System.CodeDom.Compiler;
 using App.Shared.Strings;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using CoreGraphics;
 using App.Shared.Config;
 using App.Shared.Analytics;
@@ -46,7 +46,7 @@ namespace iOS
             BlockerView = new UIBlockerView( View, View.Frame.ToRectF( ) );
 
             //setup our appearance
-            View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
+            View.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
         }
 
         public override void ViewWillAppear(bool animated)

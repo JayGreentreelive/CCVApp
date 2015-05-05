@@ -156,12 +156,12 @@ namespace iOS
         {
             base.ViewDidLoad();
 
-            View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
+            View.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             // setup our web view
             WebView = new UIWebView( );
             WebView.Layer.AnchorPoint = CGPoint.Empty;
-            WebView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
+            WebView.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
             WebView.Hidden = true;
             View.AddSubview( WebView );
 

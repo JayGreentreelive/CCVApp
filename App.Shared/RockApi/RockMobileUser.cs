@@ -10,6 +10,7 @@ using RestSharp;
 using Rock.Mobile.Util.Strings;
 using System.Runtime.Serialization.Formatters.Binary;
 using App.Shared.PrivateConfig;
+using Rock.Mobile.IO;
 
 namespace App
 {

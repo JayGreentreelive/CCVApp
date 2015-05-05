@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Foundation;
 using CoreGraphics;
 using App.Shared.Config;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using App.Shared.PrivateConfig;
 
 namespace iOS
@@ -75,8 +75,8 @@ namespace iOS
             BackButton = new UIButton(UIButtonType.System);
             BackButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateSubNavToolbarConfig.BackButton_Size );
             BackButton.SetTitle( backLabel.ToString( ), UIControlState.Normal );
-            BackButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ), UIControlState.Normal );
-            BackButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( disabledColor ), UIControlState.Disabled );
+            BackButton.SetTitleColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ), UIControlState.Normal );
+            BackButton.SetTitleColor( Rock.Mobile.UI.Util.GetUIColor( disabledColor ), UIControlState.Disabled );
 
             CGSize buttonSize = backLabel.StringSize( BackButton.Font );
             BackButton.Bounds = new CGRect( 0, 0, buttonSize.Width, buttonSize.Height );
@@ -88,8 +88,8 @@ namespace iOS
             ShareButton = new UIButton(UIButtonType.System);
             ShareButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateSubNavToolbarConfig.ShareButton_Size );
             ShareButton.SetTitle( shareLabel.ToString( ), UIControlState.Normal );
-            ShareButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ), UIControlState.Normal );
-            ShareButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( disabledColor ), UIControlState.Disabled );
+            ShareButton.SetTitleColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ), UIControlState.Normal );
+            ShareButton.SetTitleColor( Rock.Mobile.UI.Util.GetUIColor( disabledColor ), UIControlState.Disabled );
 
             // determine its dimensions
             buttonSize = shareLabel.StringSize( ShareButton.Font );
@@ -103,8 +103,8 @@ namespace iOS
             CreateButton = new UIButton(UIButtonType.System);
             CreateButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateSubNavToolbarConfig.CreateButton_Size );
             CreateButton.SetTitle( createLabel.ToString( ), UIControlState.Normal );
-            CreateButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ), UIControlState.Normal );
-            CreateButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( disabledColor ), UIControlState.Disabled );
+            CreateButton.SetTitleColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ), UIControlState.Normal );
+            CreateButton.SetTitleColor( Rock.Mobile.UI.Util.GetUIColor( disabledColor ), UIControlState.Disabled );
 
             // determine its dimensions
             buttonSize = createLabel.StringSize( CreateButton.Font );

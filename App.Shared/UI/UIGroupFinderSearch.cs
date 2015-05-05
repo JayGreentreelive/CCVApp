@@ -1,5 +1,5 @@
 ﻿using System;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using System.Drawing;
 using App.Shared.Config;
 using App.Shared.Strings;
@@ -35,7 +35,7 @@ namespace App.Shared.UI
 
         PlatformButton SearchButton { get; set; }
 
-        Rock.Mobile.PlatformUI.PlatformButton.OnClick SearchClicked { get; set; }
+        Rock.Mobile.UI.PlatformButton.OnClick SearchClicked { get; set; }
 
         public UIGroupFinderSearch( )
         {
@@ -44,7 +44,7 @@ namespace App.Shared.UI
         static float sBackerOpacity = .45f;
         static float sModalOffset = 15;
 
-        public void Create( object masterView, RectangleF frame, Rock.Mobile.PlatformUI.PlatformButton.OnClick searchClicked )
+        public void Create( object masterView, RectangleF frame, Rock.Mobile.UI.PlatformButton.OnClick searchClicked )
         {
             Backer = PlatformView.Create( );
             Backer.BackgroundColor = 0x000000FF;

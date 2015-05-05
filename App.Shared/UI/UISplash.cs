@@ -1,5 +1,5 @@
 ﻿using System;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using System.Drawing;
 using App.Shared.Config;
 using App.Shared.Strings;

@@ -6,7 +6,7 @@ using Rock.Mobile.Network;
 using App.Shared.Network;
 using System.IO;
 using App.Shared.Config;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using App.Shared.Strings;
 using App.Shared;
 using Rock.Mobile.Threading;
@@ -81,7 +81,7 @@ namespace iOS
 
             BlockerView = new UIBlockerView( View, View.Frame.ToRectF( ) );
 
-            View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
+            View.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             UserNameField = new StyledTextField();
             View.AddSubview( UserNameField.Background );
@@ -168,7 +168,7 @@ namespace iOS
             // If cancel is pressed, notify the springboard we're done.
             CancelButton = UIButton.FromType( UIButtonType.System );
             View.AddSubview( CancelButton );
-            CancelButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
+            CancelButton.SetTitleColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
             CancelButton.SetTitle( GeneralStrings.Cancel, UIControlState.Normal );
             CancelButton.SizeToFit( );
             CancelButton.TouchUpInside += (object sender, EventArgs e) => 
@@ -183,7 +183,7 @@ namespace iOS
             // setup the fake header
             HeaderView = new UIView( );
             View.AddSubview( HeaderView );
-            HeaderView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
+            HeaderView.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             imagePath = NSBundle.MainBundle.BundlePath + "/" + PrivatePrimaryNavBarConfig.LogoFile_iOS;
             LogoView = new UIImageView( new UIImage( imagePath ) );

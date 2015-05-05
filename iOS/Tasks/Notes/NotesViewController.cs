@@ -12,7 +12,7 @@ using RestSharp;
 using System.Net;
 using System.Text;
 using App.Shared.Config;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using System.Drawing;
 using Rock.Mobile.PlatformSpecific.Util;
 using App.Shared;
@@ -21,6 +21,7 @@ using App.Shared.Strings;
 using App.Shared.UI;
 using Rock.Mobile.Animation;
 using App.Shared.PrivateConfig;
+using Rock.Mobile.IO;
 
 namespace iOS
 {
@@ -267,7 +268,7 @@ namespace iOS
             UIScrollView = new CustomScrollView();
             UIScrollView.Interceptor = this;
             UIScrollView.Frame = View.Frame;
-            UIScrollView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( 0x1C1C1CFF );
+            UIScrollView.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( 0x1C1C1CFF );
             UIScrollView.Delegate = new NavBarRevealHelperDelegate( Task.NavToolbar );
             UIScrollView.Layer.AnchorPoint = new CGPoint( 0, 0 );
 
@@ -652,7 +653,7 @@ namespace iOS
                 UIScrollView.ScrollEnabled = true;
 
                 // take the requested background color
-                UIScrollView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value );
+                UIScrollView.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value );
                 View.BackgroundColor = UIScrollView.BackgroundColor; //Make the view itself match too
 
                 // update the height of the scroll view to fit all content

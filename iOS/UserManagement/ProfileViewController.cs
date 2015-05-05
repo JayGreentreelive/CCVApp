@@ -8,7 +8,7 @@ using CoreAnimation;
 using CoreGraphics;
 using App.Shared.Config;
 using App.Shared.Strings;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using System.Collections.Generic;
 using Rock.Mobile.Util.Strings;
 using Rock.Mobile.PlatformSpecific.iOS.UI;
@@ -97,7 +97,7 @@ namespace iOS
             HeaderView = new UIView( );
             View.AddSubview( HeaderView );
 
-            HeaderView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
+            HeaderView.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             string imagePath = NSBundle.MainBundle.BundlePath + "/" + PrivatePrimaryNavBarConfig.LogoFile_iOS;
             LogoView = new UIImageView( new UIImage( imagePath ) );
@@ -110,7 +110,7 @@ namespace iOS
             ScrollView.Parent = this;
 
             //setup styles
-            View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
+            View.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             NickName = new StyledTextField();
             ScrollView.AddSubview( NickName.Background );
@@ -279,7 +279,7 @@ namespace iOS
 
             LogoutButton = new UIButton( );
             ScrollView.AddSubview( LogoutButton );
-            LogoutButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
+            LogoutButton.SetTitleColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
             LogoutButton.SetTitle( ProfileStrings.LogoutButtonTitle, UIControlState.Normal );
             LogoutButton.SizeToFit( );
 
@@ -628,7 +628,7 @@ namespace iOS
         {
             // set the button's text to be the item they selected. Note that we now change the color to Active from the original Placeholder
             Gender.Field.Text = RockGeneralData.Instance.Data.Genders[ row ];
-            Gender.Field.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
+            Gender.Field.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
         }
 
         /// <summary>

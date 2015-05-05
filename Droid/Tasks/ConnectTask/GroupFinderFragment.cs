@@ -71,11 +71,11 @@ namespace Droid
                     // the list is sorted, so we can safely assume the first entry is the closest group.
                     if ( SelectedIndex == position )
                     {
-                        messageItem.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
+                        messageItem.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
                     }
                     else
                     {
-                        messageItem.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+                        messageItem.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
                     }
 
                     messageItem.ParentAdapter = this;
@@ -134,7 +134,7 @@ namespace Droid
 
                 public GroupListItem( Context context ) : base( context )
                 {
-                    SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+                    SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
                     LayoutParameters = new AbsListView.LayoutParams( LayoutParams.MatchParent, LayoutParams.MatchParent );
 
                     Orientation = Orientation.Vertical;
@@ -160,7 +160,7 @@ namespace Droid
                     Title.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Medium_FontSize );
                     Title.SetSingleLine( );
                     Title.Ellipsize = Android.Text.TextUtils.TruncateAt.End;
-                    Title.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
+                    Title.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
                     TitleLayout.AddView( Title );
 
                     Typeface buttonFontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
@@ -172,7 +172,7 @@ namespace Droid
                     JoinButton.SetTypeface( buttonFontFace, TypefaceStyle.Normal );
                     JoinButton.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateConnectConfig.GroupFinder_Join_IconSize );
                     JoinButton.Text = PrivateConnectConfig.GroupFinder_JoinIcon;
-                    JoinButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    JoinButton.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                     JoinButton.Background = null;
                     JoinButton.FocusableInTouchMode = false;
                     JoinButton.Focusable = false;
@@ -187,21 +187,21 @@ namespace Droid
                     MeetingTime.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                     MeetingTime.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Font_Light ), TypefaceStyle.Normal );
                     MeetingTime.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
-                    MeetingTime.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
+                    MeetingTime.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
                     TitleLayout.AddView( MeetingTime );
 
                     Distance  = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     Distance.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                     Distance.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Font_Light ), TypefaceStyle.Normal );
                     Distance.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
-                    Distance.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
+                    Distance.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
                     TitleLayout.AddView( Distance );
 
                     // add our own custom seperator at the bottom
                     View seperator = new View( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     seperator.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, 0 );
                     seperator.LayoutParameters.Height = 2;
-                    seperator.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+                    seperator.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
                     AddView( seperator );
                 }
             }
@@ -291,28 +291,28 @@ namespace Droid
                     // setup the linear layout containing the "Your Neighborhood is: Horizon" text
                     SearchLayout = new LinearLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     SearchLayout.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent );
-                    SearchLayout.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
+                    SearchLayout.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
                     SearchLayout.SetGravity( GravityFlags.Center );
 
                     SearchResultPrefix = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     SearchResultPrefix.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                     SearchResultPrefix.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Font_Regular ), TypefaceStyle.Normal );
                     SearchResultPrefix.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
-                    SearchResultPrefix.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    SearchResultPrefix.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                     SearchResultPrefix.Text = ConnectStrings.GroupFinder_NoGroupsFound;
 
                     SearchResultNeighborhood = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     SearchResultNeighborhood.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                     SearchResultNeighborhood.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Font_Regular ), TypefaceStyle.Normal );
                     SearchResultNeighborhood.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
-                    SearchResultNeighborhood.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
+                    SearchResultNeighborhood.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
                     SearchResultNeighborhood.Text = "";
 
 
                     Seperator = new View( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     Seperator.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, 0 );
                     Seperator.LayoutParameters.Height = 2;
-                    Seperator.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+                    Seperator.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
                     ListView = new ListView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     ListView.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent );
@@ -326,7 +326,7 @@ namespace Droid
                     View view = inflater.Inflate(Resource.Layout.Connect_GroupFinder, container, false);
                     view.SetOnTouchListener( this );
 
-                    view.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
+                    view.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
 
                     LinearLayout groupLayout = view.FindViewById<LinearLayout>( Resource.Id.groupFrame ) as LinearLayout;
 

@@ -13,7 +13,7 @@ using Android.Views;
 using Android.Widget;
 using Android.Media;
 using App.Shared.Strings;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using App.Shared;
 using App.Shared.Analytics;
 using App.Shared.UI;
@@ -73,7 +73,7 @@ namespace Droid
 
                     ProgressBar = new ProgressBar( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     ProgressBar.Indeterminate = true;
-                    ProgressBar.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( 0 ) );
+                    ProgressBar.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( 0 ) );
                     ProgressBar.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                     ( (RelativeLayout.LayoutParams)ProgressBar.LayoutParameters ).AddRule( LayoutRules.CenterInParent );
                     view.AddView( ProgressBar );

@@ -13,13 +13,14 @@ using Android.Views;
 using Android.Widget;
 using App.Shared.Network;
 using Android.Graphics;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using System.Drawing;
 using App.Shared.Strings;
 using App.Shared.Config;
 using App.Shared.Analytics;
 using Rock.Mobile.Animation;
 using App.Shared;
+using Rock.Mobile.IO;
 
 namespace Droid
 {
@@ -84,7 +85,7 @@ namespace Droid
                     View view = inflater.Inflate(Resource.Layout.Prayer_Create, container, false);
                     view.SetOnTouchListener( this );
 
-                    view.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+                    view.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
 
                     // setup the first name background
                     FirstNameBGLayer = view.FindViewById<RelativeLayout>( Resource.Id.first_name_background );
@@ -133,8 +134,8 @@ namespace Droid
                                 FirstNameText.Enabled = true;
                                 LastNameText.Enabled = true;
 
-                                FirstNameText.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
-                                LastNameText.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
+                                FirstNameText.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
+                                LastNameText.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
                             }
                             else
                             {

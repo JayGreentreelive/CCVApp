@@ -1,6 +1,6 @@
 using System;
 using System.Xml;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using System.Collections.Generic;
 using App.Shared.Config;
 using System.Drawing;

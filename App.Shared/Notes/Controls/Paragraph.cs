@@ -4,7 +4,7 @@ using System.Xml;
 using System.Text.RegularExpressions;
 
 using App.Shared.Notes.Styles;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using App.Shared.Config;
 using System.Drawing;
 using App.Shared.PrivateConfig;

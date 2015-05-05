@@ -1,5 +1,5 @@
 ﻿using System;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using System.Xml;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;

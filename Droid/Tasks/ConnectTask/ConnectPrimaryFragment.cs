@@ -15,7 +15,7 @@ using Android.Media;
 using Android.Graphics;
 using App.Shared.Config;
 using App.Shared.Strings;
-using Rock.Mobile.PlatformUI.DroidNative;
+using Rock.Mobile.UI.DroidNative;
 using Rock.Mobile.PlatformSpecific.Android.Graphics;
 using App.Shared;
 using Rock.Mobile.PlatformSpecific.Android.UI;
@@ -97,7 +97,7 @@ namespace Droid
 
                 public PrimaryListItem( Context context ) : base( context )
                 {
-                    SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
+                    SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
 
                     Orientation = Android.Widget.Orientation.Vertical;
 
@@ -110,7 +110,7 @@ namespace Droid
                     Title.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                     Title.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Font_Bold ), TypefaceStyle.Normal );
                     Title.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Large_FontSize );
-                    Title.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
+                    Title.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
                     Title.Text = ConnectStrings.Main_Connect_Header;
                     ( (LinearLayout.LayoutParams)Title.LayoutParameters ).TopMargin = 5;
                     ( (LinearLayout.LayoutParams)Title.LayoutParameters ).LeftMargin = 25;
@@ -137,7 +137,7 @@ namespace Droid
                 {
                     Orientation = Android.Widget.Orientation.Vertical;
 
-                    SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+                    SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
 
                     LinearLayout contentLayout = new LinearLayout( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     contentLayout.Orientation = Android.Widget.Orientation.Horizontal;
@@ -163,7 +163,7 @@ namespace Droid
                     Title.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                     Title.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Font_Regular ), TypefaceStyle.Normal );
                     Title.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Medium_FontSize );
-                    Title.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
+                    Title.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
                     Title.SetSingleLine( );
                     Title.Ellipsize = Android.Text.TextUtils.TruncateAt.End;
                     TitleLayout.AddView( Title );
@@ -180,7 +180,7 @@ namespace Droid
                     Typeface fontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
                     Chevron.SetTypeface(  fontFace, TypefaceStyle.Normal );
                     Chevron.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateConnectConfig.MainPage_Table_IconSize );
-                    Chevron.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    Chevron.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                     Chevron.Text = PrivateConnectConfig.MainPage_Table_Navigate_Icon;
                     contentLayout.AddView( Chevron );
 
@@ -188,7 +188,7 @@ namespace Droid
                     Seperator = new View( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     Seperator.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, 0 );
                     Seperator.LayoutParameters.Height = 2;
-                    Seperator.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+                    Seperator.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
                     AddView( Seperator );
                 }
 

@@ -14,7 +14,7 @@ using Android.Widget;
 using App.Shared.Network;
 using App.Shared.Config;
 using App.Shared.Strings;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using Android.Webkit;
 using Rock.Mobile.Threading;
 using Android.Views.InputMethods;
@@ -86,11 +86,11 @@ namespace Droid
             }
 
             View view = inflater.Inflate(Resource.Layout.Login, container, false);
-            view.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+            view.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
             view.SetOnTouchListener( this );
 
             RelativeLayout navBar = view.FindViewById<RelativeLayout>( Resource.Id.navbar_relative_layout );
-            navBar.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+            navBar.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
 
             LoginActivityIndicator = view.FindViewById<ProgressBar>( Resource.Id.login_progressBar );
             LoginActivityIndicator.Visibility = ViewStates.Gone;
@@ -133,7 +133,7 @@ namespace Droid
             ControlStyling.StyleTextField( UsernameField, LoginStrings.UsernamePlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
 
             View borderView = UsernameLayer.FindViewById<View>( Resource.Id.middle_border );
-            borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+            borderView.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
 
             // get the password field and background

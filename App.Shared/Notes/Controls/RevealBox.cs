@@ -1,6 +1,6 @@
 using System;
 using System.Xml;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using App.Shared.Notes.Model;
 using System.Collections.Generic;
 using System.Drawing;

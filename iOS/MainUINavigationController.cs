@@ -4,7 +4,7 @@ using UIKit;
 using System.CodeDom.Compiler;
 using CoreGraphics;
 using App.Shared.Config;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using Rock.Mobile.PlatformSpecific.iOS.Graphics;
 using App.Shared.PrivateConfig;
 
@@ -97,7 +97,7 @@ namespace iOS
 
             // MainNavigationController must have a black background so that the ticks
             // before the task displays don't cause a flash
-            View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
+            View.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
             View.Layer.AnchorPoint = CGPoint.Empty;
             View.Layer.Position = CGPoint.Empty;
 
@@ -109,13 +109,13 @@ namespace iOS
             View.AddSubview( DarkPanel );
 
             // setup the style of the nav bar
-            NavigationBar.TintColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+            NavigationBar.TintColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
 
             UIImage solidColor = new UIImage();
             UIGraphics.BeginImageContext( new CGSize( 1, 1 ) );
             CGContext context = UIGraphics.GetCurrentContext( );
 
-            context.SetFillColor( Rock.Mobile.PlatformUI.Util.GetUIColor( PrimaryNavBarConfig.BackgroundColor ).CGColor );
+            context.SetFillColor( Rock.Mobile.UI.Util.GetUIColor( PrimaryNavBarConfig.BackgroundColor ).CGColor );
             context.FillRect( new CGRect( 0, 0, 1, 1 ) );
 
             solidColor = UIGraphics.GetImageFromCurrentImageContext( );

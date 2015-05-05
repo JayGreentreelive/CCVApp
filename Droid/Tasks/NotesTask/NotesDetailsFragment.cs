@@ -17,7 +17,7 @@ using RestSharp;
 using Rock.Mobile.Network;
 using App.Shared.Notes.Model;
 using App.Shared;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using System.IO;
 using App.Shared.Config;
 using App.Shared.Strings;
@@ -163,7 +163,7 @@ namespace Droid
 
                 public MessagePrimaryListItem( Context context ) : base( context )
                 {
-                    SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
+                    SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
 
                     Orientation = Orientation.Vertical;
 
@@ -176,7 +176,7 @@ namespace Droid
                     Title.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                     Title.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Font_Bold ), TypefaceStyle.Normal );
                     Title.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Large_FontSize );
-                    Title.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
+                    Title.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
                     ( (LinearLayout.LayoutParams)Title.LayoutParameters ).TopMargin = 25;
                     ( (LinearLayout.LayoutParams)Title.LayoutParameters ).LeftMargin = 25;
                     AddView( Title );
@@ -185,7 +185,7 @@ namespace Droid
                     DateRange.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                     DateRange.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Font_Light ), TypefaceStyle.Normal );
                     DateRange.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
-                    DateRange.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
+                    DateRange.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
                     ( (LinearLayout.LayoutParams)DateRange.LayoutParameters ).TopMargin = 0;
                     ( (LinearLayout.LayoutParams)DateRange.LayoutParameters ).LeftMargin = 25;
                     AddView( DateRange );
@@ -194,7 +194,7 @@ namespace Droid
                     Desc.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                     Desc.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Font_Light ), TypefaceStyle.Normal );
                     Desc.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
-                    Desc.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
+                    Desc.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
                     ( (LinearLayout.LayoutParams)Desc.LayoutParameters ).TopMargin = 10;
                     ( (LinearLayout.LayoutParams)Desc.LayoutParameters ).LeftMargin = 25;
                     ( (LinearLayout.LayoutParams)Desc.LayoutParameters ).RightMargin = 25;
@@ -220,7 +220,7 @@ namespace Droid
 
                 public MessageListItem( Context context ) : base( context )
                 {
-                    SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+                    SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
                     LayoutParameters = new AbsListView.LayoutParams( LayoutParams.MatchParent, LayoutParams.MatchParent );
 
                     Orientation = Orientation.Vertical;
@@ -246,21 +246,21 @@ namespace Droid
                     Title.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Medium_FontSize );
                     Title.SetSingleLine( );
                     Title.Ellipsize = Android.Text.TextUtils.TruncateAt.End;
-                    Title.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
+                    Title.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
                     TitleLayout.AddView( Title );
 
                     Date = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     Date.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                     Date.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Font_Regular ), TypefaceStyle.Normal );
                     Date.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
-                    Date.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    Date.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                     TitleLayout.AddView( Date );
 
                     Speaker = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     Speaker.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                     Speaker.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Font_Regular ), TypefaceStyle.Normal );
                     Speaker.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
-                    Speaker.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+                    Speaker.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                     Speaker.SetMaxLines( 1 );
                     TitleLayout.AddView( Speaker );
 
@@ -268,7 +268,7 @@ namespace Droid
                     View seperator = new View( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     seperator.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, 0 );
                     seperator.LayoutParameters.Height = 2;
-                    seperator.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+                    seperator.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
                     AddView( seperator );
 
 
@@ -288,7 +288,7 @@ namespace Droid
                     ListenButton.SetTypeface( buttonFontFace, TypefaceStyle.Normal );
                     ListenButton.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateNoteConfig.Details_Table_IconSize );
                     ListenButton.Text = PrivateNoteConfig.Series_Table_Listen_Icon;
-                    ListenButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
+                    ListenButton.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
                     ListenButton.Background = null;
                     buttonLayout.AddView( ListenButton );
 
@@ -299,7 +299,7 @@ namespace Droid
                     WatchButton.SetTypeface( buttonFontFace, TypefaceStyle.Normal );
                     WatchButton.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateNoteConfig.Details_Table_IconSize );
                     WatchButton.Text = PrivateNoteConfig.Series_Table_Watch_Icon;
-                    WatchButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
+                    WatchButton.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
                     WatchButton.Background = null;
                     buttonLayout.AddView( WatchButton );
 
@@ -310,7 +310,7 @@ namespace Droid
                     TakeNotesButton.SetTypeface( buttonFontFace, TypefaceStyle.Normal );
                     TakeNotesButton.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateNoteConfig.Details_Table_IconSize );
                     TakeNotesButton.Text = PrivateNoteConfig.Series_Table_TakeNotes_Icon;
-                    TakeNotesButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
+                    TakeNotesButton.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
                     TakeNotesButton.Background = null;
                     buttonLayout.AddView( TakeNotesButton );
 
@@ -335,14 +335,14 @@ namespace Droid
                     if ( enabled == true )
                     {
                         ListenButton.Enabled = true;
-                        ListenButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
+                        ListenButton.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
                     }
                     else
                     {
                         ListenButton.Enabled = false;
 
                         uint disabledColor = Rock.Mobile.Graphics.Util.ScaleRGBAColor( ControlStylingConfig.TextField_PlaceholderTextColor, 2, false );
-                        ListenButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( disabledColor ) );
+                        ListenButton.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( disabledColor ) );
                     }
                 }
 
@@ -351,14 +351,14 @@ namespace Droid
                     if ( enabled == true )
                     {
                         WatchButton.Enabled = true;
-                        WatchButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
+                        WatchButton.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
                     }
                     else
                     {
                         WatchButton.Enabled = false;
 
                         uint disabledColor = Rock.Mobile.Graphics.Util.ScaleRGBAColor( ControlStylingConfig.TextField_PlaceholderTextColor, 2, false );
-                        WatchButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( disabledColor ) );
+                        WatchButton.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( disabledColor ) );
                     }
                 }
 
@@ -367,14 +367,14 @@ namespace Droid
                     if ( enabled == true )
                     {
                         TakeNotesButton.Enabled = true;
-                        TakeNotesButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
+                        TakeNotesButton.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
                     }
                     else
                     {
                         TakeNotesButton.Enabled = false;
                         
                         uint disabledColor = Rock.Mobile.Graphics.Util.ScaleRGBAColor( ControlStylingConfig.TextField_PlaceholderTextColor, 2, false );
-                        TakeNotesButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( disabledColor ) );
+                        TakeNotesButton.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( disabledColor ) );
                     }
                 }
             }

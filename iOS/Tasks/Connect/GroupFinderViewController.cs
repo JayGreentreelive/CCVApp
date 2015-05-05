@@ -52,7 +52,7 @@ namespace iOS
                     Title = new UILabel( );
                     Title.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Bold, ControlStylingConfig.Medium_FontSize );
                     Title.Layer.AnchorPoint = CGPoint.Empty;
-                    Title.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
+                    Title.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
                     Title.BackgroundColor = UIColor.Clear;
                     Title.LineBreakMode = UILineBreakMode.TailTruncation;
                     AddSubview( Title );
@@ -60,14 +60,14 @@ namespace iOS
                     MeetingTime = new UILabel( );
                     MeetingTime.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Light, ControlStylingConfig.Small_FontSize );
                     MeetingTime.Layer.AnchorPoint = CGPoint.Empty;
-                    MeetingTime.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
+                    MeetingTime.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
                     MeetingTime.BackgroundColor = UIColor.Clear;
                     AddSubview( MeetingTime );
 
                     Distance = new UILabel( );
                     Distance.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Light, ControlStylingConfig.Small_FontSize );
                     Distance.Layer.AnchorPoint = CGPoint.Empty;
-                    Distance.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
+                    Distance.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
                     Distance.BackgroundColor = UIColor.Clear;
                     AddSubview( Distance );
 
@@ -75,7 +75,7 @@ namespace iOS
                     JoinButton.TouchUpInside += (object sender, EventArgs e) => { TableSource.RowButtonClicked( RowIndex ); };
                     JoinButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateConnectConfig.GroupFinder_Join_IconSize );
                     JoinButton.SetTitle( PrivateConnectConfig.GroupFinder_JoinIcon, UIControlState.Normal );
-                    JoinButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
+                    JoinButton.SetTitleColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
                     JoinButton.Layer.AnchorPoint = CGPoint.Empty;
                     JoinButton.BackgroundColor = UIColor.Clear;
                     JoinButton.SizeToFit( );
@@ -84,7 +84,7 @@ namespace iOS
                     Seperator = new UIView( );
                     AddSubview( Seperator );
                     Seperator.Layer.BorderWidth = 1;
-                    Seperator.Layer.BorderColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ).CGColor;
+                    Seperator.Layer.BorderColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ).CGColor;
                 }
             }
 
@@ -143,17 +143,17 @@ namespace iOS
 
                         // remove the selection highlight
                         cell.SelectionStyle = UITableViewCellSelectionStyle.None;
-                        cell.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
+                        cell.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
                     }
 
                     // if it's the group nearest the user, color it different. (we always sort by distance)
                     if ( SelectedIndex == indexPath.Row )
                     {
-                        cell.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
+                        cell.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
                     }
                     else
                     {
-                        cell.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
+                        cell.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
                     }
 
                     cell.RowIndex = indexPath.Row;
@@ -384,7 +384,7 @@ namespace iOS
         {
             base.ViewDidLoad();
 
-            View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( App.Shared.Config.ControlStylingConfig.BG_Layer_Color );
+            View.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( App.Shared.Config.ControlStylingConfig.BG_Layer_Color );
 
             // setup everything except positioning, which will happen in LayoutChanged()
             SourceLocation = null;
@@ -422,23 +422,23 @@ namespace iOS
             SearchResultsPrefix.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Regular, ControlStylingConfig.Small_FontSize );
             SearchResultsPrefix.Text = ConnectStrings.GroupFinder_NoGroupsFound;
             SearchResultsPrefix.SizeToFit( );
-            SearchResultsPrefix.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
-            SearchResultsPrefix.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
+            SearchResultsPrefix.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+            SearchResultsPrefix.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
             SearchResultsPrefix.TextAlignment = UITextAlignment.Center;
 
             SearchResultsNeighborhood = new UILabel( );
             View.AddSubview( SearchResultsNeighborhood );
             SearchResultsNeighborhood.Layer.AnchorPoint = new CGPoint( 0, 0 );
             SearchResultsNeighborhood.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Regular, ControlStylingConfig.Small_FontSize );
-            SearchResultsNeighborhood.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
-            SearchResultsNeighborhood.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
+            SearchResultsNeighborhood.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
+            SearchResultsNeighborhood.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
             SearchResultsNeighborhood.TextAlignment = UITextAlignment.Center;
 
 
             Seperator = new UIView( );
             View.AddSubview( Seperator );
             Seperator.Layer.BorderWidth = 1;
-            Seperator.Layer.BorderColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ).CGColor;
+            Seperator.Layer.BorderColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ).CGColor;
 
 
             GroupFinderTableView = new UITableView();
@@ -446,7 +446,7 @@ namespace iOS
             GroupTableSource = new GroupFinderViewController.TableSource( this );
 
             // add the table view and source
-            GroupFinderTableView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( App.Shared.Config.ControlStylingConfig.Table_Footer_Color );
+            GroupFinderTableView.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( App.Shared.Config.ControlStylingConfig.Table_Footer_Color );
             GroupFinderTableView.Source = GroupTableSource;
             GroupFinderTableView.SeparatorStyle = UITableViewCellSeparatorStyle.None;
 

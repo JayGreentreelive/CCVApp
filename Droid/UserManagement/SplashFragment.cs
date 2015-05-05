@@ -16,7 +16,7 @@ using App.Shared.Network;
 using Android.Views.InputMethods;
 using App.Shared.Strings;
 using App.Shared.Config;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using Android.Telephony;
 using Rock.Mobile.Util.Strings;
 using Java.Lang.Reflect;
@@ -46,7 +46,7 @@ namespace Droid
 
             RelativeLayout view = inflater.Inflate(Resource.Layout.OOBEView, container, false) as RelativeLayout;
 
-            view.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
+            view.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
 
             view.SetOnTouchListener( this );
 

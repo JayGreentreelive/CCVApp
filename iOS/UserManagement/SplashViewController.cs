@@ -21,7 +21,7 @@ namespace iOS
         {
             base.ViewDidLoad();
 
-            View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
+            View.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             // this is totally a hack, but in order to seamlessly transition from the splash screen
             // to our logo, we need to use a PER-DEVICE image. Sigh.

@@ -8,7 +8,7 @@ using CoreAnimation;
 using CoreGraphics;
 using App.Shared.Config;
 using App.Shared.Strings;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using System.Collections.Generic;
 using Rock.Mobile.Util.Strings;
 using Rock.Mobile.PlatformSpecific.iOS.UI;
@@ -92,7 +92,7 @@ namespace iOS
             // setup the fake header
             HeaderView = new UIView( );
             View.AddSubview( HeaderView );
-            HeaderView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
+            HeaderView.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             string imagePath = NSBundle.MainBundle.BundlePath + "/" + PrivatePrimaryNavBarConfig.LogoFile_iOS;
             LogoView = new UIImageView( new UIImage( imagePath ) );
@@ -109,7 +109,7 @@ namespace iOS
             BlockerView = new UIBlockerView( View, View.Frame.ToRectF( ) );
 
             //setup styles
-            View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
+            View.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             UserNameText = new StyledTextField();
             ScrollView.AddSubview( UserNameText.Background );
@@ -168,7 +168,7 @@ namespace iOS
 
             CancelButton = UIButton.FromType( UIButtonType.System );
             ScrollView.AddSubview( CancelButton );
-            CancelButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
+            CancelButton.SetTitleColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
             CancelButton.SetTitle( GeneralStrings.Cancel, UIControlState.Normal );
             CancelButton.SizeToFit( );
 
@@ -252,13 +252,13 @@ namespace iOS
             base.ViewWillAppear(animated);
 
             // reset the background colors
-            UserNameText.Background.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
-            PasswordText.Background.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
-            ConfirmPasswordText.Background.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
+            UserNameText.Background.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
+            PasswordText.Background.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
+            ConfirmPasswordText.Background.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
 
-            NickNameText.Background.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
-            LastNameText.Background.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
-            EmailText.Background.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
+            NickNameText.Background.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
+            LastNameText.Background.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
+            EmailText.Background.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
 
             ScrollView.ContentOffset = CGPoint.Empty;
 

@@ -2,7 +2,7 @@ using System;
 using Foundation;
 using UIKit;
 using System.CodeDom.Compiler;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using App.Shared.Strings;
 using System.Collections.Generic;
 using CoreGraphics;
@@ -11,6 +11,7 @@ using App.Shared.Network;
 using Rock.Mobile.PlatformSpecific.iOS.UI;
 using Rock.Mobile.Animation;
 using App.Shared;
+using Rock.Mobile.IO;
 
 namespace iOS
 {
@@ -89,7 +90,7 @@ namespace iOS
             // scroll view
             ScrollView = new UIScrollViewWrapper( );
             ScrollView.Layer.AnchorPoint = CGPoint.Empty;
-            ScrollView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
+            ScrollView.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
             ScrollView.Parent = this;
             View.AddSubview( ScrollView );
 
@@ -121,14 +122,14 @@ namespace iOS
 
             // setup the prayer request field, which requires a fake "placeholder" text field
             PrayerRequest.Delegate = new TextViewDelegate( );
-            PrayerRequest.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
+            PrayerRequest.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
             PrayerRequest.TextContainerInset = UIEdgeInsets.Zero;
             PrayerRequest.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             PrayerRequest.TextContainer.LineFragmentPadding = 0;
             PrayerRequest.BackgroundColor = UIColor.Clear;
             PrayerRequest.Editable = true;
             PrayerRequest.KeyboardAppearance = UIKeyboardAppearance.Dark;
-            PrayerRequestPlaceholder.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+            PrayerRequestPlaceholder.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
             PrayerRequestPlaceholder.BackgroundColor = UIColor.Clear;
             PrayerRequestPlaceholder.Text = PrayerStrings.CreatePrayer_PrayerRequest;
             PrayerRequestPlaceholder.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
@@ -159,7 +160,7 @@ namespace iOS
                     OnToggleCategoryPicker( true );
                 };
             CategoryButton.SetTitle( PrayerStrings.CreatePrayer_CategoryButtonText, UIControlState.Normal );
-            CategoryButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
+            CategoryButton.SetTitleColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
             CategoryButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             CategoryButton.HorizontalAlignment = UIControlContentHorizontalAlignment.Left;
             ControlStyling.StyleBGLayer( CategoryLayer );
@@ -189,7 +190,7 @@ namespace iOS
             // Setup the anonymous switch
             PostAnonymouslyLabel.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             PostAnonymouslyLabel.Text = PrayerStrings.CreatePrayer_PostAnonymously;
-            UISwitchAnonymous.OnTintColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Switch_OnColor );
+            UISwitchAnonymous.OnTintColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Switch_OnColor );
             UISwitchAnonymous.TouchUpInside += (object sender, EventArgs e ) =>
                 {
                     if( UISwitchAnonymous.On == true )
@@ -203,17 +204,17 @@ namespace iOS
                     else
                     {
                         FirstName.Field.Enabled = true;
-                        FirstName.Field.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
+                        FirstName.Field.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
 
                         LastName.Field.Enabled = true;
-                        LastName.Field.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
+                        LastName.Field.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
                     }
                 };
 
             // setup the public switch
             MakePublicLabel.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             MakePublicLabel.Text = PrayerStrings.CreatePrayer_MakePublic;
-            UIPublicSwitch.OnTintColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Switch_OnColor );
+            UIPublicSwitch.OnTintColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Switch_OnColor );
 
 
             // setup the submit button
@@ -360,7 +361,7 @@ namespace iOS
         public void PickerSelected( int row )
         {
             // set the category's text to be the item they selected. Note that we now change the color to Active from the original Placeholder
-            CategoryButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ), UIControlState.Normal );
+            CategoryButton.SetTitleColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ), UIControlState.Normal );
             CategoryButton.SetTitle( RockGeneralData.Instance.Data.PrayerCategories[ row ].Name, UIControlState.Normal );
         }
 

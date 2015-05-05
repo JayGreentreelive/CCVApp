@@ -5,11 +5,12 @@ using System.CodeDom.Compiler;
 using App.Shared.Network;
 using CoreGraphics;
 using App.Shared.Config;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using App.Shared.Strings;
 using System.IO;
 using App.Shared;
 using App.Shared.PrivateConfig;
+using Rock.Mobile.IO;
 
 namespace iOS
 {
@@ -33,7 +34,7 @@ namespace iOS
         {
             base.ViewDidLoad();
 
-            View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
+            View.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
             // setup the news title
             NewsTitle = new UILabel( );
@@ -49,7 +50,7 @@ namespace iOS
             View.AddSubview( NewsDescription );
             NewsDescription.Text = NewsItem.Description;
             NewsDescription.BackgroundColor = UIColor.Clear;
-            NewsDescription.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
+            NewsDescription.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
             NewsDescription.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Light, ControlStylingConfig.Small_FontSize );
             NewsDescription.TextContainerInset = UIEdgeInsets.Zero;
             NewsDescription.TextContainer.LineFragmentPadding = 0;

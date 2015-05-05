@@ -12,13 +12,14 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using Android.Graphics;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using App.Shared.Config;
 using App.Shared.Strings;
 using Android.Text.Method;
 using App.Shared;
 using System.IO;
 using App.Shared.PrivateConfig;
+using Rock.Mobile.IO;
 
 namespace Droid
 {
@@ -50,7 +51,7 @@ namespace Droid
 
                     View view = inflater.Inflate(Resource.Layout.News_Details, container, false);
                     view.SetOnTouchListener( this );
-                    view.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+                    view.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
 
                     // set the banner
                     ImageBanner = new Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView( Activity );

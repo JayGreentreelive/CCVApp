@@ -16,7 +16,7 @@ using App.Shared.Network;
 using Android.Views.InputMethods;
 using App.Shared.Strings;
 using App.Shared.Config;
-using Rock.Mobile.PlatformUI;
+using Rock.Mobile.UI;
 using Android.Telephony;
 using Rock.Mobile.Util.Strings;
 using Java.Lang.Reflect;
@@ -90,7 +90,7 @@ namespace Droid
             }
 
             View view = inflater.Inflate(Resource.Layout.Register, container, false);
-            view.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+            view.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
             view.SetOnTouchListener( this );
 
             RelativeLayout layoutView = view.FindViewById<RelativeLayout>( Resource.Id.scroll_linear_background );
@@ -104,7 +104,7 @@ namespace Droid
             ResultView = new UIResultView( layoutView, new System.Drawing.RectangleF( 0, 0, NavbarFragment.GetFullDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels ), OnResultViewDone );
 
             RelativeLayout navBar = view.FindViewById<RelativeLayout>( Resource.Id.navbar_relative_layout );
-            navBar.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+            navBar.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
 
 
             // setup the username 
@@ -117,7 +117,7 @@ namespace Droid
             UserNameText.InputType |= InputTypes.TextFlagCapWords;
 
             View borderView = UserNameLayer.FindViewById<View>( Resource.Id.username_border );
-            borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+            borderView.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
             // password
             PasswordLayer = view.FindViewById<RelativeLayout>( Resource.Id.password_background );
@@ -129,7 +129,7 @@ namespace Droid
             PasswordBGColor = ControlStylingConfig.BG_Layer_Color;
 
             borderView = PasswordLayer.FindViewById<View>( Resource.Id.password_border );
-            borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+            borderView.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
 
 
@@ -153,7 +153,7 @@ namespace Droid
             NickNameText.InputType |= InputTypes.TextFlagCapWords;
 
             borderView = NickNameLayer.FindViewById<View>( Resource.Id.middle_border );
-            borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+            borderView.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
             LastNameLayer = view.FindViewById<RelativeLayout>( Resource.Id.lastname_background );
             ControlStyling.StyleBGLayer( LastNameLayer );
@@ -178,7 +178,7 @@ namespace Droid
             ControlStyling.StyleBGLayer( EmailLayer );
 
             borderView = EmailLayer.FindViewById<View>( Resource.Id.middle_border );
-            borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
+            borderView.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
             EmailText = EmailLayer.FindViewById<EditText>( Resource.Id.emailAddressText );
             ControlStyling.StyleTextField( EmailText, RegisterStrings.EmailPlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
