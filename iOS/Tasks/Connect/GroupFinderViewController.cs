@@ -49,7 +49,7 @@ namespace iOS
                 public GroupCell( UITableViewCellStyle style, string cellIdentifier ) : base( style, cellIdentifier )
                 {
                     Title = new UILabel( );
-                    Title.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Medium_Font_Bold, ControlStylingConfig.Medium_FontSize );
+                    Title.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Bold, ControlStylingConfig.Medium_FontSize );
                     Title.Layer.AnchorPoint = CGPoint.Empty;
                     Title.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
                     Title.BackgroundColor = UIColor.Clear;
@@ -57,14 +57,14 @@ namespace iOS
                     AddSubview( Title );
 
                     MeetingTime = new UILabel( );
-                    MeetingTime.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Light, ControlStylingConfig.Small_FontSize );
+                    MeetingTime.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Light, ControlStylingConfig.Small_FontSize );
                     MeetingTime.Layer.AnchorPoint = CGPoint.Empty;
                     MeetingTime.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
                     MeetingTime.BackgroundColor = UIColor.Clear;
                     AddSubview( MeetingTime );
 
                     Distance = new UILabel( );
-                    Distance.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Light, ControlStylingConfig.Small_FontSize );
+                    Distance.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Light, ControlStylingConfig.Small_FontSize );
                     Distance.Layer.AnchorPoint = CGPoint.Empty;
                     Distance.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
                     Distance.BackgroundColor = UIColor.Clear;
@@ -392,7 +392,7 @@ namespace iOS
             SearchAddressButton = UIButton.FromType( UIButtonType.System );
             View.AddSubview( SearchAddressButton );
             SearchAddressButton.Layer.AnchorPoint = CGPoint.Empty;
-            ControlStyling.StyleButton( SearchAddressButton, ConnectStrings.GroupFinder_SearchButtonLabel, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            ControlStyling.StyleButton( SearchAddressButton, ConnectStrings.GroupFinder_SearchButtonLabel, ControlStylingConfig.Font_Regular, ControlStylingConfig.Small_FontSize );
             SearchAddressButton.TouchUpInside += (object sender, EventArgs e ) =>
                 {
                     SearchPage.Show( );
@@ -418,7 +418,7 @@ namespace iOS
             SearchResultsPrefix = new UILabel( );
             View.AddSubview( SearchResultsPrefix );
             SearchResultsPrefix.Layer.AnchorPoint = new CGPoint( 0, 0 );
-            SearchResultsPrefix.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            SearchResultsPrefix.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Regular, ControlStylingConfig.Small_FontSize );
             SearchResultsPrefix.Text = ConnectStrings.GroupFinder_NoGroupsFound;
             SearchResultsPrefix.SizeToFit( );
             SearchResultsPrefix.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
@@ -428,7 +428,7 @@ namespace iOS
             SearchResultsNeighborhood = new UILabel( );
             View.AddSubview( SearchResultsNeighborhood );
             SearchResultsNeighborhood.Layer.AnchorPoint = new CGPoint( 0, 0 );
-            SearchResultsNeighborhood.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            SearchResultsNeighborhood.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Regular, ControlStylingConfig.Small_FontSize );
             SearchResultsNeighborhood.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
             SearchResultsNeighborhood.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
             SearchResultsNeighborhood.TextAlignment = UITextAlignment.Center;

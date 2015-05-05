@@ -57,7 +57,7 @@ namespace Droid
                             ((LinearLayout.LayoutParams)Name.LayoutParameters).TopMargin = 20;
                             ((LinearLayout.LayoutParams)Name.LayoutParameters).LeftMargin = 20;
                             Name.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
-                            Name.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Medium_Font_Bold ), TypefaceStyle.Normal );
+                            Name.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Font_Bold ), TypefaceStyle.Normal );
                             Name.SetTextSize( ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
                             Name.Text = prayer.FirstName.ToUpper( );
                             LinearLayout.AddView( Name );
@@ -76,7 +76,7 @@ namespace Droid
                             ((LinearLayout.LayoutParams)Category.LayoutParameters).TopMargin = 10;
                             ((LinearLayout.LayoutParams)Category.LayoutParameters).LeftMargin = 20;
                             Category.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
-                            Category.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Light ), TypefaceStyle.Normal );
+                            Category.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Font_Light ), TypefaceStyle.Normal );
                             Category.SetTextSize( ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
                             Category.Text = prayer.CategoryId.HasValue ? RockGeneralData.Instance.Data.PrayerIdToCategory( prayer.CategoryId.Value ) : RockGeneralData.Instance.Data.PrayerCategories[ 0 ].Name;
                             detailsLayout.AddView( Category );
@@ -93,7 +93,7 @@ namespace Droid
                             ((LinearLayout.LayoutParams)Date.LayoutParameters).TopMargin = 10;
                             ((LinearLayout.LayoutParams)Date.LayoutParameters).RightMargin = 20;
                             Date.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
-                            Date.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Light ), TypefaceStyle.Normal );
+                            Date.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Font_Light ), TypefaceStyle.Normal );
                             Date.SetTextSize( ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
                             Date.Text = string.Format( "{0:MM/dd/yy}", prayer.EnteredDateTime );
                             detailsLayout.AddView( Date );
@@ -108,7 +108,7 @@ namespace Droid
                             Prayer.SetMinWidth( (int)bounds.Width - 40 );
                             Prayer.SetMaxWidth( (int)bounds.Width - 40 );
                             Prayer.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
-                            Prayer.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Medium_Font_Regular ), TypefaceStyle.Normal );
+                            Prayer.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Font_Regular ), TypefaceStyle.Normal );
                             Prayer.SetTextSize( ComplexUnitType.Dip, ControlStylingConfig.Medium_FontSize );
                             Prayer.Text = prayer.Text;
                             LinearLayout.AddView( Prayer );
@@ -397,22 +397,22 @@ namespace Droid
                     ControlStyling.StyleBGLayer( StatusLayer );
 
                     StatusText = StatusLayer.FindViewById<TextView>( Resource.Id.text );
-                    ControlStyling.StyleUILabel( StatusText, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+                    ControlStyling.StyleUILabel( StatusText, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
 
                     ResultLayer = view.FindViewById<View>( Resource.Id.result_background );
                     ControlStyling.StyleBGLayer( ResultLayer );
 
                     ResultSymbol = ResultLayer.FindViewById<TextView>( Resource.Id.resultSymbol );
                     ResultSymbol.SetTypeface( FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary ), TypefaceStyle.Normal );
-                    ResultSymbol.SetTextSize( ComplexUnitType.Dip, PrayerConfig.PostPrayer_ResultSymbolSize );
+                    ResultSymbol.SetTextSize( ComplexUnitType.Dip, PrayerConfig.PostPrayer_ResultSymbolSize_Droid );
                     ResultSymbol.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
                     ResultSymbol.Text = ControlStylingConfig.Result_Symbol_Failed;
 
                     ResultText = ResultLayer.FindViewById<TextView>( Resource.Id.text );
-                    ControlStyling.StyleUILabel( ResultText, ControlStylingConfig.Large_Font_Regular, ControlStylingConfig.Large_FontSize );
+                    ControlStyling.StyleUILabel( ResultText, ControlStylingConfig.Font_Regular, ControlStylingConfig.Large_FontSize );
 
                     RetryButton = view.FindViewById<Button>( Resource.Id.retryButton );
-                    ControlStyling.StyleButton( RetryButton, GeneralStrings.Retry, ControlStylingConfig.Large_Font_Regular, ControlStylingConfig.Large_FontSize );
+                    ControlStyling.StyleButton( RetryButton, GeneralStrings.Retry, ControlStylingConfig.Font_Regular, ControlStylingConfig.Large_FontSize );
 
                     RetryButton.Click += (object sender, EventArgs e ) =>
                         {

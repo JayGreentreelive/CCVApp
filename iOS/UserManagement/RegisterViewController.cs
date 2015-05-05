@@ -93,7 +93,7 @@ namespace iOS
             View.AddSubview( HeaderView );
             HeaderView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
-            string imagePath = NSBundle.MainBundle.BundlePath + "/" + PrimaryNavBarConfig.LogoFile;
+            string imagePath = NSBundle.MainBundle.BundlePath + "/" + PrimaryNavBarConfig.LogoFile_iOS;
             LogoView = new UIImageView( new UIImage( imagePath ) );
             HeaderView.AddSubview( LogoView );
 
@@ -114,7 +114,7 @@ namespace iOS
             ScrollView.AddSubview( UserNameText.Background );
             UserNameText.Field.AutocapitalizationType = UITextAutocapitalizationType.None;
             UserNameText.Field.AutocorrectionType = UITextAutocorrectionType.No;
-            ControlStyling.StyleTextField( UserNameText.Field, RegisterStrings.UsernamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( UserNameText.Field, RegisterStrings.UsernamePlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( UserNameText.Background );
 
             PasswordText = new StyledTextField();
@@ -122,46 +122,46 @@ namespace iOS
             PasswordText.Field.AutocapitalizationType = UITextAutocapitalizationType.None;
             PasswordText.Field.AutocorrectionType = UITextAutocorrectionType.No;
             PasswordText.Field.SecureTextEntry = true;
-            ControlStyling.StyleTextField( PasswordText.Field, RegisterStrings.PasswordPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( PasswordText.Field, RegisterStrings.PasswordPlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( PasswordText.Background );
 
             ConfirmPasswordText = new StyledTextField();
             ScrollView.AddSubview( ConfirmPasswordText.Background );
             ConfirmPasswordText.Field.SecureTextEntry = true;
-            ControlStyling.StyleTextField( ConfirmPasswordText.Field, RegisterStrings.ConfirmPasswordPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( ConfirmPasswordText.Field, RegisterStrings.ConfirmPasswordPlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( ConfirmPasswordText.Background );
 
             NickNameText = new StyledTextField();
             ScrollView.AddSubview( NickNameText.Background );
             NickNameText.Field.AutocapitalizationType = UITextAutocapitalizationType.Words;
             NickNameText.Field.AutocorrectionType = UITextAutocorrectionType.No;
-            ControlStyling.StyleTextField( NickNameText.Field, RegisterStrings.NickNamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( NickNameText.Field, RegisterStrings.NickNamePlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( NickNameText.Background );
 
             LastNameText = new StyledTextField();
             ScrollView.AddSubview( LastNameText.Background );
             LastNameText.Field.AutocapitalizationType = UITextAutocapitalizationType.Words;
             LastNameText.Field.AutocorrectionType = UITextAutocorrectionType.No;
-            ControlStyling.StyleTextField( LastNameText.Field, RegisterStrings.LastNamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( LastNameText.Field, RegisterStrings.LastNamePlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( LastNameText.Background );
 
             EmailText = new StyledTextField();
             ScrollView.AddSubview( EmailText.Background );
             EmailText.Field.AutocapitalizationType = UITextAutocapitalizationType.None;
             EmailText.Field.AutocorrectionType = UITextAutocorrectionType.No;
-            ControlStyling.StyleTextField( EmailText.Field, RegisterStrings.EmailPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( EmailText.Field, RegisterStrings.EmailPlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( EmailText.Background );
 
             CellPhoneText = new StyledTextField();
             ScrollView.AddSubview( CellPhoneText.Background );
             CellPhoneText.Field.AutocapitalizationType = UITextAutocapitalizationType.None;
             CellPhoneText.Field.AutocorrectionType = UITextAutocorrectionType.No;
-            ControlStyling.StyleTextField( CellPhoneText.Field, RegisterStrings.CellPhonePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( CellPhoneText.Field, RegisterStrings.CellPhonePlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( CellPhoneText.Background );
 
             DoneButton = UIButton.FromType( UIButtonType.System );
             ScrollView.AddSubview( DoneButton );
-            ControlStyling.StyleButton( DoneButton, RegisterStrings.RegisterButton, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleButton( DoneButton, RegisterStrings.RegisterButton, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             DoneButton.SizeToFit( );
 
 

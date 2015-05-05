@@ -38,7 +38,7 @@ namespace iOS
             NewsTitle = new UILabel( );
             NewsTitle.Layer.AnchorPoint = CGPoint.Empty;
             View.AddSubview( NewsTitle );
-            ControlStyling.StyleUILabel( NewsTitle, ControlStylingConfig.Large_Font_Bold, ControlStylingConfig.Large_FontSize );
+            ControlStyling.StyleUILabel( NewsTitle, ControlStylingConfig.Font_Bold, ControlStylingConfig.Large_FontSize );
             NewsTitle.Text = NewsItem.Title;
             NewsTitle.SizeToFit( );
 
@@ -49,7 +49,7 @@ namespace iOS
             NewsDescription.Text = NewsItem.Description;
             NewsDescription.BackgroundColor = UIColor.Clear;
             NewsDescription.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
-            NewsDescription.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Small_Font_Light, ControlStylingConfig.Small_FontSize );
+            NewsDescription.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Light, ControlStylingConfig.Small_FontSize );
             NewsDescription.TextContainerInset = UIEdgeInsets.Zero;
             NewsDescription.TextContainer.LineFragmentPadding = 0;
             NewsDescription.Editable = false;
@@ -116,7 +116,7 @@ namespace iOS
             {
                 LearnMoreButton.Hidden = true;
             }
-            ControlStyling.StyleButton( LearnMoreButton, NewsStrings.LearnMore, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            ControlStyling.StyleButton( LearnMoreButton, NewsStrings.LearnMore, ControlStylingConfig.Font_Regular, ControlStylingConfig.Small_FontSize );
             LearnMoreButton.SizeToFit( );
         }
 

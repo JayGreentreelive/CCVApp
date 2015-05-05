@@ -54,7 +54,7 @@ namespace CCVApp.Shared.UI
             stream.Dispose( );
 
             WelcomeLabel = PlatformLabel.Create( );
-            WelcomeLabel.SetFont( ControlStylingConfig.Large_Font_Bold, 85 );
+            WelcomeLabel.SetFont( ControlStylingConfig.Font_Bold, 85 );
             WelcomeLabel.TextColor = 0xCCCCCCFF;
             WelcomeLabel.Text = OOBEConfig.Welcome;
             WelcomeLabel.Opacity = 0;
@@ -62,7 +62,7 @@ namespace CCVApp.Shared.UI
             WelcomeLabel.AddAsSubview( View.PlatformNativeObject );
 
             RegisterButton = PlatformButton.Create( );
-            RegisterButton.SetFont( ControlStylingConfig.Large_Font_Light, ControlStylingConfig.Large_FontSize );
+            RegisterButton.SetFont( ControlStylingConfig.Font_Light, ControlStylingConfig.Large_FontSize );
             RegisterButton.TextColor = 0xCCCCCCFF;
             RegisterButton.Text = string.Format( OOBEConfig.WantAccount, GeneralConfig.OrganizationShortName );
             RegisterButton.Opacity = 0;
@@ -81,7 +81,7 @@ namespace CCVApp.Shared.UI
 
 
             LoginButton = PlatformButton.Create( );
-            LoginButton.SetFont( ControlStylingConfig.Large_Font_Light, ControlStylingConfig.Large_FontSize );
+            LoginButton.SetFont( ControlStylingConfig.Font_Light, ControlStylingConfig.Large_FontSize );
             LoginButton.TextColor = 0xCCCCCCFF;
             LoginButton.Text = string.Format( OOBEConfig.HaveAccount, GeneralConfig.OrganizationShortName );
             LoginButton.Opacity = 0;
@@ -99,7 +99,7 @@ namespace CCVApp.Shared.UI
 
 
             SkipButton = PlatformButton.Create( );
-            SkipButton.SetFont( ControlStylingConfig.Large_Font_Light, ControlStylingConfig.Large_FontSize );
+            SkipButton.SetFont( ControlStylingConfig.Font_Light, ControlStylingConfig.Large_FontSize );
             SkipButton.TextColor = 0xCCCCCCFF;
             SkipButton.Text = OOBEConfig.SkipAccount;
             SkipButton.Opacity = 0;

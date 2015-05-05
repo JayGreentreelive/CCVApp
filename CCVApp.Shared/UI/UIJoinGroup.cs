@@ -54,7 +54,7 @@ namespace CCVApp.Shared.UI
 
             GroupTitle = PlatformLabel.Create( );
             GroupTitle.AddAsSubview( masterView );
-            GroupTitle.SetFont( ControlStylingConfig.Large_Font_Bold, ControlStylingConfig.Large_FontSize );
+            GroupTitle.SetFont( ControlStylingConfig.Font_Bold, ControlStylingConfig.Large_FontSize );
             GroupTitle.TextColor = ControlStylingConfig.TextField_ActiveTextColor;
             GroupTitle.TextAlignment = TextAlignment.Center;
 
@@ -66,7 +66,7 @@ namespace CCVApp.Shared.UI
 
             GroupDetails = PlatformLabel.Create( );
             GroupDetails.AddAsSubview( masterView );
-            GroupDetails.SetFont( ControlStylingConfig.Medium_Font_Light, ControlStylingConfig.Medium_FontSize );
+            GroupDetails.SetFont( ControlStylingConfig.Font_Light, ControlStylingConfig.Medium_FontSize );
             GroupDetails.TextColor = ControlStylingConfig.TextField_ActiveTextColor;
 
 
@@ -79,7 +79,7 @@ namespace CCVApp.Shared.UI
 
             FirstName = PlatformTextField.Create( );
             FirstName.AddAsSubview( masterView );
-            FirstName.SetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            FirstName.SetFont( ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             FirstName.PlaceholderTextColor = ControlStylingConfig.TextField_PlaceholderTextColor;
             FirstName.Placeholder = ConnectStrings.JoinGroup_FirstNamePlaceholder;
             FirstName.TextColor = ControlStylingConfig.TextField_ActiveTextColor;
@@ -96,7 +96,7 @@ namespace CCVApp.Shared.UI
 
             LastName = PlatformTextField.Create( );
             LastName.AddAsSubview( masterView );
-            LastName.SetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            LastName.SetFont( ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             LastName.PlaceholderTextColor = ControlStylingConfig.TextField_PlaceholderTextColor;
             LastName.Placeholder = ConnectStrings.JoinGroup_LastNamePlaceholder;
             LastName.TextColor = ControlStylingConfig.TextField_ActiveTextColor;
@@ -112,7 +112,7 @@ namespace CCVApp.Shared.UI
 
             SpouseName = PlatformTextField.Create( );
             SpouseName.AddAsSubview( masterView );
-            SpouseName.SetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            SpouseName.SetFont( ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             SpouseName.PlaceholderTextColor = ControlStylingConfig.TextField_PlaceholderTextColor;
             SpouseName.Placeholder = ConnectStrings.JoinGroup_SpouseNamePlaceholder;
             SpouseName.TextColor = ControlStylingConfig.TextField_ActiveTextColor;
@@ -129,7 +129,7 @@ namespace CCVApp.Shared.UI
 
             Email = PlatformTextField.Create( );
             Email.AddAsSubview( masterView );
-            Email.SetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            Email.SetFont( ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             Email.PlaceholderTextColor = ControlStylingConfig.TextField_PlaceholderTextColor;
             Email.Placeholder = ConnectStrings.JoinGroup_EmailPlaceholder;
             Email.TextColor = ControlStylingConfig.TextField_ActiveTextColor;
@@ -145,7 +145,7 @@ namespace CCVApp.Shared.UI
 
             CellPhone = PlatformTextField.Create( );
             CellPhone.AddAsSubview( masterView );
-            CellPhone.SetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            CellPhone.SetFont( ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             CellPhone.PlaceholderTextColor = ControlStylingConfig.TextField_PlaceholderTextColor;
             CellPhone.Placeholder = ConnectStrings.JoinGroup_CellPhonePlaceholder;
             CellPhone.TextColor = ControlStylingConfig.TextField_ActiveTextColor;

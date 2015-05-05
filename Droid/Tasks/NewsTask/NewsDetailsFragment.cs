@@ -61,13 +61,13 @@ namespace Droid
                     title.Ellipsize = Android.Text.TextUtils.TruncateAt.End;
                     title.SetMaxLines( 1 );
                     title.SetHorizontallyScrolling( true );
-                    ControlStyling.StyleUILabel( title, ControlStylingConfig.Large_Font_Bold, ControlStylingConfig.Large_FontSize );
+                    ControlStyling.StyleUILabel( title, ControlStylingConfig.Font_Bold, ControlStylingConfig.Large_FontSize );
 
                     // set the description
                     TextView description = view.FindViewById<TextView>( Resource.Id.news_details_details );
                     description.Text = NewsItem.Description;
                     description.MovementMethod = new ScrollingMovementMethod();
-                    ControlStyling.StyleUILabel( description, ControlStylingConfig.Small_Font_Light, ControlStylingConfig.Small_FontSize );
+                    ControlStyling.StyleUILabel( description, ControlStylingConfig.Font_Light, ControlStylingConfig.Small_FontSize );
 
                     Button launchUrlButton = view.FindViewById<Button>(Resource.Id.news_details_launch_url);
                     launchUrlButton.Click += (object sender, EventArgs e) => 
@@ -75,7 +75,7 @@ namespace Droid
                             // move to the next page..somehow.
                             ParentTask.OnClick( this, launchUrlButton.Id );
                         };
-                    ControlStyling.StyleButton( launchUrlButton, NewsStrings.LearnMore, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+                    ControlStyling.StyleButton( launchUrlButton, NewsStrings.LearnMore, ControlStylingConfig.Font_Regular, ControlStylingConfig.Small_FontSize );
 
                     // hide the button if there's no reference URL.
                     if ( string.IsNullOrEmpty( NewsItem.ReferenceURL ) == true )

@@ -99,7 +99,7 @@ namespace CCVApp.Shared.UI
         public void SetStyle( )
         {
             // setup the text fonts and colors
-            StatusLabel.SetFont( ControlStylingConfig.Medium_Font_Bold, 24 );
+            StatusLabel.SetFont( ControlStylingConfig.Font_Bold, 24 );
             StatusLabel.TextColor = ControlStylingConfig.TextField_ActiveTextColor;
 
             ResultSymbol.SetFont( ControlStylingConfig.Icon_Font_Secondary, 64 );
@@ -107,10 +107,10 @@ namespace CCVApp.Shared.UI
 
             ResultCircle.BackgroundColor = ControlStylingConfig.BG_Layer_Color;
 
-            ResultLabel.SetFont( ControlStylingConfig.Medium_Font_Light, 14 );
+            ResultLabel.SetFont( ControlStylingConfig.Font_Light, 14 );
             ResultLabel.TextColor = ControlStylingConfig.TextField_PlaceholderTextColor;
 
-            DoneButton.SetFont( ControlStylingConfig.Medium_Font_Regular, 14 );
+            DoneButton.SetFont( ControlStylingConfig.Font_Regular, 14 );
             DoneButton.TextColor = ControlStylingConfig.Button_TextColor;
             DoneButton.BackgroundColor = ControlStylingConfig.Button_BGColor;
 

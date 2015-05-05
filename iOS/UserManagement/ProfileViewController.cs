@@ -98,7 +98,7 @@ namespace iOS
 
             HeaderView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
-            string imagePath = NSBundle.MainBundle.BundlePath + "/" + PrimaryNavBarConfig.LogoFile;
+            string imagePath = NSBundle.MainBundle.BundlePath + "/" + PrimaryNavBarConfig.LogoFile_iOS;
             LogoView = new UIImageView( new UIImage( imagePath ) );
             HeaderView.AddSubview( LogoView );
 
@@ -114,7 +114,7 @@ namespace iOS
             NickName = new StyledTextField();
             ScrollView.AddSubview( NickName.Background );
 
-            ControlStyling.StyleTextField( NickName.Field, ProfileStrings.NickNamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( NickName.Field, ProfileStrings.NickNamePlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( NickName.Background );
             NickName.Field.AutocapitalizationType = UITextAutocapitalizationType.Words;
             NickName.Field.AutocorrectionType = UITextAutocorrectionType.No;
@@ -124,7 +124,7 @@ namespace iOS
 
             LastName.Field.AutocapitalizationType = UITextAutocapitalizationType.Words;
             LastName.Field.AutocorrectionType = UITextAutocorrectionType.No;
-            ControlStyling.StyleTextField( LastName.Field, ProfileStrings.LastNamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( LastName.Field, ProfileStrings.LastNamePlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( LastName.Background );
             LastName.Field.EditingDidBegin += (sender, e) => { Dirty = true; };
 
@@ -133,7 +133,7 @@ namespace iOS
             Email.Field.AutocapitalizationType = UITextAutocapitalizationType.None;
             Email.Field.AutocorrectionType = UITextAutocorrectionType.No;
             ScrollView.AddSubview( LastName.Background );
-            ControlStyling.StyleTextField( Email.Field, ProfileStrings.EmailPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( Email.Field, ProfileStrings.EmailPlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( Email.Background );
             Email.Field.EditingDidBegin += (sender, e) => { Dirty = true; };
 
@@ -141,7 +141,7 @@ namespace iOS
             ScrollView.AddSubview( CellPhone.Background );
             CellPhone.Field.AutocapitalizationType = UITextAutocapitalizationType.None;
             CellPhone.Field.AutocorrectionType = UITextAutocorrectionType.No;
-            ControlStyling.StyleTextField( CellPhone.Field, ProfileStrings.CellPhonePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( CellPhone.Field, ProfileStrings.CellPhonePlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( CellPhone.Background );
             CellPhone.Field.EditingDidBegin += (sender, e) => { Dirty = true; };
 
@@ -150,7 +150,7 @@ namespace iOS
             ScrollView.AddSubview( Street.Background );
             Street.Field.AutocapitalizationType = UITextAutocapitalizationType.Words;
             Street.Field.AutocorrectionType = UITextAutocorrectionType.No;
-            ControlStyling.StyleTextField( Street.Field, ProfileStrings.StreetPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( Street.Field, ProfileStrings.StreetPlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( Street.Background );
             Street.Field.EditingDidBegin += (sender, e) => { Dirty = true; };
 
@@ -158,7 +158,7 @@ namespace iOS
             ScrollView.AddSubview( City.Background );
             City.Field.AutocapitalizationType = UITextAutocapitalizationType.Words;
             City.Field.AutocorrectionType = UITextAutocorrectionType.No;
-            ControlStyling.StyleTextField( City.Field, ProfileStrings.CityPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( City.Field, ProfileStrings.CityPlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( City.Background );
             City.Field.EditingDidBegin += (sender, e) => { Dirty = true; };
 
@@ -166,7 +166,7 @@ namespace iOS
             ScrollView.AddSubview( State.Background );
             State.Field.AutocapitalizationType = UITextAutocapitalizationType.Words;
             State.Field.AutocorrectionType = UITextAutocorrectionType.No;
-            ControlStyling.StyleTextField( State.Field, ProfileStrings.StatePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( State.Field, ProfileStrings.StatePlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( State.Background );
             State.Field.EditingDidBegin += (sender, e) => { Dirty = true; };
 
@@ -174,7 +174,7 @@ namespace iOS
             ScrollView.AddSubview( Zip.Background );
             Zip.Field.AutocapitalizationType = UITextAutocapitalizationType.None;
             Zip.Field.AutocorrectionType = UITextAutocorrectionType.No;
-            ControlStyling.StyleTextField( Zip.Field, ProfileStrings.ZipPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( Zip.Field, ProfileStrings.ZipPlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( Zip.Background );
             Zip.Field.EditingDidBegin += (sender, e) => { Dirty = true; };
 
@@ -183,7 +183,7 @@ namespace iOS
             Gender = new StyledTextField();
             ScrollView.AddSubview( Gender.Background );
             Gender.Field.UserInteractionEnabled = false;
-            ControlStyling.StyleTextField( Gender.Field, ProfileStrings.GenderPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( Gender.Field, ProfileStrings.GenderPlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( Gender.Background );
 
             GenderButton = new UIButton( );
@@ -208,7 +208,7 @@ namespace iOS
             Birthdate = new StyledTextField( );
             ScrollView.AddSubview( Birthdate.Background );
             Birthdate.Field.UserInteractionEnabled = false;
-            ControlStyling.StyleTextField( Birthdate.Field, ProfileStrings.BirthdatePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( Birthdate.Field, ProfileStrings.BirthdatePlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( Birthdate.Background );
 
             BirthdayButton = new UIButton( );
@@ -236,7 +236,7 @@ namespace iOS
             HomeCampus = new StyledTextField( );
             ScrollView.AddSubview( HomeCampus.Background );
             HomeCampus.Field.UserInteractionEnabled = false;
-            ControlStyling.StyleTextField( HomeCampus.Field, ProfileStrings.CampusPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( HomeCampus.Field, ProfileStrings.CampusPlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( HomeCampus.Background );
 
             HomeCampusButton = new UIButton( );
@@ -273,7 +273,7 @@ namespace iOS
 
             DoneButton = new UIButton( );
             ScrollView.AddSubview( DoneButton );
-            ControlStyling.StyleButton( DoneButton, ProfileStrings.DoneButtonTitle, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleButton( DoneButton, ProfileStrings.DoneButtonTitle, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             DoneButton.SizeToFit( );
 
             LogoutButton = new UIButton( );
@@ -285,7 +285,7 @@ namespace iOS
 
             // setup the pickers
             UILabel genderPickerLabel = new UILabel( );
-            ControlStyling.StyleUILabel( genderPickerLabel, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleUILabel( genderPickerLabel, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             genderPickerLabel.Text = ProfileStrings.SelectGenderLabel;
 
             GenderPicker = new PickerAdjustManager( View, ScrollView, genderPickerLabel, Gender.Background );
@@ -295,7 +295,7 @@ namespace iOS
 
 
             UILabel birthdatePickerLabel = new UILabel( );
-            ControlStyling.StyleUILabel( birthdatePickerLabel, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleUILabel( birthdatePickerLabel, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             birthdatePickerLabel.Text = ProfileStrings.SelectBirthdateLabel;
             BirthdatePicker = new PickerAdjustManager( View, ScrollView, birthdatePickerLabel, Birthdate.Background );
 
@@ -665,7 +665,7 @@ namespace iOS
                     label = new UILabel();
                     label.TextColor = UIColor.White;
                     label.Text = RockGeneralData.Instance.Data.Genders[ (int) (row + 1) ];
-                    label.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+                    label.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
                     label.SizeToFit( );
                 }
 

@@ -193,7 +193,6 @@ namespace CCVApp
 
                     // flag that we want this text field to grow as more text is added
                     TextView.ScaleHeightForText = true;
-                    TextView.DynamicTextMaxHeight = NoteConfig.UserNote_MaxHeight;
 
                     // Setup the font
                     TextView.SetFont( mStyle.mFont.mName, mStyle.mFont.mSize.Value );

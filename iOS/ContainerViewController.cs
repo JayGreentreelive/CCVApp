@@ -105,7 +105,7 @@ namespace iOS
             //
 
             // set the title image for the bar
-            string imagePath = NSBundle.MainBundle.BundlePath + "/" + PrimaryNavBarConfig.LogoFile;
+            string imagePath = NSBundle.MainBundle.BundlePath + "/" + PrimaryNavBarConfig.LogoFile_iOS;
             this.NavigationItem.TitleView = new UIImageView( new UIImage( imagePath ) );
 
 

@@ -40,7 +40,7 @@ namespace Droid
                     if ( convertView as TextView == null )
                     {
                         convertView = ( Context as Activity ).LayoutInflater.Inflate( ResourceId, parent, false );
-                        ControlStyling.StyleUILabel( (convertView as TextView), ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+                        ControlStyling.StyleUILabel( (convertView as TextView), ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
                     }
 
                     ( convertView as TextView ).Text = this.GetItem( position ).ToString( );
@@ -109,17 +109,17 @@ namespace Droid
 
                     // setup the text views
                     FirstNameText = (EditText)view.FindViewById<EditText>( Resource.Id.prayer_create_firstNameText );
-                    ControlStyling.StyleTextField( FirstNameText, PrayerStrings.CreatePrayer_FirstNamePlaceholderText, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+                    ControlStyling.StyleTextField( FirstNameText, PrayerStrings.CreatePrayer_FirstNamePlaceholderText, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
                     FirstNameBGColor = ControlStylingConfig.BG_Layer_Color;
                     FirstNameText.InputType |= Android.Text.InputTypes.TextFlagCapWords;
 
                     LastNameText = (EditText)view.FindViewById<EditText>( Resource.Id.prayer_create_lastNameText );
-                    ControlStyling.StyleTextField( LastNameText, PrayerStrings.CreatePrayer_LastNamePlaceholderText, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+                    ControlStyling.StyleTextField( LastNameText, PrayerStrings.CreatePrayer_LastNamePlaceholderText, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
                     LastNameBGColor = ControlStylingConfig.BG_Layer_Color;
                     LastNameText.InputType |= Android.Text.InputTypes.TextFlagCapWords;
 
                     RequestText = (EditText)view.FindViewById<EditText>( Resource.Id.prayer_create_requestText );
-                    ControlStyling.StyleTextField( RequestText, PrayerStrings.CreatePrayer_PrayerRequest, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+                    ControlStyling.StyleTextField( RequestText, PrayerStrings.CreatePrayer_PrayerRequest, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
                     RequestBGColor = ControlStylingConfig.BG_Layer_Color;
                     RequestText.InputType |= Android.Text.InputTypes.TextFlagCapSentences;
 
@@ -150,10 +150,10 @@ namespace Droid
                     PublicSwitch.Checked = true;
 
                     TextView postAnonymousLabel = view.FindViewById<TextView>( Resource.Id.postAnonymous );
-                    ControlStyling.StyleUILabel( postAnonymousLabel, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+                    ControlStyling.StyleUILabel( postAnonymousLabel, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
 
                     TextView publicLabel = view.FindViewById<TextView>( Resource.Id.makePublic );
-                    ControlStyling.StyleUILabel( publicLabel, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+                    ControlStyling.StyleUILabel( publicLabel, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
 
                     // setup our category spinner
                     Spinner = (Spinner)view.FindViewById<Spinner>( Resource.Id.categorySpinner );
@@ -168,7 +168,7 @@ namespace Droid
                     }
 
                     Button submitButton = (Button)view.FindViewById<Button>( Resource.Id.prayer_create_submitButton );
-                    ControlStyling.StyleButton( submitButton, PrayerStrings.CreatePrayer_SubmitButtonText, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+                    ControlStyling.StyleButton( submitButton, PrayerStrings.CreatePrayer_SubmitButtonText, ControlStylingConfig.Font_Regular, ControlStylingConfig.Small_FontSize );
                     submitButton.Click += (object sender, EventArgs e ) =>
                     {
                         SubmitPrayerRequest( );

@@ -67,7 +67,7 @@ namespace Droid
             Icon.Text = IconStr;
 
             Text.Text = ElementLabel;
-            Text.SetTypeface( FontManager.Instance.GetFont( ControlStylingConfig.Medium_Font_Regular ), TypefaceStyle.Normal );
+            Text.SetTypeface( FontManager.Instance.GetFont( ControlStylingConfig.Font_Regular ), TypefaceStyle.Normal );
             Text.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Medium_FontSize );
 
             Button.Background = null;
@@ -377,7 +377,7 @@ namespace Droid
             // setup the textView for rendering either "Tap to Personalize" or "View Profile"
             ViewProfileLabel = view.FindViewById<TextView>( Resource.Id.view_profile );
             ViewProfileLabel.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
-            ViewProfileLabel.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Light ), TypefaceStyle.Normal );
+            ViewProfileLabel.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Font_Light ), TypefaceStyle.Normal );
             ViewProfileLabel.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
 
 
@@ -387,7 +387,7 @@ namespace Droid
             Activity.WindowManager.DefaultDisplay.GetSize( displaySize );
             float displayWidth = displaySize.X;
 
-            float revealPercent = MainActivity.IsLandscapeWide( ) ? PrimaryNavBarConfig.Landscape_RevealPercentage : PrimaryNavBarConfig.Portrait_RevealPercentage;
+            float revealPercent = MainActivity.IsLandscapeWide( ) ? PrimaryNavBarConfig.Landscape_RevealPercentage_Android : PrimaryNavBarConfig.Portrait_RevealPercentage_Android;
 
             // setup the width of the springboard area and campus selector
             ProfileContainer = view.FindViewById<LinearLayout>( Resource.Id.springboard_profile_image_container );
@@ -395,7 +395,7 @@ namespace Droid
 
             // setup the textView for rendering the user's name when they're logged in "Welcome: Jered"
             ProfilePrefix = view.FindViewById<TextView>( Resource.Id.profile_prefix );
-            ProfilePrefix.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Large_Font_Light ), TypefaceStyle.Normal );
+            ProfilePrefix.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Font_Light ), TypefaceStyle.Normal );
             ProfilePrefix.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Large_FontSize );
             ProfilePrefix.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
             ProfilePrefix.Text = SpringboardStrings.LoggedIn_Prefix;
@@ -403,7 +403,7 @@ namespace Droid
 
             ProfileName = view.FindViewById<TextView>( Resource.Id.profile_name );
             ProfileName.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
-            ProfileName.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Large_Font_Bold ), TypefaceStyle.Normal );
+            ProfileName.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Font_Bold ), TypefaceStyle.Normal );
             ProfileName.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Large_FontSize );
             ProfileName.SetMaxLines( 1 );
             ProfileName.Ellipsize = Android.Text.TextUtils.TruncateAt.End;
@@ -421,15 +421,15 @@ namespace Droid
             CampusText = CampusContainer.FindViewById<TextView>( Resource.Id.campus_selection_text );
             CampusText.Ellipsize = Android.Text.TextUtils.TruncateAt.End;
             CampusText.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
-            CampusText.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Small_Font_Regular ), TypefaceStyle.Normal );
+            CampusText.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Font_Regular ), TypefaceStyle.Normal );
             CampusText.SetTextSize(Android.Util.ComplexUnitType.Dip,  ControlStylingConfig.Small_FontSize );
             CampusText.SetSingleLine( );
 
             TextView settingsIcon = CampusContainer.FindViewById<TextView>( Resource.Id.campus_selection_icon );
             settingsIcon.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary ), TypefaceStyle.Normal );
             settingsIcon.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
-            settingsIcon.SetTextSize( Android.Util.ComplexUnitType.Dip, SpringboardConfig.SettingsSymbolSize );
-            settingsIcon.Text = SpringboardConfig.SettingsSymbol;
+            settingsIcon.SetTextSize( Android.Util.ComplexUnitType.Dip, SpringboardConfig.CampusSelectSymbolSize );
+            settingsIcon.Text = SpringboardConfig.CampusSelectSymbol;
 
             // set the campus text to whatever their profile has set for viewing.
             CampusText.Text = string.Format( SpringboardStrings.Viewing_Campus, RockGeneralData.Instance.Data.CampusIdToName( RockMobileUser.Instance.ViewingCampus ) ).ToUpper( );
@@ -468,7 +468,7 @@ namespace Droid
                                 ControlStylingConfig.Icon_Font_Primary,
                                 ControlStylingConfig.Small_FontSize,
                                 SpringboardStrings.TakeNotesNotificationLabel, 
-                                ControlStylingConfig.Small_Font_Light,
+                                ControlStylingConfig.Font_Light,
                                 ControlStylingConfig.Small_FontSize,
                                 ControlStylingConfig.TextField_ActiveTextColor, 
                                 SpringboardConfig.Element_SelectedColor, 
@@ -536,7 +536,7 @@ namespace Droid
             Activity.WindowManager.DefaultDisplay.GetSize( displaySize );
             float displayWidth = displaySize.X;
 
-            float revealPercent = MainActivity.IsLandscapeWide( ) ? PrimaryNavBarConfig.Landscape_RevealPercentage : PrimaryNavBarConfig.Portrait_RevealPercentage;
+            float revealPercent = MainActivity.IsLandscapeWide( ) ? PrimaryNavBarConfig.Landscape_RevealPercentage_Android : PrimaryNavBarConfig.Portrait_RevealPercentage_Android;
 
             ProfileContainer.LayoutParameters.Width = (int) ( displayWidth * revealPercent );
             CampusContainer.LayoutParameters.Width = (int) ( displayWidth * revealPercent );
@@ -556,11 +556,11 @@ namespace Droid
 
             if ( MainActivity.IsLandscapeWide( ) == true )
             {
-                return (int)( displayWidth * PrimaryNavBarConfig.Landscape_RevealPercentage );
+                return (int)( displayWidth * PrimaryNavBarConfig.Landscape_RevealPercentage_Android );
             }
             else
             {
-                return (int) (displayWidth * PrimaryNavBarConfig.Portrait_RevealPercentage);
+                return (int) (displayWidth * PrimaryNavBarConfig.Portrait_RevealPercentage_Android );
             }
         }
 
@@ -1093,7 +1093,7 @@ namespace Droid
                         if ( element != null )
                         {
                             // did we tap within the revealed springboard area?
-                            float visibleButtonWidth = NavbarFragment.View.Width * PrimaryNavBarConfig.Portrait_RevealPercentage;
+                            float visibleButtonWidth = NavbarFragment.View.Width * PrimaryNavBarConfig.Portrait_RevealPercentage_Android;
                             if ( e.GetX( ) < visibleButtonWidth )
                             {
                                 // we did, so activate the element associated with that button

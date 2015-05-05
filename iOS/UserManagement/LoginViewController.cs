@@ -86,7 +86,7 @@ namespace iOS
             View.AddSubview( UserNameField.Background );
 
             UserNameField.Field.AutocorrectionType = UITextAutocorrectionType.No;
-            ControlStyling.StyleTextField( UserNameField.Field, LoginStrings.UsernamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( UserNameField.Field, LoginStrings.UsernamePlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( UserNameField.Background );
             UserNameField.Field.ShouldReturn += (textField) => 
                 {
@@ -101,7 +101,7 @@ namespace iOS
             PasswordField.Field.AutocorrectionType = UITextAutocorrectionType.No;
             PasswordField.Field.SecureTextEntry = true;
 
-            ControlStyling.StyleTextField( PasswordField.Field, LoginStrings.PasswordPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( PasswordField.Field, LoginStrings.PasswordPlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             ControlStyling.StyleBGLayer( PasswordField.Background );
             PasswordField.Field.ShouldReturn += (textField) => 
                 {
@@ -114,7 +114,7 @@ namespace iOS
             // obviously attempt a login if login is pressed
             LoginButton = UIButton.FromType( UIButtonType.System );
             View.AddSubview( LoginButton );
-            ControlStyling.StyleButton( LoginButton, LoginStrings.LoginButton, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleButton( LoginButton, LoginStrings.LoginButton, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             LoginButton.SizeToFit( );
             LoginButton.TouchUpInside += (object sender, EventArgs e) => 
                 {
@@ -132,7 +132,7 @@ namespace iOS
 
             RegisterButton = UIButton.FromType( UIButtonType.System );
             View.AddSubview( RegisterButton );
-            ControlStyling.StyleButton( RegisterButton, LoginStrings.RegisterButton, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleButton( RegisterButton, LoginStrings.RegisterButton, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             RegisterButton.SizeToFit( );
             RegisterButton.TouchUpInside += (object sender, EventArgs e ) =>
                 {
@@ -143,7 +143,7 @@ namespace iOS
             LoginResult = new StyledTextField( );
             View.AddSubview( LoginResult.Background );
 
-            ControlStyling.StyleTextField( LoginResult.Field, "", ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            ControlStyling.StyleTextField( LoginResult.Field, "", ControlStylingConfig.Font_Regular, ControlStylingConfig.Small_FontSize );
             ControlStyling.StyleBGLayer( LoginResult.Background );
             LoginResult.Field.UserInteractionEnabled = false;
             LoginResult.Field.TextAlignment = UITextAlignment.Center;
@@ -184,7 +184,7 @@ namespace iOS
             View.AddSubview( HeaderView );
             HeaderView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
-            imagePath = NSBundle.MainBundle.BundlePath + "/" + PrimaryNavBarConfig.LogoFile;
+            imagePath = NSBundle.MainBundle.BundlePath + "/" + PrimaryNavBarConfig.LogoFile_iOS;
             LogoView = new UIImageView( new UIImage( imagePath ) );
             HeaderView.AddSubview( LogoView );
         }

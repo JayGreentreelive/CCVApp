@@ -47,10 +47,10 @@ namespace Droid
 
                     TextView headerLabel = view.FindViewById<TextView>( Resource.Id.headerLabel );
                     headerLabel.Text = GiveStrings.Header;
-                    ControlStyling.StyleUILabel( headerLabel, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+                    ControlStyling.StyleUILabel( headerLabel, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
 
                     Button giveButton = view.FindViewById<Button>( Resource.Id.button );
-                    ControlStyling.StyleButton( giveButton, GiveStrings.ButtonLabel, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+                    ControlStyling.StyleButton( giveButton, GiveStrings.ButtonLabel, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
 
                     giveButton.Click += (object sender, EventArgs e ) =>
                     {

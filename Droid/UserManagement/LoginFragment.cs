@@ -99,14 +99,14 @@ namespace Droid
             LoginResultLayer.Alpha = 0.0f;
 
             LoginButton = view.FindViewById<Button>( Resource.Id.loginButton );
-            ControlStyling.StyleButton( LoginButton, LoginStrings.LoginButton, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            ControlStyling.StyleButton( LoginButton, LoginStrings.LoginButton, ControlStylingConfig.Font_Regular, ControlStylingConfig.Small_FontSize );
             LoginButton.Click += (object sender, EventArgs e) => 
                 {
                     TryRockBind( );
                 };
 
             CancelButton = view.FindViewById<Button>( Resource.Id.cancelButton );
-            ControlStyling.StyleButton( CancelButton, GeneralStrings.Cancel, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            ControlStyling.StyleButton( CancelButton, GeneralStrings.Cancel, ControlStylingConfig.Font_Regular, ControlStylingConfig.Small_FontSize );
             CancelButton.Background = null;
             CancelButton.Click += (object sender, EventArgs e) => 
                 {
@@ -114,7 +114,7 @@ namespace Droid
                 };
 
             RegisterButton = view.FindViewById<Button>( Resource.Id.registerButton );
-            ControlStyling.StyleButton( RegisterButton, LoginStrings.RegisterButton, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            ControlStyling.StyleButton( RegisterButton, LoginStrings.RegisterButton, ControlStylingConfig.Font_Regular, ControlStylingConfig.Small_FontSize );
             RegisterButton.Click += (object sender, EventArgs e ) =>
                 {
                     SpringboardParent.ModalFragmentDone( null );
@@ -129,7 +129,7 @@ namespace Droid
 
             UsernameField = view.FindViewById<EditText>( Resource.Id.usernameText );
             UserNameBGColor = ControlStylingConfig.BG_Layer_Color;
-            ControlStyling.StyleTextField( UsernameField, LoginStrings.UsernamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( UsernameField, LoginStrings.UsernamePlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
 
             View borderView = UsernameLayer.FindViewById<View>( Resource.Id.middle_border );
             borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
@@ -140,10 +140,10 @@ namespace Droid
             ControlStyling.StyleBGLayer( PasswordLayer );
             PasswordField = view.FindViewById<EditText>( Resource.Id.passwordText );
             PasswordBGColor = ControlStylingConfig.BG_Layer_Color;
-            ControlStyling.StyleTextField( PasswordField, LoginStrings.PasswordPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( PasswordField, LoginStrings.PasswordPlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
 
             LoginResultLabel = view.FindViewById<TextView>( Resource.Id.loginResult );
-            ControlStyling.StyleUILabel( LoginResultLabel, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleUILabel( LoginResultLabel, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
 
             // Setup the facebook button
             FacebookButton = view.FindViewById<ImageButton>( Resource.Id.facebookButton );

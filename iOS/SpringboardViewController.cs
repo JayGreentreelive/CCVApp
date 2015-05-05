@@ -86,7 +86,7 @@ namespace iOS
                 // Create the text, and populate it with the button's requested text, color and font.
                 TextLabel = new UILabel();
                 TextLabel.Text = labelStr;
-                TextLabel.Font = FontManager.GetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+                TextLabel.Font = FontManager.GetFont( ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
                 TextLabel.BackgroundColor = UIColor.Clear;
                 TextLabel.SizeToFit( );
                 BackingView.AddSubview( TextLabel );
@@ -110,9 +110,9 @@ namespace iOS
                 // position the controls
                 Button.Bounds = BackingView.Bounds;
 
-                LogoView.Layer.Position = new CGPoint( SpringboardConfig.Element_LogoOffsetX, BackingView.Frame.Height / 2 );
+                LogoView.Layer.Position = new CGPoint( SpringboardConfig.Element_LogoOffsetX_iOS, BackingView.Frame.Height / 2 );
 
-                TextLabel.Layer.Position = new CGPoint( SpringboardConfig.Element_LabelOffsetX + ( TextLabel.Frame.Width / 2 ), BackingView.Frame.Height / 2 );
+                TextLabel.Layer.Position = new CGPoint( SpringboardConfig.Element_LabelOffsetX_iOS + ( TextLabel.Frame.Width / 2 ), BackingView.Frame.Height / 2 );
 
                 Seperator.Frame = new CGRect( 0, 0, Button.Frame.Width, 1.0f );
 
@@ -470,12 +470,12 @@ namespace iOS
 
             // setup the campus selector and settings button
             CampusSelectionText = new UILabel();
-            ControlStyling.StyleUILabel( CampusSelectionText, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            ControlStyling.StyleUILabel( CampusSelectionText, ControlStylingConfig.Font_Regular, ControlStylingConfig.Small_FontSize );
             ScrollView.AddSubview( CampusSelectionText );
 
             CampusSelectionIcon = new UILabel();
             ControlStyling.StyleUILabel( CampusSelectionIcon, ControlStylingConfig.Icon_Font_Primary, ControlStylingConfig.Small_FontSize );
-            CampusSelectionIcon.Text = SpringboardConfig.SettingsSymbol;
+            CampusSelectionIcon.Text = SpringboardConfig.CampusSelectSymbol;
             CampusSelectionIcon.SizeToFit( );
             ScrollView.AddSubview( CampusSelectionIcon );
 
@@ -530,10 +530,10 @@ namespace iOS
             EditPictureButton.Layer.CornerRadius = EditPictureButton.Bounds.Width / 2;
             EditPictureButton.Layer.BorderWidth = 4;
 
-            WelcomeField.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Large_Font_Light, ControlStylingConfig.Large_FontSize );
+            WelcomeField.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Light, ControlStylingConfig.Large_FontSize );
             WelcomeField.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
 
-            UserNameField.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Large_Font_Bold, ControlStylingConfig.Large_FontSize );
+            UserNameField.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Bold, ControlStylingConfig.Large_FontSize );
             UserNameField.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
 
             View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.SpringboardBackgroundColor );
@@ -598,7 +598,7 @@ namespace iOS
                                 ControlStylingConfig.Icon_Font_Primary,
                                 ControlStylingConfig.Small_FontSize,
                                 SpringboardStrings.TakeNotesNotificationLabel, 
-                                ControlStylingConfig.Small_Font_Light,
+                                ControlStylingConfig.Font_Light,
                                 ControlStylingConfig.Small_FontSize,
                                 ControlStylingConfig.TextField_ActiveTextColor, 
                                 SpringboardConfig.Element_SelectedColor, 
@@ -1078,17 +1078,17 @@ namespace iOS
             }
 
             EditPictureButton.Layer.AnchorPoint = CGPoint.Empty;
-            EditPictureButton.Layer.Position = new CGPoint( ( PrimaryContainerConfig.SlideAmount - EditPictureButton.Bounds.Width ) / 2, availableHeight * .02f );
+            EditPictureButton.Layer.Position = new CGPoint( ( PrimaryContainerConfig.SlideAmount_iOS - EditPictureButton.Bounds.Width ) / 2, availableHeight * .02f );
 
 
             // center the welcome and name labels within the available Springboard width
             float totalNameWidth = (float) (WelcomeField.Bounds.Width + UserNameField.Bounds.Width);
-            totalNameWidth = Math.Min( totalNameWidth, PrimaryContainerConfig.SlideAmount - 10 );
+            totalNameWidth = Math.Min( totalNameWidth, PrimaryContainerConfig.SlideAmount_iOS - 10 );
 
             float totalNameHeight = Math.Max( (float) WelcomeField.Bounds.Height, (float) UserNameField.Bounds.Height );
 
             WelcomeField.Layer.AnchorPoint = CGPoint.Empty;
-            WelcomeField.Layer.Position = new CGPoint( ( PrimaryContainerConfig.SlideAmount - totalNameWidth ) / 2, EditPictureButton.Frame.Bottom + 10 );
+            WelcomeField.Layer.Position = new CGPoint( ( PrimaryContainerConfig.SlideAmount_iOS - totalNameWidth ) / 2, EditPictureButton.Frame.Bottom + 10 );
             WelcomeField.Bounds = new CGRect( 0, 0, WelcomeField.Bounds.Width, totalNameHeight );
 
 
@@ -1100,7 +1100,7 @@ namespace iOS
             UserNameField.AdjustsFontSizeToFitWidth = false;
 
             ViewProfileLabel.Layer.AnchorPoint = CGPoint.Empty;
-            ViewProfileLabel.Font = FontManager.GetFont( ControlStylingConfig.Small_Font_Light, ControlStylingConfig.Small_FontSize );
+            ViewProfileLabel.Font = FontManager.GetFont( ControlStylingConfig.Font_Light, ControlStylingConfig.Small_FontSize );
             ViewProfileLabel.SizeToFit( );
             ViewProfileLabel.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
             ViewProfileLabel.Layer.Position = new CGPoint( EditPictureButton.Layer.Position.X + ((EditPictureButton.Bounds.Width - ViewProfileLabel.Bounds.Width) / 2), WelcomeField.Frame.Bottom );

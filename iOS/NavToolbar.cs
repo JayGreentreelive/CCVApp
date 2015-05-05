@@ -259,11 +259,11 @@ namespace iOS
             {
                 if ( Revealed == true )
                 {
-                    Frame = new CGRect( 0, parentFrame.Height - Frame.Height, parentFrame.Width, SubNavToolbarConfig.Height );
+                    Frame = new CGRect( 0, parentFrame.Height - Frame.Height, parentFrame.Width, SubNavToolbarConfig.Height_iOS );
                 }
                 else
                 {
-                    Frame = new CGRect( 0, parentFrame.Height, parentFrame.Width, SubNavToolbarConfig.Height );
+                    Frame = new CGRect( 0, parentFrame.Height, parentFrame.Width, SubNavToolbarConfig.Height_iOS );
                 }
             }
             else

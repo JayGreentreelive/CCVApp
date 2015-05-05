@@ -78,7 +78,7 @@ namespace Droid
             ControlStyling.StyleBGLayer( backgroundView );
 
             NickNameField = backgroundView.FindViewById<EditText>( Resource.Id.nickNameText );
-            ControlStyling.StyleTextField( NickNameField, ProfileStrings.NickNamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( NickNameField, ProfileStrings.NickNamePlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             NickNameField.AfterTextChanged += (sender, e) => { Dirty = true; };
             NickNameField.InputType |= InputTypes.TextFlagCapWords;
 
@@ -86,7 +86,7 @@ namespace Droid
             borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
             LastNameField = backgroundView.FindViewById<EditText>( Resource.Id.lastNameText );
-            ControlStyling.StyleTextField( LastNameField, ProfileStrings.LastNamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( LastNameField, ProfileStrings.LastNamePlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             LastNameField.AfterTextChanged += (sender, e) => { Dirty = true; };
             LastNameField.InputType |= InputTypes.TextFlagCapWords;
 
@@ -97,7 +97,7 @@ namespace Droid
             EmailBGColor = ControlStylingConfig.BG_Layer_Color;
 
             EmailField = EmailLayer.FindViewById<EditText>( Resource.Id.emailAddressText );
-            ControlStyling.StyleTextField( EmailField, ProfileStrings.EmailPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( EmailField, ProfileStrings.EmailPlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             EmailField.AfterTextChanged += (sender, e) => { Dirty = true; };
 
             backgroundView = view.FindViewById<RelativeLayout>( Resource.Id.cellphone_background );
@@ -107,7 +107,7 @@ namespace Droid
             borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
             CellPhoneField = backgroundView.FindViewById<EditText>( Resource.Id.cellPhoneText );
-            ControlStyling.StyleTextField( CellPhoneField, ProfileStrings.CellPhonePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( CellPhoneField, ProfileStrings.CellPhonePlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             CellPhoneField.AfterTextChanged += (sender, e) => { Dirty = true; };
             CellPhoneField.AddTextChangedListener(new PhoneNumberFormattingTextWatcher());
 
@@ -117,28 +117,28 @@ namespace Droid
             ControlStyling.StyleBGLayer( backgroundView );
 
             StreetField = backgroundView.FindViewById<EditText>( Resource.Id.streetAddressText );
-            ControlStyling.StyleTextField( StreetField, ProfileStrings.StreetPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( StreetField, ProfileStrings.StreetPlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             StreetField.AfterTextChanged += (sender, e) => { Dirty = true; };
 
             borderView = backgroundView.FindViewById<View>( Resource.Id.street_border );
             borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
             CityField = backgroundView.FindViewById<EditText>( Resource.Id.cityAddressText );
-            ControlStyling.StyleTextField( CityField, ProfileStrings.CityPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( CityField, ProfileStrings.CityPlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             CityField.AfterTextChanged += (sender, e) => { Dirty = true; };
 
             borderView = backgroundView.FindViewById<View>( Resource.Id.city_border );
             borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
             StateField = backgroundView.FindViewById<EditText>( Resource.Id.stateAddressText );
-            ControlStyling.StyleTextField( StateField, ProfileStrings.StatePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( StateField, ProfileStrings.StatePlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             StateField.AfterTextChanged += (sender, e) => { Dirty = true; };
 
             borderView = backgroundView.FindViewById<View>( Resource.Id.state_border );
             borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
             ZipField = backgroundView.FindViewById<EditText>( Resource.Id.zipAddressText );
-            ControlStyling.StyleTextField( ZipField, ProfileStrings.ZipPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( ZipField, ProfileStrings.ZipPlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             ZipField.AfterTextChanged += (sender, e) => { Dirty = true; };
 
 
@@ -147,7 +147,7 @@ namespace Droid
             ControlStyling.StyleBGLayer( backgroundView );
 
             BirthdateField = backgroundView.FindViewById<EditText>( Resource.Id.birthdateText );
-            ControlStyling.StyleTextField( BirthdateField, ProfileStrings.BirthdatePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( BirthdateField, ProfileStrings.BirthdatePlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             BirthdateField.FocusableInTouchMode = false;
             BirthdateField.Focusable = false;
             Button birthdateButton = backgroundView.FindViewById<Button>( Resource.Id.birthdateButton );
@@ -175,7 +175,7 @@ namespace Droid
 
             // Gender
             GenderField = view.FindViewById<EditText>( Resource.Id.genderText );
-            ControlStyling.StyleTextField( GenderField, ProfileStrings.GenderPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( GenderField, ProfileStrings.GenderPlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             GenderField.FocusableInTouchMode = false;
             GenderField.Focusable = false;
             Button genderButton = backgroundView.FindViewById<Button>( Resource.Id.genderButton );
@@ -205,7 +205,7 @@ namespace Droid
 
             // Campus
             CampusField = view.FindViewById<EditText>( Resource.Id.campusText );
-            ControlStyling.StyleTextField( CampusField, ProfileStrings.CampusPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( CampusField, ProfileStrings.CampusPlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             CampusField.FocusableInTouchMode = false;
             CampusField.Focusable = false;
             Button campusButton = backgroundView.FindViewById<Button>( Resource.Id.campusButton );
@@ -237,10 +237,10 @@ namespace Droid
 
             // Done buttons
             DoneButton = view.FindViewById<Button>( Resource.Id.doneButton );
-            ControlStyling.StyleButton( DoneButton, ProfileStrings.DoneButtonTitle, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            ControlStyling.StyleButton( DoneButton, ProfileStrings.DoneButtonTitle, ControlStylingConfig.Font_Regular, ControlStylingConfig.Small_FontSize );
 
             LogoutButton = view.FindViewById<Button>( Resource.Id.logoutButton );
-            ControlStyling.StyleButton( LogoutButton, ProfileStrings.LogoutButtonTitle, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            ControlStyling.StyleButton( LogoutButton, ProfileStrings.LogoutButtonTitle, ControlStylingConfig.Font_Regular, ControlStylingConfig.Small_FontSize );
             LogoutButton.Background = null;
 
             DoneButton.Click += (object sender, EventArgs e) => 

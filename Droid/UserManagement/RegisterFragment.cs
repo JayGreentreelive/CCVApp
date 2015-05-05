@@ -111,7 +111,7 @@ namespace Droid
             ControlStyling.StyleBGLayer( UserNameLayer );
 
             UserNameText = UserNameLayer.FindViewById<EditText>( Resource.Id.userNameText );
-            ControlStyling.StyleTextField( UserNameText, RegisterStrings.UsernamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( UserNameText, RegisterStrings.UsernamePlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             UserNameBGColor = ControlStylingConfig.BG_Layer_Color;
             UserNameText.InputType |= InputTypes.TextFlagCapWords;
 
@@ -124,7 +124,7 @@ namespace Droid
 
             PasswordText = PasswordLayer.FindViewById<EditText>( Resource.Id.passwordText );
             PasswordText.InputType |= InputTypes.TextVariationPassword;
-            ControlStyling.StyleTextField( PasswordText, RegisterStrings.PasswordPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( PasswordText, RegisterStrings.PasswordPlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             PasswordBGColor = ControlStylingConfig.BG_Layer_Color;
 
             borderView = PasswordLayer.FindViewById<View>( Resource.Id.password_border );
@@ -137,7 +137,7 @@ namespace Droid
 
             ConfirmPasswordText = ConfirmPasswordLayer.FindViewById<EditText>( Resource.Id.confirmPasswordText );
             ConfirmPasswordText.InputType |= InputTypes.TextVariationPassword;
-            ControlStyling.StyleTextField( ConfirmPasswordText, RegisterStrings.ConfirmPasswordPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( ConfirmPasswordText, RegisterStrings.ConfirmPasswordPlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             ConfirmPasswordBGColor = ControlStylingConfig.BG_Layer_Color;
 
 
@@ -147,7 +147,7 @@ namespace Droid
             ControlStyling.StyleBGLayer( NickNameLayer );
 
             NickNameText = NickNameLayer.FindViewById<EditText>( Resource.Id.nickNameText );
-            ControlStyling.StyleTextField( NickNameText, RegisterStrings.NickNamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( NickNameText, RegisterStrings.NickNamePlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             NickNameBGColor = ControlStylingConfig.BG_Layer_Color;
             NickNameText.InputType |= InputTypes.TextFlagCapWords;
 
@@ -158,7 +158,7 @@ namespace Droid
             ControlStyling.StyleBGLayer( LastNameLayer );
 
             LastNameText = LastNameLayer.FindViewById<EditText>( Resource.Id.lastNameText );
-            ControlStyling.StyleTextField( LastNameText, RegisterStrings.LastNamePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( LastNameText, RegisterStrings.LastNamePlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             LastNameBGColor = ControlStylingConfig.BG_Layer_Color;
             LastNameText.InputType |= InputTypes.TextFlagCapWords;
 
@@ -168,7 +168,7 @@ namespace Droid
             ControlStyling.StyleBGLayer( CellPhoneLayer );
 
             CellPhoneText = CellPhoneLayer.FindViewById<EditText>( Resource.Id.cellPhoneText );
-            ControlStyling.StyleTextField( CellPhoneText, RegisterStrings.CellPhonePlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( CellPhoneText, RegisterStrings.CellPhonePlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             CellPhoneText.AddTextChangedListener(new PhoneNumberFormattingTextWatcher());
 
 
@@ -180,16 +180,16 @@ namespace Droid
             borderView.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
 
             EmailText = EmailLayer.FindViewById<EditText>( Resource.Id.emailAddressText );
-            ControlStyling.StyleTextField( EmailText, RegisterStrings.EmailPlaceholder, ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ControlStyling.StyleTextField( EmailText, RegisterStrings.EmailPlaceholder, ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             EmailBGColor = ControlStylingConfig.BG_Layer_Color;
 
 
             // Register button
             RegisterButton = view.FindViewById<Button>( Resource.Id.registerButton );
-            ControlStyling.StyleButton( RegisterButton, RegisterStrings.RegisterButton, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            ControlStyling.StyleButton( RegisterButton, RegisterStrings.RegisterButton, ControlStylingConfig.Font_Regular, ControlStylingConfig.Small_FontSize );
 
             CancelButton = view.FindViewById<Button>( Resource.Id.cancelButton );
-            ControlStyling.StyleButton( CancelButton, GeneralStrings.Cancel, ControlStylingConfig.Small_Font_Regular, ControlStylingConfig.Small_FontSize );
+            ControlStyling.StyleButton( CancelButton, GeneralStrings.Cancel, ControlStylingConfig.Font_Regular, ControlStylingConfig.Small_FontSize );
             CancelButton.Background = null;
 
             RegisterButton.Click += (object sender, EventArgs e) => 

@@ -84,6 +84,9 @@ namespace CCVApp
                 /// </summary>
                 public const KeyboardAppearanceStyle iOSPlatformUIKeyboardAppearance = KeyboardAppearanceStyle.Dark;
 
+                /// <summary>
+                /// These are the names of placeholder images. They should not need to change.
+                /// </summary>
                 public const string NewsMainPlaceholder = "placeholder_news_main.png";
                 public const string NewsDetailsPlaceholder = "placeholder_news_details.png";
 
@@ -101,13 +104,6 @@ namespace CCVApp
             public class SpringboardConfig
             {
                 /// <summary>
-                /// The number of hours until the app will resync data with Rock when it is resumed.
-                /// This allows someone to put the app in the background (but not kill it), and come back
-                /// later to updated rock data (news, notes, etc.)
-                /// </summary>
-                public const int SyncRockHoursFrequency = 12;
-
-                /// <summary>
                 /// The text glyph to use as a symbol when the user does not have a profile.
                 /// </summary>
                 public const string NoProfileSymbol = "";
@@ -123,7 +119,7 @@ namespace CCVApp
                 public const float ProfileSymbolFontSize = 48;
 
                 /// <summary>
-                /// When we store their profile pic, thisi s what it's called.
+                /// When we store their profile pic, this is what it's called.
                 /// When the HasProfileImage flag is true, we'll load it from this file.
                 /// </summary>
                 public const string ProfilePic = "userPhoto.jpg";
@@ -131,12 +127,12 @@ namespace CCVApp
                 /// <summary>
                 /// The symbol to use representing the settings button.
                 /// </summary>
-                public const string SettingsSymbol = "";
+                public const string CampusSelectSymbol = "";
 
                 /// <summary>
                 /// The size of the symbol representing the settings button.
                 /// </summary>
-                public const float SettingsSymbolSize = 14;
+                public const float CampusSelectSymbolSize = 14;
                
                 /// <summary>
                 /// The size of font to use for the element's logo.
@@ -146,12 +142,12 @@ namespace CCVApp
                 /// <summary>
                 /// The X offset to place the CENTER of the element's logo.
                 /// </summary>
-                public const int Element_LogoOffsetX = 20;
+                public const int Element_LogoOffsetX_iOS = 20;
 
                 /// <summary>
                 /// The X offset to place the LEFT EDGE of the element's text.
                 /// </summary>
-                public const int Element_LabelOffsetX = 40;
+                public const int Element_LabelOffsetX_iOS = 40;
 
                 /// <summary>
                 /// The background color of a selected element.
@@ -204,7 +200,7 @@ namespace CCVApp
                 /// <summary>
                 /// The text to display for the 'cancel crop' button.
                 /// </summary>
-                public const string CropCancelButton_Text = "";//""; (This commented out one is the X with a circle)
+                public const string CropCancelButton_Text = "";
 
                 /// <summary>
                 /// The size (in font points) of the 'cancel crop' button.
@@ -217,7 +213,7 @@ namespace CCVApp
                 /// <summary>
                 /// The height of the subNavigation toolbar (the one at the bottom)
                 /// </summary>
-                public const float Height = 44;
+                public const float Height_iOS = 44;
 
                 /// <summary>
                 /// The color of the subNavigation toolbar (the one at the bottom)
@@ -280,7 +276,7 @@ namespace CCVApp
                 /// <summary>
                 /// The logo to be displayed on the primary nav bar.
                 /// </summary>
-                public const string LogoFile = "ccvLogo.png";
+                public const string LogoFile_iOS = "ccvLogo.png";
 
                 /// <summary>
                 /// The character to be displayed representing the reveal button.
@@ -290,12 +286,12 @@ namespace CCVApp
                 /// <summary>
                 /// The percentage of the navbar width to slide over when revealing the Springboard in Portrait. (Android Only)
                 /// </summary>
-                public const float Portrait_RevealPercentage = .65f;
+                public const float Portrait_RevealPercentage_Android = .65f;
 
                 /// <summary>
                 /// The percentage of the navbar width to slide over when revealing the Springboard in Landscape Wide. (Android Only)
                 /// </summary>
-                public const float Landscape_RevealPercentage = .35f;
+                public const float Landscape_RevealPercentage_Android = .35f;
 
                 /// <summary>
                 /// The size of the character representing the reveal button.
@@ -316,7 +312,7 @@ namespace CCVApp
                 /// <summary>
                 /// The amount to slide when revelaing the springboard.
                 /// </summary>
-                public const float SlideAmount = 230;
+                public const float SlideAmount_iOS = 230;
 
                 /// <summary>
                 /// The max amount to darken the panel when revealing the springboard. ( 0 - 1 )
@@ -327,12 +323,12 @@ namespace CCVApp
                 /// The darkness of the shadow cast by the primary container on top of the springboard.
                 /// 1 = fully opaque, 0 = fully transparent.
                 /// </summary>
-                public const float ShadowOpacity = .60f;
+                public const float ShadowOpacity_iOS = .60f;
 
                 /// <summary>
                 /// The offset of the shadow cast by the primary container on top of the springboard.
                 /// </summary>
-                public static SizeF ShadowOffset = new SizeF( 0.0f, 5.0f );
+                public static SizeF ShadowOffset_iOS = new SizeF( 0.0f, 5.0f );
             }
 
             public class NoteConfig
@@ -385,12 +381,6 @@ namespace CCVApp
                 public const uint UserNote_AnchorColor = 0x77777777;
 
                 /// <summary>
-                /// The color of the user note anchor (which is what the user interacts with to move, open, close and delete the note)
-                /// when the note is in delete mode.
-                /// </summary>
-                public const uint UserNote_DeleteAnchorColor = 0x7A1315FF;
-
-                /// <summary>
                 /// The size of the font/icon when the usernote is OPEN.
                 /// </summary>
                 public const int UserNote_IconOpenSize = 30;
@@ -399,11 +389,6 @@ namespace CCVApp
                 /// The size of the font/icon when the usernote is CLOSED.
                 /// </summary>
                 public const int UserNote_IconClosedSize = 46;
-
-                /// <summary>
-                /// The max height of a user note.
-                /// </summary>
-                public const float UserNote_MaxHeight = 200;
 
                 /// <summary>
                 /// The color of the font/icon when displaying the user note icon.
@@ -421,14 +406,13 @@ namespace CCVApp
                 /// 
                 public const int UserNote_DeleteIconSize = 25;
 
-
                 /// <summary>
-                /// The icon to use for displaying the delete icon on user notes.
+                /// The icon to use for displaying the close icon on user notes.
                 /// </summary>
                 public const string UserNote_CloseIcon = "";
 
                 /// <summary>
-                /// The size of the font/icon when displaying the delete icon on user notes.
+                /// The size of the font/icon when displaying the close icon on user notes.
                 /// </summary>
                 /// 
                 public const int UserNote_CloseIconSize = 25;
@@ -469,9 +453,13 @@ namespace CCVApp
                 public const float Series_Main_CellWidth = 70;
 
                 /// <summary>
-                /// Make Private
+                /// The icon size for icons in the details table row.
                 /// </summary>
                 public const uint Details_Table_IconSize = 62;
+
+                /// <summary>
+                /// The color of the icon in the details table row.
+                /// </summary>
                 public const uint Details_Table_IconColor = 0xc43535FF;
             }
 
@@ -491,13 +479,19 @@ namespace CCVApp
                 /// <summary>
                 /// The size of the symbol used to representing a prayer post result.
                 /// </summary>
-                public const uint PostPrayer_ResultSymbolSize = 64;
+                public const uint PostPrayer_ResultSymbolSize_Droid = 64;
 
+                /// <summary>
+                /// The color to fill the "Pray" circle when a user prays for a request.
+                /// </summary>
                 public const uint PrayedForColor = 0x26b8e2FF;
             }
 
             public class ConnectConfig
             {
+                /// <summary>
+                /// These are the "other" connect options. Each one is a label, a URL to visit, and an icon to display.
+                /// </summary>
                 public static string[] WebViews = 
                     {
                         //"Starting Point", "http://www.ccvonline.com/Arena/default.aspx?page=17400&campus=1", "starting_point_thumb.png",
@@ -509,8 +503,14 @@ namespace CCVApp
 
                     };
 
+                /// <summary>
+                /// Image to use for the group finder thumbnail image
+                /// </summary>
                 public const string GroupFinder_IconImage = "groupfinder_thumb.png";
 
+                /// <summary>
+                /// Banner to display at the top of the Connect Page
+                /// </summary>
                 public const string MainPageHeaderImage = "connect_banner.png";
 
                 /// <summary>
@@ -549,37 +549,45 @@ namespace CCVApp
                 public const float GroupFinder_DefaultScale_Android = 9.25f;
 
                 /// <summary>
-                /// The icon to use representing the search button
-                /// </summary>
-                public const string GroupFinder_SearchIcon = "";
-
-                /// <summary>
                 /// The icon to use representing the join button.
                 /// </summary>
                 public const string GroupFinder_JoinIcon = "";
 
-                public const uint GroupFinder_Join_IconSize = 64;
-
                 /// <summary>
-                /// The color for the row of the group that's closest to the address searched
+                /// The size of the icon to use for the join button.
                 /// </summary>
-                public const int GroupFinder_ClosestGroupColor = 0x5B1013FF;
+                public const uint GroupFinder_Join_IconSize = 64;
             }
 
             public class GiveConfig
             {
+                /// <summary>
+                /// The url to take a user to for giving.
+                /// </summary>
                 //public const string GiveUrl = "https://www.ccvonline.com/Arena/default.aspx?page=18485&campus=1";
                 public const string GiveUrl = "http://www.jeredmcferron.com/ccv/placeholder.html";
             }
 
             public class ControlStylingConfig
             {
+                /// <summary>
+                /// The background color of the springboard area.
+                /// </summary>
                 public const uint SpringboardBackgroundColor = 0x2D2D2DFF;
 
+                /// <summary>
+                /// The color of the active springboard element.
+                /// </summary>
                 public const uint Springboard_ActiveElementColor = 0xFFFFFFFF;
 
+                /// <summary>
+                /// The color for inactive springboard elements.
+                /// </summary>
                 public const uint Springboard_InActiveElementColor = 0xA7A7A7FF;
 
+                /// <summary>
+                /// The background color of the primary navigation bar up top.
+                /// </summary>
                 public const uint PrimaryNavBarBackgroundColor = 0x191919FF;
 
                 /// <summary>
@@ -670,19 +678,19 @@ namespace CCVApp
                 public const uint Table_Footer_Color = 0x262626FF;
 
                 /// <summary>
-                /// The font to use representing a large bold font throughout the app.
+                /// The font to use representing a bold font throughout the app.
                 /// </summary>
-                public const string Large_Font_Bold = "DINOffc-CondBlack";
+                public const string Font_Bold = "DINOffc-CondBlack";
 
                 /// <summary>
-                /// The font to use representing a large regular font throughout the app.
+                /// The font to use representing a regular font throughout the app.
                 /// </summary>
-                public const string Large_Font_Regular = "OpenSans-Regular";
+                public const string Font_Regular = "OpenSans-Regular";
 
                 /// <summary>
-                /// The font to use representing a large light font throughout the app.
+                /// The font to use representing a light font throughout the app.
                 /// </summary>
-                public const string Large_Font_Light = "OpenSans-Light";
+                public const string Font_Light = "OpenSans-Light";
 
                 /// <summary>
                 /// The size of to use for the large font throughout the app.
@@ -690,39 +698,9 @@ namespace CCVApp
                 public const uint Large_FontSize = 23;
 
                 /// <summary>
-                /// The font to use representing a medium bold font throughout the app.
-                /// </summary>
-                public const string Medium_Font_Bold = "DINOffc-CondBlack";
-
-                /// <summary>
-                /// The font to use representing a medium regular font throughout the app.
-                /// </summary>
-                public const string Medium_Font_Regular = "OpenSans-Regular";
-
-                /// <summary>
-                /// The font to use representing a medium light font throughout the app.
-                /// </summary>
-                public const string Medium_Font_Light = "OpenSans-Light";
-
-                /// <summary>
                 /// The size of to use for the medium font throughout the app.
                 /// </summary>
                 public const uint Medium_FontSize = 19;
-
-                /// <summary>
-                /// The font to use representing a small bold font throughout the app.
-                /// </summary>
-                public const string Small_Font_Bold = "DINOffc-CondBlack";
-
-                /// <summary>
-                /// The font to use representing a small regular font throughout the app.
-                /// </summary>
-                public const string Small_Font_Regular = "OpenSans-Regular";
-
-                /// <summary>
-                /// The font to use representing a small light font throughout the app.
-                /// </summary>
-                public const string Small_Font_Light = "OpenSans-Light";
 
                 /// <summary>
                 /// The size of to use for the small font throughout the app.

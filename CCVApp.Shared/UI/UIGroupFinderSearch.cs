@@ -62,13 +62,13 @@ namespace CCVApp.Shared.UI
 
             Title = PlatformLabel.Create( );
             Title.AddAsSubview( View.PlatformNativeObject );
-            Title.SetFont( ControlStylingConfig.Large_Font_Bold, ControlStylingConfig.Large_FontSize );
+            Title.SetFont( ControlStylingConfig.Font_Bold, ControlStylingConfig.Large_FontSize );
             Title.TextColor = ControlStylingConfig.TextField_ActiveTextColor;
             Title.TextAlignment = TextAlignment.Center;
 
             Details = PlatformLabel.Create( );
             Details.AddAsSubview( View.PlatformNativeObject );
-            Details.SetFont( ControlStylingConfig.Medium_Font_Light, ControlStylingConfig.Medium_FontSize );
+            Details.SetFont( ControlStylingConfig.Font_Light, ControlStylingConfig.Medium_FontSize );
             Details.TextColor = ControlStylingConfig.TextField_ActiveTextColor;
 
 
@@ -81,7 +81,7 @@ namespace CCVApp.Shared.UI
 
             Street = PlatformTextField.Create( );
             Street.AddAsSubview( View.PlatformNativeObject );
-            Street.SetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            Street.SetFont( ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             Street.PlaceholderTextColor = ControlStylingConfig.TextField_PlaceholderTextColor;
             Street.Placeholder = ConnectStrings.GroupFinder_StreetPlaceholder;
             Street.TextColor = ControlStylingConfig.TextField_ActiveTextColor;
@@ -98,7 +98,7 @@ namespace CCVApp.Shared.UI
 
             City = PlatformTextField.Create( );
             City.AddAsSubview( View.PlatformNativeObject );
-            City.SetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            City.SetFont( ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             City.PlaceholderTextColor = ControlStylingConfig.TextField_PlaceholderTextColor;
             City.Placeholder = ConnectStrings.GroupFinder_CityPlaceholder;
             City.TextColor = ControlStylingConfig.TextField_ActiveTextColor;
@@ -115,7 +115,7 @@ namespace CCVApp.Shared.UI
 
             State = PlatformTextField.Create( );
             State.AddAsSubview( View.PlatformNativeObject );
-            State.SetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            State.SetFont( ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             State.PlaceholderTextColor = ControlStylingConfig.TextField_PlaceholderTextColor;
             State.Placeholder = ConnectStrings.GroupFinder_StatePlaceholder;
             State.TextColor = ControlStylingConfig.TextField_ActiveTextColor;
@@ -131,7 +131,7 @@ namespace CCVApp.Shared.UI
 
             ZipCode = PlatformTextField.Create( );
             ZipCode.AddAsSubview( View.PlatformNativeObject );
-            ZipCode.SetFont( ControlStylingConfig.Medium_Font_Regular, ControlStylingConfig.Medium_FontSize );
+            ZipCode.SetFont( ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             ZipCode.PlaceholderTextColor = ControlStylingConfig.TextField_PlaceholderTextColor;
             ZipCode.Placeholder = ConnectStrings.GroupFinder_ZipPlaceholder;
             ZipCode.TextColor = ControlStylingConfig.TextField_ActiveTextColor;
