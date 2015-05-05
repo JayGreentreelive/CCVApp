@@ -1,10 +1,6 @@
-﻿<Properties StartupItem="Droid/Droid.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.094c904b" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Tasks/PrayerTask/PrayerCreateFragment.cs">
-    <Files>
-      <File FileName="Droid/Tasks/PrayerTask/PrayerCreateFragment.cs" Line="260" Column="67" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
+﻿<Properties StartupItem="iOS/iOS.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhone4s.8.3" />
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
