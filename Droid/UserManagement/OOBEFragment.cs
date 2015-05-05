@@ -12,15 +12,15 @@ using Android.Util;
 using Android.Views;
 using Android.Text;
 using Android.Widget;
-using CCVApp.Shared.Network;
+using App.Shared.Network;
 using Android.Views.InputMethods;
-using CCVApp.Shared.Strings;
-using CCVApp.Shared.Config;
+using App.Shared.Strings;
+using App.Shared.Config;
 using Rock.Mobile.PlatformUI;
 using Android.Telephony;
 using Rock.Mobile.Util.Strings;
 using Java.Lang.Reflect;
-using CCVApp.Shared.UI;
+using App.Shared.UI;
 using Rock.Mobile.Animation;
 using Android.Graphics;
 
@@ -48,7 +48,7 @@ namespace Droid
 
             view.SetOnTouchListener( this );
 
-            string imageName = "oobe_ccv_logo.png";
+            string imageName = "oobe_splash_logo.png";
 
             Point displaySize = new Point( );
             Activity.WindowManager.DefaultDisplay.GetSize( displaySize );

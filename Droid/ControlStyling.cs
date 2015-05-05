@@ -1,7 +1,7 @@
 ﻿using System;
 using Android.Widget;
 using Rock.Mobile.PlatformUI;
-using CCVApp.Shared.Config;
+using App.Shared.Config;
 using Android.Views;
 using Android.Graphics;
 using Android.Graphics.Drawables;

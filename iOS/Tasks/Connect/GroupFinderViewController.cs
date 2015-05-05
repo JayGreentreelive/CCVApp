@@ -4,20 +4,20 @@ using UIKit;
 using System.CodeDom.Compiler;
 using CoreLocation;
 using MapKit;
-using CCVApp.Shared.Config;
+using App.Shared.Config;
 using CoreGraphics;
 using System.Collections.Generic;
-using CCVApp.Shared.Network;
+using App.Shared.Network;
 using Rock.Mobile.Util.Strings;
 using System.Collections;
-using CCVApp.Shared;
+using App.Shared;
 using Rock.Mobile.PlatformSpecific.iOS.UI;
-using CCVApp.Shared.Strings;
-using CCVApp.Shared.Analytics;
+using App.Shared.Strings;
+using App.Shared.Analytics;
 using Rock.Mobile.Animation;
-using CCVApp.Shared.UI;
+using App.Shared.UI;
 using Rock.Mobile.PlatformSpecific.Util;
-using CCVApp.Shared.PrivateConfig;
+using App.Shared.PrivateConfig;
 
 namespace iOS
 {
@@ -384,7 +384,7 @@ namespace iOS
         {
             base.ViewDidLoad();
 
-            View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( CCVApp.Shared.Config.ControlStylingConfig.BG_Layer_Color );
+            View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( App.Shared.Config.ControlStylingConfig.BG_Layer_Color );
 
             // setup everything except positioning, which will happen in LayoutChanged()
             SourceLocation = null;
@@ -446,7 +446,7 @@ namespace iOS
             GroupTableSource = new GroupFinderViewController.TableSource( this );
 
             // add the table view and source
-            GroupFinderTableView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( CCVApp.Shared.Config.ControlStylingConfig.Table_Footer_Color );
+            GroupFinderTableView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( App.Shared.Config.ControlStylingConfig.Table_Footer_Color );
             GroupFinderTableView.Source = GroupTableSource;
             GroupFinderTableView.SeparatorStyle = UITableViewCellSeparatorStyle.None;
 

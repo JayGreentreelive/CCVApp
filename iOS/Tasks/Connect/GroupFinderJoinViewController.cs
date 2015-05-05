@@ -1,10 +1,10 @@
 ﻿using System;
-using CCVApp.Shared;
+using App.Shared;
 using Rock.Mobile.PlatformSpecific.Util;
-using CCVApp.Shared.Config;
+using App.Shared.Config;
 using UIKit;
 using Foundation;
-using CCVApp.Shared.UI;
+using App.Shared.UI;
 using CoreGraphics;
 using System.Drawing;
 

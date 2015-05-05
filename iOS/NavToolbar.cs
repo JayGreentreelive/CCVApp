@@ -3,9 +3,9 @@ using UIKit;
 using System.Collections.Generic;
 using Foundation;
 using CoreGraphics;
-using CCVApp.Shared.Config;
+using App.Shared.Config;
 using Rock.Mobile.PlatformUI;
-using CCVApp.Shared.PrivateConfig;
+using App.Shared.PrivateConfig;
 
 namespace iOS
 {

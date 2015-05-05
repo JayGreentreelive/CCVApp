@@ -3,11 +3,11 @@ using Foundation;
 using UIKit;
 using System.CodeDom.Compiler;
 using CoreGraphics;
-using CCVApp.Shared.Config;
+using App.Shared.Config;
 using System.Collections.Generic;
-using CCVApp.Shared;
-using CCVApp.Shared.Strings;
-using CCVApp.Shared.PrivateConfig;
+using App.Shared;
+using App.Shared.Strings;
+using App.Shared.PrivateConfig;
 
 namespace iOS
 {
@@ -282,7 +282,7 @@ namespace iOS
         {
             base.ViewDidLoad();
 
-            View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( CCVApp.Shared.Config.ControlStylingConfig.BackgroundColor );
+            View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( App.Shared.Config.ControlStylingConfig.BackgroundColor );
 
             LinkEntries = ConnectLink.BuildList( );
 

@@ -2,9 +2,9 @@ using System;
 using UIKit;
 using CoreGraphics;
 using Foundation;
-using CCVApp.Shared.Config;
-using CCVApp.Shared.Network;
-using CCVApp.Shared.PrivateConfig;
+using App.Shared.Config;
+using App.Shared.Network;
+using App.Shared.PrivateConfig;
 
 namespace iOS
 {
@@ -42,7 +42,7 @@ namespace iOS
             {
                 case PrivateGeneralConfig.TaskAction_NotesRead:
                 {
-                    if ( CCVApp.Shared.Network.RockLaunchData.Instance.Data.NoteDB.SeriesList.Count > 0 )
+                    if ( App.Shared.Network.RockLaunchData.Instance.Data.NoteDB.SeriesList.Count > 0 )
                     {
                         // since we're switching to the read notes VC, pop to the main page root and 
                         // remove it, because we dont' want back history (where would they go back to?)

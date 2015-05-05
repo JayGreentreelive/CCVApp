@@ -13,12 +13,12 @@ using Android.Views;
 using Android.Widget;
 using Android.Graphics;
 using Rock.Mobile.PlatformUI;
-using CCVApp.Shared.Config;
-using CCVApp.Shared.Strings;
+using App.Shared.Config;
+using App.Shared.Strings;
 using Android.Text.Method;
-using CCVApp.Shared;
+using App.Shared;
 using System.IO;
-using CCVApp.Shared.PrivateConfig;
+using App.Shared.PrivateConfig;
 
 namespace Droid
 {
@@ -30,7 +30,7 @@ namespace Droid
             {
                 bool IsFragmentActive { get; set; }
 
-                public CCVApp.Shared.Network.RockNews NewsItem { get; set; }
+                public App.Shared.Network.RockNews NewsItem { get; set; }
 
                 Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView ImageBanner { get; set; }
                 Bitmap HeaderImage { get; set; }

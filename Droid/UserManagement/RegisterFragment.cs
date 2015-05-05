@@ -12,17 +12,17 @@ using Android.Util;
 using Android.Views;
 using Android.Text;
 using Android.Widget;
-using CCVApp.Shared.Network;
+using App.Shared.Network;
 using Android.Views.InputMethods;
-using CCVApp.Shared.Strings;
-using CCVApp.Shared.Config;
+using App.Shared.Strings;
+using App.Shared.Config;
 using Rock.Mobile.PlatformUI;
 using Android.Telephony;
 using Rock.Mobile.Util.Strings;
 using Java.Lang.Reflect;
-using CCVApp.Shared.UI;
-using CCVApp.Shared.Analytics;
-using CCVApp.Shared.PrivateConfig;
+using App.Shared.UI;
+using App.Shared.Analytics;
+using App.Shared.PrivateConfig;
 
 namespace Droid
 {

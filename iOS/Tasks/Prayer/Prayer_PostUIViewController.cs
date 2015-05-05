@@ -2,12 +2,12 @@ using System;
 using Foundation;
 using UIKit;
 using System.CodeDom.Compiler;
-using CCVApp.Shared.Strings;
+using App.Shared.Strings;
 using Rock.Mobile.PlatformUI;
 using CoreGraphics;
-using CCVApp.Shared.Config;
-using CCVApp.Shared.Analytics;
-using CCVApp.Shared.UI;
+using App.Shared.Config;
+using App.Shared.Analytics;
+using App.Shared.UI;
 using Rock.Mobile.PlatformSpecific.Util;
 
 namespace iOS
@@ -110,7 +110,7 @@ namespace iOS
                     System.Threading.Thread.Sleep( 1000 );
 
                     // submit the request
-                    CCVApp.Shared.Network.RockApi.Instance.PutPrayer( PrayerRequest, delegate(System.Net.HttpStatusCode statusCode, string statusDescription )
+                    App.Shared.Network.RockApi.Instance.PutPrayer( PrayerRequest, delegate(System.Net.HttpStatusCode statusCode, string statusDescription )
                         {
                             Posting = false;
 

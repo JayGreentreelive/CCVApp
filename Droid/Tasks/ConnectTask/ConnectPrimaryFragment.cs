@@ -13,13 +13,13 @@ using Android.Views;
 using Android.Widget;
 using Android.Media;
 using Android.Graphics;
-using CCVApp.Shared.Config;
-using CCVApp.Shared.Strings;
+using App.Shared.Config;
+using App.Shared.Strings;
 using Rock.Mobile.PlatformUI.DroidNative;
 using Rock.Mobile.PlatformSpecific.Android.Graphics;
-using CCVApp.Shared;
+using App.Shared;
 using Rock.Mobile.PlatformSpecific.Android.UI;
-using CCVApp.Shared.PrivateConfig;
+using App.Shared.PrivateConfig;
 
 namespace Droid
 {

@@ -2,16 +2,16 @@ using System;
 using Foundation;
 using UIKit;
 using System.CodeDom.Compiler;
-using CCVApp.Shared.Notes.Model;
+using App.Shared.Notes.Model;
 using System.Collections.Generic;
 using CoreGraphics;
-using CCVApp.Shared;
-using CCVApp.Shared.Config;
+using App.Shared;
+using App.Shared.Config;
 using Rock.Mobile.PlatformUI;
 using System.IO;
-using CCVApp.Shared.Analytics;
-using CCVApp.Shared.Network;
-using CCVApp.Shared.PrivateConfig;
+using App.Shared.Analytics;
+using App.Shared.Network;
+using App.Shared.PrivateConfig;
 
 namespace iOS
 {

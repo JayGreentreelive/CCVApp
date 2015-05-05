@@ -3,23 +3,23 @@ using Foundation;
 using UIKit;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
-using CCVApp.Shared.Network;
+using App.Shared.Network;
 using CoreGraphics;
 using Rock.Mobile.Network;
-using CCVApp.Shared.Notes.Model;
+using App.Shared.Notes.Model;
 using System.Xml;
 using System.IO;
 using RestSharp;
-using CCVApp.Shared.Config;
-using CCVApp.Shared.Strings;
+using App.Shared.Config;
+using App.Shared.Strings;
 using Rock.Mobile.PlatformUI;
 using System.Net;
-using CCVApp.Shared;
+using App.Shared;
 using System.Threading.Tasks;
 using System.Threading;
-using CCVApp.Shared.UI;
+using App.Shared.UI;
 using Rock.Mobile.PlatformSpecific.Util;
-using CCVApp.Shared.PrivateConfig;
+using App.Shared.PrivateConfig;
 
 namespace iOS
 {
@@ -618,7 +618,7 @@ namespace iOS
         void WaitAsync( )
         {
             // while we're still requesting the series, simply wait
-            while ( CCVApp.Shared.Network.RockLaunchData.Instance.RequestingNoteDB == true );
+            while ( App.Shared.Network.RockLaunchData.Instance.RequestingNoteDB == true );
 
             // now that tis' finished, update the notes.
             SeriesReady( );

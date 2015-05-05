@@ -1,7 +1,7 @@
 ﻿using System;
 using Android.App;
 using Android.Views;
-using CCVApp.Shared.Config;
+using App.Shared.Config;
 
 namespace Droid
 {

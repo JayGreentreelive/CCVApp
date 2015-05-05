@@ -11,22 +11,22 @@ using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
-using CCVApp.Shared.Network;
+using App.Shared.Network;
 using Android.Graphics;
 using RestSharp;
 using Rock.Mobile.Network;
-using CCVApp.Shared.Notes.Model;
-using CCVApp.Shared.Config;
-using CCVApp.Shared.Strings;
+using App.Shared.Notes.Model;
+using App.Shared.Config;
+using App.Shared.Strings;
 using Rock.Mobile.PlatformUI;
 using System.Net;
 using System.IO;
-using CCVApp.Shared;
+using App.Shared;
 using Rock.Mobile.PlatformUI.DroidNative;
 using System.Threading;
-using CCVApp.Shared.UI;
+using App.Shared.UI;
 using Rock.Mobile.PlatformSpecific.Android.UI;
-using CCVApp.Shared.PrivateConfig;
+using App.Shared.PrivateConfig;
 
 namespace Droid
 {
@@ -609,7 +609,7 @@ namespace Droid
                 void WaitAsync( )
                 {
                     // while we're still requesting the series, simply wait
-                    while ( CCVApp.Shared.Network.RockLaunchData.Instance.RequestingNoteDB == true );
+                    while ( App.Shared.Network.RockLaunchData.Instance.RequestingNoteDB == true );
 
                     // now that tis' finished, update the notes.
                     SeriesReady( );

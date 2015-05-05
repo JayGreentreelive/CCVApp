@@ -5,12 +5,12 @@ using System.CodeDom.Compiler;
 using MediaPlayer;
 using CoreGraphics;
 using System.Collections.Generic;
-using CCVApp.Shared.Strings;
-using CCVApp.Shared;
-using CCVApp.Shared.Analytics;
-using CCVApp.Shared.UI;
+using App.Shared.Strings;
+using App.Shared;
+using App.Shared.Analytics;
+using App.Shared.UI;
 using Rock.Mobile.PlatformSpecific.Util;
-using CCVApp.Shared.Config;
+using App.Shared.Config;
 
 namespace iOS
 {
@@ -126,9 +126,9 @@ namespace iOS
             DidDisplayError = false;
 
             // if we're watching the same video we last watched, resume
-            if ( MediaUrl == CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaUrl )
+            if ( MediaUrl == App.Shared.Network.RockMobileUser.Instance.LastStreamingMediaUrl )
             {
-                MoviePlayer.InitialPlaybackTime = CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaPos;
+                MoviePlayer.InitialPlaybackTime = App.Shared.Network.RockMobileUser.Instance.LastStreamingMediaPos;
             }
 
             MoviePlayer.ContentUrl = new NSUrl( MediaUrl );
@@ -308,7 +308,7 @@ namespace iOS
         void SavePlaybackPos( )
         {
             // store the last video we watched.
-            CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaUrl = MediaUrl;
+            App.Shared.Network.RockMobileUser.Instance.LastStreamingMediaUrl = MediaUrl;
 
             // see where we are in playback. If it's > 1 and < 98, we'll save the time.
             if ( MoviePlayer.Duration > 0.00f )
@@ -316,11 +316,11 @@ namespace iOS
                 double playbackPerc = MoviePlayer.CurrentPlaybackTime / MoviePlayer.Duration;
                 if ( playbackPerc > .01f && playbackPerc < .98f )
                 {
-                    CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaPos = MoviePlayer.CurrentPlaybackTime;
+                    App.Shared.Network.RockMobileUser.Instance.LastStreamingMediaPos = MoviePlayer.CurrentPlaybackTime;
                 }
                 else
                 {
-                    CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaPos = 0;
+                    App.Shared.Network.RockMobileUser.Instance.LastStreamingMediaPos = 0;
                 }
             }
         }

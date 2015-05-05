@@ -3,9 +3,9 @@ using System;
 using System.CodeDom.Compiler;
 using UIKit;
 using CoreGraphics;
-using CCVApp.Shared.UI;
-using CCVApp.Shared.Strings;
-using CCVApp.Shared.Config;
+using App.Shared.UI;
+using App.Shared.Strings;
+using App.Shared.Config;
 using Rock.Mobile.PlatformSpecific.Util;
 
 namespace iOS

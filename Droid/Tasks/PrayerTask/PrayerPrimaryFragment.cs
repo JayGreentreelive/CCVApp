@@ -11,17 +11,17 @@ using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
-using CCVApp.Shared.Network;
+using App.Shared.Network;
 using Android.Graphics;
 using Rock.Mobile.PlatformUI;
 using System.Drawing;
-using CCVApp.Shared.Config;
-using CCVApp.Shared.Strings;
-using CCVApp.Shared;
-using CCVApp.Shared.Analytics;
+using App.Shared.Config;
+using App.Shared.Strings;
+using App.Shared;
+using App.Shared.Analytics;
 using Rock.Mobile.PlatformSpecific.Android.Graphics;
 using Rock.Mobile.Animation;
-using CCVApp.Shared.PrivateConfig;
+using App.Shared.PrivateConfig;
 
 namespace Droid
 {
@@ -249,7 +249,7 @@ namespace Droid
                             if ( prayed == true )
                             {
                                 // send an analytic 
-                                CCVApp.Shared.Network.RockApi.Instance.IncrementPrayerCount( PrayerRequest.Id, null );
+                                App.Shared.Network.RockApi.Instance.IncrementPrayerCount( PrayerRequest.Id, null );
 
                                 // and fill in the circle
                                 PrayerActionLabel.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
@@ -536,7 +536,7 @@ namespace Droid
                     RetryButton.Visibility = ViewStates.Invisible;
 
                     // request the prayers each time this appears
-                    CCVApp.Shared.Network.RockApi.Instance.GetPrayers( delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.PrayerRequest> prayerRequests )
+                    App.Shared.Network.RockApi.Instance.GetPrayers( delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.PrayerRequest> prayerRequests )
                         {
                             IsRequesting = false;
 

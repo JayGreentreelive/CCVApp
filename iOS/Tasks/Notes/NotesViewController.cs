@@ -7,20 +7,20 @@ using System.IO;
 using CoreAnimation;
 
 using Rock.Mobile.Network;
-using CCVApp.Shared.Notes;
+using App.Shared.Notes;
 using RestSharp;
 using System.Net;
 using System.Text;
-using CCVApp.Shared.Config;
+using App.Shared.Config;
 using Rock.Mobile.PlatformUI;
 using System.Drawing;
 using Rock.Mobile.PlatformSpecific.Util;
-using CCVApp.Shared;
-using CCVApp.Shared.Analytics;
-using CCVApp.Shared.Strings;
-using CCVApp.Shared.UI;
+using App.Shared;
+using App.Shared.Analytics;
+using App.Shared.Strings;
+using App.Shared.UI;
 using Rock.Mobile.Animation;
-using CCVApp.Shared.PrivateConfig;
+using App.Shared.PrivateConfig;
 
 namespace iOS
 {
@@ -233,7 +233,7 @@ namespace iOS
 
                 //note: the frame height of the nav bar is what it CURRENTLY is, not what it WILL be after we rotate. So, when we go from Portrait to Landscape,
                 // it says 40, but it's gonna be 32. Conversely, going back, we use 32 and it's actually 40, which causes us to start this view 8px too high.
-                if ( CCVApp.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled == true )
+                if ( App.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled == true )
                 {
                     RefreshButton.Layer.Position = new CGPoint( View.Bounds.Width / 2, ( RefreshButton.Frame.Height / 2 ) );
 
@@ -298,7 +298,7 @@ namespace iOS
 
             KeyboardAdjustManager = new Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager( View, UIScrollView );
 
-            if ( CCVApp.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled == true )
+            if ( App.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled == true )
             {
                 View.AddSubview( RefreshButton );
             }
@@ -432,7 +432,7 @@ namespace iOS
 
                 UIActivityViewController shareController = new UIActivityViewController( items, null );
 
-                string emailSubject = string.Format( CCVApp.Shared.Strings.MessagesStrings.Read_Share_Notes, NoteName );
+                string emailSubject = string.Format( App.Shared.Strings.MessagesStrings.Read_Share_Notes, NoteName );
                 shareController.SetValueForKey( new NSString( emailSubject ), new NSString( "subject" ) );
 
                 shareController.ExcludedActivityTypes = new NSString[] { UIActivityType.PostToFacebook, 
@@ -665,9 +665,9 @@ namespace iOS
                 MessageAnalytic.Instance.Trigger( MessageAnalytic.Read, NoteName );
 
                 // if the user has never seen it, show them the tutorial screen
-                if( CCVApp.Shared.Network.RockMobileUser.Instance.NoteTutorialShown == false )
+                if( App.Shared.Network.RockMobileUser.Instance.NoteTutorialShown == false )
                 {
-                    CCVApp.Shared.Network.RockMobileUser.Instance.NoteTutorialShown = true;
+                    App.Shared.Network.RockMobileUser.Instance.NoteTutorialShown = true;
 
                     // wait a second before revealing the tutorial overlay
                     System.Timers.Timer timer = new System.Timers.Timer();
@@ -774,7 +774,7 @@ namespace iOS
                             errorMsg += "\n" + e.Message;
                         }
 
-                        if ( CCVApp.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled == true )
+                        if ( App.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled == true )
                         {
                             // explain that we couldn't generate notes
                             UIAlertView alert = new UIAlertView( );

@@ -12,12 +12,12 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using Android.Media;
-using CCVApp.Shared.Strings;
+using App.Shared.Strings;
 using Rock.Mobile.PlatformUI;
-using CCVApp.Shared;
-using CCVApp.Shared.Analytics;
-using CCVApp.Shared.UI;
-using CCVApp.Shared.Config;
+using App.Shared;
+using App.Shared.Analytics;
+using App.Shared.UI;
+using App.Shared.Config;
 
 namespace Droid
 {
@@ -310,12 +310,12 @@ namespace Droid
                         float playbackPerc = (float)CurrentPosition / (float)Duration;
                         if ( playbackPerc > .01f && playbackPerc < .98f )
                         {
-                            CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaPos = CurrentPosition;
+                            App.Shared.Network.RockMobileUser.Instance.LastStreamingMediaPos = CurrentPosition;
                         }
                         else
                         {
                             // otherwise plan on starting from the beginning
-                            CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaPos = 0;
+                            App.Shared.Network.RockMobileUser.Instance.LastStreamingMediaPos = 0;
                         }
                     }
                 }
@@ -365,9 +365,9 @@ namespace Droid
                     MessageAnalytic.Instance.Trigger( MessageAnalytic.Listen, Name );
 
                     // if this is a new video, store the URL
-                    if ( CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaUrl != MediaUrl )
+                    if ( App.Shared.Network.RockMobileUser.Instance.LastStreamingMediaUrl != MediaUrl )
                     {
-                        CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaUrl = MediaUrl;
+                        App.Shared.Network.RockMobileUser.Instance.LastStreamingMediaUrl = MediaUrl;
 
                         PlayerState = MediaPlayerState.Playing;
                         mp.Start( );
@@ -377,7 +377,7 @@ namespace Droid
                     else
                     {
                         // otherwise, resume where we left off
-                        mp.SeekTo( (int)CCVApp.Shared.Network.RockMobileUser.Instance.LastStreamingMediaPos );
+                        mp.SeekTo( (int)App.Shared.Network.RockMobileUser.Instance.LastStreamingMediaPos );
                     }
                 }
 

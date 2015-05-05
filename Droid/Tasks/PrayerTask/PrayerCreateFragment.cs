@@ -11,15 +11,15 @@ using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
-using CCVApp.Shared.Network;
+using App.Shared.Network;
 using Android.Graphics;
 using Rock.Mobile.PlatformUI;
 using System.Drawing;
-using CCVApp.Shared.Strings;
-using CCVApp.Shared.Config;
-using CCVApp.Shared.Analytics;
+using App.Shared.Strings;
+using App.Shared.Config;
+using App.Shared.Analytics;
 using Rock.Mobile.Animation;
-using CCVApp.Shared;
+using App.Shared;
 
 namespace Droid
 {
@@ -162,7 +162,7 @@ namespace Droid
                     Spinner.Adapter = adapter;
 
                     // populate the category
-                    foreach ( Rock.Client.Category category in CCVApp.Shared.Network.RockGeneralData.Instance.Data.PrayerCategories )
+                    foreach ( Rock.Client.Category category in App.Shared.Network.RockGeneralData.Instance.Data.PrayerCategories )
                     {
                         adapter.Add( category.Name );
                     }
@@ -202,15 +202,17 @@ namespace Droid
                             prayerRequest.LastName = LastNameText.Text;
                         }
 
+                        int personAliasId = App.Shared.Network.RockMobileUser.Instance.Person.PrimaryAliasId.HasValue ? App.Shared.Network.RockMobileUser.Instance.Person.PrimaryAliasId.Value : 0;
+
                         prayerRequest.Text = RequestText.Text;
                         prayerRequest.EnteredDateTime = DateTime.Now;
                         prayerRequest.ExpirationDate = DateTime.Now.AddYears( 1 );
-                        prayerRequest.CategoryId = CCVApp.Shared.Network.RockGeneralData.Instance.Data.PrayerCategoryToId( Spinner.SelectedItem.ToString( ) );
+                        prayerRequest.CategoryId = App.Shared.Network.RockGeneralData.Instance.Data.PrayerCategoryToId( Spinner.SelectedItem.ToString( ) );
                         prayerRequest.IsActive = true;
                         prayerRequest.Guid = Guid.NewGuid( );
                         prayerRequest.IsPublic = PublicSwitch.Checked;
                         prayerRequest.IsApproved = false;
-                        prayerRequest.CreatedByPersonAliasId = AnonymousSwitch.Checked == true ? -1 : CCVApp.Shared.Network.RockMobileUser.Instance.Person.PrimaryAliasId;
+                        prayerRequest.CreatedByPersonAliasId = AnonymousSwitch.Checked == true ? -1 : personAliasId;
 
                         ParentTask.OnClick( this, 0, prayerRequest );
                     }
@@ -256,18 +258,18 @@ namespace Droid
                         }
                         else if ( RequestText.Text.ToLower( ) == "note refresh" )
                         {
-                            CCVApp.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled = !CCVApp.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled;
+                            App.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled = !App.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled;
                             Springboard.DisplayError( "Note Refresh Button", 
-                                string.Format( "Note refresh button has been toggled {0}", CCVApp.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled == true ? "ON" : "OFF" ) );
+                                string.Format( "Note refresh button has been toggled {0}", App.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled == true ? "ON" : "OFF" ) );
                         }
                         else if ( RequestText.Text.ToLower( ) == "version" )
                         {
                             Springboard.DisplayError( "Current Version", BuildStrings.Version );
                         }
                         // fun bonus!
-                        else if ( RequestText.Text == CCVApp.Shared.ConnectLink.CheatException.CheatString )
+                        else if ( RequestText.Text == App.Shared.ConnectLink.CheatException.CheatString )
                         {
-                            throw new CCVApp.Shared.ConnectLink.CheatException();
+                            throw new App.Shared.ConnectLink.CheatException();
                         }
                     }
                 }

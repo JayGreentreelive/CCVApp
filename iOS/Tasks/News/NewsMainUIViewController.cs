@@ -3,13 +3,13 @@ using Foundation;
 using UIKit;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
-using CCVApp.Shared.Network;
+using App.Shared.Network;
 using CoreGraphics;
-using CCVApp.Shared.Config;
+using App.Shared.Config;
 using Rock.Mobile.PlatformUI;
-using CCVApp.Shared;
+using App.Shared;
 using System.IO;
-using CCVApp.Shared.PrivateConfig;
+using App.Shared.PrivateConfig;
 
 namespace iOS
 {

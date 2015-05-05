@@ -3,10 +3,10 @@ using Foundation;
 using UIKit;
 using System.CodeDom.Compiler;
 using CoreGraphics;
-using CCVApp.Shared.Config;
+using App.Shared.Config;
 using Rock.Mobile.PlatformUI;
 using Rock.Mobile.PlatformSpecific.iOS.Graphics;
-using CCVApp.Shared.PrivateConfig;
+using App.Shared.PrivateConfig;
 
 namespace iOS
 {

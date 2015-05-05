@@ -5,9 +5,9 @@ using System.CodeDom.Compiler;
 using CoreGraphics;
 using System.Collections.Generic;
 using System.Threading;
-using CCVApp.Shared.Config;
+using App.Shared.Config;
 using Rock.Mobile.PlatformUI;
-using CCVApp.Shared.PrivateConfig;
+using App.Shared.PrivateConfig;
 
 namespace iOS
 {
@@ -106,7 +106,7 @@ namespace iOS
             //
 
             // set the title image for the bar
-            string imagePath = NSBundle.MainBundle.BundlePath + "/" + PrimaryNavBarConfig.LogoFile_iOS;
+            string imagePath = NSBundle.MainBundle.BundlePath + "/" + PrivatePrimaryNavBarConfig.LogoFile_iOS;
             this.NavigationItem.TitleView = new UIImageView( new UIImage( imagePath ) );
 
 

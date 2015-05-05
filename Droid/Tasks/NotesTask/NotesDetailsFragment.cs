@@ -11,18 +11,18 @@ using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
-using CCVApp.Shared.Network;
+using App.Shared.Network;
 using Android.Graphics;
 using RestSharp;
 using Rock.Mobile.Network;
-using CCVApp.Shared.Notes.Model;
-using CCVApp.Shared;
+using App.Shared.Notes.Model;
+using App.Shared;
 using Rock.Mobile.PlatformUI;
 using System.IO;
-using CCVApp.Shared.Config;
-using CCVApp.Shared.Strings;
-using CCVApp.Shared.Analytics;
-using CCVApp.Shared.PrivateConfig;
+using App.Shared.Config;
+using App.Shared.Strings;
+using App.Shared.Analytics;
+using App.Shared.PrivateConfig;
 
 namespace Droid
 {

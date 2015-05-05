@@ -3,8 +3,8 @@ using Foundation;
 using UIKit;
 using System.CodeDom.Compiler;
 using CoreGraphics;
-using CCVApp.Shared.Config;
-using CCVApp.Shared.Strings;
+using App.Shared.Config;
+using App.Shared.Strings;
 
 namespace iOS
 {

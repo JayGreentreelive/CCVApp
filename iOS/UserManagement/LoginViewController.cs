@@ -3,21 +3,21 @@ using Foundation;
 using UIKit;
 using System.CodeDom.Compiler;
 using Rock.Mobile.Network;
-using CCVApp.Shared.Network;
+using App.Shared.Network;
 using System.IO;
-using CCVApp.Shared.Config;
+using App.Shared.Config;
 using Rock.Mobile.PlatformUI;
-using CCVApp.Shared.Strings;
-using CCVApp.Shared;
+using App.Shared.Strings;
+using App.Shared;
 using Rock.Mobile.Threading;
 using Rock.Mobile.PlatformSpecific.iOS.UI;
 using System.Collections.Generic;
 using Rock.Mobile.Animation;
 using CoreGraphics;
-using CCVApp.Shared.UI;
+using App.Shared.UI;
 using Rock.Mobile.PlatformSpecific.Util;
-using CCVApp.Shared.Analytics;
-using CCVApp.Shared.PrivateConfig;
+using App.Shared.Analytics;
+using App.Shared.PrivateConfig;
 
 namespace iOS
 {
@@ -185,7 +185,7 @@ namespace iOS
             View.AddSubview( HeaderView );
             HeaderView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
 
-            imagePath = NSBundle.MainBundle.BundlePath + "/" + PrimaryNavBarConfig.LogoFile_iOS;
+            imagePath = NSBundle.MainBundle.BundlePath + "/" + PrivatePrimaryNavBarConfig.LogoFile_iOS;
             LogoView = new UIImageView( new UIImage( imagePath ) );
             HeaderView.AddSubview( LogoView );
         }

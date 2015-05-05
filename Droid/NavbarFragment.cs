@@ -14,9 +14,9 @@ using Android.Widget;
 using Android.Animation;
 using Droid.Tasks;
 using Android.Graphics;
-using CCVApp.Shared.Config;
+using App.Shared.Config;
 using Rock.Mobile.PlatformUI;
-using CCVApp.Shared.PrivateConfig;
+using App.Shared.PrivateConfig;
 
 namespace Droid
 {

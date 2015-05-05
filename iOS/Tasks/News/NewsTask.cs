@@ -2,10 +2,10 @@ using System;
 using UIKit;
 using CoreGraphics;
 using Foundation;
-using CCVApp.Shared.Network;
+using App.Shared.Network;
 using System.Collections.Generic;
-using CCVApp.Shared.Config;
-using CCVApp.Shared.PrivateConfig;
+using App.Shared.Config;
+using App.Shared.PrivateConfig;
 
 namespace iOS
 {

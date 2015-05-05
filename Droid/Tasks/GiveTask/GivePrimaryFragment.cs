@@ -12,8 +12,8 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using Android.Media;
-using CCVApp.Shared.Config;
-using CCVApp.Shared.Strings;
+using App.Shared.Config;
+using App.Shared.Strings;
 
 namespace Droid
 {

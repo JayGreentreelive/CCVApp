@@ -13,17 +13,17 @@ using System.Drawing;
 using System.IO;
 
 using Rock.Mobile.Network;
-using CCVApp.Shared.Notes;
-using CCVApp.Shared.Config;
+using App.Shared.Notes;
+using App.Shared.Config;
 using RestSharp;
 using Rock.Mobile.PlatformUI;
-using CCVApp.Shared;
-using CCVApp.Shared.Strings;
-using CCVApp.Shared.Analytics;
-using CCVApp.Shared.UI;
+using App.Shared;
+using App.Shared.Strings;
+using App.Shared.Analytics;
+using App.Shared.UI;
 using Rock.Mobile.Animation;
 using Android.Graphics;
-using CCVApp.Shared.PrivateConfig;
+using App.Shared.PrivateConfig;
 
 namespace Droid
 {
@@ -259,7 +259,7 @@ namespace Droid
                     };
 
                     // if the refresh button isn't enabled, hide it
-                    if ( CCVApp.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled == false )
+                    if ( App.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled == false )
                     {
                         RefreshButton.Visibility = ViewStates.Gone;
                     }
@@ -637,9 +637,9 @@ namespace Droid
 
                         // display the tutorial
                         // if the user has never seen it, show them the tutorial screen
-                        if( CCVApp.Shared.Network.RockMobileUser.Instance.NoteTutorialShown == false )
+                        if( App.Shared.Network.RockMobileUser.Instance.NoteTutorialShown == false )
                         {
-                            CCVApp.Shared.Network.RockMobileUser.Instance.NoteTutorialShown = true;
+                            App.Shared.Network.RockMobileUser.Instance.NoteTutorialShown = true;
 
                             System.IO.Stream tutorialStream = null;
                             if( MainActivity.IsLandscapeWide( ) )
@@ -743,7 +743,7 @@ namespace Droid
                                     errorMsg += e.Message;
                                 }
 
-                                if ( CCVApp.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled == true )
+                                if ( App.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled == true )
                                 {
                                     Springboard.DisplayError( "Note Error", errorMsg );
                                 }

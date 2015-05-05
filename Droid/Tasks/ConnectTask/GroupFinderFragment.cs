@@ -13,18 +13,18 @@ using Android.Views;
 using Android.Widget;
 using Android.Webkit;
 
-using CCVApp.Shared.Config;
-using CCVApp.Shared.Strings;
+using App.Shared.Config;
+using App.Shared.Strings;
 using Android.Graphics;
 using Android.Gms.Maps;
-using CCVApp.Shared;
-using CCVApp.Shared.Network;
-using CCVApp.Shared.Analytics;
+using App.Shared;
+using App.Shared.Network;
+using App.Shared.Analytics;
 using Rock.Mobile.Animation;
 using Android.Gms.Maps.Model;
-using CCVApp.Shared.UI;
+using App.Shared.UI;
 using Android.Views.InputMethods;
-using CCVApp.Shared.PrivateConfig;
+using App.Shared.PrivateConfig;
 
 namespace Droid
 {
@@ -671,7 +671,7 @@ namespace Droid
                                 {
                                     RetrievingGroups = true;
 
-                                    CCVApp.Shared.GroupFinder.GetGroups( streetValue, cityValue, stateValue, zipValue, 
+                                    App.Shared.GroupFinder.GetGroups( streetValue, cityValue, stateValue, zipValue, 
                                         delegate( GroupFinder.GroupEntry sourceLocation, List<GroupFinder.GroupEntry> groupEntries, bool result )
                                         {
                                             BlockerView.Hide( delegate

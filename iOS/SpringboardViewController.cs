@@ -6,18 +6,18 @@ using CoreAnimation;
 using CoreGraphics;
 using System.Collections.Generic;
 using Rock.Mobile.Network;
-using CCVApp.Shared.Network;
+using App.Shared.Network;
 using AssetsLibrary;
 using System.IO;
-using CCVApp.Shared.Config;
-using CCVApp.Shared.Strings;
+using App.Shared.Config;
+using App.Shared.Strings;
 using Rock.Mobile.PlatformUI;
 using Rock.Mobile.PlatformSpecific.iOS.Graphics;
 using Rock.Mobile.PlatformSpecific.iOS.UI;
-using CCVApp.Shared;
+using App.Shared;
 using Rock.Mobile.Animation;
-using CCVApp.Shared.Analytics;
-using CCVApp.Shared.PrivateConfig;
+using App.Shared.Analytics;
+using App.Shared.PrivateConfig;
 
 namespace iOS
 {
@@ -721,7 +721,7 @@ namespace iOS
         {
             SeriesInfoDownloaded = false;
 
-            CCVApp.Shared.Network.RockNetworkManager.Instance.SyncRockData( 
+            App.Shared.Network.RockNetworkManager.Instance.SyncRockData( 
                 // first delegate is for completion of the series download. At that point we can show the notification billboard.
                 delegate 
                 {

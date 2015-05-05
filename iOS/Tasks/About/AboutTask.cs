@@ -2,7 +2,7 @@ using System;
 using UIKit;
 using CoreGraphics;
 using Foundation;
-using CCVApp.Shared.Config;
+using App.Shared.Config;
 
 namespace iOS
 {

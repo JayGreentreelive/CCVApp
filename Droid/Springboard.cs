@@ -11,22 +11,22 @@ using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
-using CCVApp.Shared.Network;
+using App.Shared.Network;
 using Android.Graphics;
 using Java.IO;
 using Droid.Tasks;
 using System.IO;
-using CCVApp.Shared;
-using CCVApp.Shared.Config;
-using CCVApp.Shared.Strings;
+using App.Shared;
+using App.Shared.Config;
+using App.Shared.Strings;
 using Rock.Mobile.PlatformUI;
 using Android.Graphics.Drawables;
 using Rock.Mobile.PlatformSpecific.Android.Graphics;
 using Rock.Mobile.PlatformSpecific.Android.UI;
 using Rock.Mobile.Animation;
 using Droid.Tasks.Give;
-using CCVApp.Shared.Analytics;
-using CCVApp.Shared.PrivateConfig;
+using App.Shared.Analytics;
+using App.Shared.PrivateConfig;
 
 
 namespace Droid
@@ -251,7 +251,7 @@ namespace Droid
         {
             SeriesInfoDownloaded = false;
 
-            CCVApp.Shared.Network.RockNetworkManager.Instance.SyncRockData(
+            App.Shared.Network.RockNetworkManager.Instance.SyncRockData(
                 delegate
                 {
                     // here we know whether the initial handshake with Rock went ok or not
@@ -444,7 +444,7 @@ namespace Droid
                     Java.Lang.ICharSequence [] campusStrings = new Java.Lang.ICharSequence[ RockGeneralData.Instance.Data.Campuses.Count ];
                     for( int i = 0; i < RockGeneralData.Instance.Data.Campuses.Count; i++ )
                     {
-                        campusStrings[ i ] = new Java.Lang.String( CCVApp.Shared.Network.RockGeneralData.Instance.Data.Campuses[ i ].Name );
+                        campusStrings[ i ] = new Java.Lang.String( App.Shared.Network.RockGeneralData.Instance.Data.Campuses[ i ].Name );
                     }
 
                     // launch the dialog, and on selection, update the viewing campus text.
@@ -941,7 +941,7 @@ namespace Droid
             // should we advertise the notes?
             if ( IsOOBERunning == false && Billboard.Parent != null && SeriesInfoDownloaded == true )
             {
-                // yes, if it's a weekend and we're at CCV (that part will come later)
+                // yes, if it's a weekend and we're at church (that part will come later)
                 if ( DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday )
                 {
                     if ( RockLaunchData.Instance.Data.NoteDB.SeriesList.Count > 0 && RockLaunchData.Instance.Data.NoteDB.SeriesList[ 0 ].Messages[ 0 ] != null )

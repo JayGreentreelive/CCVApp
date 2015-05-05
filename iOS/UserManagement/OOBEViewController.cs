@@ -2,8 +2,8 @@ using Foundation;
 using System;
 using System.CodeDom.Compiler;
 using UIKit;
-using CCVApp.Shared.UI;
-using CCVApp.Shared.Config;
+using App.Shared.UI;
+using App.Shared.Config;
 using Rock.Mobile.PlatformSpecific.Util;
 using System.Drawing;
 using CoreGraphics;
@@ -40,40 +40,40 @@ namespace iOS
             nfloat nativeHeight = screenSize.Height * scalar;
 
             // default to iphone4s, cause..why not.
-            string imageName = "ccv_logo_iphone4s.png";
+            string imageName = "splash_logo_iphone4s.png";
 
             // compare the dimensions with the known iDevice sizes, and return the appropriate string.
             if ( nativeWidth == 640 && nativeHeight == 960 )
             {
-                imageName = "ccv_logo_iphone4s.png";
+                imageName = "splash_logo_iphone4s.png";
             }
             else if ( nativeWidth == 640 && nativeHeight == 1136 )
             {
-                imageName = "ccv_logo_iphone5.png";
+                imageName = "splash_logo_iphone5.png";
             }
             else if ( nativeWidth == 750 && nativeHeight == 1334 )
             {
-                imageName = "ccv_logo_iphone6.png";
+                imageName = "splash_logo_iphone6.png";
             }
             else if ( nativeWidth == 1242 && nativeHeight == 2208 )
             {
-                imageName = "ccv_logo_iphone6p.png";
+                imageName = "splash_logo_iphone6p.png";
             }
             else if ( nativeWidth == 2048 && nativeHeight == 1536 )
             {
-                imageName = "ccv_logo_ipad_landscape_retina.png";
+                imageName = "splash_logo_ipad_landscape_retina.png";
             }
             else if ( nativeWidth == 1024 && nativeHeight == 768 )
             {
-                imageName = "ccv_logo_ipad_landscape.png";
+                imageName = "splash_logo_ipad_landscape.png";
             }
             else if ( nativeWidth == 1536 && nativeHeight == 2048 )
             {
-                imageName = "ccv_logo_ipad_portrait_retina.png";
+                imageName = "splash_logo_ipad_portrait_retina.png";
             }
             else if ( nativeWidth == 768 && nativeHeight == 1024 )
             {
-                imageName = "ccv_logo_ipad_portrait.png";
+                imageName = "splash_logo_ipad_portrait.png";
             }
 
             return imageName;

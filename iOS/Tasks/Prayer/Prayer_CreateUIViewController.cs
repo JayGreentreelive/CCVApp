@@ -3,14 +3,14 @@ using Foundation;
 using UIKit;
 using System.CodeDom.Compiler;
 using Rock.Mobile.PlatformUI;
-using CCVApp.Shared.Strings;
+using App.Shared.Strings;
 using System.Collections.Generic;
 using CoreGraphics;
-using CCVApp.Shared.Config;
-using CCVApp.Shared.Network;
+using App.Shared.Config;
+using App.Shared.Network;
 using Rock.Mobile.PlatformSpecific.iOS.UI;
 using Rock.Mobile.Animation;
-using CCVApp.Shared;
+using App.Shared;
 
 namespace iOS
 {
@@ -250,6 +250,8 @@ namespace iOS
                     prayerRequest.LastName = LastName.Field.Text;
                 }
 
+                int personAliasId = App.Shared.Network.RockMobileUser.Instance.Person.PrimaryAliasId.HasValue ? App.Shared.Network.RockMobileUser.Instance.Person.PrimaryAliasId.Value : 0;
+
                 prayerRequest.Text = PrayerRequest.Text;
                 prayerRequest.EnteredDateTime = DateTime.Now;
                 prayerRequest.ExpirationDate = DateTime.Now.AddYears( 1 );
@@ -258,7 +260,7 @@ namespace iOS
                 prayerRequest.IsPublic = UIPublicSwitch.On; // use the public switch's state to determine whether it's a public prayer or not.
                 prayerRequest.Guid = Guid.NewGuid( );
                 prayerRequest.IsApproved = false;
-                prayerRequest.CreatedByPersonAliasId = UISwitchAnonymous.On == true ? -1 : CCVApp.Shared.Network.RockMobileUser.Instance.Person.PrimaryAliasId;
+                prayerRequest.CreatedByPersonAliasId = UISwitchAnonymous.On == true ? -1 : personAliasId;
 
                 // launch the post view controller
                 Prayer_PostUIViewController postPrayerVC = new Prayer_PostUIViewController();
@@ -313,18 +315,18 @@ namespace iOS
                 }
                 else if ( PrayerRequest.Text.ToLower( ) == "note refresh" )
                 {
-                    CCVApp.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled = !CCVApp.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled;
+                    App.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled = !App.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled;
                     SpringboardViewController.DisplayError( "Note Refresh Button", 
-                                                            string.Format( "Note refresh button has been toggled {0}", CCVApp.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled == true ? "ON" : "OFF" ) );
+                                                            string.Format( "Note refresh button has been toggled {0}", App.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled == true ? "ON" : "OFF" ) );
                 }
                 else if ( PrayerRequest.Text.ToLower( ) == "version" )
                 {
                     SpringboardViewController.DisplayError( "Current Version", BuildStrings.Version );
                 }
                 // fun bonus!
-                else if ( PrayerRequest.Text == CCVApp.Shared.ConnectLink.CheatException.CheatString )
+                else if ( PrayerRequest.Text == App.Shared.ConnectLink.CheatException.CheatString )
                 {
-                    throw new CCVApp.Shared.ConnectLink.CheatException();
+                    throw new App.Shared.ConnectLink.CheatException();
                 }
             }
         }

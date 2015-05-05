@@ -6,15 +6,15 @@ using System.Collections.Generic;
 using CoreGraphics;
 using CoreAnimation;
 using Rock.Mobile.PlatformUI;
-using CCVApp.Shared.Config;
-using CCVApp.Shared.Strings;
-using CCVApp.Shared.Analytics;
-using CCVApp.Shared.Network;
-using CCVApp.Shared.UI;
+using App.Shared.Config;
+using App.Shared.Strings;
+using App.Shared.Analytics;
+using App.Shared.Network;
+using App.Shared.UI;
 using Rock.Mobile.PlatformSpecific.Util;
 using System.Drawing;
 using Rock.Mobile.Animation;
-using CCVApp.Shared.PrivateConfig;
+using App.Shared.PrivateConfig;
 
 namespace iOS
 {
@@ -162,7 +162,7 @@ namespace iOS
                 if ( prayed == true )
                 {
                     // update the circle color and send an analytic
-                    CCVApp.Shared.Network.RockApi.Instance.IncrementPrayerCount( PrayerRequest.Id, null );
+                    App.Shared.Network.RockApi.Instance.IncrementPrayerCount( PrayerRequest.Id, null );
 
                     currColor = 0;
                     targetColor = PrayerConfig.PrayedForColor;
@@ -408,7 +408,7 @@ namespace iOS
                     RequestingPrayers = true;
 
                     // request the prayers each time this appears
-                    CCVApp.Shared.Network.RockApi.Instance.GetPrayers( delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.PrayerRequest> prayerRequests )
+                    App.Shared.Network.RockApi.Instance.GetPrayers( delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.PrayerRequest> prayerRequests )
                         {
                             // force this onto the main thread so that if there's a race condition in requesting prayers we won't hit it.
                             InvokeOnMainThread( delegate

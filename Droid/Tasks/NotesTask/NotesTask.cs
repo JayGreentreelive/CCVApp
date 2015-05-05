@@ -1,8 +1,8 @@
 ﻿using System;
 using Android.Views;
-using CCVApp.Shared.Network;
-using CCVApp.Shared.Config;
-using CCVApp.Shared.PrivateConfig;
+using App.Shared.Network;
+using App.Shared.Config;
+using App.Shared.PrivateConfig;
 
 namespace Droid
 {

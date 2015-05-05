@@ -1,7 +1,7 @@
 using System;
 using UIKit;
 using Rock.Mobile.PlatformUI;
-using CCVApp.Shared.Config;
+using App.Shared.Config;
 using Foundation;
 using CoreGraphics;
 

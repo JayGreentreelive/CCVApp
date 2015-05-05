@@ -11,15 +11,15 @@ using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
-using CCVApp.Shared.Network;
+using App.Shared.Network;
 using Android.Graphics;
 using Rock.Mobile.PlatformUI;
 using System.Drawing;
-using CCVApp.Shared.Strings;
-using CCVApp.Shared.Config;
-using CCVApp.Shared.Analytics;
+using App.Shared.Strings;
+using App.Shared.Config;
+using App.Shared.Analytics;
 using Rock.Mobile.PlatformSpecific.Android.Graphics;
-using CCVApp.Shared.UI;
+using App.Shared.UI;
 
 namespace Droid
 {
@@ -119,7 +119,7 @@ namespace Droid
                     BlockerView.Show( delegate
                         {
                             // submit the request
-                            CCVApp.Shared.Network.RockApi.Instance.PutPrayer( PrayerRequest, 
+                            App.Shared.Network.RockApi.Instance.PutPrayer( PrayerRequest, 
                                 delegate(System.Net.HttpStatusCode statusCode, string statusDescription )
                                 {
                                     Posting = false;

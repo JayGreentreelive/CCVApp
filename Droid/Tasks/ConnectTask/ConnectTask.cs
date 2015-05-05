@@ -1,7 +1,7 @@
 ﻿using System;
 using Android.App;
 using Android.Views;
-using CCVApp.Shared.Strings;
+using App.Shared.Strings;
 
 namespace Droid
 {
@@ -70,7 +70,7 @@ namespace Droid
                             // turn off auto-show search so that if the user presses 'back', we don't pop it up again.
                             GroupFinder.ShowSearchOnAppear = false;
                             
-                            CCVApp.Shared.GroupFinder.GroupEntry entry = (CCVApp.Shared.GroupFinder.GroupEntry)context;
+                            App.Shared.GroupFinder.GroupEntry entry = (App.Shared.GroupFinder.GroupEntry)context;
 
                             JoinGroup.GroupTitle = entry.Title;
                             JoinGroup.Distance = string.Format( "{0:##.0} {1}", entry.Distance, ConnectStrings.GroupFinder_MilesSuffix );

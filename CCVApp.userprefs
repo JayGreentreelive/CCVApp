@@ -1,16 +1,38 @@
 ﻿<Properties StartupItem="iOS/iOS.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhone4s.8.3" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="CCVApp.Shared/Config.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Springboard.cs">
     <Files>
-      <File FileName="Droid/UserManagement/RegisterFragment.cs" Line="74" Column="9" />
-      <File FileName="CCVApp.Shared/Config.cs" Line="21" Column="30" />
+      <File FileName="Droid/Springboard.cs" Line="922" Column="66" />
     </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="CCVApp" expanded="True">
+            <Node name="App.Shared" expanded="True">
+              <Node name="RockApi" expanded="True" />
+            </Node>
+            <Node name="Droid" expanded="True">
+              <Node name="Resources" expanded="True">
+                <Node name="drawable-hdpi" expanded="True" />
+                <Node name="layout" expanded="True" />
+              </Node>
+              <Node name="UserManagement" expanded="True" />
+              <Node name="Springboard.cs" selected="True" />
+            </Node>
+            <Node name="iOS" expanded="True">
+              <Node name="Resources" expanded="True" />
+              <Node name="UserManagement" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches>
-    <Watch file="CCVApp.Shared/Notes/Controls/Note.cs" line="533" offsetX="1058" offsetY="7980" expression="state" liveUpdate="False" />
+    <Watch file="App.Shared/Notes/Controls/Note.cs" line="533" offsetX="1058" offsetY="7980" expression="state" liveUpdate="False" />
     <Watch file="Droid/Tasks/NotesTask/NotesDetailsFragment.cs" line="215" offsetX="1268" offsetY="3210" expression="ThumbnailPlaceholder" liveUpdate="False" />
     <Watch file="../Rock.Mobile/PlatformUI/Droid/DroidLabel.cs" line="78" offsetX="733" offsetY="1155" expression="transparentColor" liveUpdate="False" />
   </MonoDevelop.Ide.DebuggingService.PinnedWatches>
