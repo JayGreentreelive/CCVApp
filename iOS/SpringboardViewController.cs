@@ -17,6 +17,7 @@ using Rock.Mobile.PlatformSpecific.iOS.UI;
 using CCVApp.Shared;
 using Rock.Mobile.Animation;
 using CCVApp.Shared.Analytics;
+using CCVApp.Shared.PrivateConfig;
 
 namespace iOS
 {
@@ -78,7 +79,7 @@ namespace iOS
                 // Create the logo view containing the image.
                 LogoView = new UILabel();
                 LogoView.Text = imageChar;
-                LogoView.Font = FontManager.GetFont( ControlStylingConfig.Icon_Font_Primary, SpringboardConfig.Element_FontSize );
+                LogoView.Font = FontManager.GetFont( ControlStylingConfig.Icon_Font_Primary, PrivateSpringboardConfig.Element_FontSize );
                 LogoView.SizeToFit( );
                 LogoView.BackgroundColor = UIColor.Clear;
                 BackingView.AddSubview( LogoView );
@@ -110,9 +111,9 @@ namespace iOS
                 // position the controls
                 Button.Bounds = BackingView.Bounds;
 
-                LogoView.Layer.Position = new CGPoint( SpringboardConfig.Element_LogoOffsetX_iOS, BackingView.Frame.Height / 2 );
+                LogoView.Layer.Position = new CGPoint( PrivateSpringboardConfig.Element_LogoOffsetX_iOS, BackingView.Frame.Height / 2 );
 
-                TextLabel.Layer.Position = new CGPoint( SpringboardConfig.Element_LabelOffsetX_iOS + ( TextLabel.Frame.Width / 2 ), BackingView.Frame.Height / 2 );
+                TextLabel.Layer.Position = new CGPoint( PrivateSpringboardConfig.Element_LabelOffsetX_iOS + ( TextLabel.Frame.Width / 2 ), BackingView.Frame.Height / 2 );
 
                 Seperator.Frame = new CGRect( 0, 0, Button.Frame.Width, 1.0f );
 
@@ -121,15 +122,15 @@ namespace iOS
 
             public void Activate( )
             {
-                LogoView.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Springboard_ActiveElementColor );
-                TextLabel.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Springboard_ActiveElementColor );
+                LogoView.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( SpringboardConfig.ActiveElementTextColor );
+                TextLabel.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( SpringboardConfig.ActiveElementTextColor );
                 BackingView.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( SpringboardConfig.Element_SelectedColor );
             }
 
             public void Deactivate( )
             {
-                LogoView.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Springboard_InActiveElementColor );
-                TextLabel.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Springboard_InActiveElementColor );
+                LogoView.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( SpringboardConfig.InActiveElementTextColor );
+                TextLabel.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( SpringboardConfig.InActiveElementTextColor );
                 BackingView.BackgroundColor = UIColor.Clear;
             }
         };
@@ -475,7 +476,7 @@ namespace iOS
 
             CampusSelectionIcon = new UILabel();
             ControlStyling.StyleUILabel( CampusSelectionIcon, ControlStylingConfig.Icon_Font_Primary, ControlStylingConfig.Small_FontSize );
-            CampusSelectionIcon.Text = SpringboardConfig.CampusSelectSymbol;
+            CampusSelectionIcon.Text = PrivateSpringboardConfig.CampusSelectSymbol;
             CampusSelectionIcon.SizeToFit( );
             ScrollView.AddSubview( CampusSelectionIcon );
 
@@ -524,7 +525,7 @@ namespace iOS
             ProfileImageView.Layer.Position = CGPoint.Empty;
             EditPictureButton.AddSubview( ProfileImageView );
 
-            EditPictureButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Primary, SpringboardConfig.ProfileSymbolFontSize );
+            EditPictureButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Primary, PrivateSpringboardConfig.ProfileSymbolFontSize );
             EditPictureButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
             EditPictureButton.Layer.BorderColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ).CGColor;
             EditPictureButton.Layer.CornerRadius = EditPictureButton.Bounds.Width / 2;
@@ -536,7 +537,7 @@ namespace iOS
             UserNameField.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Bold, ControlStylingConfig.Large_FontSize );
             UserNameField.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
 
-            View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.SpringboardBackgroundColor );
+            View.BackgroundColor = Rock.Mobile.PlatformUI.Util.GetUIColor( SpringboardConfig.BackgroundColor );
 
             AddChildViewController( NavViewController );
             View.AddSubview( NavViewController.View );
@@ -610,7 +611,7 @@ namespace iOS
                         if ( element.Task as NotesTask != null )
                         {
                             ActivateElement( element, true );
-                            PerformTaskAction( GeneralConfig.TaskAction_NotesRead );
+                            PerformTaskAction( PrivateGeneralConfig.TaskAction_NotesRead );
                         }
                     }
                 } 
@@ -709,8 +710,8 @@ namespace iOS
                             }
 
                             // NOW go ahead and start downloads.
-                            PerformTaskAction( GeneralConfig.TaskAction_NewsReload );
-                            PerformTaskAction( GeneralConfig.TaskAction_NotesDownloadImages );
+                            PerformTaskAction( PrivateGeneralConfig.TaskAction_NewsReload );
+                            PerformTaskAction( PrivateGeneralConfig.TaskAction_NotesDownloadImages );
                         } );
                 };
             timer.Start( );
@@ -738,8 +739,8 @@ namespace iOS
                     {
                         // Allow the news to update, and begin downloading all
                         // news and note images we need.
-                        PerformTaskAction( GeneralConfig.TaskAction_NewsReload );
-                        PerformTaskAction( GeneralConfig.TaskAction_NotesDownloadImages );
+                        PerformTaskAction( PrivateGeneralConfig.TaskAction_NewsReload );
+                        PerformTaskAction( PrivateGeneralConfig.TaskAction_NotesDownloadImages );
                     }
                 });
         }
@@ -974,7 +975,7 @@ namespace iOS
                 UpdateCampusViews( );
 
                 // let the news know it should reload
-                PerformTaskAction( GeneralConfig.TaskAction_NewsReload );
+                PerformTaskAction( PrivateGeneralConfig.TaskAction_NewsReload );
             }
         }
 
@@ -1078,17 +1079,17 @@ namespace iOS
             }
 
             EditPictureButton.Layer.AnchorPoint = CGPoint.Empty;
-            EditPictureButton.Layer.Position = new CGPoint( ( PrimaryContainerConfig.SlideAmount_iOS - EditPictureButton.Bounds.Width ) / 2, availableHeight * .02f );
+            EditPictureButton.Layer.Position = new CGPoint( ( PrivatePrimaryContainerConfig.SlideAmount_iOS - EditPictureButton.Bounds.Width ) / 2, availableHeight * .02f );
 
 
             // center the welcome and name labels within the available Springboard width
             float totalNameWidth = (float) (WelcomeField.Bounds.Width + UserNameField.Bounds.Width);
-            totalNameWidth = Math.Min( totalNameWidth, PrimaryContainerConfig.SlideAmount_iOS - 10 );
+            totalNameWidth = Math.Min( totalNameWidth, PrivatePrimaryContainerConfig.SlideAmount_iOS - 10 );
 
             float totalNameHeight = Math.Max( (float) WelcomeField.Bounds.Height, (float) UserNameField.Bounds.Height );
 
             WelcomeField.Layer.AnchorPoint = CGPoint.Empty;
-            WelcomeField.Layer.Position = new CGPoint( ( PrimaryContainerConfig.SlideAmount_iOS - totalNameWidth ) / 2, EditPictureButton.Frame.Bottom + 10 );
+            WelcomeField.Layer.Position = new CGPoint( ( PrivatePrimaryContainerConfig.SlideAmount_iOS - totalNameWidth ) / 2, EditPictureButton.Frame.Bottom + 10 );
             WelcomeField.Bounds = new CGRect( 0, 0, WelcomeField.Bounds.Width, totalNameHeight );
 
 
@@ -1210,7 +1211,7 @@ namespace iOS
                     // because the profile picture is dynamic, make sure it loads correctly.
                     try
                     {
-                        MemoryStream imageStream = (MemoryStream) FileCache.Instance.LoadFile( SpringboardConfig.ProfilePic );
+                        MemoryStream imageStream = (MemoryStream) FileCache.Instance.LoadFile( PrivateSpringboardConfig.ProfilePic );
 
                         NSData imageData = NSData.FromStream( imageStream );
                         UIImage image = new UIImage( imageData );
@@ -1229,7 +1230,7 @@ namespace iOS
                 if ( useNoPhotoImage == true )
                 {
                     ProfileImageView.Image = null;
-                    EditPictureButton.SetTitle( SpringboardConfig.NoPhotoSymbol, UIControlState.Normal );
+                    EditPictureButton.SetTitle( PrivateSpringboardConfig.NoPhotoSymbol, UIControlState.Normal );
                 }
                 else
                 {
@@ -1240,7 +1241,7 @@ namespace iOS
             {
                 // otherwise display the no profile image.
                 ProfileImageView.Image = null;
-                EditPictureButton.SetTitle( SpringboardConfig.NoProfileSymbol, UIControlState.Normal );
+                EditPictureButton.SetTitle( PrivateSpringboardConfig.NoProfileSymbol, UIControlState.Normal );
             }
         }
 

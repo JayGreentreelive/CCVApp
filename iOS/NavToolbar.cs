@@ -5,6 +5,7 @@ using Foundation;
 using CoreGraphics;
 using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
+using CCVApp.Shared.PrivateConfig;
 
 namespace iOS
 {
@@ -69,10 +70,10 @@ namespace iOS
             uint disabledColor = Rock.Mobile.Graphics.Util.ScaleRGBAColor( ControlStylingConfig.TextField_PlaceholderTextColor, 2, false );
 
             // create the back button
-            NSString backLabel = new NSString(SubNavToolbarConfig.BackButton_Text);
+            NSString backLabel = new NSString(PrivateSubNavToolbarConfig.BackButton_Text);
 
             BackButton = new UIButton(UIButtonType.System);
-            BackButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, SubNavToolbarConfig.BackButton_Size );
+            BackButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateSubNavToolbarConfig.BackButton_Size );
             BackButton.SetTitle( backLabel.ToString( ), UIControlState.Normal );
             BackButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ), UIControlState.Normal );
             BackButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( disabledColor ), UIControlState.Disabled );
@@ -82,10 +83,10 @@ namespace iOS
             //BackButton.BackgroundColor = UIColor.White;
 
             // create the share button
-            NSString shareLabel = new NSString(SubNavToolbarConfig.ShareButton_Text);
+            NSString shareLabel = new NSString(PrivateSubNavToolbarConfig.ShareButton_Text);
 
             ShareButton = new UIButton(UIButtonType.System);
-            ShareButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, SubNavToolbarConfig.ShareButton_Size );
+            ShareButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateSubNavToolbarConfig.ShareButton_Size );
             ShareButton.SetTitle( shareLabel.ToString( ), UIControlState.Normal );
             ShareButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ), UIControlState.Normal );
             ShareButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( disabledColor ), UIControlState.Disabled );
@@ -97,10 +98,10 @@ namespace iOS
 
 
             // create the create button
-            NSString createLabel = new NSString(SubNavToolbarConfig.CreateButton_Text);
+            NSString createLabel = new NSString(PrivateSubNavToolbarConfig.CreateButton_Text);
 
             CreateButton = new UIButton(UIButtonType.System);
-            CreateButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, SubNavToolbarConfig.CreateButton_Size );
+            CreateButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateSubNavToolbarConfig.CreateButton_Size );
             CreateButton.SetTitle( createLabel.ToString( ), UIControlState.Normal );
             CreateButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ), UIControlState.Normal );
             CreateButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( disabledColor ), UIControlState.Disabled );
@@ -175,7 +176,7 @@ namespace iOS
             List<UIBarButtonItem> itemList = new List<UIBarButtonItem>( );
 
             UIBarButtonItem spacer = new UIBarButtonItem( UIBarButtonSystemItem.FixedSpace );
-            spacer.Width = SubNavToolbarConfig.iOS_ButtonSpacing;
+            spacer.Width = PrivateSubNavToolbarConfig.iOS_ButtonSpacing;
 
             itemList.Add( new UIBarButtonItem( BackButton ) );
             itemList.Add( spacer );
@@ -224,7 +225,7 @@ namespace iOS
                 Animating = true;
 
                 // Animate the front panel out
-                UIView.Animate( SubNavToolbarConfig.SlideRate, 0, UIViewAnimationOptions.CurveEaseInOut, 
+                UIView.Animate( PrivateSubNavToolbarConfig.SlideRate, 0, UIViewAnimationOptions.CurveEaseInOut, 
                     new Action( 
                         delegate 
                         { 
@@ -259,11 +260,11 @@ namespace iOS
             {
                 if ( Revealed == true )
                 {
-                    Frame = new CGRect( 0, parentFrame.Height - Frame.Height, parentFrame.Width, SubNavToolbarConfig.Height_iOS );
+                    Frame = new CGRect( 0, parentFrame.Height - Frame.Height, parentFrame.Width, PrivateSubNavToolbarConfig.Height_iOS );
                 }
                 else
                 {
-                    Frame = new CGRect( 0, parentFrame.Height, parentFrame.Width, SubNavToolbarConfig.Height_iOS );
+                    Frame = new CGRect( 0, parentFrame.Height, parentFrame.Width, PrivateSubNavToolbarConfig.Height_iOS );
                 }
             }
             else

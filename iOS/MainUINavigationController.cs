@@ -6,6 +6,7 @@ using CoreGraphics;
 using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
 using Rock.Mobile.PlatformSpecific.iOS.Graphics;
+using CCVApp.Shared.PrivateConfig;
 
 namespace iOS
 {
@@ -114,7 +115,7 @@ namespace iOS
             UIGraphics.BeginImageContext( new CGSize( 1, 1 ) );
             CGContext context = UIGraphics.GetCurrentContext( );
 
-            context.SetFillColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.PrimaryNavBarBackgroundColor ).CGColor );
+            context.SetFillColor( Rock.Mobile.PlatformUI.Util.GetUIColor( PrimaryNavBarConfig.BackgroundColor ).CGColor );
             context.FillRect( new CGRect( 0, 0, 1, 1 ) );
 
             solidColor = UIGraphics.GetImageFromCurrentImageContext( );
@@ -144,8 +145,8 @@ namespace iOS
             UIBezierPath shadowPath = UIBezierPath.FromRect( View.Bounds );
             View.Layer.MasksToBounds = false;
             View.Layer.ShadowColor = UIColor.Black.CGColor;
-            View.Layer.ShadowOffset = PrimaryContainerConfig.ShadowOffset_iOS;
-            View.Layer.ShadowOpacity = PrimaryContainerConfig.ShadowOpacity_iOS;
+            View.Layer.ShadowOffset = PrivatePrimaryContainerConfig.ShadowOffset_iOS;
+            View.Layer.ShadowOpacity = PrivatePrimaryContainerConfig.ShadowOpacity_iOS;
             View.Layer.ShadowPath = shadowPath.CGPath;
         }
 
@@ -191,7 +192,7 @@ namespace iOS
                     float currX = (float) (View.Layer.Position.X - restingPoint);
 
                     // if they slide at least a third of the way, allow a switch
-                    float toggleThreshold = (PrimaryContainerConfig.SlideAmount_iOS / 3);
+                    float toggleThreshold = (PrivatePrimaryContainerConfig.SlideAmount_iOS / 3);
 
                     // check whether the springboard is open, because that changes the
                     // context of hte user's intention
@@ -199,7 +200,7 @@ namespace iOS
                     {
                         // since it's open, close it if it crosses the closeThreshold
                         // OR velocty is high
-                        float closeThreshold = PrimaryContainerConfig.SlideAmount_iOS - toggleThreshold;
+                        float closeThreshold = PrivatePrimaryContainerConfig.SlideAmount_iOS - toggleThreshold;
                         if( currX < closeThreshold || currVelocity.X < -1000 )
                         {
                             RevealSpringboard( false );
@@ -248,7 +249,7 @@ namespace iOS
             // for landscape regular, permanantly reveal the springboard
             if ( SpringboardViewController.IsLandscapeWide( ) == true )
             {
-                View.Frame = new CGRect( PrimaryContainerConfig.SlideAmount_iOS, 0, SpringboardViewController.TraitSize.Width - PrimaryContainerConfig.SlideAmount_iOS, SpringboardViewController.TraitSize.Height );
+                View.Frame = new CGRect( PrivatePrimaryContainerConfig.SlideAmount_iOS, 0, SpringboardViewController.TraitSize.Width - PrivatePrimaryContainerConfig.SlideAmount_iOS, SpringboardViewController.TraitSize.Height );
 
                 SpringboardRevealed = true;
                 Container.View.UserInteractionEnabled = true;
@@ -315,11 +316,11 @@ namespace iOS
 
             float viewHalfWidth = (float)0.00f;//( View.Layer.Bounds.Width / 2 );
 
-            xPos = Math.Max( viewHalfWidth, Math.Min( xPos, PrimaryContainerConfig.SlideAmount_iOS + viewHalfWidth ) );
+            xPos = Math.Max( viewHalfWidth, Math.Min( xPos, PrivatePrimaryContainerConfig.SlideAmount_iOS + viewHalfWidth ) );
 
             View.Layer.Position = new CGPoint( xPos, View.Layer.Position.Y );
 
-            float percentDark = Math.Max( 0, Math.Min( (xPos - viewHalfWidth) / PrimaryContainerConfig.SlideAmount_iOS, PrimaryContainerConfig.SlideDarkenAmount ) );
+            float percentDark = Math.Max( 0, Math.Min( (xPos - viewHalfWidth) / PrivatePrimaryContainerConfig.SlideAmount_iOS, PrivatePrimaryContainerConfig.SlideDarkenAmount ) );
             DarkPanel.Layer.Opacity = percentDark;
         }
 
@@ -392,15 +393,15 @@ namespace iOS
                     Animating = true;
 
                     // Animate the front panel out
-                    UIView.Animate( PrimaryContainerConfig.SlideRate, 0, UIViewAnimationOptions.CurveEaseInOut, 
+                    UIView.Animate( PrivatePrimaryContainerConfig.SlideRate, 0, UIViewAnimationOptions.CurveEaseInOut, 
                         new Action( 
                             delegate 
                             { 
                                 float endPos = 0.0f;
                                 if( wantReveal == true )
                                 {
-                                    endPos = (float) PrimaryContainerConfig.SlideAmount_iOS;
-                                    DarkPanel.Layer.Opacity = PrimaryContainerConfig.SlideDarkenAmount;
+                                    endPos = (float) PrivatePrimaryContainerConfig.SlideAmount_iOS;
+                                    DarkPanel.Layer.Opacity = PrivatePrimaryContainerConfig.SlideDarkenAmount;
                                 }
                                 else
                                 {

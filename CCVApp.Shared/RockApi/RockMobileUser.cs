@@ -9,6 +9,7 @@ using Facebook;
 using RestSharp;
 using Rock.Mobile.Util.Strings;
 using System.Runtime.Serialization.Formatters.Binary;
+using CCVApp.Shared.PrivateConfig;
 
 namespace CCVApp
 {
@@ -256,7 +257,7 @@ namespace CCVApp
                     PrimaryFamily = new Group();
 
                     PrimaryAddress = new GroupLocation();
-                    PrimaryAddress.GroupLocationTypeValueId = GeneralConfig.GroupLocationTypeHomeValueId;
+                    PrimaryAddress.GroupLocationTypeValueId = PrivateGeneralConfig.GroupLocationTypeHomeValueId;
 
                     _CellPhoneNumber = null;
 
@@ -461,7 +462,7 @@ namespace CCVApp
 
                                 // store their contact phone number seperately so we don't
                                 // get conflicts with syncing.
-                                _CellPhoneNumber = TryGetPhoneNumber( GeneralConfig.CellPhoneValueId );
+                                _CellPhoneNumber = TryGetPhoneNumber( PrivateGeneralConfig.CellPhoneValueId );
                                 Person.PhoneNumbers = null;
 
                                 LastSyncdCellPhoneNumberJson = _CellPhoneNumber != null ? JsonConvert.SerializeObject( _CellPhoneNumber ) : "";
@@ -670,7 +671,7 @@ namespace CCVApp
                     ProfileImageDirty = true;
 
                     // first open the image
-                    MemoryStream imageStream = (MemoryStream) FileCache.Instance.LoadFile( SpringboardConfig.ProfilePic );
+                    MemoryStream imageStream = (MemoryStream) FileCache.Instance.LoadFile( PrivateSpringboardConfig.ProfilePic );
 
                     // attempt to upload it
                     RockApi.Instance.UpdateProfilePicture( imageStream, 
@@ -730,7 +731,7 @@ namespace CCVApp
 
                 public void SaveProfilePicture( MemoryStream imageStream )
                 {
-                    FileCache.Instance.SaveFile( imageStream, SpringboardConfig.ProfilePic, FileCache.CacheFileNoExpiration );
+                    FileCache.Instance.SaveFile( imageStream, PrivateSpringboardConfig.ProfilePic, FileCache.CacheFileNoExpiration );
 
                     // now we have a picture!
                     HasProfileImage = true;

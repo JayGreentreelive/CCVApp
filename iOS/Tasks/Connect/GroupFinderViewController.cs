@@ -17,6 +17,7 @@ using CCVApp.Shared.Analytics;
 using Rock.Mobile.Animation;
 using CCVApp.Shared.UI;
 using Rock.Mobile.PlatformSpecific.Util;
+using CCVApp.Shared.PrivateConfig;
 
 namespace iOS
 {
@@ -72,8 +73,8 @@ namespace iOS
 
                     JoinButton = UIButton.FromType( UIButtonType.Custom );
                     JoinButton.TouchUpInside += (object sender, EventArgs e) => { TableSource.RowButtonClicked( RowIndex ); };
-                    JoinButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, ConnectConfig.GroupFinder_Join_IconSize );
-                    JoinButton.SetTitle( ConnectConfig.GroupFinder_JoinIcon, UIControlState.Normal );
+                    JoinButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateConnectConfig.GroupFinder_Join_IconSize );
+                    JoinButton.SetTitle( PrivateConnectConfig.GroupFinder_JoinIcon, UIControlState.Normal );
                     JoinButton.SetTitleColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
                     JoinButton.Layer.AnchorPoint = CGPoint.Empty;
                     JoinButton.BackgroundColor = UIColor.Clear;

@@ -4,6 +4,7 @@ using Rock.Mobile.Util.Strings;
 using CCVApp.Shared.Network;
 using System.Collections;
 using CCVApp.Shared.Strings;
+using CCVApp.Shared.PrivateConfig;
 
 namespace CCVApp.Shared
 {
@@ -53,8 +54,8 @@ namespace CCVApp.Shared
                         sourceLocation.Longitude = model.Longitude.Value;
 
                         // now get the groups
-                        RockApi.Instance.GetGroupsByLocation( CCVApp.Shared.Config.GeneralConfig.NeighborhoodGroupGeoFenceValueId, 
-                            CCVApp.Shared.Config.GeneralConfig.NeighborhoodGroupValueId,
+                        RockApi.Instance.GetGroupsByLocation( PrivateGeneralConfig.NeighborhoodGroupGeoFenceValueId, 
+                                                              PrivateGeneralConfig.NeighborhoodGroupValueId,
                             model.Id,
                             delegate(System.Net.HttpStatusCode groupStatusCode, string groupStatusDescription, List<Rock.Client.Group> rockGroupList )
                             {

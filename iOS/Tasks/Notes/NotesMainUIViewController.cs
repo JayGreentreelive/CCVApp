@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using CCVApp.Shared.UI;
 using Rock.Mobile.PlatformSpecific.Util;
+using CCVApp.Shared.PrivateConfig;
 
 namespace iOS
 {
@@ -121,8 +122,8 @@ namespace iOS
 
                     WatchButtonIcon = new UILabel( );
                     WatchButton.AddSubview( WatchButtonIcon );
-                    WatchButtonIcon.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, NoteConfig.Series_Table_IconSize );
-                    WatchButtonIcon.Text = NoteConfig.Series_Table_Watch_Icon;
+                    WatchButtonIcon.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.Series_Table_IconSize );
+                    WatchButtonIcon.Text = PrivateNoteConfig.Series_Table_Watch_Icon;
                     WatchButtonIcon.SizeToFit( );
 
                     WatchButtonLabel = new UILabel( );
@@ -152,8 +153,8 @@ namespace iOS
 
                     TakeNotesButtonIcon = new UILabel( );
                     TakeNotesButton.AddSubview( TakeNotesButtonIcon );
-                    TakeNotesButtonIcon.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, NoteConfig.Series_Table_IconSize );
-                    TakeNotesButtonIcon.Text = NoteConfig.Series_Table_TakeNotes_Icon;
+                    TakeNotesButtonIcon.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.Series_Table_IconSize );
+                    TakeNotesButtonIcon.Text = PrivateNoteConfig.Series_Table_TakeNotes_Icon;
                     TakeNotesButtonIcon.SizeToFit( );
 
                     TakeNotesButtonLabel = new UILabel( );
@@ -256,9 +257,9 @@ namespace iOS
 
                     Chevron = new UILabel( );
                     AddSubview( Chevron );
-                    Chevron.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, NoteConfig.Series_Table_IconSize );
+                    Chevron.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.Series_Table_IconSize );
                     Chevron.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
-                    Chevron.Text = NoteConfig.Series_Table_Navigate_Icon;
+                    Chevron.Text = PrivateNoteConfig.Series_Table_Navigate_Icon;
                     Chevron.SizeToFit( );
 
                     Seperator = new UIView( );
@@ -327,7 +328,7 @@ namespace iOS
 
                     default:
                     {
-                        return NoteConfig.Series_Main_CellHeight;
+                        return PrivateNoteConfig.Series_Main_CellHeight;
                     }
                 }
             }
@@ -443,14 +444,14 @@ namespace iOS
 
                 // force the image to be sized according to the height of the cell
                 cell.Image.Frame = new CGRect( 0, 
-                                                   0, 
-                                                   NoteConfig.Series_Main_CellWidth, 
-                                                   NoteConfig.Series_Main_CellHeight );
+                                               0, 
+                                               PrivateNoteConfig.Series_Main_CellWidth, 
+                                               PrivateNoteConfig.Series_Main_CellHeight );
 
                 nfloat availableTextWidth = cell.Bounds.Width - cell.Chevron.Bounds.Width - cell.Image.Bounds.Width - 10;
 
                 // Chevron
-                cell.Chevron.Layer.Position = new CGPoint( cell.Bounds.Width - (cell.Chevron.Bounds.Width / 2) - 5, (NoteConfig.Series_Main_CellHeight) / 2 );
+                cell.Chevron.Layer.Position = new CGPoint( cell.Bounds.Width - (cell.Chevron.Bounds.Width / 2) - 5, (PrivateNoteConfig.Series_Main_CellHeight) / 2 );
 
                 // Create the title
                 cell.Title.Text = SeriesEntries[ row ].Series.Name;
@@ -462,7 +463,7 @@ namespace iOS
 
                 // Position the Title & Date in the center to the right of the image
                 nfloat totalTextHeight = cell.Title.Bounds.Height + cell.Date.Bounds.Height - 1;
-                cell.Title.Frame = new CGRect( cell.Image.Frame.Right + 10, (NoteConfig.Series_Main_CellHeight - totalTextHeight) / 2, availableTextWidth - 5, cell.Title.Frame.Height );
+                cell.Title.Frame = new CGRect( cell.Image.Frame.Right + 10, (PrivateNoteConfig.Series_Main_CellHeight - totalTextHeight) / 2, availableTextWidth - 5, cell.Title.Frame.Height );
                 cell.Date.Frame = new CGRect( cell.Title.Frame.Left, cell.Title.Frame.Bottom - 6, availableTextWidth - 5, cell.Date.Frame.Height + 5 );
 
                 // add the seperator to the bottom
@@ -507,11 +508,11 @@ namespace iOS
         {
             SeriesEntries = new List<SeriesEntry>();
 
-            string imagePath = NSBundle.MainBundle.BundlePath + "/" + GeneralConfig.NotesMainPlaceholder;
+            string imagePath = NSBundle.MainBundle.BundlePath + "/" + PrivateNoteConfig.NotesMainPlaceholder;
             ImageMainPlaceholder = new UIImage( imagePath );
 
 
-            imagePath = NSBundle.MainBundle.BundlePath + "/" + GeneralConfig.NotesThumbPlaceholder;
+            imagePath = NSBundle.MainBundle.BundlePath + "/" + PrivateNoteConfig.NotesThumbPlaceholder;
             ImageThumbPlaceholder = new UIImage( imagePath );
         }
 

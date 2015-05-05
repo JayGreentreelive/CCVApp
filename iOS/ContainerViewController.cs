@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading;
 using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
+using CCVApp.Shared.PrivateConfig;
 
 namespace iOS
 {
@@ -86,10 +87,10 @@ namespace iOS
             // First setup the SpringboardReveal button, which rests in the upper left
             // of the MainNavigationUI. (We must do it here because the ContainerViewController's
             // NavBar is the active one.)
-            NSString buttonLabel = new NSString(PrimaryNavBarConfig.RevealButton_Text);
+            NSString buttonLabel = new NSString(PrivatePrimaryNavBarConfig.RevealButton_Text);
 
             SpringboardRevealButton = new UIButton(UIButtonType.System);
-            SpringboardRevealButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, PrimaryNavBarConfig.RevealButton_Size );
+            SpringboardRevealButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, PrivatePrimaryNavBarConfig.RevealButton_Size );
             SpringboardRevealButton.SetTitle( buttonLabel.ToString( ), UIControlState.Normal );
 
             // determine its dimensions
@@ -132,8 +133,8 @@ namespace iOS
             // setup the toolbar that will manage task navigation and any other tasks the task needs
             SubNavToolbar = new NavToolbar();
 
-            SubNavToolbar.BarTintColor = Rock.Mobile.PlatformUI.Util.GetUIColor( SubNavToolbarConfig.BackgroundColor );
-            SubNavToolbar.Layer.Opacity = SubNavToolbarConfig.Opacity;
+            SubNavToolbar.BarTintColor = Rock.Mobile.PlatformUI.Util.GetUIColor( PrivateSubNavToolbarConfig.BackgroundColor );
+            SubNavToolbar.Layer.Opacity = PrivateSubNavToolbarConfig.Opacity;
             SubNavigationController.View.AddSubview( SubNavToolbar );
 
             // add the back button

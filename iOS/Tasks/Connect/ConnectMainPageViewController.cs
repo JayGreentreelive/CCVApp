@@ -7,6 +7,7 @@ using CCVApp.Shared.Config;
 using System.Collections.Generic;
 using CCVApp.Shared;
 using CCVApp.Shared.Strings;
+using CCVApp.Shared.PrivateConfig;
 
 namespace iOS
 {
@@ -37,7 +38,7 @@ namespace iOS
                     AddSubview( Image );
 
                     // Banner Image
-                    Image.Image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + ConnectConfig.MainPageHeaderImage );
+                    Image.Image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + PrivateConnectConfig.MainPageHeaderImage );
                     Image.SizeToFit( );
 
                     // resize the image to fit the width of the device
@@ -103,9 +104,9 @@ namespace iOS
 
                     Chevron = new UILabel( );
                     AddSubview( Chevron );
-                    Chevron.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, ConnectConfig.MainPage_Table_IconSize );
+                    Chevron.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateConnectConfig.MainPage_Table_IconSize );
                     Chevron.TextColor = Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
-                    Chevron.Text = ConnectConfig.MainPage_Table_Navigate_Icon;
+                    Chevron.Text = PrivateConnectConfig.MainPage_Table_Navigate_Icon;
                     Chevron.SizeToFit( );
 
                     Seperator = new UIView( );
@@ -233,13 +234,13 @@ namespace iOS
                 // force the image to be sized according to the height of the cell
                 cell.Image.Frame = new CGRect( 0, 
                     10, 
-                    ConnectConfig.MainPage_ThumbnailDimension, 
-                    ConnectConfig.MainPage_ThumbnailDimension );
+                    PrivateConnectConfig.MainPage_ThumbnailDimension, 
+                    PrivateConnectConfig.MainPage_ThumbnailDimension );
 
                 nfloat availableTextWidth = cell.Bounds.Width - cell.Chevron.Bounds.Width - cell.Image.Bounds.Width - 10;
 
                 // Chevron
-                cell.Chevron.Layer.Position = new CGPoint( cell.Bounds.Width - (cell.Chevron.Bounds.Width / 2) - 5, (ConnectConfig.MainPage_ThumbnailDimension + 10) / 2 );
+                cell.Chevron.Layer.Position = new CGPoint( cell.Bounds.Width - (cell.Chevron.Bounds.Width / 2) - 5, (PrivateConnectConfig.MainPage_ThumbnailDimension + 10) / 2 );
 
                 // Create the title
                 cell.Title.Text = Parent.LinkEntries[ row ].Title;
@@ -247,7 +248,7 @@ namespace iOS
 
                 // Position the Title & Date in the center to the right of the image
                 nfloat totalTextHeight = cell.Title.Bounds.Height - 1;
-                cell.Title.Frame = new CGRect( cell.Image.Frame.Right + 10, ((ConnectConfig.MainPage_ThumbnailDimension + 10) - totalTextHeight) / 2, availableTextWidth - 5, cell.Title.Frame.Height );
+                cell.Title.Frame = new CGRect( cell.Image.Frame.Right + 10, ((PrivateConnectConfig.MainPage_ThumbnailDimension + 10) - totalTextHeight) / 2, availableTextWidth - 5, cell.Title.Frame.Height );
 
                 // add the seperator to the bottom
                 cell.Seperator.Frame = new CGRect( 0, cell.Image.Frame.Bottom + 10, cell.Bounds.Width, 1 );
@@ -288,7 +289,7 @@ namespace iOS
             // ensure the first link entry is always group finder.
             ConnectLink link = new ConnectLink( );
             link.Title = ConnectStrings.Main_Connect_GroupFinder;
-            link.ImageName = ConnectConfig.GroupFinder_IconImage;
+            link.ImageName = PrivateConnectConfig.GroupFinder_IconImage;
             LinkEntries.Insert( 0, link );
 
             ConnectTableView.SeparatorStyle = UITableViewCellSeparatorStyle.None;

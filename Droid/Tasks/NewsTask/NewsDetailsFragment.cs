@@ -18,6 +18,7 @@ using CCVApp.Shared.Strings;
 using Android.Text.Method;
 using CCVApp.Shared;
 using System.IO;
+using CCVApp.Shared.PrivateConfig;
 
 namespace Droid
 {
@@ -118,7 +119,7 @@ namespace Droid
                     else
                     {
                         // use the placeholder and request the image download
-                        System.IO.Stream thumbnailStream = Activity.BaseContext.Assets.Open( GeneralConfig.NewsDetailsPlaceholder );
+                        System.IO.Stream thumbnailStream = Activity.BaseContext.Assets.Open( PrivateGeneralConfig.NewsDetailsPlaceholder );
                         HeaderImage = BitmapFactory.DecodeStream( thumbnailStream );
 
                         FileCache.Instance.DownloadFileToCache( NewsItem.HeaderImageURL, NewsItem.HeaderImageName, delegate

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Rock.Mobile.Network;
 using CCVApp.Shared.Config;
 using CCVApp.Shared.Strings;
+using CCVApp.Shared.PrivateConfig;
 
 namespace CCVApp
 {
@@ -386,7 +387,7 @@ namespace CCVApp
                                 // resolve the alias ID
                                 RestRequest request = GetRockRestRequest( Method.POST );
 
-                                string requestString = string.Format( JoinGroupEndPoint, Config.GeneralConfig.GroupRegistrationValueId, personId, firstName, lastName, spouseName, email, phone, groupId, groupName );
+                                string requestString = string.Format( JoinGroupEndPoint, PrivateGeneralConfig.GroupRegistrationValueId, personId, firstName, lastName, spouseName, email, phone, groupId, groupName );
                                 Request.ExecuteAsync( BaseUrl + requestString, request, resultHandler );    
                             } );
                     }
@@ -395,7 +396,7 @@ namespace CCVApp
                         // no ID, so just send the info
                         RestRequest request = GetRockRestRequest( Method.POST );
 
-                        string requestString = string.Format( JoinGroupEndPoint, Config.GeneralConfig.GroupRegistrationValueId, 0, firstName, lastName, spouseName, email, phone, groupId, groupName );
+                        string requestString = string.Format( JoinGroupEndPoint, PrivateGeneralConfig.GroupRegistrationValueId, 0, firstName, lastName, spouseName, email, phone, groupId, groupName );
                         Request.ExecuteAsync( BaseUrl + requestString, request, resultHandler );    
                     }
                 }
@@ -427,7 +428,7 @@ namespace CCVApp
                     newLogin.PlainTextPassword = password;
                     newLogin.PersonId = personId;
                     newLogin.Guid = Guid.NewGuid( );
-                    newLogin.EntityTypeId = GeneralConfig.UserLoginEntityTypeId;
+                    newLogin.EntityTypeId = PrivateGeneralConfig.UserLoginEntityTypeId;
 
                     RestRequest request = GetRockRestRequest( Method.POST );
                     request.AddBody( newLogin );
@@ -536,7 +537,7 @@ namespace CCVApp
                             {
                                 // set the required values for a new phone number
                                 phoneNumber.Guid = Guid.NewGuid( );
-                                phoneNumber.NumberTypeValueId = GeneralConfig.CellPhoneValueId;
+                                phoneNumber.NumberTypeValueId = PrivateGeneralConfig.CellPhoneValueId;
 
                                 request = GetRockRestRequest( Method.POST );
                             }
@@ -617,7 +618,7 @@ namespace CCVApp
                         {
                             // first see if the user is already a member of this group (which is true if they've EVER attempted to update their profile picture.
                             RestRequest request = GetRockRestRequest( Method.GET );
-                            string requestUrl = BaseUrl + GetProfileImageMemberEndPoint + string.Format( "?$filter=PersonId eq {0} and GroupId eq {1}", personId, GeneralConfig.ApplicationGroup_PhotoRequest_ValueId );
+                            string requestUrl = BaseUrl + GetProfileImageMemberEndPoint + string.Format( "?$filter=PersonId eq {0} and GroupId eq {1}", personId, PrivateGeneralConfig.ApplicationGroup_PhotoRequest_ValueId );
                             Request.ExecuteAsync< List<Rock.Client.GroupMember> >( requestUrl, request, 
                                 delegate(HttpStatusCode statusCode, string statusDescription, List<Rock.Client.GroupMember> model )
                                 {
@@ -632,9 +633,9 @@ namespace CCVApp
                                             Rock.Client.GroupMember groupMember = new Rock.Client.GroupMember();
                                             groupMember.Guid = Guid.NewGuid( );
                                             groupMember.PersonId = personId;
-                                            groupMember.GroupMemberStatus = GeneralConfig.GroupMemberStatus_Pending_ValueId;
-                                            groupMember.GroupId = GeneralConfig.ApplicationGroup_PhotoRequest_ValueId;
-                                            groupMember.GroupRoleId = GeneralConfig.GroupMemberRole_Member_ValueId;
+                                            groupMember.GroupMemberStatus = PrivateGeneralConfig.GroupMemberStatus_Pending_ValueId;
+                                            groupMember.GroupId = PrivateGeneralConfig.ApplicationGroup_PhotoRequest_ValueId;
+                                            groupMember.GroupRoleId = PrivateGeneralConfig.GroupMemberRole_Member_ValueId;
                                             request.AddBody( groupMember );
 
                                             requestUrl = BaseUrl + GetProfileImageMemberEndPoint;
@@ -650,7 +651,7 @@ namespace CCVApp
                                             Rock.Client.GroupMember groupMember = new Rock.Client.GroupMember();
 
                                             // set the status to pending
-                                            groupMember.GroupMemberStatus = GeneralConfig.GroupMemberStatus_Pending_ValueId;
+                                            groupMember.GroupMemberStatus = PrivateGeneralConfig.GroupMemberStatus_Pending_ValueId;
 
                                             // and copy over all the other data
                                             groupMember.PersonId = model[ 0 ].PersonId;
@@ -749,7 +750,7 @@ namespace CCVApp
                 {
                     // request a profile by the username. If no username is specified, we'll use the logged in user's name.
                     RestRequest request = GetRockRestRequest( Method.GET );
-                    string requestUrl = string.Format( BaseUrl + GetGeneralDataTimeEndPoint, GeneralConfig.GeneralDataTimeValueId );
+                    string requestUrl = string.Format( BaseUrl + GetGeneralDataTimeEndPoint, PrivateGeneralConfig.GeneralDataTimeValueId );
 
 
                     // get the raw response
@@ -774,7 +775,7 @@ namespace CCVApp
                 {
                     RestRequest request = new RestRequest( method );
                     request.RequestFormat = DataFormat.Json;
-                    request.AddHeader( AuthorizationTokenHeaderKey, CCVApp.Shared.Config.GeneralConfig.RockMobileAppAuthorizationKey );
+                    request.AddHeader( AuthorizationTokenHeaderKey, PrivateGeneralConfig.RockMobileAppAuthorizationKey );
                  
                     return request;
                 }

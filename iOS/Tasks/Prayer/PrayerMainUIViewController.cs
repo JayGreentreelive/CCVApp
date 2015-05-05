@@ -14,6 +14,7 @@ using CCVApp.Shared.UI;
 using Rock.Mobile.PlatformSpecific.Util;
 using System.Drawing;
 using Rock.Mobile.Animation;
+using CCVApp.Shared.PrivateConfig;
 
 namespace iOS
 {
@@ -290,7 +291,7 @@ namespace iOS
             // setup the card positions to be to the offscreen to the left, centered on screen, and offscreen to the right
             float cardYOffset = ( viewRealHeight * .03f );
 
-            Carousel = PlatformCardCarousel.Create( View, cardWidth, cardHeight, new System.Drawing.RectangleF( 0, cardYOffset, (float)View.Bounds.Width, viewRealHeight ), PrayerConfig.Card_AnimationDuration );
+            Carousel = PlatformCardCarousel.Create( View, cardWidth, cardHeight, new System.Drawing.RectangleF( 0, cardYOffset, (float)View.Bounds.Width, viewRealHeight ), PrivatePrayerConfig.Card_AnimationDuration );
 
             CardSize = new CGRect( 0, 0, cardWidth, cardHeight );
 
@@ -338,7 +339,7 @@ namespace iOS
             if ( RequestingPrayers == false )
             {
                 TimeSpan deltaTime = DateTime.Now - LastDownload;
-                if ( deltaTime.TotalHours > PrayerConfig.PrayerDownloadFrequency.TotalHours )
+                if ( deltaTime.TotalHours > PrivatePrayerConfig.PrayerDownloadFrequency.TotalHours )
                 {
                     View.BringSubviewToFront( RetrievingPrayersView );
                     BlockerView.BringToFront( );

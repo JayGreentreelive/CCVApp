@@ -16,6 +16,7 @@ using Droid.Tasks;
 using Android.Graphics;
 using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
+using CCVApp.Shared.PrivateConfig;
 
 namespace Droid
 {
@@ -336,7 +337,7 @@ namespace Droid
 
             //The navbar should basically be a background with logo and a springboard reveal button in the upper left.
             Navbar = inflater.Inflate(Resource.Layout.navbar, container, false) as RelativeLayout;
-            Navbar.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.PrimaryNavBarBackgroundColor ) );
+            Navbar.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( PrimaryNavBarConfig.BackgroundColor ) );
 
             // create the springboard reveal button
             CreateSpringboardButton( Navbar );
@@ -438,8 +439,8 @@ namespace Droid
             // set the font and text
             Typeface fontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
             SpringboardRevealButton.SetTypeface( fontFace, TypefaceStyle.Normal );
-            SpringboardRevealButton.SetTextSize( Android.Util.ComplexUnitType.Dip, PrimaryNavBarConfig.RevealButton_Size );
-            SpringboardRevealButton.Text = PrimaryNavBarConfig.RevealButton_Text;
+            SpringboardRevealButton.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivatePrimaryNavBarConfig.RevealButton_Size );
+            SpringboardRevealButton.Text = PrivatePrimaryNavBarConfig.RevealButton_Text;
 
             // use the completely overcomplicated color states to set the normal vs pressed color state.
             int [][] states = new int[][] 
@@ -528,7 +529,7 @@ namespace Droid
 
                 xPosAnimator.AddUpdateListener( this );
                 xPosAnimator.AddListener( new NavbarAnimationListener( ) { NavbarFragment = this } );
-                xPosAnimator.SetDuration( (int) (PrimaryContainerConfig.SlideRate * 1000.0f) );
+                xPosAnimator.SetDuration( (int) (PrivatePrimaryContainerConfig.SlideRate * 1000.0f) );
                 xPosAnimator.Start();
             }
         }
@@ -555,7 +556,7 @@ namespace Droid
             {
                 float displayWidth = displayWidthPixels;
 
-                return (int)( displayWidth - ( displayWidth * PrimaryNavBarConfig.Landscape_RevealPercentage_Android ) );
+                return (int)( displayWidth - ( displayWidth * PrivatePrimaryNavBarConfig.Landscape_RevealPercentage_Android ) );
             }
             // otherwise, for portrait, just return the full display width
             else
@@ -579,7 +580,7 @@ namespace Droid
 
             // now determine the alpha
             float maxSlide = Springboard.GetSpringboardDisplayWidth( );
-            FadeOutFrame.Alpha = Math.Min( xPos / maxSlide, PrimaryContainerConfig.SlideDarkenAmount );
+            FadeOutFrame.Alpha = Math.Min( xPos / maxSlide, PrivatePrimaryContainerConfig.SlideDarkenAmount );
         }
 
         public void OnDown( MotionEvent e )

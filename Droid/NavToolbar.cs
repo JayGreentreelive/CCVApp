@@ -8,6 +8,7 @@ using Android.App;
 using Android.OS;
 using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
+using CCVApp.Shared.PrivateConfig;
 
 namespace Droid
 {
@@ -84,8 +85,8 @@ namespace Droid
             ButtonLayout.BaselineAligned = false;
 
             // set the nav subBar color (including opacity)
-            Color navColor = Rock.Mobile.PlatformUI.Util.GetUIColor( SubNavToolbarConfig.BackgroundColor );
-            navColor.A = (Byte) ( (float) navColor.A * SubNavToolbarConfig.Opacity );
+            Color navColor = Rock.Mobile.PlatformUI.Util.GetUIColor( PrivateSubNavToolbarConfig.BackgroundColor );
+            navColor.A = (Byte) ( (float) navColor.A * PrivateSubNavToolbarConfig.Opacity );
             ButtonLayout.SetBackgroundColor( navColor );
 
             ButtonLayout.LayoutParameters.Height = (int)Rock.Mobile.Graphics.Util.UnitToPx( 50.0f );
@@ -100,9 +101,9 @@ namespace Droid
             // set the back button's font
             Typeface fontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
             BackButton.SetTypeface( fontFace, TypefaceStyle.Normal );
-            BackButton.SetTextSize( Android.Util.ComplexUnitType.Dip, SubNavToolbarConfig.BackButton_Size );
+            BackButton.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateSubNavToolbarConfig.BackButton_Size );
 
-            BackButton.Text = SubNavToolbarConfig.BackButton_Text;
+            BackButton.Text = PrivateSubNavToolbarConfig.BackButton_Text;
             BackButton.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( 0 ) );
             BackButton.SetPadding( 0, 0, 0, 0 );
 
@@ -136,10 +137,10 @@ namespace Droid
             // set the share button's font
             fontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
             ShareButton.SetTypeface( fontFace, TypefaceStyle.Normal );
-            ShareButton.SetTextSize( Android.Util.ComplexUnitType.Dip, SubNavToolbarConfig.ShareButton_Size );
+            ShareButton.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateSubNavToolbarConfig.ShareButton_Size );
             ShareButton.SetPadding( 0, 0, 0, 0 );
 
-            ShareButton.Text = SubNavToolbarConfig.ShareButton_Text;
+            ShareButton.Text = PrivateSubNavToolbarConfig.ShareButton_Text;
             ShareButton.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( 0 ) );
 
             // default to NOT enabled
@@ -170,10 +171,10 @@ namespace Droid
             // set the create button's font
             fontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
             CreateButton.SetTypeface( fontFace, TypefaceStyle.Normal );
-            CreateButton.SetTextSize( Android.Util.ComplexUnitType.Dip, SubNavToolbarConfig.CreateButton_Size );
+            CreateButton.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateSubNavToolbarConfig.CreateButton_Size );
             CreateButton.SetPadding( 0, 0, 0, 0 );
 
-            CreateButton.Text = SubNavToolbarConfig.CreateButton_Text;
+            CreateButton.Text = PrivateSubNavToolbarConfig.CreateButton_Text;
             CreateButton.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( 0 ) );
 
             // default to NOT enabled
@@ -354,7 +355,7 @@ namespace Droid
 
                 Animator.AddUpdateListener( this );
                 Animator.AddListener( new NavToolbarAnimationListener() { NavbarToolbar = this } );
-                Animator.SetDuration( (long)( SubNavToolbarConfig.SlideRate * 1000.0f ) );
+                Animator.SetDuration( (long)( PrivateSubNavToolbarConfig.SlideRate * 1000.0f ) );
 
                 Animator.Start( );
             }

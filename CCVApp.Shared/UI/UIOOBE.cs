@@ -56,7 +56,7 @@ namespace CCVApp.Shared.UI
             WelcomeLabel = PlatformLabel.Create( );
             WelcomeLabel.SetFont( ControlStylingConfig.Font_Bold, 85 );
             WelcomeLabel.TextColor = 0xCCCCCCFF;
-            WelcomeLabel.Text = OOBEConfig.Welcome;
+            WelcomeLabel.Text = OOBEStrings.Welcome;
             WelcomeLabel.Opacity = 0;
             WelcomeLabel.SizeToFit( );
             WelcomeLabel.AddAsSubview( View.PlatformNativeObject );
@@ -64,7 +64,7 @@ namespace CCVApp.Shared.UI
             RegisterButton = PlatformButton.Create( );
             RegisterButton.SetFont( ControlStylingConfig.Font_Light, ControlStylingConfig.Large_FontSize );
             RegisterButton.TextColor = 0xCCCCCCFF;
-            RegisterButton.Text = string.Format( OOBEConfig.WantAccount, GeneralConfig.OrganizationShortName );
+            RegisterButton.Text = string.Format( OOBEStrings.WantAccount, GeneralConfig.OrganizationShortName );
             RegisterButton.Opacity = 0;
             RegisterButton.SizeToFit( );
             RegisterButton.ClickEvent = (PlatformButton button ) =>
@@ -83,7 +83,7 @@ namespace CCVApp.Shared.UI
             LoginButton = PlatformButton.Create( );
             LoginButton.SetFont( ControlStylingConfig.Font_Light, ControlStylingConfig.Large_FontSize );
             LoginButton.TextColor = 0xCCCCCCFF;
-            LoginButton.Text = string.Format( OOBEConfig.HaveAccount, GeneralConfig.OrganizationShortName );
+            LoginButton.Text = string.Format( OOBEStrings.HaveAccount, GeneralConfig.OrganizationShortName );
             LoginButton.Opacity = 0;
             LoginButton.SizeToFit( );
             LoginButton.ClickEvent = (PlatformButton button ) =>
@@ -101,7 +101,7 @@ namespace CCVApp.Shared.UI
             SkipButton = PlatformButton.Create( );
             SkipButton.SetFont( ControlStylingConfig.Font_Light, ControlStylingConfig.Large_FontSize );
             SkipButton.TextColor = 0xCCCCCCFF;
-            SkipButton.Text = OOBEConfig.SkipAccount;
+            SkipButton.Text = OOBEStrings.SkipAccount;
             SkipButton.Opacity = 0;
             SkipButton.SizeToFit( );
             SkipButton.ClickEvent = (PlatformButton button ) =>

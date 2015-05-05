@@ -18,6 +18,7 @@ using System.IO;
 using Rock.Mobile.PlatformSpecific.Android.Graphics;
 using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformSpecific.Android.UI;
+using CCVApp.Shared.PrivateConfig;
 
 namespace Droid
 {
@@ -316,7 +317,7 @@ namespace Droid
                         return null;
                     }
 
-                    System.IO.Stream thumbnailStream = Activity.BaseContext.Assets.Open( GeneralConfig.NewsMainPlaceholder );
+                    System.IO.Stream thumbnailStream = Activity.BaseContext.Assets.Open( PrivateGeneralConfig.NewsMainPlaceholder );
                     Placeholder = BitmapFactory.DecodeStream( thumbnailStream );
                     thumbnailStream.Dispose( );
 

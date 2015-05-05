@@ -26,6 +26,7 @@ using Rock.Mobile.PlatformSpecific.Android.UI;
 using Rock.Mobile.Animation;
 using Droid.Tasks.Give;
 using CCVApp.Shared.Analytics;
+using CCVApp.Shared.PrivateConfig;
 
 
 namespace Droid
@@ -62,7 +63,7 @@ namespace Droid
 
             Typeface fontFace = FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary );
             Icon.SetTypeface( fontFace, TypefaceStyle.Normal );
-            Icon.SetTextSize( Android.Util.ComplexUnitType.Dip, SpringboardConfig.Element_FontSize );
+            Icon.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateSpringboardConfig.Element_FontSize );
             Icon.SetX( Icon.GetX() - Icon.Width / 2 );
             Icon.Text = IconStr;
 
@@ -79,18 +80,18 @@ namespace Droid
 
         public void Deactivate( )
         {
-            Icon.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Springboard_InActiveElementColor ) );
+            Icon.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( SpringboardConfig.InActiveElementTextColor ) );
 
-            Text.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Springboard_InActiveElementColor ) );
+            Text.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( SpringboardConfig.InActiveElementTextColor ) );
 
             Layout.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( 0x00000000 ) );
         }
 
         public void Activate( )
         {
-            Icon.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Springboard_ActiveElementColor ) );
+            Icon.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( SpringboardConfig.ActiveElementTextColor ) );
 
-            Text.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.Springboard_ActiveElementColor ) );
+            Text.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( SpringboardConfig.ActiveElementTextColor ) );
 
             Layout.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( SpringboardConfig.Element_SelectedColor ) );
         }
@@ -267,8 +268,8 @@ namespace Droid
                     {
                         // Allow the news to update, and begin downloading all
                         // news and note images we need.
-                        PerformTaskAction( GeneralConfig.TaskAction_NewsReload );
-                        PerformTaskAction( GeneralConfig.TaskAction_NotesDownloadImages );
+                        PerformTaskAction( PrivateGeneralConfig.TaskAction_NewsReload );
+                        PerformTaskAction( PrivateGeneralConfig.TaskAction_NotesDownloadImages );
                     }
                 });
         }
@@ -310,7 +311,7 @@ namespace Droid
             }
 
             view.SetOnTouchListener( this );
-            view.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.SpringboardBackgroundColor ) );
+            view.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( SpringboardConfig.BackgroundColor ) );
 
             // set the task we wish to have active
             ActivateElement( Elements[ ActiveElementIndex ] );
@@ -333,7 +334,7 @@ namespace Droid
                 };
             Typeface fontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary );
             ProfileImageButton.SetTypeface( fontFace, TypefaceStyle.Normal );
-            ProfileImageButton.SetTextSize( Android.Util.ComplexUnitType.Dip, SpringboardConfig.ProfileSymbolFontSize );
+            ProfileImageButton.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateSpringboardConfig.ProfileSymbolFontSize );
             ProfileImageButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
             ProfileImageButton.LayoutParameters.Width = (int)Rock.Mobile.Graphics.Util.UnitToPx( 140 );
             ProfileImageButton.LayoutParameters.Height = (int)Rock.Mobile.Graphics.Util.UnitToPx( 140 );
@@ -387,7 +388,7 @@ namespace Droid
             Activity.WindowManager.DefaultDisplay.GetSize( displaySize );
             float displayWidth = displaySize.X;
 
-            float revealPercent = MainActivity.IsLandscapeWide( ) ? PrimaryNavBarConfig.Landscape_RevealPercentage_Android : PrimaryNavBarConfig.Portrait_RevealPercentage_Android;
+            float revealPercent = MainActivity.IsLandscapeWide( ) ? PrivatePrimaryNavBarConfig.Landscape_RevealPercentage_Android : PrivatePrimaryNavBarConfig.Portrait_RevealPercentage_Android;
 
             // setup the width of the springboard area and campus selector
             ProfileContainer = view.FindViewById<LinearLayout>( Resource.Id.springboard_profile_image_container );
@@ -411,7 +412,7 @@ namespace Droid
 
             CampusContainer = view.FindViewById<View>( Resource.Id.campus_container );
             CampusContainer.LayoutParameters.Width = (int) ( displayWidth * revealPercent );
-            CampusContainer.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.SpringboardBackgroundColor ) );
+            CampusContainer.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( SpringboardConfig.BackgroundColor ) );
 
             View seperator = view.FindViewById<View>( Resource.Id.end_seperator );
             seperator.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
@@ -428,8 +429,8 @@ namespace Droid
             TextView settingsIcon = CampusContainer.FindViewById<TextView>( Resource.Id.campus_selection_icon );
             settingsIcon.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary ), TypefaceStyle.Normal );
             settingsIcon.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
-            settingsIcon.SetTextSize( Android.Util.ComplexUnitType.Dip, SpringboardConfig.CampusSelectSymbolSize );
-            settingsIcon.Text = SpringboardConfig.CampusSelectSymbol;
+            settingsIcon.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateSpringboardConfig.CampusSelectSymbolSize );
+            settingsIcon.Text = PrivateSpringboardConfig.CampusSelectSymbol;
 
             // set the campus text to whatever their profile has set for viewing.
             CampusText.Text = string.Format( SpringboardStrings.Viewing_Campus, RockGeneralData.Instance.Data.CampusIdToName( RockMobileUser.Instance.ViewingCampus ) ).ToUpper( );
@@ -480,7 +481,7 @@ namespace Droid
                         if ( element.Task as Droid.Tasks.Notes.NotesTask != null )
                         {
                             ActivateElement( element );
-                            PerformTaskAction( GeneralConfig.TaskAction_NotesRead );
+                            PerformTaskAction( PrivateGeneralConfig.TaskAction_NotesRead );
                         }
                     }
                 } );
@@ -499,7 +500,7 @@ namespace Droid
                 CampusText.Text = newCampusText;
 
                 // let the news know it should reload
-                PerformTaskAction( GeneralConfig.TaskAction_NewsReload );
+                PerformTaskAction( PrivateGeneralConfig.TaskAction_NewsReload );
             }
         }
 
@@ -536,7 +537,7 @@ namespace Droid
             Activity.WindowManager.DefaultDisplay.GetSize( displaySize );
             float displayWidth = displaySize.X;
 
-            float revealPercent = MainActivity.IsLandscapeWide( ) ? PrimaryNavBarConfig.Landscape_RevealPercentage_Android : PrimaryNavBarConfig.Portrait_RevealPercentage_Android;
+            float revealPercent = MainActivity.IsLandscapeWide( ) ? PrivatePrimaryNavBarConfig.Landscape_RevealPercentage_Android : PrivatePrimaryNavBarConfig.Portrait_RevealPercentage_Android;
 
             ProfileContainer.LayoutParameters.Width = (int) ( displayWidth * revealPercent );
             CampusContainer.LayoutParameters.Width = (int) ( displayWidth * revealPercent );
@@ -556,11 +557,11 @@ namespace Droid
 
             if ( MainActivity.IsLandscapeWide( ) == true )
             {
-                return (int)( displayWidth * PrimaryNavBarConfig.Landscape_RevealPercentage_Android );
+                return (int)( displayWidth * PrivatePrimaryNavBarConfig.Landscape_RevealPercentage_Android );
             }
             else
             {
-                return (int) (displayWidth * PrimaryNavBarConfig.Portrait_RevealPercentage_Android );
+                return (int) (displayWidth * PrivatePrimaryNavBarConfig.Portrait_RevealPercentage_Android );
             }
         }
 
@@ -925,8 +926,8 @@ namespace Droid
                             }
 
                             // NOW go ahead and start downloads.
-                            PerformTaskAction( GeneralConfig.TaskAction_NewsReload );
-                            PerformTaskAction( GeneralConfig.TaskAction_NotesDownloadImages );
+                            PerformTaskAction( PrivateGeneralConfig.TaskAction_NewsReload );
+                            PerformTaskAction( PrivateGeneralConfig.TaskAction_NotesDownloadImages );
                         } );
                 };
             timer.Start( );
@@ -1014,13 +1015,13 @@ namespace Droid
             if( RockMobileUser.Instance.LoggedIn )
             {
                 // default to displaying the "No Photo" icon
-                ProfileImageButton.Text = SpringboardConfig.NoPhotoSymbol;
+                ProfileImageButton.Text = PrivateSpringboardConfig.NoPhotoSymbol;
 
                 // if they have an profile pic
                 if( RockMobileUser.Instance.HasProfileImage == true )
                 {
                     // Load the profile pic
-                    MemoryStream profileStream = (MemoryStream)FileCache.Instance.LoadFile( SpringboardConfig.ProfilePic );
+                    MemoryStream profileStream = (MemoryStream)FileCache.Instance.LoadFile( PrivateSpringboardConfig.ProfilePic );
                     if ( profileStream != null )
                     {
                         try
@@ -1055,8 +1056,8 @@ namespace Droid
                         }
                         catch( Exception )
                         {
-                            FileCache.Instance.RemoveFile( SpringboardConfig.ProfilePic );
-                            System.Console.WriteLine( "Image {0} is corrupt. Removing.", SpringboardConfig.ProfilePic );
+                            FileCache.Instance.RemoveFile( PrivateSpringboardConfig.ProfilePic );
+                            System.Console.WriteLine( "Image {0} is corrupt. Removing.", PrivateSpringboardConfig.ProfilePic );
                         }
 
                         profileStream.Dispose( );
@@ -1066,7 +1067,7 @@ namespace Droid
             else
             {
                 // display the "Not Logged In" icon
-                ProfileImageButton.Text = SpringboardConfig.NoProfileSymbol;
+                ProfileImageButton.Text = PrivateSpringboardConfig.NoProfileSymbol;
             }
         }
 
@@ -1093,7 +1094,7 @@ namespace Droid
                         if ( element != null )
                         {
                             // did we tap within the revealed springboard area?
-                            float visibleButtonWidth = NavbarFragment.View.Width * PrimaryNavBarConfig.Portrait_RevealPercentage_Android;
+                            float visibleButtonWidth = NavbarFragment.View.Width * PrivatePrimaryNavBarConfig.Portrait_RevealPercentage_Android;
                             if ( e.GetX( ) < visibleButtonWidth )
                             {
                                 // we did, so activate the element associated with that button

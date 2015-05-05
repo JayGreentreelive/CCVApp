@@ -21,6 +21,7 @@ using CCVApp.Shared;
 using CCVApp.Shared.Analytics;
 using Rock.Mobile.PlatformSpecific.Android.Graphics;
 using Rock.Mobile.Animation;
+using CCVApp.Shared.PrivateConfig;
 
 namespace Droid
 {
@@ -389,7 +390,7 @@ namespace Droid
                     PrayerCardSize = new RectangleF( 0, 0, cardWidth, cardHeight );
 
                     // setup the card positions to be to the offscreen to the left, centered on screen, and offscreen to the right
-                    Carousel = PlatformCardCarousel.Create( view, cardWidth, cardHeight, new RectangleF( 0, cardYOffset, NavbarFragment.GetContainerDisplayWidth( ), prayerRegionHeight ), PrayerConfig.Card_AnimationDuration );
+                    Carousel = PlatformCardCarousel.Create( view, cardWidth, cardHeight, new RectangleF( 0, cardYOffset, NavbarFragment.GetContainerDisplayWidth( ), prayerRegionHeight ), PrivatePrayerConfig.Card_AnimationDuration );
 
 
                     // setup our error UI
@@ -404,7 +405,7 @@ namespace Droid
 
                     ResultSymbol = ResultLayer.FindViewById<TextView>( Resource.Id.resultSymbol );
                     ResultSymbol.SetTypeface( FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary ), TypefaceStyle.Normal );
-                    ResultSymbol.SetTextSize( ComplexUnitType.Dip, PrayerConfig.PostPrayer_ResultSymbolSize_Droid );
+                    ResultSymbol.SetTextSize( ComplexUnitType.Dip, PrivatePrayerConfig.PostPrayer_ResultSymbolSize_Droid );
                     ResultSymbol.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ) );
                     ResultSymbol.Text = ControlStylingConfig.Result_Symbol_Failed;
 
@@ -489,7 +490,7 @@ namespace Droid
                     if ( IsRequesting == false )
                     {
                         TimeSpan deltaTime = DateTime.Now - LastDownloadTime;
-                        if ( deltaTime.TotalHours > PrayerConfig.PrayerDownloadFrequency.TotalHours )
+                        if ( deltaTime.TotalHours > PrivatePrayerConfig.PrayerDownloadFrequency.TotalHours )
                         {
                             Console.WriteLine( "Downloading Prayers" );
                             DownloadPrayers( );

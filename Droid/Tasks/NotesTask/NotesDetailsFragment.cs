@@ -22,6 +22,7 @@ using System.IO;
 using CCVApp.Shared.Config;
 using CCVApp.Shared.Strings;
 using CCVApp.Shared.Analytics;
+using CCVApp.Shared.PrivateConfig;
 
 namespace Droid
 {
@@ -285,8 +286,8 @@ namespace Droid
                     ( (LinearLayout.LayoutParams)ListenButton.LayoutParameters ).Weight = 1;
                     ( (LinearLayout.LayoutParams)ListenButton.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
                     ListenButton.SetTypeface( buttonFontFace, TypefaceStyle.Normal );
-                    ListenButton.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Details_Table_IconSize );
-                    ListenButton.Text = NoteConfig.Series_Table_Listen_Icon;
+                    ListenButton.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateNoteConfig.Details_Table_IconSize );
+                    ListenButton.Text = PrivateNoteConfig.Series_Table_Listen_Icon;
                     ListenButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
                     ListenButton.Background = null;
                     buttonLayout.AddView( ListenButton );
@@ -296,8 +297,8 @@ namespace Droid
                     ( (LinearLayout.LayoutParams)WatchButton.LayoutParameters ).Weight = 1;
                     ( (LinearLayout.LayoutParams)WatchButton.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
                     WatchButton.SetTypeface( buttonFontFace, TypefaceStyle.Normal );
-                    WatchButton.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Details_Table_IconSize );
-                    WatchButton.Text = NoteConfig.Series_Table_Watch_Icon;
+                    WatchButton.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateNoteConfig.Details_Table_IconSize );
+                    WatchButton.Text = PrivateNoteConfig.Series_Table_Watch_Icon;
                     WatchButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
                     WatchButton.Background = null;
                     buttonLayout.AddView( WatchButton );
@@ -307,8 +308,8 @@ namespace Droid
                     ( (LinearLayout.LayoutParams)TakeNotesButton.LayoutParameters ).Weight = 1;
                     ( (LinearLayout.LayoutParams)TakeNotesButton.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
                     TakeNotesButton.SetTypeface( buttonFontFace, TypefaceStyle.Normal );
-                    TakeNotesButton.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Details_Table_IconSize );
-                    TakeNotesButton.Text = NoteConfig.Series_Table_TakeNotes_Icon;
+                    TakeNotesButton.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateNoteConfig.Details_Table_IconSize );
+                    TakeNotesButton.Text = PrivateNoteConfig.Series_Table_TakeNotes_Icon;
                     TakeNotesButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
                     TakeNotesButton.Background = null;
                     buttonLayout.AddView( TakeNotesButton );

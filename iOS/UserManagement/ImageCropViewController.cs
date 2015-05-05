@@ -7,6 +7,7 @@ using CoreGraphics;
 using CoreImage;
 using AssetsLibrary;
 using CCVApp.Shared.Config;
+using CCVApp.Shared.PrivateConfig;
 
 namespace iOS
 {
@@ -140,12 +141,12 @@ namespace iOS
 
                 Toolbar.Frame = new CGRect( 0, View.Bounds.Height - 40, View.Bounds.Width, 40 );
 
-                NSString cancelLabel = new NSString( ImageCropConfig.CropCancelButton_Text );
+                NSString cancelLabel = new NSString( PrivateImageCropConfig.CropCancelButton_Text );
                 CGSize buttonSize = cancelLabel.StringSize( CancelButton.Font );
                 CancelButton.Bounds = new CGRect( 0, 0, buttonSize.Width, buttonSize.Height );
 
 
-                NSString editLabel = new NSString( ImageCropConfig.CropOkButton_Text );
+                NSString editLabel = new NSString( PrivateImageCropConfig.CropOkButton_Text );
                 buttonSize = editLabel.StringSize( EditButton.Font );
                 EditButton.Bounds = new CGRect( 0, 0, buttonSize.Width, buttonSize.Height );
 
@@ -209,10 +210,10 @@ namespace iOS
             Toolbar = new UIToolbar( );
 
             // create the cancel button
-            NSString cancelLabel = new NSString( ImageCropConfig.CropCancelButton_Text );
+            NSString cancelLabel = new NSString( PrivateImageCropConfig.CropCancelButton_Text );
 
             CancelButton = new UIButton(UIButtonType.System);
-            CancelButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, ImageCropConfig.CropCancelButton_Size );
+            CancelButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateImageCropConfig.CropCancelButton_Size );
             CancelButton.SetTitle( cancelLabel.ToString( ), UIControlState.Normal );
 
             CancelButton.TouchUpInside += (object sender, EventArgs e) => 
@@ -230,10 +231,10 @@ namespace iOS
                 };
 
             // create the edit button
-            NSString editLabel = new NSString( ImageCropConfig.CropOkButton_Text );
+            NSString editLabel = new NSString( PrivateImageCropConfig.CropOkButton_Text );
 
             EditButton = new UIButton(UIButtonType.System);
-            EditButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, ImageCropConfig.CropOkButton_Size );
+            EditButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateImageCropConfig.CropOkButton_Size );
             EditButton.SetTitle( editLabel.ToString( ), UIControlState.Normal );
             EditButton.HorizontalAlignment = UIControlContentHorizontalAlignment.Right;
 

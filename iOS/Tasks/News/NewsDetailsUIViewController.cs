@@ -9,6 +9,7 @@ using Rock.Mobile.PlatformUI;
 using CCVApp.Shared.Strings;
 using System.IO;
 using CCVApp.Shared;
+using CCVApp.Shared.PrivateConfig;
 
 namespace iOS
 {
@@ -89,7 +90,7 @@ namespace iOS
             else
             {
                 // otherwise use a placeholder and request the actual image
-                ImageBanner.Image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + GeneralConfig.NewsDetailsPlaceholder );
+                ImageBanner.Image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + PrivateGeneralConfig.NewsDetailsPlaceholder );
 
                 // resize the image to fit the width of the device
                 nfloat imageAspect = ImageBanner.Image.Size.Height / ImageBanner.Image.Size.Width;

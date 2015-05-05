@@ -4,6 +4,7 @@ using CoreGraphics;
 using Foundation;
 using CCVApp.Shared.Config;
 using CCVApp.Shared.Network;
+using CCVApp.Shared.PrivateConfig;
 
 namespace iOS
 {
@@ -39,7 +40,7 @@ namespace iOS
 
             switch( action )
             {
-                case GeneralConfig.TaskAction_NotesRead:
+                case PrivateGeneralConfig.TaskAction_NotesRead:
                 {
                     if ( CCVApp.Shared.Network.RockLaunchData.Instance.Data.NoteDB.SeriesList.Count > 0 )
                     {
@@ -56,7 +57,7 @@ namespace iOS
                     break;
                 }
 
-                case GeneralConfig.TaskAction_NotesDownloadImages:
+                case PrivateGeneralConfig.TaskAction_NotesDownloadImages:
                 {
                     MainViewController.DownloadImages( );
                     break;

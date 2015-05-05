@@ -17,6 +17,14 @@ namespace CCVApp.Shared
             }
         }
 
+        public class OOBEStrings
+        {
+            public const string Welcome = "WELCOME";
+            public const string HaveAccount = "I have a {0} Account";
+            public const string WantAccount = "Create a {0} Account";
+            public const string SkipAccount = "Do this Later";
+        }
+
         public class GeneralStrings
         {
             public const string Yes = "Yes";

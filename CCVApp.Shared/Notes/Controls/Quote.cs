@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using CCVApp.Shared.Config;
 using System.Drawing;
+using CCVApp.Shared.PrivateConfig;
 
 namespace CCVApp
 {
@@ -100,9 +101,9 @@ namespace CCVApp
                     QuoteLabel.BackgroundColor = 0;
 
 
-                    UrlGlyph.Text = NoteConfig.CitationUrl_Icon;
+                    UrlGlyph.Text = PrivateNoteConfig.CitationUrl_Icon;
                     UrlGlyph.TextColor = NoteConfig.CitationUrl_IconColor;
-                    UrlGlyph.SetFont( ControlStylingConfig.Icon_Font_Secondary, NoteConfig.CitationUrl_IconSize );
+                    UrlGlyph.SetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.CitationUrl_IconSize );
                     UrlGlyph.BackgroundColor = 0;
 
 
@@ -121,7 +122,7 @@ namespace CCVApp
                     if( mStyle.mBorderWidth.HasValue )
                     {
                         BorderView.BorderWidth = mStyle.mBorderWidth.Value;
-                        borderPaddingPx = (int)Rock.Mobile.Graphics.Util.UnitToPx( mStyle.mBorderWidth.Value + NoteConfig.BorderPadding );
+                        borderPaddingPx = (int)Rock.Mobile.Graphics.Util.UnitToPx( mStyle.mBorderWidth.Value + PrivateNoteConfig.BorderPadding );
                     }
 
                     if( mStyle.mTextInputBackgroundColor.HasValue )
@@ -157,7 +158,7 @@ namespace CCVApp
                     ActiveUrl = reader.GetAttribute( "Url" );
                     if ( string.IsNullOrEmpty( ActiveUrl ) == false )
                     {
-                        UrlGlyph.Text = NoteConfig.CitationUrl_Icon;
+                        UrlGlyph.Text = PrivateNoteConfig.CitationUrl_Icon;
                         UrlGlyph.Bounds = new RectangleF( Citation.Frame.Right, Citation.Frame.Top, (availableWidth - Citation.Frame.Right), 0 );
                         UrlGlyph.SizeToFit( );
                     }

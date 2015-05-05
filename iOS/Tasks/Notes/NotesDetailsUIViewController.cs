@@ -11,6 +11,7 @@ using Rock.Mobile.PlatformUI;
 using System.IO;
 using CCVApp.Shared.Analytics;
 using CCVApp.Shared.Network;
+using CCVApp.Shared.PrivateConfig;
 
 namespace iOS
 {
@@ -143,8 +144,8 @@ namespace iOS
                     ListenButton = new UIButton( UIButtonType.Custom );
                     ListenButton.TouchUpInside += (object sender, EventArgs e) => { Parent.RowButtonClicked( RowIndex, 0 ); };
                     ListenButton.Layer.AnchorPoint = CGPoint.Empty;
-                    ListenButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, NoteConfig.Details_Table_IconSize );
-                    ListenButton.SetTitle( NoteConfig.Series_Table_Listen_Icon, UIControlState.Normal );
+                    ListenButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.Details_Table_IconSize );
+                    ListenButton.SetTitle( PrivateNoteConfig.Series_Table_Listen_Icon, UIControlState.Normal );
                     ListenButton.BackgroundColor = UIColor.Clear;
                     ListenButton.SizeToFit( );
                     AddSubview( ListenButton );
@@ -152,16 +153,16 @@ namespace iOS
                     WatchButton = new UIButton( UIButtonType.Custom );
                     WatchButton.TouchUpInside += (object sender, EventArgs e) => { Parent.RowButtonClicked( RowIndex, 1 ); };
                     WatchButton.Layer.AnchorPoint = CGPoint.Empty;
-                    WatchButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, NoteConfig.Details_Table_IconSize );
-                    WatchButton.SetTitle( NoteConfig.Series_Table_Watch_Icon, UIControlState.Normal );
+                    WatchButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.Details_Table_IconSize );
+                    WatchButton.SetTitle( PrivateNoteConfig.Series_Table_Watch_Icon, UIControlState.Normal );
                     WatchButton.BackgroundColor = UIColor.Clear;
                     WatchButton.SizeToFit( );
                     AddSubview( WatchButton );
 
                     TakeNotesButton = new UIButton( UIButtonType.Custom );
                     TakeNotesButton.TouchUpInside += (object sender, EventArgs e) => { Parent.RowButtonClicked( RowIndex, 2 ); };
-                    TakeNotesButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, NoteConfig.Details_Table_IconSize );
-                    TakeNotesButton.SetTitle( NoteConfig.Series_Table_TakeNotes_Icon, UIControlState.Normal );
+                    TakeNotesButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.Details_Table_IconSize );
+                    TakeNotesButton.SetTitle( PrivateNoteConfig.Series_Table_TakeNotes_Icon, UIControlState.Normal );
                     TakeNotesButton.Layer.AnchorPoint = CGPoint.Empty;
                     TakeNotesButton.BackgroundColor = UIColor.Clear;
                     TakeNotesButton.SizeToFit( );

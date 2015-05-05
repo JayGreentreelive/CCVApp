@@ -20,6 +20,7 @@ using CCVApp.Shared.Analytics;
 using CCVApp.Shared.Strings;
 using CCVApp.Shared.UI;
 using Rock.Mobile.Animation;
+using CCVApp.Shared.PrivateConfig;
 
 namespace iOS
 {
@@ -645,7 +646,7 @@ namespace iOS
 
                 Note = new Note( noteXML, styleXML );
 
-                Note.Create( (float)UIScrollView.Bounds.Width, (float)UIScrollView.Bounds.Height, this.UIScrollView, NoteFileName + NoteConfig.UserNoteSuffix, DisplayMessageBox );
+                Note.Create( (float)UIScrollView.Bounds.Width, (float)UIScrollView.Bounds.Height, this.UIScrollView, NoteFileName + PrivateNoteConfig.UserNoteSuffix, DisplayMessageBox );
 
                 // enable scrolling
                 UIScrollView.ScrollEnabled = true;
@@ -678,11 +679,11 @@ namespace iOS
                                 {
                                     if( SpringboardViewController.IsLandscapeWide( ) )
                                     {
-                                        TutorialOverlay.Image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + NoteConfig.TutorialOverlayImageIPadLS );
+                                        TutorialOverlay.Image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + PrivateNoteConfig.TutorialOverlayImageIPadLS );
                                     }
                                     else
                                     {
-                                        TutorialOverlay.Image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + NoteConfig.TutorialOverlayImage );
+                                        TutorialOverlay.Image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + PrivateNoteConfig.TutorialOverlayImage );
                                     }
 
                                     TutorialOverlay.ContentMode = UIViewContentMode.ScaleAspectFill;

@@ -24,6 +24,7 @@ using Rock.Mobile.Animation;
 using Android.Gms.Maps.Model;
 using CCVApp.Shared.UI;
 using Android.Views.InputMethods;
+using CCVApp.Shared.PrivateConfig;
 
 namespace Droid
 {
@@ -169,8 +170,8 @@ namespace Droid
                     ( (LinearLayout.LayoutParams)JoinButton.LayoutParameters ).Weight = 0;
                     ( (LinearLayout.LayoutParams)JoinButton.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
                     JoinButton.SetTypeface( buttonFontFace, TypefaceStyle.Normal );
-                    JoinButton.SetTextSize( Android.Util.ComplexUnitType.Dip, ConnectConfig.GroupFinder_Join_IconSize );
-                    JoinButton.Text = ConnectConfig.GroupFinder_JoinIcon;
+                    JoinButton.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateConnectConfig.GroupFinder_Join_IconSize );
+                    JoinButton.Text = PrivateConnectConfig.GroupFinder_JoinIcon;
                     JoinButton.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                     JoinButton.Background = null;
                     JoinButton.FocusableInTouchMode = false;

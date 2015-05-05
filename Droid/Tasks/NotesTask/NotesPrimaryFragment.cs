@@ -26,6 +26,7 @@ using Rock.Mobile.PlatformUI.DroidNative;
 using System.Threading;
 using CCVApp.Shared.UI;
 using Rock.Mobile.PlatformSpecific.Android.UI;
+using CCVApp.Shared.PrivateConfig;
 
 namespace Droid
 {
@@ -275,9 +276,9 @@ namespace Droid
                     WatchButton.Layout.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
 
                     WatchButton.Icon.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary ), TypefaceStyle.Normal );
-                    WatchButton.Icon.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Series_Table_IconSize );
+                    WatchButton.Icon.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateNoteConfig.Series_Table_IconSize );
                     WatchButton.Icon.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
-                    WatchButton.Icon.Text = NoteConfig.Series_Table_Watch_Icon;
+                    WatchButton.Icon.Text = PrivateNoteConfig.Series_Table_Watch_Icon;
 
                     WatchButton.Label.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Font_Regular ), TypefaceStyle.Normal );
                     WatchButton.Label.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
@@ -304,9 +305,9 @@ namespace Droid
                     TakeNotesButton.Layout.SetBackgroundColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
 
                     TakeNotesButton.Icon.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary ), TypefaceStyle.Normal );
-                    TakeNotesButton.Icon.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Series_Table_IconSize );
+                    TakeNotesButton.Icon.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateNoteConfig.Series_Table_IconSize );
                     TakeNotesButton.Icon.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
-                    TakeNotesButton.Icon.Text = NoteConfig.Series_Table_TakeNotes_Icon;
+                    TakeNotesButton.Icon.Text = PrivateNoteConfig.Series_Table_TakeNotes_Icon;
 
                     TakeNotesButton.Label.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Font_Regular ), TypefaceStyle.Normal );
                     TakeNotesButton.Label.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
@@ -392,7 +393,7 @@ namespace Droid
                     AddView( contentLayout );
 
                     Thumbnail = new Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
-                    Thumbnail.LayoutParameters = new LinearLayout.LayoutParams( (int)Rock.Mobile.Graphics.Util.UnitToPx( NoteConfig.Series_Main_CellWidth ), (int)Rock.Mobile.Graphics.Util.UnitToPx( NoteConfig.Series_Main_CellHeight ) );
+                    Thumbnail.LayoutParameters = new LinearLayout.LayoutParams( (int)Rock.Mobile.Graphics.Util.UnitToPx( PrivateNoteConfig.Series_Main_CellWidth ), (int)Rock.Mobile.Graphics.Util.UnitToPx( PrivateNoteConfig.Series_Main_CellHeight ) );
                     ( (LinearLayout.LayoutParams)Thumbnail.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
                     Thumbnail.SetScaleType( ImageView.ScaleType.CenterCrop );
                     contentLayout.AddView( Thumbnail );
@@ -433,9 +434,9 @@ namespace Droid
                     ( (LinearLayout.LayoutParams)Chevron.LayoutParameters ).Gravity = GravityFlags.CenterVertical | GravityFlags.Right;
                     Typeface fontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
                     Chevron.SetTypeface(  fontFace, TypefaceStyle.Normal );
-                    Chevron.SetTextSize( Android.Util.ComplexUnitType.Dip, NoteConfig.Series_Table_IconSize );
+                    Chevron.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateNoteConfig.Series_Table_IconSize );
                     Chevron.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
-                    Chevron.Text = NoteConfig.Series_Table_Navigate_Icon;
+                    Chevron.Text = PrivateNoteConfig.Series_Table_Navigate_Icon;
                     contentLayout.AddView( Chevron );
 
                     // add our own custom seperator at the bottom
@@ -502,11 +503,11 @@ namespace Droid
                         return null;
                     }
 
-                    System.IO.Stream thumbnailStream = Activity.BaseContext.Assets.Open( GeneralConfig.NotesThumbPlaceholder );
+                    System.IO.Stream thumbnailStream = Activity.BaseContext.Assets.Open( PrivateNoteConfig.NotesThumbPlaceholder );
                     ImageThumbPlaceholder = BitmapFactory.DecodeStream( thumbnailStream );
                     thumbnailStream.Dispose( );
 
-                    System.IO.Stream mainImageStream = Activity.BaseContext.Assets.Open( GeneralConfig.NotesMainPlaceholder );
+                    System.IO.Stream mainImageStream = Activity.BaseContext.Assets.Open( PrivateNoteConfig.NotesMainPlaceholder );
                     ImageMainPlaceholder = BitmapFactory.DecodeStream( mainImageStream );
                     mainImageStream.Dispose( );
 

@@ -7,6 +7,7 @@ using CCVApp.Shared.Config;
 using CCVApp.Shared.Strings;
 using System.Drawing;
 using Rock.Mobile.Animation;
+using CCVApp.Shared.PrivateConfig;
 
 namespace CCVApp
 {
@@ -235,16 +236,16 @@ namespace CCVApp
                     Anchor.Bounds = new RectangleF( 0, 0, area, area );
 
                     // Setup the anchor color
-                    NoteIcon.Text = NoteConfig.UserNote_Icon;
+                    NoteIcon.Text = PrivateNoteConfig.UserNote_Icon;
                     NoteIcon.TextColor = NoteConfig.UserNote_IconColor;
 
                     // get the small and large sizes for the note icon, so we can animate correctly
-                    NoteIcon.SetFont( ControlStylingConfig.Icon_Font_Secondary, NoteConfig.UserNote_IconOpenSize );
+                    NoteIcon.SetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.UserNote_IconOpenSize );
                     NoteIcon.Bounds = new RectangleF( 0, 0, area, 0 );
                     NoteIcon.SizeToFit();
                     NoteIconOpenSize = NoteIcon.Bounds.Size;
 
-                    NoteIcon.SetFont( ControlStylingConfig.Icon_Font_Secondary, NoteConfig.UserNote_IconClosedSize );
+                    NoteIcon.SetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.UserNote_IconClosedSize );
                     NoteIcon.Bounds = new RectangleF( 0, 0, area, 0 );
                     NoteIcon.SizeToFit( );
                     NoteIconClosedSize = NoteIcon.Bounds.Size;
@@ -277,15 +278,15 @@ namespace CCVApp
                     UtilityLayer.Bounds = new RectangleF( 0, 0, MinNoteWidth, 0 );
 
                     // setup the delete button
-                    DeleteButton.Text = NoteConfig.UserNote_DeleteIcon;
+                    DeleteButton.Text = PrivateNoteConfig.UserNote_DeleteIcon;
                     DeleteButton.TextColor = NoteConfig.UserNote_IconColor;
-                    DeleteButton.SetFont( ControlStylingConfig.Icon_Font_Secondary, NoteConfig.UserNote_DeleteIconSize );
+                    DeleteButton.SetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.UserNote_DeleteIconSize );
                     DeleteButton.SizeToFit( );
 
                     // setup the close button
-                    CloseButton.Text = NoteConfig.UserNote_CloseIcon;
+                    CloseButton.Text = PrivateNoteConfig.UserNote_CloseIcon;
                     CloseButton.TextColor = NoteConfig.UserNote_IconColor;
-                    CloseButton.SetFont( ControlStylingConfig.Icon_Font_Secondary, NoteConfig.UserNote_CloseIconSize );
+                    CloseButton.SetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.UserNote_CloseIconSize );
                     CloseButton.SizeToFit( );
 
 
@@ -785,8 +786,8 @@ namespace CCVApp
                         {
                             endSize = NoteIconOpenSize;
 
-                            startTypeSize = NoteConfig.UserNote_IconClosedSize;
-                            endTypeSize = NoteConfig.UserNote_IconOpenSize;
+                            startTypeSize = PrivateNoteConfig.UserNote_IconClosedSize;
+                            endTypeSize = PrivateNoteConfig.UserNote_IconOpenSize;
 
                             sizeAnimTimeScalar = .95f;
                         }
@@ -794,8 +795,8 @@ namespace CCVApp
                         {
                             endSize = NoteIconClosedSize;
 
-                            startTypeSize = NoteConfig.UserNote_IconOpenSize;
-                            endTypeSize = NoteConfig.UserNote_IconClosedSize;
+                            startTypeSize = PrivateNoteConfig.UserNote_IconOpenSize;
+                            endTypeSize = PrivateNoteConfig.UserNote_IconClosedSize;
 
                             sizeAnimTimeScalar = 1.05f;
                         }

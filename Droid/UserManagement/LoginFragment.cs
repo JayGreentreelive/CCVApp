@@ -21,6 +21,7 @@ using Android.Views.InputMethods;
 using Rock.Mobile.PlatformSpecific.Android.UI;
 using Rock.Mobile.Animation;
 using CCVApp.Shared.Analytics;
+using CCVApp.Shared.PrivateConfig;
 
 namespace Droid
 {
@@ -379,7 +380,7 @@ namespace Droid
                 case System.Net.HttpStatusCode.OK:
                 {
                     // if they have a profile picture, grab it.
-                    RockMobileUser.Instance.TryDownloadProfilePicture( GeneralConfig.ProfileImageSize, ProfileImageComplete );
+                    RockMobileUser.Instance.TryDownloadProfilePicture( PrivateGeneralConfig.ProfileImageSize, ProfileImageComplete );
 
                     // hide the activity indicator, because we are now logged in,
                     // but leave the buttons all disabled.

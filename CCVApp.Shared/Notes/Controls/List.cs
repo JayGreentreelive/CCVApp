@@ -5,6 +5,7 @@ using CCVApp.Shared.Notes.Styles;
 using Rock.Mobile.PlatformUI;
 using CCVApp.Shared.Config;
 using System.Drawing;
+using CCVApp.Shared.PrivateConfig;
 
 namespace CCVApp
 {
@@ -86,7 +87,7 @@ namespace CCVApp
                     if( mStyle.mBorderWidth.HasValue )
                     {
                         BorderView.BorderWidth = mStyle.mBorderWidth.Value;
-                        borderPaddingPx = (int)Rock.Mobile.Graphics.Util.UnitToPx( mStyle.mBorderWidth.Value + NoteConfig.BorderPadding );
+                        borderPaddingPx = (int)Rock.Mobile.Graphics.Util.UnitToPx( mStyle.mBorderWidth.Value + PrivateNoteConfig.BorderPadding );
                     }
 
                     if( mStyle.mTextInputBackgroundColor.HasValue )

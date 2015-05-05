@@ -1,6 +1,7 @@
 using System;
 using Facebook;
 using System.Collections.Generic;
+using CCVApp.Shared.PrivateConfig;
 
 namespace CCVApp.Shared
 {
@@ -23,7 +24,7 @@ namespace CCVApp.Shared
             parameters["display"] = "touch";
 
             // add the permissions we want
-            parameters["scope"] = CCVApp.Shared.Config.GeneralConfig.FBAppPermissions;
+            parameters["scope"] = PrivateGeneralConfig.FBAppPermissions;
 
             return parameters;
         }

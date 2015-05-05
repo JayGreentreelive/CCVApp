@@ -9,6 +9,7 @@ using CCVApp.Shared.Config;
 using Rock.Mobile.PlatformUI;
 using CCVApp.Shared;
 using System.IO;
+using CCVApp.Shared.PrivateConfig;
 
 namespace iOS
 {
@@ -357,7 +358,7 @@ namespace iOS
 		{
             News = new List<NewsEntry>( );
 
-            string imagePath = NSBundle.MainBundle.BundlePath + "/" + GeneralConfig.NewsMainPlaceholder;
+            string imagePath = NSBundle.MainBundle.BundlePath + "/" + PrivateGeneralConfig.NewsMainPlaceholder;
             ImagePlaceholder = new UIImage( imagePath );
 		}
 

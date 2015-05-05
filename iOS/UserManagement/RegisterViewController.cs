@@ -16,6 +16,7 @@ using Rock.Mobile.PlatformSpecific.Util;
 using Rock.Mobile.Animation;
 using CCVApp.Shared.UI;
 using CCVApp.Shared.Analytics;
+using CCVApp.Shared.PrivateConfig;
 
 namespace iOS
 {
@@ -385,8 +386,8 @@ namespace iOS
 
                             newPerson.NickName = NickNameText.Field.Text;
                             newPerson.LastName = LastNameText.Field.Text;
-                            newPerson.ConnectionStatusValueId = GeneralConfig.PersonConnectionStatusValueId;
-                            newPerson.RecordStatusValueId = GeneralConfig.PersonRecordStatusValueId;
+                            newPerson.ConnectionStatusValueId = PrivateGeneralConfig.PersonConnectionStatusValueId;
+                            newPerson.RecordStatusValueId = PrivateGeneralConfig.PersonRecordStatusValueId;
 
                             // Update their cell phone. 
                             if ( string.IsNullOrEmpty( CellPhoneText.Field.Text ) == false )

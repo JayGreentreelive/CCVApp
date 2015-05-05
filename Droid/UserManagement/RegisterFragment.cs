@@ -22,6 +22,7 @@ using Rock.Mobile.Util.Strings;
 using Java.Lang.Reflect;
 using CCVApp.Shared.UI;
 using CCVApp.Shared.Analytics;
+using CCVApp.Shared.PrivateConfig;
 
 namespace Droid
 {
@@ -298,8 +299,8 @@ namespace Droid
 
                     newPerson.NickName = NickNameText.Text;
                     newPerson.LastName = LastNameText.Text;
-                    newPerson.ConnectionStatusValueId = GeneralConfig.PersonConnectionStatusValueId;
-                    newPerson.RecordStatusValueId = GeneralConfig.PersonRecordStatusValueId;
+                    newPerson.ConnectionStatusValueId = PrivateGeneralConfig.PersonConnectionStatusValueId;
+                    newPerson.RecordStatusValueId = PrivateGeneralConfig.PersonRecordStatusValueId;
 
                     // Update their cell phone. 
                     if ( string.IsNullOrEmpty( CellPhoneText.Text ) == false )
@@ -309,7 +310,7 @@ namespace Droid
                         newPhoneNumber = new Rock.Client.PhoneNumber();
                         newPhoneNumber.Number = digits;
                         newPhoneNumber.NumberFormatted = digits.AsPhoneNumber( );
-                        newPhoneNumber.NumberTypeValueId = GeneralConfig.CellPhoneValueId;
+                        newPhoneNumber.NumberTypeValueId = PrivateGeneralConfig.CellPhoneValueId;
                     }
 
                     RockApi.Instance.RegisterNewUser( newPerson, newPhoneNumber, UserNameText.Text, PasswordText.Text,

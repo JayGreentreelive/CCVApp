@@ -2,6 +2,7 @@ using System;
 using CCVApp.Shared.Network;
 using Rock.Mobile.Network;
 using CCVApp.Shared.Config;
+using CCVApp.Shared.PrivateConfig;
 
 namespace CCVApp
 {
@@ -57,7 +58,7 @@ namespace CCVApp
                                                         {
                                                             // and hey, why not their profile picture too
                                                             // if they have a profile picture, grab it.
-                                                            RockMobileUser.Instance.TryDownloadProfilePicture( GeneralConfig.ProfileImageSize, delegate 
+                                                            RockMobileUser.Instance.TryDownloadProfilePicture( PrivateGeneralConfig.ProfileImageSize, delegate 
                                                                 {
                                                                     // failure or not, server syncing is finished, so let's go ahead and 
                                                                     // get launch data.

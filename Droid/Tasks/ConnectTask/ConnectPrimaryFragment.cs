@@ -19,6 +19,7 @@ using Rock.Mobile.PlatformUI.DroidNative;
 using Rock.Mobile.PlatformSpecific.Android.Graphics;
 using CCVApp.Shared;
 using Rock.Mobile.PlatformSpecific.Android.UI;
+using CCVApp.Shared.PrivateConfig;
 
 namespace Droid
 {
@@ -144,7 +145,7 @@ namespace Droid
                     AddView( contentLayout );
 
                     Thumbnail = new Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
-                    Thumbnail.LayoutParameters = new LinearLayout.LayoutParams( (int)Rock.Mobile.Graphics.Util.UnitToPx( ConnectConfig.MainPage_ThumbnailDimension ), (int)Rock.Mobile.Graphics.Util.UnitToPx( ConnectConfig.MainPage_ThumbnailDimension ) );
+                    Thumbnail.LayoutParameters = new LinearLayout.LayoutParams( (int)Rock.Mobile.Graphics.Util.UnitToPx( PrivateConnectConfig.MainPage_ThumbnailDimension ), (int)Rock.Mobile.Graphics.Util.UnitToPx( PrivateConnectConfig.MainPage_ThumbnailDimension ) );
                     ( (LinearLayout.LayoutParams)Thumbnail.LayoutParameters ).TopMargin = 25;
                     ( (LinearLayout.LayoutParams)Thumbnail.LayoutParameters ).BottomMargin = 25;
                     ( (LinearLayout.LayoutParams)Thumbnail.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
@@ -178,9 +179,9 @@ namespace Droid
                     ( (LinearLayout.LayoutParams)Chevron.LayoutParameters ).Gravity = GravityFlags.CenterVertical | GravityFlags.Right;
                     Typeface fontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
                     Chevron.SetTypeface(  fontFace, TypefaceStyle.Normal );
-                    Chevron.SetTextSize( Android.Util.ComplexUnitType.Dip, ConnectConfig.MainPage_Table_IconSize );
+                    Chevron.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateConnectConfig.MainPage_Table_IconSize );
                     Chevron.SetTextColor( Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
-                    Chevron.Text = ConnectConfig.MainPage_Table_Navigate_Icon;
+                    Chevron.Text = PrivateConnectConfig.MainPage_Table_Navigate_Icon;
                     contentLayout.AddView( Chevron );
 
                     // add our own custom seperator at the bottom
@@ -225,7 +226,7 @@ namespace Droid
                     // insert group finder into the beginning of the list so it's always the first entry
                     ConnectLink groupFinderLink = new ConnectLink( );
                     groupFinderLink.Title = ConnectStrings.Main_Connect_GroupFinder;
-                    groupFinderLink.ImageName = ConnectConfig.GroupFinder_IconImage;
+                    groupFinderLink.ImageName = PrivateConnectConfig.GroupFinder_IconImage;
                     LinkEntries.Insert( 0, groupFinderLink );
 
                     foreach ( ConnectLink link in LinkEntries )
@@ -237,7 +238,7 @@ namespace Droid
                     }
 
                     // setup the main image billboard
-                    System.IO.Stream assetStream = Activity.BaseContext.Assets.Open( ConnectConfig.MainPageHeaderImage );
+                    System.IO.Stream assetStream = Activity.BaseContext.Assets.Open( PrivateConnectConfig.MainPageHeaderImage );
                     Billboard = BitmapFactory.DecodeStream( assetStream );
                     assetStream.Dispose( );
 

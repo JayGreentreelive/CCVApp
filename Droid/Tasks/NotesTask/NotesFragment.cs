@@ -23,6 +23,7 @@ using CCVApp.Shared.Analytics;
 using CCVApp.Shared.UI;
 using Rock.Mobile.Animation;
 using Android.Graphics;
+using CCVApp.Shared.PrivateConfig;
 
 namespace Droid
 {
@@ -618,7 +619,7 @@ namespace Droid
 
                         // Use the metrics and not ScrollView for dimensions, because depending on when this gets called the ScrollView
                         // may not have its dimensions set yet.
-                        Note.Create( NavbarFragment.GetContainerDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels, ScrollViewLayout, NoteFileName + NoteConfig.UserNoteSuffix, DisplayMessageBox );
+                        Note.Create( NavbarFragment.GetContainerDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels, ScrollViewLayout, NoteFileName + PrivateNoteConfig.UserNoteSuffix, DisplayMessageBox );
 
                         // set the requested background color
                         ScrollView.SetBackgroundColor( ( Android.Graphics.Color )Rock.Mobile.PlatformUI.Util.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value ) );
@@ -643,11 +644,11 @@ namespace Droid
                             System.IO.Stream tutorialStream = null;
                             if( MainActivity.IsLandscapeWide( ) )
                             {
-                                tutorialStream = Activity.BaseContext.Assets.Open( NoteConfig.TutorialOverlayImageIPadLS );
+                                tutorialStream = Activity.BaseContext.Assets.Open( PrivateNoteConfig.TutorialOverlayImageIPadLS );
                             }
                             else
                             {
-                                tutorialStream = Activity.BaseContext.Assets.Open( NoteConfig.TutorialOverlayImage );
+                                tutorialStream = Activity.BaseContext.Assets.Open( PrivateNoteConfig.TutorialOverlayImage );
                             }
 
                             TutorialImage = Android.Graphics.BitmapFactory.DecodeStream( tutorialStream );

@@ -17,6 +17,7 @@ using CoreGraphics;
 using CCVApp.Shared.UI;
 using Rock.Mobile.PlatformSpecific.Util;
 using CCVApp.Shared.Analytics;
+using CCVApp.Shared.PrivateConfig;
 
 namespace iOS
 {
@@ -571,7 +572,7 @@ namespace iOS
                         case System.Net.HttpStatusCode.OK:
                         {
                             // if they have a profile picture, grab it.
-                            RockMobileUser.Instance.TryDownloadProfilePicture( GeneralConfig.ProfileImageSize, ProfileImageComplete );
+                            RockMobileUser.Instance.TryDownloadProfilePicture( PrivateGeneralConfig.ProfileImageSize, ProfileImageComplete );
 
                             // update the UI
                             FadeLoginResult( true );
