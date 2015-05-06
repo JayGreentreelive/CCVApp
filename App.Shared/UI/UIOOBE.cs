@@ -40,7 +40,7 @@ namespace App.Shared.UI
         public void Create( object masterView, string bgLayerImageName, string logoImageName, RectangleF frame, OnButtonClick onClick )
         {
             View = PlatformView.Create( );
-            View.BackgroundColor = 0x5b0f10ff;
+            View.BackgroundColor = ControlStylingConfig.OOBE_Splash_BG_Color;
             View.AddAsSubview( masterView );
 
             ImageBG = PlatformImageView.Create( );

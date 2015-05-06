@@ -311,6 +311,13 @@ namespace App
                 /// </summary>
                 public const uint Switch_OnColor = 0x7E7E7EFF;
 
+                /// <summary>
+                /// The color when transitioning from the android splash screen to the splash / oobe intro.
+                /// You probably want it to be the primary color in your splash screen.
+                /// </summary>
+                public const uint OOBE_Splash_BG_Color = 0x5b0f10FF;
+
+
 
 
                 /// <summary>

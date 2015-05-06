@@ -28,7 +28,7 @@ namespace App.Shared.UI
             View.AddAsSubview( masterView );
 
             ImageBG = PlatformImageView.Create( );
-            ImageBG.BackgroundColor = 0x691214FF;
+            ImageBG.BackgroundColor = ControlStylingConfig.OOBE_Splash_BG_Color;
             ImageBG.AddAsSubview( masterView );
 
             // if a background image was provided, use that.
