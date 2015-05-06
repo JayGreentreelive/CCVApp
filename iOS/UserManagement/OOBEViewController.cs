@@ -61,7 +61,7 @@ namespace iOS
             }
             else if ( nativeWidth == 2048 && nativeHeight == 1536 )
             {
-                imageName = "splash_logo_ipad_landscape_retina.png";
+                imageName = "splash_logo_ipad_landscape_2x.png";
             }
             else if ( nativeWidth == 1024 && nativeHeight == 768 )
             {
@@ -69,7 +69,7 @@ namespace iOS
             }
             else if ( nativeWidth == 1536 && nativeHeight == 2048 )
             {
-                imageName = "splash_logo_ipad_portrait_retina.png";
+                imageName = "splash_logo_ipad_portrait_2x.png";
             }
             else if ( nativeWidth == 768 && nativeHeight == 1024 )
             {

@@ -4,7 +4,7 @@
       "minimum-system-version": "8.0",
       "orientation": "portrait",
       "extent": "full-screen",
-      "filename": "splashiphone6plus.png",
+      "filename": "splash_combo_iphone6p.png",
       "size": "414x736",
       "subtype": "736h",
       "scale": "3x",
@@ -14,7 +14,7 @@
       "minimum-system-version": "8.0",
       "orientation": "portrait",
       "extent": "full-screen",
-      "filename": "splashiphone6.png",
+      "filename": "splash_combo_iphone6.png",
       "size": "375x667",
       "subtype": "667h",
       "scale": "2x",
@@ -33,7 +33,7 @@
       "minimum-system-version": "7.0",
       "orientation": "portrait",
       "extent": "full-screen",
-      "filename": "splash35Retina.png",
+      "filename": "splash_combo_iphone4s.png",
       "size": "320x480",
       "scale": "2x",
       "idiom": "iphone"
@@ -42,7 +42,7 @@
       "minimum-system-version": "7.0",
       "orientation": "portrait",
       "extent": "full-screen",
-      "filename": "splashLarge.png",
+      "filename": "splash_combo_iphone5.png",
       "size": "320x568",
       "subtype": "retina4",
       "scale": "2x",
@@ -52,7 +52,7 @@
       "minimum-system-version": "7.0",
       "orientation": "portrait",
       "extent": "full-screen",
-      "filename": "splash_ipad_portrait.png",
+      "filename": "splash_combo_ipad_portrait.png",
       "size": "768x1024",
       "scale": "1x",
       "idiom": "ipad"
@@ -61,7 +61,7 @@
       "minimum-system-version": "7.0",
       "orientation": "portrait",
       "extent": "full-screen",
-      "filename": "splash_ipad_portrait_2x.png",
+      "filename": "splash_combo_ipad_portrait_2x.png",
       "size": "768x1024",
       "scale": "2x",
       "idiom": "ipad"
@@ -70,7 +70,7 @@
       "minimum-system-version": "7.0",
       "orientation": "landscape",
       "extent": "full-screen",
-      "filename": "splash_ipad_landscape.png",
+      "filename": "splash_combo_ipad_landscape.png",
       "size": "1024x768",
       "scale": "1x",
       "idiom": "ipad"
@@ -79,7 +79,7 @@
       "minimum-system-version": "7.0",
       "orientation": "landscape",
       "extent": "full-screen",
-      "filename": "splash_ipad_landscape_2x.png",
+      "filename": "splash_combo_ipad_landscape_2x.png",
       "size": "1024x768",
       "scale": "2x",
       "idiom": "ipad"
@@ -87,7 +87,7 @@
     {
       "orientation": "portrait",
       "extent": "full-screen",
-      "filename": "splash35.png",
+      "filename": "splash_combo_iphone4.png",
       "size": "320x480",
       "scale": "1x",
       "idiom": "iphone"
@@ -95,7 +95,7 @@
     {
       "orientation": "portrait",
       "extent": "full-screen",
-      "filename": "splash35Retina.png",
+      "filename": "splash_combo_iphone4s.png",
       "size": "320x480",
       "scale": "2x",
       "idiom": "iphone"
@@ -103,7 +103,7 @@
     {
       "orientation": "portrait",
       "extent": "full-screen",
-      "filename": "splashLarge.png",
+      "filename": "splash_combo_iphone5.png",
       "size": "320x568",
       "subtype": "retina4",
       "scale": "2x",

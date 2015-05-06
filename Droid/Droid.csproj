@@ -155,12 +155,12 @@
     <AndroidResource Include="Resources\layout\JoinGroup.axml" />
     <AndroidResource Include="Resources\layout\OOBEView.axml" />
     <AndroidResource Include="Resources\layout\TaskWebView.axml" />
-    <AndroidResource Include="..\Assets\splash_android.png">
-      <Link>Resources\drawable-hdpi\splash.png</Link>
-    </AndroidResource>
     <AndroidResource Include="Resources\drawable\RoundButton.axml" />
     <AndroidResource Include="..\Assets\navbarLogo%402x.png">
       <Link>Resources\drawable-hdpi\navbarLogo.png</Link>
+    </AndroidResource>
+    <AndroidResource Include="..\Assets\splash_combo_android.png">
+      <Link>Resources\drawable-hdpi\splash_combo_android.png</Link>
     </AndroidResource>
   </ItemGroup>
   <Import Project="..\..\Rock.Mobile\Rock.Mobile.projitems" Label="Shared" Condition="Exists('..\..\Rock.Mobile\Rock.Mobile.projitems')" />

@@ -315,30 +315,6 @@
     <BundleResource Include="..\Assets\note_tutorial_portrait%403x.png">
       <Link>Resources\note_tutorial_portrait%403x.png</Link>
     </BundleResource>
-    <BundleResource Include="..\Assets\splash_ipad_landscape_retina.png">
-      <Link>Resources\splash_ipad_landscape_retina.png</Link>
-    </BundleResource>
-    <BundleResource Include="..\Assets\splash_ipad_landscape.png">
-      <Link>Resources\splash_ipad_landscape.png</Link>
-    </BundleResource>
-    <BundleResource Include="..\Assets\splash_ipad_portrait_retina.png">
-      <Link>Resources\splash_ipad_portrait_retina.png</Link>
-    </BundleResource>
-    <BundleResource Include="..\Assets\splash_ipad_portrait.png">
-      <Link>Resources\splash_ipad_portrait.png</Link>
-    </BundleResource>
-    <BundleResource Include="..\Assets\splash_iphone4s.png">
-      <Link>Resources\splash_iphone4s.png</Link>
-    </BundleResource>
-    <BundleResource Include="..\Assets\splash_iphone5.png">
-      <Link>Resources\splash_iphone5.png</Link>
-    </BundleResource>
-    <BundleResource Include="..\Assets\splash_iphone6.png">
-      <Link>Resources\splash_iphone6.png</Link>
-    </BundleResource>
-    <BundleResource Include="..\Assets\splash_iphone6p.png">
-      <Link>Resources\splash_iphone6p.png</Link>
-    </BundleResource>
     <BundleResource Include="..\Assets\serve_thumb.png">
       <Link>Resources\serve_thumb.png</Link>
     </BundleResource>
@@ -399,14 +375,8 @@
     <BundleResource Include="..\Assets\default_news_c_main%403x.png">
       <Link>Resources\default_news_c_main%403x.png</Link>
     </BundleResource>
-    <BundleResource Include="..\Assets\splash_logo_ipad_landscape_retina.png">
-      <Link>Resources\splash_logo_ipad_landscape_retina.png</Link>
-    </BundleResource>
     <BundleResource Include="..\Assets\splash_logo_ipad_landscape.png">
       <Link>Resources\splash_logo_ipad_landscape.png</Link>
-    </BundleResource>
-    <BundleResource Include="..\Assets\splash_logo_ipad_portrait_retina.png">
-      <Link>Resources\splash_logo_ipad_portrait_retina.png</Link>
     </BundleResource>
     <BundleResource Include="..\Assets\splash_logo_ipad_portrait.png">
       <Link>Resources\splash_logo_ipad_portrait.png</Link>
@@ -428,6 +398,36 @@
     </BundleResource>
     <BundleResource Include="..\Assets\navbarLogo%402x.png">
       <Link>Resources\navbarLogo%402x.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\splash_bg_ipad_landscape_2x.png">
+      <Link>Resources\splash_bg_ipad_landscape_2x.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\splash_bg_ipad_landscape.png">
+      <Link>Resources\splash_bg_ipad_landscape.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\splash_bg_ipad_portrait_2x.png">
+      <Link>Resources\splash_bg_ipad_portrait_2x.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\splash_bg_ipad_portrait.png">
+      <Link>Resources\splash_bg_ipad_portrait.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\splash_bg_iphone4s.png">
+      <Link>Resources\splash_bg_iphone4s.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\splash_bg_iphone5.png">
+      <Link>Resources\splash_bg_iphone5.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\splash_bg_iphone6.png">
+      <Link>Resources\splash_bg_iphone6.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\splash_bg_iphone6p.png">
+      <Link>Resources\splash_bg_iphone6p.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\splash_logo_ipad_landscape_2x.png">
+      <Link>Resources\splash_logo_ipad_landscape_2x.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\splash_logo_ipad_portrait_2x.png">
+      <Link>Resources\splash_logo_ipad_portrait_2x.png</Link>
     </BundleResource>
   </ItemGroup>
   <ItemGroup>
@@ -547,16 +547,7 @@
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\Contents.json" />
-    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splashLarge.png" />
-    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splash35Retina.png" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Contents.json" />
-    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splashiphone6plus.png" />
-    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splashiphone6.png" />
-    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splash35.png" />
-    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splash_ipad_portrait.png" />
-    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splash_ipad_portrait_2x.png" />
-    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splash_ipad_landscape.png" />
-    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splash_ipad_landscape_2x.png" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-Small.png" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-Small%402x.png" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-Small%403x.png" />
@@ -573,5 +564,14 @@
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-Small-50%402x.png" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-72.png" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-72%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splash_combo_iphone6p.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splash_combo_iphone6.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splash_combo_iphone4s.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splash_combo_iphone5.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splash_combo_ipad_portrait.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splash_combo_ipad_portrait_2x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splash_combo_ipad_landscape.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splash_combo_ipad_landscape_2x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\splash_combo_iphone4.png" />
   </ItemGroup>
 </Project>

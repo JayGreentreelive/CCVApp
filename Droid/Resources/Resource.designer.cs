@@ -1475,7 +1475,7 @@ namespace Droid
 			public const int shadow = 2130837611;
 			
 			// aapt resource value: 0x7f02006c
-			public const int splash = 2130837612;
+			public const int splash_combo_android = 2130837612;
 			
 			static Drawable()
 			{
