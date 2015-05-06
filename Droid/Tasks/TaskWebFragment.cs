@@ -17,6 +17,7 @@ using App.Shared.Config;
 using App.Shared.Strings;
 using Rock.Mobile.PlatformSpecific.Android.UI;
 using App.Shared.UI;
+using App.Shared.PrivateConfig;
 
 namespace Droid
 {
@@ -98,7 +99,7 @@ namespace Droid
                 {
                     if ( result == false )
                     {
-                        ResultView.Show( GeneralStrings.Network_Status_FailedText, ControlStylingConfig.Result_Symbol_Failed, GeneralStrings.Network_Result_FailedText, GeneralStrings.Retry );
+                        ResultView.Show( GeneralStrings.Network_Status_FailedText, PrivateControlStylingConfig.Result_Symbol_Failed, GeneralStrings.Network_Result_FailedText, GeneralStrings.Retry );
                     }
                 }
             }

@@ -21,6 +21,7 @@ namespace Droid
 
             button.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( font ), TypefaceStyle.Normal );
             button.SetTextSize( Android.Util.ComplexUnitType.Dip, size );
+            button.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Button_TextColor ) );
         }
 
         public static void StyleUILabel( TextView label, string font, uint size )

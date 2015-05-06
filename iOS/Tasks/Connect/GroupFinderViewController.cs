@@ -73,7 +73,7 @@ namespace iOS
 
                     JoinButton = UIButton.FromType( UIButtonType.Custom );
                     JoinButton.TouchUpInside += (object sender, EventArgs e) => { TableSource.RowButtonClicked( RowIndex ); };
-                    JoinButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateConnectConfig.GroupFinder_Join_IconSize );
+                    JoinButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( PrivateControlStylingConfig.Icon_Font_Secondary, PrivateConnectConfig.GroupFinder_Join_IconSize );
                     JoinButton.SetTitle( PrivateConnectConfig.GroupFinder_JoinIcon, UIControlState.Normal );
                     JoinButton.SetTitleColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
                     JoinButton.Layer.AnchorPoint = CGPoint.Empty;
@@ -283,6 +283,7 @@ namespace iOS
 
         public MKMapView MapView { get; set; }
 
+        public UIView SearchResultsBGLayer { get; set; }
         public UILabel SearchResultsPrefix { get; set; }
         public UILabel SearchResultsNeighborhood { get; set; }
         public UIView Seperator { get; set; }
@@ -384,7 +385,7 @@ namespace iOS
         {
             base.ViewDidLoad();
 
-            View.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( App.Shared.Config.ControlStylingConfig.BG_Layer_Color );
+            View.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( App.Shared.Config.ControlStylingConfig.BackgroundColor );
 
             // setup everything except positioning, which will happen in LayoutChanged()
             SourceLocation = null;
@@ -415,6 +416,10 @@ namespace iOS
             MapView.Layer.AnchorPoint = new CGPoint( 0, 0 );
             MapView.Delegate = new MapViewDelegate() { Parent = this };
 
+            SearchResultsBGLayer = new UIView();
+            View.AddSubview( SearchResultsBGLayer );
+            SearchResultsBGLayer.Layer.AnchorPoint = new CGPoint( 0, 0 );
+            SearchResultsBGLayer.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color );
 
             SearchResultsPrefix = new UILabel( );
             View.AddSubview( SearchResultsPrefix );
@@ -446,7 +451,8 @@ namespace iOS
             GroupTableSource = new GroupFinderViewController.TableSource( this );
 
             // add the table view and source
-            GroupFinderTableView.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( App.Shared.Config.ControlStylingConfig.Table_Footer_Color );
+            GroupFinderTableView.BackgroundColor = UIColor.Clear;//Rock.Mobile.UI.Util.GetUIColor( App.Shared.Config.ControlStylingConfig.Table_Footer_Color );
+            //GroupFinderTableView.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( App.Shared.Config.ControlStylingConfig.BG_Layer_Color );
             GroupFinderTableView.Source = GroupTableSource;
             GroupFinderTableView.SeparatorStyle = UITableViewCellSeparatorStyle.None;
 
@@ -586,6 +592,7 @@ namespace iOS
             nfloat resultTotalWidth = SearchResultsPrefix.Bounds.Width + SearchResultsNeighborhood.Bounds.Width;
             nfloat xStartPos = ( View.Bounds.Width - resultTotalWidth ) / 2;
 
+            SearchResultsBGLayer.Frame = new CGRect( 0, SearchAddressButton.Frame.Bottom, View.Frame.Width, SearchResultsPrefix.Frame.Height );
             SearchResultsPrefix.Frame = new CGRect( xStartPos, SearchAddressButton.Frame.Bottom, SearchResultsPrefix.Frame.Width, SearchResultsPrefix.Frame.Height );
             SearchResultsNeighborhood.Frame = new CGRect( SearchResultsPrefix.Frame.Right, SearchAddressButton.Frame.Bottom, SearchResultsNeighborhood.Frame.Width, SearchResultsNeighborhood.Frame.Height );
         }

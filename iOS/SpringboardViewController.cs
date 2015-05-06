@@ -80,7 +80,7 @@ namespace iOS
                 // Create the logo view containing the image.
                 LogoView = new UILabel();
                 LogoView.Text = imageChar;
-                LogoView.Font = FontManager.GetFont( ControlStylingConfig.Icon_Font_Primary, PrivateSpringboardConfig.Element_FontSize );
+                LogoView.Font = FontManager.GetFont( PrivateControlStylingConfig.Icon_Font_Primary, PrivateSpringboardConfig.Element_FontSize );
                 LogoView.SizeToFit( );
                 LogoView.BackgroundColor = UIColor.Clear;
                 BackingView.AddSubview( LogoView );
@@ -123,15 +123,15 @@ namespace iOS
 
             public void Activate( )
             {
-                LogoView.TextColor = Rock.Mobile.UI.Util.GetUIColor( SpringboardConfig.ActiveElementTextColor );
-                TextLabel.TextColor = Rock.Mobile.UI.Util.GetUIColor( SpringboardConfig.ActiveElementTextColor );
-                BackingView.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( SpringboardConfig.Element_SelectedColor );
+                LogoView.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Springboard_ActiveElementTextColor );
+                TextLabel.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Springboard_ActiveElementTextColor );
+                BackingView.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Springboard_Element_SelectedColor );
             }
 
             public void Deactivate( )
             {
-                LogoView.TextColor = Rock.Mobile.UI.Util.GetUIColor( SpringboardConfig.InActiveElementTextColor );
-                TextLabel.TextColor = Rock.Mobile.UI.Util.GetUIColor( SpringboardConfig.InActiveElementTextColor );
+                LogoView.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Springboard_InActiveElementTextColor );
+                TextLabel.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Springboard_InActiveElementTextColor );
                 BackingView.BackgroundColor = UIColor.Clear;
             }
         };
@@ -473,10 +473,12 @@ namespace iOS
             // setup the campus selector and settings button
             CampusSelectionText = new UILabel();
             ControlStyling.StyleUILabel( CampusSelectionText, ControlStylingConfig.Font_Regular, ControlStylingConfig.Small_FontSize );
+            CampusSelectionText.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Springboard_InActiveElementTextColor );
             ScrollView.AddSubview( CampusSelectionText );
 
             CampusSelectionIcon = new UILabel();
-            ControlStyling.StyleUILabel( CampusSelectionIcon, ControlStylingConfig.Icon_Font_Primary, ControlStylingConfig.Small_FontSize );
+            ControlStyling.StyleUILabel( CampusSelectionIcon, PrivateControlStylingConfig.Icon_Font_Primary, ControlStylingConfig.Small_FontSize );
+            CampusSelectionIcon.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Springboard_InActiveElementTextColor );
             CampusSelectionIcon.Text = PrivateSpringboardConfig.CampusSelectSymbol;
             CampusSelectionIcon.SizeToFit( );
             ScrollView.AddSubview( CampusSelectionIcon );
@@ -526,19 +528,19 @@ namespace iOS
             ProfileImageView.Layer.Position = CGPoint.Empty;
             EditPictureButton.AddSubview( ProfileImageView );
 
-            EditPictureButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Primary, PrivateSpringboardConfig.ProfileSymbolFontSize );
-            EditPictureButton.SetTitleColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
-            EditPictureButton.Layer.BorderColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ).CGColor;
+            EditPictureButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( PrivateControlStylingConfig.Icon_Font_Primary, PrivateSpringboardConfig.ProfileSymbolFontSize );
+            EditPictureButton.SetTitleColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Springboard_InActiveElementTextColor ), UIControlState.Normal );
+            EditPictureButton.Layer.BorderColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Springboard_InActiveElementTextColor ).CGColor;
             EditPictureButton.Layer.CornerRadius = EditPictureButton.Bounds.Width / 2;
             EditPictureButton.Layer.BorderWidth = 4;
 
             WelcomeField.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Light, ControlStylingConfig.Large_FontSize );
-            WelcomeField.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
+            WelcomeField.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Springboard_InActiveElementTextColor );
 
             UserNameField.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Bold, ControlStylingConfig.Large_FontSize );
-            UserNameField.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
+            UserNameField.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Springboard_InActiveElementTextColor );
 
-            View.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( SpringboardConfig.BackgroundColor );
+            View.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Springboard_BackgroundColor );
 
             AddChildViewController( NavViewController );
             View.AddSubview( NavViewController.View );
@@ -597,13 +599,13 @@ namespace iOS
             // setup the Notification Banner for Taking Notes
             Billboard = new NotificationBillboard( View.Bounds.Width, View.Bounds.Height );
             Billboard.SetLabel( SpringboardStrings.TakeNotesNotificationIcon, 
-                                ControlStylingConfig.Icon_Font_Primary,
+                                PrivateControlStylingConfig.Icon_Font_Primary,
                                 ControlStylingConfig.Small_FontSize,
                                 SpringboardStrings.TakeNotesNotificationLabel, 
                                 ControlStylingConfig.Font_Light,
                                 ControlStylingConfig.Small_FontSize,
                                 ControlStylingConfig.TextField_ActiveTextColor, 
-                                SpringboardConfig.Element_SelectedColor, 
+                                ControlStylingConfig.Springboard_Element_SelectedColor, 
                 delegate 
                 {
                     // find the Notes task, activate it, and tell it to jump to the read page.
@@ -1104,7 +1106,7 @@ namespace iOS
             ViewProfileLabel.Layer.AnchorPoint = CGPoint.Empty;
             ViewProfileLabel.Font = FontManager.GetFont( ControlStylingConfig.Font_Light, ControlStylingConfig.Small_FontSize );
             ViewProfileLabel.SizeToFit( );
-            ViewProfileLabel.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Label_TextColor );
+            ViewProfileLabel.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Springboard_InActiveElementTextColor );
             ViewProfileLabel.Layer.Position = new CGPoint( EditPictureButton.Layer.Position.X + ((EditPictureButton.Bounds.Width - ViewProfileLabel.Bounds.Width) / 2), WelcomeField.Frame.Bottom );
 
             float totalHeight = (float) (totalNameHeight + ViewProfileLabel.Bounds.Height);

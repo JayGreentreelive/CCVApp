@@ -240,12 +240,12 @@ namespace App
                     NoteIcon.TextColor = NoteConfig.UserNote_IconColor;
 
                     // get the small and large sizes for the note icon, so we can animate correctly
-                    NoteIcon.SetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.UserNote_IconOpenSize );
+                    NoteIcon.SetFont( PrivateControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.UserNote_IconOpenSize );
                     NoteIcon.Bounds = new RectangleF( 0, 0, area, 0 );
                     NoteIcon.SizeToFit();
                     NoteIconOpenSize = NoteIcon.Bounds.Size;
 
-                    NoteIcon.SetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.UserNote_IconClosedSize );
+                    NoteIcon.SetFont( PrivateControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.UserNote_IconClosedSize );
                     NoteIcon.Bounds = new RectangleF( 0, 0, area, 0 );
                     NoteIcon.SizeToFit( );
                     NoteIconClosedSize = NoteIcon.Bounds.Size;
@@ -280,13 +280,13 @@ namespace App
                     // setup the delete button
                     DeleteButton.Text = PrivateNoteConfig.UserNote_DeleteIcon;
                     DeleteButton.TextColor = NoteConfig.UserNote_IconColor;
-                    DeleteButton.SetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.UserNote_DeleteIconSize );
+                    DeleteButton.SetFont( PrivateControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.UserNote_DeleteIconSize );
                     DeleteButton.SizeToFit( );
 
                     // setup the close button
                     CloseButton.Text = PrivateNoteConfig.UserNote_CloseIcon;
                     CloseButton.TextColor = NoteConfig.UserNote_IconColor;
-                    CloseButton.SetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.UserNote_CloseIconSize );
+                    CloseButton.SetFont( PrivateControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.UserNote_CloseIconSize );
                     CloseButton.SizeToFit( );
 
 
@@ -823,7 +823,7 @@ namespace App
                         SimpleAnimator_Float floatAnimator = new SimpleAnimator_Float( startTypeSize, endTypeSize, animTime * sizeAnimTimeScalar, 
                                                                  delegate(float percent, object value )
                             {
-                                NoteIcon.SetFont( ControlStylingConfig.Icon_Font_Secondary, (float)value );
+                                NoteIcon.SetFont( PrivateControlStylingConfig.Icon_Font_Secondary, (float)value );
                             }, delegate { Animating = false; } );
                         floatAnimator.Start( );
                     }

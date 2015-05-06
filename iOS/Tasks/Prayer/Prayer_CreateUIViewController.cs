@@ -190,6 +190,7 @@ namespace iOS
             // Setup the anonymous switch
             PostAnonymouslyLabel.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             PostAnonymouslyLabel.Text = PrayerStrings.CreatePrayer_PostAnonymously;
+            PostAnonymouslyLabel.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
             UISwitchAnonymous.OnTintColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Switch_OnColor );
             UISwitchAnonymous.TouchUpInside += (object sender, EventArgs e ) =>
                 {
@@ -214,6 +215,7 @@ namespace iOS
             // setup the public switch
             MakePublicLabel.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );
             MakePublicLabel.Text = PrayerStrings.CreatePrayer_MakePublic;
+            MakePublicLabel.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
             UIPublicSwitch.OnTintColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Switch_OnColor );
 
 

@@ -104,7 +104,7 @@ namespace iOS
 
                     Chevron = new UILabel( );
                     AddSubview( Chevron );
-                    Chevron.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateConnectConfig.MainPage_Table_IconSize );
+                    Chevron.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( PrivateControlStylingConfig.Icon_Font_Secondary, PrivateConnectConfig.MainPage_Table_IconSize );
                     Chevron.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
                     Chevron.Text = PrivateConnectConfig.MainPage_Table_Navigate_Icon;
                     Chevron.SizeToFit( );

@@ -115,7 +115,7 @@ namespace iOS
             UIGraphics.BeginImageContext( new CGSize( 1, 1 ) );
             CGContext context = UIGraphics.GetCurrentContext( );
 
-            context.SetFillColor( Rock.Mobile.UI.Util.GetUIColor( PrimaryNavBarConfig.BackgroundColor ).CGColor );
+            context.SetFillColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TopNavToolbar_BackgroundColor ).CGColor );
             context.FillRect( new CGRect( 0, 0, 1, 1 ) );
 
             solidColor = UIGraphics.GetImageFromCurrentImageContext( );

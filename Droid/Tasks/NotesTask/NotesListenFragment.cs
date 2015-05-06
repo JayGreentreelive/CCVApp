@@ -18,6 +18,7 @@ using App.Shared;
 using App.Shared.Analytics;
 using App.Shared.UI;
 using App.Shared.Config;
+using App.Shared.PrivateConfig;
 
 namespace Droid
 {
@@ -394,7 +395,7 @@ namespace Droid
                     ProgressBar.Visibility = ViewStates.Gone;
 
                     ResultView.Show( MessagesStrings.Error_Title, 
-                        ControlStylingConfig.Result_Symbol_Failed, 
+                        PrivateControlStylingConfig.Result_Symbol_Failed, 
                         MessagesStrings.Error_Watch_Playback,
                         GeneralStrings.Retry );
                     

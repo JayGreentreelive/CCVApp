@@ -279,7 +279,7 @@ namespace Droid
                     buttonLayout.Orientation = Orientation.Horizontal;
                     contentLayout.AddView( buttonLayout );
 
-                    Typeface buttonFontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
+                    Typeface buttonFontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( PrivateControlStylingConfig.Icon_Font_Secondary );
 
                     ListenButton = new Button( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     ListenButton.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );

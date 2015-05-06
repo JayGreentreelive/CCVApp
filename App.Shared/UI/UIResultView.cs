@@ -2,6 +2,7 @@
 using Rock.Mobile.UI;
 using System.Drawing;
 using App.Shared.Config;
+using App.Shared.PrivateConfig;
 
 namespace App.Shared.UI
 {
@@ -102,7 +103,7 @@ namespace App.Shared.UI
             StatusLabel.SetFont( ControlStylingConfig.Font_Bold, 24 );
             StatusLabel.TextColor = ControlStylingConfig.TextField_ActiveTextColor;
 
-            ResultSymbol.SetFont( ControlStylingConfig.Icon_Font_Secondary, 64 );
+            ResultSymbol.SetFont( PrivateControlStylingConfig.Icon_Font_Secondary, 64 );
             ResultSymbol.TextColor = ControlStylingConfig.TextField_PlaceholderTextColor;
 
             ResultCircle.BackgroundColor = ControlStylingConfig.BG_Layer_Color;

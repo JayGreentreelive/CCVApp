@@ -90,7 +90,7 @@ namespace iOS
             NSString buttonLabel = new NSString(PrivatePrimaryNavBarConfig.RevealButton_Text);
 
             SpringboardRevealButton = new UIButton(UIButtonType.System);
-            SpringboardRevealButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, PrivatePrimaryNavBarConfig.RevealButton_Size );
+            SpringboardRevealButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( PrivateControlStylingConfig.Icon_Font_Secondary, PrivatePrimaryNavBarConfig.RevealButton_Size );
             SpringboardRevealButton.SetTitle( buttonLabel.ToString( ), UIControlState.Normal );
 
             // determine its dimensions

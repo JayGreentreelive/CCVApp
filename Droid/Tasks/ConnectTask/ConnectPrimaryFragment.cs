@@ -177,7 +177,7 @@ namespace Droid
                     Chevron = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     Chevron.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                     ( (LinearLayout.LayoutParams)Chevron.LayoutParameters ).Gravity = GravityFlags.CenterVertical | GravityFlags.Right;
-                    Typeface fontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
+                    Typeface fontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( PrivateControlStylingConfig.Icon_Font_Secondary );
                     Chevron.SetTypeface(  fontFace, TypefaceStyle.Normal );
                     Chevron.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateConnectConfig.MainPage_Table_IconSize );
                     Chevron.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );

@@ -276,7 +276,7 @@ namespace Droid
                     WatchButton.Layout.SetBorderColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
                     WatchButton.Layout.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
 
-                    WatchButton.Icon.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary ), TypefaceStyle.Normal );
+                    WatchButton.Icon.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( PrivateControlStylingConfig.Icon_Font_Secondary ), TypefaceStyle.Normal );
                     WatchButton.Icon.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateNoteConfig.Series_Table_IconSize );
                     WatchButton.Icon.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                     WatchButton.Icon.Text = PrivateNoteConfig.Series_Table_Watch_Icon;
@@ -305,7 +305,7 @@ namespace Droid
                     TakeNotesButton.Layout.SetBorderColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor ) );
                     TakeNotesButton.Layout.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
 
-                    TakeNotesButton.Icon.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary ), TypefaceStyle.Normal );
+                    TakeNotesButton.Icon.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( PrivateControlStylingConfig.Icon_Font_Secondary ), TypefaceStyle.Normal );
                     TakeNotesButton.Icon.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateNoteConfig.Series_Table_IconSize );
                     TakeNotesButton.Icon.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
                     TakeNotesButton.Icon.Text = PrivateNoteConfig.Series_Table_TakeNotes_Icon;
@@ -433,7 +433,7 @@ namespace Droid
                     Chevron = new TextView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     Chevron.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
                     ( (LinearLayout.LayoutParams)Chevron.LayoutParameters ).Gravity = GravityFlags.CenterVertical | GravityFlags.Right;
-                    Typeface fontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
+                    Typeface fontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( PrivateControlStylingConfig.Icon_Font_Secondary );
                     Chevron.SetTypeface(  fontFace, TypefaceStyle.Normal );
                     Chevron.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateNoteConfig.Series_Table_IconSize );
                     Chevron.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
@@ -640,7 +640,7 @@ namespace Droid
                                 {
                                     // error
                                     ResultView.Show( MessagesStrings.Series_Error_Title, 
-                                        ControlStylingConfig.Result_Symbol_Failed, 
+                                        PrivateControlStylingConfig.Result_Symbol_Failed, 
                                         MessagesStrings.Series_Error_Message, 
                                         GeneralStrings.Retry );
                                 }

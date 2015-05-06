@@ -325,7 +325,7 @@ namespace Droid
                                 
                                 State = RegisterState.Success;
                                 ResultView.Show( RegisterStrings.RegisterStatus_Success, 
-                                    ControlStylingConfig.Result_Symbol_Success, 
+                                    PrivateControlStylingConfig.Result_Symbol_Success, 
                                     RegisterStrings.RegisterResult_Success,
                                     GeneralStrings.Done );
                             }
@@ -333,7 +333,7 @@ namespace Droid
                             {
                                 State = RegisterState.Fail;
                                 ResultView.Show( RegisterStrings.RegisterStatus_Failed, 
-                                    ControlStylingConfig.Result_Symbol_Failed, 
+                                    PrivateControlStylingConfig.Result_Symbol_Failed, 
                                     statusDescription == RegisterStrings.RegisterResult_BadLogin ? RegisterStrings.RegisterResult_LoginUsed : RegisterStrings.RegisterResult_Failed,
                                     GeneralStrings.Done );
                             }

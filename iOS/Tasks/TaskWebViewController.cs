@@ -7,6 +7,7 @@ using App.Shared.UI;
 using App.Shared.Strings;
 using App.Shared.Config;
 using Rock.Mobile.PlatformSpecific.Util;
+using App.Shared.PrivateConfig;
 
 namespace iOS
 {
@@ -189,7 +190,7 @@ namespace iOS
             // if it fails, display the result view
             WebView.LoadError += (object sender, UIWebErrorArgs e ) =>
             {
-                ResultView.Show( GeneralStrings.Network_Status_FailedText, ControlStylingConfig.Result_Symbol_Failed, GeneralStrings.Network_Result_FailedText, GeneralStrings.Retry );
+                ResultView.Show( GeneralStrings.Network_Status_FailedText, PrivateControlStylingConfig.Result_Symbol_Failed, GeneralStrings.Network_Result_FailedText, GeneralStrings.Retry );
                 ActivityIndicator.Hidden = true;
             };
 

@@ -11,6 +11,7 @@ using App.Shared.Analytics;
 using App.Shared.UI;
 using Rock.Mobile.PlatformSpecific.Util;
 using App.Shared.Config;
+using App.Shared.PrivateConfig;
 
 namespace iOS
 {
@@ -343,7 +344,7 @@ namespace iOS
             DidDisplayError = true;
 
             ResultView.Show( MessagesStrings.Error_Title, 
-                ControlStylingConfig.Result_Symbol_Failed, 
+                PrivateControlStylingConfig.Result_Symbol_Failed, 
                 MessagesStrings.Error_Watch_Playback,
                 GeneralStrings.Retry );
 

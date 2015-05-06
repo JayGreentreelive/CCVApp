@@ -9,6 +9,7 @@ using App.Shared.Config;
 using App.Shared.Analytics;
 using App.Shared.UI;
 using Rock.Mobile.PlatformSpecific.Util;
+using App.Shared.PrivateConfig;
 
 namespace iOS
 {
@@ -124,7 +125,7 @@ namespace iOS
                                     Success = true;
 
                                     ResultView.Show( PrayerStrings.PostPrayer_Status_SuccessText,
-                                        ControlStylingConfig.Result_Symbol_Success, 
+                                        PrivateControlStylingConfig.Result_Symbol_Success, 
                                         PrayerStrings.PostPrayer_Result_SuccessText, 
                                         GeneralStrings.Done );
                                     
@@ -135,7 +136,7 @@ namespace iOS
                                     Success = false;
 
                                     ResultView.Show( PrayerStrings.PostPrayer_Status_FailedText,
-                                        ControlStylingConfig.Result_Symbol_Failed, 
+                                        PrivateControlStylingConfig.Result_Symbol_Failed, 
                                         PrayerStrings.PostPrayer_Result_FailedText, 
                                         GeneralStrings.Retry );
                                 }

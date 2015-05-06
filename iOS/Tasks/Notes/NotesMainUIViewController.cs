@@ -123,7 +123,7 @@ namespace iOS
 
                     WatchButtonIcon = new UILabel( );
                     WatchButton.AddSubview( WatchButtonIcon );
-                    WatchButtonIcon.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.Series_Table_IconSize );
+                    WatchButtonIcon.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( PrivateControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.Series_Table_IconSize );
                     WatchButtonIcon.Text = PrivateNoteConfig.Series_Table_Watch_Icon;
                     WatchButtonIcon.SizeToFit( );
 
@@ -154,7 +154,7 @@ namespace iOS
 
                     TakeNotesButtonIcon = new UILabel( );
                     TakeNotesButton.AddSubview( TakeNotesButtonIcon );
-                    TakeNotesButtonIcon.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.Series_Table_IconSize );
+                    TakeNotesButtonIcon.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( PrivateControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.Series_Table_IconSize );
                     TakeNotesButtonIcon.Text = PrivateNoteConfig.Series_Table_TakeNotes_Icon;
                     TakeNotesButtonIcon.SizeToFit( );
 
@@ -258,7 +258,7 @@ namespace iOS
 
                     Chevron = new UILabel( );
                     AddSubview( Chevron );
-                    Chevron.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.Series_Table_IconSize );
+                    Chevron.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( PrivateControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.Series_Table_IconSize );
                     Chevron.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
                     Chevron.Text = PrivateNoteConfig.Series_Table_Navigate_Icon;
                     Chevron.SizeToFit( );
@@ -650,7 +650,7 @@ namespace iOS
                     else if ( IsVisible == true )
                     {
                         ResultView.Show( MessagesStrings.Series_Error_Title, 
-                                         ControlStylingConfig.Result_Symbol_Failed, 
+                                         PrivateControlStylingConfig.Result_Symbol_Failed, 
                                          MessagesStrings.Series_Error_Message, 
                                          GeneralStrings.Retry );
                     }

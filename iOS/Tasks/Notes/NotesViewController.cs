@@ -787,7 +787,7 @@ namespace iOS
                         else
                         {
                             ResultView.Show( MessagesStrings.Error_Title, 
-                                             ControlStylingConfig.Result_Symbol_Failed, 
+                                             PrivateControlStylingConfig.Result_Symbol_Failed, 
                                              MessagesStrings.Error_Message, 
                                              GeneralStrings.Retry );
                         }

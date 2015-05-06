@@ -99,7 +99,7 @@ namespace Droid
             ( (LinearLayout.LayoutParams)BackButton.LayoutParameters ).Gravity = GravityFlags.Top;
 
             // set the back button's font
-            Typeface fontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
+            Typeface fontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( PrivateControlStylingConfig.Icon_Font_Secondary );
             BackButton.SetTypeface( fontFace, TypefaceStyle.Normal );
             BackButton.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateSubNavToolbarConfig.BackButton_Size );
 
@@ -135,7 +135,7 @@ namespace Droid
             ( (LinearLayout.LayoutParams)ShareButton.LayoutParameters ).Gravity = GravityFlags.Top;
 
             // set the share button's font
-            fontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
+            fontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( PrivateControlStylingConfig.Icon_Font_Secondary );
             ShareButton.SetTypeface( fontFace, TypefaceStyle.Normal );
             ShareButton.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateSubNavToolbarConfig.ShareButton_Size );
             ShareButton.SetPadding( 0, 0, 0, 0 );
@@ -169,7 +169,7 @@ namespace Droid
             ( (LinearLayout.LayoutParams)CreateButton.LayoutParameters ).Gravity = GravityFlags.Top;
 
             // set the create button's font
-            fontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
+            fontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( PrivateControlStylingConfig.Icon_Font_Secondary );
             CreateButton.SetTypeface( fontFace, TypefaceStyle.Normal );
             CreateButton.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateSubNavToolbarConfig.CreateButton_Size );
             CreateButton.SetPadding( 0, 0, 0, 0 );

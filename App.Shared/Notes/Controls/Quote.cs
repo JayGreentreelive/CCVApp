@@ -103,7 +103,7 @@ namespace App
 
                     UrlGlyph.Text = PrivateNoteConfig.CitationUrl_Icon;
                     UrlGlyph.TextColor = NoteConfig.CitationUrl_IconColor;
-                    UrlGlyph.SetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.CitationUrl_IconSize );
+                    UrlGlyph.SetFont( PrivateControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.CitationUrl_IconSize );
                     UrlGlyph.BackgroundColor = 0;
 
 

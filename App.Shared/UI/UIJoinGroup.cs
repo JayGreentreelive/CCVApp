@@ -6,6 +6,7 @@ using App.Shared.Strings;
 using Rock.Mobile.Animation;
 using App.Shared.Network;
 using Rock.Mobile.Util.Strings;
+using App.Shared.PrivateConfig;
 
 namespace App.Shared.UI
 {
@@ -332,14 +333,14 @@ namespace App.Shared.UI
                         if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
                         {
                             ResultView.Show( RegisterStrings.RegisterStatus_Success, 
-                                ControlStylingConfig.Result_Symbol_Success, 
+                                PrivateControlStylingConfig.Result_Symbol_Success, 
                                 string.Format( ConnectStrings.JoinGroup_RegisterSuccess, GroupTitle.Text ),
                                 GeneralStrings.Done );
                         }
                         else
                         {
                             ResultView.Show( RegisterStrings.RegisterStatus_Failed, 
-                                ControlStylingConfig.Result_Symbol_Failed, 
+                                PrivateControlStylingConfig.Result_Symbol_Failed, 
                                 string.Format( ConnectStrings.JoinGroup_RegisterFailed, GroupTitle.Text ),
                                 GeneralStrings.Done );
                         }

@@ -163,7 +163,7 @@ namespace Droid
                     Title.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
                     TitleLayout.AddView( Title );
 
-                    Typeface buttonFontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Secondary );
+                    Typeface buttonFontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( PrivateControlStylingConfig.Icon_Font_Secondary );
 
                     JoinButton = new Button( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     JoinButton.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
@@ -270,13 +270,22 @@ namespace Droid
                     Activity.WindowManager.DefaultDisplay.GetSize( displaySize );
                     //float fixedWidth = displaySize.X / 4.0f;
 
-                    MapView = new Android.Gms.Maps.MapView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
-                    MapView.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent );
+                    // catch any exceptions thrown, as they'll be related to no map API key
+                    try
+                    {
+                        MapView = new Android.Gms.Maps.MapView( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                        MapView.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent );
 
-                    MapView.LayoutParameters.Height = (int) (displaySize.Y * .50f);
-                    MapView.GetMapAsync( this );
-                    MapView.SetBackgroundColor( Color.Black );
-                    MapView.OnCreate( savedInstanceState );
+                        MapView.LayoutParameters.Height = (int) (displaySize.Y * .50f);
+                        MapView.GetMapAsync( this );
+                        MapView.SetBackgroundColor( Color.Black );
+                        MapView.OnCreate( savedInstanceState );
+                    }
+                    catch
+                    {
+                        MapView = null;
+                        Console.WriteLine( "GOOGLE MAPS: Unable to create. Verify you have a valid API KEY." );
+                    }
 
 
                     SearchAddressButton = new Button( Rock.Mobile.PlatformSpecific.Android.Core.Context );
@@ -331,7 +340,11 @@ namespace Droid
                     LinearLayout groupLayout = view.FindViewById<LinearLayout>( Resource.Id.groupFrame ) as LinearLayout;
 
                     // setup the address layout, which has the address text, padding, and finally the progress bar.
-                    ((LinearLayout)groupLayout).AddView( MapView );
+                    if ( MapView != null )
+                    {
+                        ( (LinearLayout)groupLayout ).AddView( MapView );
+                    }
+
                     ((LinearLayout)groupLayout).AddView( SearchAddressButton );
 
                     ((LinearLayout)groupLayout).AddView( SearchLayout );
@@ -482,19 +495,31 @@ namespace Droid
                 public override void OnSaveInstanceState(Bundle outState)
                 {
                     base.OnSaveInstanceState(outState);
-                    MapView.OnSaveInstanceState( outState );
+
+                    if ( MapView != null )
+                    {
+                        MapView.OnSaveInstanceState( outState );
+                    }
                 }
 
                 public override void OnLowMemory()
                 {
                     base.OnLowMemory();
-                    MapView.OnLowMemory( );
+
+                    if ( MapView != null )
+                    {
+                        MapView.OnLowMemory( );
+                    }
                 }
 
                 public override void OnResume()
                 {
                     base.OnResume();
-                    MapView.OnResume( );
+
+                    if ( MapView != null )
+                    {
+                        MapView.OnResume( );
+                    }
 
                     ParentTask.NavbarFragment.NavToolbar.SetBackButtonEnabled( true );
                     ParentTask.NavbarFragment.NavToolbar.SetCreateButtonEnabled( false, null );
@@ -513,7 +538,11 @@ namespace Droid
 
                     Point displaySize = new Point( );
                     Activity.WindowManager.DefaultDisplay.GetSize( displaySize );
-                    MapView.LayoutParameters.Height = (int) (displaySize.Y * .50f);
+
+                    if ( MapView != null )
+                    {
+                        MapView.LayoutParameters.Height = (int)( displaySize.Y * .50f );
+                    }
 
                     BlockerView.SetBounds( new System.Drawing.RectangleF( 0, 0, NavbarFragment.GetContainerDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels ) );
 
@@ -523,7 +552,11 @@ namespace Droid
                 public override void OnDestroy()
                 {
                     base.OnDestroy();
-                    MapView.OnDestroy( );
+
+                    if ( MapView != null )
+                    {
+                        MapView.OnDestroy( );
+                    }
                 }
 
                 public void OnClick( int position, int buttonIndex )
@@ -565,7 +598,10 @@ namespace Droid
                 {
                     base.OnPause();
 
-                    MapView.OnPause( );
+                    if ( MapView != null )
+                    {
+                        MapView.OnPause( );
+                    }
 
                     StreetValue = SearchPage.Street.Text;
                     CityValue = SearchPage.City.Text;

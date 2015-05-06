@@ -51,26 +51,6 @@ namespace App
             public class SpringboardConfig
             {
                 /// <summary>
-                /// The background color of the springboard area.
-                /// </summary>
-                public const uint BackgroundColor = 0x2D2D2DFF;
-
-                /// <summary>
-                /// The color of the active springboard element.
-                /// </summary>
-                public const uint ActiveElementTextColor = 0xFFFFFFFF;
-
-                /// <summary>
-                /// The color for inactive springboard elements.
-                /// </summary>
-                public const uint InActiveElementTextColor = 0xA7A7A7FF;
-
-                /// <summary>
-                /// The background color of a selected element.
-                /// </summary>
-                public const int Element_SelectedColor = 0x7a1315FF;
-
-                /// <summary>
                 /// The icon to use representing the News element
                 /// </summary>
                 public const string Element_News_Icon = "";
@@ -99,17 +79,6 @@ namespace App
                 /// The icon to use representing the More element
                 /// </summary>
                 public const string Element_More_Icon = "";
-            }
-
-            /// <summary>
-            /// Settings for the primary nav bar (the one at the top)
-            /// </summary>
-            public class PrimaryNavBarConfig
-            {
-                /// <summary>
-                /// The background color of the primary navigation bar up top.
-                /// </summary>
-                public const uint BackgroundColor = 0x191919FF;
             }
 
             public class NewsConfig
@@ -258,24 +227,62 @@ namespace App
             public class ControlStylingConfig
             {
                 /// <summary>
-                /// The background color for the pages (basically the darkest area)
-                /// </summary>
-                public const uint BackgroundColor = 0x212121FF;
-
-                /// <summary>
                 /// The color of text for buttons
                 /// </summary>
                 public const uint Button_TextColor = 0xCCCCCCFF;
 
                 /// <summary>
+                /// The color for text that is not placeholder (what the user types in, control labels, etc.)
+                /// </summary>
+                public const uint TextField_ActiveTextColor = 0xCCCCCCFF;
+
+                /// <summary>
+                /// The color for placeholder text in fields the user can type into.
+                /// </summary>
+                public const uint TextField_PlaceholderTextColor = 0x878686FF;
+
+                /// <summary>
+                /// The color of text in standard labels
+                /// </summary>
+                public const uint Label_TextColor = 0xCCCCCCFF;
+
+                /// <summary>
+                /// The color of the active springboard element.
+                /// </summary>
+                public const uint Springboard_ActiveElementTextColor = 0xFFFFFFFF;
+
+                /// <summary>
+                /// The color for inactive springboard elements.
+                /// </summary>
+                public const uint Springboard_InActiveElementTextColor = 0xA7A7A7FF;
+
+
+
+
+                /// <summary>
+                /// The background color of the springboard area.
+                /// </summary>
+                public const uint Springboard_BackgroundColor = 0x2D2D2DFF;
+
+                /// <summary>
+                /// The background color of a selected element.
+                /// </summary>
+                public const int Springboard_Element_SelectedColor = 0x7a1315FF;
+
+                /// <summary>
+                /// The color of the top nav toolbar background.
+                /// </summary>
+                public const uint TopNavToolbar_BackgroundColor = 0x191919FF;
+
+                /// <summary>
+                /// The background color for the pages (basically the darkest area)
+                /// </summary>
+                public const uint BackgroundColor = 0x212121FF;
+
+                /// <summary>
                 /// The background color for buttons
                 /// </summary>
                 public const uint Button_BGColor = 0x7E7E7EFF;
-
-                /// <summary>
-                /// The corner roundedness for buttons (0 is no curvature)
-                /// </summary>
-                public const uint Button_CornerRadius = 3;
 
                 /// <summary>
                 /// The background color for the layer that backs elements (like the strip behind First Name)
@@ -295,54 +302,29 @@ namespace App
                 public const uint BG_Layer_BorderColor = 0x595959FF;
 
                 /// <summary>
-                /// The border thickness for the layer that backs elements (like the strip behind First Name)
+                /// The color for the footers of primary table cells. (Like the footer in the Messages->Series primary cell that says "Previous Messages")
                 /// </summary>
-                public const float BG_Layer_BorderWidth = .5f;
-
-                /// <summary>
-                /// The color for text that is not placeholder (what the user types in, control labels, etc.)
-                /// </summary>
-                public const uint TextField_ActiveTextColor = 0xCCCCCCFF;
-
-                /// <summary>
-                /// The color for placeholder text in fields the user can type into.
-                /// </summary>
-                public const uint TextField_PlaceholderTextColor = 0x878686FF;
-
-                /// <summary>
-                /// The color of text in standard labels
-                /// </summary>
-                public const uint Label_TextColor = 0xCCCCCCFF;
+                public const uint Table_Footer_Color = 0x262626FF;
 
                 /// <summary>
                 /// The color of a UI Switch when turned 'on'
                 /// </summary>
                 public const uint Switch_OnColor = 0x7E7E7EFF;
 
-                /// <summary>
-                /// The primary (most commonly used) icon font
-                /// </summary>
-                public const string Icon_Font_Primary = "FontAwesome";
+
 
                 /// <summary>
-                /// The secondary (used in occasional spots) icon font
+                /// The corner roundedness for buttons (0 is no curvature)
                 /// </summary>
-                public const string Icon_Font_Secondary = "Bh";
+                public const uint Button_CornerRadius = 3;
 
                 /// <summary>
-                /// The symbol to use for a result that was successful.
+                /// The border thickness for the layer that backs elements (like the strip behind First Name)
                 /// </summary>
-                public const string Result_Symbol_Success = "";
+                public const float BG_Layer_BorderWidth = .5f;
 
-                /// <summary>
-                /// The symbol to use for a result that failed.
-                /// </summary>
-                public const string Result_Symbol_Failed = "";
 
-                /// <summary>
-                /// The color for the footers of primary table cells. (Like the footer in the Messages->Series primary cell that says "Previous Messages")
-                /// </summary>
-                public const uint Table_Footer_Color = 0x262626FF;
+
 
                 /// <summary>
                 /// The font to use representing a bold font throughout the app.

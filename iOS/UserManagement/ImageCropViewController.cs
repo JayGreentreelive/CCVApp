@@ -213,7 +213,7 @@ namespace iOS
             NSString cancelLabel = new NSString( PrivateImageCropConfig.CropCancelButton_Text );
 
             CancelButton = new UIButton(UIButtonType.System);
-            CancelButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateImageCropConfig.CropCancelButton_Size );
+            CancelButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( PrivateControlStylingConfig.Icon_Font_Secondary, PrivateImageCropConfig.CropCancelButton_Size );
             CancelButton.SetTitle( cancelLabel.ToString( ), UIControlState.Normal );
 
             CancelButton.TouchUpInside += (object sender, EventArgs e) => 
@@ -234,7 +234,7 @@ namespace iOS
             NSString editLabel = new NSString( PrivateImageCropConfig.CropOkButton_Text );
 
             EditButton = new UIButton(UIButtonType.System);
-            EditButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Icon_Font_Secondary, PrivateImageCropConfig.CropOkButton_Size );
+            EditButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( PrivateControlStylingConfig.Icon_Font_Secondary, PrivateImageCropConfig.CropOkButton_Size );
             EditButton.SetTitle( editLabel.ToString( ), UIControlState.Normal );
             EditButton.HorizontalAlignment = UIControlContentHorizontalAlignment.Right;
 

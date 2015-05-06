@@ -420,6 +420,29 @@ namespace App.Shared
             /// </summary>
             public const uint GroupFinder_Join_IconSize = 64;
         }
+
+        public class PrivateControlStylingConfig
+        {
+            /// <summary>
+            /// The primary (most commonly used) icon font
+            /// </summary>
+            public const string Icon_Font_Primary = "FontAwesome";
+
+            /// <summary>
+            /// The secondary (used in occasional spots) icon font
+            /// </summary>
+            public const string Icon_Font_Secondary = "Bh";
+
+            /// <summary>
+            /// The symbol to use for a result that was successful.
+            /// </summary>
+            public const string Result_Symbol_Success = "";
+
+            /// <summary>
+            /// The symbol to use for a result that failed.
+            /// </summary>
+            public const string Result_Symbol_Failed = "";
+        }
     }
 }
 

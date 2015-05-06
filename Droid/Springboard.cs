@@ -62,7 +62,7 @@ namespace Droid
             Button = Layout.FindViewById<Button>( Resource.Id.button );
             Text = Layout.FindViewById<TextView>( Resource.Id.text );
 
-            Typeface fontFace = FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary );
+            Typeface fontFace = FontManager.Instance.GetFont( PrivateControlStylingConfig.Icon_Font_Primary );
             Icon.SetTypeface( fontFace, TypefaceStyle.Normal );
             Icon.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateSpringboardConfig.Element_FontSize );
             Icon.SetX( Icon.GetX() - Icon.Width / 2 );
@@ -81,20 +81,20 @@ namespace Droid
 
         public void Deactivate( )
         {
-            Icon.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( SpringboardConfig.InActiveElementTextColor ) );
+            Icon.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Springboard_InActiveElementTextColor ) );
 
-            Text.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( SpringboardConfig.InActiveElementTextColor ) );
+            Text.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Springboard_InActiveElementTextColor ) );
 
             Layout.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( 0x00000000 ) );
         }
 
         public void Activate( )
         {
-            Icon.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( SpringboardConfig.ActiveElementTextColor ) );
+            Icon.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Springboard_ActiveElementTextColor ) );
 
-            Text.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( SpringboardConfig.ActiveElementTextColor ) );
+            Text.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Springboard_ActiveElementTextColor ) );
 
-            Layout.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( SpringboardConfig.Element_SelectedColor ) );
+            Layout.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Springboard_Element_SelectedColor ) );
         }
     }
 
@@ -312,7 +312,7 @@ namespace Droid
             }
 
             view.SetOnTouchListener( this );
-            view.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( SpringboardConfig.BackgroundColor ) );
+            view.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Springboard_BackgroundColor ) );
 
             // set the task we wish to have active
             ActivateElement( Elements[ ActiveElementIndex ] );
@@ -333,10 +333,10 @@ namespace Droid
                         StartModalFragment( LoginFragment );
                     }
                 };
-            Typeface fontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary );
+            Typeface fontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( PrivateControlStylingConfig.Icon_Font_Primary );
             ProfileImageButton.SetTypeface( fontFace, TypefaceStyle.Normal );
             ProfileImageButton.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateSpringboardConfig.ProfileSymbolFontSize );
-            ProfileImageButton.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+            ProfileImageButton.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Springboard_InActiveElementTextColor ) );
             ProfileImageButton.LayoutParameters.Width = (int)Rock.Mobile.Graphics.Util.UnitToPx( 140 );
             ProfileImageButton.LayoutParameters.Height = (int)Rock.Mobile.Graphics.Util.UnitToPx( 140 );
             ProfileImageButton.SetBackgroundColor( Color.Transparent );
@@ -351,7 +351,7 @@ namespace Droid
             //note: these are converted from dp to pixels, so don't do it here.
             circle.StrokeWidth = 4;
 
-            circle.Color = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+            circle.Color = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Springboard_InActiveElementTextColor );
             circle.SetBackgroundColor( Color.Transparent );
             circle.LayoutParameters = new RelativeLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
             ( (RelativeLayout.LayoutParams)circle.LayoutParameters ).AddRule( LayoutRules.CenterInParent );
@@ -378,7 +378,7 @@ namespace Droid
             
             // setup the textView for rendering either "Tap to Personalize" or "View Profile"
             ViewProfileLabel = view.FindViewById<TextView>( Resource.Id.view_profile );
-            ViewProfileLabel.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
+            ViewProfileLabel.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Springboard_InActiveElementTextColor ) );
             ViewProfileLabel.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Font_Light ), TypefaceStyle.Normal );
             ViewProfileLabel.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );
 
@@ -399,12 +399,12 @@ namespace Droid
             ProfilePrefix = view.FindViewById<TextView>( Resource.Id.profile_prefix );
             ProfilePrefix.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Font_Light ), TypefaceStyle.Normal );
             ProfilePrefix.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Large_FontSize );
-            ProfilePrefix.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
+            ProfilePrefix.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Springboard_InActiveElementTextColor ) );
             ProfilePrefix.Text = SpringboardStrings.LoggedIn_Prefix;
             ProfilePrefix.Measure( 0, 0 );
 
             ProfileName = view.FindViewById<TextView>( Resource.Id.profile_name );
-            ProfileName.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Label_TextColor ) );
+            ProfileName.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Springboard_InActiveElementTextColor ) );
             ProfileName.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Font_Bold ), TypefaceStyle.Normal );
             ProfileName.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Large_FontSize );
             ProfileName.SetMaxLines( 1 );
@@ -413,7 +413,7 @@ namespace Droid
 
             CampusContainer = view.FindViewById<View>( Resource.Id.campus_container );
             CampusContainer.LayoutParameters.Width = (int) ( displayWidth * revealPercent );
-            CampusContainer.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( SpringboardConfig.BackgroundColor ) );
+            CampusContainer.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Springboard_BackgroundColor ) );
 
             View seperator = view.FindViewById<View>( Resource.Id.end_seperator );
             seperator.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ) );
@@ -422,14 +422,14 @@ namespace Droid
             // setup the bottom campus / settings selector
             CampusText = CampusContainer.FindViewById<TextView>( Resource.Id.campus_selection_text );
             CampusText.Ellipsize = Android.Text.TextUtils.TruncateAt.End;
-            CampusText.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+            CampusText.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Springboard_InActiveElementTextColor ) );
             CampusText.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Font_Regular ), TypefaceStyle.Normal );
             CampusText.SetTextSize(Android.Util.ComplexUnitType.Dip,  ControlStylingConfig.Small_FontSize );
             CampusText.SetSingleLine( );
 
             TextView settingsIcon = CampusContainer.FindViewById<TextView>( Resource.Id.campus_selection_icon );
-            settingsIcon.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Icon_Font_Primary ), TypefaceStyle.Normal );
-            settingsIcon.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
+            settingsIcon.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( PrivateControlStylingConfig.Icon_Font_Primary ), TypefaceStyle.Normal );
+            settingsIcon.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Springboard_InActiveElementTextColor ) );
             settingsIcon.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateSpringboardConfig.CampusSelectSymbolSize );
             settingsIcon.Text = PrivateSpringboardConfig.CampusSelectSymbol;
 
@@ -467,13 +467,13 @@ namespace Droid
 
             Billboard = new NotificationBillboard( displayWidth, Rock.Mobile.PlatformSpecific.Android.Core.Context );
             Billboard.SetLabel( SpringboardStrings.TakeNotesNotificationIcon, 
-                                ControlStylingConfig.Icon_Font_Primary,
+                                PrivateControlStylingConfig.Icon_Font_Primary,
                                 ControlStylingConfig.Small_FontSize,
                                 SpringboardStrings.TakeNotesNotificationLabel, 
                                 ControlStylingConfig.Font_Light,
                                 ControlStylingConfig.Small_FontSize,
                                 ControlStylingConfig.TextField_ActiveTextColor, 
-                                SpringboardConfig.Element_SelectedColor, 
+                                ControlStylingConfig.Springboard_Element_SelectedColor, 
                 delegate
                 {
                     // find the Notes task, activate it, and tell it to jump to the read page.
