@@ -3,12 +3,30 @@
   <MonoDevelop.Ide.Workbench ActiveDocument="App.Shared/UI/UIResultView.cs">
     <Files>
       <File FileName="iOS/UserManagement/OOBEViewController.cs" Line="1" Column="1" />
-      <File FileName="iOS/Tasks/Connect/GroupFinderViewController.cs" Line="686" Column="9" />
+      <File FileName="iOS/Tasks/Connect/GroupFinderViewController.cs" Line="1" Column="1" />
       <File FileName="iOS/Tasks/Connect/ConnectMainPageViewController.cs" Line="1" Column="1" />
       <File FileName="App.Shared/UI/UIGroupFinderSearch.cs" Line="1" Column="1" />
-      <File FileName="App.Shared/UI/UIResultView.cs" Line="20" Column="44" />
-      <File FileName="App.Shared/UI/UIOOBE.cs" Line="63" Column="1" />
+      <File FileName="App.Shared/UI/UIResultView.cs" Line="21" Column="48" />
+      <File FileName="App.Shared/UI/UIOOBE.cs" Line="1" Column="1" />
     </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="CCVApp" expanded="True">
+            <Node name="App.Shared" expanded="True">
+              <Node name="UI" expanded="True">
+                <Node name="UIResultView.cs" selected="True" />
+              </Node>
+            </Node>
+            <Node name="Rock.Mobile" expanded="True">
+              <Node name="PlatformSpecific" expanded="True">
+                <Node name="Android" expanded="True" />
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
