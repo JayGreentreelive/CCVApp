@@ -45,7 +45,7 @@ namespace App.Shared.UI
 
             ImageBG = PlatformImageView.Create( );
             ImageBG.AddAsSubview( View.PlatformNativeObject );
-            MemoryStream stream = Rock.Mobile.Util.FileIO.AssetConvert.AssetToStream( bgLayerImageName );
+            MemoryStream stream = Rock.Mobile.IO.AssetConvert.AssetToStream( bgLayerImageName );
             stream.Position = 0;
             ImageBG.Opacity = 0;
             ImageBG.Image = stream;
@@ -110,7 +110,7 @@ namespace App.Shared.UI
                 };
             SkipButton.AddAsSubview( View.PlatformNativeObject );
 
-            stream = Rock.Mobile.Util.FileIO.AssetConvert.AssetToStream( logoImageName );
+            stream = Rock.Mobile.IO.AssetConvert.AssetToStream( logoImageName );
             stream.Position = 0;
             ImageLogo = PlatformImageView.Create( );
             ImageLogo.AddAsSubview( View.PlatformNativeObject );

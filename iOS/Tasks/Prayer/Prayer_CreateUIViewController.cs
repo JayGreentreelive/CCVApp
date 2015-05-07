@@ -17,21 +17,6 @@ namespace iOS
 {
     partial class Prayer_CreateUIViewController : TaskUIViewController
 	{
-        // setup a delegate to manage text editing notifications
-        public class TextViewDelegate : UITextViewDelegate
-        {
-            public override bool ShouldBeginEditing(UITextView textView)
-            {
-                NSNotificationCenter.DefaultCenter.PostNotificationName( Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager.TextFieldDidBeginEditingNotification, NSValue.FromCGRect( textView.Frame ) );
-                return true;
-            }
-
-            public override void Changed(UITextView textView)
-            {
-                NSNotificationCenter.DefaultCenter.PostNotificationName( Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager.TextFieldChangedNotification, NSValue.FromCGRect( textView.Frame ) );
-            }
-        }
-
         /// <summary>
         /// List of the handles for our NSNotifications
         /// </summary>
@@ -121,7 +106,7 @@ namespace iOS
             PrayerRequestLayer.AddSubview( PrayerRequest );
 
             // setup the prayer request field, which requires a fake "placeholder" text field
-            PrayerRequest.Delegate = new TextViewDelegate( );
+            PrayerRequest.Delegate = new KeyboardAdjustManager.TextViewDelegate( );
             PrayerRequest.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
             PrayerRequest.TextContainerInset = UIEdgeInsets.Zero;
             PrayerRequest.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Regular, ControlStylingConfig.Medium_FontSize );

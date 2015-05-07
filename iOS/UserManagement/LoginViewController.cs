@@ -337,7 +337,7 @@ namespace iOS
             {
                     // it's ready, so create a webView that will take them to the FBLogin page
                     WebLayout = new WebLayout( View.Frame );
-                    WebLayout.DeleteCacheandCookies( );
+                    WebLayout.DeleteCacheAndCookies( );
 
                     View.AddSubview( WebLayout.ContainerView );
 

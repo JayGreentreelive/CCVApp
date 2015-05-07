@@ -34,7 +34,7 @@ namespace App.Shared.UI
             // if a background image was provided, use that.
             if ( string.IsNullOrEmpty( backgroundImageName ) == false )
             {
-                MemoryStream stream = Rock.Mobile.Util.FileIO.AssetConvert.AssetToStream( backgroundImageName );
+                MemoryStream stream = Rock.Mobile.IO.AssetConvert.AssetToStream( backgroundImageName );
                 stream.Position = 0;
                 ImageBG.Image = stream;
                 ImageBG.SizeToFit( );
@@ -42,7 +42,7 @@ namespace App.Shared.UI
                 stream.Dispose( );
             }
 
-            MemoryStream logoStream = Rock.Mobile.Util.FileIO.AssetConvert.AssetToStream( logoImageName );
+            MemoryStream logoStream = Rock.Mobile.IO.AssetConvert.AssetToStream( logoImageName );
             logoStream.Position = 0;
             ImageLogo = PlatformImageView.Create( );
             ImageLogo.AddAsSubview( masterView );

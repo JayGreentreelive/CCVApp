@@ -122,13 +122,13 @@ namespace App
                             #endif
 
                             // cache the main image
-                            MemoryStream stream = Rock.Mobile.Util.FileIO.AssetConvert.AssetToStream( mainImageName );
+                            MemoryStream stream = Rock.Mobile.IO.AssetConvert.AssetToStream( mainImageName );
                             stream.Position = 0;
                             FileCache.Instance.SaveFile( stream, copiedNews.ImageName, FileCache.CacheFileNoExpiration );
                             stream.Dispose( );
 
                             // cache the header image
-                            stream = Rock.Mobile.Util.FileIO.AssetConvert.AssetToStream( headerImageName );
+                            stream = Rock.Mobile.IO.AssetConvert.AssetToStream( headerImageName );
                             stream.Position = 0;
                             FileCache.Instance.SaveFile( stream, copiedNews.HeaderImageName, FileCache.CacheFileNoExpiration );
                             stream.Dispose( );
