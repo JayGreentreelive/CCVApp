@@ -309,7 +309,7 @@ namespace App
                 /// <summary>
                 /// The color of a UI Switch when turned 'on'
                 /// </summary>
-                public const uint Switch_OnColor = 0x7E7E7EFF;
+                public const uint Switch_OnColor = 0x26b8e2FF;
 
                 /// <summary>
                 /// The color when transitioning from the android splash screen to the splash / oobe intro.

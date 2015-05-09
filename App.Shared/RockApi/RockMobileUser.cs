@@ -662,72 +662,83 @@ namespace App
 
                 public void UploadSavedProfilePicture( HttpRequest.RequestResult result )
                 {
-                    // this is a big process. The profile picture being updated also requires the user's
-                    // profile be updated AND they need to be placed into a special group.
-                    // So, until ALL THOSE succeed in order, we will not consider the profile image "clean"
-
-
-                    // if upload is called, the profile image implicitely becomes dirty.
-                    // that way if it fails, we can know to sync it on next run.
-                    ProfileImageDirty = true;
-
-                    // first open the image
+                    // first open the image.
                     MemoryStream imageStream = (MemoryStream) FileCache.Instance.LoadFile( PrivateSpringboardConfig.ProfilePic );
 
-                    // attempt to upload it
-                    RockApi.Instance.UpdateProfilePicture( imageStream, 
+                    // verify it's valid and not corrupt, or otherwise unable to load. If it is, we'll stop here.
+                    if ( imageStream != null )
+                    {
+                        // this is a big process. The profile picture being updated also requires the user's
+                        // profile be updated AND they need to be placed into a special group.
+                        // So, until ALL THOSE succeed in order, we will not consider the profile image "clean"
 
-                        delegate( System.Net.HttpStatusCode statusCode, string statusDesc, int photoId )
-                        {
-                            // free the stream
-                            imageStream.Dispose( );
 
-                            // if the upload went ok
-                            if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
+                        // if upload is called, the profile image implicitely becomes dirty.
+                        // that way if it fails, we can know to sync it on next run.
+                        ProfileImageDirty = true;
+
+                        // attempt to upload it
+                        RockApi.Instance.UpdateProfilePicture( imageStream, 
+
+                            delegate( System.Net.HttpStatusCode statusCode, string statusDesc, int photoId )
                             {
-                                // now update the profile
-                                Person.PhotoId = photoId;
+                                // free the stream
+                                imageStream.Dispose( );
 
-                                // attempt to sync the profile
-                                UpdateProfile( 
-                                    delegate ( System.Net.HttpStatusCode profileStatusCode, string profileStatusDesc )
-                                    {
-                                        if( Rock.Mobile.Network.Util.StatusInSuccessRange( profileStatusCode ) == true )
-                                        {
-                                            // now (and only now) that we know the profile was updated correctly,
-                                            // we can update the image group.
-                                            RockApi.Instance.UpdateProfileImageGroup( Person, delegate ( System.Net.HttpStatusCode resultCode, string resultDesc )
-                                                {
-                                                    // now we know that the profile image group was updated correctly, and that's the last step
-                                                    if( Rock.Mobile.Network.Util.StatusInSuccessRange( resultCode ) == true )
-                                                    {
-                                                        // so now we can finally flag everything as good
-                                                        ProfileImageDirty = false;
-                                                    }
-
-                                                    if ( result != null )
-                                                    {
-                                                        result( statusCode, statusDesc );
-                                                    }
-                                                });
-                                        }
-                                        else
-                                        {
-                                            if ( result != null )
-                                            {
-                                                result( statusCode, statusDesc );
-                                            }
-                                        }
-                                    });
-                            }
-                            else
-                            {
-                                if ( result != null )
+                                // if the upload went ok
+                                if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
                                 {
-                                    result( statusCode, statusDesc );
+                                    // now update the profile
+                                    Person.PhotoId = photoId;
+
+                                    // attempt to sync the profile
+                                    UpdateProfile( 
+                                        delegate ( System.Net.HttpStatusCode profileStatusCode, string profileStatusDesc )
+                                        {
+                                            if ( Rock.Mobile.Network.Util.StatusInSuccessRange( profileStatusCode ) == true )
+                                            {
+                                                // now (and only now) that we know the profile was updated correctly,
+                                                // we can update the image group.
+                                                RockApi.Instance.UpdateProfileImageGroup( Person, delegate ( System.Net.HttpStatusCode resultCode, string resultDesc )
+                                                    {
+                                                        // now we know that the profile image group was updated correctly, and that's the last step
+                                                        if ( Rock.Mobile.Network.Util.StatusInSuccessRange( resultCode ) == true )
+                                                        {
+                                                            // so now we can finally flag everything as good
+                                                            ProfileImageDirty = false;
+                                                        }
+
+                                                        if ( result != null )
+                                                        {
+                                                            result( statusCode, statusDesc );
+                                                        }
+                                                    } );
+                                            }
+                                            else
+                                            {
+                                                if ( result != null )
+                                                {
+                                                    result( statusCode, statusDesc );
+                                                }
+                                            }
+                                        } );
                                 }
-                            }
-                        } );
+                                else
+                                {
+                                    if ( result != null )
+                                    {
+                                        result( statusCode, statusDesc );
+                                    }
+                                }
+                            } );
+                    }
+                    else
+                    {
+                        // the picture failed to save, so all we can do is say it was fine and
+                        // that it is no longer dirty. Both things are true.
+                        ProfileImageDirty = false;
+                        result( System.Net.HttpStatusCode.OK, "" );
+                    }
                 }
 
                 public void SaveProfilePicture( MemoryStream imageStream )

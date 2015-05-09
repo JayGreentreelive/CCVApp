@@ -73,16 +73,9 @@ namespace App
                         TextView.BorderWidth = mStyle.mBorderWidth.Value;
                     }
 
-                    if( mStyle.mTextInputBackgroundColor.HasValue )
+                    if( mStyle.mBackgroundColor.HasValue )
                     {
-                        TextView.BackgroundColor = mStyle.mTextInputBackgroundColor.Value;
-                    }
-                    else
-                    {
-                        if( mStyle.mBackgroundColor.HasValue )
-                        {
-                            TextView.BackgroundColor = mStyle.mBackgroundColor.Value;
-                        }
+                        TextView.BackgroundColor = mStyle.mBackgroundColor.Value;
                     }
 
                    
@@ -91,7 +84,7 @@ namespace App
                     TextView.Placeholder = " ";
 
                     // get the hint text if it's as an attribute
-                    string result = reader.GetAttribute( "PlaceHolder" );
+                    string result = reader.GetAttribute( "Placeholder" );
                     if( string.IsNullOrEmpty( result ) == false )
                     {
                         TextView.Placeholder = result;
@@ -109,7 +102,7 @@ namespace App
                                 {
                                     switch( reader.Name )
                                     {
-                                        case "PlaceHolder":
+                                        case "Placeholder":
                                         {
                                             TextView.Placeholder = reader.ReadElementContentAsString( );
                                             break;
@@ -150,8 +143,8 @@ namespace App
                     }
 
                     // size to fit to calculate the height, then reset our width with that height.
-                    TextView.SizeToFit( );
-                    TextView.Frame = new RectangleF( bounds.X, bounds.Y, bounds.Width, TextView.Bounds.Height );
+                    //TextView.SizeToFit( );
+                    TextView.Frame = new RectangleF( bounds.X, bounds.Y, bounds.Width, bounds.Height );
 
                     // set the color of the hint text
                     TextView.PlaceholderTextColor = mStyle.mFont.mColor.Value;

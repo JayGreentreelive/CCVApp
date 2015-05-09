@@ -637,7 +637,7 @@ namespace App
 
                         userNote.AddToView( MasterView );
 
-                        userNote.OpenNote( );
+                        userNote.OpenNote( true );
                         return true;
                     }
 

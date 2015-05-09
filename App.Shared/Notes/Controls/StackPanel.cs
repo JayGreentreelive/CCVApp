@@ -101,16 +101,9 @@ namespace App
                         borderPaddingPx = (int)Rock.Mobile.Graphics.Util.UnitToPx( mStyle.mBorderWidth.Value + PrivateNoteConfig.BorderPadding );
                     }
 
-                    if( mStyle.mTextInputBackgroundColor.HasValue )
+                    if( mStyle.mBackgroundColor.HasValue )
                     {
-                        BorderView.BackgroundColor = mStyle.mTextInputBackgroundColor.Value;
-                    }
-                    else
-                    {
-                        if( mStyle.mBackgroundColor.HasValue )
-                        {
-                            BorderView.BackgroundColor = mStyle.mBackgroundColor.Value;
-                        }
+                        BorderView.BackgroundColor = mStyle.mBackgroundColor.Value;
                     }
                     //
 

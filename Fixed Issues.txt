@@ -4,8 +4,17 @@ Changes
 Both
 	Fixed an issue preventing the playback position of podcasts to be saved.
 
+	They keyboard will open automatically when creating new user notes. (Thanks XXXX)
+
+	Added a feature to allow private sermon notes. This allows us to create them before letting
+		the public view them.
+
+
+
 iOS
-	
+	Improved the Prayer Category selection process to be less confusing, and avoid accidentally choosing the wrong category.
+
+	Adjusted the colors of switches so that the 'on' state is more clear.
 
 Android
 	

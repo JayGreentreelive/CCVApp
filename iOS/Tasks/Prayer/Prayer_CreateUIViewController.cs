@@ -15,7 +15,7 @@ using Rock.Mobile.IO;
 
 namespace iOS
 {
-    partial class Prayer_CreateUIViewController : TaskUIViewController
+    partial class Prayer_CreateUIViewController : TaskUIViewController, IUIGestureRecognizerDelegate
 	{
         /// <summary>
         /// List of the handles for our NSNotifications
@@ -137,7 +137,19 @@ namespace iOS
             PickerAdjustManager = new PickerAdjustManager( View, ScrollView, categoryLabel, CategoryLayer );
             UIPickerView pickerView = new UIPickerView();
             pickerView.Model = new CategoryPickerModel() { Parent = this };
+            pickerView.UserInteractionEnabled = true;
             PickerAdjustManager.SetPicker( pickerView );
+
+
+            // setup a tap gesture for the picker
+            Action action = ( ) =>
+                {
+                    OnToggleCategoryPicker( false );
+                };
+            UITapGestureRecognizer uiTap = new UITapGestureRecognizer( action );
+            uiTap.NumberOfTapsRequired = 1;
+            pickerView.AddGestureRecognizer( uiTap );
+            uiTap.Delegate = this;
 
 
             CategoryButton.TouchUpInside += (object sender, EventArgs e ) =>
@@ -179,6 +191,8 @@ namespace iOS
             UISwitchAnonymous.OnTintColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Switch_OnColor );
             UISwitchAnonymous.TouchUpInside += (object sender, EventArgs e ) =>
                 {
+                    OnToggleCategoryPicker( false );
+
                     if( UISwitchAnonymous.On == true )
                     {
                         FirstName.Field.Enabled = false;
@@ -212,83 +226,94 @@ namespace iOS
             SubmitButton.TouchUpInside += SubmitPrayerRequest;
         }
 
-
+        [Export( "gestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer:" )]
+        public bool ShouldRecognizeSimultaneously( UIKit.UIGestureRecognizer gestureRecognizer, UIKit.UIGestureRecognizer otherGestureRecognizer )
+        {
+            return true;
+        }
 
         /// <summary>
         /// Builds a prayer request from data in the UI Fields and kicks off the post UI Control
         /// </summary>
         void SubmitPrayerRequest(object sender, EventArgs e)
         {
-            // ensure they either put a first name or enabled anonymous, and ensure there's a prayer request
-            if ( ( ( string.IsNullOrEmpty( FirstName.Field.Text ) == false && string.IsNullOrEmpty( LastName.Field.Text ) == false ) || UISwitchAnonymous.On == true ) &&
-                 string.IsNullOrEmpty( PrayerRequest.Text ) == false )
+            if ( PickerAdjustManager.Revealed == true )
             {
-                Rock.Client.PrayerRequest prayerRequest = new Rock.Client.PrayerRequest();
-
-                EnableControls( false );
-
-                if ( UISwitchAnonymous.On == true )
-                {
-                    prayerRequest.FirstName = "Anonymous";
-                    prayerRequest.LastName = "Anonymous";
-                }
-                else
-                {
-                    prayerRequest.FirstName = FirstName.Field.Text;
-                    prayerRequest.LastName = LastName.Field.Text;
-                }
-
-                int personAliasId = App.Shared.Network.RockMobileUser.Instance.Person.PrimaryAliasId.HasValue ? App.Shared.Network.RockMobileUser.Instance.Person.PrimaryAliasId.Value : 0;
-
-                prayerRequest.Text = PrayerRequest.Text;
-                prayerRequest.EnteredDateTime = DateTime.Now;
-                prayerRequest.ExpirationDate = DateTime.Now.AddYears( 1 );
-                prayerRequest.CategoryId = RockGeneralData.Instance.Data.PrayerCategoryToId( CategoryButton.Title( UIControlState.Normal ) );
-                prayerRequest.IsActive = true;
-                prayerRequest.IsPublic = UIPublicSwitch.On; // use the public switch's state to determine whether it's a public prayer or not.
-                prayerRequest.Guid = Guid.NewGuid( );
-                prayerRequest.IsApproved = false;
-                prayerRequest.CreatedByPersonAliasId = UISwitchAnonymous.On == true ? -1 : personAliasId;
-
-                // launch the post view controller
-                Prayer_PostUIViewController postPrayerVC = new Prayer_PostUIViewController();
-                postPrayerVC.PrayerRequest = prayerRequest;
-                Task.PerformSegue( this, postPrayerVC );
+                OnToggleCategoryPicker( false );
             }
             else
             {
-                // Update the first name background color
-                // if they left the name field blank and didn't turn on Anonymous, flag the field.
-                uint targetNameColor = ControlStylingConfig.BG_Layer_Color; 
-                if ( string.IsNullOrEmpty( FirstName.Field.Text ) && UISwitchAnonymous.On == false )
+                // ensure they either put a first name or enabled anonymous, and ensure there's a prayer request
+                if ( ( ( string.IsNullOrEmpty( FirstName.Field.Text ) == false && string.IsNullOrEmpty( LastName.Field.Text ) == false ) || UISwitchAnonymous.On == true ) &&
+                     string.IsNullOrEmpty( PrayerRequest.Text ) == false )
                 {
-                    targetNameColor = ControlStylingConfig.BadInput_BG_Layer_Color;
+                    Rock.Client.PrayerRequest prayerRequest = new Rock.Client.PrayerRequest();
+
+                    EnableControls( false );
+
+                    if ( UISwitchAnonymous.On == true )
+                    {
+                        prayerRequest.FirstName = "Anonymous";
+                        prayerRequest.LastName = "Anonymous";
+                    }
+                    else
+                    {
+                        prayerRequest.FirstName = FirstName.Field.Text;
+                        prayerRequest.LastName = LastName.Field.Text;
+                    }
+
+                    int personAliasId = App.Shared.Network.RockMobileUser.Instance.Person.PrimaryAliasId.HasValue ? App.Shared.Network.RockMobileUser.Instance.Person.PrimaryAliasId.Value : 0;
+
+                    prayerRequest.Text = PrayerRequest.Text;
+                    prayerRequest.EnteredDateTime = DateTime.Now;
+                    prayerRequest.ExpirationDate = DateTime.Now.AddYears( 1 );
+                    prayerRequest.CategoryId = RockGeneralData.Instance.Data.PrayerCategoryToId( CategoryButton.Title( UIControlState.Normal ) );
+                    prayerRequest.IsActive = true;
+                    prayerRequest.IsPublic = UIPublicSwitch.On; // use the public switch's state to determine whether it's a public prayer or not.
+                    prayerRequest.Guid = Guid.NewGuid( );
+                    prayerRequest.IsApproved = false;
+                    prayerRequest.CreatedByPersonAliasId = UISwitchAnonymous.On == true ? -1 : personAliasId;
+
+                    // launch the post view controller
+                    Prayer_PostUIViewController postPrayerVC = new Prayer_PostUIViewController();
+                    postPrayerVC.PrayerRequest = prayerRequest;
+                    Task.PerformSegue( this, postPrayerVC );
                 }
-                Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetNameColor, FirstName.Background );
-
-
-                // Update the LAST name background color
-                // if they left the name field blank and didn't turn on Anonymous, flag the field.
-                uint targetLastNameColor = ControlStylingConfig.BG_Layer_Color; 
-                if ( string.IsNullOrEmpty( LastName.Field.Text ) && UISwitchAnonymous.On == false )
+                else
                 {
-                    targetLastNameColor = ControlStylingConfig.BadInput_BG_Layer_Color;
+                    // Update the first name background color
+                    // if they left the name field blank and didn't turn on Anonymous, flag the field.
+                    uint targetNameColor = ControlStylingConfig.BG_Layer_Color; 
+                    if ( string.IsNullOrEmpty( FirstName.Field.Text ) && UISwitchAnonymous.On == false )
+                    {
+                        targetNameColor = ControlStylingConfig.BadInput_BG_Layer_Color;
+                    }
+                    Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetNameColor, FirstName.Background );
+
+
+                    // Update the LAST name background color
+                    // if they left the name field blank and didn't turn on Anonymous, flag the field.
+                    uint targetLastNameColor = ControlStylingConfig.BG_Layer_Color; 
+                    if ( string.IsNullOrEmpty( LastName.Field.Text ) && UISwitchAnonymous.On == false )
+                    {
+                        targetLastNameColor = ControlStylingConfig.BadInput_BG_Layer_Color;
+                    }
+                    Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetLastNameColor, LastName.Background );
+
+
+                    // Update the prayer background color
+                    uint targetPrayerColor = string.IsNullOrEmpty( PrayerRequest.Text ) ? ControlStylingConfig.BadInput_BG_Layer_Color : ControlStylingConfig.BG_Layer_Color;
+                    Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetPrayerColor, PrayerRequestLayer );
+
+
+                    int categoryId = RockGeneralData.Instance.Data.PrayerCategoryToId( CategoryButton.Title( UIControlState.Normal ) );
+
+                    uint targetCategoryColor = categoryId == -1 ? ControlStylingConfig.BadInput_BG_Layer_Color : ControlStylingConfig.BG_Layer_Color;
+                    Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetCategoryColor, CategoryLayer );
+
+                    // check for debug features
+                    CheckDebug( );
                 }
-                Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetLastNameColor, LastName.Background );
-
-
-                // Update the prayer background color
-                uint targetPrayerColor = string.IsNullOrEmpty( PrayerRequest.Text ) ? ControlStylingConfig.BadInput_BG_Layer_Color : ControlStylingConfig.BG_Layer_Color;
-                Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetPrayerColor, PrayerRequestLayer );
-
-
-                int categoryId = RockGeneralData.Instance.Data.PrayerCategoryToId( CategoryButton.Title( UIControlState.Normal ) );
-
-                uint targetCategoryColor = categoryId == -1 ? ControlStylingConfig.BadInput_BG_Layer_Color : ControlStylingConfig.BG_Layer_Color;
-                Rock.Mobile.PlatformSpecific.iOS.UI.Util.AnimateViewColor( targetCategoryColor, CategoryLayer );
-
-                // check for debug features
-                CheckDebug( );
             }
         }
 
@@ -334,9 +359,6 @@ namespace iOS
                 PrayerRequest.ResignFirstResponder( );
                 FirstName.Field.ResignFirstResponder( );
                 LastName.Field.ResignFirstResponder( );
-
-                // default to the first choice
-                PickerSelected( 0 );
             }
 
             PickerAdjustManager.TogglePicker( enabled );
@@ -350,6 +372,8 @@ namespace iOS
             // set the category's text to be the item they selected. Note that we now change the color to Active from the original Placeholder
             CategoryButton.SetTitleColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor ), UIControlState.Normal );
             CategoryButton.SetTitle( RockGeneralData.Instance.Data.PrayerCategories[ row ].Name, UIControlState.Normal );
+
+            //PickerAdjustManager.TogglePicker( false );
         }
 
         /// <summary>

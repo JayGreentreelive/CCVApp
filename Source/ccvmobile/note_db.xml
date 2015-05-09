@@ -4,6 +4,27 @@
 
 	<SeriesList>
 		<!--Start Series-->
+		<Series Private="true">
+			<Message>
+				<Name>ARE ALL FAITHS EQUAL?</Name>
+				<Speaker>Todd Clark</Speaker>
+				<Date>5/10/2015</Date>
+				<NoteUrl>xml/message_5_9_2015.xml</NoteUrl>
+			</Message>
+
+			<Name>YOU ASKED FOR IT</Name>
+			<Description>
+				Do you have a tough question about life or faith that you just can't seem to find a good answer for?
+				We will take on some of your top questions.
+			</Description>
+			<DateRanges>5/9/2015 - 6/1/2015</DateRanges>
+			<BillboardUrl>images/you_asked_for_it.png</BillboardUrl>
+			<ThumbnailUrl>images/you_asked_for_it_thumb.png</ThumbnailUrl>
+
+		</Series>
+		<!--End Series-->
+
+		<!--Start Series-->
 		<Series>
 			<Message>
 				<Name>RELIGION</Name>

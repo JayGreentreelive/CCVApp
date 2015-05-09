@@ -136,6 +136,15 @@ namespace App
                             bounds.Width = Math.Max( 1, parentSize.Width - bounds.X );
                         }
                     }
+                    if( bounds.Height < 1 )
+                    {
+                        bounds.Height = Math.Max( 1, parentSize.Height - bounds.Y ) * bounds.Height;
+                        if( bounds.Height == 0 )
+                        {
+                            // if 0, just take the our parents width
+                            bounds.Height = Math.Max( 1, parentSize.Height - bounds.Y );
+                        }
+                    }
                 }
 
                 public static float ParsePositioningValue( string value )

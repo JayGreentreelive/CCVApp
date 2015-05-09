@@ -150,7 +150,7 @@ namespace App
                     }
                     else
                     {
-                        OpenNote( );
+                        OpenNote( false );
                     }
 
                     // since we're restoring an existing user note,
@@ -188,9 +188,8 @@ namespace App
                     DeleteTimer.Elapsed += DeleteTimerDidFire;
                     DeleteTimer.AutoReset = false;*/
 
-                    // take our parent's style or in defaults
-                    mStyle = parentParams.Style;
-                    Styles.Style.MergeStyleAttributesWithDefaults( ref mStyle, ref ControlStyles.mUserNote );
+                    // take the UserNote default style, because they aren't part of the XML stream and have nothing to inherit.
+                    mStyle = ControlStyles.mUserNote;
 
                     // flag that we want this text field to grow as more text is added
                     TextView.ScaleHeightForText = true;
@@ -218,16 +217,9 @@ namespace App
                         TextView.BorderWidth = mStyle.mBorderWidth.Value;
                     }
 
-                    if( mStyle.mTextInputBackgroundColor.HasValue )
+                    if( mStyle.mBackgroundColor.HasValue )
                     {
-                        TextView.BackgroundColor = mStyle.mTextInputBackgroundColor.Value;
-                    }
-                    else
-                    {
-                        if( mStyle.mBackgroundColor.HasValue )
-                        {
-                            TextView.BackgroundColor = mStyle.mBackgroundColor.Value;
-                        }
+                        TextView.BackgroundColor = mStyle.mBackgroundColor.Value;
                     }
 
                     // Setup the anchor BG
@@ -517,7 +509,7 @@ namespace App
                                 // Require them to use the close button to close it
                                 if ( TextView.Hidden == true )
                                 {
-                                    OpenNote( );
+                                    OpenNote( false );
                                 }
                             }
                             break;
@@ -720,13 +712,13 @@ namespace App
 
                 bool Animating { get; set; }
                 bool AnimatingUtilityView { get; set; }
-                public void OpenNote()
+                public void OpenNote( bool becomeFirstResponder )
                 {
                     AnimateNoteIcon( true );
                     AnimateUtilityView( true );
 
                     // open the text field
-                    TextView.AnimateOpen( );
+                    TextView.AnimateOpen( becomeFirstResponder );
                     Console.WriteLine( "Opening Note" );
                 }
 
@@ -738,6 +730,8 @@ namespace App
                     // close the text field
                     TextView.AnimateClosed( );
                     Console.WriteLine( "Closing Note" );
+
+                    TextView.ResignFirstResponder( );
                 }
 
                 PointF GetNoteIconPos( bool open )

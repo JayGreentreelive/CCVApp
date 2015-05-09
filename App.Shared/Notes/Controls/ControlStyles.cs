@@ -128,11 +128,6 @@ namespace App
                     public TextCase? mTextCase;
 
                     /// <summary>
-                    /// The background color for a text input field (if it should differ from the background color of the Note)
-                    /// </summary>
-                    public uint? mTextInputBackgroundColor;
-
-                    /// <summary>
                     /// The thickness of any border desired around the control
                     /// </summary>
                     public float? mBorderWidth;
@@ -274,13 +269,6 @@ namespace App
                         else
                         {
                             style.mBackgroundColor = null;
-                        }
-
-                        // check for text input background color
-                        result = reader.GetAttribute( "TextInputBackgroundColor" );
-                        if( string.IsNullOrEmpty( result ) == false )
-                        {
-                            style.mTextInputBackgroundColor = ParseColor( result );
                         }
 
                         // check for full width header (note only)
@@ -486,12 +474,6 @@ namespace App
                         if ( style.mTextCase.HasValue == false )
                         {
                             style.mTextCase = defaultStyle.mTextCase;
-                        }
-
-                        // check for textInput background color
-                        if( style.mTextInputBackgroundColor.HasValue == false )
-                        {
-                            style.mTextInputBackgroundColor = defaultStyle.mTextInputBackgroundColor;
                         }
 
                         // check for note specific
@@ -764,8 +746,6 @@ namespace App
                     mTextInput.mBorderColor = 0x777777FF;
                     mTextInput.mBorderRadius = 5;
                     mTextInput.mBorderWidth = 4;
-
-                    mTextInput.mTextInputBackgroundColor = 0xFFFFFFFF;
                 }
 
                 static void CreateQuoteStyle()
@@ -817,8 +797,6 @@ namespace App
                     mUserNote.mBorderColor = 0x777777FF;
                     mUserNote.mBorderRadius = 5;
                     mUserNote.mBorderWidth = 4;
-
-                    mUserNote.mTextInputBackgroundColor = 0xFFFFFFFF;
 
                     mUserNote.mAlignment = Styles.Alignment.Left;
                     mUserNote.mFont.mName = "Bevan";

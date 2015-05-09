@@ -57,16 +57,9 @@ namespace App
                         PlatformLabel.BorderWidth = mStyle.mBorderWidth.Value;
                     }
 
-                    if( mStyle.mTextInputBackgroundColor.HasValue )
+                    if( mStyle.mBackgroundColor.HasValue )
                     {
-                        PlatformLabel.BackgroundColor = mStyle.mTextInputBackgroundColor.Value;
-                    }
-                    else
-                    {
-                        if( mStyle.mBackgroundColor.HasValue )
-                        {
-                            PlatformLabel.BackgroundColor = mStyle.mBackgroundColor.Value;
-                        }
+                        PlatformLabel.BackgroundColor = mStyle.mBackgroundColor.Value;
                     }
 
                     // set the dimensions and position

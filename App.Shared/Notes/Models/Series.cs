@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using RestSharp.Serializers;
 
 namespace App.Shared
 {
@@ -27,6 +28,51 @@ namespace App.Shared
                     }
 
                     singleSeries.MakeURLsAbsolute( HostDomain );
+                }
+            }
+
+            public void ProcessPrivateNotes( bool allowPrivate )
+            {
+                List<Series> privateSeries = new List<Series>( );
+                List<Series.Message> privateMessages = new List<Series.Message>( );
+                
+                // if allowing private is false, remove them any private series or message.
+                if ( allowPrivate == false )
+                {
+                    // SERIES
+                    foreach ( Series singleSeries in SeriesList )
+                    {
+                        // first, is this series private? If so it's going away,
+                        // so there's no point in processing its messages
+                        if ( singleSeries.Private == true )
+                        {
+                            privateSeries.Add( singleSeries );
+                        }
+                        else
+                        {
+                            // MESSAGES
+                            foreach ( Series.Message message in singleSeries.Messages )
+                            {
+                                // if the message is marked as private, add it to our list for removal
+                                if ( message.Private == true )
+                                {
+                                    privateMessages.Add( message );
+                                }
+                            }
+
+                            // now remove each private message from the series
+                            foreach ( Series.Message privateMessage in privateMessages )
+                            {
+                                singleSeries.Messages.Remove( privateMessage );
+                            }
+                        }
+                    }
+
+                    // finally remove all private series
+                    foreach ( Series series in privateSeries )
+                    {
+                        SeriesList.Remove( series );
+                    }
                 }
             }
 
@@ -219,6 +265,13 @@ namespace App.Shared
                         _ShareUrl = value == null ? "" : value.Trim( Series.TrimChars );
                     }
                 }
+
+                /// <summary>
+                /// If true, this will only be displayed if the user has 'refresh notes' enabled.
+                /// This allows notes to be worked on without the public seeing them.
+                /// </summary>
+                [SerializeAs(Name = "Private")]
+                public bool Private { get; protected set; }
             }
 
             public Series( )
@@ -334,6 +387,13 @@ namespace App.Shared
                     _DateRanges = value == null ? "" : value.Trim( TrimChars );
                 }
             }
+
+            /// <summary>
+            /// If true, this will only be displayed if the user has 'refresh notes' enabled.
+            /// This allows notes to be worked on without the public seeing them.
+            /// </summary>
+            [SerializeAs(Name = "Private")]
+            public bool Private { get; protected set; }
 
             /// <summary>
             /// List of all the messages within this series

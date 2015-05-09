@@ -236,6 +236,12 @@ namespace iOS
                 // it says 40, but it's gonna be 32. Conversely, going back, we use 32 and it's actually 40, which causes us to start this view 8px too high.
                 if ( App.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled == true )
                 {
+                    // add the refresh button if necessary
+                    if ( RefreshButton.Superview == null )
+                    {
+                        View.AddSubview( RefreshButton );
+                    }
+
                     RefreshButton.Layer.Position = new CGPoint( View.Bounds.Width / 2, ( RefreshButton.Frame.Height / 2 ) );
 
                     UIScrollView.Frame = new CGRect( 0, 0, View.Bounds.Width, View.Bounds.Height - RefreshButton.Frame.Height );
@@ -243,6 +249,12 @@ namespace iOS
                 }
                 else
                 {
+                    // remove the refresh button if necessary
+                    if ( RefreshButton.Superview != null )
+                    {
+                        RefreshButton.RemoveFromSuperview( );
+                    }
+
                     UIScrollView.Frame = new CGRect( 0, 0, View.Bounds.Width, View.Bounds.Height );
                     UIScrollView.Layer.Position = new CGPoint( UIScrollView.Layer.Position.X, UIScrollView.Layer.Position.Y );
                 }
@@ -298,11 +310,6 @@ namespace iOS
             };
 
             KeyboardAdjustManager = new Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager( View, UIScrollView );
-
-            if ( App.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled == true )
-            {
-                View.AddSubview( RefreshButton );
-            }
 
             ResultView = new UIResultView( UIScrollView, View.Frame.ToRectF( ), OnResultViewDone );
 
@@ -439,7 +446,7 @@ namespace iOS
                 shareController.ExcludedActivityTypes = new NSString[] { UIActivityType.PostToFacebook, 
                                                                          UIActivityType.AirDrop, 
                                                                          UIActivityType.PostToTwitter, 
-                                                                         UIActivityType.CopyToPasteboard, 
+                                                                         UIActivityType.CopyToPasteboard,
                                                                          UIActivityType.Message };
 
                 // if devices like an iPad want an anchor, set it
@@ -608,7 +615,7 @@ namespace iOS
                         }
                         else
                         {
-                            ReportException( "", null );
+                            ReportException( "Error downloading note", null );
                         }
                     } );
             }
