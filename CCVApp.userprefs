@@ -1,55 +1,11 @@
 ﻿<Properties StartupItem="iOS/iOS.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhone4s.8.3" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="App.Shared/Notes/Controls/UserNote.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|iPhone" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget" />
+  <MonoDevelop.Ide.Workbench>
     <Files>
-      <File FileName="iOS/SpringboardViewController.cs" Line="872" Column="49" />
-      <File FileName="App.Shared/Notes/Controls/UserNote.cs" Line="729" Column="21" />
-      <File FileName="App.Shared/Notes/Controls/Note.cs" Line="640" Column="48" />
+      <File FileName="iOS/SpringboardViewController.cs" Line="853" Column="66" />
+      <File FileName="App.Shared/Notes/Controls/UserNote.cs" Line="704" Column="53" />
+      <File FileName="App.Shared/Notes/Controls/Note.cs" Line="1" Column="1" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State name="__root__">
-          <Node name="CCVApp" expanded="True">
-            <Node name="App.Shared" expanded="True">
-              <Node name="Notes" expanded="True">
-                <Node name="Controls" expanded="True">
-                  <Node name="UserNote.cs" selected="True" />
-                </Node>
-              </Node>
-              <Node name="RockApi" expanded="True" />
-            </Node>
-            <Node name="Droid" expanded="True">
-              <Node name="Tasks" expanded="True">
-                <Node name="NotesTask" expanded="True" />
-              </Node>
-            </Node>
-            <Node name="iOS" expanded="True">
-              <Node name="Tasks" expanded="True">
-                <Node name="Notes" expanded="True" />
-                <Node name="Prayer" expanded="True" />
-              </Node>
-            </Node>
-            <Node name="Rock.Mobile" expanded="True">
-              <Node name="IO" expanded="True" />
-              <Node name="Network" expanded="True" />
-              <Node name="PlatformSpecific" expanded="True">
-                <Node name="Android" expanded="True" />
-                <Node name="iOS" expanded="True" />
-              </Node>
-              <Node name="UI" expanded="True">
-                <Node name="Droid" expanded="True" />
-                <Node name="iOS" expanded="True">
-                  <Node name="iOSNative" expanded="True" />
-                </Node>
-              </Node>
-            </Node>
-          </Node>
-        </State>
-      </Pad>
-      <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />

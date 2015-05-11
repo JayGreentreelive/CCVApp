@@ -4,7 +4,7 @@
 
 	<SeriesList>
 		<!--Start Series-->
-		<Series Private="true">
+		<Series>
 			<Message>
 				<Name>ARE ALL FAITHS EQUAL?</Name>
 				<Speaker>Todd Clark</Speaker>
