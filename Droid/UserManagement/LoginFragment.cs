@@ -379,6 +379,12 @@ namespace Droid
             {
                 case System.Net.HttpStatusCode.OK:
                 {
+                    // see if we should set their viewing campus
+                    if( RockMobileUser.Instance.PrimaryFamily.CampusId.HasValue == true )
+                    {
+                        RockMobileUser.Instance.ViewingCampus = RockMobileUser.Instance.PrimaryFamily.CampusId.Value;
+                    }
+
                     // if they have a profile picture, grab it.
                     RockMobileUser.Instance.TryDownloadProfilePicture( PrivateGeneralConfig.ProfileImageSize, ProfileImageComplete );
 
