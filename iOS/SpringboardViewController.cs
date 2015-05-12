@@ -513,7 +513,9 @@ namespace iOS
                         actionSheet.AddAction( campusAction );
                     }
 
-
+                    // let them cancel, too
+                    UIAlertAction cancelAction = UIAlertAction.Create( GeneralStrings.Cancel, UIAlertActionStyle.Cancel, delegate { });
+                    actionSheet.AddAction( cancelAction );
 
                     PresentViewController( actionSheet, true, null );
             };
@@ -833,7 +835,7 @@ namespace iOS
                 } );
 
             //setup cancel
-            UIAlertAction cancelAction = UIAlertAction.Create( GeneralStrings.Cancel, UIAlertActionStyle.Default, delegate{ } );
+            UIAlertAction cancelAction = UIAlertAction.Create( GeneralStrings.Cancel, UIAlertActionStyle.Cancel, delegate{ } );
 
             actionSheet.AddAction( cameraAction );
             actionSheet.AddAction( photoLibraryAction );
@@ -1037,30 +1039,36 @@ namespace iOS
             if ( SeriesInfoDownloaded == true && IsOOBERunning == false && Billboard != null && Billboard.Superview != null )
             {
                 // should we advertise the notes?
-                // yes, if it's a weekend
-                if ( DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday )
-                {
-                    if ( RockLaunchData.Instance.Data.NoteDB.SeriesList.Count > 0 && RockLaunchData.Instance.Data.NoteDB.SeriesList[ 0 ].Messages[ 0 ] != null )
-                    {
-                        // lastly, ensure there's a valid note for the message
-                        if ( string.IsNullOrEmpty( RockLaunchData.Instance.Data.NoteDB.SeriesList[ 0 ].Messages[ 0 ].NoteUrl ) == false )
-                        {
-                            // kick off a timer to reveal the billboard, because we 
-                            // don't want to do it the MOMENT the view appears.
-                            System.Timers.Timer timer = new System.Timers.Timer();
-                            timer.AutoReset = false;
-                            timer.Interval = 1;
-                            timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>
-                            {
-                                Rock.Mobile.Threading.Util.PerformOnUIThread( 
-                                    delegate
-                                    {
-                                        Billboard.Reveal( );
-                                    } );
-                            };
-                            timer.Start( );
 
-                            return true;
+                // make sure we're not already showing the notes.
+                NotesTask noteTask = NavViewController.CurrentTask as NotesTask;
+                if( noteTask == null || noteTask.IsReading( ) == false )
+                {
+                    // yes, if it's a weekend
+                    if ( DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday )
+                    {
+                        if ( RockLaunchData.Instance.Data.NoteDB.SeriesList.Count > 0 && RockLaunchData.Instance.Data.NoteDB.SeriesList[ 0 ].Messages[ 0 ] != null )
+                        {
+                            // lastly, ensure there's a valid note for the message
+                            if ( string.IsNullOrEmpty( RockLaunchData.Instance.Data.NoteDB.SeriesList[ 0 ].Messages[ 0 ].NoteUrl ) == false )
+                            {
+                                // kick off a timer to reveal the billboard, because we 
+                                // don't want to do it the MOMENT the view appears.
+                                System.Timers.Timer timer = new System.Timers.Timer();
+                                timer.AutoReset = false;
+                                timer.Interval = 1;
+                                timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>
+                                {
+                                    Rock.Mobile.Threading.Util.PerformOnUIThread( 
+                                        delegate
+                                        {
+                                            Billboard.Reveal( );
+                                        } );
+                                };
+                                timer.Start( );
+
+                                return true;
+                            }
                         }
                     }
                 }

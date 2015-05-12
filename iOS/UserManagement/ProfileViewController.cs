@@ -269,6 +269,10 @@ namespace iOS
                         actionSheet.AddAction( campusAction );
                     }
 
+                    // let them cancel, too
+                    UIAlertAction cancelAction = UIAlertAction.Create( GeneralStrings.Cancel, UIAlertActionStyle.Cancel, delegate { });
+                    actionSheet.AddAction( cancelAction );
+
                     PresentViewController( actionSheet, true, null );
                 };
 

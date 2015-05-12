@@ -46,6 +46,11 @@ namespace App
                 /// This should be the base URL for where your Rock instance is hosted.
                 /// </summary>
                 public const string RockBaseUrl = "http://rock.ccvonline.com/";
+
+                /// <summary>
+                /// The base URL to look for Notes.
+                /// </summary>
+                public const string NoteBaseURL = "http://ccv.church/ccvmobile/";
             }
 
             public class SpringboardConfig
@@ -144,11 +149,6 @@ namespace App
 
             public class NoteConfig
             {
-                /// <summary>
-                /// The base URL to look for Notes. (this may be removed in a future version)
-                /// </summary>
-                public const string BaseURL = "http://ccv.church/ccvmobile/";
-
                 /// <summary>
                 /// The color of the font/icon when displaying the citation icon.
                 /// </summary>

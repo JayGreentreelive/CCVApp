@@ -70,6 +70,11 @@ namespace iOS
             base.MakeInActive( );
         }
 
+        public bool IsReading( )
+        {
+            return ActiveViewController as NotesViewController != null ? true : false;
+        }
+
         public override void WillShowViewController(TaskUIViewController viewController)
         {
             base.WillShowViewController( viewController );

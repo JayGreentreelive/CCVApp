@@ -579,12 +579,8 @@ namespace App
                                     // If we find a groupType of family, that should be their primary family.
                                     if( personGroup.GroupType.Guid.ToString( ).ToLower( ) == Rock.Client.SystemGuid.GroupType.GROUPTYPE_FAMILY.ToLower( ) )
                                     {
-                                        // store the family, and if they have a campus set, default the viewing campus to that.
+                                        // store the family
                                         PrimaryFamily = personGroup;
-                                        if( PrimaryFamily.CampusId.HasValue == true )
-                                        {
-                                            ViewingCampus = PrimaryFamily.CampusId.Value;
-                                        }
 
                                         // look at each location within the family
                                         foreach( Rock.Client.GroupLocation groupLocation in personGroup.GroupLocations )

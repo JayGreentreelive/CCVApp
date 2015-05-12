@@ -423,6 +423,9 @@ namespace Droid
                             return false;
                         }
                     }
+
+                    // if we get any touch input whatsoever, lose the tutorial screen
+                    AnimateTutorialScreen( false );
                     return true;
                 }
 
@@ -668,6 +671,8 @@ namespace Droid
                                 };
                             timer.Start( );
                         }
+
+                        ParentTask.NavbarFragment.NavToolbar.Reveal( true );
                     }
                     catch( Exception ex )
                     {

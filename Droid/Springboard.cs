@@ -942,30 +942,35 @@ namespace Droid
             // should we advertise the notes?
             if ( IsOOBERunning == false && Billboard.Parent != null && SeriesInfoDownloaded == true )
             {
-                // yes, if it's a weekend and we're at church (that part will come later)
-                if ( DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday )
+                // uh, make sure they aren't already ON the notes.
+                Droid.Tasks.Notes.NotesTask noteTask = Elements[ ActiveElementIndex ].Task as Droid.Tasks.Notes.NotesTask;
+                if ( noteTask == null || noteTask.IsReadingNotes( ) == false )
                 {
-                    if ( RockLaunchData.Instance.Data.NoteDB.SeriesList.Count > 0 && RockLaunchData.Instance.Data.NoteDB.SeriesList[ 0 ].Messages[ 0 ] != null )
+                    // yes, if it's a weekend and we're at church (that part will come later)
+                    if ( DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday )
                     {
-                        // lastly, ensure there's a valid note for the message
-                        if ( string.IsNullOrEmpty( RockLaunchData.Instance.Data.NoteDB.SeriesList[ 0 ].Messages[ 0 ].NoteUrl ) == false )
+                        if ( RockLaunchData.Instance.Data.NoteDB.SeriesList.Count > 0 && RockLaunchData.Instance.Data.NoteDB.SeriesList[ 0 ].Messages[ 0 ] != null )
                         {
-                            // kick off a timer to reveal the billboard, because we 
-                            // don't want to do it the MOMENT the view appears.
-                            System.Timers.Timer timer = new System.Timers.Timer();
-                            timer.AutoReset = false;
-                            timer.Interval = 1;
-                            timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>
+                            // lastly, ensure there's a valid note for the message
+                            if ( string.IsNullOrEmpty( RockLaunchData.Instance.Data.NoteDB.SeriesList[ 0 ].Messages[ 0 ].NoteUrl ) == false )
                             {
-                                Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
-                                    {
-                                        Billboard.Reveal( );
-                                    } );
-                            };
-                            timer.Start( );
+                                // kick off a timer to reveal the billboard, because we 
+                                // don't want to do it the MOMENT the view appears.
+                                System.Timers.Timer timer = new System.Timers.Timer();
+                                timer.AutoReset = false;
+                                timer.Interval = 1;
+                                timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e ) =>
+                                {
+                                    Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                                        {
+                                            Billboard.Reveal( );
+                                        } );
+                                };
+                                timer.Start( );
 
-                            // let the caller know it's gonna show
-                            return true;
+                                // let the caller know it's gonna show
+                                return true;
+                            }
                         }
                     }
                 }

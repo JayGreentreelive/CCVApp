@@ -126,6 +126,11 @@ namespace Droid
                     return MainPage;
                 }
 
+                public bool IsReadingNotes( )
+                {
+                    return NotesPage.IsVisible;
+                }
+
                 public override void OnClick(Android.App.Fragment source, int buttonId, object context = null)
                 {
                     // only handle input if the springboard is closed

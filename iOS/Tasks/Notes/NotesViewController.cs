@@ -698,11 +698,12 @@ namespace iOS
                                     TutorialOverlay.Frame = View.Frame;
 
                                     AnimateTutorialScreen( true );
-                                    Task.NavToolbar.Reveal( false );
                                 });
                         };
                     timer.Start( );
                 }
+
+                Task.NavToolbar.Reveal( true );
             }
             catch( Exception ex )
             {

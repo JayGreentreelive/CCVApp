@@ -259,6 +259,7 @@ namespace App
                     // set the allowed X/Y so we don't let the user move the note off-screen.
                     MaxAllowedX = ( ScreenWidth - MinNoteWidth - Anchor.Bounds.Width );
                     MaxAllowedY = ( parentParams.Height - Anchor.Bounds.Height );
+                    MaxAllowedY *= 1.05f;
 
                     float width = Math.Max( MinNoteWidth, Math.Min( MaxNoteWidth, MaxAllowedX - startPos.X ) );
                     TextView.Bounds = new RectangleF( 0, 0, width, 0 );
