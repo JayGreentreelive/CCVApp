@@ -111,7 +111,8 @@ namespace iOS
             {
                 NavToolbar.SetCreateButtonEnabled( false, null );
                 NavToolbar.SetShareButtonEnabled( false, null );
-                NavToolbar.RevealForTime( 3.0f );
+                //NavToolbar.RevealForTime( 3.0f );
+                NavToolbar.Reveal( true );
             }
             else if ( ( viewController as NotesMainUIViewController ) != null )
             {
@@ -140,7 +141,7 @@ namespace iOS
             {
                 if ( SpringboardViewController.IsLandscapeWide( ) || SpringboardViewController.IsDevicePortrait( ) )
                 {
-                    NavToolbar.RevealForTime( 3.0f );
+                    //NavToolbar.RevealForTime( 3.0f );
                 }
             }
         }

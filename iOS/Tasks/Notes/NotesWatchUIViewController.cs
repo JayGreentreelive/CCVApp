@@ -177,7 +177,8 @@ namespace iOS
             // landscape wide devices MAY show the nav toolbar
             if ( SpringboardViewController.IsLandscapeWide( ) == true )
             {
-                Task.NavToolbar.RevealForTime( 3.0f );
+                //Task.NavToolbar.RevealForTime( 3.0f );
+                Task.NavToolbar.Reveal( true );
                 Task.NavToolbar.SetBackButtonEnabled( true );
             }
             // landscape non-wide devices should not
@@ -187,7 +188,8 @@ namespace iOS
             }
             else
             {
-                Task.NavToolbar.RevealForTime( 3.0f );
+                //Task.NavToolbar.RevealForTime( 3.0f );
+                Task.NavToolbar.Reveal( true );
                 Task.NavToolbar.SetBackButtonEnabled( true );
             }
 

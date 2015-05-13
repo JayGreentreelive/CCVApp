@@ -51,7 +51,8 @@ namespace iOS
             // otherwise, as long as it IS NOT the webView, do the standard 3 seconds
             else if ( viewController as TaskWebViewController == null )
             {
-                NavToolbar.RevealForTime( 3.0f );
+                //NavToolbar.RevealForTime( 3.0f );
+                NavToolbar.Reveal( true );
             }
         }
 
@@ -63,7 +64,7 @@ namespace iOS
             if ( ActiveViewController != MainPageVC && ( ActiveViewController as TaskWebViewController ) == null )
             {
                 // let a dead space tap reveal the toolbar
-                NavToolbar.RevealForTime( 3.0f );
+                //NavToolbar.RevealForTime( 3.0f );
             }
         }
 

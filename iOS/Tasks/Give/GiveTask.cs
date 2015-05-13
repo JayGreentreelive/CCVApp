@@ -48,7 +48,8 @@ namespace iOS
             }
             else
             {
-                NavToolbar.RevealForTime( 3.0f );
+                //NavToolbar.RevealForTime( 3.0f );
+                NavToolbar.Reveal( true );
             }
         }
 
@@ -57,7 +58,7 @@ namespace iOS
             base.TouchesEnded(taskUIViewController, touches, evt);
 
             // if they touched a dead area, reveal the nav toolbar again.
-            NavToolbar.RevealForTime( 3.0f );
+            //NavToolbar.RevealForTime( 3.0f );
         }
 
         public override void OnActivated( )

@@ -53,7 +53,8 @@ namespace iOS
                 // as nothing should be allowed while posting.
                 if ( viewController as Prayer_PostUIViewController == null )
                 {
-                    NavToolbar.RevealForTime( 3.0f );
+                    //NavToolbar.RevealForTime( 3.0f );
+                    NavToolbar.Reveal( true );
                 }
             }
         }
@@ -65,7 +66,7 @@ namespace iOS
             if ( ActiveViewController != MainPage )
             {
                 // if they touched a dead area, reveal the nav toolbar again.
-                NavToolbar.RevealForTime( 3.0f );
+                //NavToolbar.RevealForTime( 3.0f );
             }
         }
 
