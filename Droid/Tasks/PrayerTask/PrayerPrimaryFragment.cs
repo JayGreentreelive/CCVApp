@@ -517,13 +517,15 @@ namespace Droid
 
                         LayoutChanged( );
                     }
+                    else
+                    {
+                        // we're still in the process of requesting, so restore the "request UI"
+                        SetUIRequestingPrayers( );
+                    }
                 }
 
-                void DownloadPrayers( )
+                void SetUIRequestingPrayers( )
                 {
-                    // protect against double requests
-                    IsRequesting = true;
-
                     ActivityIndicator.Visibility = ViewStates.Visible;
 
                     // let them know we're attempting to download the prayers
@@ -534,6 +536,14 @@ namespace Droid
                     // until we have a result.
                     ResultLayer.Visibility = ViewStates.Invisible;
                     RetryButton.Visibility = ViewStates.Invisible;
+                }
+
+                void DownloadPrayers( )
+                {
+                    // protect against double requests
+                    IsRequesting = true;
+
+                    SetUIRequestingPrayers( );
 
                     // request the prayers each time this appears
                     App.Shared.Network.RockApi.Instance.GetPrayers( delegate(System.Net.HttpStatusCode statusCode, string statusDescription, List<Rock.Client.PrayerRequest> prayerRequests )
