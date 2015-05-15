@@ -20,6 +20,10 @@ using App.Shared;
 using System.IO;
 using App.Shared.PrivateConfig;
 using Rock.Mobile.IO;
+using Rock.Mobile.PlatformSpecific.Android;
+using Rock.Mobile.PlatformSpecific.Android.Util;
+using Rock.Mobile.Animation;
+using System.Threading;
 
 namespace Droid
 {
@@ -57,6 +61,9 @@ namespace Droid
                     ImageBanner = new Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView( Activity );
                     ( (LinearLayout)view ).AddView( ImageBanner, 0 );
 
+                    int height = (int)System.Math.Ceiling( NavbarFragment.GetContainerDisplayWidth( ) * PrivateNewsConfig.NewsBannerAspectRatio );
+                    ImageBanner.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, height );
+
                     TextView title = view.FindViewById<TextView>( Resource.Id.news_details_title );
                     title.Text = NewsItem.Title;
                     title.SetSingleLine( );
@@ -85,6 +92,39 @@ namespace Droid
                         launchUrlButton.Visibility = ViewStates.Invisible;
                     }
 
+
+                    // get the placeholder image in case we need it
+                    // attempt to load the image from cache. If that doesn't work, use a placeholder
+                    HeaderImage = null;
+
+                    bool imageExists = TryLoadBanner( NewsItem.HeaderImageName );
+                    if ( imageExists == false )
+                    {
+                        // use the placeholder and request the image download
+                        FileCache.Instance.DownloadFileToCache( NewsItem.HeaderImageURL, NewsItem.HeaderImageName, delegate
+                            {
+                                TryLoadBanner( NewsItem.HeaderImageName );
+                            } );
+
+
+                        AsyncLoader.LoadImage( PrivateGeneralConfig.NewsDetailsPlaceholder, true, false,
+                            delegate( Bitmap imageBmp )
+                            {
+                                if ( IsFragmentActive == true )
+                                {
+                                    HeaderImage = imageBmp;
+                                    ImageBanner.SetImageBitmap( HeaderImage );
+                                    ImageBanner.Invalidate( );
+
+                                    Rock.Mobile.PlatformSpecific.Android.UI.Util.FadeView( ImageBanner, true, null );
+
+                                    return true;
+                                }
+
+                                return false;
+                            } );
+                    }
+
                     return view;
                 }
 
@@ -98,70 +138,48 @@ namespace Droid
                     ParentTask.NavbarFragment.NavToolbar.Reveal( false );
 
                     IsFragmentActive = true;
+                }
 
-
-                    // attempt to load the image from cache. If that doesn't work, use a placeholder
-                    HeaderImage = null;
-
-                    System.IO.MemoryStream assetStream = (System.IO.MemoryStream)FileCache.Instance.LoadFile( NewsItem.HeaderImageName );
-                    if ( assetStream!= null )
+                bool TryLoadBanner( string filename )
+                {
+                    // if the file exists
+                    if ( FileCache.Instance.FileExists( filename ) == true )
                     {
-                        try
-                        {
-                            HeaderImage = BitmapFactory.DecodeStream( assetStream );
-                        }
-                        catch( Exception )
-                        {
-                            FileCache.Instance.RemoveFile( NewsItem.HeaderImageName );
-                            Console.WriteLine( "Image {0} was corrupt. Removing.", NewsItem.HeaderImageName );
-                        }
-                        assetStream.Dispose( );
+                        // load it asynchronously
+                        AsyncLoader.LoadImage( filename, false, false,
+                            delegate( Bitmap imageBmp )
+                            {
+                                if ( IsFragmentActive == true )
+                                {
+                                    // if for some reason it loaded corrupt, remove it.
+                                    if ( imageBmp == null )
+                                    {
+                                        FileCache.Instance.RemoveFile( filename );
+                                    }
+
+                                    HeaderImage = imageBmp;
+
+                                    if( ImageBanner.Drawable != null )
+                                    {
+                                        ImageBanner.Drawable.Dispose( );
+                                    }
+
+                                    ImageBanner.SetImageBitmap( HeaderImage );
+                                    ImageBanner.Invalidate( );
+
+                                    Rock.Mobile.PlatformSpecific.Android.UI.Util.FadeView( ImageBanner, true, null );
+
+                                    return true;
+                                }
+                                return false;
+
+                            } );
+
+                        return true;
                     }
                     else
                     {
-                        // use the placeholder and request the image download
-                        System.IO.Stream thumbnailStream = Activity.BaseContext.Assets.Open( PrivateGeneralConfig.NewsDetailsPlaceholder );
-                        HeaderImage = BitmapFactory.DecodeStream( thumbnailStream );
-
-                        FileCache.Instance.DownloadFileToCache( NewsItem.HeaderImageURL, NewsItem.HeaderImageName, delegate
-                            {
-                                NewsHeaderDownloaded( );
-                            } );
-                    }
-                    ImageBanner.SetImageBitmap( HeaderImage );
-                }
-
-                void NewsHeaderDownloaded( )
-                {
-                    // if they're still viewing this article
-                    if ( IsFragmentActive == true )
-                    {
-                        Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
-                            {
-                                MemoryStream imageStream = (System.IO.MemoryStream)FileCache.Instance.LoadFile( NewsItem.HeaderImageName );
-                                if ( imageStream != null )
-                                {
-                                    try
-                                    {
-                                        HeaderImage.Dispose( );
-                                        HeaderImage = BitmapFactory.DecodeStream( imageStream );
-
-                                        ImageBanner.Drawable.Dispose( );
-                                        ImageBanner.SetImageBitmap( HeaderImage );
-                                    }
-                                    catch( Exception )
-                                    {
-                                        FileCache.Instance.RemoveFile( NewsItem.HeaderImageName );
-                                        Console.WriteLine( "Image {0} was corrupt. Removing.", NewsItem.HeaderImageName );
-
-                                        ImageBanner.Drawable.Dispose( );
-                                        ImageBanner.SetImageBitmap( null );
-                                    }
-
-                                    imageStream.Dispose( );
-                                }
-                            });
-
+                        return false;
                     }
                 }
 
@@ -171,11 +189,17 @@ namespace Droid
 
                     IsFragmentActive = false;
 
-                    HeaderImage.Dispose( );
-                    HeaderImage = null;
+                    if ( HeaderImage != null )
+                    {
+                        HeaderImage.Dispose( );
+                        HeaderImage = null;
+                    }
 
-                    ImageBanner.Drawable.Dispose( );
-                    ImageBanner.SetImageBitmap( null );
+                    if ( ImageBanner.Drawable != null )
+                    {
+                        ImageBanner.Drawable.Dispose( );
+                        ImageBanner.SetImageBitmap( null );
+                    }
                 }
             }
         }

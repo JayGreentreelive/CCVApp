@@ -37,8 +37,6 @@
 	<array>
 		<string>audio</string>
 	</array>
-	<key>CFBundleVersion</key>
-	<string>19</string>
 	<key>UIMainStoryboardFile~ipad</key>
 	<string>MainStoryboard</string>
 	<key>UISupportedInterfaceOrientations~ipad</key>
@@ -51,5 +49,7 @@
 	<true/>
 	<key>CFBundleDisplayName</key>
 	<string>CCV Mobile</string>
+	<key>CFBundleVersion</key>
+	<string>20</string>
 </dict>
 </plist>

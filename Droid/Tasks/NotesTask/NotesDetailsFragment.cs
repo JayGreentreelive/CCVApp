@@ -23,6 +23,9 @@ using App.Shared.Config;
 using App.Shared.Strings;
 using App.Shared.Analytics;
 using App.Shared.PrivateConfig;
+using Rock.Mobile.PlatformSpecific.Android.Util;
+using Rock.Mobile.IO;
+using Rock.Mobile.PlatformSpecific.Android.UI;
 
 namespace Droid
 {
@@ -30,76 +33,76 @@ namespace Droid
     {
         namespace Notes
         {
-            public class NotesDetailsArrayAdapter : BaseAdapter
+            public class NotesDetailsArrayAdapter : ListAdapter
             {
-                List<MessageEntry> Messages { get; set; }
-
-                Series Series { get; set; }
-                Bitmap SeriesBillboard { get; set; }
-
                 NotesDetailsFragment ParentFragment { get; set; }
 
-                public NotesDetailsArrayAdapter( NotesDetailsFragment parentFragment, List<MessageEntry> messages, Series series, Bitmap seriesBillboard )
+                public NotesDetailsArrayAdapter( NotesDetailsFragment parentFragment )
                 {
                     ParentFragment = parentFragment;
-
-                    Messages = messages;
-
-                    Series = series;
-
-                    SeriesBillboard = seriesBillboard;
                 }
 
                 public override int Count 
                 {
-                    get { return Messages.Count + 1; }
-                }
-
-                public override Java.Lang.Object GetItem (int position) 
-                {
-                    // could wrap a Contact in a Java.Lang.Object
-                    // to return it here if needed
-                    return null;
-                }
-
-                public override long GetItemId (int position) 
-                {
-                    return 0;
+                    get { return ParentFragment.Series.Messages.Count + 1; }
                 }
 
                 public override View GetView(int position, View convertView, ViewGroup parent)
                 {
+                    ListItemView newItem = null;
+
                     if ( position == 0 )
                     {
-                        return GetPrimaryView( convertView, parent );
+                        newItem = GetPrimaryView( convertView, parent );
                     }
                     else
                     {
-                        return GetStandardView( position - 1, convertView, parent );
+                        newItem = GetStandardView( position - 1, convertView, parent );
                     }
+
+                    return AddView( newItem );
                 }
 
-                View GetPrimaryView( View convertView, ViewGroup parent )
+                ListItemView GetPrimaryView( View convertView, ViewGroup parent )
                 {
                     MessagePrimaryListItem messageItem = convertView as MessagePrimaryListItem;
                     if ( messageItem == null )
                     {
                         messageItem = new MessagePrimaryListItem( ParentFragment.Activity.BaseContext );
+
+                        int height = (int)System.Math.Ceiling( NavbarFragment.GetContainerDisplayWidth( ) * PrivateNoteConfig.NotesMainPlaceholderAspectRatio );
+                        messageItem.Thumbnail.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, height );
+
+                        messageItem.HasImage = false;
                     }
 
                     messageItem.ParentAdapter = this;
 
-                    messageItem.Thumbnail.SetImageBitmap( SeriesBillboard );
-                    messageItem.Thumbnail.SetScaleType( ImageView.ScaleType.CenterCrop );
+                    if ( ParentFragment.SeriesBillboard != null )
+                    {
+                        if ( messageItem.HasImage == false )
+                        {
+                            messageItem.HasImage = true;
+                            Rock.Mobile.PlatformSpecific.Android.UI.Util.FadeView( messageItem.Thumbnail, true, null );
+                        }
+                        
+                        messageItem.Thumbnail.SetImageBitmap( ParentFragment.SeriesBillboard );
+                        messageItem.Thumbnail.SetScaleType( ImageView.ScaleType.CenterCrop );
+                    }
+                    else if ( ParentFragment.PlaceholderImage != null )
+                    {
+                        messageItem.Thumbnail.SetImageBitmap( ParentFragment.PlaceholderImage );
+                        messageItem.Thumbnail.SetScaleType( ImageView.ScaleType.CenterCrop );
+                    }
 
-                    messageItem.Title.Text = Series.Name;
-                    messageItem.DateRange.Text = Series.DateRanges;
-                    messageItem.Desc.Text = Series.Description;
+                    messageItem.Title.Text = ParentFragment.Series.Name;
+                    messageItem.DateRange.Text = ParentFragment.Series.DateRanges;
+                    messageItem.Desc.Text = ParentFragment.Series.Description;
 
                     return messageItem;
                 }
 
-                View GetStandardView( int position, View convertView, ViewGroup parent )
+                ListItemView GetStandardView( int position, View convertView, ViewGroup parent )
                 {
                     MessageListItem messageItem = convertView as MessageListItem;
                     if ( messageItem == null )
@@ -110,11 +113,11 @@ namespace Droid
                     messageItem.ParentAdapter = this;
                     messageItem.Position = position;
 
-                    messageItem.Title.Text = Messages[ position ].Message.Name;
-                    messageItem.Date.Text = Messages[ position ].Message.Date;
-                    messageItem.Speaker.Text = Messages[ position ].Message.Speaker;
+                    messageItem.Title.Text = ParentFragment.Series.Messages[ position ].Name;
+                    messageItem.Date.Text = ParentFragment.Series.Messages[ position ].Date;
+                    messageItem.Speaker.Text = ParentFragment.Series.Messages[ position ].Speaker;
 
-                    if ( string.IsNullOrEmpty( Messages[ position ].Message.AudioUrl ) == true )
+                    if ( string.IsNullOrEmpty( ParentFragment.Series.Messages[ position ].AudioUrl ) == true )
                     {
                         messageItem.ToggleListenButton( false );
                     }
@@ -123,7 +126,7 @@ namespace Droid
                         messageItem.ToggleListenButton( true );
                     }
 
-                    if ( string.IsNullOrEmpty( Messages[ position ].Message.WatchUrl ) == true )
+                    if ( string.IsNullOrEmpty( ParentFragment.Series.Messages[ position ].WatchUrl ) == true )
                     {
                         messageItem.ToggleWatchButton( false );
                     }
@@ -132,7 +135,7 @@ namespace Droid
                         messageItem.ToggleWatchButton( true );
                     }
 
-                    if ( string.IsNullOrEmpty( Messages[ position ].Message.NoteUrl ) == true )
+                    if ( string.IsNullOrEmpty( ParentFragment.Series.Messages[ position ].NoteUrl ) == true )
                     {
                         messageItem.ToggleTakeNotesButton( false );
                     }
@@ -150,7 +153,7 @@ namespace Droid
                 }
             }
 
-            public class MessagePrimaryListItem : LinearLayout
+            public class MessagePrimaryListItem : ListAdapter.ListItemView
             {
                 public NotesDetailsArrayAdapter ParentAdapter { get; set; }
 
@@ -159,6 +162,7 @@ namespace Droid
                 public TextView Title { get; set; }
                 public TextView DateRange { get; set; }
                 public TextView Desc { get; set; }
+                public bool HasImage { get; set; }
                 //
 
                 public MessagePrimaryListItem( Context context ) : base( context )
@@ -201,9 +205,14 @@ namespace Droid
                     ( (LinearLayout.LayoutParams)Desc.LayoutParameters ).BottomMargin = 25;
                     AddView( Desc );
                 }
+
+                public override void Destroy()
+                {
+                    Thumbnail.SetImageBitmap( null );   
+                }
             }
 
-            public class MessageListItem : LinearLayout
+            public class MessageListItem : ListAdapter.ListItemView
             {
                 public LinearLayout TitleLayout { get; set; }
                 public TextView Title { get; set; }
@@ -377,23 +386,17 @@ namespace Droid
                         TakeNotesButton.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( disabledColor ) );
                     }
                 }
-            }
 
-            /// <summary>
-            /// A wrapper class that consolidates the message, it's thumbnail and podcast status
-            /// </summary>
-            public class MessageEntry
-            {
-                public Series.Message Message { get; set; }
-                //public Bitmap Thumbnail { get; set; }
-                //public bool HasPodcast { get; set; }
+                public override void Destroy()
+                {
+                }
             }
 
             public class NotesDetailsFragment : TaskFragment
             {
                 public Series Series { get; set; }
-                public List<MessageEntry> Messages { get; set; }
                 public Bitmap SeriesBillboard { get; set; }
+                public Bitmap PlaceholderImage { get; set; }
 
                 ListView MessagesListView { get; set; }
 
@@ -402,8 +405,6 @@ namespace Droid
                 public override void OnCreate( Bundle savedInstanceState )
                 {
                     base.OnCreate( savedInstanceState );
-
-                    Messages = new List<MessageEntry>();
                 }
 
                 public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -422,7 +423,80 @@ namespace Droid
                     MessagesListView.SetOnTouchListener( this );
                     MessagesListView.Divider = null;
 
+
+                    // load the placeholder and series image
+                    SeriesBillboard = null;
+
+                    bool imageExists = TryLoadBanner( NotesTask.FormatBillboardImageName( Series.Name ) );
+                    if ( imageExists == false )
+                    {
+                        // use the placeholder and request the image download
+                        FileCache.Instance.DownloadFileToCache( Series.BillboardUrl, NotesTask.FormatBillboardImageName( Series.Name ), delegate
+                            {
+                                TryLoadBanner( NotesTask.FormatBillboardImageName( Series.Name ) );
+                            } );
+
+
+                        AsyncLoader.LoadImage( PrivateNoteConfig.NotesMainPlaceholder, true, false,
+                            delegate( Bitmap imageBmp )
+                            {
+                                if ( FragmentActive == true )
+                                {
+                                    PlaceholderImage = imageBmp;
+                                     
+                                    RefreshList( );
+
+                                    return true;
+                                }
+
+                                return false;
+                            } );
+                    }
+
                     return view;
+                }
+
+                void RefreshList( )
+                {
+                    if( MessagesListView != null && MessagesListView.Adapter != null )
+                    {
+                        ( MessagesListView.Adapter as ListAdapter ).NotifyDataSetChanged( );
+                    }
+                }
+
+                bool TryLoadBanner( string filename )
+                {
+                    // if the file exists
+                    if ( FileCache.Instance.FileExists( filename ) == true )
+                    {
+                        // load it asynchronously
+                        AsyncLoader.LoadImage( filename, false, false,
+                            delegate( Bitmap imageBmp )
+                            {
+                                if ( FragmentActive == true )
+                                {
+                                    // if for some reason it loaded corrupt, remove it.
+                                    if ( imageBmp == null )
+                                    {
+                                        FileCache.Instance.RemoveFile( filename );
+                                    }
+
+                                    SeriesBillboard = imageBmp;
+
+                                    RefreshList( );
+
+                                    return true;
+                                }
+                                return false;
+
+                            } );
+
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
 
                 public void OnClick( int position, int buttonIndex )
@@ -444,90 +518,37 @@ namespace Droid
                     // log the series they tapped on.
                     MessageAnalytic.Instance.Trigger( MessageAnalytic.BrowseSeries, Series.Name );
 
-                    Messages.Clear( );
-
                     // setup the messages list
-                    MessagesListView.Adapter = new NotesDetailsArrayAdapter( this, Messages, Series, SeriesBillboard );
-
-                    // now add the messages
-                    for ( int i = 0; i < Series.Messages.Count; i++ )
-                    {
-                        MessageEntry messageEntry = new MessageEntry();
-                        Messages.Add( messageEntry );
-
-                        // give each message entry its message and the default thumbnail
-                        messageEntry.Message = Series.Messages[ i ];
-                        //JHM 12-15-14: Don't set thumbnails, the latest design doesn't call for images on the entries.
-                        //messageEntry.Thumbnail = ThumbnailPlaceholder;
-
-                        // grab the thumbnail IF it has a podcast
-                        /*if ( string.IsNullOrEmpty( Series.Messages[ i ].WatchUrl ) == false )
-                        {
-                            messageEntry.HasPodcast = true;
-
-                            int requestedIndex = i;
-
-                            // first see if the image is cached
-                            MemoryStream image = FileCache.Instance.ReadImage( messageEntry.Message.Name );
-                            if ( image != null )
-                            {
-                                ApplyBillboardImage( messageEntry, image );
-
-                                image.Dispose( );
-                            }
-                            else
-                            {
-                                // sucky, it isn't. Download it.
-                                VimeoManager.Instance.GetVideoThumbnail( Series.Messages[ requestedIndex ].WatchUrl, 
-                                    delegate(System.Net.HttpStatusCode statusCode, string statusDescription, System.IO.MemoryStream imageBuffer )
-                                    {
-                                        if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
-                                        {
-                                            // on the main thread, update the list
-                                            Rock.Mobile.Threading.Util.PerformOnUIThread(delegate
-                                                {
-                                                    // whether we're still active or not, cache the image downloaded
-                                                    FileCache.Instance.WriteImage( imageBuffer, messageEntry.Message.Name );
-
-                                                    // only actually load it if we're still loaded
-                                                    if ( FragmentActive == true )
-                                                    {
-                                                        ApplyBillboardImage( messageEntry, imageBuffer );
-                                                    }
-
-                                                    imageBuffer.Dispose( );
-                                                });
-                                        }
-                                    } );
-                            }
-                        }*/
-                    }
+                    MessagesListView.Adapter = new NotesDetailsArrayAdapter( this );
                 }
-
-                /*void ApplyBillboardImage( MessageEntry messageEntry, MemoryStream imageBuffer )
-                {
-                    Android.Graphics.Bitmap bitmap = BitmapFactory.DecodeStream( imageBuffer );
-
-                    messageEntry.Thumbnail = bitmap;
-                    ( MessagesListView.Adapter as NotesDetailsArrayAdapter ).NotifyDataSetChanged( );
-                }*/
 
                 public override void OnPause( )
                 {
                     base.OnPause( );
 
                     FragmentActive = false;
+                }
 
-                    // free all associated bitmaps
-                    /*foreach ( MessageEntry messageEntry in Messages )
+                public override void OnDestroyView()
+                {
+                    base.OnDestroyView();
+
+                    if ( PlaceholderImage != null )
                     {
-                        // don't dump our one placeholder image. We need that one in memory
-                        if ( messageEntry.Thumbnail != ThumbnailPlaceholder )
-                        {
-                            messageEntry.Thumbnail.Dispose( );
-                        }
-                    }*/
-                    Messages.Clear( );
+                        PlaceholderImage.Dispose( );
+                        PlaceholderImage = null;
+                    }
+
+                    if ( SeriesBillboard != null )
+                    {
+                        SeriesBillboard.Dispose( );
+                        SeriesBillboard = null;
+                    }
+
+                    if ( MessagesListView != null && MessagesListView.Adapter != null )
+                    {
+                        ( (ListAdapter)MessagesListView.Adapter ).Destroy( );
+                    }
                 }
             }
         }

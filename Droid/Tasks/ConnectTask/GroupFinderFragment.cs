@@ -410,36 +410,43 @@ namespace Droid
                     {
                         Map = map;
 
-                        Map.SetOnMarkerClickListener( this );
-
-                        // set the map to a default position
-                        // additionally, set the default position for the map to whatever specified area.
-                        Android.Gms.Maps.Model.LatLng defaultPos = new Android.Gms.Maps.Model.LatLng( ConnectConfig.GroupFinder_DefaultLatitude, ConnectConfig.GroupFinder_DefaultLongitude );
-
-                        CameraUpdate camPos = CameraUpdateFactory.NewLatLngZoom( defaultPos, ConnectConfig.GroupFinder_DefaultScale_Android );
-                        map.MoveCamera( camPos );
-
-                        // see if there's an address for this person that we can automatically use.
-                        if ( RockMobileUser.Instance.HasFullAddress( ) == true )
+                        // because google can actually give me a valid map that isn't actually ready.
+                        try
                         {
-                            // if they don't already have any value, use their address
-                            if ( string.IsNullOrEmpty( StreetValue ) == true &&
-                                 string.IsNullOrEmpty( CityValue ) == true &&
-                                 string.IsNullOrEmpty( StateValue ) == true &&
-                                 string.IsNullOrEmpty( ZipValue ) == true )
+                            Map.SetOnMarkerClickListener( this );
+
+                            // set the map to a default position
+                            // additionally, set the default position for the map to whatever specified area.
+                            Android.Gms.Maps.Model.LatLng defaultPos = new Android.Gms.Maps.Model.LatLng( ConnectConfig.GroupFinder_DefaultLatitude, ConnectConfig.GroupFinder_DefaultLongitude );
+
+                            CameraUpdate camPos = CameraUpdateFactory.NewLatLngZoom( defaultPos, ConnectConfig.GroupFinder_DefaultScale_Android );
+                            map.MoveCamera( camPos );
+
+                            // see if there's an address for this person that we can automatically use.
+                            if ( RockMobileUser.Instance.HasFullAddress( ) == true )
                             {
-                                SearchPage.SetAddress( RockMobileUser.Instance.Street1( ), RockMobileUser.Instance.City( ), RockMobileUser.Instance.State( ), RockMobileUser.Instance.Zip( ) );    
+                                // if they don't already have any value, use their address
+                                if ( string.IsNullOrEmpty( StreetValue ) == true &&
+                                     string.IsNullOrEmpty( CityValue ) == true &&
+                                     string.IsNullOrEmpty( StateValue ) == true &&
+                                     string.IsNullOrEmpty( ZipValue ) == true )
+                                {
+                                    SearchPage.SetAddress( RockMobileUser.Instance.Street1( ), RockMobileUser.Instance.City( ), RockMobileUser.Instance.State( ), RockMobileUser.Instance.Zip( ) );    
+                                }
+                                else
+                                {
+                                    // otherwise use what they last had.
+                                    SearchPage.SetAddress( StreetValue, CityValue, StateValue, ZipValue );
+                                }
                             }
                             else
                             {
-                                // otherwise use what they last had.
-                                SearchPage.SetAddress( StreetValue, CityValue, StateValue, ZipValue );
+                                // otherwise, if there are values from a previous session, use those.
+                                SearchPage.SetAddress( StreetValue, CityValue, string.IsNullOrEmpty( StateValue ) ? ConnectStrings.GroupFinder_DefaultState : StateValue, ZipValue );
                             }
                         }
-                        else
+                        catch
                         {
-                            // otherwise, if there are values from a previous session, use those.
-                            SearchPage.SetAddress( StreetValue, CityValue, string.IsNullOrEmpty( StateValue ) ? ConnectStrings.GroupFinder_DefaultState : StateValue, ZipValue );
                         }
                     }
                 }
@@ -512,6 +519,14 @@ namespace Droid
                     }
                 }
 
+                public void SetSearchAddress( string street, string city, string state, string zip )
+                {
+                    StreetValue = street;
+                    CityValue = city;
+                    StateValue = state;
+                    ZipValue = zip;
+                }
+
                 public override void OnResume()
                 {
                     base.OnResume();
@@ -528,8 +543,6 @@ namespace Droid
 
                     // restore saved values
                     SearchPage.SetAddress( StreetValue, CityValue, StateValue, ZipValue );
-
-
                 }
 
                 public override void OnConfigurationChanged(Android.Content.Res.Configuration newConfig)

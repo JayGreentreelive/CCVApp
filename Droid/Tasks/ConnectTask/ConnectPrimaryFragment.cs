@@ -20,6 +20,9 @@ using Rock.Mobile.PlatformSpecific.Android.Graphics;
 using App.Shared;
 using Rock.Mobile.PlatformSpecific.Android.UI;
 using App.Shared.PrivateConfig;
+using Rock.Mobile;
+using System.Threading;
+using Rock.Mobile.PlatformSpecific.Android.Util;
 
 namespace Droid
 {
@@ -62,10 +65,22 @@ namespace Droid
                     if ( primaryItem == null )
                     {
                         primaryItem = new PrimaryListItem( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+
+                        int height = (int)System.Math.Ceiling( NavbarFragment.GetContainerDisplayWidth( ) * PrivateConnectConfig.MainPageHeaderAspectRatio );
+                        primaryItem.Billboard.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MatchParent, height );
+                        primaryItem.HasImage = false;
                     }
 
-                    primaryItem.Billboard.SetImageBitmap( ParentFragment.Billboard );
-                    primaryItem.Billboard.SetScaleType( ImageView.ScaleType.CenterCrop );
+                    if ( ParentFragment.Billboard != null )
+                    {
+                        if ( primaryItem.HasImage == false )
+                        {
+                            primaryItem.HasImage = true;
+                            Rock.Mobile.PlatformSpecific.Android.UI.Util.FadeView( primaryItem.Billboard, true, null );
+                        }
+                        
+                        primaryItem.Billboard.SetImageBitmap( ParentFragment.Billboard );
+                    }
 
                     return primaryItem;
                 }
@@ -76,10 +91,20 @@ namespace Droid
                     if ( seriesItem == null )
                     {
                         seriesItem = new ListItem( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                        seriesItem.HasImage = false;
                     }
 
-                    seriesItem.Thumbnail.SetImageBitmap( ParentFragment.LinkBillboards[ position ] );
-                    seriesItem.Thumbnail.SetScaleType( ImageView.ScaleType.CenterCrop );
+                    if ( position < ParentFragment.LinkBillboards.Count( ) && ParentFragment.LinkBillboards[ position ] != null )
+                    {
+                        if ( seriesItem.HasImage == false )
+                        {
+                            seriesItem.HasImage = true;
+                            Rock.Mobile.PlatformSpecific.Android.UI.Util.FadeView( seriesItem.Thumbnail, true, null );
+                        }
+                            
+                        seriesItem.Thumbnail.SetImageBitmap( ParentFragment.LinkBillboards[ position ] );
+                        seriesItem.Thumbnail.SetScaleType( ImageView.ScaleType.CenterCrop );
+                    }
 
                     seriesItem.Title.Text = ParentFragment.LinkEntries[ position ].Title;
                     return seriesItem;
@@ -94,6 +119,8 @@ namespace Droid
                 //
 
                 LinearLayout ButtonLayout { get; set; }
+
+                public bool HasImage { get; set; }
 
                 public PrimaryListItem( Context context ) : base( context )
                 {
@@ -132,6 +159,7 @@ namespace Droid
                 public TextView Title { get; set; }
                 public TextView Chevron { get; set; }
                 public View Seperator { get; set; }
+                public bool HasImage { get; set; }
 
                 public ListItem( Context context ) : base( context )
                 {
@@ -206,12 +234,7 @@ namespace Droid
                 public Bitmap Billboard { get; set; }
 
                 public List<ConnectLink> LinkEntries { get; set; }
-                public List<Bitmap> LinkBillboards { get; set; }
-
-                public ConnectPrimaryFragment( )
-                {
-                    LinkBillboards = new List<Bitmap>( );
-                }
+                public Bitmap [] LinkBillboards { get; set; }
 
                 public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
                 {
@@ -221,6 +244,10 @@ namespace Droid
                         return null;
                     }
 
+                    View view = inflater.Inflate(Resource.Layout.Connect_Primary, container, false);
+                    view.SetOnTouchListener( this );
+
+
                     LinkEntries = ConnectLink.BuildList( );
 
                     // insert group finder into the beginning of the list so it's always the first entry
@@ -229,21 +256,7 @@ namespace Droid
                     groupFinderLink.ImageName = PrivateConnectConfig.GroupFinder_IconImage;
                     LinkEntries.Insert( 0, groupFinderLink );
 
-                    foreach ( ConnectLink link in LinkEntries )
-                    {
-                        // load each entry's thumbnail image
-                        System.IO.Stream thumbnailStream = Activity.BaseContext.Assets.Open( link.ImageName );
-                        LinkBillboards.Add( BitmapFactory.DecodeStream( thumbnailStream ) );
-                        thumbnailStream.Dispose( );
-                    }
-
-                    // setup the main image billboard
-                    System.IO.Stream assetStream = Activity.BaseContext.Assets.Open( PrivateConnectConfig.MainPageHeaderImage );
-                    Billboard = BitmapFactory.DecodeStream( assetStream );
-                    assetStream.Dispose( );
-
-                    View view = inflater.Inflate(Resource.Layout.Connect_Primary, container, false);
-                    view.SetOnTouchListener( this );
+                    LinkBillboards = new Bitmap[ LinkEntries.Count ];
 
                     ListView = view.FindViewById<ListView>( Resource.Id.connect_primary_list );
 
@@ -266,7 +279,57 @@ namespace Droid
                     ListView.SetOnTouchListener( this );
                     ListView.Adapter = new ArrayAdapter( this );
 
+                    if ( ParentTask.TaskReadyForFragmentDisplay == true )
+                    {
+                        SetupDisplay( view );
+                    }
+
                     return view;
+                }
+
+                public override void TaskReadyForFragmentDisplay()
+                {
+                    base.TaskReadyForFragmentDisplay();
+
+                    SetupDisplay( View );
+                }
+
+                void SetupDisplay( View view )
+                {
+                    // load the top banner
+                    AsyncLoader.LoadImage( PrivateConnectConfig.MainPageHeaderImage, true, true,
+                        delegate( Bitmap imageBmp )
+                        {
+                            if( FragmentActive == true )
+                            {
+                                Billboard = imageBmp;
+
+                                ((ListAdapter)ListView.Adapter).NotifyDataSetChanged( );   
+
+                                return true;
+                            }
+                            return false;
+                        } );
+
+
+                    // load the thumbnails
+                    for( int i = 0; i < LinkEntries.Count; i++ )
+                    {
+                        int imageIndex = i;
+
+                        AsyncLoader.LoadImage( LinkEntries[ i ].ImageName, true, false,
+                            delegate( Bitmap imageBmp )
+                            {
+                                if( FragmentActive == true )
+                                {
+                                    LinkBillboards[ imageIndex ] = imageBmp;
+
+                                    ((ListAdapter)ListView.Adapter).NotifyDataSetChanged( );   
+                                    return true;
+                                }
+                                return false;
+                            } );
+                    }
                 }
 
                 public override void OnResume()
@@ -292,18 +355,25 @@ namespace Droid
                 {
                     base.OnDestroyView();
 
-                    ( (ArrayAdapter)ListView.Adapter ).Destroy( );
+                    if ( ListView != null && ListView.Adapter != null )
+                    {
+                        ( (ArrayAdapter)ListView.Adapter ).Destroy( );
+                    }
 
                     // free bmp resources
-                    Billboard.Dispose( );
-                    Billboard = null;
+                    if ( Billboard != null )
+                    {
+                        Billboard.Dispose( );
+                        Billboard = null;
+                    }
 
                     foreach ( Bitmap image in LinkBillboards )
                     {
-                        image.Dispose( );
+                        if ( image != null )
+                        {
+                            image.Dispose( );
+                        }
                     }
-
-                    LinkBillboards.Clear( );
                 }
             }
         }

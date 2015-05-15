@@ -20,6 +20,7 @@ using App.Shared.Config;
 using Rock.Mobile.PlatformSpecific.Android.UI;
 using App.Shared.PrivateConfig;
 using Rock.Mobile.IO;
+using Rock.Mobile.PlatformSpecific.Android.Util;
 
 namespace Droid
 {
@@ -47,15 +48,39 @@ namespace Droid
                     if ( listItem == null )
                     {
                         listItem = new SingleNewsListItem( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+
+                        int height = (int)System.Math.Ceiling( NavbarFragment.GetContainerDisplayWidth( ) * PrivateNewsConfig.NewsMainAspectRatio );
+                        listItem.LayoutParameters = new AbsListView.LayoutParams( ViewGroup.LayoutParams.WrapContent, height );
+                        listItem.HasImage = false;
                     }
 
-                    if ( ParentFragment.News[ position ].Image != null )
+                    // if we have a valid item
+                    if ( position < ParentFragment.News.Count )
                     {
-                        listItem.Billboard.SetImageBitmap( ParentFragment.News[ position ].Image );
+                        // is our image ready?
+                        if ( ParentFragment.News[ position ].Image != null )
+                        {
+                            if ( listItem.HasImage == false )
+                            {
+                                listItem.HasImage = true;
+                                Rock.Mobile.PlatformSpecific.Android.UI.Util.FadeView( listItem.Billboard, true, null );
+                            }
+
+                            listItem.Billboard.SetImageBitmap( ParentFragment.News[ position ].Image );
+                        }
+                        // only show the "Loading..." if the image isn't actually downloaded.
+                        else if ( ParentFragment.Placeholder != null && ParentFragment.News[ position ].ImageIsDownloaded == false )
+                        {
+                            listItem.Billboard.SetImageBitmap( ParentFragment.Placeholder );
+                        }
+                        else
+                        {
+                            listItem.Billboard.SetImageBitmap( null );
+                        }
                     }
                     else
                     {
-                        listItem.Billboard.SetImageBitmap( ParentFragment.Placeholder );
+                        listItem.Billboard.SetImageBitmap( null );
                     }
 
                     return base.AddView( listItem );
@@ -121,15 +146,40 @@ namespace Droid
                     if ( listItem == null )
                     {
                         listItem = new SingleNewsListItem( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+
+                        int height = (int)System.Math.Ceiling( NavbarFragment.GetContainerDisplayWidth( ) * PrivateNewsConfig.NewsMainAspectRatio );
+                        listItem.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, height );
+                        listItem.HasImage = false;
                     }
 
-                    if ( ParentFragment.News[ position ].Image != null )
+                    // if we have a valid item
+                    if ( position < ParentFragment.News.Count )
                     {
-                        listItem.Billboard.SetImageBitmap( ParentFragment.News[ position ].Image );
+                        // is the image valid?
+                        if ( ParentFragment.News[ position ].Image != null )
+                        {
+                            if ( listItem.HasImage == false )
+                            {
+                                listItem.HasImage = true;
+                                Rock.Mobile.PlatformSpecific.Android.UI.Util.FadeView( listItem.Billboard, true, null );
+                            }
+
+                            listItem.Billboard.SetImageBitmap( ParentFragment.News[ position ].Image );
+                        }
+                        // then should we use the placeholder?
+                        else if ( ParentFragment.Placeholder != null && ParentFragment.News[ position ].ImageIsDownloaded == false )
+                        {
+                            listItem.Billboard.SetImageBitmap( ParentFragment.Placeholder );
+                        }
+                        else
+                        {
+                            listItem.Billboard.SetImageBitmap( null );
+                        }
                     }
+
                     else
                     {
-                        listItem.Billboard.SetImageBitmap( ParentFragment.Placeholder );
+                        listItem.Billboard.SetImageBitmap( null );
                     }
 
                     return listItem;
@@ -146,43 +196,75 @@ namespace Droid
                     {
                         seriesItem = new DoubleNewsListItem( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                         seriesItem.ParentAdapter = this;
-                    }   
+
+                        int height = (int)System.Math.Ceiling( (NavbarFragment.GetContainerDisplayWidth( ) / 2) * PrivateNewsConfig.NewsMainAspectRatio );
+                        seriesItem.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, height );
+
+                        seriesItem.LeftHasImage = false;
+                        seriesItem.RightHasImage = false;
+                    }
 
                     seriesItem.LeftImageIndex = leftImageIndex;
 
                     // first set the left item
                     if ( leftImageIndex < ParentFragment.News.Count )
                     {
+                        // is there an image ready?
                         if ( ParentFragment.News[ leftImageIndex ].Image != null )
                         {
+                            if ( seriesItem.LeftHasImage == false )
+                            {
+                                seriesItem.LeftHasImage = true;
+                                Rock.Mobile.PlatformSpecific.Android.UI.Util.FadeView( seriesItem.LeftImage, true, null );
+                            }
+
                             seriesItem.LeftImage.SetImageBitmap( ParentFragment.News[ leftImageIndex ].Image );
+                        }
+                        // should we use the placeholder instead?
+                        else if ( ParentFragment.Placeholder != null && ParentFragment.News[ leftImageIndex ].ImageIsDownloaded == false )
+                        {
+                            seriesItem.LeftImage.SetImageBitmap( ParentFragment.Placeholder );
                         }
                         else
                         {
-                            seriesItem.LeftImage.SetImageBitmap( ParentFragment.Placeholder );
+                            // then just clear it out
+                            seriesItem.LeftImage.SetImageBitmap( null );
                         }
                     }
                     else
                     {
-                        seriesItem.LeftImage.SetImageBitmap( ParentFragment.Placeholder );
+                        seriesItem.LeftImage.SetImageBitmap( null );
                     }
 
                     // now if there's a right item, set it
                     int rightImageIndex = leftImageIndex + 1;
                     if ( rightImageIndex < ParentFragment.News.Count )
                     {
+                        // is there an image ready?
                         if ( ParentFragment.News[ rightImageIndex ].Image != null )
                         {
+                            if ( seriesItem.RightHasImage == false )
+                            {
+                                seriesItem.RightHasImage = true;
+                                Rock.Mobile.PlatformSpecific.Android.UI.Util.FadeView( seriesItem.RightImage, true, null );
+                            }
+
                             seriesItem.RightImage.SetImageBitmap( ParentFragment.News[ rightImageIndex ].Image );
+                        }
+                        // should we use the placeholder instead?
+                        else if ( ParentFragment.Placeholder != null && ParentFragment.News[ rightImageIndex ].ImageIsDownloaded == false )
+                        {
+                            seriesItem.RightImage.SetImageBitmap( ParentFragment.Placeholder );
                         }
                         else
                         {
-                            seriesItem.RightImage.SetImageBitmap( ParentFragment.Placeholder );
-                        }    
+                            // then just clear it out
+                            seriesItem.RightImage.SetImageBitmap( null );
+                        }
                     }
                     else
                     {
-                        seriesItem.RightImage.SetImageBitmap( ParentFragment.Placeholder );
+                        seriesItem.RightImage.SetImageBitmap( null );
                     }
 
                     return seriesItem;
@@ -195,12 +277,17 @@ namespace Droid
             class SingleNewsListItem : Rock.Mobile.PlatformSpecific.Android.UI.ListAdapter.ListItemView
             {
                 public AspectScaledImageView Billboard { get; set; }
+                public bool HasImage { get; set; }
 
                 public SingleNewsListItem( Context context ) : base( context )
                 {
+                    SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+
                     Billboard = new AspectScaledImageView( context );
                     Billboard.LayoutParameters = new AbsListView.LayoutParams( ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent );
                     Billboard.SetScaleType( ImageView.ScaleType.CenterCrop );
+
+                    Billboard.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
 
                     AddView( Billboard );
                 }
@@ -223,10 +310,12 @@ namespace Droid
                 public RelativeLayout LeftLayout { get; set; }
                 public Button LeftButton { get; set; }
                 public Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView LeftImage { get; set; }
+                public bool LeftHasImage { get; set; }
 
                 public RelativeLayout RightLayout { get; set; }
                 public Button RightButton { get; set; }
                 public Rock.Mobile.PlatformSpecific.Android.Graphics.AspectScaledImageView RightImage { get; set; }
+                public bool RightHasImage { get; set; }
 
                 public DoubleNewsListItem( Context context ) : base( context )
                 {
@@ -287,12 +376,12 @@ namespace Droid
             {
                 public RockNews News { get; set; }
                 public Bitmap Image { get; set; }
+                public bool ImageIsDownloaded { get; set; }
             }
 
             public class NewsPrimaryFragment : TaskFragment
             {
                 public List<NewsEntry> News { get; set; }
-                public List<RockNews> SourceNews { get; set; }
 
                 ListView ListView { get; set; }
 
@@ -318,13 +407,20 @@ namespace Droid
                         return null;
                     }
 
-                    System.IO.Stream thumbnailStream = Activity.BaseContext.Assets.Open( PrivateGeneralConfig.NewsMainPlaceholder );
-                    Placeholder = BitmapFactory.DecodeStream( thumbnailStream );
-                    thumbnailStream.Dispose( );
-
-					View view = inflater.Inflate(Resource.Layout.News_Primary, container, false);
+                    View view = inflater.Inflate(Resource.Layout.News_Primary, container, false);
                     view.SetOnTouchListener( this );
+                    view.SetBackgroundColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor ) );
+                    
+                    return view;
+                }
 
+                public override void TaskReadyForFragmentDisplay( )
+                {
+                    SetupDisplay( View );
+                }
+
+                void SetupDisplay( View view )
+                {
                     ListView = view.FindViewById<ListView>( Resource.Id.news_primary_list );
                     ListView.ItemClick += (object sender, AdapterView.ItemClickEventArgs e) => 
                         {
@@ -355,9 +451,22 @@ namespace Droid
                         ListView.Adapter = new PortraitNewsArrayAdapter( this );
                     }
 
-                    ReloadNews( );
+                    // load the placeholder image
+                    AsyncLoader.LoadImage( PrivateGeneralConfig.NewsMainPlaceholder, true, false,
+                        delegate( Bitmap imageBmp )
+                        {
+                            Placeholder = imageBmp;
 
-                    return view;
+                            if( FragmentActive == true )
+                            {
+                                RefreshListView( );
+                                return true;
+                            }
+
+                            return false;
+                        } );
+
+                    LoadImages( );
                 }
 
                 public override void OnConfigurationChanged(Android.Content.Res.Configuration newConfig)
@@ -378,20 +487,22 @@ namespace Droid
                 {
                     base.OnResume();
 
+                    FragmentActive = true;
+
                     ParentTask.NavbarFragment.NavToolbar.SetBackButtonEnabled( false );
                     ParentTask.NavbarFragment.NavToolbar.SetCreateButtonEnabled( false, null );
                     ParentTask.NavbarFragment.NavToolbar.SetShareButtonEnabled( false, null );
                     ParentTask.NavbarFragment.NavToolbar.Reveal( false );
 
-                    FragmentActive = true;
+                    if ( ParentTask.TaskReadyForFragmentDisplay == true )
+                    {
+                        SetupDisplay( View );
+                    }
                 }
 
-                void DumpNews( )
+                public void UpdateNews( List<RockNews> sourceNews )
                 {
-                    if ( ListView != null && ListView.Adapter != null )
-                    {
-                        ( (ListAdapter)ListView.Adapter ).Destroy( );
-                    }
+                    // free existing news
 
                     // be sure to dump the existing news images so
                     // Dalvik knows it can use the memory
@@ -405,23 +516,44 @@ namespace Droid
                     }
 
                     News.Clear( );
-                }
 
-                public void ReloadNews( )
-                {
-                    DumpNews( );
 
-                    foreach ( RockNews rockEntry in SourceNews )
+
+                    // copy the new news
+                    foreach ( RockNews rockEntry in sourceNews )
                     {
                         NewsEntry newsEntry = new NewsEntry();
                         News.Add( newsEntry );
 
                         newsEntry.News = rockEntry;
 
-                        TryLoadCachedImage( newsEntry );
+                        // see if we can load the file
+                        bool fileFound = TryLoadCachedImageAsync( newsEntry );
+                        if ( fileFound == false )
+                        {
+                            // if not, download it
+                            FileCache.Instance.DownloadFileToCache( newsEntry.News.ImageURL, newsEntry.News.ImageName, 
+                                delegate
+                                {
+                                    // and THEN load it
+                                    TryLoadCachedImageAsync( newsEntry );
+                                } );
+                        }
                     }
+                }
 
-                    // if we've already created the list source, refresh it
+                void LoadImages( )
+                {
+                    // here we're simply trying to load the images that are already
+                    // stored
+                    foreach ( NewsEntry news in News )
+                    {
+                        TryLoadCachedImageAsync( news );
+                    }
+                }
+
+                void RefreshListView( )
+                {
                     if ( ListView != null && ListView.Adapter != null )
                     {
                         if ( MainActivity.SupportsLandscapeWide( ) == true )
@@ -435,72 +567,40 @@ namespace Droid
                     }
                 }
 
-                bool TryLoadCachedImage( NewsEntry entry )
+                bool TryLoadCachedImageAsync( NewsEntry entry )
                 {
-                    bool needImage = false;
-
-                    // check the billboard
-                    if ( entry.Image == null )
+                    // if it exists, spawn a thread to load and decode it
+                    if ( FileCache.Instance.FileExists( entry.News.ImageName ) == true )
                     {
-                        MemoryStream imageStream = (MemoryStream)FileCache.Instance.LoadFile( entry.News.ImageName );
-                        if ( imageStream != null )
-                        {
-                            try
-                            {
-                                entry.Image = BitmapFactory.DecodeStream( imageStream );
-                            }
-                            catch( Exception )
-                            {
-                                FileCache.Instance.RemoveFile( entry.News.ImageName );
-                                Console.WriteLine( "Image {0} was corrupt. Removing.", entry.News.ImageName );
-                            }
+                        // flag that we do HAVE the image
+                        entry.ImageIsDownloaded = true;
 
-                            imageStream.Dispose( );
-                            imageStream = null;
-                        }
-                        else
-                        {
-                            needImage = true;
-                        }
+                        AsyncLoader.LoadImage( entry.News.ImageName, false, false,
+                            delegate( Bitmap imageBmp )
+                            {
+                                if ( FragmentActive == true )
+                                {
+                                    // if for some reason it loaded corrupt, remove it.
+                                    if ( imageBmp == null )
+                                    {
+                                        FileCache.Instance.RemoveFile( entry.News.ImageName );
+                                    }
+
+                                    entry.Image = imageBmp;
+                                    RefreshListView( );
+
+                                    return true;
+                                }
+
+                                return false;
+                            } );
+
+                        return true;
                     }
-
-                    return needImage;
-                }
-
-                public void DownloadImages( )
-                {
-                    foreach ( NewsEntry newsEntry in News )
+                    else
                     {
-                        if ( newsEntry.Image == null )
-                        {
-                            FileCache.Instance.DownloadFileToCache( newsEntry.News.ImageURL, newsEntry.News.ImageName, delegate { SeriesImageDownloaded( ); } );
-                            FileCache.Instance.DownloadFileToCache( newsEntry.News.HeaderImageURL, newsEntry.News.HeaderImageName, null );
-                        }
+                        return false;
                     }
-                }
-
-                void SeriesImageDownloaded( )
-                {
-                    Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
-                        {
-                            // using only the cache, try to load any image that isn't loaded
-                            foreach ( NewsEntry entry in News )
-                            {
-                                TryLoadCachedImage( entry );
-                            }
-
-                            if ( FragmentActive == true )
-                            {
-                                if ( MainActivity.SupportsLandscapeWide( ) == true )
-                                {
-                                    ( ListView.Adapter as LandscapeNewsArrayAdapter ).NotifyDataSetChanged( );
-                                }
-                                else
-                                {
-                                    ( ListView.Adapter as PortraitNewsArrayAdapter ).NotifyDataSetChanged( );
-                                }
-                            }
-                        } );
                 }
 
                 public override void OnPause()
@@ -514,13 +614,28 @@ namespace Droid
                 {
                     base.OnDestroyView();
 
-                    DumpNews( );
+                    // unload all resource
+                    if ( ListView != null && ListView.Adapter != null )
+                    {
+                        ( (ListAdapter)ListView.Adapter ).Destroy( );
+                    }
 
-                    Placeholder.Dispose( );
-                    Placeholder = null;
+                    foreach ( NewsEntry newsEntry in News )
+                    {
+                        if ( newsEntry.Image != null )
+                        {
+                            newsEntry.Image.Dispose( );
+                            newsEntry.Image = null;
+                        }
+                    }
+
+                    if ( Placeholder != null )
+                    {
+                        Placeholder.Dispose( );
+                        Placeholder = null;
+                    }
                 }
             }
         }
     }
 }
-

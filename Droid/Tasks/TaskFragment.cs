@@ -121,6 +121,15 @@ namespace Droid
             }
 
             /// <summary>
+            /// Called by the parent task when it's ok with the fragment
+            /// displaying itself. Prior to this, it's ok to do basic UI setup,
+            /// but expensive operations should wait until this is called.
+            /// </summary>
+            public virtual void TaskReadyForFragmentDisplay( )
+            {
+            }
+
+            /// <summary>
             /// Called by the OnTouchListener. This is the only method OnTouch calls.
             /// If you override this, you need to acknowledge it returning true and
             /// return true as well

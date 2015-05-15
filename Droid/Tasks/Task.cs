@@ -11,7 +11,7 @@ namespace Droid
         /// A task represents a "section" of the app, like the news, group finder,
         /// notes, etc. It contains all of the pages that make up that particular section.
         /// </summary>
-        public class Task
+        public abstract class Task
         {
             /// <summary>
             /// Reference to the parent navbar fragment
@@ -32,10 +32,7 @@ namespace Droid
                 NavbarFragment = navFragment;
             }
 
-            public virtual TaskFragment StartingFragment( )
-            {
-                return null;
-            }
+            public abstract TaskFragment StartingFragment( );
 
             public virtual void Activate( bool forResume )
             {
@@ -48,11 +45,26 @@ namespace Droid
                     // present our starting fragment, and don't allow back navigation
                     PresentFragment( StartingFragment( ), false );
                 }
+
+                // if the springboard is already closed, set ourselves as ready.
+                // This is always called before any fragment methods, so the fragment
+                // will be able to know if it can display or not.
+
+                // alternatively, if we're simply resuming from a pause, it's ok to allow the note to show.
+                if( NavbarFragment.ShouldTaskAllowInput( ) || forResume == true)
+                {
+                    TaskReadyForFragmentDisplay = true;
+                }
+                else
+                {
+                    TaskReadyForFragmentDisplay = false;
+                }
             }
 
             public virtual void Deactivate( bool forPause )
             {
-                // nothing we need to do for deactivation
+                // let the fragment know we're NOT ok with it displaying
+                TaskReadyForFragmentDisplay = false;
             }
 
             public virtual void PerformTaskAction( string action )
@@ -65,23 +77,23 @@ namespace Droid
                 // fragment being passed in be returned to"
 
                 // get the fragment manager
-                var ft = NavbarFragment.FragmentManager.BeginTransaction();
+                var ft = NavbarFragment.FragmentManager.BeginTransaction( );
 
                 // set this as the active visible fragment in the task frame.
-                string typestr = fragment.GetType().ToString();
-                ft.Replace(Resource.Id.activetask, fragment, typestr );
+                string typestr = fragment.GetType( ).ToString( );
+                ft.Replace( Resource.Id.activetask, fragment, typestr );
 
                 // do a nice crossfade
-                ft.SetTransition(FragmentTransit.FragmentFade);
+                ft.SetTransition( FragmentTransit.FragmentFade );
 
                 // if back was requested, put it in our stack
-                if( allowBack )
+                if ( allowBack )
                 {
                     ft.AddToBackStack( fragment.ToString( ) );
                 }
 
                 // do the transaction
-                ft.Commit();
+                ft.Commit( );
             }
 
             public virtual bool CanContainerPan()
@@ -91,6 +103,17 @@ namespace Droid
 
             public virtual void SpringboardDidAnimate( bool springboardRevealed )
             {
+                // did the springboard just close?
+                if( springboardRevealed == false )
+                {
+                    // if we weren't ready, let the notes know we now are.
+                    if( TaskReadyForFragmentDisplay == false )
+                    {
+                        TaskReadyForFragmentDisplay = true;
+
+                        StartingFragment( ).TaskReadyForFragmentDisplay( );
+                    }
+                }
             }
 
             public virtual void OnClick( Fragment source, int buttonId, object context = null )

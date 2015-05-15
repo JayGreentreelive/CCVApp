@@ -41,21 +41,6 @@ namespace Droid
                     WebViewPage.ParentTask = this;
                 }
 
-                public override void SpringboardDidAnimate( bool springboardRevealed )
-                {
-                    // did the springboard just close?
-                    if( springboardRevealed == false )
-                    {
-                        // if we weren't ready, let the notes know we now are.
-                        if( TaskReadyForFragmentDisplay == false )
-                        {
-                            TaskReadyForFragmentDisplay = true;
-
-                            NotesPage.TaskReadyForFragmentDisplay( );
-                        }
-                    }
-                }
-
                 public override void PerformTaskAction( string action )
                 {
                     base.PerformTaskAction( action );
@@ -81,32 +66,6 @@ namespace Droid
                             break;
                         }
                     }
-                }
-
-                public override void Activate( bool forResume )
-                {
-                    base.Activate( forResume );
-
-                    // if the springboard is already closed, set ourselves as ready.
-                    // This is always called before any fragment methods, so the fragment
-                    // will be able to know if it can display or not.
-
-                    // alternatively, if we're simply resuming from a pause, it's ok to allow the note to show.
-                    if( NavbarFragment.ShouldTaskAllowInput( ) || forResume == true)
-                    {
-                        TaskReadyForFragmentDisplay = true;
-                    }
-                    else
-                    {
-                        TaskReadyForFragmentDisplay = false;
-                    }
-                }
-
-                public override void Deactivate( bool forPause )
-                {
-                    base.Deactivate( forPause );
-
-                    TaskReadyForFragmentDisplay = false;
                 }
 
                 public override bool CanContainerPan()
@@ -187,24 +146,24 @@ namespace Droid
                             // 0 is listen
                             if ( buttonChoice == 0 )
                             {
-                                ListenPage.MediaUrl = DetailsPage.Messages[ buttonId ].Message.AudioUrl;
-                                ListenPage.ShareUrl = DetailsPage.Messages[ buttonId ].Message.ShareUrl;
-                                ListenPage.Name = DetailsPage.Messages[ buttonId ].Message.Name;
+                                ListenPage.MediaUrl = DetailsPage.Series.Messages[ buttonId ].AudioUrl;
+                                ListenPage.ShareUrl = DetailsPage.Series.Messages[ buttonId ].ShareUrl;
+                                ListenPage.Name = DetailsPage.Series.Messages[ buttonId ].Name;
                                 PresentFragment( ListenPage, true );
                             }
                             // 1 is watch
                             else if ( buttonChoice == 1 )
                             {
-                                WatchPage.MediaUrl = DetailsPage.Messages[ buttonId ].Message.WatchUrl;
-                                WatchPage.ShareUrl = DetailsPage.Messages[ buttonId ].Message.ShareUrl;
-                                WatchPage.Name = DetailsPage.Messages[ buttonId ].Message.Name;
+                                WatchPage.MediaUrl = DetailsPage.Series.Messages[ buttonId ].WatchUrl;
+                                WatchPage.ShareUrl = DetailsPage.Series.Messages[ buttonId ].ShareUrl;
+                                WatchPage.Name = DetailsPage.Series.Messages[ buttonId ].Name;
                                 PresentFragment( WatchPage, true );
                             }
                             // 2 is read
                             else if ( buttonChoice == 2 )
                             {
-                                NotesPage.NoteUrl = DetailsPage.Messages[ buttonId ].Message.NoteUrl;
-                                NotesPage.NoteName = DetailsPage.Messages[ buttonId ].Message.Name;
+                                NotesPage.NoteUrl = DetailsPage.Series.Messages[ buttonId ].NoteUrl;
+                                NotesPage.NoteName = DetailsPage.Series.Messages[ buttonId ].Name;
                                 NotesPage.StyleSheetDefaultHostDomain = RockLaunchData.Instance.Data.NoteDB.HostDomain;
 
                                 PresentFragment( NotesPage, true );
@@ -218,6 +177,16 @@ namespace Droid
                             PresentFragment( WebViewPage, true );
                         }
                     }
+                }
+
+                public static string FormatBillboardImageName( string seriesName )
+                {
+                    return seriesName + "_bb";
+                }
+
+                public static string FormatThumbImageName( string seriesName )
+                {
+                    return seriesName + "_thumb";
                 }
 
                 public override void OnUp( MotionEvent e )

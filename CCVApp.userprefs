@@ -1,50 +1,27 @@
-﻿<Properties StartupItem="Droid/Droid.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.094c904b" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Springboard.cs">
+﻿<Properties StartupItem="iOS/iOS.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhone4s.8.3" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="App.Shared/Strings.cs">
     <Files>
-      <File FileName="iOS/Tasks/Prayer/PrayerTask.cs" Line="80" Column="33" />
-      <File FileName="Droid/NavToolbar.cs" Line="310" Column="31" />
-      <File FileName="iOS/Tasks/Connect/ConnectTask.cs" Line="58" Column="9" />
-      <File FileName="../Rock.Mobile/Network/HttpWebRequest.cs" Line="171" Column="38" />
-      <File FileName="App.Shared/RockApi/RockLaunchData.cs" Line="103" Column="41" />
-      <File FileName="../../../../Library/Frameworks/Xamarin.iOS.framework/Versions/8.10.0.267/src/mono/mcs/class/System/System.Net/SimpleAsyncResult.cs" Line="174" Column="66" />
-      <File FileName="../../../../Library/Frameworks/Xamarin.iOS.framework/Versions/8.10.0.267/src/mono/mcs/class/System/System.Net/WebConnectionStream.cs" Line="328" Column="52" />
-      <File FileName="Droid/Springboard.cs" Line="935" Column="10" />
+      <File FileName="App.Shared/Strings.cs" Line="13" Column="20" />
+      <File FileName="Droid/Tasks/ConnectTask/GroupFinderFragment.cs" Line="1" Column="1" />
+      <File FileName="Droid/Tasks/ConnectTask/ConnectTask.cs" Line="51" Column="22" />
+      <File FileName="Droid/Tasks/NewsTask/NewsPrimaryFragment.cs" Line="455" Column="42" />
+      <File FileName="Droid/Tasks/NewsTask/NewsDetailsFragment.cs" Line="149" Column="69" />
+      <File FileName="Droid/Tasks/NotesTask/NotesPrimaryFragment.cs" Line="818" Column="70" />
+      <File FileName="Droid/Tasks/NotesTask/NotesDetailsFragment.cs" Line="473" Column="70" />
+      <File FileName="Droid/Tasks/ConnectTask/ConnectPrimaryFragment.cs" Line="324" Column="34" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="CCVApp" expanded="True">
             <Node name="App.Shared" expanded="True">
-              <Node name="RockApi" expanded="True" />
-            </Node>
-            <Node name="Droid" expanded="True">
-              <Node name="Springboard.cs" selected="True" />
-            </Node>
-            <Node name="iOS" expanded="True">
-              <Node name="Tasks" expanded="True">
-                <Node name="Connect" expanded="True" />
-                <Node name="Give" expanded="True" />
-                <Node name="News" expanded="True" />
-                <Node name="Notes" expanded="True" />
-              </Node>
-              <Node name="UserManagement" expanded="True" />
-            </Node>
-            <Node name="Rock.Mobile" expanded="True">
-              <Node name="IO" expanded="True" />
-              <Node name="Network" expanded="True" />
-              <Node name="PlatformSpecific" expanded="True">
-                <Node name="Android" expanded="True" />
-                <Node name="iOS" expanded="True" />
-              </Node>
               <Node name="UI" expanded="True" />
-              <Node name="Util" expanded="True" />
+              <Node name="Strings.cs" selected="True" />
             </Node>
+            <Node name="iOS" expanded="True" />
           </Node>
         </State>
-      </Pad>
-      <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>

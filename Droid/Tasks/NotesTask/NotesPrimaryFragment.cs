@@ -28,6 +28,7 @@ using App.Shared.UI;
 using Rock.Mobile.PlatformSpecific.Android.UI;
 using App.Shared.PrivateConfig;
 using Rock.Mobile.IO;
+using Rock.Mobile.PlatformSpecific.Android.Util;
 
 namespace Droid
 {
@@ -71,43 +72,64 @@ namespace Droid
                     if ( primaryItem == null )
                     {
                         primaryItem = new SeriesPrimaryListItem( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+
+                        int height = (int)System.Math.Ceiling( NavbarFragment.GetContainerDisplayWidth( ) * PrivateNoteConfig.NotesMainPlaceholderAspectRatio );
+                        primaryItem.Billboard.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, height );
+                        primaryItem.HasImage = false;
                     }
 
                     primaryItem.ParentAdapter = this;
 
-                    primaryItem.Billboard.SetImageBitmap( ParentFragment.SeriesEntries[ 0 ].Billboard != null ? ParentFragment.SeriesEntries[ 0 ].Billboard : ParentFragment.ImageMainPlaceholder );
-                    primaryItem.Billboard.SetScaleType( ImageView.ScaleType.CenterCrop );
-
-                    if ( ParentFragment.SeriesEntries[ 0 ].Series.Messages.Count > 0 )
+                    if ( ParentFragment.SeriesEntries.Count > 0 )
                     {
-                        primaryItem.Title.Text = ParentFragment.SeriesEntries[ 0 ].Series.Messages[ 0 ].Name;
-                        primaryItem.Speaker.Text = ParentFragment.SeriesEntries[ 0 ].Series.Messages[ 0 ].Speaker;
-                        primaryItem.Date.Text = ParentFragment.SeriesEntries[ 0 ].Series.Messages[ 0 ].Date;
-
-                        // toggle the Take Notes button
-                        if ( string.IsNullOrEmpty( ParentFragment.SeriesEntries[ 0 ].Series.Messages[ 0 ].NoteUrl ) == false )
+                        if ( ParentFragment.SeriesEntries[ 0 ].Billboard != null )
                         {
-                            primaryItem.ToggleTakeNotesButton( true );
+                            if ( primaryItem.HasImage == false )
+                            {
+                                primaryItem.HasImage = true;
+                                Rock.Mobile.PlatformSpecific.Android.UI.Util.FadeView( primaryItem.Billboard, true, null );
+                            }
+
+                            primaryItem.Billboard.SetImageBitmap( ParentFragment.SeriesEntries[ 0 ].Billboard );
+                            primaryItem.Billboard.SetScaleType( ImageView.ScaleType.CenterCrop );
+                        }
+                        else if ( ParentFragment.ImageMainPlaceholder != null )
+                        {
+                            primaryItem.Billboard.SetImageBitmap( ParentFragment.ImageMainPlaceholder );
+                        }
+
+                        // verify there are messages to show
+                        if ( ParentFragment.SeriesEntries[ 0 ].Series.Messages.Count > 0 )
+                        {
+                            primaryItem.Title.Text = ParentFragment.SeriesEntries[ 0 ].Series.Messages[ 0 ].Name;
+                            primaryItem.Speaker.Text = ParentFragment.SeriesEntries[ 0 ].Series.Messages[ 0 ].Speaker;
+                            primaryItem.Date.Text = ParentFragment.SeriesEntries[ 0 ].Series.Messages[ 0 ].Date;
+
+                            // toggle the Take Notes button
+                            if ( string.IsNullOrEmpty( ParentFragment.SeriesEntries[ 0 ].Series.Messages[ 0 ].NoteUrl ) == false )
+                            {
+                                primaryItem.ToggleTakeNotesButton( true );
+                            }
+                            else
+                            {
+                                primaryItem.ToggleTakeNotesButton( false );
+                            }
+
+                            // toggle the Watch button
+                            if ( string.IsNullOrEmpty( ParentFragment.SeriesEntries[ 0 ].Series.Messages[ 0 ].WatchUrl ) == false )
+                            {
+                                primaryItem.ToggleWatchButton( true );
+                            }
+                            else
+                            {
+                                primaryItem.ToggleWatchButton( false );
+                            }
                         }
                         else
                         {
                             primaryItem.ToggleTakeNotesButton( false );
-                        }
-
-                        // toggle the Watch button
-                        if ( string.IsNullOrEmpty( ParentFragment.SeriesEntries[ 0 ].Series.Messages[ 0 ].WatchUrl ) == false )
-                        {
-                            primaryItem.ToggleWatchButton( true );
-                        }
-                        else
-                        {
                             primaryItem.ToggleWatchButton( false );
                         }
-                    }
-                    else
-                    {
-                        primaryItem.ToggleTakeNotesButton( false );
-                        primaryItem.ToggleWatchButton( false );
                     }
 
                     return primaryItem;
@@ -119,13 +141,36 @@ namespace Droid
                     if ( seriesItem == null )
                     {
                         seriesItem = new SeriesListItem( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                        seriesItem.HasImage = false;
                     }
 
-                    seriesItem.Thumbnail.SetImageBitmap( ParentFragment.SeriesEntries[ position ].Thumbnail != null ? ParentFragment.SeriesEntries[ position ].Thumbnail : ParentFragment.ImageThumbPlaceholder );
-                    seriesItem.Thumbnail.SetScaleType( ImageView.ScaleType.CenterCrop );
+                    // make sure we don't somehow attempt to render outside our list bounds
+                    // this could happen if the list gets unloaded during the last render
+                    if ( position < ParentFragment.SeriesEntries.Count )
+                    {
+                        if ( ParentFragment.SeriesEntries[ position ].Thumbnail != null )
+                        {
+                            if ( seriesItem.HasImage == false )
+                            {
+                                seriesItem.HasImage = true;
+                                Rock.Mobile.PlatformSpecific.Android.UI.Util.FadeView( seriesItem.Thumbnail, true, null );
+                            }
+                            
+                            seriesItem.Thumbnail.SetImageBitmap( ParentFragment.SeriesEntries[ position ].Thumbnail );
+                            seriesItem.Thumbnail.SetScaleType( ImageView.ScaleType.CenterCrop );
+                        }
+                        else if ( ParentFragment.ImageThumbPlaceholder != null )
+                        {
+                            seriesItem.Thumbnail.SetImageBitmap( ParentFragment.ImageThumbPlaceholder );
+                        }
+                        else
+                        {
+                            seriesItem.Thumbnail.SetImageBitmap( null );
+                        }
 
-                    seriesItem.Title.Text = ParentFragment.SeriesEntries[ position ].Series.Name;
-                    seriesItem.DateRange.Text = ParentFragment.SeriesEntries[ position ].Series.DateRanges;
+                        seriesItem.Title.Text = ParentFragment.SeriesEntries[ position ].Series.Name;
+                        seriesItem.DateRange.Text = ParentFragment.SeriesEntries[ position ].Series.DateRanges;
+                    }
 
                     return seriesItem;
                 }
@@ -191,6 +236,7 @@ namespace Droid
                 public TextView Title { get; set; }
                 public TextView Date { get; set; }
                 public TextView Speaker { get; set; }
+                public bool HasImage { get; set; }
                 //
 
                 LinearLayout ButtonLayout { get; set; }
@@ -381,6 +427,7 @@ namespace Droid
                 public TextView DateRange { get; set; }
                 public TextView Chevron { get; set; }
                 public View Seperator { get; set; }
+                public bool HasImage { get; set; }
 
                 public SeriesListItem( Context context ) : base( context )
                 {
@@ -460,8 +507,8 @@ namespace Droid
             public class SeriesEntry
             {
                 public Series Series { get; set; }
-                public Bitmap Billboard { get; set; }
-                public Bitmap Thumbnail { get; set; }
+                public Bitmap Billboard;
+                public Bitmap Thumbnail;
             }
 
             public class NotesPrimaryFragment : TaskFragment
@@ -487,13 +534,22 @@ namespace Droid
                 {
                     base.OnDestroyView();
 
-                    ImageMainPlaceholder.Dispose( );
-                    ImageMainPlaceholder = null;
+                    if ( ImageMainPlaceholder != null )
+                    {
+                        ImageMainPlaceholder.Dispose( );
+                        ImageMainPlaceholder = null;
+                    }
 
-                    ImageThumbPlaceholder.Dispose( );
-                    ImageThumbPlaceholder = null;
+                    if ( ImageThumbPlaceholder != null )
+                    {
+                        ImageThumbPlaceholder.Dispose( );
+                        ImageThumbPlaceholder = null;
+                    }
 
-                    ( (ListAdapter)ListView.Adapter ).Destroy( );
+                    if ( ListView != null && ListView.Adapter != null )
+                    {
+                        ( (ListAdapter)ListView.Adapter ).Destroy( );
+                    }
                 }
 
                 public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -503,15 +559,7 @@ namespace Droid
                         // Currently in a layout without a container, so no reason to create our view.
                         return null;
                     }
-
-                    System.IO.Stream thumbnailStream = Activity.BaseContext.Assets.Open( PrivateNoteConfig.NotesThumbPlaceholder );
-                    ImageThumbPlaceholder = BitmapFactory.DecodeStream( thumbnailStream );
-                    thumbnailStream.Dispose( );
-
-                    System.IO.Stream mainImageStream = Activity.BaseContext.Assets.Open( PrivateNoteConfig.NotesMainPlaceholder );
-                    ImageMainPlaceholder = BitmapFactory.DecodeStream( mainImageStream );
-                    mainImageStream.Dispose( );
-
+                                        
 					View view = inflater.Inflate(Resource.Layout.Notes_Primary, container, false);
                     view.SetOnTouchListener( this );
 
@@ -569,6 +617,49 @@ namespace Droid
                     ParentTask.NavbarFragment.NavToolbar.SetShareButtonEnabled( false, null );
                     ParentTask.NavbarFragment.NavToolbar.SetCreateButtonEnabled( false, null );
                     ParentTask.NavbarFragment.NavToolbar.Reveal( false );
+
+                    if ( ParentTask.TaskReadyForFragmentDisplay )
+                    {
+                        SetupDisplay( );
+                    }
+                }
+
+                public override void TaskReadyForFragmentDisplay()
+                {
+                    base.TaskReadyForFragmentDisplay();
+
+                    SetupDisplay( );
+                }
+
+                void SetupDisplay( )
+                {
+                    AsyncLoader.LoadImage( PrivateNoteConfig.NotesThumbPlaceholder, true, false,
+                        delegate( Bitmap loadedBmp )
+                        {
+                            if ( FragmentActive == true )
+                            {
+                                ImageThumbPlaceholder = loadedBmp;
+
+                                RefreshList( );
+                                return true;
+                            }
+
+                            return false;
+                        } );
+
+                    AsyncLoader.LoadImage( PrivateNoteConfig.NotesMainPlaceholder, true, false,
+                        delegate( Bitmap loadedBmp )
+                        {
+                            if ( FragmentActive == true )
+                            {
+                                ImageMainPlaceholder = loadedBmp;
+
+                                RefreshList( );
+                                return true;
+                            }
+
+                            return false;
+                        } );
 
                     TrySetupSeries( );
                 }
@@ -629,10 +720,8 @@ namespace Droid
                                 if( FragmentActive == true )
                                 {
                                     ListView.Adapter = new NotesArrayAdapter( this );
+                                    SetupSeriesEntries( RockLaunchData.Instance.Data.NoteDB.SeriesList );
                                 }
-
-                                // setup the series entries either way, because that doesn't require the fragment to be active
-                                SetupSeriesEntries( RockLaunchData.Instance.Data.NoteDB.SeriesList );
                             }
                             else
                             {
@@ -652,85 +741,113 @@ namespace Droid
                 {
                     SeriesEntries.Clear( );
 
-                    foreach ( Series series in seriesList )
+                    for( int i = 0; i < seriesList.Count; i++ )
                     {
                         // add the entry to our list
                         SeriesEntry entry = new SeriesEntry();
                         SeriesEntries.Add( entry );
 
                         // copy over the series and give it a placeholder image
-                        entry.Series = series;
+                        entry.Series = seriesList[ i ];
 
-                        // attempt to load both its images from cache
-                        bool needDownload = TryLoadCachedImage( entry );
-                        if ( needDownload )
+
+                        // attempt to load / download images.
+
+                        // for billboards, we ONLY CARE about loading the first series' billboard.
+                        if ( i == 0 )
                         {
-                            // something failed, so see what needs to be downloaded (could be both)
-                            if ( entry.Billboard == null )
+                            bool imageExists = TryLoadBillboardImage( entry, NotesTask.FormatBillboardImageName( entry.Series.Name ) );
+                            if ( imageExists == false )
                             {
-                                FileCache.Instance.DownloadFileToCache( entry.Series.BillboardUrl, entry.Series.Name + "_bb", delegate { SeriesImageDownloaded( ); } );
+                                FileCache.Instance.DownloadFileToCache( entry.Series.BillboardUrl, NotesTask.FormatBillboardImageName( entry.Series.Name ), delegate
+                                    {
+                                        TryLoadBillboardImage( entry, NotesTask.FormatBillboardImageName( entry.Series.Name ) );
+                                    } );
                             }
+                        }
 
-                            if ( entry.Thumbnail == null )
-                            {
-                                FileCache.Instance.DownloadFileToCache( entry.Series.ThumbnailUrl, entry.Series.Name + "_thumb", delegate { SeriesImageDownloaded( ); } );
-                            }
+                        // for everything, we care about the thumbnails
+                        bool thumbExists = TryLoadThumbImage( entry, NotesTask.FormatThumbImageName( entry.Series.Name ) );
+                        if ( thumbExists == false )
+                        {
+                            FileCache.Instance.DownloadFileToCache( entry.Series.ThumbnailUrl, NotesTask.FormatThumbImageName( entry.Series.Name ), delegate
+                                {
+                                    TryLoadThumbImage( entry, NotesTask.FormatThumbImageName( entry.Series.Name ) );
+                                } );
                         }
                     }
                 }
 
-                bool TryLoadCachedImage( SeriesEntry entry )
+                bool TryLoadBillboardImage( SeriesEntry entry, string filename )
                 {
-                    bool needImage = false;
-
-                    // check the billboard
-                    if ( entry.Billboard == null )
+                    // does the file exist?
+                    if ( FileCache.Instance.FileExists( filename ) == true )
                     {
-                        MemoryStream imageStream = (MemoryStream)FileCache.Instance.LoadFile( entry.Series.Name + "_bb" );
-                        if ( imageStream != null )
-                        {
-                            try
+                        AsyncLoader.LoadImage( filename, false, false,
+                            delegate( Bitmap loadedBmp )
                             {
-                                entry.Billboard = BitmapFactory.DecodeStream( imageStream );
-                            }
-                            catch( Exception )
-                            {
-                                FileCache.Instance.RemoveFile( entry.Series.Name + "_bb" );
-                                System.Console.WriteLine( "Image {0} is corrupt. Removing.", entry.Series.Name + "_bb" );
-                            }
+                                if ( FragmentActive == true )
+                                {
+                                    // if for some reason it loaded corrupt, remove it.
+                                    if ( loadedBmp == null )
+                                    {
+                                        FileCache.Instance.RemoveFile( filename );
+                                    }
 
-                            imageStream.Dispose( );
-                        }
-                        else
-                        {
-                            needImage = true;
-                        }
+                                    entry.Billboard = loadedBmp;
+
+                                    RefreshList( );
+
+                                    return true;
+                                }
+
+                                return false;
+                            } );
+
+                        return true;
                     }
 
-                    // check the thumbnail
-                    if ( entry.Thumbnail == null )
+                    return false;
+                }
+
+                bool TryLoadThumbImage( SeriesEntry entry, string filename )
+                {
+                    // does the file exist?
+                    if ( FileCache.Instance.FileExists( filename ) == true )
                     {
-                        MemoryStream imageStream = (MemoryStream)FileCache.Instance.LoadFile( entry.Series.Name + "_thumb" );
-                        if ( imageStream != null )
-                        {
-                            try
+                        AsyncLoader.LoadImage( filename, false, false,
+                            delegate( Bitmap loadedBmp )
                             {
-                                entry.Thumbnail = BitmapFactory.DecodeStream( imageStream );
-                            }
-                            catch( Exception )
-                            {
-                                FileCache.Instance.RemoveFile( entry.Series.Name + "_thumb" );
-                                System.Console.WriteLine( "Image {0} is corrupt. Removing.", entry.Series.Name + "_thumb" );
-                            }
-                            imageStream.Dispose( );
-                        }
-                        else
-                        {
-                            needImage = true;
-                        }
+                                if ( FragmentActive == true )
+                                {
+                                    // if for some reason it loaded corrupt, remove it.
+                                    if ( loadedBmp == null )
+                                    {
+                                        FileCache.Instance.RemoveFile( filename );
+                                    }
+
+                                    entry.Thumbnail = loadedBmp;
+
+                                    RefreshList( );
+
+                                    return true;
+                                }
+
+                                return false;
+                            } );
+
+                        return true;
                     }
 
-                    return needImage;
+                    return false;
+                }
+
+                void RefreshList( )
+                {
+                    if ( ListView != null && ListView.Adapter != null )
+                    {
+                        ( ListView.Adapter as ListAdapter ).NotifyDataSetChanged( );
+                    }
                 }
 
                 /// <summary>
@@ -743,38 +860,25 @@ namespace Droid
                 {
                     if ( RockLaunchData.Instance.RequestingNoteDB == false && RockLaunchData.Instance.NeedSeriesDownload( ) == false )
                     {
-                        // for each entry in the series, see if it has been downloaded yet. If not, do it.
-                        foreach ( Series series in RockLaunchData.Instance.Data.NoteDB.SeriesList )
+                        // if there's stuff to download
+                        if ( RockLaunchData.Instance.Data.NoteDB.SeriesList.Count > 0 )
                         {
-                            //bool fileExists = FileCache.Instance.FileExists( series.Name + "_bb" );
-                            //if ( fileExists == false )
+                            // get the FIRST series billboard, but nothing else, because they're huge and can be loaded on demand.
+                            string firstSeriesName = RockLaunchData.Instance.Data.NoteDB.SeriesList[ 0 ].Name;
+                            if ( FileCache.Instance.FileExists( NotesTask.FormatBillboardImageName( firstSeriesName ) ) == false )
                             {
-                                FileCache.Instance.DownloadFileToCache( series.BillboardUrl, series.Name + "_bb", null );
+                                FileCache.Instance.DownloadFileToCache( RockLaunchData.Instance.Data.NoteDB.SeriesList[ 0 ].BillboardUrl, NotesTask.FormatBillboardImageName( firstSeriesName ), null );
                             }
 
-                            //fileExists = FileCache.Instance.FileExists( series.Name + "_thumb" );
-                            //if( fileExists == false )
+                            // for the rest, get their thumbnails. Those are teeny tiny.
+                            foreach ( Series series in RockLaunchData.Instance.Data.NoteDB.SeriesList )
                             {
-                                FileCache.Instance.DownloadFileToCache( series.ThumbnailUrl, series.Name + "_thumb", null );
-                            }
-                        }   
-                    }
-                }
-
-                void SeriesImageDownloaded( )
-                {
-                    if ( FragmentActive == true )
-                    {
-                        Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
-                            {
-                                // using only the cache, try to load any image that isn't loaded
-                                foreach ( SeriesEntry entry in SeriesEntries )
+                                if ( FileCache.Instance.FileExists( NotesTask.FormatThumbImageName( series.Name ) ) == false )
                                 {
-                                    TryLoadCachedImage( entry );
+                                    FileCache.Instance.DownloadFileToCache( series.ThumbnailUrl, NotesTask.FormatThumbImageName( series.Name ), null );
                                 }
-
-                                ( ListView.Adapter as NotesArrayAdapter ).NotifyDataSetChanged( );
-                            } );
+                            }   
+                        }
                     }
                 }
 

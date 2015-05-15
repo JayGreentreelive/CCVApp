@@ -35,7 +35,6 @@ namespace Droid
 
                     // setup a list we can use to cache the news, so should it update we don't use the wrong set.
                     News = new List<RockNews>();
-                    MainPage.SourceNews = News;
                 }
 
                 public override void Activate( bool forResume )
@@ -45,6 +44,9 @@ namespace Droid
                     if ( forResume == false )
                     {
                         ReloadNews( );
+
+                        // let the page have the latest news
+                        MainPage.UpdateNews( News );
                     }
                 }
 
@@ -87,12 +89,6 @@ namespace Droid
                             // for this action, we want to reload our news,
                             ReloadNews( );
 
-                            // tell the news page to reload (in case it's visible now)
-                            MainPage.ReloadNews( );
-
-                            // and download any images it wants
-                            MainPage.DownloadImages( );
-
                             break;
                         }
                     }
@@ -106,7 +102,7 @@ namespace Droid
                         // if the main page had a VALID news item clicked, go to it
                         if ( source == MainPage && buttonId < News.Count )
                         {
-                            DetailsPage.NewsItem = News[ buttonId ];
+                            DetailsPage.NewsItem = MainPage.News[ buttonId ].News;
                             PresentFragment( DetailsPage, true );
                         }
                         else if ( source == DetailsPage )
@@ -124,4 +120,3 @@ namespace Droid
         }
     }
 }
-

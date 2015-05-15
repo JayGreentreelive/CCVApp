@@ -43,7 +43,7 @@ namespace App.Shared.UI
             View.BackgroundColor = ControlStylingConfig.OOBE_Splash_BG_Color;
             View.AddAsSubview( masterView );
 
-            ImageBG = PlatformImageView.Create( );
+            ImageBG = PlatformImageView.Create( true );
             ImageBG.AddAsSubview( View.PlatformNativeObject );
             MemoryStream stream = Rock.Mobile.IO.AssetConvert.AssetToStream( bgLayerImageName );
             stream.Position = 0;
@@ -112,7 +112,7 @@ namespace App.Shared.UI
 
             stream = Rock.Mobile.IO.AssetConvert.AssetToStream( logoImageName );
             stream.Position = 0;
-            ImageLogo = PlatformImageView.Create( );
+            ImageLogo = PlatformImageView.Create( true );
             ImageLogo.AddAsSubview( View.PlatformNativeObject );
             ImageLogo.Image = stream;
             ImageLogo.SizeToFit( );

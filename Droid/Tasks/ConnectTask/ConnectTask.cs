@@ -56,6 +56,16 @@ namespace Droid
                             {
                                 // launch group finder (and have it auto-show the search)
                                 GroupFinder.ShowSearchOnAppear = true;
+
+                                // if we're logged in, give it a starting address
+                                if ( App.Shared.Network.RockMobileUser.Instance.LoggedIn == true && App.Shared.Network.RockMobileUser.Instance.HasFullAddress( ) )
+                                {
+                                    GroupFinder.SetSearchAddress( App.Shared.Network.RockMobileUser.Instance.Street1( ), 
+                                        App.Shared.Network.RockMobileUser.Instance.City( ),
+                                        App.Shared.Network.RockMobileUser.Instance.State( ),
+                                        App.Shared.Network.RockMobileUser.Instance.Zip( ) );
+                                }
+
                                 PresentFragment( GroupFinder, true );
                             }
                             else

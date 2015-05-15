@@ -5,6 +5,12 @@
 	<SeriesList>
 		<!--Start Series-->
 		<Series>
+			<Message Private="true">
+				<Name>WHY DOES GOD ALLOW SUFFERING</Name>
+				<Speaker>Dr. Don Wilson</Speaker>
+				<Date>5/17/2015</Date>
+				<NoteUrl>xml/message_5_16_2015.xml</NoteUrl>
+			</Message>
 			<Message>
 				<Name>ARE ALL FAITHS EQUAL?</Name>
 				<Speaker>Todd Clark</Speaker>

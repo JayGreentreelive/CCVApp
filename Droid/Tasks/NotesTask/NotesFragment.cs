@@ -347,7 +347,7 @@ namespace Droid
                     }
                 }
 
-                public void TaskReadyForFragmentDisplay()
+                public override void TaskReadyForFragmentDisplay()
                 {
                     // our parent task is letting us know it's ready.
                     // if we've had our OnResume called, then we're ready too.

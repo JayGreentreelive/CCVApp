@@ -254,6 +254,23 @@ namespace App.Shared
             public static SizeF ShadowOffset_iOS = new SizeF( 0.0f, 5.0f );
         }
 
+        public class PrivateNewsConfig
+        {
+            /// <summary>
+            /// The height of news image banners
+            /// </summary>
+            public const float NewsBannerWidth = 1242;
+            public const float NewsBannerHeight = 540;
+
+            public const float NewsBannerAspectRatio = NewsBannerHeight / NewsBannerWidth;
+
+
+            public const float NewsMainWidth = 1242;
+            public const float NewsMainHeight = 801;
+
+            public const float NewsMainAspectRatio = NewsMainHeight / NewsMainWidth;
+        }
+
         public class PrivateNoteConfig
         {
             public const string NotesMainPlaceholder = "placeholder_notes_main.png";
@@ -264,6 +281,15 @@ namespace App.Shared
             /// </summary>
             public const string TutorialOverlayImage = "note_tutorial_portrait.png";
             public const string TutorialOverlayImageIPadLS = "note_tutorial_ipad_ls.png";
+
+            public const float NotesMainPlaceholderWidth = 750;
+            public const float NotesMainPlaceholderHeight = 422;
+            public const float NotesMainPlaceholderAspectRatio = NotesMainPlaceholderHeight / NotesMainPlaceholderWidth;
+
+
+            public const float NotesThumbPlaceholderWidth = 210;
+            public const float NotesThumbPlaceholderHeight = 210;
+            public const float NotesThumbPlaceholderAspectRatio = NotesMainPlaceholderHeight / NotesMainPlaceholderWidth;
 
             /// <summary>
             /// The suffix to use for the user note filename.
@@ -394,6 +420,12 @@ namespace App.Shared
             /// Banner to display at the top of the Connect Page
             /// </summary>
             public const string MainPageHeaderImage = "connect_banner.png";
+
+            public const float MainPageHeaderWidth = 2304;
+
+            public const float MainPageHeaderHeight = 1296;
+
+            public const float MainPageHeaderAspectRatio = MainPageHeaderHeight / MainPageHeaderWidth;
 
             /// <summary>
             /// The width/height of the image used as a thumbnail for each entry in the "Other ways to connect"

@@ -1027,46 +1027,45 @@ namespace Droid
                 if( RockMobileUser.Instance.HasProfileImage == true )
                 {
                     // Load the profile pic
-                    MemoryStream profileStream = (MemoryStream)FileCache.Instance.LoadFile( PrivateSpringboardConfig.ProfilePic );
-                    if ( profileStream != null )
+                    if ( FileCache.Instance.FileExists( PrivateSpringboardConfig.ProfilePic ) == true )
                     {
-                        try
-                        {
-                            Bitmap image = BitmapFactory.DecodeStream( profileStream );
-                            if ( image != null )
+                        Rock.Mobile.PlatformSpecific.Android.Util.AsyncLoader.LoadImage( PrivateSpringboardConfig.ProfilePic, false, false,
+                            delegate(Bitmap imageBmp )
                             {
-                                // scale the image to the size of the mask
-                                Bitmap scaledImage = Bitmap.CreateScaledBitmap( image, ProfileMask.Width, ProfileMask.Height, false );
-
-                                // dump the source image
-                                image.Dispose( );
-                                image = null;
-
-                                // if we already have a final image, dispose of it
-                                if ( ProfileMaskedImage != null )
+                                // if for some reason it loaded corrupt, remove it.
+                                if ( imageBmp == null )
                                 {
-                                    ProfileMaskedImage.Dispose( );
-                                    ProfileMaskedImage = null;
+                                    FileCache.Instance.RemoveFile( PrivateSpringboardConfig.ProfilePic );
+                                }
+                                else
+                                {
+                                    // scale the image to the size of the mask
+                                    Bitmap scaledImage = Bitmap.CreateScaledBitmap( imageBmp, ProfileMask.Width, ProfileMask.Height, false );
+
+                                    // dump the source image
+                                    imageBmp.Dispose( );
+                                    imageBmp = null;
+
+                                    // if we already have a final image, dispose of it
+                                    if ( ProfileMaskedImage != null )
+                                    {
+                                        ProfileMaskedImage.Dispose( );
+                                        ProfileMaskedImage = null;
+                                    }
+
+                                    // generate the masked image
+                                    ProfileMaskedImage = Rock.Mobile.PlatformSpecific.Android.Graphics.Util.ApplyMaskToBitmap( scaledImage, ProfileMask, 0, 0 );
+
+                                    scaledImage.Dispose( );
+                                    scaledImage = null;
+
+                                    // set the final result
+                                    ProfileImageButton.Text = "";
+                                    ProfileImageButton.Background = new BitmapDrawable( ProfileMaskedImage );
                                 }
 
-                                // generate the masked image
-                                ProfileMaskedImage = Rock.Mobile.PlatformSpecific.Android.Graphics.Util.ApplyMaskToBitmap( scaledImage, ProfileMask, 0, 0 );
-
-                                scaledImage.Dispose( );
-                                scaledImage = null;
-
-                                // set the final result
-                                ProfileImageButton.Text = "";
-                                ProfileImageButton.Background = new BitmapDrawable( ProfileMaskedImage );
-                            }
-                        }
-                        catch( Exception )
-                        {
-                            FileCache.Instance.RemoveFile( PrivateSpringboardConfig.ProfilePic );
-                            System.Console.WriteLine( "Image {0} is corrupt. Removing.", PrivateSpringboardConfig.ProfilePic );
-                        }
-
-                        profileStream.Dispose( );
+                                return true;
+                            });
                     }
                 }
             }
