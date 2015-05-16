@@ -201,7 +201,7 @@ namespace App
                 /// <param name="launchDataResult">Launch data result.</param>
                 public void GetLaunchData( HttpRequest.RequestResult launchDataResult )
                 {
-                    Console.WriteLine( "Get LaunchData" );
+                    Rock.Mobile.Util.Debug.WriteLine( "Get LaunchData" );
 
                     // first get the general data server time, so that we know whether we should update the
                     // general data or not.
@@ -216,14 +216,14 @@ namespace App
                                 }
                                 else
                                 {
-                                    Console.WriteLine( "GeneralDateTime request failed with status {0}. Using existing.", statusDescription );
+                                    Rock.Mobile.Util.Debug.WriteLine( string.Format( "GeneralDateTime request failed with status {0}. Using existing.", statusDescription ) );
                                 }
 
                                 // now get the news.
                                 GetNews( delegate 
                                     {
                                         // chain any other required launch data actions here.
-                                        Console.WriteLine( "Get LaunchData DONE" );
+                                        Rock.Mobile.Util.Debug.WriteLine( "Get LaunchData DONE" );
 
                                         // notify the caller now that we're done
                                         if( launchDataResult != null )
@@ -241,7 +241,7 @@ namespace App
                         {
                             if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
                             {
-                                Console.WriteLine( "Got news from Rock." );
+                                Rock.Mobile.Util.Debug.WriteLine( "Got news from Rock." );
 
                                 // before comitting to this news, make sure there's at least one valid news item.
                                 if( model.Count > 0 && model[ 0 ].AttributeValues != null )
@@ -281,7 +281,7 @@ namespace App
                             }
                             else
                             {
-                                Console.WriteLine( "News request failed." );
+                                Rock.Mobile.Util.Debug.WriteLine( "News request failed." );
                             }
 
                             if ( resultCallback != null )
@@ -304,7 +304,7 @@ namespace App
                         {
                             if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true && noteModel != null )
                             {
-                                Console.WriteLine( "Got NoteDB info." );
+                                Rock.Mobile.Util.Debug.WriteLine( "Got NoteDB info." );
                                 Data.NoteDB = noteModel;
                                 Data.NoteDB.ProcessPrivateNotes( App.Shared.Network.RockGeneralData.Instance.Data.RefreshButtonEnabled );
                                 Data.NoteDB.MakeURLsAbsolute( );
@@ -327,7 +327,7 @@ namespace App
                                 }
                                 else
                                 {
-                                    Console.WriteLine( "No note for latest message." );
+                                    Rock.Mobile.Util.Debug.WriteLine( "No note for latest message." );
 
                                     RequestingNoteDB = false;
 
@@ -341,7 +341,7 @@ namespace App
                             {
                                 statusDescription = "NoteDB downloaded but failed parsing.";
                                 statusCode = System.Net.HttpStatusCode.BadRequest;
-                                Console.WriteLine( statusDescription );
+                                Rock.Mobile.Util.Debug.WriteLine( statusDescription );
 
                                 RequestingNoteDB = false;
 
@@ -352,7 +352,7 @@ namespace App
                             }
                             else
                             {
-                                Console.WriteLine( "NoteDB request failed." );
+                                Rock.Mobile.Util.Debug.WriteLine( "NoteDB request failed." );
                                 RequestingNoteDB = false;
 
                                 if ( resultCallback != null )

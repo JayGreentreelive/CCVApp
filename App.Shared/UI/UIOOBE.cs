@@ -292,7 +292,7 @@ namespace App.Shared.UI
             SimpleAnimator_RectF regBorderAnim = new SimpleAnimator_RectF( startRegBorder, finalRegBorder, .25f, delegate(float percent, object value )
                 {
                      RegisterSeperator.Frame = (RectangleF)value;
-                     Console.WriteLine( "{0}", RegisterSeperator.Frame );
+                     Rock.Mobile.Util.Debug.WriteLine( string.Format( "{0}", RegisterSeperator.Frame ) );
                 }, delegate { AnimateLoginSeperator( ); } );
 
             regBorderAnim.Start( );

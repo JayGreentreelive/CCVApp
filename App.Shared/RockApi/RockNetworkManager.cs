@@ -38,7 +38,7 @@ namespace App
                             // if we're logged in, sync any changes we've made with the server.
                             if( RockMobileUser.Instance.LoggedIn == true )
                             {
-                                Console.WriteLine( "Logged in. Syncing out-of-sync data." );
+                                Rock.Mobile.Util.Debug.WriteLine( "Logged in. Syncing out-of-sync data." );
 
                                 //( this includes notes, profile changes, etc.)
                                 RockApi.Instance.SyncWithServer( 
@@ -48,7 +48,7 @@ namespace App
                                         // That would cause pending changes to be lost.
                                         if( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
                                         {
-                                            Console.WriteLine( "Syncing with server worked. Pulling down latest data." );
+                                            Rock.Mobile.Util.Debug.WriteLine( "Syncing with server worked. Pulling down latest data." );
                                             // now get their profile. Assuming there weren't any profile changes, this will download
                                             // their latest profile. That way if someone made a change directly in Rock, it'll be reflected here.
                                             RockMobileUser.Instance.GetProfileAndCellPhone( delegate 
@@ -69,7 +69,7 @@ namespace App
                                         }
                                         else
                                         {
-                                            Console.WriteLine( "Syncing with server FAILED. Skipping profile download to protect dirty data." );
+                                            Rock.Mobile.Util.Debug.WriteLine( "Syncing with server FAILED. Skipping profile download to protect dirty data." );
 
                                             // failure or not, server syncing is finished, so let's go ahead and 
                                             // get launch data.
@@ -79,7 +79,7 @@ namespace App
                             }
                             else
                             {
-                                Console.WriteLine( "Not Logged In. Skipping sync." );
+                                Rock.Mobile.Util.Debug.WriteLine( "Not Logged In. Skipping sync." );
                                 RockLaunchData.Instance.GetLaunchData( LaunchDataReceived );
                             }
                         } );

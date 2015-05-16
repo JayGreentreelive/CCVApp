@@ -284,7 +284,7 @@ namespace Droid
                     catch
                     {
                         MapView = null;
-                        Console.WriteLine( "GOOGLE MAPS: Unable to create. Verify you have a valid API KEY." );
+                        Rock.Mobile.Util.Debug.WriteLine( "GOOGLE MAPS: Unable to create. Verify you have a valid API KEY." );
                     }
 
 
@@ -603,7 +603,7 @@ namespace Droid
                         // Ok! notify the parent they tapped Join, and it will launch the
                         // join group fragment! It's MARCH, FRIDAY THE 13th!!!! OH NOOOO!!!!
                         ParentTask.OnClick( this, position, GroupEntries[ position ] );
-                        Console.WriteLine( "Join neighborhood group in row {0}", position );
+                        Rock.Mobile.Util.Debug.WriteLine( string.Format( "Join neighborhood group in row {0}", position ) );
                     }
                 }
 

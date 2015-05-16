@@ -161,7 +161,7 @@ namespace App
 
                 public void GetGeneralData( DateTime newServerTime, HttpRequest.RequestResult generalDataResult )
                 {
-                    Console.WriteLine( "Get GeneralData" );
+                    Rock.Mobile.Util.Debug.WriteLine( "Get GeneralData" );
 
                     // assume we're going to get everything
                     bool generalDataReceived = true;
@@ -198,11 +198,11 @@ namespace App
                                         // save!
                                         SaveToDevice( );
 
-                                        Console.WriteLine( "Get GeneralData SUCCESS" );
+                                        Rock.Mobile.Util.Debug.WriteLine( "Get GeneralData SUCCESS" );
                                     }
                                     else
                                     {
-                                        Console.WriteLine( "Get GeneralData FAILED" );
+                                        Rock.Mobile.Util.Debug.WriteLine( "Get GeneralData FAILED" );
                                     }
 
                                     // notify the caller
@@ -251,7 +251,7 @@ namespace App
                             }
                             catch( Exception e )
                             {
-                                Console.WriteLine( string.Format( "{0}", e) );
+                                Rock.Mobile.Util.Debug.WriteLine( string.Format( "{0}", e) );
                             }
                         }
                     }

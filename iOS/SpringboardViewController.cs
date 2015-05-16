@@ -584,9 +584,9 @@ namespace iOS
                 };
 
             // load our objects from disk
-            Console.WriteLine( "Loading objects from device." );
+            Rock.Mobile.Util.Debug.WriteLine( "Loading objects from device." );
             RockApi.Instance.LoadObjectsFromDevice( );
-            Console.WriteLine( "Loading objects done." );
+            Rock.Mobile.Util.Debug.WriteLine( "Loading objects done." );
 
             // set the viewing campus now that their profile has loaded
             CampusSelectionText.Text = string.Format( SpringboardStrings.Viewing_Campus, RockGeneralData.Instance.Data.CampusIdToName( RockMobileUser.Instance.ViewingCampus ) ).ToUpper( );
@@ -1233,7 +1233,7 @@ namespace iOS
                     }
                     catch(Exception)
                     {
-                        Console.WriteLine( "Bad Pic! Defaulting to No Photo" );
+                        Rock.Mobile.Util.Debug.WriteLine( "Bad Pic! Defaulting to No Photo" );
                     }
                 }
 

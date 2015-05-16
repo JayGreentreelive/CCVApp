@@ -492,12 +492,12 @@ namespace Droid
                         TimeSpan deltaTime = DateTime.Now - LastDownloadTime;
                         if ( deltaTime.TotalHours > PrivatePrayerConfig.PrayerDownloadFrequency.TotalHours )
                         {
-                            Console.WriteLine( "Downloading Prayers" );
+                            Rock.Mobile.Util.Debug.WriteLine( "Downloading Prayers" );
                             DownloadPrayers( );
                         }
                         else
                         {
-                            Console.WriteLine( "Not downloading prayers" );
+                            Rock.Mobile.Util.Debug.WriteLine( "Not downloading prayers" );
 
                             // We already have cached prayers, so simply restore them.
                             StatusLayer.Visibility = ViewStates.Invisible;
@@ -599,7 +599,7 @@ namespace Droid
                 // forward these to the carousel
                 public override bool OnFlingGesture( MotionEvent e1, MotionEvent e2, float velocityX, float velocityY )
                 {
-                    //Console.WriteLine( "OnFlingGesture" );
+                    //Rock.Mobile.Util.Debug.WriteLine( "OnFlingGesture" );
                     return ( (DroidCardCarousel)Carousel ).OnFling( e1, e2, velocityX, velocityY );
                 }
 
@@ -608,13 +608,13 @@ namespace Droid
                     // let the center prayer scroll
                     PrayerRequestCards[ Carousel.CenterCardIndex ].Scroll( distanceY );
 
-                    //Console.WriteLine( "OnScrollGesture" );
+                    //Rock.Mobile.Util.Debug.WriteLine( "OnScrollGesture" );
                     return ( (DroidCardCarousel)Carousel ).OnScroll( e1, e2, distanceX, distanceY );
                 }
 
                 public override bool OnDownGesture( MotionEvent e )
                 {
-                    //Console.WriteLine( "OnDownGesture" );
+                    //Rock.Mobile.Util.Debug.WriteLine( "OnDownGesture" );
                     if ( IsRequesting == false )
                     {
                         Carousel.TouchesBegan( );
@@ -624,7 +624,7 @@ namespace Droid
 
                 public override bool OnTouch( View v, MotionEvent e )
                 {
-                    //Console.WriteLine( "OnTouch" );
+                    //Rock.Mobile.Util.Debug.WriteLine( "OnTouch" );
 
                     // if we're downloading prayers, don't process touch, because it causes a crash in android's gesture detector.
                     if ( IsRequesting == false )

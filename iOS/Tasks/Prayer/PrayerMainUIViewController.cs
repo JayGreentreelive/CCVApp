@@ -344,12 +344,12 @@ namespace iOS
                     View.BringSubviewToFront( RetrievingPrayersView );
                     BlockerView.BringToFront( );
 
-                    Console.WriteLine( "Grabbing Prayers" );
+                    Rock.Mobile.Util.Debug.WriteLine( "Grabbing Prayers" );
                     RetrievePrayerRequests( );
                 }
                 else
                 {
-                    Console.WriteLine( "Not getting prayers." );
+                    Rock.Mobile.Util.Debug.WriteLine( "Not getting prayers." );
 
                     // add a read analytic
                     PrayerAnalytic.Instance.Trigger( PrayerAnalytic.Read );

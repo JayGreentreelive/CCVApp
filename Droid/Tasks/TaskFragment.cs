@@ -117,7 +117,7 @@ namespace Droid
                 catch
                 {
                 }
-                Console.WriteLine( "Detaching" );
+                Rock.Mobile.Util.Debug.WriteLine( "Detaching" );
             }
 
             /// <summary>

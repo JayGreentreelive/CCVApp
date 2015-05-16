@@ -32,7 +32,7 @@ namespace Droid
                 public AudioService Service { get; protected set; }
                 public AudioServiceBinder( AudioService service )
                 {
-                    Console.WriteLine( "AudioServiceBinder created" );
+                    Rock.Mobile.Util.Debug.WriteLine( "AudioServiceBinder created" );
                     Service = service;
                 }
             }
@@ -44,13 +44,13 @@ namespace Droid
 
                 public AudioServiceConnection( NotesListenFragment connectionFragment )
                 {
-                    Console.WriteLine( "AudioServiceConnection created" );
+                    Rock.Mobile.Util.Debug.WriteLine( "AudioServiceConnection created" );
                     ConnectionFragment = connectionFragment;
                 }
 
                 public void OnServiceConnected( ComponentName name, IBinder serviceBinder )
                 {
-                    Console.WriteLine( "OnServiceConnected - We are binding" );
+                    Rock.Mobile.Util.Debug.WriteLine( "OnServiceConnected - We are binding" );
 
                     AudioServiceBinder binder = serviceBinder as AudioServiceBinder;
                     if ( binder != null )
@@ -61,7 +61,7 @@ namespace Droid
 
                 public void OnServiceDisconnected( ComponentName name )
                 {
-                    Console.WriteLine( "OnServiceDisconnected - We are unbinding" );
+                    Rock.Mobile.Util.Debug.WriteLine( "OnServiceDisconnected - We are unbinding" );
                     ConnectionFragment.ServiceDisconnected( );
                 }
             }
@@ -76,14 +76,14 @@ namespace Droid
 
                 public AudioService( ) : base(  )
                 {
-                    Console.WriteLine( "AudioService::()" );
+                    Rock.Mobile.Util.Debug.WriteLine( "AudioService::()" );
                 }
 
                 public override void OnCreate()
                 {
                     base.OnCreate();
 
-                    Console.WriteLine( "AudioService::OnCreate" );
+                    Rock.Mobile.Util.Debug.WriteLine( "AudioService::OnCreate" );
 
                     Binder = new AudioServiceBinder( this );
 
@@ -103,7 +103,7 @@ namespace Droid
                 // when bound, return the Binder object containing our instance
                 public override IBinder OnBind(Intent intent)
                 {
-                    Console.WriteLine( "AudioService::OnBind" );
+                    Rock.Mobile.Util.Debug.WriteLine( "AudioService::OnBind" );
                     return Binder;
                 }
             }
@@ -138,7 +138,7 @@ namespace Droid
 
                 public void ServiceConnected( AudioServiceBinder binder )
                 {
-                    Console.WriteLine( "ServiceConnected." );
+                    Rock.Mobile.Util.Debug.WriteLine( "ServiceConnected." );
                     AudioServiceBinder = binder;
 
                     if ( PlayerState == MediaPlayerState.WantsAutoplay )
@@ -151,7 +151,7 @@ namespace Droid
 
                 public void ServiceDisconnected( )
                 {
-                    Console.WriteLine( "Service Disconnected." );
+                    Rock.Mobile.Util.Debug.WriteLine( "Service Disconnected." );
                     AudioServiceBinder = null;
                 }
 
@@ -178,7 +178,7 @@ namespace Droid
                 {
                     base.OnCreate( savedInstanceState );
 
-                    Console.WriteLine( "OnCreate - Starting Audio Service" );
+                    Rock.Mobile.Util.Debug.WriteLine( "OnCreate - Starting Audio Service" );
 
                     // flag that we want to automatically start the audio.
                     // If this fragment is backgrounded and resumed, this will be false and we won't
@@ -265,7 +265,7 @@ namespace Droid
                         throw new Exception( "MediaUrl must be valid." );
                     }
 
-                    Console.WriteLine( "OnResume - Binding to audio service" );
+                    Rock.Mobile.Util.Debug.WriteLine( "OnResume - Binding to audio service" );
 
                     // bind ourselves to the audio service
                     Activity.BindService( new Intent( Activity, typeof( AudioService )  ), AudioServiceConnection, Bind.AutoCreate );
@@ -277,7 +277,7 @@ namespace Droid
                 {
                     base.OnPause();
 
-                    Console.WriteLine( "OnPause - UNbinding audio service" );
+                    Rock.Mobile.Util.Debug.WriteLine( "OnPause - UNbinding audio service" );
 
                     ParentTask.NavbarFragment.EnableSpringboardRevealButton( true );
                     ParentTask.NavbarFragment.ToggleFullscreen( false );
@@ -292,7 +292,7 @@ namespace Droid
                 {
                     base.OnDestroy();
 
-                    Console.WriteLine( "OnDestroy - Stopping Audio Service" );
+                    Rock.Mobile.Util.Debug.WriteLine( "OnDestroy - Stopping Audio Service" );
 
                     // attempt to store the media position. This works because unbinding the service doesn't
                     // necessarily disconnect us, so we might still have a valid reference to the service
@@ -357,7 +357,7 @@ namespace Droid
 
                 public void OnPrepared( MediaPlayer mp )
                 {
-                    Console.WriteLine( "OnPrepared - Audio ready to play" );
+                    Rock.Mobile.Util.Debug.WriteLine( "OnPrepared - Audio ready to play" );
 
                     // setup a seek listener
                     mp.SetOnSeekCompleteListener( this );

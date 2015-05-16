@@ -877,12 +877,12 @@ namespace App
                 public void SyncWithServer( HttpRequest.RequestResult result )
                 {
                     // this is a chance for anything saved but not uploaded to Rock to upload to Rock.
-                    Console.WriteLine( "Sync with server" );
+                    Rock.Mobile.Util.Debug.WriteLine( "Sync with server" );
 
                     // USER PROFILE
                     RockMobileUser.Instance.SyncDirtyObjects( delegate(System.Net.HttpStatusCode statusCode, string statusDescription)
                         {
-                            Console.WriteLine( "Sync with server complete with code {0}", statusCode );
+                            Rock.Mobile.Util.Debug.WriteLine( string.Format( "Sync with server complete with code {0}", statusCode ) );
 
                             // this is called back on the main thread, so from here we can execute more requests,
                             // or notify the caller.

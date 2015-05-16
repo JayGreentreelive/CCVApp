@@ -343,13 +343,6 @@ namespace iOS
         }
         List<NewsEntry> News { get; set; }
 
-        /// <summary>
-        /// Store the source news so that if they pick a news item to view,
-        /// when they return, it shows the same news instead of potentially newly downloaded news.
-        /// </summary>
-        /// <value>The source rock news.</value>
-        public List<RockNews> SourceRockNews { get; set; }
-
         bool IsVisible { get; set; }
         UIImage ImagePlaceholder { get; set; }
 
@@ -380,14 +373,14 @@ namespace iOS
 
             IsVisible = true;
 
-            ReloadNews( );
-
             // populate our table
             LandscapeSource = new LandscapeTableSource( this, News, ImagePlaceholder );
             PortraitSource = new PortraitTableSource( this, News, ImagePlaceholder );
 
             NewsTableView.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BackgroundColor );
             NewsTableView.SeparatorStyle = UITableViewCellSeparatorStyle.None;
+
+            LoadImages( );
         }
 
         public override void ViewWillDisappear(bool animated)
@@ -397,88 +390,76 @@ namespace iOS
             IsVisible = false;
         }
 
-        public void ReloadNews( )
+        public void UpdateNews( List<RockNews> sourceNews )
         {
-            if ( NewsTableView != null )
+            // clear the existing news
+            News.Clear( );
+
+            // copy the source into our news objects
+            foreach ( RockNews rockEntry in sourceNews )
             {
-                News.Clear( );
+                NewsEntry newsEntry = new NewsEntry();
+                News.Add( newsEntry );
 
-                foreach ( RockNews rockEntry in SourceRockNews )
-                {
-                    NewsEntry newsEntry = new NewsEntry();
-                    News.Add( newsEntry );
-
-                    newsEntry.News = rockEntry;
-
-                    // since we're in setup, go ahead and try loading any images we want.
-                    // If thye don't exist, we'll use a placeholder until DownloadImages is called by our parent task.
-                    TryLoadCachedImage( newsEntry );
-                }
-
-                NewsTableView.ReloadData( );
+                newsEntry.News = rockEntry;
             }
         }
 
-        public void DownloadImages( )
+        void LoadImages( )
         {
-            // this will be called by our parent task when we're clear to download images.
-            foreach ( NewsEntry newsItem in News )
+            // go through the news
+            foreach ( NewsEntry news in News )
             {
-                // if no image is set, we couldn't load one, so download it.
-                if ( newsItem.Image == null )
+                // and attempt to load each image
+                if ( TryLoadCachedImage( news ) == false )
                 {
-                    FileCache.Instance.DownloadFileToCache( newsItem.News.ImageURL, newsItem.News.ImageName, delegate { SeriesImageDownloaded( ); } );
-                    FileCache.Instance.DownloadFileToCache( newsItem.News.HeaderImageURL, newsItem.News.HeaderImageName, null );
+                    // it failed, so download it and try again.
+                    FileCache.Instance.DownloadFileToCache( news.News.ImageURL, news.News.ImageName, 
+                        delegate
+                        {
+                            Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                                {
+                                    if( IsVisible == true )
+                                    {
+                                        TryLoadCachedImage( news );
+                                    }
+                                });
+                        } );
                 }
             }
         }
 
         bool TryLoadCachedImage( NewsEntry entry )
         {
-            bool needImage = false;
+            bool success = false;
 
             // check the billboard
-            if ( entry.Image == null )
+            if( FileCache.Instance.FileExists( entry.News.ImageName ) == true )
             {
                 MemoryStream imageStream = (MemoryStream)FileCache.Instance.LoadFile( entry.News.ImageName );
                 if ( imageStream != null )
                 {
                     try
                     {
+                        // grab the data
                         NSData imageData = NSData.FromStream( imageStream );
                         entry.Image = new UIImage( imageData, UIScreen.MainScreen.Scale );
+
+                        // refresh the table
+                        NewsTableView.ReloadData( );
+
+                        success = true;
                     }
                     catch( Exception )
                     {
                         FileCache.Instance.RemoveFile( entry.News.ImageName );
-                        Console.WriteLine( "Image {0} is corrupt. Removing.", entry.News.ImageName );
+                        Rock.Mobile.Util.Debug.WriteLine( string.Format( "Image {0} is corrupt. Removing.", entry.News.ImageName ) );
                     }
                     imageStream.Dispose( );
                 }
-                else
-                {
-                    needImage = true;
-                }
             }
 
-            return needImage;
-        }
-
-        void SeriesImageDownloaded( )
-        {
-            if ( IsVisible == true )
-            {
-                InvokeOnMainThread( delegate
-                    {
-                        // using only the cache, try to load any image that isn't loaded
-                        foreach ( NewsEntry entry in News )
-                        {
-                            TryLoadCachedImage( entry );
-                        }
-
-                        NewsTableView.ReloadData( );
-                    } );
-            }
+            return success;
         }
 
         public override void LayoutChanged()

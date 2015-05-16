@@ -118,7 +118,7 @@ namespace App
                     {
                         try
                         {
-                            Console.WriteLine( "NO CACHED NOTES. DOWNLOADING THEM." );
+                            Rock.Mobile.Util.Debug.WriteLine( "NO CACHED NOTES. DOWNLOADING THEM." );
 
                             FileCache.Instance.DownloadFileToCache( noteUrl, noteFileName, delegate
                                 {

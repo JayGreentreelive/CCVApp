@@ -420,7 +420,7 @@ namespace App
                             // Store our starting touch and kick off our delete timer
                             TrackingLastPos = touch;
                             //DeleteTimer.Start();
-                            Console.WriteLine( "UserNote Hold" );
+                            Rock.Mobile.Util.Debug.WriteLine( "UserNote Hold" );
                         }
                     }
 
@@ -449,7 +449,7 @@ namespace App
                                 TrackingLastPos = touch;
 
                                 State = TouchState.Moving;
-                                Console.WriteLine( "UserNote MOVING" );
+                                Rock.Mobile.Util.Debug.WriteLine( "UserNote MOVING" );
                             }
                         }
                         else if( State == TouchState.Moving )
@@ -481,7 +481,7 @@ namespace App
                             consumed = true;
                             State = TouchState.None;
 
-                            Console.WriteLine( "UserNote Finished Moving" );
+                            Rock.Mobile.Util.Debug.WriteLine( "UserNote Finished Moving" );
                             break;
                         }
 
@@ -527,7 +527,7 @@ namespace App
 
                         case TouchState.Delete:
                         {
-                            Console.WriteLine( "User Wants to delete note" );
+                            Rock.Mobile.Util.Debug.WriteLine( "User Wants to delete note" );
                             break;
                         }
                     }
@@ -585,7 +585,7 @@ namespace App
                     /*if( DeleteEnabled == true )
                     {
                         DeleteEnabled = false;
-                        Console.WriteLine( "Clearing Delete Mode" );
+                        Rock.Mobile.Util.Debug.WriteLine( "Clearing Delete Mode" );
                         TextView.UserInteractionEnabled = true;
 
                         DeleteButton.Hidden = true;
@@ -720,7 +720,7 @@ namespace App
 
                     // open the text field
                     TextView.AnimateOpen( becomeFirstResponder );
-                    Console.WriteLine( "Opening Note" );
+                    Rock.Mobile.Util.Debug.WriteLine( "Opening Note" );
                 }
 
                 public void CloseNote()
@@ -730,7 +730,7 @@ namespace App
 
                     // close the text field
                     TextView.AnimateClosed( );
-                    Console.WriteLine( "Closing Note" );
+                    Rock.Mobile.Util.Debug.WriteLine( "Closing Note" );
 
                     TextView.ResignFirstResponder( );
                 }

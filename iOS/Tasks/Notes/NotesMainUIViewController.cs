@@ -661,131 +661,70 @@ namespace iOS
         {
             SeriesEntries.Clear( );
 
-            foreach ( Series series in seriesList )
+            for( int i = 0; i < seriesList.Count; i++ )
             {
                 // add the entry to our list
                 SeriesEntry entry = new SeriesEntry();
                 SeriesEntries.Add( entry );
 
                 // copy over the series and give it a placeholder image
-                entry.Series = series;
+                entry.Series = seriesList[ i ];
 
-                // attempt to load both its images from cache
-                bool needDownload = TryLoadCachedImage( entry );
-                if ( needDownload )
+
+                // attempt to load / download images.
+
+                // for billboards, we ONLY CARE about loading the first series' billboard.
+                if ( i == 0 )
                 {
-                    // something failed, so see what needs to be downloaded (could be both)
-                    if ( entry.mBillboard == null )
+                    bool imageExists = TryLoadImage( ref entry.mBillboard, NotesTask.FormatBillboardImageName( entry.Series.Name ) );
+                    if ( imageExists == false )
                     {
-                        FileCache.Instance.DownloadFileToCache( entry.Series.BillboardUrl, entry.Series.Name + "_bb", delegate{ SeriesImageDownloaded( ); } );
-                    }
-
-                    if ( entry.mThumbnail == null )
-                    {
-                        FileCache.Instance.DownloadFileToCache( entry.Series.ThumbnailUrl, entry.Series.Name + "_thumb", delegate{ SeriesImageDownloaded( ); } );
+                        FileCache.Instance.DownloadFileToCache( entry.Series.BillboardUrl, NotesTask.FormatBillboardImageName( entry.Series.Name ), 
+                            delegate
+                            {
+                                Rock.Mobile.Threading.Util.PerformOnUIThread( delegate {
+                                    if( IsVisible == true )
+                                    {
+                                        TryLoadImage( ref entry.mBillboard, NotesTask.FormatBillboardImageName( entry.Series.Name ) );
+                                    }
+                                });
+                            } );
                     }
                 }
-            }
-        }
 
-        bool TryLoadCachedImage( SeriesEntry entry )
-        {
-            bool needImage = false;
-
-            // check the billboard
-            if ( entry.mBillboard == null )
-            {
-                MemoryStream imageStream = (MemoryStream)FileCache.Instance.LoadFile( entry.Series.Name + "_bb" );
-                if ( imageStream != null )
+                // for everything, we care about the thumbnails
+                bool thumbExists = TryLoadImage( ref entry.mThumbnail, NotesTask.FormatThumbImageName( entry.Series.Name ) );
+                if ( thumbExists == false )
                 {
-                    try
-                    {
-                        NSData imageData = NSData.FromStream( imageStream );
-                        entry.mBillboard = new UIImage( imageData, UIScreen.MainScreen.Scale );
-                    }
-                    catch( Exception )
-                    {
-                        FileCache.Instance.RemoveFile( entry.Series.Name + "_bb" );
-                        Console.WriteLine( "Image {0} was corrupt. Removing.", entry.Series.Name + "_bb" );
-                    }
-                    imageStream.Dispose( );
-                }
-                else
-                {
-                    needImage = true;
-                }
-            }
-
-            // check the thumbnail
-            if ( entry.mThumbnail == null )
-            {
-                MemoryStream imageStream = (MemoryStream)FileCache.Instance.LoadFile( entry.Series.Name + "_thumb" );
-                if ( imageStream != null )
-                {
-                    try
-                    {
-                        NSData imageData = NSData.FromStream( imageStream );
-                        entry.mThumbnail = new UIImage( imageData, UIScreen.MainScreen.Scale );
-                    }
-                    catch( Exception )
-                    {
-                        FileCache.Instance.RemoveFile( entry.Series.Name + "_thumb" );
-                        Console.WriteLine( "Image {0} was corrupt. Removing.", entry.Series.Name + "_thumb" );
-                    }
-                    imageStream.Dispose( );
-                }
-                else
-                {
-                    needImage = true;
-                }
-            }
-
-            return needImage;
-        }
-
-        void SeriesImageDownloaded( )
-        {
-            if ( IsVisible == true )
-            {
-                InvokeOnMainThread( delegate
-                    {
-                        // using only the cache, try to load any image that isn't loaded
-                        foreach ( SeriesEntry entry in SeriesEntries )
+                    FileCache.Instance.DownloadFileToCache( entry.Series.ThumbnailUrl, NotesTask.FormatThumbImageName( entry.Series.Name ), delegate
                         {
-                            TryLoadCachedImage( entry );
-                        }
-
-                        NotesTableView.ReloadData( );
-                    } );
+                            Rock.Mobile.Threading.Util.PerformOnUIThread( delegate {
+                                if( IsVisible == true )
+                                {
+                                    TryLoadImage( ref entry.mThumbnail, NotesTask.FormatThumbImageName( entry.Series.Name ) );
+                                }
+                            });
+                        } );
+                }
             }
         }
 
-        /// <summary>
-        /// Goes thru the series list, and for each image not already downloaded, downloads it.
-        /// Note that this is different than the normal SetupSeriesEntries above, because that will
-        /// only download if the image is corrupt or not loaded, and is "on demand". This is meant to be
-        /// called in advance so the images are ready.
-        /// </summary>
-        public void DownloadImages( )
+        bool TryLoadImage( ref UIImage rImage, string filename )
         {
-            if ( RockLaunchData.Instance.RequestingNoteDB == false && RockLaunchData.Instance.NeedSeriesDownload( ) == false )
-            {
-                // for each entry in the series, see if it has been downloaded yet. If not, do it.
-                foreach ( Series series in RockLaunchData.Instance.Data.NoteDB.SeriesList )
-                {
-                    //bool fileExists = FileCache.Instance.FileExists( series.Name + "_bb" );
-                    //if ( fileExists == false )
-                    {
-                        FileCache.Instance.DownloadFileToCache( series.BillboardUrl, series.Name + "_bb", null );
-                    }
+            bool result = false;
 
-                    //fileExists = FileCache.Instance.FileExists( series.Name + "_thumb" );
-                    //if( fileExists == false )
-                    {
-                        FileCache.Instance.DownloadFileToCache( series.ThumbnailUrl, series.Name + "_thumb", null );
-                    }
-                }   
+            // does the file exist?
+            if ( FileCache.Instance.FileExists( filename ) == true )
+            {
+                result = ImageLoader.Load( filename, ref rImage );
+                if ( result )
+                {
+                    // let the table refresh
+                    NotesTableView.ReloadData( );
+                }
             }
+
+            return result;
         }
 
         /// <summary>
@@ -822,14 +761,7 @@ namespace iOS
         {
             DetailsViewController = new NotesDetailsUIViewController( Task );
             DetailsViewController.Series = SeriesEntries[ row ].Series;
-            DetailsViewController.SeriesBillboard = SeriesEntries[ row ].mBillboard != null ? SeriesEntries[ row ].mBillboard : ImageMainPlaceholder;
-
-            // Note - if they are fast enough, they will end up going to the details of a series before
-            // the series banner comes down, resulting in them seeing the generic image placeholder.
-            // This isn't really a bug, more just a design issue. Ultimately it'll go away when we
-            // start caching images
-            //JHM 12-15-14: Don't set billboards, the latest design doesn't call for images on the entries.
-            //DetailsViewController.ImagePlaceholder = SeriesEntries[ row ].Billboard;
+            //DetailsViewController.SeriesBillboard = SeriesEntries[ row ].mBillboard != null ? SeriesEntries[ row ].mBillboard : ImageMainPlaceholder;
 
             Task.PerformSegue( this, DetailsViewController );
         }

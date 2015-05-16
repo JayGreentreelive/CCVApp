@@ -217,7 +217,7 @@ namespace iOS
             base.ViewDidLayoutSubviews( );
 
             UIApplication.SharedApplication.IdleTimerDisabled = true;
-            Console.WriteLine( "Turning idle timer OFF" );
+            Rock.Mobile.Util.Debug.WriteLine( "Turning idle timer OFF" );
         }
 
         public override void LayoutChanged()
@@ -339,7 +339,7 @@ namespace iOS
 
             // since we're reappearing, we know we're safe to reset our download count
             NoteDownloadRetries = MaxDownloadAttempts;
-            Console.WriteLine( "Resetting Download Attempts" );
+            Rock.Mobile.Util.Debug.WriteLine( "Resetting Download Attempts" );
 
             //PrepareCreateNotes( );
         }
@@ -362,7 +362,7 @@ namespace iOS
             ObserverHandles.Add( handle );
 
             UIApplication.SharedApplication.IdleTimerDisabled = true;
-            Console.WriteLine( "Turning idle timer OFF" );
+            Rock.Mobile.Util.Debug.WriteLine( "Turning idle timer OFF" );
         }
 
         public override void ViewDidDisappear(bool animated)
@@ -390,7 +390,7 @@ namespace iOS
 
             // yet another place to drop in an idle timer disable
             UIApplication.SharedApplication.IdleTimerDisabled = true;
-            Console.WriteLine( "Turning idle timer OFF" );
+            Rock.Mobile.Util.Debug.WriteLine( "Turning idle timer OFF" );
         }
 
         public override void WillEnterForeground( )
@@ -399,7 +399,7 @@ namespace iOS
 
             // yet another place to drop in an idle timer disable
             UIApplication.SharedApplication.IdleTimerDisabled = true;
-            Console.WriteLine( "Turning idle timer OFF" );
+            Rock.Mobile.Util.Debug.WriteLine( "Turning idle timer OFF" );
         }
 
         public override void AppOnResignActive()
@@ -426,7 +426,7 @@ namespace iOS
             OrientationState = -1;
 
             UIApplication.SharedApplication.IdleTimerDisabled = false;
-            Console.WriteLine( "Turning idle timer ON" );
+            Rock.Mobile.Util.Debug.WriteLine( "Turning idle timer ON" );
         }
 
         public void ShareNotes()
@@ -508,7 +508,7 @@ namespace iOS
         {
             base.TouchesBegan(touches, evt);
 
-            Console.WriteLine( "Touches Began" );
+            Rock.Mobile.Util.Debug.WriteLine( "Touches Began" );
 
             UITouch touch = touches.AnyObject as UITouch;
             if( touch != null )
@@ -521,7 +521,7 @@ namespace iOS
         {
             base.TouchesMoved( touches, evt );
 
-            Console.WriteLine( "Touches MOVED" );
+            Rock.Mobile.Util.Debug.WriteLine( "Touches MOVED" );
 
             UITouch touch = touches.AnyObject as UITouch;
             if( touch != null )
@@ -537,7 +537,7 @@ namespace iOS
         {
             base.TouchesEnded( touches, evt );
 
-            Console.WriteLine( "Touches Ended" );
+            Rock.Mobile.Util.Debug.WriteLine( "Touches Ended" );
 
             AnimateTutorialScreen( false );
 
@@ -770,7 +770,7 @@ namespace iOS
                     // since there was an error, try redownloading the notes
                     if( NoteDownloadRetries > 0 )
                     {
-                        Console.WriteLine( "Download error. Trying again" );
+                        Rock.Mobile.Util.Debug.WriteLine( "Download error. Trying again" );
 
                         NoteDownloadRetries--;
                         PrepareCreateNotes( );

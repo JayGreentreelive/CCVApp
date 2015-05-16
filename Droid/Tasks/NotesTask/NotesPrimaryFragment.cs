@@ -850,37 +850,6 @@ namespace Droid
                     }
                 }
 
-                /// <summary>
-                /// Goes thru the series list, and for each image not already downloaded, downloads it.
-                /// Note that this is different than the normal SetupSeriesEntries above, because that will
-                /// only download if the image is corrupt or not loaded, and is "on demand". This is meant to be
-                /// called in advance so the images are ready.
-                /// </summary>
-                public void DownloadImages( )
-                {
-                    if ( RockLaunchData.Instance.RequestingNoteDB == false && RockLaunchData.Instance.NeedSeriesDownload( ) == false )
-                    {
-                        // if there's stuff to download
-                        if ( RockLaunchData.Instance.Data.NoteDB.SeriesList.Count > 0 )
-                        {
-                            // get the FIRST series billboard, but nothing else, because they're huge and can be loaded on demand.
-                            string firstSeriesName = RockLaunchData.Instance.Data.NoteDB.SeriesList[ 0 ].Name;
-                            if ( FileCache.Instance.FileExists( NotesTask.FormatBillboardImageName( firstSeriesName ) ) == false )
-                            {
-                                FileCache.Instance.DownloadFileToCache( RockLaunchData.Instance.Data.NoteDB.SeriesList[ 0 ].BillboardUrl, NotesTask.FormatBillboardImageName( firstSeriesName ), null );
-                            }
-
-                            // for the rest, get their thumbnails. Those are teeny tiny.
-                            foreach ( Series series in RockLaunchData.Instance.Data.NoteDB.SeriesList )
-                            {
-                                if ( FileCache.Instance.FileExists( NotesTask.FormatThumbImageName( series.Name ) ) == false )
-                                {
-                                    FileCache.Instance.DownloadFileToCache( series.ThumbnailUrl, NotesTask.FormatThumbImageName( series.Name ), null );
-                                }
-                            }   
-                        }
-                    }
-                }
 
                 public override void OnPause( )
                 {

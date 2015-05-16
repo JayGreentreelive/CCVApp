@@ -62,7 +62,7 @@ namespace Droid
 
                         case PrivateGeneralConfig.TaskAction_NotesDownloadImages:
                         {
-                            MainPage.DownloadImages( );
+                            //MainPage.DownloadImages( );
                             break;
                         }
                     }

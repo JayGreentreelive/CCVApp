@@ -56,28 +56,28 @@ namespace iOS
 
         public override void OnActivated(UIApplication application)
         {
-            Console.WriteLine("OnActivated called, App is active.");
+            Rock.Mobile.Util.Debug.WriteLine("OnActivated called, App is active.");
             Springboard.OnActivated( );
         }
         public override void WillEnterForeground(UIApplication application)
         {
-            Console.WriteLine("App will enter foreground");
+            Rock.Mobile.Util.Debug.WriteLine("App will enter foreground");
             Springboard.WillEnterForeground( );
         }
         public override void OnResignActivation(UIApplication application)
         {
-            Console.WriteLine("OnResignActivation called, App moving to inactive state.");
+            Rock.Mobile.Util.Debug.WriteLine("OnResignActivation called, App moving to inactive state.");
             Springboard.OnResignActive( );
         }
         public override void DidEnterBackground(UIApplication application)
         {
-            Console.WriteLine("App entering background state.");
+            Rock.Mobile.Util.Debug.WriteLine("App entering background state.");
             Springboard.DidEnterBackground( );
         }
         // not guaranteed that this will run
         public override void WillTerminate(UIApplication application)
         {
-            Console.WriteLine("App is terminating.");
+            Rock.Mobile.Util.Debug.WriteLine("App is terminating.");
             Springboard.WillTerminate( );
         }
     }

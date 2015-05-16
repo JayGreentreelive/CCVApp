@@ -59,7 +59,7 @@ namespace iOS
 
                 case PrivateGeneralConfig.TaskAction_NotesDownloadImages:
                 {
-                    MainViewController.DownloadImages( );
+                    //MainViewController.DownloadImages( );
                     break;
                 }
             }
@@ -220,6 +220,16 @@ namespace iOS
 
             // if it isn't, we shouldn't allow it
             return false;
+        }
+
+        public static string FormatBillboardImageName( string seriesName )
+        {
+            return seriesName + "_bb";
+        }
+
+        public static string FormatThumbImageName( string seriesName )
+        {
+            return seriesName + "_thumb";
         }
     }
 }

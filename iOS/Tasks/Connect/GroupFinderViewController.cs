@@ -335,12 +335,12 @@ namespace iOS
 
             public override void DidAddAnnotationViews(MKMapView mapView, MKAnnotationView[] views)
             {
-                Console.WriteLine( "Done" );
+                Rock.Mobile.Util.Debug.WriteLine( "Done" );
             }
 
             public override void DidFinishRenderingMap(MKMapView mapView, bool fullyRendered)
             {
-                Console.WriteLine( "Done" );
+                Rock.Mobile.Util.Debug.WriteLine( "Done" );
             }
 
             public override void RegionChanged(MKMapView mapView, bool animated)

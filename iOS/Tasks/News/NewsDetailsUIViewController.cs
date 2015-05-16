@@ -69,37 +69,24 @@ namespace iOS
             View.AddSubview( ImageBanner );
 
             // do we have the real image?
-            MemoryStream imageStream = (MemoryStream)FileCache.Instance.LoadFile( NewsItem.HeaderImageName );
-            if ( imageStream != null )
+            if( TryLoadHeaderImage( NewsItem.HeaderImageName ) == false )
             {
-                try
-                {
-                    NSData imageData = NSData.FromStream( imageStream );
-                    ImageBanner.Image = new UIImage( imageData );
-
-                    // resize the image to fit the width of the device
-                    nfloat imageAspect = ImageBanner.Image.Size.Height / ImageBanner.Image.Size.Width;
-                    ImageBanner.Frame = new CGRect( 0, 0, View.Bounds.Width, View.Bounds.Width * imageAspect );
-                }
-                catch( Exception )
-                {
-                    FileCache.Instance.RemoveFile( NewsItem.HeaderImageName );
-                    Console.WriteLine( "Image {0} is corrupt. Removing.", NewsItem.HeaderImageName );
-                }
-                imageStream.Dispose( );
-            }
-            else
-            {
-                // otherwise use a placeholder and request the actual image
+                // no, so use a placeholder and request the actual image
                 ImageBanner.Image = new UIImage( NSBundle.MainBundle.BundlePath + "/" + PrivateGeneralConfig.NewsDetailsPlaceholder );
 
                 // resize the image to fit the width of the device
                 nfloat imageAspect = ImageBanner.Image.Size.Height / ImageBanner.Image.Size.Width;
                 ImageBanner.Frame = new CGRect( 0, 0, View.Bounds.Width, View.Bounds.Width * imageAspect );
 
+                // request!
                 FileCache.Instance.DownloadFileToCache( NewsItem.HeaderImageURL, NewsItem.HeaderImageName, delegate
                     {
-                        NewsHeaderDownloaded( );
+                        Rock.Mobile.Threading.Util.PerformOnUIThread( delegate {
+                            if( IsVisible == true )
+                            {
+                                TryLoadHeaderImage( NewsItem.HeaderImageName );
+                            }
+                        });
                     } );
             }
 
@@ -122,6 +109,37 @@ namespace iOS
             LearnMoreButton.SizeToFit( );
         }
 
+        public bool TryLoadHeaderImage( string imageName )
+        {
+            bool success = false;
+
+            if( FileCache.Instance.FileExists( imageName ) == true )
+            {
+                MemoryStream imageStream = null;
+                try
+                {
+                    imageStream = (MemoryStream)FileCache.Instance.LoadFile( NewsItem.HeaderImageName );
+
+                    NSData imageData = NSData.FromStream( imageStream );
+                    ImageBanner.Image = new UIImage( imageData );
+
+                    // resize the image to fit the width of the device
+                    nfloat imageAspect = ImageBanner.Image.Size.Height / ImageBanner.Image.Size.Width;
+                    ImageBanner.Frame = new CGRect( 0, 0, View.Bounds.Width, View.Bounds.Width * imageAspect );
+
+                    success = true;
+                }
+                catch( Exception )
+                {
+                    FileCache.Instance.RemoveFile( NewsItem.HeaderImageName );
+                    Rock.Mobile.Util.Debug.WriteLine( string.Format( "Image {0} is corrupt. Removing.", NewsItem.HeaderImageName ) );
+                }
+                imageStream.Dispose( );
+            }
+
+            return success;
+        }
+
         public override void ViewWillAppear(bool animated)
         {
             base.ViewWillAppear(animated);
@@ -134,38 +152,6 @@ namespace iOS
             base.ViewWillDisappear(animated);
 
             IsVisible = false;
-        }
-
-        void NewsHeaderDownloaded( )
-        {
-            // if they're still viewing this article
-            if ( IsVisible == true )
-            {
-                Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
-                    {
-                        MemoryStream imageStream = (System.IO.MemoryStream)FileCache.Instance.LoadFile( NewsItem.HeaderImageName );
-                        if ( imageStream != null )
-                        {
-                            try
-                            {
-                                NSData imageData = NSData.FromStream( imageStream );
-                                ImageBanner.Image = new UIImage( imageData, UIScreen.MainScreen.Scale );
-
-                                // resize the image to fit the width of the device
-                                nfloat imageAspect = ImageBanner.Image.Size.Height / ImageBanner.Image.Size.Width;
-                                ImageBanner.Frame = new CGRect( 0, 0, View.Bounds.Width, View.Bounds.Width * imageAspect );
-                            }
-                            catch( Exception )
-                            {
-                                FileCache.Instance.RemoveFile( NewsItem.HeaderImageName );
-                                Console.WriteLine( "Image {0} is corrupt. Removing.", NewsItem.HeaderImageName );
-                            }
-
-                            imageStream.Dispose( );
-                        }
-                    });
-
-            }
         }
 
         public override void ViewDidAppear(bool animated)

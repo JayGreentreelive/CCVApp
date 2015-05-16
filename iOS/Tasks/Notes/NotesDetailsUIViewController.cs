@@ -12,6 +12,7 @@ using System.IO;
 using App.Shared.Analytics;
 using App.Shared.Network;
 using App.Shared.PrivateConfig;
+using Rock.Mobile.IO;
 
 namespace iOS
 {
@@ -220,17 +221,15 @@ namespace iOS
             NotesDetailsUIViewController Parent { get; set; }
             List<MessageEntry> MessageEntries { get; set; }
             Series Series { get; set; }
-            UIImage Banner { get; set; }
 
             nfloat PendingPrimaryCellHeight { get; set; }
             nfloat PendingCellHeight { get; set; }
 
-            public TableSource (NotesDetailsUIViewController parent, List<MessageEntry> messages, Series series, UIImage banner )
+            public TableSource (NotesDetailsUIViewController parent, List<MessageEntry> messages, Series series )
             {
                 Parent = parent;
                 MessageEntries = messages;
                 Series = series;
-                Banner = banner;
             }
 
             public override nint RowsInSection (UITableView tableview, nint section)
@@ -314,7 +313,7 @@ namespace iOS
                 }
 
                 // Banner Image
-                cell.Image.Image = Banner;
+                cell.Image.Image = Parent.SeriesBillboard;
                 cell.Image.SizeToFit( );
 
                 // resize the image to fit the width of the device
@@ -451,13 +450,11 @@ namespace iOS
         public class MessageEntry
         {
             public Series.Message Message { get; set; }
-            //public UIImage Thumbnail { get; set; }
         }
 
         public Series Series { get; set; }
         public UIImage SeriesBillboard { get; set; }
         public List<MessageEntry> Messages { get; set; }
-        //public UIImage ThumbnailPlaceholder{ get; set; }
         bool IsVisible { get; set; }
         UITableView SeriesTable { get; set; }
 
@@ -479,7 +476,7 @@ namespace iOS
 
             // setup the messages list
             Messages = new List<MessageEntry>();
-            TableSource source = new TableSource( this, Messages, Series, SeriesBillboard );
+            TableSource source = new TableSource( this, Messages, Series );
             SeriesTable.Source = source;
             SeriesTable.Delegate = new TableViewDelegate( source, Task.NavToolbar );
 
@@ -494,62 +491,60 @@ namespace iOS
                 MessageEntry messageEntry = new MessageEntry();
                 Messages.Add( messageEntry );
 
-                // give each message entry its message and the default thumbnail, which is the series billboard
-                //JHM 12-15-14: Don't set thumbnails, the latest design doesn't call for images on the entries.
                 messageEntry.Message = Series.Messages[ i ];
-                //messageEntry.Thumbnail = ThumbnailPlaceholder;
+            }
 
-                // grab the thumbnail IF it has a podcast
-                /*if ( string.IsNullOrEmpty( Series.Messages[ i ].WatchUrl ) == false )
-                {
-                    messageEntry.HasPodcast = true;
 
-                    int requestedIndex = i;
+            // do we have the real image?
+            if( TryLoadImage( NotesTask.FormatBillboardImageName( Series.Name ) ) == false )
+            {
+                // no, so use a placeholder and request the actual image
+                SeriesBillboard = new UIImage( NSBundle.MainBundle.BundlePath + "/" + PrivateGeneralConfig.NewsDetailsPlaceholder );
 
-                    // first see if the image is cached
-                    MemoryStream image = FileCache.Instance.ReadImage( messageEntry.Message.Name );
-                    if ( image != null )
+                // request!
+                FileCache.Instance.DownloadFileToCache( Series.BillboardUrl, NotesTask.FormatBillboardImageName( Series.Name ), 
+                    delegate
                     {
-                        ApplyBillboardImage( messageEntry, image );
-
-                        image.Dispose( );
-                    }
-                    else
-                    {
-                        // it isn't, so we'll need to download it
-                        VimeoManager.Instance.GetVideoThumbnail( Series.Messages[ requestedIndex ].WatchUrl, 
-                            delegate(System.Net.HttpStatusCode statusCode, string statusDescription, System.IO.MemoryStream imageBuffer )
+                        Rock.Mobile.Threading.Util.PerformOnUIThread( 
+                            delegate
                             {
-                                if ( Rock.Mobile.Network.Util.StatusInSuccessRange( statusCode ) == true )
+                                if( IsVisible == true )
                                 {
-                                    // update the image on the UI Thread ONLY!
-                                    InvokeOnMainThread( delegate
-                                        {
-                                            FileCache.Instance.WriteImage( imageBuffer, messageEntry.Message.Name );
-
-                                            if( IsVisible == true )
-                                            {
-                                                ApplyBillboardImage( messageEntry, imageBuffer );
-                                            }
-
-                                            imageBuffer.Dispose( );
-                                        });
+                                    TryLoadImage( NotesTask.FormatBillboardImageName( Series.Name ) );
                                 }
-                            } );
-                    }
-                }*/
+                            });
+                    } );
             }
         }
 
-        /*void ApplyBillboardImage( MessageEntry messageEntry, MemoryStream imageBuffer )
+        bool TryLoadImage( string imageName )
         {
-            // show the image
-            NSData imageData = NSData.FromStream( imageBuffer );
-            UIImage uiImage = new UIImage( imageData );
+            bool success = false;
 
-            messageEntry.Thumbnail = uiImage;
-            SeriesTable.ReloadData( );
-        }*/
+            if( FileCache.Instance.FileExists( imageName ) == true )
+            {
+                MemoryStream imageStream = null;
+                try
+                {
+                    imageStream = (MemoryStream)FileCache.Instance.LoadFile( imageName );
+
+                    NSData imageData = NSData.FromStream( imageStream );
+                    SeriesBillboard = new UIImage( imageData );
+
+                    SeriesTable.ReloadData( );
+
+                    success = true;
+                }
+                catch( Exception )
+                {
+                    FileCache.Instance.RemoveFile( imageName );
+                    Rock.Mobile.Util.Debug.WriteLine( string.Format( "Image {0} is corrupt. Removing.", imageName ) );
+                }
+                imageStream.Dispose( );
+            }
+
+            return success;
+        }
 
         public override void ViewWillDisappear(bool animated)
         {
@@ -573,7 +568,7 @@ namespace iOS
             base.LayoutChanged( );
 
             // if the layout is changed, the simplest way to fix the UI is to recreate the table source
-            TableSource source = new TableSource( this, Messages, Series, SeriesBillboard );
+            TableSource source = new TableSource( this, Messages, Series );
             SeriesTable.Source = source;
             SeriesTable.Delegate = new TableViewDelegate( source, Task.NavToolbar );
             SeriesTable.ReloadData( );

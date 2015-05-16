@@ -238,9 +238,9 @@ namespace Droid
             }
 
             // load our objects from disk
-            System.Console.WriteLine( "Loading objects from device." );
+            Rock.Mobile.Util.Debug.WriteLine( string.Format( "Loading objects from device." ) );
             RockApi.Instance.LoadObjectsFromDevice( );
-            System.Console.WriteLine( "Loading objects done." );
+            Rock.Mobile.Util.Debug.WriteLine( string.Format( "Loading objects done." ) );
 
             // seed the last sync time with now, so that when OnResume gets called we don't do it again.
             LastRockSync = DateTime.Now;
@@ -796,7 +796,7 @@ namespace Droid
         {
             base.OnPause();
 
-            System.Console.WriteLine( "Springboard OnPause()" );
+            Rock.Mobile.Util.Debug.WriteLine( "Springboard OnPause()" );
 
             AppInForeground = false;
         }
@@ -809,7 +809,7 @@ namespace Droid
 
             AppInForeground = true;
 
-            System.Console.WriteLine( "Springboard OnResume()" );
+            Rock.Mobile.Util.Debug.WriteLine( "Springboard OnResume()" );
 
             // if it's been longer than N hours, resync rock.
             // JHM 4-27-15: Now we will always sync on resume. We do this to avoid issues like Christopher had,
@@ -1158,25 +1158,25 @@ namespace Droid
             FileCache.Instance.SaveCacheMap( );
             RockApi.Instance.SaveObjectsToDevice( );
 
-            System.Console.WriteLine( "Springboard OnStop()" );
+            Rock.Mobile.Util.Debug.WriteLine( "Springboard OnStop()" );
         }
 
         public override void OnDestroy()
         {
             base.OnDestroy();
-            System.Console.WriteLine( "Springboard OnDestroy()" );
+            Rock.Mobile.Util.Debug.WriteLine( "Springboard OnDestroy()" );
         }
 
         public override void OnAttach(Activity activity)
         {
             base.OnAttach(activity);
-            System.Console.WriteLine( "Springboard OnAtach()" );
+            Rock.Mobile.Util.Debug.WriteLine( "Springboard OnAtach()" );
         }
 
         public override void OnDetach()
         {
             base.OnDetach();
-            System.Console.WriteLine( "Springboard OnDetach()" );
+            Rock.Mobile.Util.Debug.WriteLine( "Springboard OnDetach()" );
         }
 
         public static void DisplayError( string title, string message )

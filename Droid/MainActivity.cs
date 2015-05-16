@@ -85,7 +85,7 @@ namespace Droid
             }
 
             DisplayMetrics metrics = Resources.DisplayMetrics;
-            Console.WriteLine("Android Device detected dpi: {0}", metrics.DensityDpi );
+            Rock.Mobile.Util.Debug.WriteLine( string.Format( "Android Device detected dpi: {0}", metrics.DensityDpi ) );
 
             // Set our view from the "main" layout resource
             SetContentView( Resource.Layout.Main );

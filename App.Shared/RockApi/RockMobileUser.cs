@@ -823,7 +823,7 @@ namespace App
                         string.Compare( LastSyncdAddressJson, currAddressJson ) != 0 ||
                         ProfileImageDirty == true )
                     {
-                        Console.WriteLine( "RockMobileUser: Syncing Profile" );
+                        Rock.Mobile.Util.Debug.WriteLine( "RockMobileUser: Syncing Profile" );
 
                         // PROFILE
                         UpdateProfile( delegate( System.Net.HttpStatusCode profileCode, string profileResult )
@@ -894,7 +894,7 @@ namespace App
                     }
                     else
                     {
-                        Console.WriteLine( "RockMobileUser: No sync needed." );
+                        Rock.Mobile.Util.Debug.WriteLine( "RockMobileUser: No sync needed." );
 
                         // nothing need be sync'd, call back with ok.
                         resultCallback( System.Net.HttpStatusCode.OK, "Success" );
@@ -939,7 +939,7 @@ namespace App
                                 }
                                 catch( Exception e )
                                 {
-                                    Console.WriteLine( string.Format( "{0}", e ) );
+                                    Rock.Mobile.Util.Debug.WriteLine( string.Format( "{0}", e ) );
                                 }
                             }
                         }

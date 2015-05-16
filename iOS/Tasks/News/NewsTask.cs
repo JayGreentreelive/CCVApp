@@ -23,7 +23,6 @@ namespace iOS
             ActiveViewController = MainPageVC;
 
             News = new List<RockNews>( );
-            MainPageVC.SourceRockNews = News;
         }
 
         public override void MakeActive( TaskUINavigationController parentViewController, NavToolbar navToolbar, CGRect containerBounds )
@@ -32,7 +31,11 @@ namespace iOS
 
             MainPageVC.View.Bounds = containerBounds;
 
+            // refresh our news from GeneralData
             ReloadNews( );
+
+            // and provide it to the main page
+            MainPageVC.UpdateNews( News );
 
             // set our current page as root
             parentViewController.PushViewController(MainPageVC, false);
@@ -90,10 +93,6 @@ namespace iOS
                 case PrivateGeneralConfig.TaskAction_NewsReload:
                 {
                     ReloadNews( );
-
-                    MainPageVC.ReloadNews( );
-
-                    MainPageVC.DownloadImages( );
                     break;
                 }
             }

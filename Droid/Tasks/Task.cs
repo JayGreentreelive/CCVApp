@@ -39,7 +39,7 @@ namespace Droid
                 // if we're simply resuming, we dont need to reset the fragment, the task is already setup.
                 if ( forResume == false )
                 {
-                    Console.WriteLine( "Popping back stack" );
+                    Rock.Mobile.Util.Debug.WriteLine( "Popping back stack" );
                     NavbarFragment.FragmentManager.PopBackStack( null, PopBackStackFlags.Inclusive );
 
                     // present our starting fragment, and don't allow back navigation
