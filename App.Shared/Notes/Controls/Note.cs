@@ -217,7 +217,7 @@ namespace App
                     ControlStyles.Initialize( styleXml );
                 }
 
-                public void Create( float parentWidth, float parentHeight, object masterView, string userNoteFileName, DisplayMessageBoxDelegate displayMessageBoxDelegate )
+                public float Create( float parentWidth, float parentHeight, object masterView, string userNoteFileName, DisplayMessageBoxDelegate displayMessageBoxDelegate )
                 {
                     // setup our note timer that will wait to load our notes until AFTER the notes are created,
                     // as opposed to the same tick. This cuts down 500ms from the create time.
@@ -274,6 +274,11 @@ namespace App
                     {
                         throw new Exception( e.Message + string.Format( "\nLine Number: {0}", reader.LineNumber ) );
                     }
+
+                    // now load our note state (which will restore stuff)
+                    NoteState noteState = LoadState( UserNotePath );
+
+                    return noteState != null ? noteState.ScrollOffsetPercent : 0.00f;
                 }
 
                 public void Destroy( object obj )
@@ -431,7 +436,7 @@ namespace App
                         LoadingNoteState = true;
                         LoadStateTimer.Start( );
                     }*/
-                    LoadState( UserNotePath );
+
                 }
 
                 protected void AddControlsToView( )
@@ -644,7 +649,7 @@ namespace App
                     return false;
                 }
 
-                public void SaveState()
+                public void SaveState( float scrollOffsetPercent )
                 {
                     // if we're waiting for our notes to load, don't allow saving! We'll
                     // save a blank state over our real notes!
@@ -654,6 +659,9 @@ namespace App
                         using (StreamWriter writer = new StreamWriter(UserNotePath, false))
                         {
                             NoteState noteState = new NoteState( );
+
+                            // Scroll position
+                            noteState.ScrollOffsetPercent = scrollOffsetPercent;
 
                             // User Notes
                             noteState.UserNoteContentList = new List<NoteState.UserNoteContent>( );
@@ -692,7 +700,7 @@ namespace App
                     }
                 }
 
-                protected void LoadState( string filePath )
+                protected NoteState LoadState( string filePath )
                 {
                     // sanity check to make sure the notes were requested to load.
                     //if( LoadingNoteState == true )
@@ -762,6 +770,7 @@ namespace App
                             }
                         }
 
+                        return noteState;
                         //LoadingNoteState = false;
                     }
                 }
@@ -797,6 +806,22 @@ namespace App
                             note.BuildHTMLContent( ref htmlStream, null );
                         }
                     }
+                }
+
+                public float GetNoteAbsoluteHeight( )
+                {
+                    // INCLUDING USER NOTES, this will give us the total
+                    // height of the notes.
+                    float height = Frame.Height;
+                    foreach ( UserNote note in UserNoteControls )
+                    {
+                        if ( note.GetFrame( ).Bottom > height )
+                        {
+                            height = note.GetFrame( ).Bottom;
+                        }
+                    }
+
+                    return height;
                 }
             }
         }

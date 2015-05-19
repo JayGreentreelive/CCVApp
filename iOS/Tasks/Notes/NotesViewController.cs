@@ -206,7 +206,7 @@ namespace iOS
 
             if( Note != null )
             {
-                Note.SaveState( );
+                Note.SaveState( (float) (UIScrollView.ContentOffset.Y / UIScrollView.ContentSize.Height) );
             }
 
             UIApplication.SharedApplication.EndBackgroundTask(taskID);
@@ -349,10 +349,10 @@ namespace iOS
             base.ViewDidAppear(animated);
 
             // monitor for text field being edited, and keyboard show/hide notitications
-            NSObject handle = NSNotificationCenter.DefaultCenter.AddObserver( Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager.TextFieldDidBeginEditingNotification, KeyboardAdjustManager.OnTextFieldDidBeginEditing);
+            NSObject handle = NSNotificationCenter.DefaultCenter.AddObserver( Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager.TextFieldDidBeginEditingNotification, OnTextFieldDidBeginEditing);
             ObserverHandles.Add( handle );
 
-            handle = NSNotificationCenter.DefaultCenter.AddObserver( Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager.TextFieldChangedNotification, KeyboardAdjustManager.OnTextFieldChanged);
+            handle = NSNotificationCenter.DefaultCenter.AddObserver( Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager.TextFieldChangedNotification, OnTextFieldChanged);
             ObserverHandles.Add( handle );
 
             handle = NSNotificationCenter.DefaultCenter.AddObserver (UIKeyboard.WillHideNotification, KeyboardAdjustManager.OnKeyboardNotification);
@@ -363,6 +363,47 @@ namespace iOS
 
             UIApplication.SharedApplication.IdleTimerDisabled = true;
             Rock.Mobile.Util.Debug.WriteLine( "Turning idle timer OFF" );
+        }
+
+        void TryExpandHeightForUserNote( )
+        {
+            // if the bottom of the note goes past our allowed scroll value
+            float totalHeight = Note.GetNoteAbsoluteHeight( );
+
+            if ( totalHeight > UIScrollView.ContentSize.Height )
+            {
+                // expand the content size so the user can scroll to the bottom of their user note.
+                UIScrollView.ContentSize = new CGSize( 0, totalHeight + ( UIScrollView.Bounds.Height / 3 ) );
+            }
+        }
+
+        public void OnTextFieldDidBeginEditing( NSNotification notification )
+        {
+            KeyboardAdjustManager.OnTextFieldDidBeginEditing( notification );
+
+            // when a user note is edited, make sure that we allow enough scroll height to accomodate it.
+            TryExpandHeightForUserNote( );
+        }
+
+        public void OnTextFieldChanged( NSNotification notification )
+        {
+            KeyboardAdjustManager.OnTextFieldChanged( notification );
+
+            // when a user note is edited, make sure that we allow enough scroll height to accomodate it.
+            TryExpandHeightForUserNote( );
+        }
+
+        CGRect GetTappedTextFieldFrame( RectangleF textFrame )
+        {
+            // first subtract the amount scrolled by the view.
+            nfloat yPos = textFrame.Y - UIScrollView.ContentOffset.Y;
+            nfloat xPos = textFrame.X - UIScrollView.ContentOffset.X;
+
+            // now add in however far down the scroll view is from the top.
+            yPos += UIScrollView.Frame.Y;
+            xPos += UIScrollView.Frame.X;
+
+            return new CGRect( xPos, yPos, textFrame.Width, textFrame.Height );
         }
 
         public override void ViewDidDisappear(bool animated)
@@ -422,6 +463,8 @@ namespace iOS
         public void ViewResigning()
         {
             SaveNoteState( );
+
+            DestroyNotes( );
 
             OrientationState = -1;
 
@@ -550,6 +593,10 @@ namespace iOS
                     string activeUrl = Note.TouchesEnded( touch.LocationInView( UIScrollView ).ToPointF( ) );
                     if ( string.IsNullOrEmpty( activeUrl ) == false )
                     {
+                        SaveNoteState( );
+
+                        DestroyNotes( );
+
                         TaskWebViewController viewController = new TaskWebViewController( activeUrl, Task );
                         Task.PerformSegue( this, viewController );
                     }
@@ -654,7 +701,7 @@ namespace iOS
 
                 Note = new Note( noteXML, styleXML );
 
-                Note.Create( (float)UIScrollView.Bounds.Width, (float)UIScrollView.Bounds.Height, this.UIScrollView, NoteFileName + PrivateNoteConfig.UserNoteSuffix, DisplayMessageBox );
+                float scrollPercentOffset = Note.Create( (float)UIScrollView.Bounds.Width, (float)UIScrollView.Bounds.Height, this.UIScrollView, NoteFileName + PrivateNoteConfig.UserNoteSuffix, DisplayMessageBox );
 
                 // enable scrolling
                 UIScrollView.ScrollEnabled = true;
@@ -664,8 +711,11 @@ namespace iOS
                 View.BackgroundColor = UIScrollView.BackgroundColor; //Make the view itself match too
 
                 // update the height of the scroll view to fit all content
-                CGRect frame = Note.GetFrame( );
-                UIScrollView.ContentSize = new CGSize( UIScrollView.Bounds.Width, frame.Size.Height + ( UIScrollView.Bounds.Height / 3 ) );
+                //CGRect frame = Note.GetFrame( );
+                float height = Note.GetNoteAbsoluteHeight( );
+                UIScrollView.ContentSize = new CGSize( UIScrollView.Bounds.Width, height + ( UIScrollView.Bounds.Height / 3 ) );
+
+                UIScrollView.ContentOffset = new CGPoint( 0, scrollPercentOffset * UIScrollView.ContentSize.Height );
 
                 FinishNotesCreation( );
 

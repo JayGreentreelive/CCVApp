@@ -104,6 +104,11 @@ namespace App
                     /// </summary>
                     /// <value>The text input state list.</value>
                     public List<TextInputState> TextInputStateList { get; set; }
+
+                    /// <summary>
+                    /// The last scrolled percent position of the note
+                    /// </summary>
+                    public float ScrollOffsetPercent { get; set; }
                 }
             }
         }

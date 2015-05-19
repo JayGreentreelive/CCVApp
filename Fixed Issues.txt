@@ -14,10 +14,20 @@ Both
 
 	Fixed a download issue that could result in extremely long wait times for certain things
 		(Group Finder, Prayer Requests, etc.)
+		
+	Your position scrolled in Notes will now be remembered (Thanks Emily)
+	
+	Changed the term "User Note" to "My Note" (Thanks Robin)
 
 
 iOS
 	Added the ability to cancel selecting a Home or Viewing Campus. (Thanks Grace)
+	
+	Fixed an issue where a user note wouldn't display at its full height. (Thanks Kris)
+	
+	Fixed an issue causing user notes at the very bottom to be cut off and not fully viewable. (Thanks Emily)
+	
+	Fixed an issue causing the top line of text in user notes to cut off while editing. 
 
 
 Android

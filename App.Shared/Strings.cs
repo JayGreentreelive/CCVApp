@@ -256,6 +256,7 @@ namespace App.Shared
 
             public const string UserNote_DeleteTitle = "Delete Note";
             public const string UserNote_DeleteMessage = "Are you sure you want to delete this note?";
+            public const string UserNote_Prefix = "My Note - ";
 
         }
 

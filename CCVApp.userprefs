@@ -1,13 +1,11 @@
-﻿<Properties StartupItem="iOS/iOS.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|iPhone" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/Tasks/Notes/NotesDetailsUIViewController.cs">
+﻿<Properties StartupItem="Droid/Droid.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.192.168.56.101:5555" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Tasks/NotesTask/NotesFragment.cs">
     <Files>
-      <File FileName="iOS/Tasks/Notes/NotesMainUIViewController.cs" Line="696" Column="40" />
-      <File FileName="iOS/Tasks/Notes/NotesDetailsUIViewController.cs" Line="569" Column="13" />
-      <File FileName="iOS/Tasks/News/NewsMainUIViewController.cs" Line="417" Column="40" />
-      <File FileName="Droid/Tasks/NewsTask/NewsDetailsFragment.cs" Line="104" Column="44" />
-      <File FileName="Droid/Tasks/NotesTask/NotesPrimaryFragment.cs" Line="762" Column="52" />
-      <File FileName="App.Shared/Notes/Controls/Note.cs" Line="129" Column="126" />
+      <File FileName="iOS/Tasks/Notes/NotesViewController.cs" Line="371" Column="48" />
+      <File FileName="Droid/Tasks/NotesTask/NotesFragment.cs" Line="621" Column="69" />
+      <File FileName="App.Shared/Notes/Controls/BaseControl.cs" Line="208" Column="46" />
+      <File FileName="../Rock.Mobile/UI/Droid/DroidTextView.cs" Line="517" Column="14" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -16,24 +14,23 @@
             <Node name="App.Shared" expanded="True">
               <Node name="Notes" expanded="True">
                 <Node name="Controls" expanded="True" />
+                <Node name="Models" expanded="True" />
               </Node>
               <Node name="RockApi" expanded="True" />
               <Node name="UI" expanded="True" />
             </Node>
             <Node name="Droid" expanded="True">
-              <Node name="Resources" expanded="True" />
               <Node name="Tasks" expanded="True">
-                <Node name="ConnectTask" expanded="True" />
                 <Node name="NewsTask" expanded="True" />
-                <Node name="NotesTask" expanded="True" />
+                <Node name="NotesTask" expanded="True">
+                  <Node name="NotesFragment.cs" selected="True" />
+                </Node>
               </Node>
             </Node>
             <Node name="iOS" expanded="True">
               <Node name="Tasks" expanded="True">
                 <Node name="News" expanded="True" />
-                <Node name="Notes" expanded="True">
-                  <Node name="NotesDetailsUIViewController.cs" selected="True" />
-                </Node>
+                <Node name="Notes" expanded="True" />
               </Node>
             </Node>
             <Node name="Rock.Mobile" expanded="True">
@@ -43,6 +40,9 @@
               <Node name="PlatformSpecific" expanded="True">
                 <Node name="Android" expanded="True" />
                 <Node name="iOS" expanded="True" />
+              </Node>
+              <Node name="UI" expanded="True">
+                <Node name="Droid" expanded="True" />
               </Node>
               <Node name="Util" expanded="True" />
             </Node>

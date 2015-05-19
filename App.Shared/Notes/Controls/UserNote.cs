@@ -142,17 +142,6 @@ namespace App
                     PointF startPos = new PointF( userNoteContent.PositionPercX * PositionTransform.X, userNoteContent.PositionPercY * PositionTransform.Y );
                     Create( createParams, deviceHeight, startPos, userNoteContent.Text );
 
-                    // new notes are open by default. So if we're restoring one that was closed,
-                    // keep it closed.
-                    if ( userNoteContent.WasOpen == false )
-                    {
-                        CloseNote( );
-                    }
-                    else
-                    {
-                        OpenNote( false );
-                    }
-
                     // since we're restoring an existing user note,
                     // we want to turn off scaling so we can adjust the height 
                     // for all the text
@@ -167,6 +156,21 @@ namespace App
                     // now we can turn it back on so that if they continue to edit,
                     // it will grow.
                     TextView.ScaleHeightForText = true;
+
+                    // new notes are open by default. So if we're restoring one that was closed,
+                    // keep it closed.
+                    if ( userNoteContent.WasOpen == false )
+                    {
+                        CloseNote( );
+                    }
+                    else
+                    {
+                        // open up the text field WITHOUT animating
+                        // the textView
+                        TextView.Hidden = false;
+                        AnimateNoteIcon( true );
+                        AnimateUtilityView( true );
+                    }
                 }
 
                 public UserNote( CreateParams parentParams, float deviceHeight, PointF startPos )
@@ -878,14 +882,27 @@ namespace App
 
                 public override RectangleF GetFrame( )
                 {
-                    return TextView.Frame;
+                    // Turn off scaling and size the field, which will get us its actual width / height.
+                    TextView.ScaleHeightForText = false;
+
+                    // measure
+                    TextView.SizeToFit( );
+
+                    // store it
+                    RectangleF fullFrame = TextView.Frame;
+
+                    // then restore scaling (which will alter the Frame, but that's ok)
+                    TextView.ScaleHeightForText = true;
+
+                    // and return the full frame.
+                    return fullFrame;
                 }
 
                 public override void BuildHTMLContent( ref string htmlStream, List<IUIControl> userNotes )
                 {
                     if ( string.IsNullOrEmpty( TextView.Text ) == false )
                     {
-                        htmlStream += "<br><p><b>User Note - " + TextView.Text + "</b></p>";
+                        htmlStream += string.Format( "<br><p><b>{0}", MessagesStrings.UserNote_Prefix ) + TextView.Text + "</b></p>";
                     }
                 }
 

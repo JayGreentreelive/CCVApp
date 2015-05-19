@@ -69,6 +69,11 @@ namespace Droid
                     //base.ScrollBy(x, y);
                 }
 
+                public void ForceScrollTo(int x, int y)
+                {
+                    base.ScrollTo(x, y);
+                }
+
                 public override bool OnInterceptTouchEvent(MotionEvent ev)
                 {
                     // verify from our parent we can scroll, and that scrolling is enabled
@@ -550,7 +555,7 @@ namespace Droid
                     // the note is destroyed and references to it are cleared.
                     if( Note != null )
                     {
-                        Note.SaveState( );
+                        Note.SaveState( (float) ScrollView.ScrollY / (float) ScrollViewLayout.LayoutParameters.Height );
 
                         Note.Destroy( ScrollViewLayout );
                         Note = null;
@@ -623,16 +628,22 @@ namespace Droid
 
                         // Use the metrics and not ScrollView for dimensions, because depending on when this gets called the ScrollView
                         // may not have its dimensions set yet.
-                        Note.Create( NavbarFragment.GetContainerDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels, ScrollViewLayout, NoteFileName + PrivateNoteConfig.UserNoteSuffix, DisplayMessageBox );
+                        float scrollPercentOffset = Note.Create( NavbarFragment.GetContainerDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels, ScrollViewLayout, NoteFileName + PrivateNoteConfig.UserNoteSuffix, DisplayMessageBox );
 
                         // set the requested background color
                         ScrollView.SetBackgroundColor( ( Android.Graphics.Color )Rock.Mobile.UI.Util.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value ) );
 
                         // update the height of the scroll view to fit all content
-                        RectangleF frame = Note.GetFrame( );
+                        float noteBottom = Note.GetNoteAbsoluteHeight( );
 
-                        int scrollFrameHeight = ( int )frame.Size.Height + ( this.Resources.DisplayMetrics.HeightPixels / 3 );
+                        int scrollFrameHeight = ( int )noteBottom + ( this.Resources.DisplayMetrics.HeightPixels / 3 );
                         ScrollViewLayout.LayoutParameters.Height = scrollFrameHeight;
+
+                        // scroll to where the user left off
+                        ScrollView.Post( new Action( delegate
+                            {
+                                ScrollView.ForceScrollTo( 0, (int) (scrollPercentOffset * (float)scrollFrameHeight) );
+                            }));
 
                         FinishNotesCreation( );
 
