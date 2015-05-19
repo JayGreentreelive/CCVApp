@@ -628,7 +628,12 @@ namespace Droid
 
                         // Use the metrics and not ScrollView for dimensions, because depending on when this gets called the ScrollView
                         // may not have its dimensions set yet.
-                        float scrollPercentOffset = Note.Create( NavbarFragment.GetContainerDisplayWidth( ), this.Resources.DisplayMetrics.HeightPixels, ScrollViewLayout, NoteFileName + PrivateNoteConfig.UserNoteSuffix, DisplayMessageBox );
+                        float scrollPercentOffset = Note.Create( NavbarFragment.GetContainerDisplayWidth( ), 
+                                                                 this.Resources.DisplayMetrics.HeightPixels, 
+                                                                 ScrollViewLayout, 
+                                                                 NoteFileName + PrivateNoteConfig.UserNoteSuffix, 
+                                                                 DisplayMessageBox, 
+                                                                 UpdateScrollViewHeight );
 
                         // set the requested background color
                         ScrollView.SetBackgroundColor( ( Android.Graphics.Color )Rock.Mobile.UI.Util.GetUIColor( ControlStyles.mMainNote.mBackgroundColor.Value ) );
@@ -689,6 +694,16 @@ namespace Droid
                     {
                         ReportException( "", ex );
                     }
+                }
+
+                void UpdateScrollViewHeight( )
+                {
+                    // update the height of the scroll view to fit all content, including user notes
+                    // that might go obscenely below the actual note region
+                    float noteBottom = Note.GetNoteAbsoluteHeight( );
+
+                    int scrollFrameHeight = ( int )noteBottom + ( this.Resources.DisplayMetrics.HeightPixels / 3 );
+                    ScrollViewLayout.LayoutParameters.Height = scrollFrameHeight;
                 }
 
                 void FinishNotesCreation( )

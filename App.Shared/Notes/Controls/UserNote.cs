@@ -135,12 +135,12 @@ namespace App
                     CloseButton = PlatformLabel.Create( );
                 }
 
-                public UserNote( BaseControl.CreateParams createParams, float deviceHeight, Model.NoteState.UserNoteContent userNoteContent )
+                public UserNote( BaseControl.CreateParams createParams, float deviceHeight, Model.NoteState.UserNoteContent userNoteContent, UserNoteChanged onUserNoteChanged )
                 {
                     PositionTransform = new PointF( createParams.Width, createParams.Height );
 
                     PointF startPos = new PointF( userNoteContent.PositionPercX * PositionTransform.X, userNoteContent.PositionPercY * PositionTransform.Y );
-                    Create( createParams, deviceHeight, startPos, userNoteContent.Text );
+                    Create( createParams, deviceHeight, startPos, userNoteContent.Text, onUserNoteChanged );
 
                     // since we're restoring an existing user note,
                     // we want to turn off scaling so we can adjust the height 
@@ -173,16 +173,33 @@ namespace App
                     }
                 }
 
-                public UserNote( CreateParams parentParams, float deviceHeight, PointF startPos )
+                /// <summary>
+                /// User notes are tricky and can require big changes to the layout of the NoteView.
+                /// So, each one will accept a callback so it can notify the parent Note when something happens to it.
+                /// </summary>
+                public delegate void UserNoteChanged( UserNote note );
+                UserNoteChanged OnUserNoteChanged;
+
+                void InvokeChangedCallback( )
                 {
-                    Create( parentParams, deviceHeight, startPos, null );
+                    if( OnUserNoteChanged != null )
+                    {
+                        OnUserNoteChanged( this );
+                    }
+                }
+
+                public UserNote( CreateParams parentParams, float deviceHeight, PointF startPos, UserNoteChanged onUserNoteChanged )
+                {
+                    Create( parentParams, deviceHeight, startPos, null, onUserNoteChanged );
                 }
 
                 const float UtilityLayerHeight = 25;
 
-                public void Create( CreateParams parentParams, float deviceHeight, PointF startPos, string startingText )
+                void Create( CreateParams parentParams, float deviceHeight, PointF startPos, string startingText, UserNoteChanged onUserNoteChanged )
                 {
                     Initialize( );
+
+                    OnUserNoteChanged = onUserNoteChanged;
 
                     PositionTransform = new PointF( parentParams.Width, parentParams.Height );
 
@@ -204,6 +221,11 @@ namespace App
                     TextView.Placeholder = MessagesStrings.UserNote_Placeholder;
                     TextView.PlaceholderTextColor = ControlStylingConfig.TextField_PlaceholderTextColor;
                     TextView.KeyboardAppearance = GeneralConfig.iOSPlatformUIKeyboardAppearance;
+                    TextView.SetOnEditCallback( 
+                        delegate(PlatformTextView textView )
+                        {
+                            InvokeChangedCallback( );
+                        } );
                      
                     // check for border styling
                     if ( mStyle.mBorderColor.HasValue )
@@ -658,6 +680,9 @@ namespace App
 
                     CloseButton.Position = new PointF( UtilityLayer.Frame.Right - (CloseButton.Bounds.Width + (CloseButton.Bounds.Width / 2)), 
                         UtilityLayer.Position.Y + (Rock.Mobile.Graphics.Util.UnitToPx( UtilityLayerHeight ) - CloseButton.Bounds.Height) / 2 );
+
+                    // let the parent know we're moving, which they may care about
+                    InvokeChangedCallback( );
                 }
 
                 void ValidateBounds()
@@ -887,6 +912,10 @@ namespace App
 
                     // measure
                     TextView.SizeToFit( );
+
+                    // a small hack, but calling SizeToFit breaks
+                    // the note width, so this will restore it.
+                    ValidateBounds( );
 
                     // store it
                     RectangleF fullFrame = TextView.Frame;

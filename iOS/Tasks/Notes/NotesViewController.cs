@@ -349,10 +349,10 @@ namespace iOS
             base.ViewDidAppear(animated);
 
             // monitor for text field being edited, and keyboard show/hide notitications
-            NSObject handle = NSNotificationCenter.DefaultCenter.AddObserver( Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager.TextFieldDidBeginEditingNotification, OnTextFieldDidBeginEditing);
+            NSObject handle = NSNotificationCenter.DefaultCenter.AddObserver( Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager.TextFieldDidBeginEditingNotification, KeyboardAdjustManager.OnTextFieldDidBeginEditing);
             ObserverHandles.Add( handle );
 
-            handle = NSNotificationCenter.DefaultCenter.AddObserver( Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager.TextFieldChangedNotification, OnTextFieldChanged);
+            handle = NSNotificationCenter.DefaultCenter.AddObserver( Rock.Mobile.PlatformSpecific.iOS.UI.KeyboardAdjustManager.TextFieldChangedNotification, KeyboardAdjustManager.OnTextFieldChanged);
             ObserverHandles.Add( handle );
 
             handle = NSNotificationCenter.DefaultCenter.AddObserver (UIKeyboard.WillHideNotification, KeyboardAdjustManager.OnKeyboardNotification);
@@ -365,19 +365,7 @@ namespace iOS
             Rock.Mobile.Util.Debug.WriteLine( "Turning idle timer OFF" );
         }
 
-        void TryExpandHeightForUserNote( )
-        {
-            // if the bottom of the note goes past our allowed scroll value
-            float totalHeight = Note.GetNoteAbsoluteHeight( );
-
-            if ( totalHeight > UIScrollView.ContentSize.Height )
-            {
-                // expand the content size so the user can scroll to the bottom of their user note.
-                UIScrollView.ContentSize = new CGSize( 0, totalHeight + ( UIScrollView.Bounds.Height / 3 ) );
-            }
-        }
-
-        public void OnTextFieldDidBeginEditing( NSNotification notification )
+        /*public void OnTextFieldDidBeginEditing( NSNotification notification )
         {
             KeyboardAdjustManager.OnTextFieldDidBeginEditing( notification );
 
@@ -390,8 +378,21 @@ namespace iOS
             KeyboardAdjustManager.OnTextFieldChanged( notification );
 
             // when a user note is edited, make sure that we allow enough scroll height to accomodate it.
+            // if we're going to grow
+
+            // as they edit, we want to scroll with them so the bottom of the note doesn't go below the screne.
+            // so take the current size of the scroll area
+            nfloat contentSizeDelta = UIScrollView.ContentSize.Height;
+
             TryExpandHeightForUserNote( );
-        }
+
+            // get the change, but clamp to 0. We want to follow them editing down, but not if they delete,
+            // which will shrink the box
+            contentSizeDelta = (nfloat)Math.Max( 0, (double)(UIScrollView.ContentSize.Height - contentSizeDelta) );
+
+            // and update our scroll offset by that.
+            UIScrollView.ContentOffset = new CGPoint( 0, UIScrollView.ContentOffset.Y + contentSizeDelta );
+        }*/
 
         CGRect GetTappedTextFieldFrame( RectangleF textFrame )
         {
@@ -701,7 +702,12 @@ namespace iOS
 
                 Note = new Note( noteXML, styleXML );
 
-                float scrollPercentOffset = Note.Create( (float)UIScrollView.Bounds.Width, (float)UIScrollView.Bounds.Height, this.UIScrollView, NoteFileName + PrivateNoteConfig.UserNoteSuffix, DisplayMessageBox );
+                float scrollPercentOffset = Note.Create( (float)UIScrollView.Bounds.Width, 
+                                                         (float)UIScrollView.Bounds.Height, 
+                                                         this.UIScrollView, 
+                                                         NoteFileName + PrivateNoteConfig.UserNoteSuffix, 
+                                                         DisplayMessageBox, 
+                                                         UpdateScrollViewHeight );
 
                 // enable scrolling
                 UIScrollView.ScrollEnabled = true;
@@ -758,6 +764,31 @@ namespace iOS
             catch( Exception ex )
             {
                 ReportException( "", ex );
+            }
+        }
+
+        void UpdateScrollViewHeight( )
+        {
+            // get the height of the note
+            float noteHeight = Note.GetNoteAbsoluteHeight( );
+            nfloat scrollViewHeight = noteHeight + ( UIScrollView.Bounds.Height / 3 );
+
+
+            // if that no longer matches our scroll view height, we need
+            // to update our scroll view.
+            if ( scrollViewHeight != UIScrollView.ContentSize.Height )
+            {
+                nfloat contentSizeDelta = UIScrollView.ContentSize.Height;
+
+                // expand the content size so the user can scroll to the bottom of their user note.
+                UIScrollView.ContentSize = new CGSize( 0, scrollViewHeight );
+
+                // get the change, but clamp to 0. We want to follow them editing down, but not if they delete,
+                // which will shrink the box
+                contentSizeDelta = (nfloat)Math.Max( 0, (double)(UIScrollView.ContentSize.Height - contentSizeDelta) );
+
+                // and update our scroll offset by that.
+                UIScrollView.ContentOffset = new CGPoint( 0, UIScrollView.ContentOffset.Y + contentSizeDelta );
             }
         }
 

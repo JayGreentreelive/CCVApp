@@ -217,7 +217,10 @@ namespace App
                     ControlStyles.Initialize( styleXml );
                 }
 
-                public float Create( float parentWidth, float parentHeight, object masterView, string userNoteFileName, DisplayMessageBoxDelegate displayMessageBoxDelegate )
+                public delegate void NoteSizeChanging( );
+                NoteSizeChanging OnNoteSizeChanging;
+
+                public float Create( float parentWidth, float parentHeight, object masterView, string userNoteFileName, DisplayMessageBoxDelegate displayMessageBoxDelegate, NoteSizeChanging onNoteSizeChanging )
                 {
                     // setup our note timer that will wait to load our notes until AFTER the notes are created,
                     // as opposed to the same tick. This cuts down 500ms from the create time.
@@ -231,6 +234,8 @@ namespace App
                             // on the main (UI) thread, we don't have to worry about race conditions.
                             Rock.Mobile.Threading.Util.PerformOnUIThread( delegate { LoadState( UserNotePath ); } );
                         };*/
+
+                    OnNoteSizeChanging = onNoteSizeChanging;
 
                     RequestDisplayMessageBox = displayMessageBoxDelegate;
 
@@ -558,11 +563,14 @@ namespace App
                                     // if they said yes, do it.
                                     if ( result == 0 )
                                     {
-                                        activeNote.Dispose( MasterView );
-
-                                        // remove it from our list. Because our next step will be
-                                        // to clear the anchor ref, that will effectively delete the note (eligible for garbage collection)
+                                        // remove it from our list.
                                         UserNoteControls.Remove( activeNote );
+
+                                        // notify our parent
+                                        UserNoteChanged( activeNote );
+
+                                        // now clear the anchor ref, which will effectively delete the note (eligible for garbage collection)
+                                        activeNote.Dispose( MasterView );
                                     }
                                 } );
                         }
@@ -637,7 +645,7 @@ namespace App
 
                     if( allowNoteCreation )
                     {
-                        UserNote userNote = new UserNote( new BaseControl.CreateParams( this, Frame.Width, Frame.Height, ref mStyle ), DeviceHeight, touch );
+                        UserNote userNote = new UserNote( new BaseControl.CreateParams( this, Frame.Width, Frame.Height, ref mStyle ), DeviceHeight, touch, UserNoteChanged );
                         UserNoteControls.Add( userNote );
 
                         userNote.AddToView( MasterView );
@@ -729,7 +737,7 @@ namespace App
                             foreach( NoteState.UserNoteContent note in noteState.UserNoteContentList )
                             {
                                 // create the note, add it to our list, and to the view
-                                UserNote userNote = new UserNote( new BaseControl.CreateParams( this, Frame.Width, Frame.Height, ref mStyle ), DeviceHeight, note );
+                                UserNote userNote = new UserNote( new BaseControl.CreateParams( this, Frame.Width, Frame.Height, ref mStyle ), DeviceHeight, note, UserNoteChanged );
                                 UserNoteControls.Add( userNote );
                                 userNote.AddToView( MasterView );
                             }
@@ -822,6 +830,16 @@ namespace App
                     }
 
                     return height;
+                }
+
+                void UserNoteChanged( UserNote note )
+                {
+                    // our handler for ANY user note modification. This allows us to notify the
+                    // parent UI so it can resize or do whatever it may need to do. (Like grow the
+                    // scroll view as the note enlarges)
+                    Rock.Mobile.Util.Debug.WriteLine( "User Note did change in some way." );
+
+                    OnNoteSizeChanging( );
                 }
             }
         }
