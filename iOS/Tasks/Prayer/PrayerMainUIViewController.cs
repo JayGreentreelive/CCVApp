@@ -52,9 +52,16 @@ namespace iOS
         }
 
         public PlatformView View { get; set; }
+
+        UIView NameLayer { get; set; }
         UILabel Name { get; set; }
+
+        UIView DateLayer { get; set; }
         UILabel Date { get; set; }
+
+        UIView CategoryLayer { get; set; }
         UILabel Category { get; set; }
+
         Rock.Client.PrayerRequest PrayerRequest { get; set; }
         PrayerTextView PrayerText { get; set; }
 
@@ -115,30 +122,52 @@ namespace iOS
             
 
             // setup the name field
+            NameLayer = new UIView( );
+            NameLayer.Layer.AnchorPoint = new CGPoint( 0, 0 );
+            NameLayer.Layer.BorderColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ).CGColor;
+            NameLayer.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor );
+
             Name = new UILabel( );
             Name.Layer.AnchorPoint = new CGPoint( 0, 0 );
             Name.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
             Name.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Bold, ControlStylingConfig.Medium_FontSize );
+            Name.BackgroundColor = UIColor.Clear;
 
             // setup the date field
+            DateLayer = new UIView( );
+            DateLayer.Layer.AnchorPoint = new CGPoint( 0, 0 );
+            DateLayer.Layer.BorderWidth = 1;
+            DateLayer.Layer.BorderColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ).CGColor;
+            DateLayer.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor );
+
             Date = new UILabel( );
             Date.Layer.AnchorPoint = new CGPoint( 0, 0 );
-            Date.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+            Date.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
             Date.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Light, ControlStylingConfig.Small_FontSize );
-
+            Date.BackgroundColor = UIColor.Clear;
 
             // setup the category field
+            CategoryLayer = new UIView( );
+            CategoryLayer.Layer.AnchorPoint = new CGPoint( 0, 0 );
+            CategoryLayer.Layer.BorderWidth = 1;
+            CategoryLayer.Layer.BorderColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_Color ).CGColor;
+            CategoryLayer.BackgroundColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.BG_Layer_BorderColor );
+
             Category = new UILabel( );
             Category.Layer.AnchorPoint = new CGPoint( 0, 0 );
-            Category.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor );
+            Category.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
             Category.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( ControlStylingConfig.Font_Light, ControlStylingConfig.Small_FontSize );
+            Category.BackgroundColor = UIColor.Clear;
 
 
             // add the controls
             UIView nativeView = View.PlatformNativeObject as UIView;
 
+            nativeView.AddSubview( NameLayer );
             nativeView.AddSubview( Name );
+            nativeView.AddSubview( CategoryLayer );
             nativeView.AddSubview( Category );
+            nativeView.AddSubview( DateLayer );
             nativeView.AddSubview( Date );
             nativeView.AddSubview( PrayerText );
             nativeView.AddSubview( PrayerActionCircle );
@@ -170,6 +199,7 @@ namespace iOS
 
                     PrayerActionButton.SetTitleColor( Rock.Mobile.UI.Util.GetUIColor( 0xFFFFFFFF ), UIControlState.Normal );
                     PrayerActionButton.SetTitle( PrayerStrings.Prayer_After, UIControlState.Normal );
+                    PrayerActionButton.SizeToFit( );
                 }
                 else
                 {
@@ -180,6 +210,7 @@ namespace iOS
 
                     PrayerActionButton.SetTitleColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ), UIControlState.Normal );
                     PrayerActionButton.SetTitle( PrayerStrings.Prayer_Before, UIControlState.Normal );
+                    PrayerActionButton.SizeToFit( );
                 }
 
                 PrayerActionButton.SizeToFit( );
@@ -197,8 +228,11 @@ namespace iOS
 
         void PositionPrayedLabel( )
         {
-            PrayerActionButton.Layer.Position = new CGPoint( PrayerActionCircle.Layer.Position.X + PrayerActionCircle.Frame.Width / 2 - PrayerActionButton.Frame.Width / 1.25f, 
-                                                             PrayerActionCircle.Layer.Position.Y + PrayerActionCircle.Frame.Height / 2 - PrayerActionButton.Frame.Height );
+            PrayerActionCircle.Layer.Position = new CGPoint( (View.Bounds.Width - PrayerActionCircle.Layer.Bounds.Width) / 2.0f, 
+                                                             View.Bounds.Height - PrayerActionCircle.Layer.Bounds.Height / 3.50f );
+            
+            PrayerActionButton.Layer.Position = new CGPoint( PrayerActionCircle.Layer.Position.X + (PrayerActionCircle.Frame.Width - PrayerActionButton.Frame.Width) / 2, 
+                                                             PrayerActionCircle.Layer.Position.Y  );
         }
 
         const int ViewPadding = 10;
@@ -220,32 +254,39 @@ namespace iOS
         {
             View.Bounds = bounds;
 
-            Name.Frame = new CGRect( ViewPadding, ViewPadding, View.Bounds.Width - (ViewPadding * 2), Name.Bounds.Height );
-            Name.SizeToFit( );
-
-            Category.Layer.Position = new CGPoint( ViewPadding, Name.Frame.Bottom );
-            Category.SizeToFit( );
-
+            // setup the name layer and name
             float metaDataSpacing = 30;
-            nfloat metaDataYSpacing = ( ( metaDataSpacing - Category.Frame.Height ) / 2 );
-            Category.Layer.Position = new CGPoint( ViewPadding, Name.Frame.Bottom + metaDataYSpacing );
+            NameLayer.Frame = new CGRect( 0, 0, View.Bounds.Width, metaDataSpacing );
+
+            Name.Frame = new CGRect( 0, 0, View.Bounds.Width - (ViewPadding * 2), metaDataSpacing );
+            Name.SizeToFit( );
+            Name.Frame = new CGRect( ViewPadding, (metaDataSpacing - Name.Bounds.Height) / 2, Name.Frame.Width, Name.Bounds.Height );
 
 
-            Date.Frame = new CGRect( ViewPadding, Name.Frame.Bottom, View.Bounds.Width - ViewPadding, 0 );
+            // setup the category layer and category
+            CategoryLayer.Frame = new CGRect( -5, NameLayer.Frame.Bottom, View.Bounds.Width / 2 + 6, metaDataSpacing );
+                
+            Category.Frame = new CGRect( 0, 0, (View.Bounds.Width / 2) - ViewPadding, metaDataSpacing );
+            Category.SizeToFit( );
+            Category.Frame = new CGRect( ViewPadding, CategoryLayer.Frame.Top + (metaDataSpacing - Category.Bounds.Height) / 2, Category.Frame.Width, Category.Frame.Height );
+
+
+            // setup the date layer and category
+            DateLayer.Frame = new CGRect( View.Bounds.Width / 2, NameLayer.Frame.Bottom, View.Bounds.Width / 2 + 5, metaDataSpacing );
+
+            Date.Frame = new CGRect( 0, 0, (View.Bounds.Width / 2) - ViewPadding, metaDataSpacing );
             Date.SizeToFit( );
+            Date.Frame = new CGRect( View.Bounds.Width - Date.Frame.Width - ViewPadding, 
+                                     DateLayer.Frame.Top + (metaDataSpacing - Date.Bounds.Height) / 2, 
+                                     Date.Frame.Width, 
+                                     Date.Frame.Height );
 
-            metaDataYSpacing = ( ( metaDataSpacing - Date.Frame.Height ) / 2 );
-            Date.Layer.Position = new CGPoint( View.Bounds.Width - Date.Frame.Width - ViewPadding, Name.Frame.Bottom + metaDataYSpacing );
 
-
-            PrayerText.Frame = new CGRect( ViewPadding, Name.Frame.Bottom + metaDataSpacing, View.Bounds.Width - (ViewPadding * 2), 0 );
+            PrayerText.Frame = new CGRect( ViewPadding, DateLayer.Frame.Bottom, View.Bounds.Width - (ViewPadding * 2), 0 );
             PrayerText.SizeToFit( );
-            float prayerHeight = (float) Math.Min( PrayerText.Frame.Height, View.Bounds.Height - PrayerText.Frame.Top - (PrayerActionButton.Frame.Height * 2) - ViewPadding );
+            float prayerHeight = (float) Math.Min( PrayerText.Frame.Height, View.Bounds.Height - PrayerText.Frame.Top - PrayerActionButton.Frame.Height - ViewPadding );
             PrayerText.Frame = new CGRect( PrayerText.Frame.Left, PrayerText.Frame.Top, PrayerText.Frame.Width, prayerHeight );
-
-            PrayerActionCircle.Layer.Position = new CGPoint( View.Bounds.Width - PrayerActionCircle.Layer.Bounds.Width / 1.5f, 
-                                                             View.Bounds.Height - PrayerActionCircle.Layer.Bounds.Height / 2.0f );
-            
+                        
             PositionPrayedLabel( );
         }
     }

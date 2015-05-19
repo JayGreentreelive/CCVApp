@@ -148,7 +148,7 @@ namespace Droid
                         listItem = new SingleNewsListItem( Rock.Mobile.PlatformSpecific.Android.Core.Context );
 
                         int height = (int)System.Math.Ceiling( NavbarFragment.GetContainerDisplayWidth( ) * PrivateNewsConfig.NewsMainAspectRatio );
-                        listItem.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, height );
+                        listItem.LayoutParameters = new AbsListView.LayoutParams( ViewGroup.LayoutParams.WrapContent, height );
                         listItem.HasImage = false;
                     }
 
@@ -198,7 +198,7 @@ namespace Droid
                         seriesItem.ParentAdapter = this;
 
                         int height = (int)System.Math.Ceiling( (NavbarFragment.GetContainerDisplayWidth( ) / 2) * PrivateNewsConfig.NewsMainAspectRatio );
-                        seriesItem.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, height );
+                        seriesItem.LayoutParameters = new AbsListView.LayoutParams( ViewGroup.LayoutParams.WrapContent, height );
 
                         seriesItem.LeftHasImage = false;
                         seriesItem.RightHasImage = false;
