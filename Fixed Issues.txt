@@ -2,47 +2,11 @@ Changes
 -------
 
 Both
-	The "Take Notes" banner will no longer show up if you're already taking notes. (Thanks Jenni)
-
-	The bottom Nav Toolbar will no longer hide automatically. (Thanks Grace)
-
-	Fixed an issue causing your Viewing Campus to reset when leaving the app and returning.
-
-	Updated User Notes so that they can be placed lower in the Notes, below the actual content.
-
-	The nav toolbar will now display when entering Notes.
-
-	Fixed a download issue that could result in extremely long wait times for certain things
-		(Group Finder, Prayer Requests, etc.)
-		
-	Your position scrolled in Notes will now be remembered (Thanks Emily)
-	
-	Changed the term "User Note" to "My Note" (Thanks Robin)
-	
-	The "Double Tap to create Notes" tutorial will now show up multiple times, instead of once. (Thanks Robin/Grace)
-	
-	Fixed issues with the "Double Tap to create Notes" going away when tapped.
-	
-	Improved the size and contrast of User Notes (Thanks Kris)
 
 
 iOS
-	Added the ability to cancel selecting a Home or Viewing Campus. (Thanks Grace)
-	
-	Fixed an issue where a user note wouldn't display at its full height. (Thanks Kris)
-	
-	Fixed an issue causing user notes at the very bottom to be cut off and not fully viewable. (Thanks Emily)
-	
-	Fixed an issue causing the top line of text in user notes to cut off while editing. 
+
 
 
 Android
-	Major, major performance improvements. Things should feel much snappier.
 	
-	Fixed an issue causing the Prayer page to be incorrect when leaving and returning while Prayers are downloading.
-
-	Fixed an issue making it difficult to dismiss the "Tap to Create Notes" screen.
-
-	Fixed an issue preventing the "Take Notes" banner from working. (Thanks Christopher)
-
-	Fixed an issue where the Group Finder Search Box didn't auto-populate with your address when signed in.

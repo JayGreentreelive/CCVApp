@@ -6,22 +6,33 @@
 		<!--Start Series-->
 		<Series>
 			<Message>
-				<Name>WHY DOES GOD ALLOW SUFFERING</Name>
+				<Name>WHAT IS THE TRINITY?</Name>
+				<Speaker>Dr. Mark Moore</Speaker>
+				<Date>5/24/2015</Date>
+				<NoteUrl>xml/message_5_23_2015.xml</NoteUrl>
+			</Message>
+			<Message>
+				<Name>WHY DOES GOD ALLOW SUFFERING?</Name>
 				<Speaker>Dr. Don Wilson</Speaker>
 				<Date>5/17/2015</Date>
 				<NoteUrl>xml/message_5_16_2015.xml</NoteUrl>
+				<ShareUrl>http://ccv.church/Arena/default.aspx?page=17529&amp;item=508</ShareUrl>
+				<WatchUrl>http://player.vimeo.com/external/128071288.m3u8?p=high,standard,mobile&amp;s=606ddbf7ef9ee33a397e6edcbea8675d</WatchUrl>
+				<AudioUrl>http://podcasts.ccvonline.com.s3.amazonaws.com/contemporaryaudio/YouAskedForIt/You_Asked_For_It_Wk2_Why_Does_God_Allow_Suffering.mp3</AudioUrl>
 			</Message>
 			<Message>
 				<Name>ARE ALL FAITHS EQUAL?</Name>
 				<Speaker>Todd Clark</Speaker>
 				<Date>5/10/2015</Date>
 				<NoteUrl>xml/message_5_9_2015.xml</NoteUrl>
+				<ShareUrl>http://ccv.church/Arena/default.aspx?page=17529&amp;item=507</ShareUrl>
+				<WatchUrl>http://player.vimeo.com/external/127414630.m3u8?p=high,standard,mobile&amp;s=ee40c5ad61278752c1be305dacb64802</WatchUrl>
+				<AudioUrl>http://podcasts.ccvonline.com.s3.amazonaws.com/contemporaryaudio/YouAskedForIt/YouAskedForIt_Wk1_AreAllFaithsEqual.mp3</AudioUrl>
 			</Message>
 
 			<Name>YOU ASKED FOR IT</Name>
 			<Description>
-				Do you have a tough question about life or faith that you just can't seem to find a good answer for?
-				We will take on some of your top questions.
+				Do you have a tough question about life or faith that you just can't seem to find a good answer for? We will take on some of your top questions.
 			</Description>
 			<DateRanges>5/9/2015 - 6/1/2015</DateRanges>
 			<BillboardUrl>images/you_asked_for_it.png</BillboardUrl>
