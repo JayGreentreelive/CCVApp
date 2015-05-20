@@ -292,6 +292,11 @@ namespace App.Shared
             public const float NotesThumbPlaceholderAspectRatio = NotesMainPlaceholderHeight / NotesMainPlaceholderWidth;
 
             /// <summary>
+            /// The number of times to show the user the "double tap to take notes" thing.
+            /// </summary>
+            public const float MaxTutorialDisplayCount = 3;
+
+            /// <summary>
             /// The suffix to use for the user note filename.
             /// </summary>
             public const string UserNoteSuffix = "_user_note.dat";
@@ -336,7 +341,7 @@ namespace App.Shared
             /// The size of the font/icon when displaying the delete icon on user notes.
             /// </summary>
             /// 
-            public const int UserNote_DeleteIconSize = 25;
+            public const int UserNote_DeleteIconSize = 40;
 
             /// <summary>
             /// The icon to use for displaying the close icon on user notes.
@@ -347,7 +352,7 @@ namespace App.Shared
             /// The size of the font/icon when displaying the close icon on user notes.
             /// </summary>
             /// 
-            public const int UserNote_CloseIconSize = 25;
+            public const int UserNote_CloseIconSize = 40;
 
             /// <summary>
             /// The icon to use representing "Listen to this Message"

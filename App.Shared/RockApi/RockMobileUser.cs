@@ -81,7 +81,7 @@ namespace App
                 /// If true, they've already seen the note tutorial and don't need to see it again.
                 /// </summary>
                 /// <value><c>true</c> if note tutorial shown; otherwise, <c>false</c>.</value>
-                public bool NoteTutorialShown { get; set; }
+                public int NoteTutorialShownCount { get; set; }
 
                 /// <summary>
                 /// True if this is the first time the user has run the app

@@ -442,6 +442,9 @@ namespace iOS
             // yet another place to drop in an idle timer disable
             UIApplication.SharedApplication.IdleTimerDisabled = true;
             Rock.Mobile.Util.Debug.WriteLine( "Turning idle timer OFF" );
+
+            // force a redraw so the notes are recreated
+            LayoutChanged( );
         }
 
         public override void AppOnResignActive()
@@ -729,9 +732,9 @@ namespace iOS
                 MessageAnalytic.Instance.Trigger( MessageAnalytic.Read, NoteName );
 
                 // if the user has never seen it, show them the tutorial screen
-                if( App.Shared.Network.RockMobileUser.Instance.NoteTutorialShown == false )
+                if( App.Shared.Network.RockMobileUser.Instance.NoteTutorialShownCount < PrivateNoteConfig.MaxTutorialDisplayCount )
                 {
-                    App.Shared.Network.RockMobileUser.Instance.NoteTutorialShown = true;
+                    App.Shared.Network.RockMobileUser.Instance.NoteTutorialShownCount = App.Shared.Network.RockMobileUser.Instance.NoteTutorialShownCount + 1;
 
                     // wait a second before revealing the tutorial overlay
                     System.Timers.Timer timer = new System.Timers.Timer();
@@ -754,6 +757,7 @@ namespace iOS
                                     TutorialOverlay.Frame = View.Frame;
 
                                     AnimateTutorialScreen( true );
+                                    UIScrollView.ScrollEnabled = false;
                                 });
                         };
                     timer.Start( );
@@ -819,6 +823,10 @@ namespace iOS
                         }, 
                         delegate
                         {
+                            if( fadeIn == false )
+                            {
+                                UIScrollView.ScrollEnabled = true;
+                            }
                             AnimatingTutorial = false;
                         } );
                     tutorialAnim.Start( );

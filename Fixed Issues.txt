@@ -18,6 +18,12 @@ Both
 	Your position scrolled in Notes will now be remembered (Thanks Emily)
 	
 	Changed the term "User Note" to "My Note" (Thanks Robin)
+	
+	The "Double Tap to create Notes" tutorial will now show up multiple times, instead of once. (Thanks Robin/Grace)
+	
+	Fixed issues with the "Double Tap to create Notes" going away when tapped.
+	
+	Improved the size and contrast of User Notes (Thanks Kris)
 
 
 iOS

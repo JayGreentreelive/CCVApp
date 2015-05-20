@@ -193,7 +193,7 @@ namespace App
                     Create( parentParams, deviceHeight, startPos, null, onUserNoteChanged );
                 }
 
-                const float UtilityLayerHeight = 25;
+                const float UtilityLayerHeight = 40;
 
                 void Create( CreateParams parentParams, float deviceHeight, PointF startPos, string startingText, UserNoteChanged onUserNoteChanged )
                 {
@@ -255,7 +255,7 @@ namespace App
 
                     // Setup the anchor color
                     NoteIcon.Text = PrivateNoteConfig.UserNote_Icon;
-                    NoteIcon.TextColor = NoteConfig.UserNote_IconColor;
+                    NoteIcon.TextColor = mStyle.mFont.mColor.Value;//NoteConfig.UserNote_IconColor;
 
                     // get the small and large sizes for the note icon, so we can animate correctly
                     NoteIcon.SetFont( PrivateControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.UserNote_IconOpenSize );
@@ -298,13 +298,13 @@ namespace App
 
                     // setup the delete button
                     DeleteButton.Text = PrivateNoteConfig.UserNote_DeleteIcon;
-                    DeleteButton.TextColor = NoteConfig.UserNote_IconColor;
+                    DeleteButton.TextColor = mStyle.mFont.mColor.Value;//NoteConfig.UserNote_IconColor;
                     DeleteButton.SetFont( PrivateControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.UserNote_DeleteIconSize );
                     DeleteButton.SizeToFit( );
 
                     // setup the close button
                     CloseButton.Text = PrivateNoteConfig.UserNote_CloseIcon;
-                    CloseButton.TextColor = NoteConfig.UserNote_IconColor;
+                    CloseButton.TextColor = mStyle.mFont.mColor.Value;//NoteConfig.UserNote_IconColor;
                     CloseButton.SetFont( PrivateControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.UserNote_CloseIconSize );
                     CloseButton.SizeToFit( );
 
@@ -675,10 +675,10 @@ namespace App
                         TextView.Position.Y - Rock.Mobile.Graphics.Util.UnitToPx( UtilityLayerHeight ) );
 
                     // set the position for the delete button
-                    DeleteButton.Position = new PointF( UtilityLayer.Position.X + DeleteButton.Bounds.Width / 2, 
+                    DeleteButton.Position = new PointF( UtilityLayer.Position.X, 
                         UtilityLayer.Position.Y + (Rock.Mobile.Graphics.Util.UnitToPx( UtilityLayerHeight ) - DeleteButton.Bounds.Height) / 2 );
 
-                    CloseButton.Position = new PointF( UtilityLayer.Frame.Right - (CloseButton.Bounds.Width + (CloseButton.Bounds.Width / 2)), 
+                    CloseButton.Position = new PointF( UtilityLayer.Frame.Right - CloseButton.Bounds.Width, 
                         UtilityLayer.Position.Y + (Rock.Mobile.Graphics.Util.UnitToPx( UtilityLayerHeight ) - CloseButton.Bounds.Height) / 2 );
 
                     // let the parent know we're moving, which they may care about
@@ -709,10 +709,10 @@ namespace App
                         TextView.Position.Y - Rock.Mobile.Graphics.Util.UnitToPx( UtilityLayerHeight ) );
 
                     // set the position for the delete button
-                    DeleteButton.Position = new PointF( UtilityLayer.Position.X + DeleteButton.Bounds.Width / 2, 
+                    DeleteButton.Position = new PointF( UtilityLayer.Position.X, 
                         UtilityLayer.Position.Y + (Rock.Mobile.Graphics.Util.UnitToPx( UtilityLayerHeight ) - DeleteButton.Bounds.Height) / 2 );
 
-                    CloseButton.Position = new PointF( UtilityLayer.Frame.Right - (CloseButton.Bounds.Width + (CloseButton.Bounds.Width / 2)), 
+                    CloseButton.Position = new PointF( UtilityLayer.Frame.Right - CloseButton.Bounds.Width, 
                         UtilityLayer.Position.Y + (Rock.Mobile.Graphics.Util.UnitToPx( UtilityLayerHeight ) - CloseButton.Bounds.Height) / 2 );
                 }
 
@@ -868,7 +868,7 @@ namespace App
                         if ( open == true )
                         {
                             UtilityLayer.Hidden = false;
-                            endSize = new SizeF( MinNoteWidth, Rock.Mobile.Graphics.Util.UnitToPx( 25 ) );
+                            endSize = new SizeF( MinNoteWidth, Rock.Mobile.Graphics.Util.UnitToPx( UtilityLayerHeight ) );
                         }
                         else
                         {

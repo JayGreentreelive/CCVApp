@@ -173,7 +173,7 @@ namespace iOS
 
             MakePublicLabel = new UILabel();
             SwitchBackground.AddSubview( MakePublicLabel );
-            MakePublicLabel.TextColor = UIColor.White;
+            //MakePublicLabel.TextColor = UIColor.White;
 
 
             UISwitchAnonymous = new UISwitch();
@@ -181,7 +181,7 @@ namespace iOS
 
             PostAnonymouslyLabel = new UILabel();
             SwitchBackground.AddSubview( PostAnonymouslyLabel );
-            PostAnonymouslyLabel.TextColor = UIColor.White;
+            //PostAnonymouslyLabel.TextColor = UIColor.White;
 
 
             // Setup the anonymous switch
@@ -216,6 +216,7 @@ namespace iOS
             MakePublicLabel.Text = PrayerStrings.CreatePrayer_MakePublic;
             MakePublicLabel.TextColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
             UIPublicSwitch.OnTintColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.Switch_OnColor );
+            //UIPublicSwitch.ThumbTintColor = Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_ActiveTextColor );
 
 
             // setup the submit button

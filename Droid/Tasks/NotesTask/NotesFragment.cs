@@ -96,6 +96,72 @@ namespace Droid
             public class NotesFragment : TaskFragment
             {
                 /// <summary>
+                /// A simple struct for managing the properties needed for
+                /// hiding / revealing the nav toolbar
+                /// </summary>
+                class NavBarReveal
+                {
+                    float Timer { get; set; }
+                    bool TimerTicked { get; set; }
+                    float ScrollStartY { get; set; }
+                    NavToolbarFragment NavToolbar { get; set; }
+
+                    public NavBarReveal( NavToolbarFragment navToolbar )
+                    {
+                        NavToolbar = navToolbar;
+
+                        Timer = 0.00f;
+                        TimerTicked = false;
+                        ScrollStartY = 0;
+                    }
+
+                    public void BeginTracking( float currScrollY )
+                    {
+                        // start monitoring for a flick strong enough to toggle the navbar
+                        Timer = DateTime.Now.Millisecond;
+                        TimerTicked = false;
+                        ScrollStartY = currScrollY;
+                    }
+
+                    public void Update( float scrollDelta, float currScrollY, float scrollViewHeight )
+                    {
+                        // see how much time has passed
+                        float deltaTime = DateTime.Now.Millisecond - Timer;
+
+                        // if it's been 1/10th a second and we haven't already ticked
+                        if ( deltaTime > 100 && TimerTicked == false )
+                        {
+                            TimerTicked = true;
+
+                            // first, if they are near the top, simply reveal the bar.
+                            float scrollPerc = currScrollY / scrollViewHeight;
+                            if ( scrollPerc < .10f )
+                            {
+                                // show the nav bar
+                                NavToolbar.Reveal( true );
+                            }
+                            else
+                            {
+                                // get the amount scrolled
+                                float deltaScroll = currScrollY - ScrollStartY;
+
+                                if ( deltaScroll < -50 )
+                                {
+                                    // hide the nav bar
+                                    NavToolbar.Reveal( true );
+                                }
+                                else if ( deltaScroll > 150 )
+                                {
+                                    // hide the nav bar
+                                    NavToolbar.Reveal( false );
+                                }
+                            }
+                        }
+                    }
+                }
+                NavBarReveal NavBarRevealTracker { get; set; }
+
+                /// <summary>
                 /// Tags for storing the NoteScript and Style XML during an orientation change.
                 /// </summary>
                 const string XML_NOTE_KEY = "NOTE_XML";
@@ -286,6 +352,8 @@ namespace Droid
                     TutorialOverlay.SetBackgroundColor( Android.Graphics.Color.Black );
                     layout.AddView( TutorialOverlay );
 
+                    NavBarRevealTracker = new NavBarReveal( ParentTask.NavbarFragment.NavToolbar );
+
                     return layout;
                 }
 
@@ -401,21 +469,6 @@ namespace Droid
                     ShutdownNotes( null );
                 }
 
-                public void OnScrollChanged( float scrollDelta )
-                {
-                    float scrollPerc = (float) ScrollView.ScrollY / (float) ScrollViewLayout.LayoutParameters.Height;
-                    if ( scrollPerc < .10f )
-                    {
-                        // show the nav bar
-                        ParentTask.NavbarFragment.NavToolbar.Reveal( true );
-                    }
-                    else
-                    {
-                        // hide the nav bar
-                        ParentTask.NavbarFragment.NavToolbar.Reveal( false );
-                    }
-                }
-
                 public bool OnInterceptTouchEvent(MotionEvent ev)
                 {
                     // called by the LockableScrollView. This allows us to shut the
@@ -484,8 +537,20 @@ namespace Droid
                     }
                 }
 
+                public void OnScrollChanged( float scrollDelta )
+                {
+                    // whenever the scrollview is scrolled, let the navBar tracker know
+                    NavBarRevealTracker.Update( scrollDelta, ScrollView.ScrollY, ScrollViewLayout.LayoutParameters.Height );
+                }
+
                 public override bool OnTouch( View v, MotionEvent e )
                 {
+                    // check to see if we should monitor navBar reveal
+                    if ( e.Action == MotionEventActions.Down )
+                    {
+                        NavBarRevealTracker.BeginTracking( ScrollView.ScrollY );   
+                    }
+                    
                     if ( base.OnTouch( v, e ) == true )
                     {
                         return true;
@@ -657,9 +722,9 @@ namespace Droid
 
                         // display the tutorial
                         // if the user has never seen it, show them the tutorial screen
-                        if( App.Shared.Network.RockMobileUser.Instance.NoteTutorialShown == false )
+                        if( App.Shared.Network.RockMobileUser.Instance.NoteTutorialShownCount < PrivateNoteConfig.MaxTutorialDisplayCount )
                         {
-                            App.Shared.Network.RockMobileUser.Instance.NoteTutorialShown = true;
+                            App.Shared.Network.RockMobileUser.Instance.NoteTutorialShownCount = App.Shared.Network.RockMobileUser.Instance.NoteTutorialShownCount + 1;
 
                             System.IO.Stream tutorialStream = null;
                             if( MainActivity.IsLandscapeWide( ) )
@@ -683,6 +748,7 @@ namespace Droid
                                     Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
                                         {
                                             AnimateTutorialScreen( true );
+                                            ScrollView.ScrollEnabled = false;
                                         });
                                 };
                             timer.Start( );
@@ -734,6 +800,11 @@ namespace Droid
                                 delegate
                                 {
                                     AnimatingTutorial = false;
+
+                                    if( fadeIn == false )
+                                    {
+                                        ScrollView.ScrollEnabled = true;
+                                    }
                                 } );
                             tutorialAnim.Start( );
                         }

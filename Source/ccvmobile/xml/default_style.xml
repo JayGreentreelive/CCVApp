@@ -7,7 +7,7 @@
 
      <TextInput BackgroundColor="#3E3E3EFF" BorderWidth="1" BorderColor="#323232FF" BorderRadius="5" FontName="OpenSans-Regular" FontSize="16" FontColor="#9a9a9aFF"/>
      
-     <UserNote FontColor="#9a9a9aFF" FontName="OpenSans-Regular" FontSize="16" BorderWidth="2" BorderRadius="5" BorderColor="#323232FF" BackgroundColor="#505050FF"/>
+     <UserNote FontColor="#CCCCCCFF" FontName="OpenSans-Regular" FontSize="22" BorderWidth="2" BorderRadius="5" BorderColor="#323232FF" BackgroundColor="#505050FF"/>
      
      <Header.Container PaddingLeft="5%" PaddingRight="5%" BackgroundColor="#3E3E3EFF" MarginTop="2%" MarginBottom="5%" Alignment="Left"/>
      <Header.Title Alignment="Left" FontName="OpenSans-Bold" FontSize="24" FontColor="#AFAFAFFF"/>

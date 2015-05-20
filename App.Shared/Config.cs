@@ -160,11 +160,6 @@ namespace App
                 public const uint UserNote_AnchorColor = 0x77777777;
 
                 /// <summary>
-                /// The color of the font/icon when displaying the user note icon.
-                /// </summary>
-                public const uint UserNote_IconColor = 0x8c8c8cFF;
-
-                /// <summary>
                 /// The color of the icon in the details table row.
                 /// </summary>
                 public const uint Details_Table_IconColor = 0xc43535FF;
