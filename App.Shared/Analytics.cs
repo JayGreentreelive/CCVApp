@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using App.Shared.Config;
 
 
 #if __IOS__
@@ -83,16 +84,19 @@ namespace App.Shared
                     // add it, which will fail if it's alread in the list
                     categoryObj.PerformedActions.Add( action );
 
-                    #if !DEBUG
-                    #if __IOS__
-                    NSDictionary attribs = NSDictionary.FromObjectAndKey( new NSString( action ), new NSString( categoryObj.Name ) );
-                    Localytics.TagEvent( Name, attribs );
-                    #elif __ANDROID__
-                    System.Collections.Generic.Dictionary<string, string> attribs = new System.Collections.Generic.Dictionary<string, string>( );
-                    attribs.Add( categoryObj.Name, action );
-                    Localytics.TagEvent( Name, attribs );
-                    #endif
-                    #endif
+                    if ( GeneralConfig.Use_Localytics == true )
+                    {
+                        #if !DEBUG
+                        #if __IOS__
+                        NSDictionary attribs = NSDictionary.FromObjectAndKey( new NSString( action ), new NSString( categoryObj.Name ) );
+                        Localytics.TagEvent( Name, attribs );
+                        #elif __ANDROID__
+                        System.Collections.Generic.Dictionary<string, string> attribs = new System.Collections.Generic.Dictionary<string, string>();
+                        attribs.Add( categoryObj.Name, action );
+                        Localytics.TagEvent( Name, attribs );
+                        #endif
+                        #endif
+                    }
                 }
             }
         }

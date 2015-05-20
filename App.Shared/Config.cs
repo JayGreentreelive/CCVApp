@@ -24,6 +24,11 @@ namespace App
                 public const string OrganizationShortName = "CCV";
 
                 /// <summary>
+                /// The name that Android should use for your app when launched.
+                /// </summary>
+                public const string AndroidAppName = "CCV Mobile";
+
+                /// <summary>
                 /// Used when creating new addresses that will be sent to Rock. If your app will run in another country,
                 /// set CountryCode to the ISO country code.
                 /// </summary>
@@ -51,6 +56,17 @@ namespace App
                 /// The base URL to look for Notes.
                 /// </summary>
                 public const string NoteBaseURL = "http://ccv.church/ccvmobile/";
+
+                /// <summary>
+                /// Set to true if you wish to use Localytics
+                /// </summary>
+                public const bool Use_Localytics = true;
+
+                /// <summary>
+                /// Localytics requires a seperate key for iOS and Android. Here is where you should define your iOS key.
+                /// (Or leave it 0 if you aren't using Localytics
+                /// </summary>
+                public const string Localyitics_iOS_Key = "a9722e06e0ab3ca14721105-4aada4e8-edc0-11e4-314a-004a77f8b47f";
             }
 
             public class SpringboardConfig

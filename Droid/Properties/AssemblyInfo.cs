@@ -1,14 +1,14 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using Android.App;
+using App.Shared.Config;
 
 // Information about this assembly is defined by the following attributes.
 // Change them to the values specific to your project.
-
-[assembly: AssemblyTitle( "CCV Mobile" )]
+[assembly: AssemblyTitle( GeneralConfig.AndroidAppName )]
 [assembly: AssemblyDescription( "" )]
 [assembly: AssemblyConfiguration( "" )]
-[assembly: AssemblyCompany( "Christ's Church of the Valley" )]
+[assembly: AssemblyCompany( GeneralConfig.OrganizationName )]
 [assembly: AssemblyProduct( "" )]
 [assembly: AssemblyCopyright( "" )]
 [assembly: AssemblyTrademark( "" )]

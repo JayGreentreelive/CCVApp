@@ -6,6 +6,7 @@ using Foundation;
 using UIKit;
 using AVFoundation;
 using LocalyticsBinding;
+using App.Shared.Config;
 
 namespace iOS
 {
@@ -31,7 +32,10 @@ namespace iOS
         public override bool FinishedLaunching( UIApplication app, NSDictionary options )
         {
             #if !DEBUG
-            Localytics.AutoIntegrate( "a9722e06e0ab3ca14721105-4aada4e8-edc0-11e4-314a-004a77f8b47f", options );
+            if( string.IsNullOrEmpty( GeneralConfig.Localyitics_iOS_Key ) == false )
+            {
+                Localytics.AutoIntegrate( GeneralConfig.Localyitics_iOS_Key, options );
+            }
             #endif
 
             // create a new window instance based on the screen size
