@@ -382,8 +382,8 @@
     <AndroidAsset Include="..\Assets\default_news_c_main%402x.png">
       <Link>Assets\default_news_c_main.png</Link>
     </AndroidAsset>
-    <AndroidAsset Include="..\Assets\splash_logo_iphone6p.png">
-      <Link>Assets\oobe_splash_logo.png</Link>
+    <AndroidAsset Include="..\..\RSCApp\Assets\splash_logo_android.png">
+      <Link>Assets\splash_logo_android.png</Link>
     </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
